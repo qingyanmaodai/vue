@@ -1252,7 +1252,7 @@ this.spread.refresh();
           submitData.push(x.item);
         });
       }
-
+     
          newData =sheet.getInsertRows();
           if (newData.length != 0) {
         newData.forEach((x) => {
