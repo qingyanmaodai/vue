@@ -1,0 +1,44 @@
+{
+  "id": "2513312",
+  "name": "MON",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "609291",
+      "name": "07_箭头_向上_fill",
+      "font_class": "07jiantouxiangshangfill",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "609293",
+      "name": "07_箭头_向下_fill",
+      "font_class": "07jiantouxiangxiafill",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "17967668",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "eecd",
+      "unicode_decimal": 61133
+    },
+    {
+      "icon_id": "609297",
+      "name": "07_箭头_向左_fill",
+      "font_class": "07jiantouxiangzuofill",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "609295",
+      "name": "07_箭头_向右_fill",
+      "font_class": "07jiantouxiangyoufill",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    }
+  ]
+}

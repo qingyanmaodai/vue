@@ -1,0 +1,378 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1920,user-scalable=no">
+    <title>数据同步实时监控</title>
+    <link rel="stylesheet" type="text/css" href="css/monitor2.css?ver=9" />
+</head>
+
+<body>
+    <div v-cloak id="app">
+        <span id="localtime"
+            style=" font-size:14px; position: absolute; z-index: 10; right: 25px; top:5px; color: #ffffff;">{{todayDate}}</span>
+        <span class="btn btn-blue btn-big" id="refreshBtn" title="默认 1min 刷新一次">刷新</span>
+        <div style="height: 620px;">
+            <header class="t_header">
+                <span>包装三日计划看板</span>
+            </header>
+            <div class="t_table_box">
+                <img class="t_l_line" src="images/left_line.png" alt="">
+                <div class="flex">
+                    <div class="t_top_box">
+                        <ul class="t_nav">
+                            <li v-for="(item,i) in list" :key="i">
+                                <span id="addTj" :class="tag == i?'textSpan':'textNum'"
+                                    @click="changePLan(i)">{{item.label}}</span>
+                                <i></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+                <div class="border_bottom" style="margin-right: 25px;">
+                    <table class="commonTable" style="margin-right: 5px;">
+                        <thead>
+                            <tr>
+                                <td colspan="1" v-for="(item,i) in tableHeader" :key="i">{{item.label}}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(x,i2) in tableData" :key="i2" :class="x.LineName?'':'bgGreenTr'">
+                                <td colspan="1" v-for="(item2,i3) in tableHeader" :key="i3">
+                                    <span
+                                        :class="item2.prop == 'ConfirmQty'?'colorGreen':(item2.prop == 'PlanQtyP' && x.PlanQtyP2 >= 100 )?'bgGreen':(item2.prop == 'PlanQtyP')?'bgYellow':''">{{item2.propName?x[item2.propName]:x[item2.prop]}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="border_bottom" style="margin-left: 20px;">
+                    <table class="commonTable">
+                        <thead>
+                            <tr>
+                                <td colspan="1" v-for="(item,i) in tableHeader" :key="i">{{item.label}}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(x,i2) in tableData2" :key="i2" :class="x.LineName?'':'bgGreenTr'">
+                                <td colspan="1" v-for="(item2,i3) in tableHeader" :key="i3">
+                                    <span
+                                        :class="item2.prop == 'ConfirmQty'?'colorGreen':(item2.prop == 'PlanQtyP' && x.PlanQtyP2 >= 100)?'bgGreen':item2.prop == 'PlanQtyP'?'bgYellow':''">{{item2.propName?x[item2.propName]:x[item2.prop]}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="clear: both;"></div>
+                <img class="t_r_line" src="images/right_line.png" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/axios.min.js" type="text/javascript"></script>
+<script src="./js/token.js?ver=6" type="text/javascript"></script>
+<script src="./js/DateJson.js"></script>
+<script type="module">
+    import formatDate from './js/newFormatDate.js'
+    var app = new Vue({
+        el: "#app",
+        components: {
+        },
+        data: {
+            tag: 0,
+            tableHeader: [],
+            tableData: [],
+            tableData2: [],
+            toDay: [],
+            oldToDay: [],
+            tomorrawDay: [],
+            PlanDay: [],
+            pagination: {
+                pageIndex: 1,
+                pageSize: 27,
+                pageTotal: 0
+            },
+            pagination2: {
+                pageIndex: 1,
+                pageSize: 27,
+                pageTotal: 0
+            },
+            processs: [],
+            list: [],
+            max1: 0,
+            max2: 0,
+            OrganizeID: '',
+            getDataTime: null,
+            getDataTime2: null,
+            ProcessID: '',
+            todayDate: new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日' + ' ' + new Date().getHours() + ':' + new Date().getMinutes(),
+
+        },
+        created() {
+            this.PlanDay = [formatDate.formatOldDate(), formatDate.formatOldDate()];
+            this.toDay = [formatDate.formatTodayDate(), formatDate.formatTodayDate()];
+            this.oldToDay = [formatDate.formatOldDate(), formatDate.formatOldDate()];
+            this.tomorrawDay = [formatDate.formatTommorowDate(), formatDate.formatTommorowDate()];
+            // this.getProcessData();
+            this.getTodayTime();
+            let obj1 = {
+                label: '昨日',
+                value: this.oldToDay
+            }
+            let obj2 = {
+                label: '今日',
+                value: this.toDay
+            }
+            let obj3 = {
+                label: '明日',
+                value: this.tomorrawDay
+            }
+            this.$set(this.list, 0, obj1);
+            this.$set(this.list, 1, obj2);
+            this.$set(this.list, 2, obj3);
+            this.getTableHeader();
+        },
+        methods: {
+            // 获取所有工序
+            getProcessData() {
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 6659 })
+                    .then(function (res) {
+                        if (res.result) {
+                            // 获取每个表头
+                            _this.processs = res.data;
+                            _this.ProcessID = res.data[0].ProcessID;
+
+                        } else {
+                            console.log(res.msg);
+                        }
+                    })
+            },
+            // 接收路由传参
+            getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return decodeURIComponent(r[2]); return null;
+            },
+            // 获取表格
+            getTableHeader() {
+                axiosPostRequst(`/APSAPI/GetConfig`, [{ ID: 6723 }])
+                    .then(function (res) {
+                        if (res.result) {
+                            // 获取每个表头
+                            _this.tableHeader = res.datas[0].filter(x => { return x.prop != 'ProducedNum' && x.prop != 'AduitNum' && x.prop != 'PlanDay' && x.prop != 'ProducedQty' && x.prop != 'Peoples' });
+                            _this.loadData();
+                        } else {
+                            _this.$message.error(res.msg);
+                            _this.isUpdating = false;
+                        }
+                    })
+            },
+            // 切换日期
+            changePLan(val) {
+                // if (val == 0) {
+                //     this.PlanDay = this.toDay;
+                // } else if (val == 1) {
+                //     this.PlanDay = this.oldToDay;
+                // } else {
+                //     this.PlanDay = this.tomorrawDay;
+                // }
+                this.tag = val;
+                this.tableData = [];
+                this.tableData2 = [];
+                clearTimeout(this.getDataTime);
+                this.pagination.pageIndex = 1;
+                this.PlanDay = this.list[val].value;
+                this.loadData();
+                // clearTimeout(this.getDataTime2);
+                // this.pagination2.pageIndex = 1;
+                // this.getTableData(this.PlanDay);
+                // this.getTableData2(this.PlanDay);
+            },
+            loadData() {
+                let flag = 0;
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723, ProcessID: 'P202106171344021', MFGOrganizeID: 106, PlanDay: this.PlanDay, rows: this.pagination.pageSize, page: this.pagination.pageIndex })
+                    .then(function (res) {
+                        if (res.result) {
+                            _this.max1 = res.count;
+                            if (_this.max1 >= _this.max2) {
+                                let start = (_this.pagination.pageIndex - 1) * _this.pagination.pageSize;
+                                let end = start + _this.pagination.pageSize;
+                                if (start > res.count) {
+                                    if (_this.tag == _this.list.length - 1) {
+                                        _this.changePLan(0);
+                                        window.location.href = "http://121.9.64.70:9999/iframeBorard/board_2/index.html";
+                                    } else {
+                                        _this.tag++;
+                                        _this.changePLan(_this.tag);
+                                    }
+                                    flag = 1;
+                                    return;
+                                }
+                            }
+                            if (res.data.length != 0) {
+                                res.data.forEach(z => {
+                                    let num = 0;
+                                    if (z.PlanQtyP) {
+                                        num = parseInt(z.PlanQtyP.substring(0, z.PlanQtyP.length - 4));
+                                        z.PlanQtyP = z.PlanQtyP.substring(0, z.PlanQtyP.length - 4) + '%'
+                                    }
+                                    _this.$set(z, 'PlanQtyP2', num);
+                                });
+                            }
+                            _this.$set(_this, 'tableData', []);
+                            _this.$set(_this, 'tableData', res.data);
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+
+
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,ProcessID: 'P202106171344021',  MFGOrganizeID: 107, PlanDay: _this.PlanDay, rows: _this.pagination.pageSize, page: _this.pagination.pageIndex })
+                    .then(function (res) {
+                        if (res.result) {
+                            _this.max2 = res.count;
+                            if (_this.max1 < _this.max2) {
+                                let start = (_this.pagination.pageIndex - 1) * _this.pagination.pageSize;
+                                let end = start + _this.pagination.pageSize;
+                                if (start > res.count) {
+                                    if (_this.tag == _this.list.length - 1) {
+                                        _this.changePLan(0);
+                                        window.location.href = "http://121.9.64.70:9999/iframeBorard/board_2/index.html";
+                                    } else {
+                                        _this.tag++;
+                                        _this.changePLan(_this.tag);
+                                    }
+                                    flag = 1;
+                                    return;
+                                }
+                            }
+                            if (res.data.length != 0) {
+                                res.data.forEach(z => {
+                                    let num = 0;
+                                    if (z.PlanQtyP) {
+                                        num = JSON.parse(JSON.stringify(parseInt(z.PlanQtyP.substring(0, z.PlanQtyP.length - 4))));
+                                        z.PlanQtyP = z.PlanQtyP.substring(0, z.PlanQtyP.length - 4) + '%';
+                                    }
+                                    _this.$set(z, 'PlanQtyP2', num);
+                                });
+                            }
+                            _this.$set(_this, 'tableData2', []);
+                            _this.$set(_this, 'tableData2', res.data);
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+
+
+
+                if (flag == 0) {
+                    _this.getDataTime = setTimeout(() => {
+                        _this.pagination.pageIndex++;
+                        _this.loadData();
+                    }, 1000 * 10)
+                }
+            },
+            // 获取当前时间
+            getTodayTime() {
+                setInterval(() => {
+                    //new Date() new一个data对象，当前日期和时间
+                    //toLocaleString() 方法可根据本地时间把 Date 对象转换为字符串，并返回结果。
+                    // this.date = new Date().toLocaleString();
+                    var date = new Date();
+                    var seperator1 = "年";
+                    var seperator2 = "月";
+                    var seperator3 = "日";
+                    var seperator4 = ":";
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var strDate = date.getDate();
+                    var hour = date.getHours();
+                    var minute = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    if (month >= 1 && month <= 9) {
+                        month = "0" + month;
+
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                        strDate = "0" + strDate;
+
+                    }
+                    if (hour >= 0 && hour <= 9) {
+                        hour = "0" + hour;
+
+                    }
+                    if (minute >= 0 && minute <= 9) {
+                        minute = "0" + minute;
+
+                    }
+                    if (seconds >= 0 && seconds <= 9) {
+                        seconds = "0" + seconds;
+
+                    }
+                    var a = new Array("日", "一", "二", "三", "四", "五", "六");
+                    var week = new Date().getDay();
+                    var str = "星期" + a[week];
+
+                    this.todayDate = year + seperator1 + month + seperator2 + strDate + seperator2 + ' ' + hour + seperator4 + minute + seperator4 + seconds + '  ' + str;
+                }, 1000)
+            },
+        }
+    })
+    const _this = app
+</script>
+
+</html>
+<style>
+    .colorGreen {
+        color: #00cc00;
+    }
+
+    .bgGreen {
+        display: inline-block;
+        cursor: pointer;
+        font-size: 12px;
+        border-radius: 4px;
+        background-color: #449d44;
+        color: #fff;
+        width: 60px;
+        height: 15px;
+        line-height: 15px;
+        text-align: center;
+        padding: 3px 5px 3px 5px;
+    }
+
+    .bgYellow {
+        display: inline-block;
+        cursor: pointer;
+        font-size: 12px;
+        border-radius: 4px;
+        background-color: #c560cc;
+        color: #fff;
+        width: 60px;
+        height: 15px;
+        line-height: 15px;
+        text-align: center;
+        padding: 3px 5px 3px 5px;
+    }
+
+    .bgGreenTr {
+        background: #295252 !important;
+    }
+</style>

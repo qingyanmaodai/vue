@@ -1,0 +1,1132 @@
+﻿<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Pragma" contect="no-cache">
+	<meta name="viewport" content="width=1920,user-scalable=no">
+	<title>可视化看板</title>
+	<script src="./js/vue.js" type="text/javascript"></script>
+	<link type="text/css" href="./css/public.css?ver=1" rel="stylesheet">
+	<link type="text/css" href="./css/icon.css" rel="stylesheet">
+	<link type="text/css" href="./css/jjindex.css?ver=2" rel="stylesheet">
+</head>
+
+<body>
+	<div class="bg" v-cloak id="app">
+		<div class="title">{{OrganizeInfo.OrganizeName}}APS可视化看板</div>
+		<!-- <image src="./img/logo.png" style="position: fixed;top:0.1rem;width:1rem;height: 0.2rem;" /> -->
+		<!-- <image @click="moreLarge" src="./img/large.png"
+			style="position: fixed;bottom:0.1rem;right:0.05rem;width: 0.1rem;height: 0.1rem;cursor: pointer;" /> -->
+		<label
+			style="position: fixed;right:0.05rem;width: 0.1rem;height: 0.1rem;top:0.1rem;width: 20%;color: #fff;font-size: 0.12rem;">{{todayDate}}</label>
+		<div class="leftMain">
+			<div class="leftMain_top">
+				<div class="leftMain_topIn" style="height: 13.5vh;">
+					<ul>
+						<li>
+							<div class="liIn">
+								<h3>本月计划产量</h3>
+								<p class="shu"><span class="shu1">{{dataOne[0].PlanQty}}</span><i>个</i></p>
+								<div class="zi"><span
+										class="span1">计划产品个数</span><span>{{dataOne[0].MonthPlanQty}}</span></div>
+								<span class="border_bg_leftTop"></span>
+								<span class="border_bg_rightTop"></span>
+								<span class="border_bg_leftBottom"></span>
+								<span class="border_bg_rightBottom"></span>
+							</div>
+						</li>
+						<li>
+							<div class="liIn">
+								<h3>本月实际产量</h3>
+								<p class="shu"><span class="shu2" id="spanQty">{{dataOne[1].PlanQty}}</span>
+									<i>个</i>
+								</p>
+								<div class="zi"><span
+										class="span1">实际产品个数</span><span>{{dataOne[1].MonthPlanQty}}</span></div>
+								<span class="border_bg_leftTop"></span>
+								<span class="border_bg_rightTop"></span>
+								<span class="border_bg_leftBottom"></span>
+								<span class="border_bg_rightBottom"></span>
+							</div>
+						</li>
+						<li>
+							<div class="liIn">
+								<h3>本月销售总量</h3>
+								<p class="shu"><span class="shu3">{{dataOne[2].PlanQty}}</span><i>个</i></p>
+								<div class="zi"><span
+										class="span1">累计销售产品</span><span>{{dataOne[2].MonthPlanQty}}</span></div>
+								<span class="border_bg_leftTop"></span>
+								<span class="border_bg_rightTop"></span>
+								<span class="border_bg_leftBottom"></span>
+								<span class="border_bg_rightBottom"></span>
+							</div>
+						</li>
+						<li>
+							<div class="liIn">
+								<h3>产成品积压数</h3>
+								<p class="shu"><span class="shu4">{{dataOne[3].PlanQty}}</span><i>个</i></p>
+								<div class="zi"><span
+										class="span1">当前库存总数</span><span>{{dataOne[3].MonthPlanQty}}</span></div>
+								<span class="border_bg_leftTop"></span>
+								<span class="border_bg_rightTop"></span>
+								<span class="border_bg_leftBottom"></span>
+								<span class="border_bg_rightBottom"></span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="leftMain_middle">
+				<div class="leftMain_middle_left">
+					<div class="leftMain_middle_leftIn">
+						<h3>10月产销分析(品类)</h3>
+						<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+						<div class="biaoge" style="width:100%; height:25vh" id="echartsTwo"></div>
+						<span class="border_bg_leftTop"></span>
+						<span class="border_bg_rightTop"></span>
+						<span class="border_bg_leftBottom"></span>
+						<span class="border_bg_rightBottom"></span>
+					</div>
+				</div>
+				<div class="leftMain_middle_right">
+					<div class="leftMain_middle_rightIn">
+						<h3>计划产量达成</h3>
+						<div class="biaoge biaoge_pai" style="width:100%; height:25vh">
+							<div class="biaoge_paiIn">
+								<ul>
+									<li v-for="(item2,index) in products" :key="index">
+										<div :class="item2.ClassName" v-show="item2.WorkShopName">
+											<div class="liIn_left"><span class="bot"></span><span
+													class="zi">{{item2.WorkShopName}}</span></div>
+											<div class="liIn_line">
+												<div class="line_lineIn" :style="{'width':item2.ApprovalP}"></div>
+											</div>
+											<p class="num">
+												{{item2.ApprovalP}}% ∣ {{item2.ApprovalCount}}
+											</p>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<span class="border_bg_leftTop"></span>
+						<span class="border_bg_rightTop"></span>
+						<span class="border_bg_leftBottom"></span>
+						<span class="border_bg_rightBottom"></span>
+					</div>
+				</div>
+			</div>
+			<div class="leftMain_middle">
+				<div class="leftMain_middle_left">
+					<div class="leftMain_middle_leftIn">
+						<h3>工序计划达成(昨日)</h3>
+						<div class="biaoge" style="width:100%; height:25vh" id="echartsNewThree"></div>
+						<span class="border_bg_leftTop"></span>
+						<span class="border_bg_rightTop"></span>
+						<span class="border_bg_leftBottom"></span>
+						<span class="border_bg_rightBottom"></span>
+					</div>
+				</div>
+				<div class="leftMain_middle_right">
+					<div class="leftMain_middle_rightIn">
+						<h3>昨日达成汇总</h3>
+						<div class="biaoge biaoge_bi" style="width:100%; height:25vh">
+							<ul>
+								<li>
+									<div class="liIn">
+										<p class="shu shu1">{{tableSix.PlanQty}}</p>
+										<p class="zi">计划产量</p>
+									</div>
+								</li>
+								<li>
+									<div class="liIn">
+										<p class="shu shu2">{{tableSix.ConfirmQty}}</p>
+										<p class="zi">实际产量</p>
+									</div>
+								</li>
+								<li>
+									<div class="liIn">
+										<p class="shu shu3">{{tableSix.PlanQtyP?tableSix.PlanQtyP.toFixed(1):0}}%</p>
+										<p class="zi">产量达成率</p>
+									</div>
+								</li>
+								<li>
+									<div class="liIn">
+										<p class="shu shu4">{{tableSix.MaterialCount}}</p>
+										<p class="zi">计划产品数</p>
+									</div>
+								</li>
+								<li>
+									<div class="liIn">
+										<p class="shu shu5">{{tableSix.MaterialOK}}</p>
+										<p class="zi">达标产品数</p>
+									</div>
+								</li>
+								<li>
+									<div class="liIn">
+										<p class="shu shu6">
+											{{tableSix.MaterialCountP?tableSix.MaterialCountP.toFixed(1):0}}%</p>
+										<p class="zi">计划完成率</p>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+						<span class="border_bg_leftTop"></span>
+						<span class="border_bg_rightTop"></span>
+						<span class="border_bg_leftBottom"></span>
+						<span class="border_bg_rightBottom"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="rightMain">
+			<div class="rightMain_top">
+				<div class="rightMain_topIn">
+					<h3>品类产出分布</h3>
+					<div class="biaoge" style="width:100%; height:30vh" id="echartsOne"></div>
+					<span class="border_bg_leftTop"></span>
+					<span class="border_bg_rightTop"></span>
+					<span class="border_bg_leftBottom"></span>
+					<span class="border_bg_rightBottom"></span>
+				</div>
+			</div>
+			<div class="rightMain_bottom">
+				<div class="rightMain_bottomIn">
+					<h3>APP报工审批提醒</h3>
+					<div class="biaoge biaoge_list" style="width:100%; height:36vh">
+						<div class="biaoge_listIn">
+							<ul class="ul_title">
+								<li>拉线</li>
+								<li>负责人</li>
+								<li>未审批</li>
+								<li>倒计时(分)</li>
+							</ul>
+							<div class="ul_list">
+								<div class="ul_listIn">
+									<ul class="ul_con" v-for="(item3,index) in tableSeven" :key="index">
+										<li>{{item3.LineName}}</li>
+										<li>{{item3.PlanQty}}</li>
+										<li>{{item3.ConfirmQty}}</li>
+										<li style="color: rgb(49, 241, 49);font-weight: bold;">{{item3.PlanQtyP}}</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<span class="border_bg_leftTop"></span>
+					<span class="border_bg_rightTop"></span>
+					<span class="border_bg_leftBottom"></span>
+					<span class="border_bg_rightBottom"></span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+</body>
+<!--数字增长累加动画-->
+<script src="./js/axios.min.js" type="text/javascript"></script>
+<script src="./js/token.js?ver=5" type="text/javascript"></script>
+<script src="./js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="./js/jquery.numscroll.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	document.documentElement.style.fontSize = document.documentElement.clientWidth / 768 * 100 + 'px';
+</script>
+<script src="./js/echarts.min.js"></script>
+<script src="./js/DateJson.js"></script>
+<script type="module">
+	import formatDate from './js/newFormatDate.js'
+	var app = new Vue({
+		el: "#app",
+		components: {
+		},
+		data: {
+			todayDate: new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日' + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds(),
+			large: true,
+			OrganizeID: "",
+			OrganizeName: "电子信息化",
+			dataOne: [{ PlanQty: 0, MonthPlanQty: 0 }, { PlanQty: 0, MonthPlanQty: 0 }, { PlanQty: 0, MonthPlanQty: 0 }, { PlanQty: 0, MonthPlanQty: 0 }],
+			optionOne: {
+				tooltip: {
+					trigger: '',
+					formatter: '{b} : {c}万 <br/>({d}%)'
+				},
+				legend: {
+					show: false,
+				},
+				grid: {
+					x: '-10%',
+					y: 40,
+					x2: 20,
+					y2: 20,
+				},
+				color: ['#09d0fb', '#f88cfb', '#0081ff', '#f43f3b', '#95f8fe', '#f9f390', '#ecfeb7', '#39b54a', '#9000ff', '#feac00', '#1afffd', '#f859d5', '#043060'],
+				series: [
+					{
+						type: 'pie',
+						radius: '75%',
+						center: ['50%', '50%'],
+						// selectedMode: 'single',
+						data: [],
+						avoidLabelOverlap: false,
+						label: {
+							emphasis: {
+								show: true,
+								textStyle: {
+									fontSize: '12',
+									fontWeight: 'bold'
+								}
+								// itemStyle: {
+								// 	shadowBlur: 10,
+								// 	shadowOffsetX: 0,
+								// 	shadowColor: 'rgba(0, 0, 0, 0.5)'
+								// }
+							},
+							normal: {
+								formatter: '{b}' + '\n\r' + '({d}%)',
+								show: true,
+								position: 'left'
+							}
+						},
+						labelLine: {
+							normal: {
+								show: true
+							}
+						},
+					}
+				]
+			},
+			optionTwo: {
+				title: {
+					text: '',
+					subtext: ''
+				},
+				grid: { x: 40, y: 40, x2: 20, y2: 20 },
+				xAxis: {
+					data: [],
+					axisLabel: {
+						/*inside: true,*/
+						interval: 0,
+						textStyle: {
+							color: '#fff',
+							fontSize: 12
+
+						}
+					},
+					axisTick: {
+						show: false,
+					},
+					axisLine: {
+						show: true,
+						symbol: ['none', 'arrow'],
+						symbolOffset: 12,
+						lineStyle: {
+							color: '#fff',
+						}
+					},
+					z: 10
+				},
+				yAxis: {
+					type: 'value',
+					name: '单位：个',
+
+					left: '20%',
+
+					axisLine: {
+						show: true,
+						symbol: ['none', 'arrow'],
+						symbolOffset: 12,
+						lineStyle: {
+							color: '#fff',
+						}
+					},
+					axisTick: {
+						show: false
+					},
+					axisLabel: {
+						textStyle: {
+							color: '#fff',
+							fontSize: 12
+						}
+					}
+				},
+				dataZoom: [
+					{
+						type: 'inside'
+					}
+				],
+				grid: {
+					left: '10%',
+					right: '2%',
+					top: '25%',
+					bottom: '15%'
+					// containLabel: true
+				},
+				series: [
+					// { // For shadow
+					// 	type: 'bar',
+					// 	itemStyle: {
+					// 		color: 'rgba(0,0,0,0.05)'
+					// 	},
+					// 	barGap: '-100%',
+					// 	barCategoryGap: '40%',
+					// 	data: [],
+					// 	animation: false
+					// },
+					{
+						type: 'bar',
+						barWidth:15,
+						itemStyle: {
+							color: new echarts.graphic.LinearGradient(
+								0, 0, 0, 1,
+								[
+									{ offset: 0, color: '#0efdff' },
+									{ offset: 0.5, color: '#188df0' },
+									{ offset: 1, color: '#188df0' }
+								]
+							)
+						},
+						emphasis: {
+							itemStyle: {
+								color: new echarts.graphic.LinearGradient(
+									0, 0, 0, 1,
+									[
+										{ offset: 0, color: '#2378f7' },
+										{ offset: 0.7, color: '#2378f7' },
+										{ offset: 1, color: '#0efdff' }
+									]
+								)
+							}
+						},
+						data: [],
+						label: {
+							show: true,
+							position: 'top',
+							color: '#ffffff'
+						},
+					}
+				]
+			},
+			products: [[], [], [], [], [],[],[],[],[],[]],
+			optionThree: {
+				title: {
+					text: ''
+				},
+				tooltip: {
+					trigger: 'axis',
+					formatter: '{b} </br> {a} : {c}% </br> {a1} : {c1}% '
+				},
+				legend: {
+					show: true,
+					textStyle: {
+						color: '#fff',
+						fontSize: 12,
+					},
+					right: '10%',
+					data: ['品类达成', '产量达成']
+				},
+				grid: {
+					x: 40,
+					y: 40,
+					x2: 20,
+					y2: 20,
+				},
+				toolbox: {
+					feature: {
+						//saveAsImage: {}
+					}
+				},
+				xAxis: {
+					type: 'category',
+					boundaryGap: false,
+					axisLabel: {
+						/*inside: true,*/
+						interval: 0,
+						textStyle: {
+							color: '#fff',
+							fontSize: 12
+
+						}
+					},
+					axisTick: {
+						show: false,
+					},
+					axisLine: {
+						show: true,
+						symbol: ['none', 'arrow'],
+						symbolOffset: 12,
+						lineStyle: {
+							color: '#fff',
+						}
+					},
+					data: []
+				},
+				yAxis: {
+					type: 'value',
+					name: '单位：%',
+					max: 100,
+					axisLine: {
+						show: true,
+						symbol: ['none', 'arrow'],
+						symbolOffset: 12,
+						lineStyle: {
+							color: '#fff',
+						}
+					},
+					axisTick: {
+						show: false
+					},
+					axisLabel: {
+						textStyle: {
+							color: '#fff',
+							fontSize: 12
+						}
+					}
+				},
+				series: [
+					{
+						name: '品类达成',
+						type: 'line',
+						stack: '品类达成',
+						data: [],
+						itemStyle: {
+							normal: {
+								color: "#0efdff",//折线点的颜色
+								lineStyle: {
+									color: "#0efdff",//折线的颜色
+									width: 2,
+								}
+							},
+						}
+					},
+					{
+						name: '产量达成',
+						type: 'line',
+						stack: '产量达成',
+						data: []
+					},
+				]
+			},
+			tableSix: {
+				PlanQty: 0,
+				MaterialCountP: 0,
+				PlanQtyP: 0,
+				MaterialOK: 0,
+				ConfirmQty: 0,
+				MaterialCount: 0
+			},
+			loading: false,
+			tableSeven: [],
+			today: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
+			oldDate: '',
+			YearMonth: new Date().getFullYear() + '-' + (new Date().getMonth() + 1),
+			mTime: null,
+			mTime2: null,
+			mTime3: null,
+			OrganizeID2: "",
+			pagination: {
+				pageIndex: 1,
+				pageSize: 10,
+				pageTotal: 0
+			},
+			timeOut: null,
+			oldDayDate: '',
+			oldSevenDate: '',
+			OrganizeInfo: { OrganizeName: '', OrganizeID: '' },
+			toPage: null
+		},
+		created() {
+			if ((new Date().getMonth() + 1) < 10) {
+				this.YearMonth = new Date().getFullYear() + '-' + '0' + (new Date().getMonth() + 1);
+			} else {
+				this.YearMonth = new Date().getFullYear() + '-' + (new Date().getMonth() + 1);
+			}
+			var d = new Date();
+			d.setDate(d.getDate() - 14);
+			this.oldDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+			this.oldDayDate = formatDate.formatOldDate();
+			this.oldSevenDate = formatDate.formatSevenDate();
+			// 获取地址栏后面的参数
+			let OrganizeID = this.getQueryString("OrganizeID");
+			if (!OrganizeID) {
+				this.OrganizeID = ""
+			} else {
+				this.OrganizeID = OrganizeID;
+				this.getOrgData(OrganizeID);
+			}
+			this.getData_2(this.OrganizeID);
+			this.getPageData(this.OrganizeID);
+			this.getTodayTime();
+		},
+		computed: {
+		},
+		methods: {
+			// 获取组织名称
+			getOrgData(OrganizeID) {
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 25, OrganizeID: OrganizeID })
+					.then(function (res) {
+						if (res.result) {
+							if (res.data.length != 0) {
+								_this.OrganizeInfo = res.data[0];
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+			},
+			// 获取2分钟后需刷新的数据
+			getData_2(OrganizeIDs) {
+				// 获取各个工序今日计划数
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6709, PlanDay: [this.today, this.today], OrganizeIDs: OrganizeIDs, fields: 'ProcessName,sum(PlanQty) as  PlanQty', groupby: ' ProcessName', sort: 'ProcessName' })
+					.then(function (res) {
+						if (res.result) {
+							if (res.data.length != 0) {
+								_this.dataOne[0].PlanQty = res.data.filter(x => { return x.ProcessName == '包装' })[0].PlanQty;
+								_this.dataOne[1].PlanQty = res.data.filter(y => { return y.ProcessName == '封口' })[0].PlanQty;
+								_this.dataOne[2].PlanQty = res.data.filter(z => { return z.ProcessName == '填粉' })[0].PlanQty;
+								_this.dataOne[3].PlanQty = res.data.filter(a => { return a.ProcessName == '绕线' })[0].PlanQty;
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+
+				// 获取各个工序月计划数
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6720, YearMonth: this.YearMonth, OrganizeIDs: OrganizeIDs, fields: 'ProcessName,sum(ConfirmQty) as  ConfirmQty', groupby: 'ProcessName', sort: 'ProcessName' })
+					.then(function (res) {
+						if (res.result) {
+							if (res.data.length != 0) {
+								let num1 = 0;
+								let num2 = 0;
+								let num3 = 0;
+								let num4 = 0;
+								let name1 = res.data.filter(x => { return x.ProcessName == '包装' });
+								debugger
+								let name2 = res.data.filter(y => { return y.ProcessName == '封口' });
+								let name3 = res.data.filter(z => { return z.ProcessName == '填粉' });
+								let name4 = res.data.filter(a => { return a.ProcessName == '绕线/制管' });
+								if (name1.length != 0) {
+									num1 = name1[0].ConfirmQty;
+								}
+								if (name2.length != 0) {
+									num2 = name2[0].ConfirmQty;
+								}
+								if (name3.length != 0) {
+									num3 = name3[0].ConfirmQty;
+								}
+								if (name4.length != 0) {
+									num4 = name4[0].ConfirmQty;
+								}
+								_this.$set(_this.dataOne[0], 'MonthPlanQty', num1);
+								_this.$set(_this.dataOne[1], 'MonthPlanQty', num2);
+								_this.$set(_this.dataOne[2], 'MonthPlanQty', num3);
+								_this.$set(_this.dataOne[3], 'MonthPlanQty', num4);
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+
+				// // 获取产品品类占比
+				// axiosPostRequst(`/APSAPI/APSData`, { dicID: 12, OrganizeIDs: OrganizeIDs, fields: 'Extend9 as name,COUNT(1) as value', groupby: ' Extend9', sort: 'Extend9' })
+				// 	.then(function (res) {
+				// 		if (res.result) {
+				// 			let xAxis = []
+				// 			let series = []
+				// 			if (res.data.length != 0) {
+				// 				res.data.forEach(m => {
+				// 					if (m.name) {
+				// 						series.push(m);
+				// 						xAxis.push(m.name)
+				// 					}
+				// 				})
+				// 				_this.optionOne.series[0].data = series;
+				// 				_this.drawChartOne()
+				// 			}
+				// 		}
+				// 		else {
+				// 			_this.$message({
+				// 				message: res.msg,
+				// 				type: 'error'
+				// 			});
+				// 		}
+				// 	})
+				// 	.catch(function (error) {
+
+				// 	});
+
+				// 获取昨日产品产出
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6704, rows: 8, ProcessID: 'P202106171344021', ProducedDate: [this.oldDayDate, this.oldDayDate], OrganizeIDs: OrganizeIDs, fields: 'MaterialName as name,MaterialID, sum(ConfirmQty) as value', groupby: ' MaterialName,MaterialID', sort: 'value desc' })
+					.then(function (res) {
+						if (res.result) {
+							let xAxis = []
+							let series = []
+							if (res.data.length != 0) {
+								res.data.forEach(m => {
+									if (m.name) {
+										series.push(m);
+										xAxis.push(m.name)
+									}
+								})
+								_this.optionOne.series[0].data = series;
+								_this.drawChartOne()
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+				// 获取15日成品明细
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6704, OrganizeIDs: OrganizeIDs, ProcessName: '包装', ProducedDate: [this.oldDate, this.today], fields: "cast(sum(ConfirmQty) as decimal(18,2)) as ConfirmQty,FORMAT(ProducedDate,'MM-dd') as ProducedDate", groupby: 'ProducedDate', sort: "ProducedDate asc" })
+					.then(function (res) {
+						if (res.result) {
+							let xAxis = []
+							let series = []
+							if (res.data.length != 0) {
+								res.data.forEach(m => {
+									xAxis.push(m.ProducedDate)
+									series.push(parseFloat(m.ConfirmQty))
+								})
+								_this.optionTwo.xAxis.data = xAxis
+								_this.optionTwo.series[0].data = series
+								_this.drawChartTwo()
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+
+				// 获取产量达成率排名
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6757, OrganizeIDs: OrganizeIDs, ProducedDate: [this.oldDayDate, this.oldDayDate], sort: ' ApprovalP desc,ApprovalCount desc', rows: 10 })
+					.then(function (res) {
+						if (res.result) {
+							debugger
+							if (res.data.length != 0) {
+								let name = 'liIn ';
+								res.data.some((m, index) => {
+									let name1 = 'liIn';
+									if (index != 0) {
+										name1 = name1 + (index + 1)
+									}
+									_this.products[index]["ClassName"] = name + name1;
+									_this.products[index]["WorkShopName"] = m.WorkShopName;
+									_this.products[index]["ApprovalCount"] = m.ApprovalCount;
+									_this.products[index]["ApprovalP"] = m.ApprovalP;
+									_this.products[index]["Approvals"] = m.Approvals;
+								});
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+
+
+				/* 近一周达成率 */
+				axiosPostRequst(`/APSAPI/APSData`, { dicID: 6754, OrganizeIDs: OrganizeIDs, sort: "PlanDay asc" })
+					.then(function (res) {
+						if (res.result) {
+							let xAxis = [];
+							let series = []
+							let series1 = [];
+							if (res.data.length != 0) {
+								res.data.forEach(m => {
+									xAxis.push(m.PlanDay)
+									if (m.PlanCountP) {
+										m.PlanCountP = parseFloat(m.PlanCountP).toFixed(2)
+									}
+									if (m.PlanQtyP) {
+										m.PlanQtyP = parseFloat(m.PlanQtyP).toFixed(2)
+									}
+									series.push(m.PlanCountP);
+									series1.push(m.PlanQtyP)
+								})
+								_this.optionThree.xAxis.data = xAxis;
+								_this.optionThree.series[0].data = series;
+								_this.optionThree.series[1].data = series1;
+								_this.drawChartThree()
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					})
+
+
+				/* 组织人数等等 */
+				axiosPostRequst(`/APSAPI/GetWageReport`, { OrganizeIDs: OrganizeIDs })
+					.then(function (res) {
+						if (res.result) {
+							_this.tableSix = res.data;
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					})
+
+
+				setTimeout(() => {
+					_this.getData_2(_this.OrganizeID);
+				}, 1000 * 60)
+
+			},
+			// 获取分页的数据
+			getPageData(OrganizeIDs) {
+				clearTimeout(this.timeOut);
+				// 获取报工不达标人员（近三天）
+				axiosPostRequst(`/APSAPI/APSData`, { rows: this.pagination.pageSize, page: this.pagination.pageIndex, dicID: 6720, OrganizeIDs: OrganizeIDs, PlanDay: [this.oldDayDate, this.oldDayDate], fields: "LineID,LineName,sum(PlanQty) as PlanQty,sum(ConfirmQty) as ConfirmQty,FORMAT(ISNULL(sum(ConfirmQty),0)/sum(PlanQty),'P2') as PlanQtyP", groupby: 'LineID,LineName', sort: "LineID,PlanQtyP desc" })
+					.then(function (res) {
+						if (res.result) {
+							let start = (_this.pagination.pageIndex - 1) * _this.pagination.pageSize;
+							let end = start + _this.pagination.pageSize;
+							if (start > res.count) {
+								_this.pagination.pageIndex = 1;
+								_this.getPageData(_this.OrganizeID);
+								return;
+							}
+							if (res.data.length != 0) {
+								_this.tableSeven = res.data;
+								_this.timeOut = setTimeout(() => {
+									_this.pagination.pageIndex++;
+									_this.getPageData(_this.OrganizeID);
+								}, 1000 * 10)
+							}
+						}
+						else {
+							_this.$message({
+								message: res.msg,
+								type: 'error'
+							});
+						}
+					})
+					.catch(function (error) {
+
+					});
+			},
+			// 获取当前时间
+			getTodayTime() {
+				setInterval(() => {
+					//new Date() new一个data对象，当前日期和时间
+					//toLocaleString() 方法可根据本地时间把 Date 对象转换为字符串，并返回结果。
+					// this.date = new Date().toLocaleString();
+					var date = new Date();
+					var seperator1 = "年";
+					var seperator2 = "月";
+					var seperator3 = "日";
+					var seperator4 = ":";
+					var year = date.getFullYear();
+					var month = date.getMonth() + 1;
+					var strDate = date.getDate();
+					var hour = date.getHours();
+					var minute = date.getMinutes();
+					var seconds = date.getSeconds();
+					if (month >= 1 && month <= 9) {
+						month = "0" + month;
+
+					}
+					if (strDate >= 0 && strDate <= 9) {
+						strDate = "0" + strDate;
+
+					}
+					if (hour >= 0 && hour <= 9) {
+						hour = "0" + hour;
+
+					}
+					if (minute >= 0 && minute <= 9) {
+						minute = "0" + minute;
+
+					}
+					if (seconds >= 0 && seconds <= 9) {
+						seconds = "0" + seconds;
+
+					}
+					this.todayDate = year + seperator1 + month + seperator2 + strDate + seperator2 + ' ' + hour + seperator4 + minute + seperator4 + seconds;
+				}, 1000)
+			},
+			moreLarge() {
+				this.large = !this.large
+				if (!this.large) {
+					// this.fullScreen()
+					if (document.documentElement.requestFullscreen) {
+						document.documentElement.requestFullscreen()
+					}
+					if (document.documentElement.mozRequestFullScreen) {
+						document.documentElement.mozRequestFullScreen()
+
+					}
+					if (document.documentElement.webkitRequestFullScreen) {
+						document.documentElement.webkitRequestFullScreen()
+					}
+					if (document.documentElement.msRequestFullscreen) {
+
+						document.documentElement.msRequestFullscreen()
+					}
+				} else {
+					// this.exitFullScreen()
+					if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen()
+					}
+					if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen()
+					}
+					if (document.exitFullscreen) {
+						document.exitFullscreen()
+					}
+					if (document.msExitFullscreen) {
+						document.msExitFullscreen()
+					}
+				}
+			},
+			// 接收路由传参
+			getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) return decodeURIComponent(r[2]); return null;
+			},
+			// 获取图表
+			drawChartOne() {
+				let myChart = echarts.init(document.getElementById('echartsOne'))
+				myChart.setOption(this.optionOne, true);
+				let chart = document.getElementById('echartsOne')
+				echarts.init(chart).resize()
+				this.cyclePie()
+			},
+			// 获取图表
+			drawChartTwo() {
+				let myChart2 = echarts.init(document.getElementById('echartsTwo'))
+				myChart2.setOption(this.optionTwo, true);
+				let chart2 = document.getElementById('echartsTwo')
+				echarts.init(chart2).resize()
+				this.cycleBarUp()
+			},
+			// 获取图表
+			drawChartThree() {
+				let myChart3 = echarts.init(document.getElementById('echartsNewThree'))
+				myChart3.setOption(this.optionThree, true);
+				let chart3 = document.getElementById('echartsNewThree')
+				echarts.init(chart3).resize()
+				this.cycleBarDown()
+			},
+			// 循环高亮饼图
+			cyclePie() {
+				var index = 0;
+				// 用定时器控制饼图高亮
+				if (this.mTime) {
+					clearInterval(this.mTime)
+				}
+				let myChart = echarts.init(document.getElementById('echartsOne'))
+				let dataLength = this.optionOne.series[0].data.length   // 当前饼图有多少个扇形
+				this.mTime = setInterval(() => {
+					// 清除之前的高亮
+					myChart.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					index = (index + 1) % dataLength
+					// 当前下标高亮
+					myChart.dispatchAction({
+						type: 'highlight',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					if (index > dataLength) {
+						index = 0
+					}
+				}, 2000)
+				// 鼠标划入
+				myChart.on('mouseover', () => {
+					// 停止定时器，清除之前的高亮
+					clearInterval(this.mTime)
+					myChart.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+				})
+			},
+			// 循环高亮折线图产量
+			cycleBarUp() {
+				var index = 0;
+				// 用定时器控制饼图高亮
+				if (this.mTime2) {
+					clearInterval(this.mTime2)
+				}
+				let myChart2 = echarts.init(document.getElementById('echartsTwo'))
+				let dataLength = this.optionTwo.series[0].data.length   // 当前饼图有多少个扇形
+				this.mTime2 = setInterval(() => {
+					// 清除之前的高亮
+					myChart2.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					index = (index + 1) % dataLength
+					// 当前下标高亮
+					myChart2.dispatchAction({
+						type: 'showTip',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					if (index > dataLength) {
+						index = 0
+					}
+				}, 2000)
+				// 鼠标划入
+				myChart2.on('mouseover', () => {
+					// 停止定时器，清除之前的高亮
+					clearInterval(this.mTime2)
+					myChart2.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+				})
+			},
+			// 循环高亮折线图产值
+			cycleBarDown() {
+				var index = 0;
+				// 用定时器控制饼图高亮
+				if (this.mTime3) {
+					clearInterval(this.mTime3)
+				}
+				let myChart3 = echarts.init(document.getElementById('echartsNewThree'))
+				let dataLength = this.optionThree.series[0].data.length   // 当前饼图有多少个扇形
+				this.mTime3 = setInterval(() => {
+					// 清除之前的高亮
+					myChart3.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					index = (index + 1) % dataLength
+					// 当前下标高亮
+					myChart3.dispatchAction({
+						type: 'showTip',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+					if (index > dataLength) {
+						index = 0
+					}
+				}, 2000)
+				// 鼠标划入
+				myChart3.on('mouseover', () => {
+					// 停止定时器，清除之前的高亮
+					clearInterval(this.mTime3)
+					myChart3.dispatchAction({
+						type: 'downplay',
+						seriesIndex: 0,
+						dataIndex: index
+					})
+				})
+			},
+			// 滚动数据
+			gunnum() {
+				// setTimeout(() => {
+				// 	$(".shu1").numScroll();
+				// 	$(".shu2").numScroll();
+				// 	$(".shu3").numScroll();
+				// 	$(".shu4").numScroll();
+				// 	$(".shu5").numScroll();
+				// 	$(".shu6").numScroll();
+				// 	this.gunnum()
+				// }, 1000 * 60 * 8)
+			},
+			// pieall() {
+			// 	_this.cyclePie()
+			// 	_this.cycleBarUp()
+			// 	_this.cycleBarDown()
+			// 	setTimeout(() => {
+			// 		_this.pieall()
+			// 	}, 1000 * 60 * 60)
+			// }
+		},
+		mounted() {
+			// this.drawChart()
+			window.onresize = () => {
+				return (() => {
+					window.screenWidth = document.body.clientWidth;
+					document.documentElement.style.fontSize = document.documentElement.clientWidth / 768 * 100 + 'px';
+				})()
+			}
+			if (this.toPage) {
+				clearTimeout(this.toPage);
+			}
+			this.toPage = setTimeout(() => {
+				if (this.getQueryString("OrganizeID") == 107) {
+					window.location.href = "T-1DayPlan.html";
+				} else {
+					window.location.href = "pieceHome.html?OrganizeID=107";
+				}
+				clearTimeout(this.toPage);
+			}, 1000 * 60 * 2)
+
+			// this.$nextTick(() => {
+			// 	_this.pieall()
+			// })
+
+			// this.gunnum()
+		},
+		watch: {
+		}
+	})
+	const _this = app
+</script>
+
+</html>
