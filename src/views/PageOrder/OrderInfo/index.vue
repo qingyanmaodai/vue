@@ -164,7 +164,7 @@ export default {
       ProcessGroupID: "",
       Status1: [
         { label: "全部", value: "" },
-        { label: "已下达", value: 21 },
+        { label: "已下达", value: [21,22,23,24] },
         { label: "未下达", value: 26 },
         { label: "已完成", value: 25 },
       ],

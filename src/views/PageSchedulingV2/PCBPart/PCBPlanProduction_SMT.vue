@@ -191,7 +191,7 @@ export default {
       tablePagination: [
         {
           pageIndex: 1,
-          pageSize: 0,
+          pageSize: 200,
           pageTotal: 0,
         },
         {

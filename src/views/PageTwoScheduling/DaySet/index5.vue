@@ -996,12 +996,12 @@ sheet.getCell(index, cellIndex).cellType(cellType);
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
        let sheet = this.spread.getActiveSheet();
-       let dataSource=sheet.getDataSource();
+     //  let dataSource=sheet.getDataSource();
       if(val==null)
       {
        return;
       }
-      let currentRow = dataSource[rowIndex];
+     let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
       if(currentRow.ID==-1)
       {
         return false;

@@ -218,7 +218,7 @@
       <div class="box_content">
         <ComVxeTable
           :rowKey="'RowNumber'"
-          :height="'730px'"
+          :height="'500px'"
           :tableData="tableData[2]"
           :tableHeader="tableColumns[2]"
           :tableLoading="tableLoading[2]"

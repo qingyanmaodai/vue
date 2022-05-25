@@ -1,13 +1,7 @@
 <!--备料任务指派-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <!-- <div
         v-for="(item,i) in 5"
         :key="i"
@@ -30,11 +24,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div v-show="labelStatus1 == 0">
                 <el-date-picker
                   type="date"
@@ -45,12 +38,10 @@
                 >
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="moreDate"
-                >批量填写日期</el-button>
-                 <el-divider direction="vertical"></el-divider>
+                <el-button type="primary" size="mini" @click="moreDate"
+                  >批量填写日期</el-button
+                >
+                <el-divider direction="vertical"></el-divider>
               </div>
               <!-- <div v-show="labelStatus1 == 1">
                 <span>选择机台/班组：</span>
@@ -91,30 +82,36 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 5"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
-      
-        </div>
-                <div class="flex_column" :style="{ height: height }">
+        <div v-for="(item, i) in 5" :key="i" v-show="labelStatus1 == i"></div>
+        <div class="flex_column" :style="{ height: height }">
           <div class="spreadContainer" v-loading="tableLoading[0]">
-            <gc-spread-sheets class="sample-spreadsheets" @workbookInitialized="initSpread">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
           </div>
         </div>
-          <div class="flex_row_spaceBtn pagination">
+        <div class="flex_row_spaceBtn pagination">
           <div>
-            <span @click="toPageSetting(sysID[0].ID)" class="primaryColor cursor">SysID:{{sysID[0].ID}}
+            <span
+              @click="toPageSetting(sysID[0].ID)"
+              class="primaryColor cursor"
+              >SysID:{{ sysID[0].ID }}
             </span>
           </div>
           <div class="flex">
-            <el-pagination background @size-change="(val) => pageSize(val, 0)"
-              :current-page="tablePagination[0].pageIndex" :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-              :page-size="tablePagination[0].pageSize" :total="tablePagination[0].pageTotal"
-              @current-change="(val) => pageChange(val, 0)" layout="total, sizes, prev, pager, next,jumper">
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
             </el-pagination>
           </div>
         </div>
@@ -157,40 +154,32 @@
           @selectfun="selectFun"
         />
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogPlan=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureAddNewData"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogPlan = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureAddNewData" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
- var _this;
-  const GCsheets = GC.Spread.Sheets;
-  import "@grapecity/spread-sheets-vue";
-  import GC from "@grapecity/spread-sheets";
-  import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-  import "@grapecity/spread-sheets/js/zh.js";
+var _this;
+const GCsheets = GC.Spread.Sheets;
+import "@grapecity/spread-sheets-vue";
+import GC from "@grapecity/spread-sheets";
+import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
+import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
-  import {
-    HighlightColumnItemsCellType,
-    TopItemsCellType,
-    HeaderCheckBoxCellType,
-    SortHyperlinkCellType,
-    HighlightRowItemsCellType,
-  } from "@/static/data.js";
+import {
+  HighlightColumnItemsCellType,
+  TopItemsCellType,
+  HeaderCheckBoxCellType,
+  SortHyperlinkCellType,
+  HighlightRowItemsCellType,
+} from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -222,7 +211,7 @@ export default {
       Status1: [
         { label: "总排期", value: 0 },
         { label: "已完成待出货", value: 1 },
-         { label: "已出货", value: 2 },
+        { label: "已出货", value: 2 },
       ],
       title: "",
       labelStatus1: 0,
@@ -289,18 +278,18 @@ export default {
           Methods: "save",
           Icon: "",
         },
-         {
-            ButtonCode: "save",
-            BtnName: "退回",
-            isLoading: false,
-            Methods: "dataDel",
-            Type: "danger",
-            Icon: "",
-            Size: "small",
-            Params: {
-              dataName: "selectionData"
-            },
+        {
+          ButtonCode: "save",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: {
+            dataName: "selectionData",
           },
+        },
       ],
       tableData: [[], [], [], [], [], []],
       delData: [[], [], [], [], [], []],
@@ -342,22 +331,21 @@ export default {
     this.judgeBtn();
   },
   mounted() {
- 
     setTimeout(() => {
       this.setHeight();
     }, 450);
   },
   methods: {
-        // 跳转至页面配置
-      toPageSetting(id) {
-        this.$router.push({
-          name: "FieldInfo",
-          params: {
-            ID: id
-          },
-        });
-      },
-          // 删除
+    // 跳转至页面配置
+    toPageSetting(id) {
+      this.$router.push({
+        name: "FieldInfo",
+        params: {
+          ID: id,
+        },
+      });
+    },
+    // 删除
     async dataDel(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
@@ -388,181 +376,199 @@ export default {
             });
           }
           this.adminLoading = true;
-          _this.dataSave(newData,remarkTb);
+          _this.dataSave(newData, remarkTb);
         })
         .catch((_) => {});
     },
-       timeOut() {
-        if (this.time) {
-          clearTimeout(this.time);
-        }
-        if (this.spread) {
-          this.spread.refresh();
-        }
-        this.time = setTimeout(() => {
-          //重新定位宽高度
-          this.timeOut();
-        }, 2000);
-      },
-      initSpread: function(spread) {
-        this.spread = spread;
-      },
-           // 获取选中的数据
-      getSelectionData() {
-        let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDataSource();
-        this.selectionData[0] = [];
-        if (newData.length != 0) {
-          newData.forEach((x) => {
-            if (x.isChecked) {
-              this.selectionData[0].push(x);
-            }
+    timeOut() {
+      if (this.time) {
+        clearTimeout(this.time);
+      }
+      if (this.spread) {
+        this.spread.refresh();
+      }
+      this.time = setTimeout(() => {
+        //重新定位宽高度
+        this.timeOut();
+      }, 2000);
+    },
+    initSpread: function (spread) {
+      this.spread = spread;
+    },
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[0] = [];
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          if (x.isChecked) {
+            this.selectionData[0].push(x);
+          }
+        });
+      }
+    },
+    // 渲染数据
+    setData() {
+      this.spread.suspendPaint();
+      let sheet = this.spread.getActiveSheet();
+      sheet.options.allowCellOverflow = true;
+      sheet.defaults.rowHeight = 23;
+      sheet.defaults.colWidth = 100;
+      sheet.defaults.colHeaderRowHeight = 23;
+      sheet.defaults.rowHeaderColWidth = 60;
+      let colHeader1 = [];
+      let colInfos = [];
+
+      this.tableColumns[0].forEach((x) => {
+        if (x.prop == "LineID") {
+          colInfos.push({
+            name: x.prop,
+            displayName: "线别",
+            cellType: this.checkBoxCellTypeLine,
+            size: parseInt(x.width),
+          });
+        } else {
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            size: parseInt(x.width),
           });
         }
-      },
-    // 渲染数据
-      setData() {
-        this.spread.suspendPaint();
-        let sheet = this.spread.getActiveSheet();
-        sheet.options.allowCellOverflow = true;
-        sheet.defaults.rowHeight = 23;
-        sheet.defaults.colWidth = 100;
-        sheet.defaults.colHeaderRowHeight = 23;
-        sheet.defaults.rowHeaderColWidth = 60;
-        let colHeader1 = [];
-        let colInfos = [];
-      
-        this.tableColumns[0].forEach((x) => {
-          if (x.prop == "LineID") {
-            colInfos.push({
-              name: x.prop,
-              displayName: "线别",
-              cellType: this.checkBoxCellTypeLine,
-              size: parseInt(x.width),
-            });
-          } else {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width),
-            });
-          }
-          colHeader1.push(x.label);
-        });
-        sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeader1.forEach(function(value, index) {
-          sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
-        });
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
+        colHeader1.push(x.label);
+      });
+      sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
+      colHeader1.forEach(function (value, index) {
+        sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
+      });
+      sheet.setCellType(
+        0,
+        0,
+        new HeaderCheckBoxCellType(),
+        GCsheets.SheetArea.colHeader
+      );
 
-        // 选框
-        let checkbox = {
-          name: "isChecked",
-          displayName: "isChecked",
-          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
-        };
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
+      // 选框
+      let checkbox = {
+        name: "isChecked",
+        displayName: "isChecked",
+        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+        size: 60,
+      };
+      for (var name in checkbox) {
+        colInfos[0][name] = checkbox[name];
+      }
+
+      //  colInfos.unshift(checkbox);
+
+      var row = sheet.getRange(
+        0,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.SheetArea.colHeader
+      );
+      row.backColor("#f3f3f3");
+      row.foreColor("#000000d9");
+      row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
+      var defaultStyle = new GC.Spread.Sheets.Style();
+      defaultStyle.font =
+        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+      defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+      defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+        "1px solid #CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+        "1px solid #CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+        "1px solid transparent",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+        "1px solid transparent",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
+      // 冻结第一列
+
+      sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
+
+      sheet.setDataSource(this.tableData[0]);
+      sheet.bindColumns(colInfos);
+
+
+
+            this.tableData[0].forEach((row, index) => {
+        var rowSheet = sheet.getRange(
+          index,
+          0,
+          1,
+          4,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+         
+        if (row["SchedulingStatus"] =='已排产') {
+          if(row["ProducedQty"])
+          {
+       rowSheet.backColor("#dd7c7c");
+          }
+          else{
+          rowSheet.backColor("#4CD964");
+          }
+
+        }});
+
+      let cellIndex = 0;
+      this.tableColumns[0].forEach((m) => {
+        //行，start,end
+        if (m.isEdit) {
+          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+          var cell = sheet.getCell(
+            -1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          cell.foreColor("#2a06ecd9");
+        } else {
+          // var cell = sheet.getCell(
+          //   -1,
+          //   cellIndex,
+          //   GC.Spread.Sheets.SheetArea.viewport
+          // );
+          // cell.foreColor("gray");
         }
 
-        //  colInfos.unshift(checkbox);
-     
-        var row = sheet.getRange(
-          0,
-          -1,
-          1,
-          -1,
-          GC.Spread.Sheets.SheetArea.colHeader
-        );
-        row.backColor("#f3f3f3");
-        row.foreColor("#000000d9");
-        row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
-        var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-          "1px solid #CCCCCC",
-          GC.Spread.Sheets.LineStyle.min
-        );
-        defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-          "1px solid #CCCCCC",
-          GC.Spread.Sheets.LineStyle.min
-        );
-        defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-          "1px solid transparent",
-          GC.Spread.Sheets.LineStyle.min
-        );
-        defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-          "1px solid transparent",
-          GC.Spread.Sheets.LineStyle.min
-        );
-        sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        // 冻结第一列
+        cellIndex++;
+      });
 
-        sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
- 
-        sheet.setDataSource(this.tableData[0]);
-        sheet.bindColumns(colInfos);
+      /////////////////表格事件/////////////
+      this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
+        const { sheet, row, col } = args;
+        const cellType = sheet.getCellType(row, col);
+        if (cellType instanceof GCsheets.CellTypes.Button) {
+        }
+        if (cellType instanceof GCsheets.CellTypes.CheckBox) {
+        }
+        if (cellType instanceof GCsheets.CellTypes.HyperLink) {
+        }
+      });
+      //表格编辑事件
 
-        let cellIndex = 0;
-        this.tableColumns[0].forEach((m) => {
-          //行，start,end
-          if (m.isEdit) {
-            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport
-            );
-            cell.foreColor("#2a06ecd9");
-          } else {
-            // var cell = sheet.getCell(
-            //   -1,
-            //   cellIndex,
-            //   GC.Spread.Sheets.SheetArea.viewport
-            // );
-            // cell.foreColor("gray");
-          }
-
-          cellIndex++;
-        });
-
-        /////////////////表格事件/////////////
-        this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
-          const {
-            sheet,
-            row,
-            col
-          } = args;
-          const cellType = sheet.getCellType(row, col);
-          if (cellType instanceof GCsheets.CellTypes.Button) {}
-          if (cellType instanceof GCsheets.CellTypes.CheckBox) {}
-          if (cellType instanceof GCsheets.CellTypes.HyperLink) {}
-        });
-        //表格编辑事件
-
-        this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
-        this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
-          // 自动计算数量
-
- 
-          // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-          //   sheet.setArray(args.row, i, [2021]);
-          // }
-        });
-        this.spread.resumePaint();
-        this.adminLoading = false;
-        this.tableLoading[0] = false;
-       
-      },
+      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
+      this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
+        // 自动计算数量
+        // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
+        //   sheet.setArray(args.row, i, [2021]);
+        // }
+      });
+      this.spread.resumePaint();
+      this.adminLoading = false;
+      this.tableLoading[0] = false;
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
@@ -762,13 +768,12 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.formSearchs[5].datas["CompletionDate"] = "null";
-         this.formSearchs[5].datas["WorkOrderTypeName"] = "配件";
-                this.formSearchs[5].datas["FirstPlanID"] = "0";
+        this.formSearchs[5].datas["WorkOrderTypeName"] = "配件";
+        this.formSearchs[5].datas["FirstPlanID"] = "0";
 
-    
         // this.formSearchs[1].datas["sort"] = "PrepareStatus asc";
-        this.changeStatus(null,0);
-      
+        this.changeStatus(null, 0);
+
         this.adminLoading = false;
       }
     },
@@ -795,10 +800,8 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if(remarkTb==0)
-        {
-       
-              this.setData();
+        if (remarkTb == 0) {
+          this.setData();
         }
       } else {
         this.$message({
@@ -815,30 +818,26 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-this.formSearchs[0].datas["SchedulingStatus"]="";
-this.formSearchs[0].datas["StockStatus"]="";
-this.formSearchs[0].datas["ProductionStatus"]="";
-this.formSearchs[0].datas["FirstPlanID"]="";
+      this.formSearchs[0].datas["SchedulingStatus"] = "";
+      this.formSearchs[0].datas["StockStatus"] = "";
+      this.formSearchs[0].datas["ProductionStatus"] = "";
+      this.formSearchs[0].datas["FirstPlanID"] = "";
 
-
-      switch(index)
-      {
-case 0://总排期
- 
-        this.formSearchs[0].datas["ProductionStatus"]=[21,22,23,24,26]
-        this.formSearchs[0].datas["FirstPlanID"]=0
-   break;
-case 1://已完成待出货
-this.formSearchs[0].datas["StockStatus"]="待出货";
-      this.formSearchs[0].datas["ProductionStatus"]=25;
+      switch (index) {
+        case 0: //总排期
+          this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
+          this.formSearchs[0].datas["FirstPlanID"] = 0;
           break;
-      case 2:
-this.formSearchs[0].datas["StockStatus"]="已出货";
-    break;
-     
-  }
+        case 1: //已完成待出货
+          this.formSearchs[0].datas["StockStatus"] = "待出货";
+          this.formSearchs[0].datas["ProductionStatus"] = 25;
+          break;
+        case 2:
+          this.formSearchs[0].datas["StockStatus"] = "已出货";
+          break;
+      }
       this.dataSearch(0);
-   },
+    },
     // 控制选框是否能手动勾选
     checCheckboxkMethod({ row }) {},
     // 批量填写开工日期
@@ -859,64 +858,57 @@ this.formSearchs[0].datas["StockStatus"]="已出货";
       this.dataSearch(5);
     },
     // 确定添加
-   async sureAddNewData() {
+    async sureAddNewData() {
       if (this.selectionData[5].length == 0) {
         this.$message.error("请选择需要添加的排程！");
       } else {
-       // let newData = this.selectionData[5].concat(this.tableData[0]);
-        let saveData=[];
-        this.selectionData[5].forEach(m=>{
-            let obj={
-dicID:5149,OrderID:m.OrderID
-,MaterialID:m.MaterialID
-,HasQty:0
-,AwaitQty:m.Qty
-,PlanQty:m.Qty
-,ProductionStatus:26
-,Status:0
-
-
-
-            }
-            saveData.push(obj);
-
+        // let newData = this.selectionData[5].concat(this.tableData[0]);
+        let saveData = [];
+        this.selectionData[5].forEach((m) => {
+          let obj = {
+            dicID: 5149,
+            OrderID: m.OrderID,
+            MaterialID: m.MaterialID,
+            HasQty: 0,
+            AwaitQty: m.Qty,
+            PlanQty: m.Qty,
+            ProductionStatus: 26,
+            Status: 0,
+          };
+          saveData.push(obj);
         });
-     let res = await GetSearch(
-            saveData,
-            "/APSAPI/SaveData"
-          );
-          const { result, data, count, msg } = res.data;
-            this.dialogPlan = false;
-          if (result) {
-            this.adminLoading = false;
-            this.dataSearch(0);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
- 
+        let res = await GetSearch(saveData, "/APSAPI/SaveData");
+        const { result, data, count, msg } = res.data;
+        this.dialogPlan = false;
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(0);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+
         this.dialogPlan = false;
       }
     },
-       backData() {
-
-       this.getSelectionData();
+    backData() {
+      this.getSelectionData();
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
         this.selectionData[0].forEach((a) => {
-         a["ElementDeleteFlag"]=1;
+          a["ElementDeleteFlag"] = 1;
         });
         this.dataSave(this.selectionData[0], 0);
       }
     },
-        async dataSave(newData, remarkTb) {
-      this.adminLoading=true;
+    async dataSave(newData, remarkTb) {
+      this.adminLoading = true;
       let res = await GetSearch(newData, "/APSAPI/SaveData");
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
@@ -939,22 +931,21 @@ dicID:5149,OrderID:m.OrderID
     },
     // 保存
     async save(remarkTb, index) {
-   
-    let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDirtyRows();
-        let submitData = [];
-        if (newData.length != 0) {
-          newData.forEach((x) => {
-            submitData.push(x.item);
-          });
-        }
-        if (submitData.length == 0) {
-          this.$message.error("没修改过任何数据！");
-          return;
-        }
-           this.adminLoading = true;
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDirtyRows();
+      let submitData = [];
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          submitData.push(x.item);
+        });
+      }
+      if (submitData.length == 0) {
+        this.$message.error("没修改过任何数据！");
+        return;
+      }
+      this.adminLoading = true;
       let res = await SaveData(submitData);
-      
+
       const { result, data, count, msg } = res.data;
 
       if (result) {
@@ -975,10 +966,10 @@ dicID:5149,OrderID:m.OrderID
     },
     // 转入日计划
     async setPlan(remarkTb, index, ProcessID) {
-      if (this.ruleForm.LineIDs.length == 0&&false) {
+      if (this.ruleForm.LineIDs.length == 0 && false) {
         this.$message.error("请选择生产线再转入日计划！");
       } else {
-            this.getSelectionData();
+        this.getSelectionData();
         let newData = [];
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要转入日计划的数据！");
@@ -986,7 +977,7 @@ dicID:5149,OrderID:m.OrderID
           this.adminLoading = true;
           this.selectionData[remarkTb].forEach((d) => {
             d["LineID"] = this.ruleForm.LineIDs;
-           // d["ProducedDate"] = this.ruleForm.ProducedDate;
+            // d["ProducedDate"] = this.ruleForm.ProducedDate;
             //d["ProcessID"] = ProcessID.ProcessID;
           });
           let res = await GetSearch(

@@ -303,6 +303,17 @@ export default {
           signName: [1, 4],
           Size: "small",
         },
+                 {
+          ButtonCode: "save",
+          BtnName: "恢复",
+          isLoading: false,
+          Methods: "recovery",
+          Type: "success",
+          signName: 3,
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData",remarkTb:2 },
+        },
         {
           ButtonCode: "save",
           BtnName: "退回",
@@ -410,6 +421,7 @@ export default {
         }
       } else {
         this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
+                this.adminLoading = false;
       }
     },
     schedulingPre() {
@@ -1312,6 +1324,21 @@ export default {
     },
     async reData() {
       this.SetData(26);
+    },
+        //恢复计划
+    async recovery(remarkTb, index, parms, newData) {
+      
+        if (this.selectionData[2].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+     this.selectionData[2].forEach(m=>{
+       m["ProductionStatus"]=23;
+
+     });
+       this.dataSave(this.selectionData[2],2);
+      }
+       
+ 
     },
     // 退回
     backData() {

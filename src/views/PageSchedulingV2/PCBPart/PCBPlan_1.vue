@@ -1105,7 +1105,7 @@ export default {
               isOk = false;
             } else if (
               params.ProcessID == "P202009092233413" &&
-              d["IsToPlanDay1"] != "否"
+              d["IsToPlanDay2"] != "否"
             ) {
               isOk = false;
             }

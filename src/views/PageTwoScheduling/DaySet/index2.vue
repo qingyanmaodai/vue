@@ -858,37 +858,12 @@ this.spread.refresh();
         },
       };
 
-      //修改剪切,已经不用
-      var insertRowsCut = {
-        canUndo: true,
-        name: "insertRowsCut",
-        execute: function (context, options, isUndo) {
-          var Commands = GC.Spread.Sheets.Commands;
-          if (isUndo) {
-            Commands.undoTransaction(context, options);
-            return true;
-          } else {
-            //  console.log(options);
-            context.commandManager().execute(options);
-            this.sheetSelectRows = sheet.getArray(
-              options.selections[0].row,
-              0,
-              options.selections[0].rowCount,
-              sheet.getColumnCount()
-            );
-            this.sheetSelectObj.start = options.selections[0].row;
 
-            this.sheetSelectObj.count = options.selections[0].rowCount;
-            return true;
-          }
-        },
-      };
 
       this.spread
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
-      //修改剪切
-      this.spread.commandManager().register("insertRowsCut", insertRowsCut);
+  
 
       function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
@@ -970,11 +945,11 @@ this.spread.refresh();
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
       let sheet = this.spread.getActiveSheet();
-      let dataSource = sheet.getDataSource();
+      //let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
       }
-      let currentRow = dataSource[rowIndex];
+      let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
       if (currentRow.ID == -1) {
         return false;
       }
