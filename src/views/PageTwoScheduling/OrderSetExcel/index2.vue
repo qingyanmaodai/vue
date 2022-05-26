@@ -310,17 +310,6 @@ export default {
           signName: [1, 4],
           Size: "small",
         },
-                 {
-          ButtonCode: "save",
-          BtnName: "恢复",
-          isLoading: false,
-          Methods: "recovery",
-          Type: "success",
-          signName: 3,
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData",remarkTb:2 },
-        },
         {
           ButtonCode: "save",
 	        BtnName: "恢复",

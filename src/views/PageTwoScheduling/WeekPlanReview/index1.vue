@@ -28,11 +28,6 @@
                 :span="20"
                 class="flex_flex_end"
               >
-                <el-button
-                  type="warning"
-                  size="mini"
-                  @click="audit"
-                >审核</el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-tooltip
                   class="item"
@@ -127,7 +122,7 @@ import ComFormDialog from "@/components/ComFormDialog";
 import ComCheckboxTree from "@/components/ComCheckboxTree";
 import { mapState } from "vuex";
 export default {
-  name: "ProductInfo",
+  name: "index1",
   components: {
     ComSearch,
     ComVxeTable,
@@ -252,6 +247,17 @@ export default {
         { label: "产线配置", title: "配置拉线" },
       ],
       labelStatus1: 0,
+      parmsBtn:[
+          {
+            ButtonCode: "aduit",
+            BtnName: "审核",
+            Type: "success",
+            Ghost: true,
+            Size: "small",
+            Methods: "audit",
+            Icon: "",
+          },
+      ],
     };
   },
   computed: {
@@ -262,6 +268,7 @@ export default {
   created() {
     _this = this;
     this.getTableHeader();
+    this.judgeBtn();
   },
   mounted() {
     setTimeout(() => {
@@ -504,6 +511,30 @@ export default {
         }).catch(() => {
           // 取消
         });
+    },
+    // 判断按钮权限
+    judgeBtn() {
+      let routeBtn = this.$route.meta.btns;
+      let permission = false;
+      if (routeBtn.length != 0) {
+        console.log('routeBtn',routeBtn)
+        for (var i = 0; i < 1; i++) {
+          let newBtn = [];
+          let newData = [];
+          routeBtn.forEach((x) => {
+            if (this.parmsBtn.length != 0) {
+              newData = this.parmsBtn.filter((y) => {
+                return x.ButtonCode == y.ButtonCode;
+              });
+            }
+            if (newData.length != 0) {
+              newBtn = newBtn.concat(newData);
+            }
+          });
+          this.$set(this.btnForm, i, newBtn);
+        }
+      }
+      this.$set(this, "isEdit", permission);
     },
   },
 };

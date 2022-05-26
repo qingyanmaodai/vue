@@ -234,7 +234,7 @@ import {
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
-  name: "index2",
+  name: "index3",
   components: {
     ComSearch,
     ComAsideTree,
@@ -312,7 +312,7 @@ export default {
         },
         {
           ButtonCode: "save",
-	  BtnName: "恢复",
+	        BtnName: "恢复",
           isLoading: false,
           Methods: "recovery",
           Type: "success",

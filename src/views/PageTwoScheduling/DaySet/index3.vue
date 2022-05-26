@@ -151,8 +151,6 @@ export default {
           Params: { dataName: "selectionData" },
         },
         {
-<<<<<<< HEAD
-=======
           ButtonCode: "save",
           BtnName: "同步SAP",
           isLoading: false,
@@ -163,7 +161,6 @@ export default {
           Params: { dataName: "selectionData" },
         },
         {
->>>>>>> f8b601e2253d54c50b57da593264ee69c7d6b85b
           ButtonCode: "save",
           BtnName: "重排",
           isLoading: false,
