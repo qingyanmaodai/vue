@@ -1,4 +1,5 @@
 <!--菜单设置-->
+<!-- 四部日计划 -->
 <template>
   <div
     class="container"
@@ -145,7 +146,7 @@ export default {
           Icon: "",
           Size: "small",
         },
-            {
+        {
           ButtonCode: "save",
           BtnName: "暂停",
           isLoading: false,
@@ -153,7 +154,7 @@ export default {
           Type: "warning",
           Icon: "",
           Size: "small",
-                   Params: { dataName: "selectionData" },
+          Params: { dataName: "selectionData" },
         },
         {
           ButtonCode: "save",
@@ -539,7 +540,7 @@ keyDown() {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 6734 }];
+      let IDs = [{ ID: this.sysID }];
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -582,7 +583,7 @@ keyDown() {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = 6734;
+      form["dicID"] = this.sysID;
           form["ControlID"]=this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
    
@@ -1312,9 +1313,9 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         });
       }
     },
- async suspend(remarkTb, index, parms) 
-{
-  let res = null;
+    async suspend(remarkTb, index, parms) 
+    {
+      let res = null;
       this.getSelectionData();
       let newData = [];
 
@@ -1343,7 +1344,7 @@ sheet.getCell(index, cellIndex).cellType(cellType);
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
-}
+    }
     
     // 下拉选择事件
    , handleCommand(val) {

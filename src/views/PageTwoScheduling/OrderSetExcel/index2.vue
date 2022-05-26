@@ -1,4 +1,5 @@
 <!--组织信息-->
+<!-- 二部周计划 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
@@ -8,7 +9,7 @@
           ref="searchRef"
           :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[0].forms"
-          :remark="0"
+          :remark="labelStatus1 == 3?2:0"
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
@@ -104,7 +105,7 @@
             </el-row>
           </div>
 
-          <div v-show="labelStatus1 != 4">
+          <div v-show="labelStatus1 <=2">
             <div class="admin_content">
               <div class="flex_column" :style="{ height: height }">
                 <div class="spreadContainer" v-loading="tableLoading[0]">
@@ -138,29 +139,31 @@
               </div>
             </div>
           </div>
-          <!-- <ComVxeTable
-            v-show="labelStatus1 != 4"
+          <ComVxeTable
+            ref="tableRefTwo"
+            v-show="labelStatus1 == 3"
             :rowKey="'RowNumber'"
             :height="height"
-            :tableData="tableData[0]"
-            :tableHeader="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :sysID="sysID[0].ID"
             :hasSelect="true"
+            :tableData="tableData[2]"
+            :tableHeader="tableColumns[2]"
+            :tableLoading="tableLoading[2]"
+            :remark="2"
+            :sysID="sysID[2].ID"
             :isEdit="isEdit"
             :showFooter="true"
             :includeFields="includeFields"
-            :cellStyle="cellStyle"
-            :isClear="isClear[0]"
-            :showPagination="true"
-            :pagination="tablePagination[0]"
+     
+          
+            :isClear="isClear[2]"
+            :showPagination="false"
+            :pagination="tablePagination[2]"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @selectfun="selectFun"
+            @changeline="changeline"
             @sortChange="sortChange"
-            @changenoworkhours="changenoworkhours"
-          /> -->
+          />
 
           <ComVxeTable
             ref="tableRefTwo"
@@ -261,6 +264,10 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       parmsBtn: [
         // {
@@ -316,6 +323,17 @@ export default {
         },
         {
           ButtonCode: "save",
+	        BtnName: "恢复",
+          isLoading: false,
+          Methods: "recovery",
+          Type: "success",
+          signName: 3,
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData",remarkTb:2 },
+        },
+        {
+          ButtonCode: "save",
           BtnName: "退回",
           Type: "danger",
           Ghost: true,
@@ -335,15 +353,16 @@ export default {
         //   Icon: "",
         // },
       ],
-      selectionData: [[], []],
+      selectionData: [[], [],[]],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false, false],
-      isClear: [false, false],
+      tableData: [[], [],[]],
+      tableColumns: [[], [],[]],
+      tableLoading: [false, false, false],
+      isClear: [false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -356,7 +375,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7961, AutoDays2: this.AutoDays2 }, { ID: 7960 }],
+      sysID: [{ ID: 7961, AutoDays2: this.AutoDays2 }, { ID: 7960 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
@@ -1043,6 +1062,7 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
+      console.log('查询remarkTb',remarkTb)
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
@@ -1217,6 +1237,9 @@ export default {
         s = [21, 22, 23];
       } else if (index === 3) {
         s = [24];
+ 	      this.formSearchs[2].datas["ProductionStatus"] = s;
+        this.dataSearch(2);
+        return
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
 
@@ -1368,6 +1391,20 @@ export default {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.dataSave(submitData, remarkTb);
+      }
+    },
+    //恢复计划
+    async recovery(remarkTb) {
+      remarkTb = 2
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        
+        this.selectionData[remarkTb].forEach(m=>{
+          m["ProductionStatus"]=23;
+
+        });
+       this.dataSave(this.selectionData[remarkTb],remarkTb);
       }
     },
     async dataSave(newData, remarkTb) {

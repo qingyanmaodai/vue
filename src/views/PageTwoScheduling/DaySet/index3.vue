@@ -1,4 +1,5 @@
 <!--菜单设置-->
+<!-- 三部日计划 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -131,10 +132,10 @@ export default {
         },
         {
           ButtonCode: "save",
-          BtnName: "同步SAP",
+          BtnName: "暂停",
           isLoading: false,
-          Methods: "updateSAP",
-          Type: "danger",
+          Methods: "suspend",
+          Type: "warning",
           Icon: "",
           Size: "small",
           Params: { dataName: "selectionData" },
@@ -150,6 +151,19 @@ export default {
           Params: { dataName: "selectionData" },
         },
         {
+<<<<<<< HEAD
+=======
+          ButtonCode: "save",
+          BtnName: "同步SAP",
+          isLoading: false,
+          Methods: "updateSAP",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData" },
+        },
+        {
+>>>>>>> f8b601e2253d54c50b57da593264ee69c7d6b85b
           ButtonCode: "save",
           BtnName: "重排",
           isLoading: false,
@@ -1235,6 +1249,36 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
+    },
+    async suspend(remarkTb, index, parms) {
+      let res = null;
+      this.getSelectionData();
+      let newData = [];
+
+      this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
+        .then((_) => {
+        if (parms && parms.dataName) {
+        if (this[parms.dataName][remarkTb].length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+          return;
+        } else {
+          this[parms.dataName][remarkTb].forEach((x) => {
+            let obj = x;
+            obj["ProductionStatus"] = 24
+            newData.push(obj);
+          });
+        }
+      } else {
+        this.tableData[remarkTb].forEach((y) => {
+          let obj2 = y;
+         obj["ProductionStatus"] = 24
+          newData.push(obj2);
+        });
+      }
+           this.adminLoading = true;
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
     // 下拉选择事件
     handleCommand(val) {
