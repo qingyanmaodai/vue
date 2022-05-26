@@ -391,22 +391,23 @@ export default {
       let newData = this.selectionData[0];
       let pushData = [];
       newData.forEach((m) => {
-        m["dicID"] = 5619;
-        if (m["Extend8"] == "待同步") {
-          this.$message.error(m["OrderNo"] + "已经待同步了");
-        } else {
-          if (m["Extend8"] != "已同步") {
-            m["Extend8"] = "待同步";
-          }
-          pushData.push(m);
-        }
+        m["dicID"] = 7967;
+        // if (m["Extend8"] == "待同步") {
+        //   this.$message.error(m["OrderNo"] + "已经待同步了");
+        // } else {
+        //   if (m["Extend8"] != "已同步") {
+        //     m["Extend8"] = "待同步";
+        //   }
+           pushData.push(m);
+        // }
       });
       if (pushData.length > 0) {
-        let res = await SaveData(pushData);
+        let res = await GetSearch(pushData,'/APSAPI/UpdateOrderStartDate');
         const { result, data, count, msg } = res.data;
+                this.adminLoading = false;
         if (result) {
           this.dataSearch(0);
-          this.adminLoading = false;
+  
           this.$message({
             message: msg,
             type: "success",

@@ -1,0 +1,1610 @@
+﻿<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920,user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta http-equiv="Pragma" contect="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+  <meta http-equiv="expires" content="0">
+  <title>易事特APS可视化看板</title>
+  <link rel="stylesheet" href="css/comon0.css?ver=3">
+</head>
+
+<body>
+  <div v-cloak id="app" style="background:#000d4a url(images/bg.jpg) center top;">
+    <div class="loading">
+      <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+    </div>
+    <image @click="moreLarge" src="images/large.png"
+      style="position: fixed;bottom:1.2rem;right:1.2rem;width:1.5rem;height: 1,5rem;cursor: pointer;z-index:999" />
+    <div class="back"></div>
+    <div class="head">
+      <img src="../images/logo.png"  width="80px"  class="logo"/>
+      <div class="weather"><span id="showTime"></span></div>
+      <h1 @click="reloadData">易事特APS可视化看板</h1>
+
+    </div>
+    <div class="mainbox">
+      <ul class="clearfix">
+        <li>
+          <div class="boxall" style="height:250px;">
+            <div class="alltitle">未来7天计划备料进度</div>
+            <div class="navboxall" id="echart5"></div>
+          </div>
+          <div class="boxall" style="height:350px;">
+            <div class="alltitle" v-show="label_1">今日计划</div>
+            <!-- <div class="alltitle" v-show="label_1">APP审批超时预警</div>
+            <div class="alltitle" v-show="!label_1">不达成未维护预警</div> -->
+            <div class="navboxall" v-show="label_1">
+              <div class="wraptit">
+                <span style="width:30%">制造部</span<span style="width:30%">生产订单</span><span style="width:15%">计划数</span><span
+                  style="width15%">已报工</span><span style="width:10%">完成率</span>
+              </div>
+              <div class="wrap">
+                <ul>
+                  <li v-for="(item,i) in rightData_3" :key="i">
+                    <p><span style="width:30%">{{item.N2}}</span>
+                      <span style="width:30%">{{item.N1}}</span><span
+                        style="width:15%">{{item.C1}}</span><span
+                        style="width:15%">{{item.O1}}</span><span style="width:10%">{{item.P1}}</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- <div class="navboxall" v-show="label_1">
+              <div class="wraptit">
+                <span style="width:30%">车间</span><span style="width:25%">审批人</span><span
+                  style="width:25%">未审笔数</span><span style="width:20%">状态</span>
+              </div>
+              <div class="wrap">
+                <ul>
+                  <li v-for="(item,i) in rightData_3" :key="i">
+                    <p>
+                      <span style="width:30%">{{item.WorkShopName}}</span><span
+                        style="width:25%">{{item.Approvals}}</span><span
+                        style="width:25%">{{item.ApprovalCount}}</span><span style="width:20%">超期未审</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div> -->
+
+            <!-- <div class="navboxall" v-show="!label_1">
+              <div class="wraptit">
+                <span style="width:30%">班组</span><span style="width:30%">负责人</span><span
+                  style="width:20%">不达成</span><span style="width:20%">待维护</span>
+              </div>
+              <div class="wrap">
+                <ul>
+                  <li v-for="(item,i) in rightData_4" :key="i">
+                    <p>
+                      <span style="width:30%">{{item.LineName}}</span><span
+                        style="width:30%">{{item.Approvals}}</span><span
+                        style="width:20%">{{item.NoReceiveNum}}</span><span
+                        style="width:20%">{{item.NoDefendNum}}</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div> -->
+
+          </div>
+          <div class="boxall" style="height:320px;">
+            <div class="alltitle">最新报工</div>
+            <!-- <div class="navboxall" id="echart1"></div> -->
+            <div class="navboxall">
+              <div class="wraptit">
+                <span style="width:55%">产品</span> <span style="width:30%">料号</span><span style="width:15%">数量</span>
+              </div>
+              <div class="wrap">
+               
+                <ul>
+                  <li v-for="(item,i) in leftData_3" :key="i">
+                    <p>
+                      <span style="width:55%" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;text-align: left;">{{item.N1}}</span>
+                      <span style="width:30%">{{item.N3}}</span>
+                      <span
+                        style="width:15%">{{item.Q1}}</span>
+                    </p>
+                  </li>
+                </ul>
+            
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+
+          <div class="boxall" style="height:230px">
+            <div class="clearfix navboxall" style="height: 100%">
+              <!-- <div class="pulll_left num">
+                <div class="numbt">今日总计划<span>(万个)</span></div>
+                <div class="numtxt">{{formData[0]}} </div>
+              </div> -->
+              <div class="pulll_left num">
+                <div class="numbt">发料欠料<span>(个)</span></div>
+                <div class="numtxt" style="position: relative;">{{formData[1]}} 
+                </div>
+
+              </div>
+              <!-- <div class="pulll_left num3">
+                <div class="numbt2">月目标销售额(万元)</div>
+                <div class="numtxt2">{{formData[0]}} </div>
+              </div> -->
+              <div class="pulll_right zhibiao">
+                <div class="zb1"><span>计划送货</span>
+                  <div id="zb1"></div>
+                </div>
+                <div class="zb2"><span>采购预算总额（万）</span>
+                  <div id="zb2"></div>
+                </div>
+                <div class="zb3"><span>库存消耗金额（万）</span>
+                  <div id="zb3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="boxall" style="height:350px">
+            <div class="alltitle">车间计划达成（昨日）</div>
+            <div class="navboxall" id="echart4"></div>
+
+          </div>
+          <div class="boxall" style="height:340px">
+            <div class="alltitle">全局欠料趋势</div>
+            <div class="navboxall" id="echart3"></div>
+          </div>
+        </li>
+        <li>
+          <div class="boxall" style="height:300px">
+            <div class="alltitle">车间全局欠料分布</div>
+            <div class="navboxall">
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <th class="f1" scope="col">排名</th>
+                    <th class="f2" scope="col">车间</th>
+                    <th class="f3" scope="col">总数</th>
+                    <th class="f3" scope="col">欠数</th>
+                    <th class="f3" scope="col">齐套率</th>
+                  </tr>
+                  <tr v-for="(item3,index) in rightData_1" :key="index">
+                    <td class="f1"><span>{{index+1}}</span></td>
+                    <td class="f2">{{item3.N1}}</td>
+                    <td class="f3">{{item3.C1}}<br></td>
+                    <td class="f3">{{item3.E1}}<br></td>
+                    <td class="f3">{{item3.P1}}<br></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="boxall" style="height: 300px">
+            <div class="alltitle">库存大于需求</div>
+            <div class="navboxall">
+            
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <th class="f1" scope="col">排名</th>
+                    <th class="f2" scope="col">品名</th>
+                    <th class="f2" scope="col">库存</th>
+                    <th class="f3" scope="col">剩余</th> 
+         
+                  </tr>
+                  <tr v-for="(item3,index) in leftData_2 " :key="index">
+                    <td class="f1"><span>{{index+1}}</span></td>
+                    <td class="f2">{{item3.N1}}</td>
+                    <td class="f2">{{item3.Q1}}</td>
+                    <td class="f3">{{item3.E1}}<br></td> 
+           
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <div class="boxall" style="height:320px">
+            <div class="alltitle">最新收货</div>
+            <!-- <div class="navboxall" id="echart2"></div> -->
+            <div class="navboxall">
+              <div class="wraptit">
+                <span style="width:40%">品名</span><span style="width:30%">料号</span><span style="width:10%">数量</span> <span style="width:20%">时间</span> 
+              </div>
+              <div class="wrap">
+                <ul>
+                  <li v-for="(item,i) in rightData_2" :key="i">
+                    <p>
+                      <span style="width:40%">{{item.N1}}</span><span
+                        style="width:30%">{{item.N2}}</span><span
+                        style="width:10%">{{item.Q1}}</span>
+                        <span
+                        style="width:20%">{{item.T1}}</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+  
+       
+
+
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</body>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/axios.min.js" type="text/javascript"></script>
+<script src="./js/token.js?ver=5" type="text/javascript"></script>
+<script type="text/javascript" src="./js/jquery.js?ver=1"></script>
+<!-- <script type="text/javascript" src="./js/js.js?ver=1"></script> -->
+<script type="text/javascript" src="./js/echarts.min.js"></script>
+<script type="text/javascript" src="./js/jquery.limarquee.js"></script>
+<script type="text/javascript" src="./js/jquery.cxselect.min.js"></script>
+<script src="./js/DateJson.js"></script>
+<script type="module">
+  import formatDate from './js/newFormatDate.js'
+  var app = new Vue({
+    el: "#app",
+    components: {
+    },
+    data: {
+      label_1: true,
+      judgeRight_1: false,
+      judgeRight_2: false,
+      centerTime_1: null,
+      centerTime_2: null,
+      centerTime_3: null,
+      centerTime_4: null,
+      centerTime_5: null,
+      oldDayDate: [],
+      timeOut: null,
+      timeOut2: null,
+      timeOut3: null,
+      timeOut4: null,
+      timeOut5: null,
+      rightNum_1: 0,
+      rightData_1: [],
+      rightData_2: [],
+      rightData_3: [],
+      rightData_4: [],
+      centerOption_4: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            lineStyle: {
+              color: '#57617B'
+            }
+          }
+        },
+        "legend": {
+
+          "data": [
+            { "name": "计划数" },
+            { "name": "完成数" },
+            { "name": "完成率" }
+          ],
+          "top": "0%",
+          "textStyle": {
+            "color": "rgba(255,255,255,0.9)"//图例文字
+          }
+        },
+
+        "xAxis": [
+          {
+            "type": "category",
+            data: [],
+            axisLine: { lineStyle: { color: "rgba(255,255,255,.1)" } },
+            axisLabel: {
+              textStyle: { color: "rgba(255,255,255,.6)", fontSize: '14', padding: [16, 0, 0, 0] }, rotate: 0, interval: 0
+            },
+
+          },
+        ],
+        "yAxis": [
+          {
+            "type": "value",
+            "name": "万个",
+            "min": function (value) { return value.min; },
+            "max": function (value) { return value.max; },
+            "axisLabel": {
+              "show": true,
+
+            },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//左线色
+
+          },
+          {
+            "type": "value",
+            "name": "完成率%",
+            "show": true,
+            "axisLabel": {
+              "show": true
+            },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//右线色
+            splitLine: { show: true, lineStyle: { color: "#001e94" } },//x轴线
+          },
+        ],
+        "grid": {
+          "top": "10%",
+          "right": "40",
+          "bottom": "40",
+          "left": "50",
+        },
+        "series": [
+          {
+            "name": "计划数",
+
+            "type": "bar",
+            "data": [],
+            "barWidth": "auto",
+            "itemStyle": {
+              "normal": {
+                'label': {
+                  show: true, //开启显示
+                  position: 'bottom', //在上方显示
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13
+                  }
+                },
+                "color": {
+                  "type": "linear",
+                  "x": 0,
+                  "y": 0,
+                  "x2": 0,
+                  "y2": 1,
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#609db8"
+                    },
+
+                    {
+                      "offset": 1,
+                      "color": "#609db8"
+                    }
+                  ],
+                  "globalCoord": false
+                }
+              }
+            }
+          },
+          {
+            "name": "完成数",
+            "type": "bar",
+            "data": [],
+            "barWidth": "auto",
+
+            "itemStyle": {
+              "normal": {
+                'label': {
+                  show: true, //开启显示
+                  position: 'bottom', //在上方显示
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13
+                  }
+                },
+                "color": {
+                  "type": "linear",
+                  "x": 0,
+                  "y": 0,
+                  "x2": 0,
+                  "y2": 1,
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#66b8a7"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#66b8a7"
+                    }
+                  ],
+                  "globalCoord": false
+                }
+              }
+            },
+            "barGap": "0"
+          },
+          {
+            "name": "完成率",
+            "type": "line",
+            "yAxisIndex": 1,
+
+            "data": [],
+            lineStyle: {
+              normal: {
+                width: 2
+              },
+            },
+            "itemStyle": {
+              "normal": {
+                "color": "#cdba00",
+                'label': {
+                  show: true, //开启显示
+                  position: 'top', //在上方显示
+                  "formatter": function (value) {
+                    return value.data + '%'
+                  },
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13,
+                  }
+                }
+              },
+            },
+            "smooth": true
+          }
+        ]
+      },
+      leftOption_1: {
+        tooltip: {
+          show: false
+        },
+        grid: {
+          top: '0%',
+          left: '85',
+          right: '14%',
+          bottom: '0%',
+        },
+        xAxis: {
+          min: 0,
+          max: 100,
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          axisLabel: {
+            show: false
+          }
+        },
+        yAxis: {
+          data: [],
+          // offset: 10,
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          axisLabel: {
+            color: 'rgba(255,255,255,.6)',
+            fontSize: 16
+          }
+        },
+        series: [{
+          type: 'bar',
+          barCategory: '2%',
+          label: {
+            show: true,
+            zlevel: 10000,
+            position: 'right',
+            padding: 10,
+            color: '#49bcf7',
+            fontSize: 16,
+            formatter: '{c}%'
+
+          },
+          itemStyle: {
+            color: '#49bcf7'
+          },
+          barWidth: '11',
+          data: [],
+          z: 10
+        }, {
+          type: 'bar',
+          barCategory: '0%',
+          barGap: '-100%',
+          itemStyle: {
+            color: '#fff',
+            opacity: 0.1
+          },
+          barWidth: '11',
+          data: [],
+          z: 5
+        }],
+      },
+      percent: 0,
+      percent2: 0,
+      percent3: 0,
+      centerOption_1: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#49bcf7',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.name + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
+                }
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 12
+                }
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
+            },
+          }]
+        }]
+      },
+      centerOption_2: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#cdba00',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.value + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
+                }
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent2 + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 12
+                }
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
+            },
+          }]
+        }]
+      },
+      centerOption_3: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#62c98d',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.value + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
+                }
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent3 + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 12
+                }
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
+            },
+          }]
+        }]
+      },
+      centerOption_5: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            lineStyle: {
+              color: '#57617B'
+            }
+          }
+        },
+        legend: {
+
+          //icon: 'vertical',
+          data: ['总数', '欠数'],
+          //align: 'center',
+          // right: '35%',
+          top: '0',
+          textStyle: {
+            color: "#fff"
+          },
+          // itemWidth: 15,
+          // itemHeight: 15,
+          itemGap: 20,
+        },
+        grid: {
+          left: '0',
+          right: '20',
+          top: '10',
+          bottom: '20',
+          containLabel: true
+        },
+        xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: 'rgba(255,255,255,.6)'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(255,255,255,.1)'
+            }
+          },
+          data: []
+        }, {
+        }],
+        yAxis: [{
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: 'rgba(255,255,255,.6)'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(255,255,255,.1)'
+            }
+          },
+          splitLine: {
+            lineStyle: {
+              color: 'rgba(255,255,255,.1)'
+            }
+          }
+        }],
+        series: [{
+          name: '总数',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: true,
+          lineStyle: {
+            normal: {
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(24, 163, 64, 0.3)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(24, 163, 64, 0)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10,
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#cdba00',
+              borderColor: 'rgba(137,189,2,0.27)',
+              borderWidth: 12,
+              label: {
+                show: true, //开启显示
+                position: 'top', //在上方显示
+                textStyle: { //数值样式
+                  color: 'white',
+                  fontSize: 13
+                }
+              },
+            }
+          },
+          data: []
+        }, {
+          name: '欠数',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: true,
+          lineStyle: {
+            normal: {
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(39, 122,206, 0.3)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(39, 122,206, 0)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#277ace',
+              borderColor: 'rgba(0,136,212,0.2)',
+              borderWidth: 12,
+              label: {
+                show: true, //开启显示
+                position: 'bottom', //在上方显示
+                textStyle: { //数值样式
+                  color: 'white',
+                  fontSize: 13
+                }
+              },
+            }
+          },
+          data: []
+        }]
+      },
+      judgeleft_1: false,
+      judgeleft_2: false,
+      judgeleft_3: false,
+      leftData_2: [],
+      leftData_3: [],
+      judgeCenter_1: false,
+      judgeCenter_2: false,
+      judgeCenter_3: false,
+      judgeCenter_4: false,
+      judgeCenter_5: false,
+      YearMonth: '',
+      YearMonth2: '',
+      toDay: [],
+      formData: [0, 0],
+      searchDay: [],
+      DeliveryPlanDate: [],
+      DeliveryPlanDate2: [],
+      DeliveryPlanDate3: [],
+      Days: 0,
+      Days2: 0,
+      large: true,
+      pagination: {
+        pageTotal: 0,
+        pageIndex: 1
+      },
+      pagination2: {
+        pageTotal: 0,
+        pageIndex: 1
+      },
+      CreatedOn: []
+    },
+    created() {
+      this.oldDayDate = [formatDate.formatOldDate(), formatDate.formatOldDate()];
+      this.toDay = [formatDate.formatTodayDate(), formatDate.formatTodayDate()];
+      this.searchDay = [formatDate.formatFivthDate(), formatDate.formatTodayDate()];
+      this.CreatedOn = [formatDate.formatOldDate(), formatDate.formatTodayDate()];
+      this.YearMonth = new Date().getFullYear() + '-' + this.zero(new Date().getMonth() + 1);
+      this.YearMonth2 = String(new Date().getFullYear()) + String(this.zero(new Date().getMonth() + 1));
+      // 获取这个月已经过了多少天
+      let startDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + '01';
+      this.DeliveryPlanDate3 = [startDate, formatDate.formatTodayDate()];
+      this.Days = new Date().getDate();
+      this.Days2 = this.getMonthDay(new Date().getFullYear(), (new Date().getMonth() + 1));
+      // 虚拟过去15天
+      let val = new Date().getDate();
+      for (var i = 14; i >= 0; i--) {
+        var d = new Date();
+        d.setDate(d.getDate() - i);
+        let year = d.getFullYear();
+        let month = this.zero(d.getMonth() + 1);
+        let day = this.zero(d.getDate());
+        let obj = month + '/' + day;
+        let obj2 = year + '-' + month + '-' + day;
+        this.DeliveryPlanDate2.push(obj);
+        this.DeliveryPlanDate.push(obj2);
+      }
+
+      this.getData_60();
+      // this.getData_30();
+      this.getData_2M();
+      this.getData_30M();
+     // this.getChangeLabel();
+    },
+    mounted() {
+      // setTimeout(() => {
+      //   window.location.href = "T-1DayPlan.html";
+      // }, 1000 * 60 * 5)
+    },
+    methods: {
+      zero(num) {
+        if (Number(num) < 10) {
+          return '0' + num
+        } else {
+          return num
+        }
+      },
+      // 预警与不达成维护切换
+      getChangeLabel() {
+        if (this.timeOut5) {
+          clearTimeout(this.timeOut5);
+        }
+    
+        // this.label_1 = !this.label_1;
+        // if (this.label_1) {
+        //   this.getAduitNotice();
+        // } else {
+        //   this.getOldNoReceiveData();
+        // }
+        this.timeOut5 = setTimeout(() => {
+          _this.getChangeLabel();
+        }, 1000 * 30)
+      },
+      getSaleMoney() {
+        // 月销售达成
+        // axiosPostRequst(`/APSAPI/APSData`, { dicID: 165, DeliveryPlanDate: this.DeliveryPlanDate3, fields: "sum(Price) as Money,sum(DeliveryQty) as DeliveryQty,sum(DeliveryedQty) as DeliveryedQty", sort: 'DeliveryQty desc' })
+        //   .then(function (res) {
+        //     if (res.result) {
+        //       let num1 = 0;
+        //       let num2 = 0;
+        //       let num3 = 0;
+        //       let num5 = 0;
+        //       _this.centerOption_3.series[0].data[0].value = 0;
+        //       _this.centerOption_3.series[0].data[1].value = 0;
+        //       if (res.data.length != 0) {
+        //         num1 = parseFloat(res.data[0].DeliveryedQty);
+        //         num2 = parseFloat(res.data[0].DeliveryedQty);
+        //         num5 = num2 - num1;
+        //         if (num5 <= 0) {
+        //           num3 = 100;
+        //           _this.$set(_this.centerOption_3.series[0].data[1], 'value', 0);
+        //         } else {
+        //           num3 = ((num5 / num2) * 100).toFixed(0);
+        //           _this.$set(_this.centerOption_3.series[0].data[1], 'value', num5);
+                  
+        //         }
+        //         _this.$set(_this.centerOption_3.series[0].data[0], 'value', num2);
+        //         _this.$set(_this, 'percent3', num3);
+        //       }
+        //       _this.drawChart('zb3', _this.centerOption_3);
+        //       let targetMonth = String(new Date().getFullYear()) + _this.zero(String(new Date().getMonth() + 1));
+        //       // 月目标销售额
+             
+        //     }
+        //   })
+      },
+      getData_2M() {
+        if (this.timeOut4) {
+          clearTimeout(this.timeOut4);
+        }
+        this.getSaleMoney();
+        if (this.judgeCenter_3) {
+          return;
+        }
+        this.judgeCenter_3 = true;
+        //产销对比分析
+        // axiosPostRequst(`/APSAPI/APSData`, { dicID: 166, DeliveryPlanDate: this.searchDay, fields: "FORMAT(DeliveryPlanDate,'yyyy-MM-dd') as DeliveryPlanDate,sum(DeliveryedQty) as DeliveryedQty", groupby: "DeliveryPlanDate", sort: "DeliveryPlanDate desc" })
+        //   .then(function (res) {
+        //     if (res.result) {
+        //       let series1 = [];
+        //       let series2 = [];
+        //       axiosPostRequst(`/APSAPI/APSData`, { dicID: 6720, PlanDay: _this.searchDay, ProcessID: 'P202106171344021', fields: "FORMAT(PlanDay,'yyyy-MM-dd') as PlanDay,sum(ConfirmQty) as ConfirmQty", groupby: "PlanDay", sort: "PlanDay desc" })
+        //         .then(function (res2) {
+        //           if (res2.result) {
+        //             _this.DeliveryPlanDate.some((x, i) => {
+        //               let newIndex = 0;
+        //               let newIndex2 = 0;
+        //               newIndex = res.data.findIndex(y => y.DeliveryPlanDate == x);
+        //               if (newIndex != -1) {
+        //                 series1.push(res.data[newIndex].DeliveryedQty);
+        //               } else {
+        //                 series1.push(0);
+        //               }
+        //               newIndex2 = res2.data.findIndex(z => z.PlanDay == x);
+        //               if (newIndex2 != -1) {
+        //                 series2.push(res2.data[newIndex2].ConfirmQty);
+        //               } else {
+        //                 series2.push(0);
+        //               }
+        //               // if (i == _this.DeliveryPlanDate.length - 1) {
+        //               //   let num0 = (series1[i - 1] / 10000).toFixed(2);
+        //               //   _this.$set(_this.formData, 1, num0);
+        //               // }
+        //             })
+
+        //             _this.centerOption_5.xAxis[0].data = [];
+        //             _this.centerOption_5.series[0].data = [];
+        //             _this.centerOption_5.series[1].data = [];
+        //             _this.$set(_this.centerOption_5.xAxis[0], 'data', _this.DeliveryPlanDate2);
+        //             _this.$set(_this.centerOption_5.series[0], 'data', series1);
+        //             _this.$set(_this.centerOption_5.series[1], 'data', series2);
+        //             _this.drawChart('echart3', _this.centerOption_5);
+        //             _this.refreshBar('centerTime_5', 'echart3', _this.centerOption_5, 'xAxis');
+        //             _this.judgeCenter_3 = false;
+        //           }
+        //           else {
+        //             _this.judgeCenter_3 = false;
+        //           }
+        //         })
+        //         .catch(function (error) {
+        //           _this.judgeCenter_3 = false;
+        //         });
+        //     }
+        //     else {
+        //       _this.judgeCenter_3 = false;
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //     _this.judgeCenter_3 = false;
+        //   });
+
+      
+
+
+      
+      },
+ 
+      // 一分钟刷新一次
+      getData_60() {
+        if (this.timeOut2) {
+          clearTimeout(this.timeOut2);
+        }
+        if (this.judgeleft_2) {
+          return;
+        }
+        this.judgeleft_2 = true;
+
+
+        // //最新成品报工
+        // axiosPostRequst(`/APSAPI/APSData`, { rows: 9, page: this.pagination.pageIndex, CreatedOn: this.CreatedOn, dicID: 6704, ProcessID: 'P202106171344021', sort: "CreatedOn desc" })
+        //   .then(function (res) {
+        //     _this.leftData_2 = [];
+        //     if (res.result) {
+        //       if (res.data.length != 0) {
+        //         _this.leftData_2 = res.data;
+        //         _this.pagination.pageTotal = _this.pagination.pageIndex * 9;
+        //       }
+        //       if (res.count > _this.pagination.pageTotal) {
+        //         _this.pagination.pageIndex++;
+        //       } else {
+        //         _this.pagination.pageIndex = 0;
+        //       }
+        //     }
+        //     else {
+        //     }
+        //   })
+        //   .catch(function (error) {
+        //   });
+
+        //计划达成快报
+        // ,sum(PlanQty) as PlanQty,SUM(ConfirmQty) AS ConfirmQty ,SUM(case when ISNULL(ConfirmQty,0)/PlanQty >= 1.0 then 1 else 0 end) as ConfirmNum, FORMAT(SUM(case when isnull(ConfirmQty,0)/PlanQty >= 1.0 then 1 else 0 end)/cast(count(1) as decimal(18,1)),'P2') as PlanQtyP
+        
+
+        // this.timeOut2 = setTimeout(() => {
+        //   _this.getData_60();
+        // }, 1000 * 60)
+      },
+      gundong() {
+        $('.wrap,.adduser').liMarquee({
+          direction: 'up',//身上滚动 
+          runshort: false,//内容不足时不滚动
+          scrollamount: 20//速度
+        });
+      },
+      moreLarge() {
+        this.large = !this.large
+        if (!this.large) {
+          // this.fullScreen()
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen()
+          }
+          if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen()
+
+          }
+          if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen()
+          }
+          if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen()
+          }
+        } else {
+          // this.exitFullScreen()
+          if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen()
+          }
+          if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen()
+          }
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          }
+          if (document.msExitFullscreen) {
+            document.msExitFullscreen()
+          }
+        }
+      },
+      getMonthDay(year, month) {
+        let days = new Date(year, month, 0).getDate()
+        return days
+      },
+      // 半小时后刷新
+      getData_30M() {
+      
+        this.rightData_1 = [];
+        this.rightData_2 = [];
+        let currentHour = new Date().getHours();
+    
+          //一厂昨日计划达成
+          // axiosPostRequst(`/APSAPI/APSData`, { pc: "1", rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: 106, PlanDay: this.oldDayDate, fields: "Extend9,sum(PlanQty) as PlanQty,sum(ConfirmQty) as ConfirmQty,ISNULL(sum(ConfirmQty),0)/sum(PlanQty)as PlanQtyP1,FORMAT(ISNULL(sum(ConfirmQty),0)/sum(PlanQty),'P2') as PlanQtyP", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
+          //   .then(function (res) {
+          //     if (res.result) {
+          //       if (res.data.length != 0) {
+          //         _this.rightData_1 = res.data;
+          //       }
+          //     }
+          //     else {
+          //       _this.$message({
+          //         message: res.msg,
+          //         type: 'error'
+          //       });
+          //     }
+          //   })
+          //   .catch(function (error) {
+          //   });
+          //二厂昨日计划达成
+          // axiosPostRequst(`/APSAPI/APSData`, { pc: "1", rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: 107, PlanDay: this.oldDayDate, fields: "Extend9,sum(PlanQty) as PlanQty,sum(ConfirmQty) as ConfirmQty,ISNULL(sum(ConfirmQty),0)/sum(PlanQty)as PlanQtyP1,FORMAT(ISNULL(sum(ConfirmQty),0)/sum(PlanQty),'P2') as PlanQtyP", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
+          //   .then(function (res) {
+          //     if (res.result) {
+          //       _this.rightData_2 = [];
+          //       if (res.data.length != 0) {
+          //         _this.$set(_this, 'rightData_2', res.data);
+          //       }
+          //       this.judgeRight_1 = false;
+          //     }
+          //     else {
+          //       this.judgeRight_1 = false;
+          //       _this.$message({
+          //         message: res.msg,
+          //         type: 'error'
+          //       });
+          //     }
+          //   })
+          //   .catch(function (error) {
+          //   });
+
+          // //昨日车间计划达成
+          // axiosPostRequst(`/APSAPI/APSData`, { rows: 0, dicID: 6720, OrganizeIDs: '', PlanDay: this.oldDayDate, fields: "WorkShopID,WorkShopName,(sum(PlanQty)/10000) as PlanQty,(sum(ConfirmQty)/10000) as ConfirmQty,MFGOrganizeID,(ISNULL(sum(ConfirmQty),0)/sum(PlanQty))*100 as PlanQtyP", groupby: 'MFGOrganizeID,WorkShopID,WorkShopName', sort: "MFGOrganizeID desc" })
+          //   .then(function (res) {
+          //     if (res.result) {
+          //       _this.centerOption_4.xAxis[0].data = [];
+          //       _this.centerOption_4.series[0].data = [];
+          //       _this.centerOption_4.series[1].data = [];
+          //       _this.centerOption_4.series[2].data = [];
+          //       if (res.data.length != 0) {
+          //         res.data.forEach(x => {
+          //           if (x.PlanQtyP != 0) {
+          //             x.PlanQtyP = parseFloat(x.PlanQtyP).toFixed(0);
+          //           }
+          //           if (x.PlanQty != 0) {
+          //             x.PlanQty = parseFloat(x.PlanQty).toFixed(1);
+          //           }
+          //           if (x.ConfirmQty != 0) {
+          //             x.ConfirmQty = parseFloat(x.ConfirmQty).toFixed(1);
+          //           }
+          //           // if (x.WorkShopName) {
+          //           //   x.WorkShopName = x.WorkShopName.substring(2, x.WorkShopName.length)
+          //           // }
+          //           _this.centerOption_4.xAxis[0].data.push(x.WorkShopName);
+          //           _this.centerOption_4.series[0].data.push(x.PlanQty)
+          //           _this.centerOption_4.series[1].data.push(x.ConfirmQty)
+          //           _this.centerOption_4.series[2].data.push(x.PlanQtyP)
+          //         })
+          //         _this.drawChart('echart4', _this.centerOption_4);
+          //         _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
+          //       }
+          //     }
+          //     else {
+          //       _this.$message({
+          //         message: res.msg,
+          //         type: 'error'
+          //       });
+          //     }
+          //   })
+          //   .catch(function (error) {
+          //   });
+
+
+          //仓库周备料进度,条件无效
+          axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: '', YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
+            .then(function (res) {
+              if (res.result) {
+                _this.leftOption_1.yAxis.data = [];
+                _this.leftOption_1.series[0].data = [];
+                _this.leftOption_1.series[1].data = [];
+                if (res.data.length != 0) {
+                  let num1 = 0;
+                  res.data.Table.forEach(x => {
+                 
+                    _this.leftOption_1.yAxis.data.push(x.N1);
+                    _this.leftOption_1.series[0].data.push(x.P1);
+                    _this.leftOption_1.series[1].data.push(100);
+                    if (x.PlanQtyP1 >= 100) {
+                      num1++
+                    }
+                  })
+                  _this.drawChart('echart5', _this.leftOption_1);
+
+
+                  _this.rightData_3=_this.leftData_3=[];
+
+                  _this.rightData_3=res.data.Table1;
+                  _this.leftData_3=res.data.Table2;
+
+                  _this.formData[0]=_this.formData[1]=res.data.Table3[0].E1;
+
+
+                    _this.centerOption_1.series[0].data[0].value = res.data.Table4[0].E1;
+                    _this.centerOption_1.series[0].data[1].value = res.data.Table4[0].S1;
+                  
+                  
+                     // _this.$set(_this.centerOption_1.series[0].data[0], 'value', parseFloat(111).toFixed(0));
+                      _this.$set(_this.centerOption_1.series[0].data[0], 'name', res.data.Table4[0].E1);
+
+                      _this.$set(_this, 'percent', res.data.Table4[0].P1);
+
+ 
+                    _this.drawChart('zb1', _this.centerOption_1);
+
+
+
+//采购预算进而
+                   
+                  _this.$set(_this.centerOption_2.series[0].data[1], 'value', res.data.Table5[0].S1);
+               
+                _this.$set(_this.centerOption_2.series[0].data[0], 'value', res.data.Table5[0].Q1);
+                _this.$set(_this.centerOption_2.series[0].data[0], 'name', res.data.Table5[0].Q1);
+                _this.$set(_this, 'percent2', res.data.Table5[0].P1);
+                _this.drawChart('zb2', _this.centerOption_2);
+
+
+
+                _this.$set(_this.centerOption_3.series[0].data[1], 'value', res.data.Table6[0].S1);
+               
+               _this.$set(_this.centerOption_3.series[0].data[0], 'value', res.data.Table6[0].Q2);
+               _this.$set(_this.centerOption_3.series[0].data[0], 'name', res.data.Table6[0].Q2);
+               _this.$set(_this, 'percent3', res.data.Table6[0].P1);
+               _this.drawChart('zb3', _this.centerOption_3);
+
+
+                _this.centerOption_4.xAxis[0].data = [];
+                _this.centerOption_4.series[0].data = [];
+                _this.centerOption_4.series[1].data = [];
+                _this.centerOption_4.series[2].data = [];
+               //车间达成率
+               res.data.Table7.forEach(x => {
+                  
+                     
+                    _this.centerOption_4.xAxis[0].data.push(x.N1);
+                    _this.centerOption_4.series[0].data.push(x.Q1)
+                    _this.centerOption_4.series[1].data.push(x.Q2)
+                    _this.centerOption_4.series[2].data.push(x.P1)
+                  })
+                  _this.drawChart('echart4', _this.centerOption_4);
+                  _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
+              
+
+
+                  //库存需求分析
+let series1=[];
+let series2=[];
+                  _this.DeliveryPlanDate2=[];
+                  res.data.Table8.forEach((x, i) => {
+                      let newIndex = 0;
+                      let newIndex2 = 0;
+                      _this.DeliveryPlanDate2.push(x.N1);
+                    
+                        series1.push(x.Q1);
+                      
+                        series2.push(x.Q2);
+                     
+                    })
+                  _this.centerOption_5.xAxis[0].data = [];
+                    _this.centerOption_5.series[0].data = [];
+                    _this.centerOption_5.series[1].data = [];
+                    _this.$set(_this.centerOption_5.xAxis[0], 'data', _this.DeliveryPlanDate2);
+                    _this.$set(_this.centerOption_5.series[0], 'data', series1);
+                    _this.$set(_this.centerOption_5.series[1], 'data', series2);
+                    _this.drawChart('echart3', _this.centerOption_5);
+                    _this.refreshBar('centerTime_5', 'echart3', _this.centerOption_5, 'xAxis');
+
+                    _this.leftData_2= _this.rightData_1=_this.rightData_2=[];
+
+                    _this.rightData_1 = res.data.Table9;
+
+                    _this.rightData_2= res.data.Table10;
+
+//库存结余
+                    _this.leftData_2 = res.data.Table11;
+                    $(".loading").fadeOut()
+if(_this.judgeRight_1==false)
+{
+                    _this.$nextTick(() => {
+                 _this.gundong()
+                 
+                 _this.judgeRight_1 = true;
+              })
+            }
+                }
+                _this.judgeRight_1 = true;
+              }
+              else {
+                _this.judgeRight_1 = true;
+                _this.$message({
+                  message: res.msg,
+                  type: 'error'
+                });
+              }
+            })
+            .catch(function (error) {
+            });
+
+          // //月产品达成
+          // axiosPostRequst(`/APSAPI/APSData`, { rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: '', YearMonth: this.YearMonth, fields: "MaterialID,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'MaterialID', sort: "PlanQtyP1 desc" })
+          //   .then(function (res) {
+          //     if (res.result) {
+          //       if (res.data.length != 0) {
+          //         let num1 = 0;
+          //         res.data.forEach(x => {
+          //           x.PlanQtyP1 = parseFloat(x.PlanQtyP1 * 100).toFixed(0);
+          //           if (x.PlanQtyP1 >= 100) {
+          //             num1++
+          //           }
+          //         })
+          //         // 渲染计划达成图
+          //         let num2 = res.data.length;
+          //         let num3 = ((num1 / num2) * 100).toFixed(0);
+          //         let num4 = Math.abs(num1 - num2);
+          //         _this.centerOption_2.series[0].data[0].value = 0;
+          //         _this.centerOption_2.series[0].data[1].value = 0;
+          //         if (num3 >= 100) {
+          //           _this.$set(_this.centerOption_2.series[0].data[1], 'value', 0);
+          //         } else {
+          //           _this.$set(_this.centerOption_2.series[0].data[1], 'value', num4);
+          //         }
+          //         _this.$set(_this.centerOption_2.series[0].data[0], 'value', num1);
+          //         _this.$set(_this, 'percent2', num3);
+          //         _this.drawChart('zb2', _this.centerOption_2);
+          //       }
+          //     }
+          //     else {
+          //       this.judgeRight_1 = false;
+          //       _this.$message({
+          //         message: res.msg,
+          //         type: 'error'
+          //       });
+          //     }
+          //   })
+          //   .catch(function (error) {
+          //   });
+
+
+
+      
+        this.timeOut = setTimeout(() => {
+         window.location.href=window.location.href
+        }, 1000 * 60*5)
+      },
+      // 渲染图标
+      drawChart(id, option) {
+        let myChart = echarts.init(document.getElementById(id))
+        myChart.clear();
+        myChart.setOption(option, true);
+        let chart = document.getElementById(id)
+        echarts.init(chart).resize()
+      },
+      // 刷新 饼图
+      refreshPie(mTime, id, option) {
+        if (this[mTime]) {
+          clearInterval(this[mTime])
+        }
+        var index = 0;
+        // 用定时器控制饼图高亮      
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option.series[0].data.length;  // 当前饼图有多少个扇形
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      refreshPieOther(mTime, id, option) {
+        var index = 0;
+        // 用定时器控制饼图高亮
+        if (this[mTime]) {
+          clearInterval(this[mTime])
+        }
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option.series.data.length;  // 当前饼图有多少个扇形
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      // 高亮柱状图
+      refreshBar(mTime, id, option, xy) {
+        var index = 0;
+        if (this[mTime]) {
+          clearInterval(this[mTime]);
+        }
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option[xy][0].data.length;
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      // 重新加载整个页面
+      reloadData() {
+        location.reload();
+      },
+    
+      //获取昨日不达成数据
+      getOldNoReceiveData() {
+        axiosPostRequst(`/APSAPI/APSData`, { rows: 0, page: 1, dicID: 7777, fields: 'sum(NoDefendNum) as Num,Approvals,WorkShopName', groupby: 'Approvals,WorkShopName', PlanDay: this.oldDayDate, IsReceive: 1, sort: 'NoDefendNum desc' })
+          .then(function (res) {
+            _this.rightData_4 = [];
+            if (res.result) {
+              if (res.data.length != 0) {
+                _this.rightData_4 = res.data;
+              }
+            }
+            else {
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    }
+  })
+  const _this = app;
+</script>
+<script>
+  $(window).load(function () {
+    // $(".loading").fadeOut()
+    // setTimeout(() => {
+    //   $(".loading").fadeOut()
+    // }, 1000 * 3)
+  })
+  $(function () {
+    // $('.wrap,.adduser').liMarquee({
+    //   direction: 'up',//身上滚动 
+    //   runshort: false,//内容不足时不滚动
+    //   scrollamount: 20//速度
+    // });
+  });
+</script>
+<script>
+  var t = null;
+  t = setTimeout(time, 1000);//開始运行
+  function time() {
+    clearTimeout(t);//清除定时器
+    dt = new Date();
+    var y = dt.getFullYear();
+    var mt = dt.getMonth() + 1;
+    var day = dt.getDate();
+    var h = dt.getHours();//获取时
+    var m = dt.getMinutes();//获取分
+    var s = dt.getSeconds();//获取秒
+    document.getElementById("showTime").innerHTML = y + "年" + mt + "月" + day + "日" + h + "时" + m + "分" + s + "秒";
+    t = setTimeout(time, 1000); //设定定时器，循环运行     
+  }
+</script>
+
+</html>
+<style>
+  .table1 .f1 {
+    width: 13%;
+  }
+
+  .table1 .f2 {
+    width: 27%;
+  }
+
+  .table1 .f3 {
+    width: 20%;
+  }
+
+  .table1 .f4 {
+    width: 25%;
+  }
+
+  .wrap {
+    /* -webkit-animation: 20s gundong linear infinite normal;
+    animation: 20s gundong linear infinite normal; */
+    /* position: relative; */
+  }
+
+  @keyframes gundong {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+      -webkit-transform: translate3d(0, -30vh, 0);
+      transform: translate3d(0, -30vh, 0);
+    }
+  }
+
+  .num2 {
+    width: 35%;
+  }
+
+  .num3 {
+    width: 15%;
+    font-size: 16px;
+    padding-top: 20px;
+  }
+
+  .numbt2 {
+    color: #ffffff;
+  }
+
+  .numtxt2 {
+    color: #fef000;
+    font-size: 20px;
+    /* position: absolute;
+    right: 0;
+    bottom: 20px; */
+  }
+
+  .logo {
+   
+    height:80px;
+    position: absolute;
+    left: 20px;
+    top: 1px;
+  }
+</style>
