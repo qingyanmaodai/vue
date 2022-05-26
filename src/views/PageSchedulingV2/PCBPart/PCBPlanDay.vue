@@ -174,6 +174,11 @@
         selectionData: [
           []
         ],
+        NoWorkHour: [],
+      LineViewSort: [],
+      spread: null,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       };
     },
     beforeRouteLeave(to, form, next) {
@@ -633,7 +638,18 @@
         sheet.bindColumns(colInfos);
 
         let cellIndex = 0;
+        let viewSortIndex=0;//排序的索引
+        let lineIDIndex=0
         this.tableColumns[0].forEach((m) => {
+          //行，start,end
+          if(m.prop=="ViewSort")
+          {
+            viewSortIndex=cellIndex;
+          }
+          if(m.prop=="LineID")
+          {
+            lineIDIndex=cellIndex;
+          }
           //行，start,end
           if (m.isEdit) {
             sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -654,6 +670,184 @@
 
           cellIndex++;
         });
+
+
+
+
+
+      var insertRowsCopyStyle = {
+        canUndo: true,
+        name: "insertRowsCopyStyle",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            sheet.suspendPaint();
+            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+              console.log(_this.sheetSelectRows);
+
+            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+            //删除旧行
+            if (_this.sheetSelectObj.start > options.activeRow) {
+              //说明从下面插入上面
+              sheet.copyTo(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+           
+          //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                _this.sheetSelectObj.count
+              );
+              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+            } else {
+              //从上面往下面插入
+              sheet.copyTo(
+                _this.sheetSelectObj.start,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+            //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start,
+                _this.sheetSelectObj.count
+              );
+              
+            }
+            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+ 
+            let lineID=_this.sheetSelectRows[0][lineIDIndex]
+            let isFind=false;
+            let viewSort=1;
+   
+
+            for(var i=0;i<count;i++ )
+            {
+ 
+              if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
+              {
+                  isFind=true;      
+                
+              }
+    if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+              {
+               
+                break;
+              }
+              if(isFind)
+              {
+                sheet.setValue(i,viewSortIndex,viewSort);
+                viewSort++;
+              }
+             
+                
+            }
+      
+            // Commands.startTransaction(context, options);
+
+            // sheet.suspendPaint();
+
+            // var beforeRowCount = 0;
+
+            //  sheet.suspendPaint();
+
+            // Commands.endTransaction(context, options);
+            sheet.resumePaint();
+
+            return true;
+          }
+        },
+      };
+
+      //修改剪切,已经不用
+      var insertRowsCut = {
+        canUndo: true,
+        name: "insertRowsCut",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            //  console.log(options);
+            context.commandManager().execute(options);
+            this.sheetSelectRows = sheet.getArray(
+              options.selections[0].row,
+              0,
+              options.selections[0].rowCount,
+              sheet.getColumnCount()
+            );
+            this.sheetSelectObj.start = options.selections[0].row;
+
+            this.sheetSelectObj.count = options.selections[0].rowCount;
+            return true;
+          }
+        },
+      };
+
+      this.spread
+        .commandManager()
+        .register("insertRowsCopyStyle", insertRowsCopyStyle);
+      //修改剪切
+      this.spread.commandManager().register("insertRowsCut", insertRowsCut);
+
+      function MyContextMenu() {}
+      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+        this.spread
+      );
+      MyContextMenu.prototype.onOpenMenu = function (
+        menuData,
+        itemsDataForShown,
+        hitInfo,
+        spread
+      ) {
+        itemsDataForShown.forEach(function (item, index) {
+          // console.log(item);
+          if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
+            item.command = "insertRowsCopyStyle";
+          }
+          //  else if (item && item.name === "gc.spread.cut") {
+
+          //     item.command = "insertRowsCut";
+          //   }
+        });
+      };
+      var contextMenu = new MyContextMenu();
+      this.spread.contextMenu = contextMenu;
+      // 剪贴板事件绑定
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          console.log(sheet.getDataItem(s.row));
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[0].length
+          );
+          _this.sheetSelectObj.start = s.row;
+
+          _this.sheetSelectObj.count = s.rowCount;
+        
+        }
+      );
+
+
+
 
         /////////////////表格事件/////////////
         this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
