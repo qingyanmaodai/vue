@@ -37,18 +37,23 @@
             <div class="alltitle" v-show="label_1">今日计划</div>
             <!-- <div class="alltitle" v-show="label_1">APP审批超时预警</div>
             <div class="alltitle" v-show="!label_1">不达成未维护预警</div> -->
-            <div class="navboxall" v-show="label_1">
-              <div class="wraptit">
-                <span style="width:20%">制造部</span<span style="width:30%">生产订单</span><span style="width:15%">计划数</span><span
-                  style="width:15%">已报工</span><span style="width:15%">完成率</span>
+            <div class="navboxall1" v-show="label_1">
+              <div class="wraptit flexjc">
+                <span style="width:20%">制造部</span>
+                <span style="width:30%">生产订单</span>
+                <span style="width:15%">计划数</span>
+                <span style="width:15%">已报工</span>
+                <span style="width:15%">完成率</span>
               </div>
-              <div class="wrap">
+              <div class="wrapcon">
                 <ul>
                   <li v-for="(item,i) in rightData_3" :key="i">
-                    <p><span style="width:20%">{{item.N2}}</span>
-                      <span style="width:30%">{{item.N1}}</span><span
-                        style="width:15%">{{item.C1}}</span><span
-                        style="width:15%">{{item.O1}}</span><span style="width:15%">{{item.P1}}</span>
+                    <p>
+                      <span style="width:20%;" class="veralign wordbreak">{{item.N2}}</span>
+                      <span style="width:30%;" class="veralign wordbreak">{{item.N1}}</span>
+                      <span style="width:15%;" class="veralign wordbreak">{{item.C1}}</span>
+                      <span style="width:15%;" class="veralign wordbreak">{{item.O1}}</span>
+                      <span style="width:15%;" class="veralign">{{item.P1}}</span>
                     </p>
                   </li>
                 </ul>
@@ -96,18 +101,18 @@
             <div class="alltitle">最新报工</div>
             <!-- <div class="navboxall" id="echart1"></div> -->
             <div class="navboxall">
-              <div class="wraptit">
+              <div class="wraptit flexjc">
                 <span style="width:55%">产品</span> <span style="width:30%">料号</span><span style="width:15%">数量</span>
               </div>
-              <div class="wrap">
+              <div class="wrapcon">
                
                 <ul>
                   <li v-for="(item,i) in leftData_3" :key="i">
                     <p>
-                      <span style="width:55%" style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;text-align: left;">{{item.N1}}</span>
-                      <span style="width:30%">{{item.N3}}</span>
+                      <span style="width:55%" class="veralign wordbreak">{{item.N1}}</span>
+                      <span style="width:30%" class="veralign wordbreak">{{item.N3}}</span>
                       <span
-                        style="width:15%">{{item.Q1}}</span>
+                        style="width:15%" class="veralign wordbreak">{{item.Q1}}</span>
                     </p>
                   </li>
                 </ul>
@@ -160,48 +165,52 @@
         <li>
           <div class="boxall" style="height:300px">
             <div class="alltitle">车间全局欠料分布</div>
-            <div class="navboxall">
-              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+            <div class="navboxall overflowhidden">
+              <table class="table1 tableheight" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody>
-                  <tr>
+                  <tr class="flexjc">
                     <th class="f1" scope="col">排名</th>
                     <th class="f2" scope="col">车间</th>
                     <th class="f3" scope="col">总数</th>
                     <th class="f3" scope="col">欠数</th>
                     <th class="f3" scope="col">齐套率</th>
                   </tr>
-                  <tr v-for="(item3,index) in rightData_1" :key="index">
-                    <td class="f1"><span>{{index+1}}</span></td>
-                    <td class="f2">{{item3.N1}}</td>
-                    <td class="f3">{{item3.C1}}<br></td>
-                    <td class="f3">{{item3.E1}}<br></td>
-                    <td class="f3">{{item3.P1}}<br></td>
+                  <tr v-for="(item3,index) in rightData_1" :key="index" class="flexjc">
+                    <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
+                    <td class="f2 veralign wordbreak">{{item3.N1}}</td>
+                    <td class="f3 veralign wordbreak">{{item3.C1}}<br></td>
+                    <td class="f3 veralign wordbreak">{{item3.E1}}<br></td>
+                    <td class="f3 veralign">{{item3.P1}}<br></td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
           <div class="boxall" style="height: 300px">
-            <div class="alltitle">库存大于需求</div>
-            <div class="navboxall">
+            <div class="alltitle">今日计划欠料</div>
+            <div class="navboxall overflowhidden">
             
               <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tbody>
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <thead>
                   <tr>
                     <th class="f1" scope="col">排名</th>
-                    <th class="f2" scope="col">品名</th>
-                    <th class="f2" scope="col">库存</th>
-                    <th class="f3" scope="col">剩余</th> 
-         
+                    <th class="f2" scope="col">生产订单</th>
+                    <th class="f2" scope="col">料号</th>
+                    <th class="f3" scope="col" style="text-align:center;">欠数</th> 
                   </tr>
+                </thead>
+              </table>
+              <table class="table1 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tbody class="tablegun" >
                   <tr v-for="(item3,index) in leftData_2 " :key="index">
-                    <td class="f1"><span>{{index+1}}</span></td>
-                    <td class="f2">{{item3.N1}}</td>
-                    <td class="f2">{{item3.Q1}}</td>
-                    <td class="f3">{{item3.E1}}<br></td> 
-           
+                    <td class="f1 veralign"><span>{{index+1}}</span></td>
+                    <td class="f2 veralign wordbreak">{{item3.N2}}</td>
+                    <td class="f2 veralign wordbreak">{{item3.N1}}</td>
+                    <td class="f3 veralign wordbreak" style="text-align:center;">{{item3.E1}}<br></td> 
                   </tr>
                 </tbody>
+              </table>
               </table>
             </div>
 
@@ -210,19 +219,22 @@
           <div class="boxall" style="height:320px">
             <div class="alltitle">最新收货</div>
             <!-- <div class="navboxall" id="echart2"></div> -->
-            <div class="navboxall">
-              <div class="wraptit">
-                <span style="width:40%">品名</span><span style="width:30%">料号</span><span style="width:10%">数量</span> <span style="width:20%">时间</span> 
+            <div class="navboxall  overflowhidden wordbreak">
+              <div class="wraptit flexjc">
+                <span style="width:40%">品名</span>
+                <span style="width:30%">料号</span>
+                <span style="width:15%">数量</span> 
+                <span style="width:15%">时间</span> 
               </div>
-              <div class="wrap">
+              <div class="wrapcon">
                 <ul>
                   <li v-for="(item,i) in rightData_2" :key="i">
                     <p>
-                      <span style="width:40%">{{item.N1}}</span><span
-                        style="width:30%">{{item.N2}}</span><span
-                        style="width:10%">{{item.Q1}}</span>
+                      <span style="width:40%" class="veralign wordbreak">{{item.N1}}</span><span
+                        style="width:30%" class="veralign wordbreak">{{item.N2}}</span><span
+                        style="width:15%" class="veralign wordbreak">{{item.Q1}}</span>
                         <span
-                        style="width:20%">{{item.T1}}</span>
+                        style="width:15%">{{item.T1}}</span>
                     </p>
                   </li>
                 </ul>
@@ -1054,12 +1066,15 @@
         //   _this.getData_60();
         // }, 1000 * 60)
       },
+      // 测试先注释，用完取消注释
       gundong() {
-        $('.wrap,.adduser').liMarquee({
+        $('.wrap,.adduser,.wrapcon').liMarquee({
           direction: 'up',//身上滚动 
           runshort: false,//内容不足时不滚动
           scrollamount: 20//速度
         });
+
+        
       },
       moreLarge() {
         this.large = !this.large
@@ -1543,17 +1558,17 @@ if(_this.judgeRight_1==false)
 </script>
 
 </html>
-<style>
+<style lang="less" scoped>
   .table1 .f1 {
     width: 13%;
   }
 
   .table1 .f2 {
-    width: 27%;
+    width: 25%;
   }
 
   .table1 .f3 {
-    width: 20%;
+    width: 22%;
   }
 
   .table1 .f4 {
@@ -1606,5 +1621,19 @@ if(_this.judgeRight_1==false)
     position: absolute;
     left: 20px;
     top: 1px;
+  }
+  .tableheight{
+    height: 90%;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  .navboxall1{
+    height: calc(100% - 60px);
+  }
+  .overflowhidden{
+    overflow: hidden;
+  }
+  .veralign{
+    vertical-align: top;
   }
 </style>
