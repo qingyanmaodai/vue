@@ -22,7 +22,7 @@ function axiosPostRequst(url, data) {
    
     let result = axios({
         method: 'post',
-        url: 'http://192.168.18.82'+ url,
+        url: 'http://127.0.0.1'+ url,
         data: data,
         headers: {
             'token': getCookie("token"),
