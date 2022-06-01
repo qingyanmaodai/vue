@@ -58,7 +58,7 @@
             :hasSelect="hasSelect[y]"
             :tableLoading="tableLoading[y]"
             :remark="y"
-            :sysID="sysID[0].ID"
+            :sysID="sysID[y].ID"
             :isClear="isClear[y]"
             :cellStyle="cellStyle0"
             :pagination="tablePagination[y]"
@@ -177,11 +177,11 @@ export default {
           ID: 6688,
         },
         {
-          ID: 5586,
-        },
-        {
-          ID: 5586,
-        },
+            ID: 7907,
+          },
+          {
+            ID: 7909,
+          },
       ],
       selectionData: [[], [], []],
       currentDay:
@@ -390,6 +390,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
+        form["ProcessID"]="P202009092233413";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
