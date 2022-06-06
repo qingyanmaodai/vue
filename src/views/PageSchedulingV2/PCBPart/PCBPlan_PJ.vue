@@ -517,10 +517,10 @@ export default {
         if (row["SchedulingStatus"] =='已排产') {
           if(row["ProducedQty"])
           {
-       rowSheet.backColor("#dd7c7c");
+            rowSheet.backColor("#6b52f2");
           }
           else{
-          rowSheet.backColor("#4CD964");
+          rowSheet.backColor("#f2d852");
           }
 
         }});
@@ -832,7 +832,7 @@ export default {
           this.formSearchs[0].datas["FirstPlanID"] = 0;
           break;
         case 1: //已完成待出货
-          this.formSearchs[0].datas["StockStatus"] = "待出货";
+         // this.formSearchs[0].datas["StockStatus"] = "待出货";
           this.formSearchs[0].datas["ProductionStatus"] = 25;
           break;
         case 2:

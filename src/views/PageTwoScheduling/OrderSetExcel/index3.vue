@@ -307,7 +307,17 @@ export default {
           Methods: "save",
           Type: "success",
           Icon: "",
-          signName: [1, 4],
+          signName: 1,
+          Size: "small",
+        },
+                {
+          ButtonCode: "save",
+          BtnName: "保存",
+          isLoading: false,
+          Methods: "save4",
+          Type: "success",
+          Icon: "",
+          signName: 4,
           Size: "small",
         },
         {
@@ -1347,6 +1357,22 @@ export default {
           a["ElementDeleteFlag"] = 1;
         });
         this.dataSave(this.selectionData[1], 1);
+      }
+    },
+   save4() {//在分线列表处保存
+      if (this.selectionData[1].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        this.adminLoading = true;
+        
+         let submitData = this.selectionData[1]
+    
+
+      if (submitData.length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        this.dataSave(submitData, 1);
+      }
       }
     },
     // 保存
