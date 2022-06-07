@@ -9,7 +9,7 @@ let base_url;
 //http://192.168.1.166      --EK生产地址
 //http://192.168.18.82:9998 --易事特测试地址
 //http://192.168.18.82      --易事特地址
-let apsUrl = 'http://a493486951.wocp.fun';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = 'http://127.0.0.1';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 localStorage.setItem('apsurl', apsUrl);
 let _this = this;

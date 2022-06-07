@@ -194,6 +194,8 @@
         </div>
       </div>
     </div>
+    <!-- 点击齐套率弹框-->
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -209,6 +211,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
+import DialogTable from "@/components/Dialog/dialogTable";
 import {
   HighlightColumnItemsCellType,
   TopItemsCellType,
@@ -240,9 +243,14 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComFormDialog,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        OrderID:'',
+      },
+      colDialogVisible:false,
       includeFields: ["Qty"], // 包含合计的字段
       labelStatus1: 1,
       Status1: [
@@ -307,7 +315,17 @@ export default {
           Methods: "save",
           Type: "success",
           Icon: "",
-          signName: [1, 4],
+          signName:1,
+          Size: "small",
+        },
+               {
+          ButtonCode: "save",
+          BtnName: "保存",
+          isLoading: false,
+          Methods: "save4",
+          Type: "success",
+          Icon: "",
+          signName:4,
           Size: "small",
         },
         {
@@ -797,6 +815,19 @@ export default {
           _this.sheetSelectObj.count = s.rowCount;
         }
       );
+      
+      // 表格单击齐套率弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+          if(_this.tableColumns[0].length){
+            _this.tableColumns[0].map((item,index)=>{
+              if(item.name ==="K1"&&args.col===index){
+                // 显示ERP供需平衡表
+                _this.colDialogVisible =true
+                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
+              }
+            })
+          }
+      });
 
       //表格编辑事件
 
@@ -1340,6 +1371,22 @@ export default {
           a["ElementDeleteFlag"] = 1;
         });
         this.dataSave(this.selectionData[1], 1);
+      }
+    },
+           save4() {//在分线列表处保存
+      if (this.selectionData[1].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        this.adminLoading = true;
+        
+         let submitData = this.selectionData[1]
+    
+
+      if (submitData.length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        this.dataSave(submitData, 1);
+      }
       }
     },
     // 保存

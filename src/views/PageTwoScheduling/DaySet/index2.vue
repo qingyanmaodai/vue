@@ -200,7 +200,11 @@ export default {
   },
     activated()
   {
+    if(this.spread)
+    {
 this.spread.refresh();
+    }
+
   },
   computed: {
     ...mapState({
