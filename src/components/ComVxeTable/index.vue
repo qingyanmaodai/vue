@@ -12,6 +12,7 @@
       custom
       print
       class="toolbar"
+      v-show="isToolbar"
     >
     </vxe-toolbar>
     <vxe-table
@@ -1106,6 +1107,10 @@ export default {
       },
       required: false,
     },
+    isToolbar: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -1143,6 +1148,8 @@ export default {
           params: { ID: this.sysID },
         });
       }
+      // 解决其他页面弹框状态下跳转到配置表弹框不关闭的bug
+      this.$emit('toPageSetting')
     },
     // 编辑行
     editRow(row, index) {
