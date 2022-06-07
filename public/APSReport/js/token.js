@@ -16,6 +16,10 @@ function getCookie(name) {
         return null; 
     }
 }
+//http://192.168.1.166:9998 --EK测试地址
+//http://192.168.1.166      --EK生产地址
+//http://192.168.18.82:9998 --易事特测试地址
+//http://192.168.18.82      --易事特地址
 //     url: 'http://14.116.223.88:9802'+ url,
 //axios封装post请求
 function axiosPostRequst(url, data) {
