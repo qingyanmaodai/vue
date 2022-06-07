@@ -21,6 +21,7 @@
           :key="index"
           :label="newItem.label"
           :prop="newItem.prop"
+          v-show="!newItem.IsShow"
         >
           <el-input
             size="small"

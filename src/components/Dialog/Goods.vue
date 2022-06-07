@@ -40,6 +40,7 @@
             v-model="MaterialName"
             style="width:240px;"
             placeholder="按产品名称可查询"
+            @keyup.enter.native="queryGoods"
           ></el-input>
           <el-button
             size="small"
