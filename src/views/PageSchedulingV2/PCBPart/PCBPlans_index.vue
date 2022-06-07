@@ -43,8 +43,9 @@
           class="flex_column"
           :style="{'height':height}"
         >
-          <div class="spreadContainer"
-            v-loading="tableLoading[labelStatus1===1?1:0]"
+          <div
+            class="spreadContainer"
+            v-loading="tableLoading[0]"
           >
             <gc-spread-sheets
               class="sample-spreadsheets"
@@ -54,40 +55,38 @@
               <gc-worksheet :colCount=49></gc-worksheet>
             </gc-spread-sheets>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                  @click="toPageSetting(sysID[labelStatus1===1?1:0].ID)"
-                  class="primaryColor cursor"
-                  >SysID:{{ sysID[labelStatus1===1?1:0].ID }}
-                </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[labelStatus1===1?1:0].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span
+              @click="toPageSetting"
+              class="primaryColor cursor"
+            >SysID:{{sysID}}
+            </span>
+          </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="val=>pageSize(val,0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[
+              200,
+              500,
+              1000,
+              2000,
+              3000,
+              5000,
+              10000
 
-              ]"
-                :page-size="tablePagination[labelStatus1===1?1:0].pageSize"
-                :total="tablePagination[labelStatus1===1?1:0].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            ]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="val=>pageChange(val,0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
+          </div>
         </div>
-        </div>
-        
-       
       </div>
     </div>
   </div>
@@ -114,7 +113,7 @@ import {
   GetOrgData,
 } from "@/api/Common";
 export default {
-  name: "EditSalePlan",
+  name: "PCBPlans_index",
   components: {
     ComSearch,
     ComReportTable,
@@ -128,19 +127,14 @@ export default {
       title: "订单列表",
       Status1: [
         { label: "全部", value: "" },
-        { label: "PCB配件", value: 1 },
         { label: "待转入备料", value: "是" },
         { label: "已转入备料", value: "是" },
         { label: "未匹配MO", value: "否" },
       ],
       labelStatus1: 0,
       drawer: false,
-      delData: [[],[]],
+      delData: [[]],
       formSearchs: [
-        {
-          datas: {},
-          forms: [],
-        },
         {
           datas: {},
           forms: [],
@@ -179,24 +173,18 @@ export default {
         //   Params: { dataName: "delData" },
         // },
       ],
-      tableData: [[],[]],
-      tableColumns: [[],[]],
-      tableLoading: [false,false],
-      isClear: [false,false],
-      tablePagination: [
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
-      ],
+      tableData: [[]],
+      tableColumns: [[]],
+      tableLoading: [false],
+      isClear: [false],
+      tablePagination: [{ pageIndex: 1, pageSize: 2000, pageTotal: 0 }],
       height: "707px",
       treeHeight: "765px",
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: [
-        {ID:6676},
-        {ID:5150}
-      ],
+      sysID: 5156,
       spread: null,
       adminLoading: false,
       categorys: [],
@@ -402,7 +390,7 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = this.sysID;
+      let IDs = [{ ID: this.sysID }];
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -449,7 +437,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID[remarkTb].ID;
+      form["dicID"] = this.sysID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -478,7 +466,7 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       let colInfos = [];
       let colHeader1 = [];
-      if (this.labelStatus1 == 2) {
+      if (this.labelStatus1 == 1) {
         colHeader1.push("");
         // 选框
         let checkbox = {
@@ -495,7 +483,7 @@ export default {
           GCsheets.SheetArea.colHeader
         );
       } else {
-        colHeader1.push("");
+        // colHeader1.push("");
         // let checkbox = {
         //   name: this.tableData[0].prop,
         //   displayName: this.tableData[0].label,
@@ -590,10 +578,10 @@ export default {
       // this.spread.isPaintSuspended(false);
     },
     // 跳转至页面配置
-    toPageSetting(id) {
+    toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: id },
+        params: { ID: this.sysID },
       });
     },
     // 改变状态
@@ -603,14 +591,8 @@ export default {
       if (index == 0) {
         this.formSearchs[0].datas["IsSetPrepare"] = "";
       } else if (index == 1) {
-        this.formSearchs[1].datas["ProductionStatus"] = [21, 22, 23, 24, 26]
-        this.formSearchs[1].datas["FirstPlanID"] = 0
-        this.dataSearch(1);
-        return
-      } else if (index == 2) {
         this.formSearchs[0].datas["IsSetPrepare"] = ["未生成", "部分生成"];
-        
-      }else if(index == 3){
+      } else if (index == 2) {
         this.formSearchs[0].datas["IsSetPrepare"] = ["已生成", "部分生成"];
       } else {
         this.formSearchs[0].datas["IsSetPrepare"] = "";
