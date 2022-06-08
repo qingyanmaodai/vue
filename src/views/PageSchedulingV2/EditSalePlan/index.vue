@@ -128,7 +128,7 @@ export default {
       title: "订单列表",
       Status1: [
         { label: "全部", value: "" },
-        { label: "PCB配件", value: 1 },
+        { label: "PCB备料", value: 1 },
         { label: "待转入备料", value: "是" },
         { label: "已转入备料", value: "是" },
         { label: "未匹配MO", value: "否" },
@@ -165,6 +165,17 @@ export default {
           Type: "primary",
           Icon: "",
           signName: 1,
+          Size: "small",
+          Params: "1",
+        },
+         {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 2,
           Size: "small",
           Params: "0",
         },
@@ -476,9 +487,10 @@ export default {
       let sheet = this.spread.getActiveSheet();
       sheet.defaults.rowHeight = 23;
       sheet.defaults.colHeaderRowHeight = 23;
+      
       let colInfos = [];
       let colHeader1 = [];
-      if (this.labelStatus1 == 2) {
+      if (this.labelStatus1 == 1||this.labelStatus1 == 2) {
         colHeader1.push("");
         // 选框
         let checkbox = {
@@ -496,6 +508,7 @@ export default {
         );
       } else {
         colHeader1.push("");
+        console.log('colInfos',colInfos)
         // let checkbox = {
         //   name: this.tableData[0].prop,
         //   displayName: this.tableData[0].label,
@@ -505,6 +518,7 @@ export default {
         // colInfos.unshift(checkbox);
       }
 
+      let cellIndex = 0;
       this.tableColumns[0].forEach((x, i) => {
         if (i == 0) {
           colInfos.push({
@@ -520,10 +534,8 @@ export default {
             size: parseInt(x.width),
           });
         }
-
         colHeader1.push(x.label);
       });
-
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
@@ -566,7 +578,7 @@ export default {
 
       // 冻结第一列
       sheet.frozenColumnCount(5);
-      sheet.setDataSource(this.tableData[0]);
+      sheet.setDataSource(this.tableData[this.tagRemark]);
       sheet.bindColumns(colInfos);
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
@@ -584,8 +596,9 @@ export default {
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {});
       this.spread.resumePaint();
       this.adminLoading = false;
-      this.tableLoading[0] = false;
+      this.tableLoading[this.tagRemark] = false;
       this.spread.repaint();
+      
       // this.spread.suspendPaint();
       // this.spread.isPaintSuspended(false);
     },
@@ -625,6 +638,7 @@ export default {
       let newSubmitData = [];
       if (data.length != 0) {
         data.forEach((x) => {
+          console.log('此处加入是否可转入备料状态x',x)
           if (x.isChecked) {
             submitData.push(x);
           }
@@ -665,6 +679,8 @@ export default {
               dangerouslyUseHTMLString: true,
             });
           }
+        }else{
+          this.$message.error("请选择需要操作的数据！");
         }
       }
     },
