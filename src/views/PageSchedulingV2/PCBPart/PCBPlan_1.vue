@@ -272,7 +272,7 @@ export default {
         // },
         {
           ButtonCode: "save",
-          BtnName: "转入SMT",
+          BtnName: "转入日计划",
           Type: "primary",
           Ghost: true,
           Size: "small",
