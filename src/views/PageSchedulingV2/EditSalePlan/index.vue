@@ -316,8 +316,6 @@ export default {
     // 查询
     dataSearch(remarkTb) {
       // let sheet = this.spread.getActiveSheet();
-      // console.log(sheet.getDataSource()); // 获取改变过的数组
-      // console.log(sheet.getDirtyRows()); // 获取改变过的数组
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -487,7 +485,6 @@ export default {
       let sheet = this.spread.getActiveSheet();
       sheet.defaults.rowHeight = 23;
       sheet.defaults.colHeaderRowHeight = 23;
-      
       let colInfos = [];
       let colHeader1 = [];
       if (this.labelStatus1 == 1||this.labelStatus1 == 2) {
@@ -507,8 +504,8 @@ export default {
           GCsheets.SheetArea.colHeader
         );
       } else {
-        colHeader1.push("");
-        console.log('colInfos',colInfos)
+        // colHeader1.push("");
+        
         // let checkbox = {
         //   name: this.tableData[0].prop,
         //   displayName: this.tableData[0].label,
@@ -516,8 +513,14 @@ export default {
         //   size: 60,
         // };
         // colInfos.unshift(checkbox);
+        // 解决其他表格复选框带入其他标签问题
+        sheet.setCellType(
+          0,
+          0,
+          '',
+          GCsheets.SheetArea.colHeader
+        );
       }
-
       let cellIndex = 0;
       this.tableColumns[0].forEach((x, i) => {
         if (i == 0) {
@@ -536,8 +539,10 @@ export default {
         }
         colHeader1.push(x.label);
       });
+      
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
+        
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
 
@@ -548,6 +553,7 @@ export default {
         -1,
         GC.Spread.Sheets.SheetArea.colHeader
       );
+      
       row.backColor("#f3f3f3");
       row.foreColor("#000000d9");
       row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
@@ -638,7 +644,6 @@ export default {
       let newSubmitData = [];
       if (data.length != 0) {
         data.forEach((x) => {
-          console.log('此处加入是否可转入备料状态x',x)
           if (x.isChecked) {
             submitData.push(x);
           }
