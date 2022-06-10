@@ -9,7 +9,7 @@ let base_url;
 //http://192.168.1.166      --EK生产地址
 //http://192.168.18.82:9998 --易事特测试地址
 //http://192.168.18.82      --易事特地址
-let apsUrl = 'http://127.0.0.1';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = 'http://192.168.1.166';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 localStorage.setItem('apsurl', apsUrl);
 let _this = this;
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 // create an axios instance
 const service = axios.create({
   baseURL: base_url, // api 的 base_url
-  timeout: 5 * 60 * 1000 // request timeout
+  timeout: 20 * 60 * 1000 // request timeout
 })
 
 // 请求拦截器
