@@ -281,17 +281,17 @@ export default {
           Params: { ProcessID: "P202009092233201" },
           Icon: "",
         },
-        {
-          ButtonCode: "save",
-          BtnName: "转入补焊",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Params: { ProcessID: "P202009092233413" },
-          Methods: "setPlan",
-          Icon: "",
-        },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "转入补焊",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 1,
+        //   Params: { ProcessID: "P202009092233413" },
+        //   Methods: "setPlan",
+        //   Icon: "",
+        // },
         {
           ButtonCode: "save",
           BtnName: "退回",
@@ -1098,31 +1098,31 @@ export default {
 
           let errMsg = "";
           let okCount = 0;
-          this.selectionData[remarkTb].forEach((d) => {
-            let isOk = true;
-            //判断是否转入
-            if (
-              params.ProcessID == "P202009092233201" &&
-              d["IsToPlanDay1"] != "否"
-            ) {
-              isOk = false;
-            } else if (
-              params.ProcessID == "P202009092233413" &&
-              d["IsToPlanDay2"] != "否"
-            ) {
-              isOk = false;
-            }
+          // this.selectionData[remarkTb].forEach((d) => {
+          //   let isOk = true;
+          //   //判断是否转入
+          //   if (
+          //     params.ProcessID == "P202009092233201" &&
+          //     d["IsToPlanDay1"] != "否"
+          //   ) {
+          //     isOk = false;
+          //   } else if (
+          //     params.ProcessID == "P202009092233413" &&
+          //     d["IsToPlanDay2"] != "否"
+          //   ) {
+          //     isOk = false;
+          //   }
 
-            if (isOk) {
-              d["LineIDs"] = this.ruleForm.LineIDs;
-              d["ProducedDate"] = this.ruleForm.ProducedDate;
-              d["ProcessID"] = params.ProcessID;
-              d["LineID"] = null;
-              okCount++;
-            } else {
-              errMsg += d["OrderNo"] + "已转入或者无此工序";
-            }
-          });
+          //   if (isOk) {
+          //     d["LineIDs"] = this.ruleForm.LineIDs;
+          //     d["ProducedDate"] = this.ruleForm.ProducedDate;
+          //     d["ProcessID"] = params.ProcessID;
+          //     d["LineID"] = null;
+          //     okCount++;
+          //   } else {
+          //     errMsg += d["OrderNo"] + "已转入或者无此工序";
+          //   }
+          // });
 
           if (errMsg != "") {
             this.$message({
