@@ -43,7 +43,7 @@
 
     <DialogTable
       :title="'收货查询'"
-      :sysID="7876"
+      :sysID="7875"
       :height="'640px'"
       :width="'65%'"
       :tableDialog="tableDialog"
@@ -66,7 +66,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "Report_1",
+  name: "Report_2",
   components: {
     ComSearch,
     ComVxeTable,
@@ -78,7 +78,7 @@ export default {
       tableDialog: false,
       isAdd: false,
       adminLoading: false,
-      title: "月材料列表",
+      title: "月出货汇总列表",
       drawer: false,
       delData: [[]],
       formSearchs: [

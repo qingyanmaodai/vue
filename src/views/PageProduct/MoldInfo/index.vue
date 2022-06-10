@@ -156,7 +156,7 @@ export default {
           label: "旧模名称",
           prop: "OldMoldName",
           type: "input",
-          IsShow:true
+          IsShow: true,
         },
         { label: "模具名称", prop: "MoldName", type: "input" },
         { label: "模具编号", prop: "MoldNO", type: "input" },
@@ -429,7 +429,7 @@ export default {
         if (this.selectionData[0].length == 0) {
           this.$message.error("请单击选中需要改模的模具！");
           return;
-        } else if (this.delData[0][0].IsChange) {
+        } else if (this.selectionData[0][0].IsChange) {
           this.$message.error("该模具正在生产中，不可更改弃用！");
           return;
         }
@@ -468,13 +468,31 @@ export default {
         } else {
           // 改模
           let submitData = [];
-          let obj = JSON.parse(JSON.stringify(this.delData[0][0]));
+          let obj = JSON.parse(JSON.stringify(this.selectionData[0][0]));
           obj["Status"] = 0;
           submitData.push(obj);
           let obj2 = JSON.parse(JSON.stringify(this.formData));
           obj2["dieBeforeName"] = obj.MoldName;
           obj2["dieBeforeID"] = obj.MachineMouldID;
+          let obj3 = {
+            //旧模
+            dicID: 9999,
+            OperationStatus: 1,
+            MachineMouldID: this.selectionData[0][0].MachineMouldID,
+            ExpectDate: this.formData.ExpectDate,
+          };
+          let obj4 = [
+            {
+              //新模
+              dicID: 9999,
+              OperationStatus: 1,
+              MachineMouldID: this.formData.MachineMouldID,
+              ExpectDate: this.formData.ExpectDate,
+            },
+          ];
+          obj2["childrens"] = obj4;
           submitData.push(obj2);
+          submitData.push(obj3);
           this.generalSaveData(submitData, 0);
           this.dialogShow = false;
         }
