@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
 // create an axios instance
 const service = axios.create({
   baseURL: base_url, // api 的 base_url
-  timeout: 5 * 60 * 1000 // request timeout
+  timeout: 20 * 60 * 1000 // request timeout
 })
 
 // 请求拦截器
