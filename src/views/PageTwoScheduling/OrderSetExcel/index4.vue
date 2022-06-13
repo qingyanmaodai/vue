@@ -1,5 +1,5 @@
 <!--菜单设置-->
-<template>SaveToDayPlan
+<template>
   <div
     class="container"
     v-loading="adminLoading"

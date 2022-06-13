@@ -1081,7 +1081,9 @@ export default {
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
-      this.getSelectionData();
+      let arr = this.getSelectionData();
+      console.log('remarkTb',remarkTb)
+      console.log('this.selectionData',this.selectionData)
       if (this.ruleForm.LineIDs.length == 0 && false) {
         this.$message.error("请选择生产线再转入日计划！");
       } else {
@@ -1097,7 +1099,8 @@ export default {
           // }
 
           let errMsg = "";
-          let okCount = 0;
+          // let okCount = 0;
+          let okCount = this.selectionData[remarkTb].length;
           // this.selectionData[remarkTb].forEach((d) => {
           //   let isOk = true;
           //   //判断是否转入
@@ -1123,7 +1126,6 @@ export default {
           //     errMsg += d["OrderNo"] + "已转入或者无此工序";
           //   }
           // });
-
           if (errMsg != "") {
             this.$message({
               message: errMsg,
