@@ -503,6 +503,7 @@ export default {
       sheet.bindColumns(colInfos);
 
       let cellIndex = 0;
+      
       this.tableColumns[1].forEach((m) => {
         //行，start,end
         if (m.isEdit) {
@@ -521,65 +522,14 @@ export default {
           // );
           // cell.foreColor("gray");
         }
+       
 
         cellIndex++;
       });
-
-      let colindex = 0;
-      let colindex2 = 0;
-      console.log(this.tableColumns[1]);
-      this.tableColumns[1].forEach((m, index) => {
-        if (m.prop == "IsToPlanDay1") {
-          colindex = index;
-        } else if (m.prop == "IsToPlanDay2") {
-          colindex2 = index;
-        }
-      });
-
+      var colindexs = [1,2,3,4,5]
       this.tableData[1].forEach((row, index) => {
-        var rowSheet = sheet.getRange(
-          index,
-          colindex,
-          1,
-          1,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-
-        if (row["IsToPlanDay1"] == "是") {
-          rowSheet.backColor("#4CD964");
-          rowSheet.foreColor("balck");
-        } else if (row["IsToPlanDay1"] == "否") {
-          // row.backColor();
-          rowSheet.backColor("#FFFF00");
-          rowSheet.foreColor("black");
-        } else if (row["IsToPlanDay1"] == "无SMT") {
-          // row.backColor();
-          rowSheet.foreColor("black");
-          rowSheet.backColor("");
-        }
-
-        rowSheet = sheet.getRange(
-          index,
-          colindex2,
-          1,
-          1,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        if (row["IsToPlanDay2"] == "是") {
-          rowSheet.backColor("#4CD964");
-          rowSheet.foreColor("balck");
-        } else if (row["IsToPlanDay2"] == "否") {
-          // row.backColor();
-          rowSheet.backColor("#FFFF00");
-          rowSheet.foreColor("black");
-        } else if (row["IsToPlanDay2"] == "无补焊") {
-          // row.backColor();
-          rowSheet.foreColor("black");
-          rowSheet.backColor("");
-        }
-
         let cellIndex = 0;
-        this.tableColumns[1].forEach((m) => {
+        this.tableColumns[1].forEach((m,num) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -594,6 +544,35 @@ export default {
             sheet.getCell(index, cellIndex).cellType(cellType);
           }
           cellIndex++;
+
+          console.log('row',row)
+         var rowSheet = sheet.getRange(
+            index,
+            num,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          )
+          // SMT已排、插件已排、补焊已排、测试已排、三防漆已排字段结尾1~5区分，单元格样式动态生成
+        for(let i=0;i<colindexs.length;i++){
+          if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "是") {
+            rowSheet.backColor("#4CD964");
+            rowSheet.foreColor("balck");
+          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "否") {
+            rowSheet.backColor("#FFFF00");
+            rowSheet.foreColor("black");
+          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "无补焊") {
+            rowSheet.foreColor("black");
+            rowSheet.backColor("");
+          }
+        }
+        rowSheet = sheet.getRange(
+          index,
+          num,
+          1,
+          1,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
         });
       });
       /////////////////表格事件/////////////
@@ -612,9 +591,7 @@ export default {
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-        // for (var i = args.col + 1; i < _this.tableColumns[1].length; i++) {
-        //   sheet.setArray(args.row, i, [2021]);
-        // }
+        
       });
       this.spread.resumePaint();
       this.adminLoading = false;
