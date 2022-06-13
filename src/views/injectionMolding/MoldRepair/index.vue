@@ -2,45 +2,21 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
+      <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+        :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
     </div>
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
+            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
           </el-row>
         </div>
-        <ComVxeTable
-          :rowKey="'RowNumber'"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableHeader="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :remark="0"
-          :hasSelect="false"
-          :isMultiple="false"
-          :sysID="sysID"
-          :isEdit="true"
-          :isClear="isClear[0]"
-          :cellStyle="cellStyle"
-          :pagination="tablePagination[0]"
-          @isusing="isusing"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-          @selectfun="selectFun"
-        />
+        <ComVxeTable :rowKey="'RowNumber'" :height="height" :tableData="tableData[0]" :tableHeader="tableColumns[0]"
+          :tableLoading="tableLoading[0]" :remark="0" :hasSelect="false" :isMultiple="false" :sysID="sysID"
+          :isEdit="true" :isClear="isClear[0]" :cellStyle="cellStyle" :pagination="tablePagination[0]"
+          @isusing="isusing" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
+          @selectfun="selectFun" />
       </div>
     </div>
   </div>
@@ -71,7 +47,7 @@ export default {
           forms: [],
         },
       ],
-      sysID: 110,
+      sysID: 7894,
       btnForm: [],
       tableData: [[]],
       tableColumns: [[]],
@@ -213,7 +189,15 @@ export default {
     // 维修完成
     isusing(row) {
       row.OperationStatus = 3;
-      this.dataSave(0, null, null, [row]);
+      let obj = {};
+      obj["dicID"] = 108;
+      obj["MachineMouldID"] = row.MachineMouldID;
+      obj["Status"] = 1;
+      // 同时把模具表变成启用
+      let newData = [];
+      newData.push(obj);
+      newData.push(row)
+      this.dataSave(0, null, null, newData);
     },
     // 查询
     dataSearch(remarkTb) {
@@ -271,7 +255,7 @@ export default {
           _this.$set(_this.btnForm[index], "isLoading", true);
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => {});
+        .catch((_) => { });
     },
     // 单击行
     handleRowClick(row, remarkTb) {
