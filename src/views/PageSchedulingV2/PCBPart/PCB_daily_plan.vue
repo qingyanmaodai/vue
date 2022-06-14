@@ -1,7 +1,6 @@
-<!--SMT日计划-->
+<!--日计划-->
 <template>
   <div class="container" v-loading="adminLoading">
-
     <div class="admin_head" ref="headRef">
       <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
         :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
@@ -12,10 +11,10 @@
           <el-row>
             <el-col :span="4"><span class="title">{{ title }}</span></el-col>
             <el-col :span="20" class="flex_flex_end">
-              <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
+              <!-- <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
                 <span @click="changeStatus(item, y)">{{ item.OrganizeName }}</span>
                 <el-divider direction="vertical"></el-divider>
-              </div>
+              </div> -->
             </el-col>
           </el-row>
         </div>
@@ -77,7 +76,7 @@
     SaveMOPlanStep4
   } from "@/api/PageTwoScheduling";
   export default {
-    name: "PCBPlanDay",
+    name: "PCB_daily_plan",
     components: {
       ComSearch,
       ComReportTable,
@@ -200,16 +199,16 @@
         userInfo: (state) => state.user.userInfo,
       }),
     },
-      beforeRouteEnter(to, form, next) {
+    beforeRouteEnter(to, form, next) {
     //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
     
-    next();
-    if(this.spread)
-    {
-    this.spread.refresh(); //重新定位宽高度
-    }
+        next();
+        if(this.spread)
+        {
+            this.spread.refresh(); //重新定位宽高度
+        }
 
-  },
+    },
     mounted() {
       setTimeout(() => {
         this.setHeight();
@@ -250,6 +249,8 @@
           });
         }
         console.log('routeBtn',this.$route)
+        console.log('newBtn',newBtn)
+        console.log('permission',permission)
         this.$set(this, "btnForm", newBtn);
         this.$set(this, "isEdit", permission);
       },
@@ -341,7 +342,6 @@
         this.adminLoading = false;
         this.$store.dispatch("user/exportData", res.data);
       },
-      // 删除
     // 删除
     async dataDel(remarkTb, index, parms) {
       let res = null;
@@ -504,7 +504,7 @@
           });
           this.getOrgData();
            this.formSearchs.forEach(a=>{
-            a.datas["ProcessID"] = 'P202009092233201';
+            // a.datas["ProcessID"] = 'P202009092233201';
           })
           // this.dataSearch(0);
         }
@@ -743,7 +743,7 @@
                   isFind=true;      
                 
               }
-    if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+             if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
               {
                
                 break;
@@ -1063,7 +1063,7 @@
         let res = await GetSearchData({
           dicID: 5144,
           OrganizeTypeID: 6,
-    ProcessID:'P202009092233201',
+          // ProcessID:'P202009092233201',
           OrganizeIDs: OrganizeIDs,
         });
         const {
@@ -1237,7 +1237,7 @@
         this.Status1 = [];
         let form = {};
         form["dicID"] = '5144';
-        form["ProcessID"] = 'P202009092233201';
+        // form["ProcessID"] = 'P202009092233201';
         let res = await GetSearchData(form);
         const {
           result,

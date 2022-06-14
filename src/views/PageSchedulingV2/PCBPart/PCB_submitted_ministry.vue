@@ -1,4 +1,4 @@
-<!--SMT报工-->
+<!--报工-->
 <template>
   <div
     class="container"
@@ -58,11 +58,11 @@
             :hasSelect="hasSelect[y]"
             :tableLoading="tableLoading[y]"
             :remark="y"
-            :sysID="sysID[0].ID"
+            :sysID="sysID[y].ID"
             :isClear="isClear[y]"
             :cellStyle="cellStyle0"
             :pagination="tablePagination[y]"
-                    @selectfun="selectFun"
+             @selectfun="selectFun"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
@@ -71,47 +71,6 @@
 
       </div>
     </div>
-
-    <el-dialog
-      title=""
-      :visible.sync="dialogVisible"
-      v-loading="adminLoading"
-      width="85%"
-    >
-      <ComVxeTable
-        :rowKey="'RowNumber'"
-        :height="'560px'"
-        ref="dialog_1"
-        :tableData="tableData[1]"
-        :tableHeader="tableColumns[1]"
-        :tableLoading="tableLoading[1]"
-        :remark="1"
-        :hasSelect="true"
-        :sysID="sysID[1].ID"
-        :isClear="isClear[1]"
-        :pagination="tablePagination[1]"
-        @pageChange="pageChange"
-        @pageSize="pageSize"
-        :isEdit="true"
-        @sortChange="sortChange"
-        @selectfun="selectFun"
-      />
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="warning"
-          @click="addData(true)"
-        >报工不关闭</el-button>
-        <el-button
-          type="primary"
-          @click="addData(false)"
-        >报工并关闭</el-button>
-      </span>
-    </el-dialog>
-
   </div>
 </template>
 
@@ -120,7 +79,7 @@ import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
 export default {
-  name: "PCBPlanProduction_SMT",
+  name: "PCB_submitted_ministry",
   components: {
     ComSearch,
     ComVxeTable,
@@ -191,7 +150,7 @@ export default {
       tablePagination: [
         {
           pageIndex: 1,
-          pageSize: 200,
+          pageSize: 0,
           pageTotal: 0,
         },
         {
@@ -216,7 +175,7 @@ export default {
         {
           ID: 6688,
         },
-       {
+        {
             ID: 7907,
           },
           {
@@ -408,7 +367,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.formSearchs[0].datas["ProcessID"] = "P202009092233201";
+        // this.formSearchs[0].datas["ProcessID"] = "P202009092233413";
         this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
         this.dataSearch(0);
       }
@@ -430,7 +389,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["ProcessID"]="P202009092233201";
+        // form["ProcessID"]="P202009092233413";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -465,6 +424,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
+   
       this.selectionData[remarkTb] = data;
     },
     async addData(val) {
@@ -474,7 +434,7 @@ export default {
         let newData = JSON.parse(JSON.stringify(this.selectionData[0]));
         // this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
         // this.selectionData[0] = [];
-           for(var a of newData)
+        for(var a of newData)
         {
     if (a["ProductionQty"] > a["ProcessOweQty"]) {
             this.$message.error("报工数不能大于欠数！");
@@ -483,6 +443,7 @@ export default {
           a["dicID"] = 5586;
           a["ProducedDate"] = a.PlanDay;
         }
+        
         this.adminLoading = true;
         let res = await SaveData(newData);
         this.adminLoading = false;
