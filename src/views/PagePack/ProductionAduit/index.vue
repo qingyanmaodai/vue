@@ -282,14 +282,6 @@
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="计时：" prop="TotalHours">
-            <el-input
-              style="width: 100%"
-              type="number"
-              v-model="ruleForm.TotalHours"
-              size="small"
-            ></el-input>
-          </el-form-item>
           <el-form-item label="备注：" prop="Remark3">
             <el-input
               style="width: 100%"

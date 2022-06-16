@@ -686,8 +686,6 @@ export default {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
             })
-          }else{
-            this.formSearchs[remarkTb].datas[name] = null;
           }
         }
       }
