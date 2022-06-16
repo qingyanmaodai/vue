@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--特殊报工维护-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -282,6 +282,24 @@
               size="small"
             ></el-input>
           </el-form-item>
+          <el-form-item label="计时：" prop="TotalHours">
+            <el-input
+              style="width: 100%"
+              type="number"
+              v-model="ruleForm.TotalHours"
+              size="small"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注：" prop="Remark3">
+            <el-input
+              style="width: 100%"
+              type="textarea"
+              v-model="ruleForm.Remark3"
+              size="small"
+              maxlength="500"
+              placeholder="限制500字符"
+            ></el-input>
+          </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -323,6 +341,7 @@ export default {
         ProcessGroupName: "",
         childrens: [],
         TotalHours: "",
+        Remark3:'',//新增产品备注
       },
       rules: {
         ProducedDate: [{ required: true, message: "报工日期必填", trigger: "change" }],
@@ -655,6 +674,7 @@ export default {
       let newRow = this.lines.filter((x) => {
         return x.OrganizeID == row.LineID;
       });
+      console.log('this.lines',this.lines)
       this.getUserData(newRow[0].OrganizeID);
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
