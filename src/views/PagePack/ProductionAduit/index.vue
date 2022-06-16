@@ -25,7 +25,7 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <el-button type="primary" size="small" @click="openProduct"
-                >新增产品</el-button
+                >新增报工</el-button
               >
               <el-divider direction="vertical"></el-divider>
               <div
@@ -333,7 +333,7 @@ export default {
         ProcessGroupName: "",
         childrens: [],
         TotalHours: "",
-        Remark3:'',//新增产品备注
+        Remark3:'',//新增报工备注
       },
       rules: {
         ProducedDate: [{ required: true, message: "报工日期必填", trigger: "change" }],
@@ -825,7 +825,7 @@ export default {
         });
       }
     },
-    // 新增产品
+    // 新增报工
     openProduct() {
       this.dialogProduct = true;
     },
