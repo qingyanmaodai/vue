@@ -157,18 +157,18 @@ export default {
           Icon: "",
           Size: "small",
         },
-        //PCB备料标签的生成备料任务功能对接完才放开
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "生成备料任务",
-        //   isLoading: false,
-        //   Methods: "readyTask",
-        //   Type: "primary",
-        //   Icon: "",
-        //   signName: 1,
-        //   Size: "small",
-        //   Params: "1",
-        // },
+       // PCB备料标签的生成备料任务功能对接完才放开
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 1,
+          Size: "small",
+          Params: "1",
+        },
          {
           ButtonCode: "save",
           BtnName: "生成备料任务",

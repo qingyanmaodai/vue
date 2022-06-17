@@ -503,6 +503,7 @@
             this.$set(this.formSearchs[z], "forms", x);
           });
           this.getOrgData();
+            this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
            this.formSearchs.forEach(a=>{
             // a.datas["ProcessID"] = 'P202009092233201';
           })

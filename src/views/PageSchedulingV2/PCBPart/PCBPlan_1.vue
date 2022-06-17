@@ -176,9 +176,9 @@ export default {
         { label: "PCB总排期", value: 0 },
         { label: "PCB月计划", value: 1 },
         // { label: "SMT待排", value: 2 },
-        { label: "SMT已排", value: 2 },
+       // { label: "SMT已排", value: 2 },
         // { label: "补焊待排", value: 3 },
-        { label: "补焊已排", value: 3 },
+       // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
       ],
       title: "",
@@ -828,7 +828,7 @@ export default {
         this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
         this.formSearchs[3].datas["SchedulingStatus"] = "1";
         this.formSearchs[4].datas["productionstatus"] = "25";
-
+        this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
         this.getTableData(this.formSearchs[1].datas, 1);
 
         this.adminLoading = false;

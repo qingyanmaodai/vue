@@ -368,6 +368,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         // this.formSearchs[0].datas["ProcessID"] = "P202009092233413";
+         this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
         this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
         this.dataSearch(0);
       }
