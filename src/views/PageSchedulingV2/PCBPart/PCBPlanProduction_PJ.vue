@@ -265,10 +265,17 @@
       // 重置
       dataReset(remarkTb) {
         for (let name in this.formSearchs[remarkTb].datas) {
-          if (name != "dicID") {
-            this.formSearchs[remarkTb].datas[name] = null;
+        if (name != "dicID") {
+          if(this.formSearchs[remarkTb].forms.length){
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element)=>{
+              if(element.prop===name){
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            })
           }
         }
+      }
       },
       // 导出
       async dataExport(remarkTb) {
@@ -380,7 +387,7 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        form["ProcessID"]="P2204030001";
+        form["ProcessID"]=["P2204030001"];
         let res = await GetSearchData(form);
         const {
           result,
