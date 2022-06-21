@@ -377,7 +377,7 @@
     <el-dialog
       title="工单查询"
       :visible.sync="formatDialog"
-      width="70%"
+      width="80%"
     >
       <div
         class="container"
@@ -902,7 +902,6 @@ export default {
       ],
       startNum: 0,
       formatDialog: false,
-      height1: "280px",
     };
   },
   watch: {
@@ -1027,7 +1026,9 @@ export default {
         headHeight -
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
+      let newHeight1 = (rem-10) + "px";
       this.$set(this, "height", newHeight);
+      this.$set(this, "height1", newHeight1);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -1182,6 +1183,9 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
+      if(remarkTb===9){//工单查询页面时只查询欠料的，0的数不需要
+        form["OweQty"] = 0
+      }
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
