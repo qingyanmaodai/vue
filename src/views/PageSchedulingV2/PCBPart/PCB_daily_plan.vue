@@ -132,6 +132,18 @@
               dataName: "selectionData"
             },
           },
+                 {
+            ButtonCode: "save",
+            BtnName: "下推",
+            isLoading: false,
+            Methods: "setPlan",
+            Type: "danger",
+            Icon: "",
+            Size: "small",
+            Params: {
+              dataName: "selectionData"
+            },
+          },
           // {
           //   ButtonCode: "save",
           //   BtnName: "重排",
@@ -333,6 +345,55 @@
           }
         }
       },
+       async setPlan(remarkTb, index, params) {
+      let arr = this.getSelectionData();
+ 
+     
+        if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("请选择需要转入日计划的数据！");
+        } else {
+          let ProcessID = "";
+          this.adminLoading = true;
+          // if (remarkTb == 1) {
+          //   ProcessID = "P202009092233201";
+          // } else if (remarkTb == 3) {
+          //   ProcessID = "P202009092233413";
+          // }
+
+          let errMsg = "";
+          // let okCount = 0;
+          let okCount = this.selectionData[remarkTb].length;
+       
+          if (errMsg != "") {
+            this.$message({
+              message: errMsg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          if (okCount > 0) {
+            let res = await GetSearch(
+              this.selectionData[remarkTb],
+              "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=2"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+             this.adminLoading = false;
+          }
+        }
+      
+    },
       // 导出
       async dataExport(remarkTb) {
         this.adminLoading = true;
@@ -1064,6 +1125,7 @@
         let res = await GetSearchData({
           dicID: 5144,
           OrganizeTypeID: 6,
+          ParentID:3,
           // ProcessID:'P202009092233201',
           OrganizeIDs: OrganizeIDs,
         });
