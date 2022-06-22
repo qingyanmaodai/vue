@@ -634,6 +634,7 @@ export default {
       } else if (this.delData[1].length == 0) {
         this.$message.error("请单击选择工艺！");
       } else {
+
         this.selectionData[0].some((x, i) => {
           let obj = {
             materialID: x.MaterialID,
@@ -645,8 +646,10 @@ export default {
     },
     // 提交配置的工艺
     async submitData(obj, i, remarkTb, index) {
+         this.adminLoading = true;
       let res = await UpdateProcess(obj);
       const { result, data, count, msg } = res.data;
+       this.adminLoading = false;
       if (result) {
         if (i == this.selectionData[0].length - 1) {
           this.$set(this.btnForm[remarkTb][index], "isLoading", false);
