@@ -10,8 +10,8 @@
     >
       <ComSearch
         ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
+        :searchData="formSearchs[tagRemark].datas"
+        :searchForm="formSearchs[tagRemark].forms"
         :remark="0"
         :signName="labelStatus1"
         :isLoading="isLoading"
@@ -128,7 +128,7 @@ export default {
       title: "订单列表",
       Status1: [
         { label: "全部", value: "" },
-        { label: "PCB备料", value: 1 },
+        { label: "配件备料", value: 1 },
         { label: "待转入备料", value: "是" },
         { label: "已转入备料", value: "是" },
         { label: "未匹配MO", value: "否" },
@@ -158,17 +158,17 @@ export default {
           Size: "small",
         },
         //PCB备料标签的生成备料任务功能对接完才放开
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "生成备料任务",
-        //   isLoading: false,
-        //   Methods: "readyTask",
-        //   Type: "primary",
-        //   Icon: "",
-        //   signName: 1,
-        //   Size: "small",
-        //   Params: "1",
-        // },
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 1,
+          Size: "small",
+          Params: "1",
+        },
          {
           ButtonCode: "save",
           BtnName: "生成备料任务",
@@ -207,7 +207,7 @@ export default {
       isEdit: false,
       sysID: [
         {ID:6676},
-        {ID:5150}
+        {ID:7973}
       ],
       spread: null,
       adminLoading: false,
@@ -309,9 +309,9 @@ export default {
     btnClick(methods, parms, index, remarkTb) {
       if (parms) {
         // 下标 要用的数据 标题 ref
-        this[methods](remarkTb, index, parms);
+        this[methods](this.tagRemark, index, parms);
       } else {
-        this[methods](remarkTb, index);
+        this[methods](this.tagRemark, index);
       }
     },
     // 查询
@@ -431,7 +431,9 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.getTableData(this.formSearchs[0].datas, 0);
+          // this.getTableData(this.formSearchs[0].datas, 0);
+          // 现加了PCB备料，需要传入动态下标
+          this.getTableData(this.formSearchs[z].datas, z);
         });
       } else {
         this.adminLoading = false;
@@ -492,8 +494,8 @@ export default {
         colHeader1.push("");
         // 选框
         let checkbox = {
-          name: "isChecked",
-          displayName: "isChecked",
+          name: "isChecked",//字段名
+          displayName: "选择",//列名
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
           size: 60,
         };
@@ -523,7 +525,7 @@ export default {
         );
       }
       let cellIndex = 0;
-      this.tableColumns[0].forEach((x, i) => {
+      this.tableColumns[this.tagRemark].forEach((x, i) => {
         if (i == 0) {
           colInfos.push({
             name: x.prop,
@@ -538,9 +540,27 @@ export default {
             size: parseInt(x.width),
           });
         }
-        colHeader1.push(x.label);
+        // if(x.label!='选择'){
+        //   colHeader1.push(x.label);
+        // }
+        
       });
-      
+      // this.tableColumns[1].forEach((x, i) => {
+      //   // if (i == 0) {
+      //   //   colInfos.push({
+      //   //     name: x.prop,
+      //   //     displayName: x.label,
+      //   //     cellType: new GC.Spread.Sheets.CellTypes.Text(),
+      //   //     size: parseInt(x.width),
+      //   //   });
+      //   // } else {
+      //     colInfos.push({
+      //       name: x.prop,
+      //       displayName: x.label,
+      //       size: parseInt(x.width),
+      //     });
+      //   // }
+      // });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         
@@ -623,8 +643,7 @@ export default {
       if (index == 0) {
         this.formSearchs[0].datas["IsSetPrepare"] = "";
       } else if (index == 1) {
-        this.formSearchs[1].datas["ProductionStatus"] = [21, 22, 23, 24, 26]
-        this.formSearchs[1].datas["FirstPlanID"] = 0
+        this.formSearchs[1].datas["dicID"] = "7973";
         this.dataSearch(1);
         return
       } else if (index == 2) {
