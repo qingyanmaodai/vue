@@ -686,14 +686,15 @@ export default {
         // }
         if (submitData.length != 0) {
           this.adminLoading = true;
+          // 配件备料接口：/APSAPI/SetPreParePlanV2
+          // 
           let url = this.tagRemark===1?"/APSAPI/SetPreParePlanV2":"/APSAPI/SetPreParePlan"
           console.log('url',url)
           console.log('this.tagRemark',this.tagRemark)
-          // return
           let res = await GetSearch(submitData, url);
           const { result, data, count, msg } = res.data;
           if (result) {
-            this.dataSearch(0);
+            this.dataSearch(this.tagRemark);
             this.adminLoading = false;
             this.$message({
               message: msg,

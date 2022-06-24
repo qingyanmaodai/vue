@@ -756,7 +756,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        debugger;
         this.getTotalOweNum();
         if (data.length != 0) {
           data.forEach((x) => {
