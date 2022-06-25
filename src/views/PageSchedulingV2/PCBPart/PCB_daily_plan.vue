@@ -422,14 +422,14 @@
             } else {
               this[parms.dataName][remarkTb].forEach((x) => {
                 let obj = x;
-                obj["ElementDeleteFlag"] = 1;
+                obj["Status"] = -1;
                 newData.push(obj);
               });
             }
           } else {
             this.tableData[remarkTb].forEach((y) => {
               let obj2 = y;
-              obj2["ElementDeleteFlag"] = 1;
+              obj2["Status"] = -1;
               newData.push(obj2);
             });
           }

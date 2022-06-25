@@ -45,8 +45,8 @@
                 class="flex_flex_end"
               >
                 <el-date-picker
-                  v-model="ReplyDate"
-                  type="date"
+                  v-model="ReplyDate" type="daterange"
+            
                   v-show="labelStatus1 != 4"
                   size="small"
                   value-format="yyyy-MM-dd"
@@ -60,7 +60,7 @@
                   v-show="labelStatus1 != 4"
                   @click="changeDate(0)"
                 >
-                  批量开始日期
+                  选择抓单周期
                 </el-button>
                 <el-button
                   v-show="labelStatus1 == 1"

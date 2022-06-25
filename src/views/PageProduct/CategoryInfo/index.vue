@@ -185,6 +185,7 @@ import {
   ExportData,
   SaveData,
   UpdateProcess,
+  GetSearch,
 } from "@/api/Common";
 import { SaveSalesPlan } from "@/api/PageSale";
 export default {
@@ -634,39 +635,33 @@ export default {
       } else if (this.delData[1].length == 0) {
         this.$message.error("请单击选择工艺！");
       } else {
-
+let objs=[];
         this.selectionData[0].some((x, i) => {
           let obj = {
             materialID: x.MaterialID,
             processGroupID: this.delData[1][0].ProcessGroupID,
           };
-          this.submitData(obj, i, remarkTb, index);
+         objs.push(obj);
         });
+         this.submitData(objs);
       }
     },
     // 提交配置的工艺
-    async submitData(obj, i, remarkTb, index) {
+    async submitData(obj) {
          this.adminLoading = true;
-      let res = await UpdateProcess(obj);
+ 
+      let res = await GetSearch(obj,"/APSAPI/UpdateProcessV2");
       const { result, data, count, msg } = res.data;
        this.adminLoading = false;
       if (result) {
-        if (i == this.selectionData[0].length - 1) {
-          this.$set(this.btnForm[remarkTb][index], "isLoading", false);
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(0);
-        }
+        this.dataSearch(0);
       } else {
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this.btnForm[remarkTb][index], "isLoading", false);
+    
       }
     },
     // 单击行

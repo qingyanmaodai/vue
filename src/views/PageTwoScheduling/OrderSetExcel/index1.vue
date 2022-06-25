@@ -32,19 +32,21 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-                <el-input-number
-                  v-model="AutoDays2"
-                  type="number"
+              <SPAN>日期：</SPAN>
+                  <el-date-picker 
+                  v-model="ReplyDate" type="daterange"
+            
                   v-show="labelStatus1 != 4"
                   size="small"
-                  placeholder="请选择周期"
+                  value-format="yyyy-MM-dd"
+                  placeholder="选择开始时间"
                 >
-                </el-input-number>
+                  </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="primary"
                   size="mini"
-                  v-show="labelStatus1 != 4"
+                  v-show="labelStatus1 ==1"
                   @click="MOPlanStep1CalculationPre(0)"
                 >
                   预排运算
@@ -56,6 +58,14 @@
                   @click="insertList"
                 >
                   进入分线列表
+                </el-button>
+                 <el-button
+                  v-show="labelStatus1 == 1"
+                  type="success"
+                  size="mini"
+                  @click="getOrder"
+                >
+                  抓单
                 </el-button>
                 <el-button
                   v-show="labelStatus1 == 1"
@@ -236,7 +246,7 @@ import {
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
-  name: "WeekManagement",
+  name: "index1",
   components: {
     ComSearch,
     ComAsideTree,
@@ -384,7 +394,7 @@ export default {
       sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
-      ReplyDate: "",
+      ReplyDate: [],
       AutoDays2: 30,
       NoWorkHour: [],
       LineViewSort: [],
@@ -426,6 +436,8 @@ export default {
            pushData.push(m);
         // }
       });
+
+
       if (pushData.length > 0) {
         let res = await GetSearch(pushData,'/APSAPI/UpdateOrderStartDate');
         const { result, data, count, msg } = res.data;
@@ -1243,16 +1255,7 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-    // 批量开始日期
-    changeDate() {
-      if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要批量填写开始日期的数据！");
-      } else {
-        this.selectionData[0].forEach((a) => {
-          a.StartDate = this.ReplyDate;
-        });
-      }
-    },
+  
     tableRowClassName({ row, rowIndex }) {
       let className = "";
       if (row.DbResult != "" && row.DbResult != "计算成功") {
@@ -1559,6 +1562,38 @@ export default {
         }
       }
     },
+    async getOrder()
+    {
+   let submitData = [];
+      
+
+      if (false) {
+        
+      } else {
+        this.adminLoading = true;
+        let res = await GetSearch(
+          {ReplyDate:this.ReplyDate},
+          "/APSAPI/GetSMTDemand"
+        );
+        const { data, forms, result, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+          this.dataSearch(0);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
+      
     //正排倒排计算，匹配拉线
     async MOPlanStep1Calculation() {
       // if (this.selectionData[1].length == 0) {

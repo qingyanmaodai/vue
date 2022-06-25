@@ -779,7 +779,7 @@ export default {
         });
         this.formSearchs[5].datas["CompletionDate"] = "null";
         this.formSearchs[5].datas["WorkOrderTypeName"] = "配件";
-        this.formSearchs[5].datas["FirstPlanID"] = "0";
+        this.formSearchs[5].datas["ProcessPlanID"] = "0";
 
         // this.formSearchs[1].datas["sort"] = "PrepareStatus asc";
         this.changeStatus(null, 0);
@@ -831,16 +831,18 @@ export default {
       this.formSearchs[0].datas["SchedulingStatus"] = "";
       this.formSearchs[0].datas["StockStatus"] = "";
       this.formSearchs[0].datas["ProductionStatus"] = "";
-      this.formSearchs[0].datas["FirstPlanID"] = "";
+      this.formSearchs[0].datas["ProcessPlanID"] = "";
 
       switch (index) {
         case 0: //总排期
-          this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
-          this.formSearchs[0].datas["FirstPlanID"] = 0;
+         // this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
+          this.formSearchs[0].datas["ProcessPlanID"] = 0;
+          this.formSearchs[0].datas["CompletionStatus"] =0
           break;
         case 1: //已完成待出货
-           this.formSearchs[0].datas["StockStatus"] = "待出货";
-          this.formSearchs[0].datas["ProductionStatus"] = 25;
+          // this.formSearchs[0].datas["StockStatus"] = "待出货";
+           this.formSearchs[0].datas["StockStatus"] = '待出货';
+            this.formSearchs[0].datas["CompletionStatus"] =1
           break;
         case 2:
           this.formSearchs[0].datas["StockStatus"] = "已出货";
