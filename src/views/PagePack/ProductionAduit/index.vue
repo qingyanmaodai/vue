@@ -266,6 +266,23 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="二级工序：" prop="LevelTwoProcessID">
+            <el-select
+              style="width: 100%"
+              clearable
+              filterable
+              :multiple="true"
+              v-model="ruleForm.LevelTwoProcessID"
+              size="small"
+            >
+              <el-option
+                v-for="(item, i) in LevelTwoProcessList"
+                :key="i"
+                :label="item.LevelTwoProcessName"
+                :value="item.LevelTwoProcessID"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="报工数量：" prop="ProducedQty">
             <el-input
               style="width: 100%"
@@ -317,6 +334,7 @@ export default {
   },
   data() {
     return {
+      LevelTwoProcessList:[],//二级工序集合
       ProcessID: "",
       ruleForm: {
         ProcessID: "",
@@ -334,6 +352,7 @@ export default {
         childrens: [],
         TotalHours: "",
         Remark3:'',//新增报工备注
+        LevelTwoProcessID:'',//二级工序id
       },
       rules: {
         ProducedDate: [{ required: true, message: "报工日期必填", trigger: "change" }],
@@ -390,6 +409,7 @@ export default {
       Status1: [
         { label: "报工", value: 0 },
         { label: "审批", value: 1 },
+        { label: "更改报工", value: 2 },
       ],
       isSelect: false,
       adminLoading: false,
@@ -652,8 +672,10 @@ export default {
       this.labelStatus1 = index;
       if (index == 0) {
         this.title = "计划列表";
-      } else {
+      } else if(index == 1) {
         this.title = "审核超期列表";
+      }else if(index == 2){
+        this.title = "报工列表";
       }
       // if (this.tableData[index].length == 0) {
       //   this.dataSearch(index);
@@ -932,6 +954,9 @@ export default {
             ProcessID = ProcessIDs.split(",");
           }
           this.ProcessID = ProcessID[0];
+          // 获取二级工序
+          console.log('this.ProcessID',this.ProcessID)
+          this.getLevelTwoProcessData(this.ProcessID)
         } else {
           this.$message({
             message: msg,
@@ -943,6 +968,23 @@ export default {
         this.ruleForm.LineID = "";
       }
     },
+    //通过先别工序获取二级工序
+    async getLevelTwoProcessData(ProcessID){
+      let form = {};
+        form["dicID"] = 7900;
+        form["ProcessID"] = ProcessID;
+        let res = await GetSearchData(form);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.LevelTwoProcessList = data
+        }else{
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+    }
   },
 };
 </script>
