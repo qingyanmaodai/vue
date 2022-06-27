@@ -679,10 +679,10 @@ export default {
     // 退回总排程
     async backFirstData(submitData) {
       _this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/BackSalePlan");
+      let res = await GetSearch(submitData, "/APSAPI/BackSalePlanV2");
       const { result, data, count, msg } = res.data;
       if (result) {
-        _this.dataSearch(0);
+        _this.dataSearch(this.tagRemark);
         _this.$message({
           message: msg,
           type: "success",

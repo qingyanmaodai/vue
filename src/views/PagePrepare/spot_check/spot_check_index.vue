@@ -1,4 +1,4 @@
-<!--物料点检-->
+<!--PCB/配件点检-->
 <template>
   <div
     class="container"
@@ -365,7 +365,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 7791 }, { ID: 7792 }, { ID: 76 }, { ID: 6751 }],
+      sysID: [{ ID: 7975 }, { ID: 7792 }, { ID: 76 }, { ID: 6751 }],
       isEdit: false,
       enlargeType: true,
       rem: "",
