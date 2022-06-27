@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="(item, i) in 2" :key="i">
+      <div v-for="(item, i) in 3" :key="i">
         <ComSearch
           v-show="labelStatus1 == i"
           ref="searchRef"
@@ -24,7 +24,7 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <el-button type="primary" size="small" @click="openProduct"
+              <el-button type="primary" size="small" @click="openProduct" v-show="labelStatus1==0"
                 >新增报工</el-button
               >
               <el-divider direction="vertical"></el-divider>
@@ -39,11 +39,11 @@
             </el-col>
           </el-row>
         </div>
-        <div v-for="(item2, i2) in 2" :key="i2">
+        <div v-for="(item2, i2) in 3" :key="i2">
           <ComUmyTable
             v-show="labelStatus1 == i2"
             :rowKey="'RowNumber'"
-            :height="height"
+            :height="labelStatus1==2?height1:height"
             :tableData="tableData[i2]"
             :tableHeader="tableColumns[i2]"
             :hasSelect="hasSelect[i2]"
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <div class="footer_content" ref="footerRef">
+    <div :class="labelStatus1===2?'footer2_content':'footer_content'" ref="footerRef">
       <el-row>
         <el-col :span="22">
           <el-form label-width="100px">
@@ -82,12 +82,12 @@
                 size="small"
               ></el-input>
             </el-form-item>
-            <el-form-item v-show="labelStatus1 == 0" label="人员：" prop="UserPeople">
+            <el-form-item v-show="labelStatus1 == 0||labelStatus1 == 2" label="人员：" prop="UserPeople">
               <el-select
                 clearable
                 filterable
                 :multiple="multiple"
-                v-model="currentRow[0].UserPeople"
+                v-model="currentRow[labelStatus1].UserPeople"
                 size="small"
                 style="width: 100%"
               >
@@ -101,7 +101,7 @@
             </el-form-item>
             <el-form-item v-show="labelStatus1 == 1" label="人员：" prop="Peoples">
               <el-input
-                v-model="currentRow[1].Peoples"
+                v-model="currentRow[labelStatus1].Peoples"
                 size="small"
                 disabled
                 type="text"
@@ -116,7 +116,7 @@
                 style="width: 100%"
               ></el-input>
             </el-form-item>
-            <el-form-item label="代码：" prop="MaterialName">
+            <el-form-item label="代码：" prop="MaterialName" v-show="labelStatus1 == 0||labelStatus1 == 1">
               <el-input
                 disabled
                 v-model="currentRow[labelStatus1].MaterialName"
@@ -124,13 +124,54 @@
                 size="small"
               ></el-input>
             </el-form-item>
-            <el-form-item label="计划数：" v-show="labelStatus1 == 0" prop="PlanQty">
-              <el-input
-                disabled
-                v-model="currentRow[0].PlanQty"
-                type="text"
-                size="small"
-              ></el-input>
+           <el-form-item label="代码：" prop="MaterialName"  v-show="labelStatus1 == 2">
+            <el-autocomplete
+              size="small"
+              style="width: 100%"
+              v-model="currentRow[labelStatus1].MaterialName"
+              :fetch-suggestions="fetchsuggertions"
+              @select="getEditProData"
+            >
+              <template slot-scope="{ item }">
+                <div style="border-bottom: 1px dashed #8c8e8e">
+                  <el-form label-width="60px" inline>
+                    <el-form-item style="margin-bottom: 5px" label="产品名称："
+                      ><span style="color: orange">{{ item.MaterialName }}</span>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom: 5px" label="工艺："
+                      ><span style="color: orange">{{ item.ProcessGroupName }}</span>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </template>
+            </el-autocomplete>
+          </el-form-item>
+          <el-form-item label="二级工序：" prop="LevelTwoProcessID"  v-show="labelStatus1 == 2">
+            <el-select
+              id="multipleSelct"
+              style="width: 100%"
+              clearable
+              filterable
+              multiple
+              v-model="currentRow[labelStatus1].LevelTwoProcessID"
+              size="small"
+            >
+              <el-option
+                v-for="(item, i) in LevelTwoProcessList"
+                :key="i"
+                :label="item.LevelTwoProcessName"
+                :value="item.LevelTwoProcessID"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="计划数：" v-show="labelStatus1 == 0" prop="PlanQty">
+            <el-input
+              disabled
+              v-model="currentRow[labelStatus1].PlanQty"
+              type="text"
+              size="small"
+              clearable
+            ></el-input>
             </el-form-item>
 
             <el-form-item label="报工数：" prop="ProducedQty">
@@ -139,14 +180,16 @@
                 v-model="currentRow[labelStatus1].ProducedQty"
                 type="text"
                 size="small"
+                clearable
               ></el-input>
             </el-form-item>
 
             <el-form-item label="确认数：" prop="ConfirmQty" v-show="labelStatus1 == 1">
               <el-input
-                v-model="currentRow[1].ConfirmQty"
+                v-model="currentRow[labelStatus1].ConfirmQty"
                 type="text"
                 size="small"
+                clearable
               ></el-input>
             </el-form-item>
 
@@ -156,26 +199,52 @@
                 v-model="currentRow[labelStatus1].TotalHours"
                 type="text"
                 size="small"
+                clearable
               ></el-input>
             </el-form-item>
 
             <el-form-item
               label="确认计时："
               prop="ConfirmTotalHours"
-              v-show="labelStatus1 == 1"
+              v-show="labelStatus1 == 1||labelStatus1 == 2"
             >
               <el-input
-                v-model="currentRow[1].ConfirmTotalHours"
+                v-model="currentRow[labelStatus1].ConfirmTotalHours"
                 type="text"
                 size="small"
+                clearable
               ></el-input>
             </el-form-item>
-
-            <el-form-item label="补备注：" prop="Remark1">
+            <el-form-item label="长度：" prop="ProductLength" v-show="labelStatus1 == 2">
+              <el-input
+                v-model="currentRow[labelStatus1].ProductLength"
+                type="text"
+                size="small"
+                clearable
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="集体备注：" prop="Extend1" v-show="currentRow[labelStatus1].OrganizeType ==='集体'&&labelStatus1 == 2">
+              <el-input
+                v-model="currentRow[labelStatus1].Extend1"
+                type="text"
+                size="small"
+                clearable
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="个人备注：" prop="Extend2" v-show="currentRow[labelStatus1].OrganizeType ==='个人'&&labelStatus1 == 2">
+              <el-input
+                v-model="currentRow[labelStatus1].Extend2"
+                type="text"
+                size="small"
+                clearable
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="补备注：" prop="Remark1" v-show="labelStatus1 == 0||labelStatus1 == 1">
               <el-input
                 v-model="currentRow[labelStatus1].Remark2"
                 type="text"
                 size="small"
+                clearable
               ></el-input>
             </el-form-item>
           </el-form>
@@ -186,6 +255,9 @@
           >
           <el-button type="primary" v-show="labelStatus1 == 1" @click="setAduit"
             >审批</el-button
+          >
+          <el-button type="primary" v-show="labelStatus1 == 2" @click="saveProduction"
+            >保存</el-button
           >
         </el-col>
       </el-row>
@@ -266,6 +338,24 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="二级工序：" prop="LevelTwoProcessID">
+            <el-select
+              style="width: 100%"
+              clearable
+              filterable
+             
+              v-model="ruleForm.LevelTwoProcessID"
+              size="small"
+            >
+              <el-option
+                v-for="(item, i) in LevelTwoProcessList"
+                :key="i"
+                :label="item.LevelTwoProcessName"
+                :value="item.LevelTwoProcessID"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          
           <el-form-item label="报工数量：" prop="ProducedQty">
             <el-input
               style="width: 100%"
@@ -317,6 +407,8 @@ export default {
   },
   data() {
     return {
+      height1:'707px',
+      LevelTwoProcessList:[],//二级工序集合
       ProcessID: "",
       ruleForm: {
         ProcessID: "",
@@ -334,6 +426,7 @@ export default {
         childrens: [],
         TotalHours: "",
         Remark3:'',//新增报工备注
+        LevelTwoProcessID:'',//二级工序id
       },
       rules: {
         ProducedDate: [{ required: true, message: "报工日期必填", trigger: "change" }],
@@ -359,8 +452,12 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
-      sysID: [{ ID: 6720 }, { ID: 6704 }],
+      sysID: [{ ID: 6720 }, { ID: 6704 }, { ID: 6704 }],
       btnForm: [],
       parmsBtn: [
         {
@@ -372,6 +469,7 @@ export default {
           Methods: "aduitMoreData",
           Icon: "",
           Params: "",
+          signName:'1',
         },
       ],
       tableData: [[], []],
@@ -379,6 +477,7 @@ export default {
       tableLoading: [false, false],
       isClear: [false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
       ],
@@ -390,17 +489,18 @@ export default {
       Status1: [
         { label: "报工", value: 0 },
         { label: "审批", value: 1 },
+        { label: "更改报工", value: 2 },
       ],
       isSelect: false,
       adminLoading: false,
-      selectionData: [[], []],
-      currentRow: [{}, {}],
+      selectionData: [[], [], []],
+      currentRow: [{}, {}, {}],
       lines: [],
       userInfo: {},
       dialogProduct: false,
-      hasSelect: [false, true],
+      hasSelect: [false, true, false],
       multiple_2: false,
-      isEdit: [true, false],
+      isEdit: [true, false, false],
     };
   },
   watch: {},
@@ -424,16 +524,19 @@ export default {
       form["rows"] = 0;
       form["dicID"] = 3026;
       form["OrganizeTypeID"] = 6;
+      this.adminLoading = true;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.lines = data;
+        this.adminLoading = false;
       } else {
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+        this.adminLoading = false;
       }
     },
     async getUserData(OrganizeID) {
@@ -485,7 +588,8 @@ export default {
         footerHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem + 20+ "px";
+      this.height1 = rem - 30+ "px";
       this.$set(this, "height", newHeight);
     },
     // 第几页
@@ -652,8 +756,10 @@ export default {
       this.labelStatus1 = index;
       if (index == 0) {
         this.title = "计划列表";
-      } else {
+      } else if(index == 1) {
         this.title = "审核超期列表";
+      }else if(index == 2){
+        this.title = "报工列表";
       }
       // if (this.tableData[index].length == 0) {
       //   this.dataSearch(index);
@@ -661,13 +767,17 @@ export default {
     },
     // 单击
     handleRowClick(row) {
+      console.log('row',row)
       // 获取线下面的人
       // 判断是集体还是个人
       let newRow = this.lines.filter((x) => {
         return x.OrganizeID == row.LineID;
       });
       console.log('this.lines',this.lines)
-      this.getUserData(newRow[0].OrganizeID);
+      if(newRow[0]['OrganizeID']){
+        this.getUserData(newRow[0].OrganizeID);
+      }
+      
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
       } else {
@@ -675,25 +785,37 @@ export default {
       }
       if (this.labelStatus1 == 0) {
         this.tag = 0;
-        this.$set(this.currentRow[0], "UserPeople", null);
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
         this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
         this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
         for (let name in row) {
-          this.$set(this.currentRow[0], name, row[name]);
+          this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
-        this.$set(this.currentRow[0], "ProducedDate", row.PlanDay);
-        this.$set(this.currentRow[0], "dicID", 6704);
-        this.$set(this.currentRow[0], "Status", 2);
-        this.$set(this.currentRow[0], "ProducedQty", null);
-      } else {
+        this.$set(this.currentRow[this.labelStatus1], "ProducedDate", row.PlanDay);
+        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
+        this.$set(this.currentRow[this.labelStatus1], "Status", 2);
+        this.$set(this.currentRow[this.labelStatus1], "ProducedQty", null);
+      } else if(this.labelStatus1 == 1) {
         this.tag = 1;
         this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
         for (let name in row) {
-          this.$set(this.currentRow[1], name, row[name]);
+          this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
-        this.$set(this.currentRow[1], "ConfirmQty", null);
-        this.$set(this.currentRow[1], "dicID", 6704);
-        this.$set(this.currentRow[1], "Status", 2);
+        this.$set(this.currentRow[this.labelStatus1], "ConfirmQty", null);
+        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
+        this.$set(this.currentRow[this.labelStatus1], "Status", 2);
+      }else if(this.labelStatus1 == 2){
+        this.tag = 2;
+        this.getLevelTwoProcessData(this.currentRow[this.labelStatus1]['ProcessID'])
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
+        this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
+        this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
+        for (let name in row) {
+          this.$set(this.currentRow[this.labelStatus1], name, row[name]);
+        }
+        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
+        console.log('this.currentRow',this.currentRow)
       }
     },
     // 报工
@@ -882,10 +1004,11 @@ export default {
     // 远程搜索
     async fetchsuggertions(val, cb) {
       if (val) {
+
         let form = {};
         form["rows"] = 100;
         form["dicID"] = 1180;
-        form["ProcessID"] = this.ProcessID;
+        form["ProcessID"] = this.labelStatus1==2?this.currentRow[this.labelStatus1]['ProcessID']:this.ProcessID;
         form["MaterialName"] = val;
         let res = await GetSearch(form, "/APSAPI/SearchMaterialByLine");
         const { result, data, count, msg } = res.data;
@@ -905,6 +1028,12 @@ export default {
       this.ruleForm.MaterialID = item.MaterialID;
       this.ruleForm.MaterialName = item.MaterialName;
       this.ruleForm.ProcessGroupName = item.ProcessGroupName;
+    },
+    // 更改报工栏获取远程搜索数据
+    getEditProData(item) {
+      this.currentRow[this.labelStatus1]['MaterialID'] = item.MaterialID;
+      this.currentRow[this.labelStatus1]['MaterialName'] = item.MaterialName;
+      this.currentRow[this.labelStatus1]['ProcessGroupName'] = item.ProcessGroupName;
     },
     // 选中线别
     async changeLine(val) {
@@ -932,6 +1061,9 @@ export default {
             ProcessID = ProcessIDs.split(",");
           }
           this.ProcessID = ProcessID[0];
+          // 获取二级工序
+          console.log('this.ProcessID',this.ProcessID)
+          this.getLevelTwoProcessData(this.ProcessID)
         } else {
           this.$message({
             message: msg,
@@ -942,6 +1074,109 @@ export default {
       } else {
         this.ruleForm.LineID = "";
       }
+    },
+    //通过先别工序获取二级工序
+    async getLevelTwoProcessData(ProcessID){
+      let form = {};
+        form["dicID"] = 7900;
+        form["ProcessID"] = ProcessID;
+        let res = await GetSearchData(form);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.LevelTwoProcessList = data
+          
+        }else{
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+    },
+    // 修改报工
+    saveProduction(){
+      var date = new Date();
+      //获取3天前的日期
+      var time1 = new Date(date.getTime() - 3*24*60*60*1000);
+      console.log('time1',time1)
+      var year1 = time1.getFullYear();
+      var month1 = time1.getMonth() + 1;
+      if( month1 <10){
+          month1 = '0' + month1;
+      }
+      var day1 = time1.getDate();
+      if( day1 < 10){
+          day1 = '0' + day1;
+      }
+      var date1 = year1 + "-" + month1 + "-" + day1;
+
+      // //获取2天前的日期
+      var time2 = new Date(date.getTime() - 2*24*60*60*1000);
+      var year2 = time2.getFullYear();
+      var month2 = time2.getMonth() + 1;
+      if( month2 <10){
+          month2 = '0' + month2;
+      }
+      var day2 = time2.getDate();
+      if( day2 < 10){
+          day2 = '0' + day2;
+      }
+      var date2 = year2 + "-" + month2 + "-" + day2;
+
+      //获取1天前的日期
+      var time3 = new Date(date.getTime() - 24*60*60*1000);
+      var year3 = time3.getFullYear();
+      var month3 = time3.getMonth() + 1;
+      if( month3 <10){
+          month3 = '0' + month3;
+      }
+      var day3 = time3.getDate();
+      if( day3 < 10){
+          day3 = '0' + day3;
+      }
+      var date3 = year3 + "-" + month3 + "-" + day3;
+
+      //获取当天的日期
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      if( month <10){
+          month = '0' + month;
+      }
+      var day = date.getDate();
+      if( day < 10){
+          day = '0' + day;
+      }
+      var date4 = year + "-" + month + "-" + day;
+      //只能修改当前+往前3天的报工数据
+      let list = [date1,date2,date3,date4]
+      if(!list.includes(this.currentRow[this.labelStatus1]['ProducedDate'])){
+        this.$message.error("只能修改日期范围为"+date1+" ~ "+date4+"的报工数据！");
+        return
+      }
+            
+      if (this.multiple) {
+        if (
+          !this.currentRow[0].UserPeople||this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
+          parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
+        ) {
+          this.$message.error("请检查报工人员与报工数是否填写！");
+          return;
+        }
+      } else {
+        if (
+          !this.currentRow[this.labelStatus1].UserPeople ||
+          parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
+        ) {
+          this.$message.error("请检查报工人员与报工数是否填写！");
+          return;
+        }
+      }
+      this.$confirm("确定保存吗？")
+        .then(() => {
+          _this.dataSave([_this.currentRow[this.labelStatus1]], 1);
+        })
+        .catch(() => {});
+      
     },
   },
 };
@@ -975,6 +1210,39 @@ export default {
     margin: auto 10%;
     height: 60px;
   }
+}
+
+.footer2_content {
+  height: 150px;
+  // background: #ffe8bd;
+  background: #ffffff;
+
+  ::v-deep .el-input__inner {
+    // border: 1px solid #5f96b0 !important;
+    background: yellow;
+    color: #101010 !important;
+  }
+  ::v-deep .el-input.is-disabled .el-input__inner {
+    background-color: #f5f7fa !important;
+    border-color: #e4e7ed;
+    color: #c0c4cc;
+    cursor: not-allowed;
+  }
+
+  .el-form-item {
+    width: 20%;
+    float: left;
+    margin-bottom: 5px;
+  }
+
+  .el-button {
+    width: 80%;
+    margin: auto 10%;
+    height: 60px;
+  }
+}
+::v-deep .el-select  #multipleSelct.el-input__inner{
+  height: 2.5rem !important;
 }
 
 .el-autocomplete-suggestion {
