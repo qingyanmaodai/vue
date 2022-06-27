@@ -400,7 +400,6 @@ export default {
       let num = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-      debugger;
       if (result) {
         let newTree = [];
         if (data.length != 0) {
