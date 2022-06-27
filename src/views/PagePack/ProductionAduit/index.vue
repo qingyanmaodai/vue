@@ -1095,68 +1095,68 @@ export default {
     },
     // 修改报工
     saveProduction(){
-      // var date = new Date();
-      //       //获取3天前的日期
-      //       var time1 = date.setDate(date.getDate() - 3);
-      //       console.log('time1',time1)
-      //       var year1 = time1.getFullYear();
-      //       var month1 = time1.getMonth() + 1;
-      //       if( month1 <10){
-      //           month1 = '0' + month1;
-      //       }
-      //       var day1 = time1.getDate();
-      //       if( d < 10){
-      //           day1 = '0' + day1;
-      //       }
-      //       var date1 = year1 + "-" + month1 + "-" + day1;
+      var date = new Date();
+      //获取3天前的日期
+      var time1 = new Date(date.getTime() - 3*24*60*60*1000);
+      console.log('time1',time1)
+      var year1 = time1.getFullYear();
+      var month1 = time1.getMonth() + 1;
+      if( month1 <10){
+          month1 = '0' + month1;
+      }
+      var day1 = time1.getDate();
+      if( day1 < 10){
+          day1 = '0' + day1;
+      }
+      var date1 = year1 + "-" + month1 + "-" + day1;
 
-      //       //获取2天前的日期
-      //       var time2 = date.setDate(date.getDate() - 2);
-      //       var year2 = time2.getFullYear();
-      //       var month2 = time2.getMonth() + 1;
-      //       if( month2 <10){
-      //           month2 = '0' + month2;
-      //       }
-      //       var day2 = time2.getDate();
-      //       if( d < 10){
-      //           day2 = '0' + day2;
-      //       }
-      //       var date2 = year2 + "-" + month2 + "-" + day2;
+      // //获取2天前的日期
+      var time2 = new Date(date.getTime() - 2*24*60*60*1000);
+      var year2 = time2.getFullYear();
+      var month2 = time2.getMonth() + 1;
+      if( month2 <10){
+          month2 = '0' + month2;
+      }
+      var day2 = time2.getDate();
+      if( day2 < 10){
+          day2 = '0' + day2;
+      }
+      var date2 = year2 + "-" + month2 + "-" + day2;
 
-      //       //获取1天前的日期
-      //       var time3 = date.setDate(date.getDate() - 1);
-      //       var year3 = time3.getFullYear();
-      //       var month3 = time3.getMonth() + 1;
-      //       if( month3 <10){
-      //           month3 = '0' + month3;
-      //       }
-      //       var day3 = time3.getDate();
-      //       if( d < 10){
-      //           day3 = '0' + day3;
-      //       }
-      //       var date3 = year3 + "-" + month3 + "-" + day3;
+      //获取1天前的日期
+      var time3 = new Date(date.getTime() - 24*60*60*1000);
+      var year3 = time3.getFullYear();
+      var month3 = time3.getMonth() + 1;
+      if( month3 <10){
+          month3 = '0' + month3;
+      }
+      var day3 = time3.getDate();
+      if( day3 < 10){
+          day3 = '0' + day3;
+      }
+      var date3 = year3 + "-" + month3 + "-" + day3;
 
-      //       //获取当天的日期
-      //       var year = date.getFullYear();
-      //       var month = date.getMonth() + 1;
-      //       if( month <10){
-      //           month = '0' + month;
-      //       }
-      //       var day = date.getDate();
-      //       if( d < 10){
-      //           day = '0' + day;
-      //       }
-      //       var date4 = year + "-" + month + "-" + day;
-
+      //获取当天的日期
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      if( month <10){
+          month = '0' + month;
+      }
+      var day = date.getDate();
+      if( day < 10){
+          day = '0' + day;
+      }
+      var date4 = year + "-" + month + "-" + day;
+      //只能修改当前+往前3天的报工数据
+      let list = [date1,date2,date3,date4]
+      if(!list.includes(this.currentRow[this.labelStatus1]['ProducedDate'])){
+        this.$message.error("只能修改日期范围为"+date1+" ~ "+date4+"的报工数据！");
+        return
+      }
             
-      //       console.log('date1',date1)
-      //       console.log('date2',date2)
-      //       console.log('date3',date3)
-      //       console.log('date4',date4)
-
       if (this.multiple) {
         if (
-          this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
+          !this.currentRow[0].UserPeople||this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
           parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
         ) {
           this.$message.error("请检查报工人员与报工数是否填写！");
@@ -1173,7 +1173,6 @@ export default {
       }
       this.$confirm("确定保存吗？")
         .then(() => {
-          return
           _this.dataSave([_this.currentRow[this.labelStatus1]], 1);
         })
         .catch(() => {});
