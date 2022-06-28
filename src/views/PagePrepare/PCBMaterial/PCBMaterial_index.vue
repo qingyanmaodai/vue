@@ -60,11 +60,11 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
               </div>
-              <div v-show="labelStatus1 == 1">
+              <div v-show="labelStatus1 == 0">
                 <el-radio
                   v-model="losePrepareDate2"
                   :label="0"
-                  @click.native.prevent="clickitem2(1)"
+                  @click.native.prevent="clickitem2(0)"
                 >未免检</el-radio>
                 <el-divider direction="vertical"></el-divider>
               </div>
@@ -121,7 +121,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "ReadyPlanSet",
+  name: "PCBMaterial_index",
   components: {
     ComSearch,
     ComVxeTable,
@@ -749,15 +749,16 @@ export default {
     },
     // 是否只显示没有免检的订单
     clickitem2(val) {
+      console.log('val',val)
       val == this.losePrepareDate2
         ? (this.losePrepareDate2 = 0)
         : (this.losePrepareDate2 = 1);
       if (this.losePrepareDate2 == 0) {
-        this.formSearchs[1].datas["Extend14"] = "null";
+        this.formSearchs[0].datas["Extend14"] = "免检";
       } else {
-        this.formSearchs[1].datas["Extend14"] = "";
+        this.formSearchs[0].datas["Extend14"] = "";
       }
-      this.dataSearch(1);
+      this.dataSearch(0);
     },
     // 订单免检
     passData() {

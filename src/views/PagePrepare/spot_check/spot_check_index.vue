@@ -280,7 +280,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "MaterialInspect",
+  name: "spot_check_index",
   components: {
     ComSearch,
     ComVxeTable,
