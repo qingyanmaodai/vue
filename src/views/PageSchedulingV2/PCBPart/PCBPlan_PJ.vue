@@ -173,6 +173,7 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
+import  "@/styles/excel.scss";
 import {
   HighlightColumnItemsCellType,
   TopItemsCellType,
@@ -422,6 +423,7 @@ export default {
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
+      let colIndex = 0
 
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
@@ -439,7 +441,17 @@ export default {
           });
         }
         colHeader1.push(x.label);
+        colIndex ++
       });
+      
+      // 列筛选
+      // 参数2 开始列
+      // 参数3 
+      // 参数4 结束列
+      var cellrange =new GC.Spread.Sheets.Range(-1, 1, -1, colIndex);
+      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
+
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
