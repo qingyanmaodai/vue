@@ -431,7 +431,6 @@ export default {
         // });
 
         this.formSearchs[0].datas["PMCRemark"] = [
-          "委外",
           "试产",
           "试产/车间生产",
         ];
