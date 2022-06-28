@@ -844,7 +844,7 @@ export default {
       this.formSearchs[0].datas["StockStatus"] = "";
       this.formSearchs[0].datas["ProductionStatus"] = "";
       this.formSearchs[0].datas["ProcessPlanID"] = "";
-
+  this.formSearchs[0].datas["CompletionStatus"] =null;
       switch (index) {
         case 0: //总排期
          // this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
@@ -854,7 +854,7 @@ export default {
         case 1: //已完成待出货
           // this.formSearchs[0].datas["StockStatus"] = "待出货";
            this.formSearchs[0].datas["StockStatus"] = '待出货';
-            this.formSearchs[0].datas["CompletionStatus"] =1
+            this.formSearchs[0].datas["CompletionStatus"] =0
           break;
         case 2:
           this.formSearchs[0].datas["StockStatus"] = "已出货";
