@@ -596,8 +596,8 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[1] = false;
-      sheet.options.protectionOptions.allowResizeColumns = true;
-      sheet.options.isProtected = true;
+      sheet.options.protectionOptions.allowResizeColumns = true;//禁用改变行高
+      sheet.options.isProtected = true;//锁定表格
     },
     async ToPlan() {
       //转入月计划
