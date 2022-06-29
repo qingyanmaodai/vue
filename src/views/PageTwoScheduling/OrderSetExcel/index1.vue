@@ -32,7 +32,7 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-              <SPAN>日期：</SPAN>
+              <SPAN>抓单日期范围：</SPAN>
                   <el-date-picker 
                   v-model="ReplyDate" type="daterange"
             
@@ -46,7 +46,7 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  v-show="labelStatus1 ==1"
+                  v-show="labelStatus1 ==-1"
                   @click="MOPlanStep1CalculationPre(0)"
                 >
                   预排运算
@@ -912,7 +912,7 @@ export default {
       this.selectionData[0] = [];
       if (newData.length != 0) {
         newData.forEach((x, y) => {
-          if (x.isChecked) {
+          if (x.isChecked&&x.OrderNo) {
             if (!x.ProcessGroupID) {
               resultTag = true;
               this.$message.error("第" + (y + 1) + "行工艺不能为空");
@@ -1195,6 +1195,7 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
+                this.formSearchs[1].datas["ProcessPartName"] ='PCB'; //默认待排
         this.dataSearch(0);
       }
     },
@@ -1512,7 +1513,7 @@ export default {
     insertList() {
       this.getSelectionData(0);
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
+       // this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
       } else {
         // 进入预排计划
 
@@ -1611,7 +1612,7 @@ export default {
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
+        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationPCB");
         const { data, forms, result, msg } = res.data;
         if (result) {
           this.$set(this.tableData, 1, data);

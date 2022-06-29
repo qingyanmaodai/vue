@@ -791,7 +791,7 @@ export default {
         });
         this.formSearchs[5].datas["CompletionDate"] = "null";
         this.formSearchs[5].datas["WorkOrderTypeName"] = "配件";
-        this.formSearchs[5].datas["ProcessPlanID"] = "0";
+        this.formSearchs[5].datas["ProductionStatus"] = "26";
 
         // this.formSearchs[1].datas["sort"] = "PrepareStatus asc";
         this.changeStatus(null, 0);
