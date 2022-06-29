@@ -64,7 +64,7 @@
                 <el-radio
                   v-model="losePrepareDate2"
                   :label="0"
-                  @click.native.prevent="clickitem2(0)"
+                  @click.native.prevent="clickitem2(1)"
                 >未免检</el-radio>
                 <el-divider direction="vertical"></el-divider>
               </div>
@@ -754,7 +754,7 @@ export default {
         ? (this.losePrepareDate2 = 0)
         : (this.losePrepareDate2 = 1);
       if (this.losePrepareDate2 == 0) {
-        this.formSearchs[0].datas["Extend14"] = "免检";
+        this.formSearchs[0].datas["Extend14"] = "null";
       } else {
         this.formSearchs[0].datas["Extend14"] = "";
       }
