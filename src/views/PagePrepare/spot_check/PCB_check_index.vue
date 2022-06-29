@@ -1,4 +1,4 @@
-<!--物料点检-->
+<!--PCB点检-->
 <template>
   <div
     class="container"
@@ -280,7 +280,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "MaterialInspect",
+  name: "PCB_check_index",
   components: {
     ComSearch,
     ComVxeTable,
@@ -301,7 +301,9 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            WorkOrderTypeID:'6033a552143a56'
+          },
           forms: [],
         },
         {
@@ -365,7 +367,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 7791 }, { ID: 7792 }, { ID: 76 }, { ID: 6751 }],
+      sysID: [{ ID: 7975 }, { ID: 7976 }, { ID: 76 }, { ID: 6751 }],
       isEdit: false,
       enlargeType: true,
       rem: "",
@@ -642,7 +644,7 @@ export default {
     },
     // 改变状态
     changeStatus2(item, index) {
-      if (!this.formSearchs[1].datas["SalesOrderDetailID"]) {
+      if (!this.formSearchs[1].datas["OrderID"]) {
         this.$message.error("请单击上方行数据再查询！");
         return;
       }
@@ -667,7 +669,9 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+      
+      this.formSearchs[1].datas["OrderID"] = row.OrderID;
+      // this.formSearchs[1].datas["SalesOrderDetailID"] = row.OrderID;
       this.OrderNos = [];
       if (row.MOS) {
         let OrderNos = row.MOS.split(",");

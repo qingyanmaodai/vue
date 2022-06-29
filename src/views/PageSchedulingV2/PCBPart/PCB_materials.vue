@@ -17,7 +17,7 @@
         :btnForm="btnForm"
         @btnClick="btnClick"
         :defaultShow="true"
-        :signName="currentIndex"
+        :signName="tabStatus"
       />
     </div>
     <div>
@@ -134,6 +134,7 @@ export default {
             Type: "primary",
             Icon: "",
             Size: "small",
+            signName:'0',
           },
         ],
         formSearchs:[//不同标签页面的查询条件

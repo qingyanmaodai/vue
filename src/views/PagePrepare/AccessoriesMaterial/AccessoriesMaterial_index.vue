@@ -60,7 +60,7 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
               </div>
-              <div v-show="labelStatus1 == 1">
+              <div v-show="labelStatus1 == 0">
                 <el-radio
                   v-model="losePrepareDate2"
                   :label="0"
@@ -121,7 +121,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "ReadyPlanSet",
+  name: "AccessoriesMaterial_index",
   components: {
     ComSearch,
     ComVxeTable,
@@ -146,7 +146,9 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {WorkOrderTypeID:'6033a552143a56'},
+          datas: {
+            WorkOrderTypeID:'6033a552143a56'
+          },
           forms: [],
         },
         {

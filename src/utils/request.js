@@ -10,7 +10,7 @@ let base_url;
 //https://aps.eklights.cn      --EK生产地址
 //http://192.168.18.82:9998 --易事特测试地址
 //http://192.168.18.82      --易事特地址
-//http://121.9.64.70:9999   --恒美外网访问地址
+//http://121.9.64.70:9999   --恒美外网访问地址http://192.168.124.56:9528
 let apsUrl = 'https://aps.eklights.cn';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 localStorage.setItem('apsurl', apsUrl);

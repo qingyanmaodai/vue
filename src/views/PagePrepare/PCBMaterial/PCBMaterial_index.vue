@@ -60,7 +60,7 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
               </div>
-              <div v-show="labelStatus1 == 1">
+              <div v-show="labelStatus1 == 0">
                 <el-radio
                   v-model="losePrepareDate2"
                   :label="0"
@@ -121,7 +121,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "ReadyPlanSet",
+  name: "PCBMaterial_index",
   components: {
     ComSearch,
     ComVxeTable,
@@ -164,16 +164,16 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "计算齐套",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "computedForm",
-          Icon: "",
-        },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "计算齐套",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 0,
+        //   Methods: "computedForm",
+        //   Icon: "",
+        // },
         {
           ButtonCode: "save",
           BtnName: "下发",
@@ -563,13 +563,13 @@ export default {
     async computedForm(remarkTb) {
       this.adminLoading = true;
       let res = await GetSearch(
-        this.tableData[1],
+        this.tableData[0],
         "/APSAPI/MaterialFormForPrepare"
       );
       const { result, data, count, msg } = res.data;
       if (result) {
         // 将返回的数据重新赋值配套率
-        this.dataSearch(1);
+        this.dataSearch(0);
         this.$message({
           message: msg,
           type: "success",
@@ -679,10 +679,10 @@ export default {
     // 退回总排程
     async backFirstData(submitData) {
       _this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/BackSalePlan");
+      let res = await GetSearch(submitData, "/APSAPI/BackSalePlanV2");
       const { result, data, count, msg } = res.data;
       if (result) {
-        _this.dataSearch(0);
+        _this.dataSearch(this.tagRemark);
         _this.$message({
           message: msg,
           type: "success",
@@ -749,15 +749,16 @@ export default {
     },
     // 是否只显示没有免检的订单
     clickitem2(val) {
+      console.log('val',val)
       val == this.losePrepareDate2
         ? (this.losePrepareDate2 = 0)
         : (this.losePrepareDate2 = 1);
       if (this.losePrepareDate2 == 0) {
-        this.formSearchs[1].datas["Extend14"] = "null";
+        this.formSearchs[0].datas["Extend14"] = "null";
       } else {
-        this.formSearchs[1].datas["Extend14"] = "";
+        this.formSearchs[0].datas["Extend14"] = "";
       }
-      this.dataSearch(1);
+      this.dataSearch(0);
     },
     // 订单免检
     passData() {
