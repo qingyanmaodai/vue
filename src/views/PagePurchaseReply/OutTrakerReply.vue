@@ -5,7 +5,8 @@
     v-loading="adminLoading"
   >
     <el-container>
-      <el-aside
+      <!-- 2022.6.29客户要求取消左侧供应商 -->
+      <!-- <el-aside
         v-show="showAside"
         style="width:auto"
       >
@@ -31,7 +32,7 @@
             ></el-tree>
           </div>
         </div>
-      </el-aside>
+      </el-aside> -->
       <el-main style="padding:0;margin:0">
         <div
           class="admin_container_2"
@@ -279,14 +280,15 @@ export default {
   computed: {},
   created() {
     _this = this;
-    this.userInfo = this.$store.getters.userInfo;
-    if (
-      this.userInfo.RoleMap.findIndex((a) => a.RoleID == "R2201120001") != -1
-    ) {
-      this.getSupplierData("", 1);
-    } else {
-      this.getSupplierData(this.userInfo.Account, 0);
-    }
+    // this.userInfo = this.$store.getters.userInfo;
+    // if (
+    //   this.userInfo.RoleMap.findIndex((a) => a.RoleID == "R2201120001") != -1
+    // ) {
+    //   this.getSupplierData("", 1);
+    // } else {
+    //   this.getSupplierData(this.userInfo.Account, 0);
+    // }
+    this.getData()
     this.getTableHeader();
     this.judgeBtn();
   },
@@ -296,6 +298,14 @@ export default {
     }, 500);
   },
   methods: {
+    getData(){
+       this.formSearchs[0].datas["PMCRemark"] = [
+          "试产",
+          "试产/车间生产",
+        ];
+        this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
+        this.getTableData(this.formSearchs[0].datas, 0);
+    },
     // 获取查询到的所有欠料数
     async getTotalOweNum() {
       let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
