@@ -146,7 +146,9 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {WorkOrderTypeID:'6033a552143a56'},
+          datas: {
+            WorkOrderTypeID:'6033a552143a56'
+          },
           forms: [],
         },
         {

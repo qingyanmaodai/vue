@@ -1,4 +1,4 @@
-<!--配件点检-->
+<!--PCB点检-->
 <template>
   <div
     class="container"
@@ -280,7 +280,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "spot_check_index",
+  name: "PCB_check_index",
   components: {
     ComSearch,
     ComVxeTable,
@@ -302,7 +302,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            WorkOrderTypeID:'604ed9c8fbbad5'
+            WorkOrderTypeID:'6033a552143a56'
           },
           forms: [],
         },

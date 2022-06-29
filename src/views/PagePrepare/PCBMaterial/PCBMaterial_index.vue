@@ -164,16 +164,16 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "计算齐套",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "computedForm",
-          Icon: "",
-        },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "计算齐套",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 0,
+        //   Methods: "computedForm",
+        //   Icon: "",
+        // },
         {
           ButtonCode: "save",
           BtnName: "下发",
@@ -563,13 +563,13 @@ export default {
     async computedForm(remarkTb) {
       this.adminLoading = true;
       let res = await GetSearch(
-        this.tableData[1],
+        this.tableData[0],
         "/APSAPI/MaterialFormForPrepare"
       );
       const { result, data, count, msg } = res.data;
       if (result) {
         // 将返回的数据重新赋值配套率
-        this.dataSearch(1);
+        this.dataSearch(0);
         this.$message({
           message: msg,
           type: "success",
