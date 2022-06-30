@@ -212,6 +212,8 @@ export default {
         { label: "总排期", value: 0 },
         { label: "已完成待出货", value: 1 },
         { label: "已出货", value: 2 },
+        { label: "待转入备料", value: 3 },
+        { label: "已转入备料", value: 4 },
       ],
       title: "",
       labelStatus1: 0,
@@ -285,10 +287,48 @@ export default {
           Methods: "dataDel",
           Type: "danger",
           Icon: "",
+          signName: 0,
           Size: "small",
           Params: {
             dataName: "selectionData",
           },
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          signName: 1,
+          Size: "small",
+          Params: {
+            dataName: "selectionData",
+          },
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          signName: 2,
+          Size: "small",
+          Params: {
+            dataName: "selectionData",
+          },
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 0,
+          Size: "small",
+          Params: "1",
         },
       ],
       tableData: [[], [], [], [], [], []],
@@ -845,6 +885,12 @@ export default {
         case 2:
           this.formSearchs[0].datas["StockStatus"] = "已出货";
           break;
+        case 3:
+          //待转入备料入参条件
+          break;
+        case 4:
+          // 已转入备料入参条件
+          break;
       }
       this.dataSearch(0);
     },
@@ -1042,6 +1088,46 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+      }
+    },
+    // 备料任务
+    async readyTask(remarkTb, index, MOSchedulingType) {
+      let sheet = this.spread.getActiveSheet();
+      let data = sheet.getDataSource();
+      let submitData = [];
+      let newSubmitData = [];
+      if (data.length != 0) {
+        data.forEach((x) => {
+          if (x.isChecked) {
+            submitData.push(x);
+          }
+        });
+        if (submitData.length != 0) {
+          this.adminLoading = true;
+          let url = "/APSAPI/SetPreParePlanV2"
+          console.log('url',url)
+          console.log('this.tagRemark',this.tagRemark)
+          let res = await GetSearch(submitData, url);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.dataSearch(this.tagRemark);
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        }else{
+          this.$message.error("请选择需要操作的数据！");
+        }
       }
     },
   },
