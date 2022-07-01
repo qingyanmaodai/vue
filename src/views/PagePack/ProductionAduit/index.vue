@@ -146,21 +146,21 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="二级工序：" prop="LevelTwoProcessID"  v-show="labelStatus1 == 2">
+          <el-form-item label="二级工序：" prop="LevelTwoProcessName"  v-show="labelStatus1 == 2">
             <el-select
               id="multipleSelct"
               style="width: 100%"
               clearable
               filterable
               multiple
-              v-model="currentRow[labelStatus1].LevelTwoProcessID"
+              v-model="currentRow[labelStatus1].LevelTwoProcessName"
               size="small"
             >
               <el-option
                 v-for="(item, i) in LevelTwoProcessList"
                 :key="i"
                 :label="item.LevelTwoProcessName"
-                :value="item.LevelTwoProcessID"
+                :value="item.LevelTwoProcessName"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -805,16 +805,19 @@ export default {
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
         this.$set(this.currentRow[this.labelStatus1], "Status", 2);
       }else if(this.labelStatus1 == 2){
+        console.log('row.ProcessID',row.ProcessID)
+        console.log('this.currentRow[this.labelStatus1]',this.currentRow[this.labelStatus1])
         this.tag = 2;
-        this.getLevelTwoProcessData(this.currentRow[this.labelStatus1]['ProcessID'])
-        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
-        this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
-        this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
+        
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
+        this.getLevelTwoProcessData(row.ProcessID)
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
+        this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
+        this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
         console.log('this.currentRow',this.currentRow)
       }
     },
@@ -1077,6 +1080,7 @@ export default {
     },
     //通过先别工序获取二级工序
     async getLevelTwoProcessData(ProcessID){
+      this.LevelTwoProcessList = []
       let form = {};
         form["dicID"] = 7900;
         form["ProcessID"] = ProcessID;
