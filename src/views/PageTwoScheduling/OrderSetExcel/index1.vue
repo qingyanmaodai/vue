@@ -367,7 +367,7 @@ export default {
       isClear: [false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
@@ -1108,6 +1108,7 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
+      console.log('remarkTb',remarkTb)
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
