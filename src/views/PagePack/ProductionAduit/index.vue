@@ -566,11 +566,10 @@ export default {
   methods: {
     // 人员类型为个人时单选
     handleCurrentChange(row){
-      console.log('row',row)
+      this.multipleSelection = [row]
     },
     // 二级工序改变
     processChang(val){
-      console.log(val)
       if(val&&val.length){
         this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", val.join(','));
       }else{
@@ -589,15 +588,27 @@ export default {
         
         if(this.currentRow[this.labelStatus1]['UserPeople']){
           let list = this.currentRow[this.labelStatus1]['UserPeople'].split(',')
-          this.$nextTick(()=>{
-            this.userData.forEach((item)=>{
-            list.forEach(ele=>{
-              if(item.Name===ele){
-                _this.$refs.multipleTable.toggleRowSelection(item)
-              }
+          if(this.multiple){
+            this.$nextTick(()=>{
+              this.userData.forEach((item)=>{
+              list.forEach(ele=>{
+                if(item.Name===ele){
+                  _this.$refs.multipleTable.toggleRowSelection(item)
+                }
+              })
             })
-          })
-          })
+            })
+          }else{
+            this.$nextTick(()=>{
+              this.userData.forEach((item)=>{
+                if(item.Name===list[0]){
+                   _this.$refs.multipleTable.setCurrentRow(item);
+                }
+            })
+            })
+           
+          }
+          
           
         }
         // this.currentRow[this.labelStatus1], "UserPeople"
@@ -615,17 +626,11 @@ export default {
         }
         this.$set(this.currentRow[this.labelStatus1],'Peoples',list.join(','))
         this.$set(this.currentRow[this.labelStatus1],'UserPeople',list.join(','))
-        console.log('弹框确定',this.currentRow[this.labelStatus1])
-        if (this.currentRow[this.labelStatus1]['OrganizeType'] == "个人"&&this.multipleSelection.length>1) {
-          
-          return
-        } 
       }
       this.dialogPreson  = false
     },
     //获取选中的人员
     handleSelectionChange(selection){
-      console.log('selection',selection)
       this.multipleSelection = selection
     },
     // 获取线别
@@ -877,26 +882,20 @@ export default {
     },
     // 单击
     async handleRowClick(row) {
-      console.log('row',row)
       // 获取线下面的人
       // 判断是集体还是个人
       let newRow = this.lines.filter((x) => {
         return x.OrganizeID == row.LineID;
       });
-      console.log('this.lines',this.lines)
       if(newRow[0]['OrganizeID']){
         this.$set(this.currentRow[this.labelStatus1], "OrganizeID", newRow[0].OrganizeID);
         await this.getUserData(newRow[0].OrganizeID);
       }
-      
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
-        // this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
       } else {
         this.multiple = false;
-        // this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
       }
-      
       if (this.labelStatus1 == 0) {
         this.tag = 0;
         this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
@@ -919,55 +918,17 @@ export default {
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
         this.$set(this.currentRow[this.labelStatus1], "Status", 2);
       }else if(this.labelStatus1 == 2){
-        console.log('row.ProcessID',row.ProcessID)
-        console.log('this.currentRow[this.labelStatus1]',this.currentRow[this.labelStatus1])
         this.tag = 2;
-        
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
         await this.getLevelTwoProcessData(row.ProcessID)
-       let presonIdList = []
-       let presonNameList = []
         this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
         this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
-        // this.$nextTick(()=>{
-          // if(row.Peoples){
-          //   let arr = row.Peoples.split(',')
-          //   console.log('arr',arr)
-          //   console.log('this.userData',this.userData)
-          //   this.userData.forEach(item=>{
-          //     console.log('item',item)
-          //     arr.forEach((ele)=>{
-          //       console.log('ele',ele)
-          //       if(item.Name === ele){
-          //         presonIdList.push(item.Account)
-          //         presonNameList.push(item.Name)
-          //         console.log('presonIdList',presonIdList)
-          //       }
-          //     })
-              
-          //   })
-          // }
-          this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
-          // if(this.multiple){
-          //   // this.$set(this.currentRow[this.labelStatus1], "UserPeople", '');
-          //   this.$set(this.currentRow[this.labelStatus1], "UserPeopleID", presonIdList.length?presonIdList:[]);
-          //   this.$set(this.currentRow[this.labelStatus1], "UserPeople", presonNameList.length?presonNameList:[]);
-          // }else{
-          //   // this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
-          //   // this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
-          //   this.$set(this.currentRow[this.labelStatus1], "UserPeopleID",  presonIdList.length?presonIdList.join(','):'');
-          //   this.$set(this.currentRow[this.labelStatus1], "UserPeople", presonNameList.length?presonNameList.join(','):'');
-          // }
-          this.$set(this.currentRow[this.labelStatus1], "ProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
-          this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
-        // })
-        
-        
-        
-        console.log('this.currentRow',this.currentRow)
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
+        this.$set(this.currentRow[this.labelStatus1], "ProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
       }
     },
     // 报工
@@ -1214,7 +1175,6 @@ export default {
           }
           this.ProcessID = ProcessID[0];
           // 获取二级工序
-          console.log('this.ProcessID',this.ProcessID)
           this.getLevelTwoProcessData(this.ProcessID)
         } else {
           this.$message({
@@ -1251,7 +1211,6 @@ export default {
       var date = new Date();
       //获取3天前的日期
       var time1 = new Date(date.getTime() - 3*24*60*60*1000);
-      console.log('time1',time1)
       var year1 = time1.getFullYear();
       var month1 = time1.getMonth() + 1;
       if( month1 <10){
@@ -1326,8 +1285,6 @@ export default {
       }
       this.$confirm("确定保存吗？")
         .then(() => {
-          console.log('_this.currentRow[this.labelStatus1]',_this.currentRow[this.labelStatus1])
-          return
           _this.dataSave([_this.currentRow[this.labelStatus1]], 1);
         })
         .catch(() => {});
