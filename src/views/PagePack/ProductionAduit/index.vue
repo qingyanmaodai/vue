@@ -82,7 +82,7 @@
                 size="small"
               ></el-input>
             </el-form-item>
-            <el-form-item v-show="labelStatus1 == 0||labelStatus1 == 2" label="人员：" prop="UserPeople">
+            <el-form-item v-show="labelStatus1 == 0" label="人员：" prop="UserPeople">
               <el-select
                 clearable
                 filterable
@@ -98,6 +98,16 @@
                   :value="item.Account"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item v-show="labelStatus1 == 2" label="人员：" prop="Peoples">
+              <el-input
+                v-model="currentRow[labelStatus1].Peoples"
+                size="small"
+                readonly
+                type="text"
+                @click.native="clickDialog"
+                class="presonDialog"
+              ></el-input>
             </el-form-item>
             <el-form-item v-show="labelStatus1 == 1" label="人员：" prop="Peoples">
               <el-input
@@ -146,21 +156,22 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="二级工序：" prop="LevelTwoProcessID"  v-show="labelStatus1 == 2">
+          <el-form-item label="二级工序：" prop="ProcessName"  v-show="labelStatus1 == 2" style="width:40%">
             <el-select
               id="multipleSelct"
               style="width: 100%"
               clearable
               filterable
               multiple
-              v-model="currentRow[labelStatus1].LevelTwoProcessID"
+              v-model="currentRow[labelStatus1].ProcessName"
               size="small"
+              @change="processChang"
             >
               <el-option
                 v-for="(item, i) in LevelTwoProcessList"
                 :key="i"
                 :label="item.LevelTwoProcessName"
-                :value="item.LevelTwoProcessID"
+                :value="item.LevelTwoProcessName"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -389,6 +400,39 @@
         <el-button type="primary" @click="sureAdd">确定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 人员的选择 -->
+    <el-dialog  title="修改人员" width="50%" :visible.sync="dialogPreson">
+       <el-table
+        ref="multipleTable"
+        :data="userData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        :highlight-current-row="!multiple"
+        @current-change="handleCurrentChange"
+        >
+        <el-table-column
+          type="selection"
+          width="55" v-if="multiple">
+        </el-table-column>
+        <el-table-column
+          prop="OrganizeName"
+          label="组织"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="Name"
+          label="姓名"
+          width="120">
+        </el-table-column>
+        
+      </el-table>
+      <div style="margin-top: 20px">
+        <el-button @click.native="toggleSelection(false)">取消</el-button>
+        <el-button @click.native="toggleSelection(true)">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -407,6 +451,8 @@ export default {
   },
   data() {
     return {
+      dialogPreson:false,
+      multipleSelection:[],
       height1:'707px',
       LevelTwoProcessList:[],//二级工序集合
       ProcessID: "",
@@ -518,6 +564,75 @@ export default {
     }, 450);
   },
   methods: {
+    // 人员类型为个人时单选
+    handleCurrentChange(row){
+      this.multipleSelection = [row]
+    },
+    // 二级工序改变
+    processChang(val){
+      if(val&&val.length){
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", val.join(','));
+      }else{
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", '');
+      }
+    },
+    // 点击人员弹框
+    clickDialog(){
+      
+      // this.multipleSelection = []
+      if(this.multipleSelection.length){
+        _this.$refs.multipleTable.clearSelection()
+      }
+      if(this.currentRow[this.labelStatus1]['OrganizeID']){
+        this.dialogPreson  = true
+        
+        if(this.currentRow[this.labelStatus1]['UserPeople']){
+          let list = this.currentRow[this.labelStatus1]['UserPeople'].split(',')
+          if(this.multiple){
+            this.$nextTick(()=>{
+              this.userData.forEach((item)=>{
+              list.forEach(ele=>{
+                if(item.Name===ele){
+                  _this.$refs.multipleTable.toggleRowSelection(item)
+                }
+              })
+            })
+            })
+          }else{
+            this.$nextTick(()=>{
+              this.userData.forEach((item)=>{
+                if(item.Name===list[0]){
+                   _this.$refs.multipleTable.setCurrentRow(item);
+                }
+            })
+            })
+           
+          }
+          
+          
+        }
+        // this.currentRow[this.labelStatus1], "UserPeople"
+      }
+    },
+    //确定选项
+    toggleSelection(status){
+      let list = []
+      if(status){
+        if(this.multipleSelection.length){
+          this.multipleSelection.forEach(item=>{
+            list.push(item.Name)
+          })
+          
+        }
+        this.$set(this.currentRow[this.labelStatus1],'Peoples',list.join(','))
+        this.$set(this.currentRow[this.labelStatus1],'UserPeople',list.join(','))
+      }
+      this.dialogPreson  = false
+    },
+    //获取选中的人员
+    handleSelectionChange(selection){
+      this.multipleSelection = selection
+    },
     // 获取线别
     async getLineData() {
       let form = {};
@@ -766,18 +881,16 @@ export default {
       // }
     },
     // 单击
-    handleRowClick(row) {
-      console.log('row',row)
+    async handleRowClick(row) {
       // 获取线下面的人
       // 判断是集体还是个人
       let newRow = this.lines.filter((x) => {
         return x.OrganizeID == row.LineID;
       });
-      console.log('this.lines',this.lines)
       if(newRow[0]['OrganizeID']){
-        this.getUserData(newRow[0].OrganizeID);
+        this.$set(this.currentRow[this.labelStatus1], "OrganizeID", newRow[0].OrganizeID);
+        await this.getUserData(newRow[0].OrganizeID);
       }
-      
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
       } else {
@@ -806,16 +919,16 @@ export default {
         this.$set(this.currentRow[this.labelStatus1], "Status", 2);
       }else if(this.labelStatus1 == 2){
         this.tag = 2;
-        this.getLevelTwoProcessData(this.currentRow[this.labelStatus1]['ProcessID'])
-        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
-        this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
-        this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
-        console.log('this.currentRow',this.currentRow)
+        await this.getLevelTwoProcessData(row.ProcessID)
+        this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
+        this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
+        this.$set(this.currentRow[this.labelStatus1], "ProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
       }
     },
     // 报工
@@ -1062,7 +1175,6 @@ export default {
           }
           this.ProcessID = ProcessID[0];
           // 获取二级工序
-          console.log('this.ProcessID',this.ProcessID)
           this.getLevelTwoProcessData(this.ProcessID)
         } else {
           this.$message({
@@ -1077,6 +1189,7 @@ export default {
     },
     //通过先别工序获取二级工序
     async getLevelTwoProcessData(ProcessID){
+      this.LevelTwoProcessList = []
       let form = {};
         form["dicID"] = 7900;
         form["ProcessID"] = ProcessID;
@@ -1098,7 +1211,6 @@ export default {
       var date = new Date();
       //获取3天前的日期
       var time1 = new Date(date.getTime() - 3*24*60*60*1000);
-      console.log('time1',time1)
       var year1 = time1.getFullYear();
       var month1 = time1.getMonth() + 1;
       if( month1 <10){
@@ -1247,5 +1359,8 @@ export default {
 
 .el-autocomplete-suggestion {
   width: 400px !important;
+}
+.presonDialog:hover{
+  cursor: pointer;
 }
 </style>
