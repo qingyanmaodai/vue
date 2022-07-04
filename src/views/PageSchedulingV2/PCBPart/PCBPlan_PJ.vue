@@ -330,6 +330,17 @@ export default {
           Size: "small",
           Params: "1",
         },
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 3,
+          Size: "small",
+          Params: "1",
+        },
       ],
       tableData: [[], [], [], [], [], []],
       delData: [[], [], [], [], [], []],
@@ -872,6 +883,7 @@ export default {
       this.formSearchs[0].datas["StockStatus"] = "";
       this.formSearchs[0].datas["ProductionStatus"] = "";
       this.formSearchs[0].datas["FirstPlanID"] = "";
+      this.formSearchs[0].datas["IsSetPrepare"] = "";
 
       switch (index) {
         case 0: //总排期
@@ -887,9 +899,15 @@ export default {
           break;
         case 3:
           //待转入备料入参条件
+          this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
+          this.formSearchs[0].datas["FirstPlanID"] = 0;
+          this.formSearchs[0].datas["IsSetPrepare"] = "未生成";
           break;
         case 4:
           // 已转入备料入参条件
+          this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
+          this.formSearchs[0].datas["FirstPlanID"] = 0;
+          this.formSearchs[0].datas["IsSetPrepare"] = "已生成";
           break;
       }
       this.dataSearch(0);
