@@ -1,51 +1,75 @@
-<!-- 一部插件日计划 -->
+<!--插件日计划-->
 <template>
-  <div class="container" v-loading="adminLoading">
-    <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
-    </div>
-    <div>
-      <div class="admin_content">
-        <div class="flex_column" :style="{ height: height }">
-          <div class="spreadContainer" v-loading="tableLoading[0]">
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread"
-            >
-              <gc-worksheet></gc-worksheet>
-            </gc-spread-sheets>
+  <div
+    class="container"
+    v-loading="adminLoading"
+  >
+  
+      <div
+        class="admin_head"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[0].datas"
+          :searchForm="formSearchs[0].forms"
+          :remark="0"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+              <el-col
+                :span="20"
+                class="flex_flex_end"
+              > </el-col>
+            </el-row>
           </div>
-        </div>
-        <div class="flex_row_spaceBtn pagination">
-          <div>
-            <span @click="toPageSetting" class="primaryColor cursor"
-              >SysID:{{sysID}}
-            </span>
-          </div>
-          <div class="flex">
-            <el-pagination
-              background
-              @size-change="(val) => pageSize(val, 0)"
-              :current-page="tablePagination[0].pageIndex"
-              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-              :page-size="tablePagination[0].pageSize"
-              :total="tablePagination[0].pageTotal"
-              @current-change="(val) => pageChange(val, 0)"
-              layout="total, sizes, prev, pager, next,jumper"
+          <div
+            class="flex_column"
+            :style="{ height: height }"
+          >
+            <div
+              class="spreadContainer"
+              v-loading="tableLoading[0]"
             >
-            </el-pagination>
+              <gc-spread-sheets
+                class="sample-spreadsheets"
+                @workbookInitialized="initSpread"
+              >
+                <gc-worksheet></gc-worksheet>
+              </gc-spread-sheets>
+            </div>
+          </div>
+          <div class="flex_row_spaceBtn pagination">
+            <div>
+              <span
+                @click="toPageSetting"
+                class="primaryColor cursor"
+              >SysID:7945
+              </span>
+            </div>
+            <div class="flex">
+              <el-pagination
+                background
+                @size-change="(val) => pageSize(val, 0)"
+                :current-page="tablePagination[0].pageIndex"
+                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                :page-size="tablePagination[0].pageSize"
+                :total="tablePagination[0].pageTotal"
+                @current-change="(val) => pageChange(val, 0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -73,12 +97,12 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch,
+    GetSearch,
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 export default {
-  name: "pindex2",
+  name: "DaySet1",
   components: {
     ComSearch,
     ComReportTable,
@@ -123,16 +147,6 @@ export default {
         },
         {
           ButtonCode: "save",
-          BtnName: "暂停",
-          isLoading: false,
-          Methods: "suspend",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData" },
-        },
-        {
-          ButtonCode: "save",
           BtnName: "退回",
           isLoading: false,
           Methods: "dataDel",
@@ -141,17 +155,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData" },
         },
-        {
-          ButtonCode: "save",
-          BtnName: "同步SAP",
-          isLoading: false,
-          Methods: "updateSAP",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData" },
-        },
-        {
+          {
           ButtonCode: "save",
           BtnName: "重排",
           isLoading: false,
@@ -179,31 +183,19 @@ export default {
       checkBoxCellTypeLine: "",
       isOpen: true,
       selectionData: [[]],
-          NoWorkHour: [],
-      LineViewSort: [],
-      spread: null,
-      sheetSelectRows: [],
-      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   watch: {},
   created() {
     _this = this;
-    this.adminLoading = true;
+   this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
 
-    // setInterval(() => {
-    //   this.spread.refresh(); //重新定位宽高度
-    // }, 10000);
-  },
-    activated()
-  {
-    if(this.spread)
-    {
-this.spread.refresh();
-    }
+      setInterval(()=>{
+        this.spread.refresh();//重新定位宽高度
 
+    },2000);
   },
   computed: {
     ...mapState({
@@ -211,28 +203,11 @@ this.spread.refresh();
     }),
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.setHeight();
-    // }, 300);
-    this.keyDown();
+    setTimeout(() => {
+      this.setHeight();
+    }, 300);
   },
   methods: {
-    // 监听键盘
-    keyDown() {
-      document.onkeydown = (e) => {
-        //事件对象兼容
-        let e1 =
-          e || event || window.event || arguments.callee.caller.arguments[0];
-
-        if (e.ctrlKey && e.keyCode == 83) {
-          e.preventDefault();
-          e.returnValue = false;
-
-          this.dataSaveDay();
-          return false;
-        }
-      };
-    },
     initSpread: function (spread) {
       this.spread = spread;
     },
@@ -256,58 +231,6 @@ this.spread.refresh();
       }
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
-    },
-    updateSAP(remarkTb, index, parms) {
-      let res = null;
-
-      this.getSelectionData();
-      let newData = [];
-      if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-       
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-   
-          newData.push(obj2);
-        });
-      }
-      this.$confirm(
-        "确定要同步的【" +
-          newData.length +
-          "】数据吗，如果已经同步过则无法再次同步"
-      )
-        .then(async (_) => {
-          this.adminLoading = true;
-
-          let res = await GetSearch(newData, "/APSAPI/UpdateERPInfo");
-          const { result, data, count, msg } = res.data;
-
-          if (result) {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        })
-        .catch((_) => {});
     },
     // 高度控制
     setHeight() {
@@ -395,85 +318,86 @@ this.spread.refresh();
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+     this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
-    async dataDel(remarkTb, index, parms) {
+   async dataDel(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
       let newData = [];
 
-      this.$confirm(
-        "确定要退回的【" +
-          this[parms.dataName][remarkTb].length +
-          "】数据吗，如果已经报工则无法退回？"
-      )
+      this.$confirm("确定要退回的【" + this[parms.dataName][remarkTb].length + "】数据吗，如果已经报工则无法退回？")
         .then((_) => {
-          if (parms && parms.dataName) {
-            if (this[parms.dataName][remarkTb].length == 0) {
-              this.$message.error("请单击需要操作的数据！");
-              return;
-            } else {
-              this[parms.dataName][remarkTb].forEach((x) => {
-                let obj = x;
-                obj["ElementDeleteFlag"] = 1;
-                newData.push(obj);
-              });
-            }
-          } else {
-            this.tableData[remarkTb].forEach((y) => {
-              let obj2 = y;
-              obj2["ElementDeleteFlag"] = 1;
-              newData.push(obj2);
-            });
-          }
-          this.adminLoading = true;
+
+                if (parms && parms.dataName) {
+        if (this[parms.dataName][remarkTb].length == 0) {
+          this.$message.error("请单击需要操作的数据！");
+          return;
+        } else {
+          this[parms.dataName][remarkTb].forEach((x) => {
+            let obj = x;
+            obj["ElementDeleteFlag"] = 1;
+            newData.push(obj);
+          });
+        }
+      } else {
+        this.tableData[remarkTb].forEach((y) => {
+          let obj2 = y;
+          obj2["ElementDeleteFlag"] = 1;
+          newData.push(obj2);
+        });
+      }
+           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
-    resetScheduling() {
-      this.$confirm("确定要重新排全部数据吗？")
+    resetScheduling()
+    {
+        this.$confirm("确定要重新排全部数据吗？")
         .then(async (_) => {
-          this.adminLoading = true;
+  this.adminLoading = true;
+  
+      let sheet = this.spread.getActiveSheet();
+      let submitData = sheet.getDataSource();
+       submitData.forEach((m) => {
+        m["isChecked"] = true;
+       
+      });
+      if(submitData.length>=0)
+      {
+      this.adminLoading = true;
+      let res =  await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan?isPlan=1");
+      const { result, data, count, msg } = res.data;
+      if (result) {
+             this.dataSearch(0);
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+      
+      }
+      else{
 
-          let sheet = this.spread.getActiveSheet();
-          let submitData = sheet.getDataSource();
-          submitData.forEach((m) => {
-            m["isChecked"] = true;
-          });
-          if (submitData.length >= 0) {
-            this.adminLoading = true;
-            let res = await GetSearch(
-              submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
-            );
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.dataSearch(0);
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } else {
-            this.$message({
-              message: "未有数据",
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
+           this.$message({
+          message: '未有数据',
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
         })
         .catch((_) => {});
+    
     },
     // 获取选中的数据
     getSelectionData() {
@@ -520,7 +444,7 @@ this.spread.refresh();
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: this.sysID }];
+      let IDs = [{ ID: 7945 }];
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -540,9 +464,9 @@ this.spread.refresh();
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        console.log("gettable");
+        console.log('gettable')
         this.getOrgData();
-        // this.dataSearch(0);
+           // this.dataSearch(0);
       }
     },
     // 验证数据
@@ -559,15 +483,16 @@ this.spread.refresh();
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
+        
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID;
-       form["ControlID"]=this.userInfo.WorkFlowInstanceID;
+      form["dicID"] = 7945;
       let res = await GetSearchData(form);
-
+   
       const { result, data, count, msg } = res.data;
       if (result) {
+   
         this.$set(this.tableData, remarkTb, data);
         this.setData();
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -591,7 +516,7 @@ this.spread.refresh();
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      console.log(this.checkBoxCellTypeLine);
+      console.log(this.checkBoxCellTypeLine)
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -632,119 +557,70 @@ this.spread.refresh();
       }
 
       //  colInfos.unshift(checkbox);
+      var row = sheet.getRange(
+        0,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.SheetArea.colHeader
+      );
+      row.backColor("#f3f3f3");
+      row.foreColor("#000000d9");
+      row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
         "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
       defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-        "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        "1px solid #CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
       );
       defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-        "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        "1px solid #CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
       );
       defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-        "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        "1px solid transparent",
+        GC.Spread.Sheets.LineStyle.min
       );
       defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-        "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        "1px solid transparent",
+        GC.Spread.Sheets.LineStyle.min
       );
-
-      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-
       // 冻结第一列
-
+    
       sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-
-      let colindex = 0;
-      for (let m of colInfos) {
-        if (m.name == "Capacity") {
-          var rowSheet = sheet.getRange(
-            -1,
-            colindex,
-            1,
-            1,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-          rowSheet.foreColor("red");
-          break;
+      let colindex=0;
+      colInfos.forEach(m=>{
+    
+        if(m.name=="Capacity")
+        {
+     var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+ 
+    row.foreColor("red");
+    return;
         }
         colindex++;
-      }
 
-      this.tableData[0].forEach((row, index) => {
-        var rowSheet = sheet.getRange(
-          index,
-          0,
-          1,
-          colindex,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        var rowSheet2 = sheet.getRange(
-          index,
-          colindex,
-          1,
-          colInfos.length - colindex,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        if (row["Code"] == null) {
-          rowSheet.backColor("#A0CFFF");
-          rowSheet.foreColor("balck");
-          rowSheet2.backColor("#A0CFFF");
-          rowSheet2.foreColor("balck");
-        } else if (row["MFGOrganizeID"] === 162) {
-          // row.backColor();
-          rowSheet.backColor("#FFFF00");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("#FFFF00");
-        } else {
-          // row.backColor();
-          rowSheet.foreColor("black");
-          rowSheet.backColor("");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("");
-        }
-        let cellIndex = 0;
-        this.tableColumns[0].forEach((m) => {
-          //行，start,end
-          if (m.DataType == "bit" && m.isEdit) {
-            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-            cellType.caption("");
-            cellType.textTrue("");
-            cellType.textFalse("");
-            cellType.textIndeterminate("");
-            cellType.textAlign(
-              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
-            );
-            cellType.isThreeState(false);
-            sheet.getCell(index, cellIndex).cellType(cellType);
-          }
-          cellIndex++;
-        });
       });
+this.tableData[0].forEach((row,index)=>{
+ 
+if(!row["Code"])
+{
+       var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
 
+    row.backColor("#019fde");
+     row.foreColor("white");
+}
+});
       let cellIndex = 0;
-      let viewSortIndex=0;//排序的索引
-      let lineIDIndex=0
       this.tableColumns[0].forEach((m) => {
         //行，start,end
-        if(m.prop=="ViewSort")
-        {
-          viewSortIndex=cellIndex;
-        }
-        if(m.prop=="LineID")
-        {
-          lineIDIndex=cellIndex;
-        }
         if (m.isEdit) {
           sheet.getRange(-1, cellIndex, 1, 1).locked(false);
           var cell = sheet.getCell(
@@ -754,181 +630,16 @@ this.spread.refresh();
           );
           //cell.foreColor("#2a06ecd9");
         } else {
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          cell.foreColor("gray");
+          // var cell = sheet.getCell(
+          //   -1,
+          //   cellIndex,
+          //   GC.Spread.Sheets.SheetArea.viewport
+          // );
+          // cell.foreColor("gray");
         }
 
         cellIndex++;
       });
-      sheet.options.protectionOptions.allowResizeColumns = true;
-      //sheet.options.isProtected = true;
-
-
-
-
-
-
-
-
-
-      var insertRowsCopyStyle = {
-        canUndo: true,
-        name: "insertRowsCopyStyle",
-        execute: function (context, options, isUndo) {
-          var Commands = GC.Spread.Sheets.Commands;
-          if (isUndo) {
-            Commands.undoTransaction(context, options);
-            return true;
-          } else {
-            sheet.suspendPaint();
-            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-            // console.log(_this.sheetSelectRows);
-
-            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
-            //删除旧行
-            if (_this.sheetSelectObj.start > options.activeRow) {
-              //说明从下面插入上面
-              sheet.copyTo(
-                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                0,
-                options.activeRow,
-                0,
-                _this.sheetSelectRows.length,
-                sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.all
-              );
-           
-          //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-              sheet.deleteRows(
-                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                _this.sheetSelectObj.count
-              );
-              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
-            } else {
-              //从上面往下面插入
-              sheet.copyTo(
-                _this.sheetSelectObj.start,
-                0,
-                options.activeRow,
-                0,
-                _this.sheetSelectRows.length,
-                sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.all
-              );
-            //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-              sheet.deleteRows(
-                _this.sheetSelectObj.start,
-                _this.sheetSelectObj.count
-              );
-              
-            }
-            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
- 
-            let lineID=_this.sheetSelectRows[0][lineIDIndex]
-            let isFind=false;
-            let viewSort=1;
-   
-
-            for(var i=0;i<count;i++ )
-            {
- 
-              if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
-              {
-                  isFind=true;      
-                
-              }
-    if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
-              {
-               
-                break;
-              }
-              if(isFind)
-              {
-                sheet.setValue(i,viewSortIndex,viewSort);
-                viewSort++;
-              }
-             
-                
-            }
-      
-            // Commands.startTransaction(context, options);
-
-            // sheet.suspendPaint();
-
-            // var beforeRowCount = 0;
-
-            //  sheet.suspendPaint();
-
-            // Commands.endTransaction(context, options);
-            sheet.resumePaint();
-
-            return true;
-          }
-        },
-      };
-
-
-
-      this.spread
-        .commandManager()
-        .register("insertRowsCopyStyle", insertRowsCopyStyle);
-  
-
-      function MyContextMenu() {}
-      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-        this.spread
-      );
-      MyContextMenu.prototype.onOpenMenu = function (
-        menuData,
-        itemsDataForShown,
-        hitInfo,
-        spread
-      ) {
-        itemsDataForShown.forEach(function (item, index) {
-          // console.log(item);
-          if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
-            item.command = "insertRowsCopyStyle";
-          }
-          //  else if (item && item.name === "gc.spread.cut") {
-
-          //     item.command = "insertRowsCut";
-          //   }
-        });
-      };
-      var contextMenu = new MyContextMenu();
-      this.spread.contextMenu = contextMenu;
-      // 剪贴板事件绑定
-      sheet.bind(
-        GC.Spread.Sheets.Events.ClipboardChanged,
-        function (sender, args) {
-          let s = sheet.getSelections()[0];
-          console.log(sheet.getDataItem(s.row));
-          _this.sheetSelectRows = sheet.getArray(
-            s.row,
-            0,
-            s.rowCount,
-            _this.tableColumns[0].length
-          );
-          _this.sheetSelectObj.start = s.row;
-
-          _this.sheetSelectObj.count = s.rowCount;
-        }
-      );
-
-
-
-
-
-
-
-
-
-
 
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
@@ -942,11 +653,11 @@ this.spread.refresh();
         }
       });
       //表格编辑事件
-
+    
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-
+        
         _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
@@ -958,66 +669,83 @@ this.spread.refresh();
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread.getActiveSheet();
-      //let dataSource = sheet.getDataSource();
-      if (val == null) {
-        val = 0;
+       let sheet = this.spread.getActiveSheet();
+       let dataSource=sheet.getDataSource();
+      if(val==null)
+      {
+        val=0;
       }
-      let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
-      if (currentRow.ID == -1) {
+      let currentRow = dataSource[rowIndex];
+      if(currentRow.ID==-1)
+      {
         return false;
       }
-
       let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
-      if (false && !currentRow[currentlabel]) {
+           if (false&&!currentRow[currentlabel]) {
+   
         //不是天日的数量
-        currentlabel = this.tableColumns[0][colIndex].prop;
-        if (currentlabel == "ViewSort") {
-          val = currentRow[currentlabel];
-          if (val) {
-            let newRowindex = 1;
-            let flag = false;
-            let lineID = currentRow["LineID"];
+           currentlabel = this.tableColumns[0][colIndex].prop ;
+          if(currentlabel=='ViewSort')
+          {
+            val=currentRow[currentlabel];
+            if(val)
+            {
+
+              let newRowindex=1;
+              let flag=false;
+              let lineID=currentRow["LineID"];
             //循环上面
-            for (var r = 0; r < dataSource.length - 1; r++) {
-              let row = dataSource[r];
-              if (lineID != row["LineID"]) {
-                continue;
-              }
-              let thisValue = newRowindex; //row[currentlabel];
-              if (row["Code"] == null || row["Code"] == "") {
-                break;
-              }
-              if (r < rowIndex) {
-                //当前循环的在当前操作行的上面
-                if (thisValue >= val && flag === false) {
-                  newRowindex = val + 1;
-                  flag = true;
+             for(var r=0;r<dataSource.length-1;r++)
+             {
+         
+                let row = dataSource[r];
+                  if (lineID!=row["LineID"])
+                  {
+                    continue;
+                  }
+                let thisValue=newRowindex;//row[currentlabel];
+                  if(row["Code"]==null||row["Code"]=='')
+                  {
+                    break;
+                  }
+                if(r<rowIndex)
+                {//当前循环的在当前操作行的上面
+                  if(thisValue>=val&&flag===false)
+                  {
+                    newRowindex=val+1;
+                    flag=true;
+                  }
+                 
+                  thisValue=newRowindex;
+                   newRowindex++;
                 }
-
-                thisValue = newRowindex;
-                newRowindex++;
-              } else if (r > rowIndex) {
-                //当前循环的在当前操作行的下面
-                if (newRowindex == val) {
-                  newRowindex++;
+                else if(r>rowIndex)
+                {//当前循环的在当前操作行的下面
+                  if(newRowindex==val)
+                  {
+                    newRowindex++;
+                  }
+                  
+                     thisValue=newRowindex;
+                     newRowindex++;
                 }
-
-                thisValue = newRowindex;
-                newRowindex++;
-              } else {
-                thisValue = val;
-              }
-              sheet.setValue(r, colIndex, thisValue);
+                else 
+                {
+                  thisValue=val;
+                }
+                 sheet.setValue(r, colIndex, thisValue);
+             }
+          
+                
+             
             }
           }
-        } else {
-        }
-        sheet.setDataSource(this.tableData[0]);
-        return;
-      }
-      if (currentRow[currentlabel] == null) {
-        return;
+          else 
+          {
+          
+          }
+           sheet.setDataSource(this.tableData[0]);
+            return ;
       }
       if (
         !currentRow[currentlabel].TotalHours ||
@@ -1026,7 +754,7 @@ this.spread.refresh();
         this.$message.error("该天休息，上班时间为0");
         return;
       }
-
+     
       let Qty = parseInt(currentRow.OweQty);
       let Capacity = parseInt(currentRow.Capacity);
       let list = [];
@@ -1035,6 +763,7 @@ this.spread.refresh();
       // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
       this.tableColumns[0].some((x, i) => {
         if (i <= colIndex) {
+          
           list.push(currentRow[x.prop]);
           if (x.prop2 && i != colIndex && currentRow[x.prop]) {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
@@ -1044,7 +773,7 @@ this.spread.refresh();
         }
       });
       remainNum = Qty - editNum;
-
+      
       if (parseInt(val) > remainNum) {
         this.$message.error(
           "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
@@ -1102,8 +831,9 @@ this.spread.refresh();
     },
     //////////////////////////////
     async getOrgData() {
-      this.getLineData(this.userInfo.WorkFlowInstanceID);
-      return;
+
+        this.getLineData(this.userInfo.WorkFlowInstanceID);
+        return ;
       this.treeListTmp = [];
       this.treeData = [];
       let form = {
@@ -1215,7 +945,7 @@ this.spread.refresh();
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
-      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+     // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       //this.dataSearch(0);
       this.getLineData(data.OrganizeID);
     },
@@ -1230,22 +960,10 @@ this.spread.refresh();
     // 保存日计划
     async dataSaveDay() {
       let sheet = this.spread.getActiveSheet();
-      if (sheet.isEditing()) {
-        sheet.endEdit();
-      }
-       
-     let submitData =[]
-      let newData =sheet.getDirtyRows();
+      let newData = sheet.getDirtyRows();
+      let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          submitData.push(x.item);
-        });
-      }
-     
-         newData =sheet.getInsertRows();
-          if (newData.length != 0) {
-        newData.forEach((x) => {
-          x.item["dicID"]=this.sysID;
           submitData.push(x.item);
         });
       }
@@ -1253,7 +971,7 @@ this.spread.refresh();
         this.$message.error("没修改过任何数据！");
         return;
       }
-
+       
       this.adminLoading = true;
       let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;
@@ -1273,36 +991,6 @@ this.spread.refresh();
           dangerouslyUseHTMLString: true,
         });
       }
-    },
-    async suspend(remarkTb, index, parms) {
-      let res = null;
-      this.getSelectionData();
-      let newData = [];
-
-      this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
-        .then((_) => {
-        if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ProductionStatus"] = 24
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-         obj["ProductionStatus"] = 24
-          newData.push(obj2);
-        });
-      }
-           this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
     },
     // 下拉选择事件
     handleCommand(val) {

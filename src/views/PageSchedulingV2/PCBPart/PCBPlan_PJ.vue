@@ -854,7 +854,7 @@ export default {
         case 1: //已完成待出货
           // this.formSearchs[0].datas["StockStatus"] = "待出货";
            this.formSearchs[0].datas["StockStatus"] = '待出货';
-            this.formSearchs[0].datas["CompletionStatus"] =0
+            this.formSearchs[0].datas["CompletionStatus"] =1
           break;
         case 2:
           this.formSearchs[0].datas["StockStatus"] = "已出货";

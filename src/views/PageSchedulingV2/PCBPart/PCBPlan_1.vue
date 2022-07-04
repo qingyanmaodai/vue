@@ -166,8 +166,8 @@ export default {
       sysID: [
         { ID: 5156 },
         { ID: 5615 },
-        { ID: 5641 },
-        { ID: 5641 },
+        { ID: 5156 },
+        { ID: 5156 },
         { ID: 5641 },
         { ID: 5641 },
         { ID: 5156 },
@@ -864,13 +864,13 @@ export default {
         // this.formSearchs[0].datas["sort"] = "PrepareStatus asc";
         // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
         // this.formSearchs[2].datas["SchedulingStatus"] = "0";
-        this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
-        this.formSearchs[2].datas["SchedulingStatus"] = "1";
+       // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
+        this.formSearchs[2].datas["CompletionStatus"] = "1";
 
         // this.formSearchs[4].datas["ProcessID"] = "P202009092233413";
         // this.formSearchs[4].datas["SchedulingStatus"] = "0";
-        this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
-        this.formSearchs[3].datas["SchedulingStatus"] = "1";
+      //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
+        this.formSearchs[3].datas["CompletionStatus"] = "1";
         this.formSearchs[4].datas["productionstatus"] = "25";
         this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
         this.getTableData(this.formSearchs[1].datas, 1);
