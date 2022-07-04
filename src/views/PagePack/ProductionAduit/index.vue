@@ -106,6 +106,7 @@
                 readonly
                 type="text"
                 @click.native="clickDialog"
+                class="presonDialog"
               ></el-input>
             </el-form-item>
             <el-form-item v-show="labelStatus1 == 1" label="人员：" prop="Peoples">
@@ -155,15 +156,16 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="二级工序：" prop="LevelTwoProcessName"  v-show="labelStatus1 == 2" style="width:40%">
+          <el-form-item label="二级工序：" prop="ProcessName"  v-show="labelStatus1 == 2" style="width:40%">
             <el-select
               id="multipleSelct"
               style="width: 100%"
               clearable
               filterable
               multiple
-              v-model="currentRow[labelStatus1].LevelTwoProcessName"
+              v-model="currentRow[labelStatus1].ProcessName"
               size="small"
+              @change="processChang"
             >
               <el-option
                 v-for="(item, i) in LevelTwoProcessList"
@@ -406,10 +408,13 @@
         :data="userData"
         tooltip-effect="dark"
         style="width: 100%"
-        @selection-change="handleSelectionChange">
+        @selection-change="handleSelectionChange"
+        :highlight-current-row="!multiple"
+        @current-change="handleCurrentChange"
+        >
         <el-table-column
           type="selection"
-          width="55">
+          width="55" v-if="multiple">
         </el-table-column>
         <el-table-column
           prop="OrganizeName"
@@ -559,12 +564,29 @@ export default {
     }, 450);
   },
   methods: {
+    // 人员类型为个人时单选
+    handleCurrentChange(row){
+      console.log('row',row)
+    },
+    // 二级工序改变
+    processChang(val){
+      console.log(val)
+      if(val&&val.length){
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", val.join(','));
+      }else{
+        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", '');
+      }
+    },
     // 点击人员弹框
     clickDialog(){
-      _this.$refs.multipleTable.clearSelection()
+      
       // this.multipleSelection = []
+      if(this.multipleSelection.length){
+        _this.$refs.multipleTable.clearSelection()
+      }
       if(this.currentRow[this.labelStatus1]['OrganizeID']){
         this.dialogPreson  = true
+        
         if(this.currentRow[this.labelStatus1]['UserPeople']){
           let list = this.currentRow[this.labelStatus1]['UserPeople'].split(',')
           this.$nextTick(()=>{
@@ -592,7 +614,12 @@ export default {
           
         }
         this.$set(this.currentRow[this.labelStatus1],'Peoples',list.join(','))
+        this.$set(this.currentRow[this.labelStatus1],'UserPeople',list.join(','))
         console.log('弹框确定',this.currentRow[this.labelStatus1])
+        if (this.currentRow[this.labelStatus1]['OrganizeType'] == "个人"&&this.multipleSelection.length>1) {
+          
+          return
+        } 
       }
       this.dialogPreson  = false
     },
@@ -864,10 +891,10 @@ export default {
       
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
+        // this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
       } else {
         this.multiple = false;
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
+        // this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
       }
       
       if (this.labelStatus1 == 0) {
@@ -934,7 +961,8 @@ export default {
           //   this.$set(this.currentRow[this.labelStatus1], "UserPeopleID",  presonIdList.length?presonIdList.join(','):'');
           //   this.$set(this.currentRow[this.labelStatus1], "UserPeople", presonNameList.length?presonNameList.join(','):'');
           // }
-          this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
+          this.$set(this.currentRow[this.labelStatus1], "ProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
+          this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
         // })
         
         
@@ -1374,5 +1402,8 @@ export default {
 
 .el-autocomplete-suggestion {
   width: 400px !important;
+}
+.presonDialog:hover{
+  cursor: pointer;
 }
 </style>
