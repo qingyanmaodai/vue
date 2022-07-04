@@ -82,7 +82,7 @@
                 size="small"
               ></el-input>
             </el-form-item>
-            <el-form-item v-show="labelStatus1 == 0||labelStatus1 == 2" label="人员：" prop="UserPeople">
+            <el-form-item v-show="labelStatus1 == 0" label="人员：" prop="UserPeople">
               <el-select
                 clearable
                 filterable
@@ -98,6 +98,15 @@
                   :value="item.Account"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item v-show="labelStatus1 == 2" label="人员：" prop="Peoples">
+              <el-input
+                v-model="currentRow[labelStatus1].Peoples"
+                size="small"
+                readonly
+                type="text"
+                @click.native="clickDialog"
+              ></el-input>
             </el-form-item>
             <el-form-item v-show="labelStatus1 == 1" label="人员：" prop="Peoples">
               <el-input
@@ -146,7 +155,7 @@
               </template>
             </el-autocomplete>
           </el-form-item>
-          <el-form-item label="二级工序：" prop="LevelTwoProcessName"  v-show="labelStatus1 == 2">
+          <el-form-item label="二级工序：" prop="LevelTwoProcessName"  v-show="labelStatus1 == 2" style="width:40%">
             <el-select
               id="multipleSelct"
               style="width: 100%"
@@ -389,6 +398,36 @@
         <el-button type="primary" @click="sureAdd">确定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 人员的选择 -->
+    <el-dialog  title="修改人员" width="50%" :visible.sync="dialogPreson">
+       <el-table
+        ref="multipleTable"
+        :data="userData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="OrganizeName"
+          label="组织"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="Name"
+          label="姓名"
+          width="120">
+        </el-table-column>
+        
+      </el-table>
+      <div style="margin-top: 20px">
+        <el-button @click.native="toggleSelection(false)">取消</el-button>
+        <el-button @click.native="toggleSelection(true)">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -407,6 +446,8 @@ export default {
   },
   data() {
     return {
+      dialogPreson:false,
+      multipleSelection:[],
       height1:'707px',
       LevelTwoProcessList:[],//二级工序集合
       ProcessID: "",
@@ -518,6 +559,48 @@ export default {
     }, 450);
   },
   methods: {
+    // 点击人员弹框
+    clickDialog(){
+      _this.$refs.multipleTable.clearSelection()
+      // this.multipleSelection = []
+      if(this.currentRow[this.labelStatus1]['OrganizeID']){
+        this.dialogPreson  = true
+        if(this.currentRow[this.labelStatus1]['UserPeople']){
+          let list = this.currentRow[this.labelStatus1]['UserPeople'].split(',')
+          this.$nextTick(()=>{
+            this.userData.forEach((item)=>{
+            list.forEach(ele=>{
+              if(item.Name===ele){
+                _this.$refs.multipleTable.toggleRowSelection(item)
+              }
+            })
+          })
+          })
+          
+        }
+        // this.currentRow[this.labelStatus1], "UserPeople"
+      }
+    },
+    //确定选项
+    toggleSelection(status){
+      let list = []
+      if(status){
+        if(this.multipleSelection.length){
+          this.multipleSelection.forEach(item=>{
+            list.push(item.Name)
+          })
+          
+        }
+        this.$set(this.currentRow[this.labelStatus1],'Peoples',list.join(','))
+        console.log('弹框确定',this.currentRow[this.labelStatus1])
+      }
+      this.dialogPreson  = false
+    },
+    //获取选中的人员
+    handleSelectionChange(selection){
+      console.log('selection',selection)
+      this.multipleSelection = selection
+    },
     // 获取线别
     async getLineData() {
       let form = {};
@@ -766,7 +849,7 @@ export default {
       // }
     },
     // 单击
-    handleRowClick(row) {
+    async handleRowClick(row) {
       console.log('row',row)
       // 获取线下面的人
       // 判断是集体还是个人
@@ -775,14 +858,18 @@ export default {
       });
       console.log('this.lines',this.lines)
       if(newRow[0]['OrganizeID']){
-        this.getUserData(newRow[0].OrganizeID);
+        this.$set(this.currentRow[this.labelStatus1], "OrganizeID", newRow[0].OrganizeID);
+        await this.getUserData(newRow[0].OrganizeID);
       }
       
       if (newRow[0].OrganizeType == "集体") {
         this.multiple = true;
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
       } else {
         this.multiple = false;
+        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
       }
+      
       if (this.labelStatus1 == 0) {
         this.tag = 0;
         this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
@@ -813,11 +900,45 @@ export default {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
-        this.getLevelTwoProcessData(row.ProcessID)
-        this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
+        await this.getLevelTwoProcessData(row.ProcessID)
+       let presonIdList = []
+       let presonNameList = []
         this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
         this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
+        // this.$nextTick(()=>{
+          // if(row.Peoples){
+          //   let arr = row.Peoples.split(',')
+          //   console.log('arr',arr)
+          //   console.log('this.userData',this.userData)
+          //   this.userData.forEach(item=>{
+          //     console.log('item',item)
+          //     arr.forEach((ele)=>{
+          //       console.log('ele',ele)
+          //       if(item.Name === ele){
+          //         presonIdList.push(item.Account)
+          //         presonNameList.push(item.Name)
+          //         console.log('presonIdList',presonIdList)
+          //       }
+          //     })
+              
+          //   })
+          // }
+          this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
+          // if(this.multiple){
+          //   // this.$set(this.currentRow[this.labelStatus1], "UserPeople", '');
+          //   this.$set(this.currentRow[this.labelStatus1], "UserPeopleID", presonIdList.length?presonIdList:[]);
+          //   this.$set(this.currentRow[this.labelStatus1], "UserPeople", presonNameList.length?presonNameList:[]);
+          // }else{
+          //   // this.$set(this.currentRow[this.labelStatus1], "UserPeople", []);
+          //   // this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName);
+          //   this.$set(this.currentRow[this.labelStatus1], "UserPeopleID",  presonIdList.length?presonIdList.join(','):'');
+          //   this.$set(this.currentRow[this.labelStatus1], "UserPeople", presonNameList.length?presonNameList.join(','):'');
+          // }
+          this.$set(this.currentRow[this.labelStatus1], "LevelTwoProcessName", row.LevelTwoProcessName?row.LevelTwoProcessName.split(','):[]);
+        // })
+        
+        
+        
         console.log('this.currentRow',this.currentRow)
       }
     },
@@ -1177,6 +1298,8 @@ export default {
       }
       this.$confirm("确定保存吗？")
         .then(() => {
+          console.log('_this.currentRow[this.labelStatus1]',_this.currentRow[this.labelStatus1])
+          return
           _this.dataSave([_this.currentRow[this.labelStatus1]], 1);
         })
         .catch(() => {});
