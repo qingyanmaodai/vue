@@ -128,7 +128,7 @@ export default {
       title: "订单列表",
       Status1: [
         { label: "全部", value: "" },
-        { label: "配件备料", value: 1 },
+        // { label: "配件备料", value: 1 },此功能已改在配件总排期中做
         { label: "待转入备料", value: "是" },
         { label: "已转入备料", value: "是" },
         { label: "未匹配MO", value: "否" },
