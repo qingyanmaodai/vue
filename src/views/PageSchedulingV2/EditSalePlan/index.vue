@@ -151,10 +151,6 @@ export default {
           Icon: "",
           Size: "small",
         },
-<<<<<<< HEAD
-       // PCB备料标签的生成备料任务功能对接完才放开
-=======
->>>>>>> a10694866e9ba59ecfaa52f8bb04110421003481
         {
           ButtonCode: "save",
           BtnName: "生成备料任务",

@@ -119,7 +119,7 @@
               <div class="flex_row_spaceBtn pagination">
                 <div>
                   <span @click="toPageSetting" class="primaryColor cursor"
-                    >SysID:7942
+                    >SysID:7944
                   </span>
                 </div>
                 <div class="flex">
@@ -381,7 +381,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
+      sysID: [{ ID: 7944, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
