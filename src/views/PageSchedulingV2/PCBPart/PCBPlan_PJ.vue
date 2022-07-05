@@ -133,7 +133,6 @@
           :remark="5"
           :isLoading="isLoading[5]"
           :btnForm="btnForm"
-          :signName="5"
           @btnClick="btnClick"
         />
         <ComVxeTable
@@ -316,19 +315,6 @@ export default {
           Type: "danger",
           Icon: "",
           signName: 2,
-          Size: "small",
-          Params: {
-            dataName: "selectionData",
-          },
-        },
-	      {
-          ButtonCode: "save",
-          BtnName: "退回",
-          isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          signName: 5,
           Size: "small",
           Params: {
             dataName: "selectionData",
