@@ -10,8 +10,8 @@
     >
       <ComSearch
         ref="searchRef"
-        :searchData="formSearchs[tagRemark].datas"
-        :searchForm="formSearchs[tagRemark].forms"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
         :remark="0"
         :signName="labelStatus1"
         :isLoading="isLoading"
@@ -43,8 +43,9 @@
           class="flex_column"
           :style="{'height':height}"
         >
-          <div class="spreadContainer"
-            v-loading="tableLoading[labelStatus1===1?1:0]"
+          <div
+            class="spreadContainer"
+            v-loading="tableLoading[0]"
           >
             <gc-spread-sheets
               class="sample-spreadsheets"
@@ -54,40 +55,38 @@
               <gc-worksheet :colCount=49></gc-worksheet>
             </gc-spread-sheets>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                  @click="toPageSetting(sysID[labelStatus1===1?1:0].ID)"
-                  class="primaryColor cursor"
-                  >SysID:{{ sysID[labelStatus1===1?1:0].ID }}
-                </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[labelStatus1===1?1:0].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span
+              @click="toPageSetting"
+              class="primaryColor cursor"
+            >SysID:{{sysID[tagRemark].ID}}
+            </span>
+          </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="val=>pageSize(val,0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[
+              200,
+              500,
+              1000,
+              2000,
+              3000,
+              5000,
+              10000
 
-              ]"
-                :page-size="tablePagination[labelStatus1===1?1:0].pageSize"
-                :total="tablePagination[labelStatus1===1?1:0].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            ]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="val=>pageChange(val,0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
+          </div>
         </div>
-        </div>
-        
-       
       </div>
     </div>
   </div>
@@ -128,19 +127,14 @@ export default {
       title: "订单列表",
       Status1: [
         { label: "全部", value: "" },
-        // { label: "配件备料", value: 1 },此功能已改在配件总排期中做
         { label: "待转入备料", value: "是" },
         { label: "已转入备料", value: "是" },
         { label: "未匹配MO", value: "否" },
       ],
       labelStatus1: 0,
       drawer: false,
-      delData: [[],[]],
+      delData: [[]],
       formSearchs: [
-        {
-          datas: {},
-          forms: [],
-        },
         {
           datas: {},
           forms: [],
@@ -157,7 +151,6 @@ export default {
           Icon: "",
           Size: "small",
         },
-        //PCB备料标签的生成备料任务功能对接完才放开
         {
           ButtonCode: "save",
           BtnName: "生成备料任务",
@@ -166,17 +159,6 @@ export default {
           Type: "primary",
           Icon: "",
           signName: 1,
-          Size: "small",
-          Params: "1",
-        },
-         {
-          ButtonCode: "save",
-          BtnName: "生成备料任务",
-          isLoading: false,
-          Methods: "readyTask",
-          Type: "primary",
-          Icon: "",
-          signName: 2,
           Size: "small",
           Params: "0",
         },
@@ -191,14 +173,11 @@ export default {
         //   Params: { dataName: "delData" },
         // },
       ],
-      tableData: [[],[]],
-      tableColumns: [[],[]],
-      tableLoading: [false,false],
-      isClear: [false,false],
-      tablePagination: [
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
-      ],
+      tableData: [[]],
+      tableColumns: [[]],
+      tableLoading: [false],
+      isClear: [false],
+      tablePagination: [{ pageIndex: 1, pageSize: 2000, pageTotal: 0 }],
       height: "707px",
       treeHeight: "765px",
       showPagination: true,
@@ -207,8 +186,7 @@ export default {
       isEdit: false,
       sysID: [
         {ID:6676},
-        {ID:7973}
-      ],
+      ],      
       spread: null,
       adminLoading: false,
       categorys: [],
@@ -309,14 +287,16 @@ export default {
     btnClick(methods, parms, index, remarkTb) {
       if (parms) {
         // 下标 要用的数据 标题 ref
-        this[methods](this.tagRemark, index, parms);
+        this[methods](remarkTb, index, parms);
       } else {
-        this[methods](this.tagRemark, index);
+        this[methods](remarkTb, index);
       }
     },
     // 查询
     dataSearch(remarkTb) {
       // let sheet = this.spread.getActiveSheet();
+      // console.log(sheet.getDataSource()); // 获取改变过的数组
+      // console.log(sheet.getDirtyRows()); // 获取改变过的数组
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -431,9 +411,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          // this.getTableData(this.formSearchs[0].datas, 0);
-          // 现加了PCB备料，需要传入动态下标
-          this.getTableData(this.formSearchs[z].datas, z);
+          this.getTableData(this.formSearchs[0].datas, 0);
         });
       } else {
         this.adminLoading = false;
@@ -461,7 +439,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID[remarkTb].ID;
+      form["dicID"] = this.sysID[remarkTb].ID
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -490,7 +468,7 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       let colInfos = [];
       let colHeader1 = [];
-      if (this.labelStatus1 == 1||this.labelStatus1 == 2) {
+      if (this.labelStatus1 == 1) {
         colHeader1.push("");
         // 选框
         let checkbox = {
@@ -508,7 +486,6 @@ export default {
         );
       } else {
         // colHeader1.push("");
-        
         // let checkbox = {
         //   name: this.tableData[0].prop,
         //   displayName: this.tableData[0].label,
@@ -516,16 +493,9 @@ export default {
         //   size: 60,
         // };
         // colInfos.unshift(checkbox);
-        // 解决其他表格复选框带入其他标签问题
-        sheet.setCellType(
-          0,
-          0,
-          '',
-          GCsheets.SheetArea.colHeader
-        );
       }
-      let cellIndex = 0;
-      this.tableColumns[this.tagRemark].forEach((x, i) => {
+
+      this.tableColumns[0].forEach((x, i) => {
         if (i == 0) {
           colInfos.push({
             name: x.prop,
@@ -540,30 +510,12 @@ export default {
             size: parseInt(x.width),
           });
         }
-        // if(x.label!='选择'){
-        //   colHeader1.push(x.label);
-        // }
-        
+
+        colHeader1.push(x.label);
       });
-      // this.tableColumns[1].forEach((x, i) => {
-      //   // if (i == 0) {
-      //   //   colInfos.push({
-      //   //     name: x.prop,
-      //   //     displayName: x.label,
-      //   //     cellType: new GC.Spread.Sheets.CellTypes.Text(),
-      //   //     size: parseInt(x.width),
-      //   //   });
-      //   // } else {
-      //     colInfos.push({
-      //       name: x.prop,
-      //       displayName: x.label,
-      //       size: parseInt(x.width),
-      //     });
-      //   // }
-      // });
+
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
-        
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
 
@@ -574,7 +526,6 @@ export default {
         -1,
         GC.Spread.Sheets.SheetArea.colHeader
       );
-      
       row.backColor("#f3f3f3");
       row.foreColor("#000000d9");
       row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
@@ -605,7 +556,7 @@ export default {
 
       // 冻结第一列
       sheet.frozenColumnCount(5);
-      sheet.setDataSource(this.tableData[this.tagRemark]);
+      sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
@@ -623,9 +574,8 @@ export default {
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {});
       this.spread.resumePaint();
       this.adminLoading = false;
-      this.tableLoading[this.tagRemark] = false;
+      this.tableLoading[0] = false;
       this.spread.repaint();
-      
       // this.spread.suspendPaint();
       // this.spread.isPaintSuspended(false);
     },
@@ -643,13 +593,8 @@ export default {
       if (index == 0) {
         this.formSearchs[0].datas["IsSetPrepare"] = "";
       } else if (index == 1) {
-        this.formSearchs[1].datas["dicID"] = "7973";
-        this.dataSearch(1);
-        return
-      } else if (index == 2) {
         this.formSearchs[0].datas["IsSetPrepare"] = ["未生成", "部分生成"];
-        
-      }else if(index == 3){
+      } else if (index == 2) {
         this.formSearchs[0].datas["IsSetPrepare"] = ["已生成", "部分生成"];
       } else {
         this.formSearchs[0].datas["IsSetPrepare"] = "";
@@ -686,15 +631,10 @@ export default {
         // }
         if (submitData.length != 0) {
           this.adminLoading = true;
-          // 配件备料接口：/APSAPI/SetPreParePlanV2
-          // 
-          let url = this.tagRemark===1?"/APSAPI/SetPreParePlanV2":"/APSAPI/SetPreParePlan"
-          console.log('url',url)
-          console.log('this.tagRemark',this.tagRemark)
-          let res = await GetSearch(submitData, url);
+          let res = await GetSearch(submitData, "/APSAPI/SetPreParePlan");
           const { result, data, count, msg } = res.data;
           if (result) {
-            this.dataSearch(this.tagRemark);
+            this.dataSearch(0);
             this.adminLoading = false;
             this.$message({
               message: msg,
@@ -709,8 +649,6 @@ export default {
               dangerouslyUseHTMLString: true,
             });
           }
-        }else{
-          this.$message.error("请选择需要操作的数据！");
         }
       }
     },
