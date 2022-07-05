@@ -132,7 +132,8 @@
           :searchForm="formSearchs[5].forms"
           :remark="5"
           :isLoading="isLoading[5]"
-          :btnForm="btnForm[5]"
+          :btnForm="btnForm"
+          :signName="5"
           @btnClick="btnClick"
         />
         <ComVxeTable
@@ -315,6 +316,19 @@ export default {
           Type: "danger",
           Icon: "",
           signName: 2,
+          Size: "small",
+          Params: {
+            dataName: "selectionData",
+          },
+        },
+	      {
+          ButtonCode: "save",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          signName: 5,
           Size: "small",
           Params: {
             dataName: "selectionData",
@@ -637,6 +651,7 @@ export default {
     },
     // 判断按钮权限
     judgeBtn() {
+      console.log('this.$route.meta',this.$route.meta)
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
       let permission = false;
@@ -654,6 +669,7 @@ export default {
           }
         });
       }
+      console.log('newBtn',newBtn)
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
     },
