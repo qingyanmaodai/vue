@@ -1670,7 +1670,7 @@ export default {
         m["dicID"] = 7960;
       });
       this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
+      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan"); //test
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(1);

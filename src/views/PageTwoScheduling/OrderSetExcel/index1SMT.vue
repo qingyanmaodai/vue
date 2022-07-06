@@ -136,11 +136,7 @@
               <div class="flex_row_spaceBtn pagination">
                 <div>
                   <span @click="toPageSetting" class="primaryColor cursor"
-<<<<<<< HEAD
-                    >SysID:7944
-=======
                     >SysID:{{sysID[tagRemark].ID}}
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
                   </span>
                 </div>
                 <div class="flex">
@@ -402,12 +398,8 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-<<<<<<< HEAD
-      sysID: [{ ID: 7944, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
-=======
       sysID: [{ ID: 7944, AutoDays2: this.AutoDays2 }],
       //sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
