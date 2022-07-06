@@ -249,7 +249,6 @@
             }
           });
         }
-        console.log('routeBtn',this.$route)
         this.$set(this, "btnForm", newBtn);
         this.$set(this, "isEdit", permission);
       },
@@ -688,9 +687,6 @@
             sheet.suspendPaint();
             sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
             //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-              console.log(_this.sheetSelectRows);
-
-            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
             //删除旧行
             if (_this.sheetSelectObj.start > options.activeRow) {
               //说明从下面插入上面
@@ -783,7 +779,6 @@
             Commands.undoTransaction(context, options);
             return true;
           } else {
-            //  console.log(options);
             context.commandManager().execute(options);
             this.sheetSelectRows = sheet.getArray(
               options.selections[0].row,
@@ -816,7 +811,6 @@
         spread
       ) {
         itemsDataForShown.forEach(function (item, index) {
-          // console.log(item);
           if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
             item.command = "insertRowsCopyStyle";
           }
@@ -833,7 +827,6 @@
         GC.Spread.Sheets.Events.ClipboardChanged,
         function (sender, args) {
           let s = sheet.getSelections()[0];
-          console.log(sheet.getDataItem(s.row));
           _this.sheetSelectRows = sheet.getArray(
             s.row,
             0,
@@ -1017,7 +1010,8 @@
       },
       //////////////////////////////
       async getOrgData() {
-        this.getLineData(this.userInfo.CenterID);
+        this.getLineData(this.userInfo.WorkFlowInstanceID);
+        // this.getLineData(this.userInfo.CenterID);
         return;
         this.treeListTmp = [];
         this.treeData = [];
@@ -1058,13 +1052,12 @@
         }
       },
       // 获取线别数据
-      async getLineData(OrganizeIDs) {
+      async getLineData(ERPOrderCode) {
         this.lines = [];
         let res = await GetSearchData({
-          dicID: 5144,
+          dicID: 36,
           OrganizeTypeID: 6,
-    ProcessID:'P202009092233201',
-          OrganizeIDs: OrganizeIDs,
+          ERPOrderCode: ERPOrderCode,//ERP控制者
         });
         const {
           data,
@@ -1092,7 +1085,7 @@
           );
           this.checkBoxCellTypeLine.items(newData);
           this.checkBoxCellTypeLine.itemHeight(24);
-          this.formSearchs[0].datas.ControlID = "202";
+          // this.formSearchs[0].datas.ControlID = "202";
           this.getTableData(this.formSearchs[0].datas, 0);
         } else {
           this.adminLoading = false;
