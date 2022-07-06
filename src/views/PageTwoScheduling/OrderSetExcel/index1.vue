@@ -1273,9 +1273,6 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-<<<<<<< HEAD
-  
-=======
     // 批量开始日期
     changeDate() {
       if (this.selectionData[this.tagRemark].length == 0) {
@@ -1286,7 +1283,6 @@ export default {
         });
       }
     },
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
     tableRowClassName({ row, rowIndex }) {
       let className = "";
       if (row.DbResult != "" && row.DbResult != "计算成功") {
@@ -1538,15 +1534,9 @@ export default {
     },
     // 进入分线列表
     insertList() {
-<<<<<<< HEAD
-      this.getSelectionData(0);
-      if (this.selectionData[0].length == 0) {
-       // this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
-=======
       this.getSelectionData(this.tagRemark);
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
       } else {
         // 进入预排计划
 
