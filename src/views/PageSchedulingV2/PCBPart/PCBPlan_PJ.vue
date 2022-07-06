@@ -132,7 +132,7 @@
           :searchForm="formSearchs[5].forms"
           :remark="5"
           :isLoading="isLoading[5]"
-          :btnForm="btnForm[5]"
+          :btnForm="btnForm"
           @btnClick="btnClick"
         />
         <ComVxeTable
@@ -637,6 +637,7 @@ export default {
     },
     // 判断按钮权限
     judgeBtn() {
+      console.log('this.$route.meta',this.$route.meta)
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
       let permission = false;
@@ -654,6 +655,7 @@ export default {
           }
         });
       }
+      console.log('newBtn',newBtn)
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
     },
