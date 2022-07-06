@@ -1182,7 +1182,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
-        this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
+       // this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
         this.dataSearch(0);
       }
     },
