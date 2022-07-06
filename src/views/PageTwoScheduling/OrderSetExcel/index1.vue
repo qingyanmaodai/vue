@@ -6,9 +6,9 @@
         <ComSearch
           v-show="labelStatus1 != 4"
           ref="searchRef"
-          :searchData="formSearchs[tagRemark].datas"
-          :searchForm="formSearchs[tagRemark].forms"
-          :remark="tagRemark"
+          :searchData="formSearchs[0].datas"
+          :searchForm="formSearchs[0].forms"
+          :remark="labelStatus1 == 3?2:0"
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
@@ -53,22 +53,6 @@
                 </el-button>
                 <el-button
                   v-show="labelStatus1 == 1"
-                  type="primary"
-                  size="mini"
-                  @click="MOPlanStep1Calculation"
-                >
-                  匹配拉线
-                </el-button>
-                <el-button
-                  v-show="labelStatus1 == 1"
-                  type="success"
-                  size="mini"
-                  @click="MOPlanSaveToDayPlan"
-                >
-                  更新计划
-                </el-button>
-                <!-- <el-button
-                  v-show="labelStatus1 == 1"
                   type="warning"
                   size="mini"
                   @click="insertList"
@@ -90,8 +74,8 @@
                   @click="subSAP"
                 >
                   提交同步申请
-                </el-button> -->
-                <!-- <el-button
+                </el-button>
+                <el-button
                   v-show="labelStatus1 == 4"
                   type="primary"
                   size="mini"
@@ -116,7 +100,7 @@
                   @click="MOPlanSaveToDayPlan"
                 >
                   3.更新计划
-                </el-button> -->
+                </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
@@ -130,11 +114,10 @@
             </el-row>
           </div>
 
-          <!-- <div v-show="labelStatus1 <=2"> -->
-          <div>
+          <div v-show="labelStatus1 <=2">
             <div class="admin_content">
               <div class="flex_column" :style="{ height: height }">
-                <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
+                <div class="spreadContainer" v-loading="tableLoading[0]">
                   <gc-spread-sheets
                     class="sample-spreadsheets"
                     @workbookInitialized="initSpread"
@@ -146,17 +129,17 @@
               <div class="flex_row_spaceBtn pagination">
                 <div>
                   <span @click="toPageSetting" class="primaryColor cursor"
-                    >SysID:{{sysID[tagRemark].ID}}
+                    >SysID:7942
                   </span>
                 </div>
                 <div class="flex">
                   <el-pagination
                     background
                     @size-change="(val) => pageSize(val, 0)"
-                    :current-page="tablePagination[tagRemark].pageIndex"
+                    :current-page="tablePagination[0].pageIndex"
                     :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                    :page-size="tablePagination[tagRemark].pageSize"
-                    :total="tablePagination[tagRemark].pageTotal"
+                    :page-size="tablePagination[0].pageSize"
+                    :total="tablePagination[0].pageTotal"
                     @current-change="(val) => pageChange(val, 0)"
                     layout="total, sizes, prev, pager, next,jumper"
                   >
@@ -165,7 +148,7 @@
               </div>
             </div>
           </div>
-          <!-- <ComVxeTable
+          <ComVxeTable
             ref="tableRefTwo"
             v-show="labelStatus1 == 3"
             :rowKey="'RowNumber'"
@@ -215,7 +198,7 @@
             @selectfun="selectFun"
             @changeline="changeline"
             @sortChange="sortChange"
-          /> -->
+          />
           <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
@@ -284,7 +267,7 @@ export default {
         { label: "待排产", value: 0 },
         { label: "已排产", value: 1 },
         { label: "暂停", value: 2 },
-        // { label: "分线列表", value: 4 },
+        { label: "分线列表", value: 4 },
       ],
       title: "周计划管理列表",
       resultMsg: "",
@@ -344,16 +327,16 @@ export default {
           signName:1,
           Size: "small",
         },
-        //        {
-        //   ButtonCode: "save",
-        //   BtnName: "保存",
-        //   isLoading: false,
-        //   Methods: "save4",
-        //   Type: "success",
-        //   Icon: "",
-        //   signName:4,
-        //   Size: "small",
-        // },
+               {
+          ButtonCode: "save",
+          BtnName: "保存",
+          isLoading: false,
+          Methods: "save4",
+          Type: "success",
+          Icon: "",
+          signName:4,
+          Size: "small",
+        },
         {
           ButtonCode: "save",
           BtnName: "恢复",
@@ -365,16 +348,16 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData",remarkTb:2 },
         },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "退回",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   signName: 4,
-        //   Size: "small",
-        //   Methods: "backData",
-        //   Icon: "",
-        // },
+        {
+          ButtonCode: "save",
+          BtnName: "退回",
+          Type: "danger",
+          Ghost: true,
+          signName: 4,
+          Size: "small",
+          Methods: "backData",
+          Icon: "",
+        },
         // {
         //   ButtonCode: "save",
         //   BtnName: "返回",
@@ -393,9 +376,9 @@ export default {
       tableLoading: [false, false, false],
       isClear: [false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -408,8 +391,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }],
-      // sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 }],
+      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: [],
@@ -441,7 +423,7 @@ export default {
     async subSAP() {
       this.getSelectionData(1);
       this.adminLoading = true;
-      let newData = this.selectionData[this.tagRemark];
+      let newData = this.selectionData[0];
       let pushData = [];
       newData.forEach((m) => {
         m["dicID"] = 7967;
@@ -927,7 +909,7 @@ export default {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       let resultTag = false;
-      this.selectionData[this.tagRemark] = [];
+      this.selectionData[0] = [];
       if (newData.length != 0) {
         newData.forEach((x, y) => {
           if (x.isChecked&&x.OrderNo) {
@@ -935,21 +917,21 @@ export default {
               resultTag = true;
               this.$message.error("第" + (y + 1) + "行工艺不能为空");
             } else {
-              this.selectionData[this.tagRemark].push(x);
+              this.selectionData[0].push(x);
             }
           }
         });
       }
       if (resultTag && type === 0) {
         //
-        this.selectionData[this.tagRemark] = [];
+        this.selectionData[0] = [];
       }
     },
     // 跳转至页面配置
     toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: this.sysID[this.tagRemark].ID },
+        params: { ID: this.sysID[0].ID },
       });
     },
     initSpread: function (spread) {
@@ -1143,7 +1125,8 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.formSearchs[remarkTb].datas["ControlID"] = this.userInfo.WorkFlowInstanceID;
+      this.formSearchs[remarkTb].datas["ControlID"] =
+        this.userInfo.WorkFlowInstanceID;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
@@ -1273,20 +1256,7 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-<<<<<<< HEAD
   
-=======
-    // 批量开始日期
-    changeDate() {
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要批量填写开始日期的数据！");
-      } else {
-        this.selectionData[this.tagRemark].forEach((a) => {
-          a.StartDate = this.ReplyDate;
-        });
-      }
-    },
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
     tableRowClassName({ row, rowIndex }) {
       let className = "";
       if (row.DbResult != "" && row.DbResult != "计算成功") {
@@ -1316,9 +1286,9 @@ export default {
         s = [21, 22, 23];
       } else if (index === 3) {
         s = [24];
-        // this.formSearchs[0].datas["ProductionStatus"] = s;
-        // this.dataSearch(2);
-        // return
+        this.formSearchs[2].datas["ProductionStatus"] = s;
+        this.dataSearch(2);
+        return
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
       this.dataSearch(0);
@@ -1330,7 +1300,7 @@ export default {
         this.$message.error("工艺是否不为空！");
         return;
       }
-      let submitData = this.tableData[this.tagRemark]; //this.selectionData[this.tagRemark];
+      let submitData = this.tableData[1]; //this.selectionData[0];
       submitData.forEach((m) => {
         m.ReplyDate = this.ReplyDate;
         m["isChecked"] = true;
@@ -1386,7 +1356,7 @@ export default {
         this.$message.error("工艺不能为空");
         return;
       }
-      let submitData = this.selectionData[this.tagRemark];
+      let submitData = this.selectionData[0];
       if (submitData.length == 0) {
         this.$message.error("请选择需要下达的数据！");
         return;
@@ -1429,22 +1399,25 @@ export default {
     },
     // 退回
     backData() {
-      if (this.selectionData[this.tagRemark].length == 0) {
+      if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
-        this.selectionData[this.tagRemark].forEach((a) => {
+        this.selectionData[1].forEach((a) => {
           a["ElementDeleteFlag"] = 1;
         });
-        this.dataSave(this.selectionData[this.tagRemark], this.tagRemark);
+        this.dataSave(this.selectionData[1], 1);
       }
     },
            save4() {//在分线列表处保存
-      if (this.selectionData[this.tagRemark].length == 0) {
+      if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
-        let submitData = this.selectionData[this.tagRemark]
+        
+         let submitData = this.selectionData[1]
+    
+
       if (submitData.length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
@@ -1455,7 +1428,7 @@ export default {
     // 保存
     async save(remarkTb, index, parms) {
       let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows();//获取变更行
+      let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
@@ -1471,7 +1444,7 @@ export default {
     },
     //恢复计划
     async recovery(remarkTb) {
-      // remarkTb = 2
+      remarkTb = 2
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
@@ -1507,7 +1480,7 @@ export default {
       }
     },
     async SetData(status) {
-      let submitData = this.selectionData[this.tagRemark];
+      let submitData = this.selectionData[0];
       if (submitData.length == 0) {
         this.$message.error("请选择数据！");
         return;
@@ -1538,26 +1511,25 @@ export default {
     },
     // 进入分线列表
     insertList() {
-<<<<<<< HEAD
       this.getSelectionData(0);
       if (this.selectionData[0].length == 0) {
        // this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
-=======
-      this.getSelectionData(this.tagRemark);
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
->>>>>>> 2cde2705e6bc14930fb17fa0d3af53a2d4d20f25
       } else {
         // 进入预排计划
 
         this.setWeekData(1);
       }
     },
-    //预排运算
+    //正排倒排计算，匹配拉线
     async MOPlanStep1CalculationPre() {
+      // if (this.selectionData[1].length == 0) {
+      //   this.$message.error("请选择需要批量填写开始日期的数据！");
+      //   return;
+      // }
+
       let submitData = [];
       this.getSelectionData();
-      this.selectionData[this.tagRemark].forEach((x) => {
+      this.selectionData[0].forEach((x) => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
@@ -1625,24 +1597,17 @@ export default {
       
     //正排倒排计算，匹配拉线
     async MOPlanStep1Calculation() {
+      // if (this.selectionData[1].length == 0) {
+      //   this.$message.error("请选择需要批量填写开始日期的数据！");
+      //   return;
+      // }
       let submitData = [];
-      // this.tableData[1].forEach((x) => {
-      //   x["Type"] = 0;
-      //   x["dicID"] = 7960;
-      //   x["isChecked"] = true;
-      //   submitData.push(x);
-      // });
-      // 匹配拉线由分线列表标签移到待排产中，表格不一样需要修改以下代码
-      this.getSelectionData();
-      this.selectionData[this.tagRemark].forEach((x) => {
+      this.tableData[1].forEach((x) => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
         submitData.push(x);
       });
-
-
-
       if (submitData.length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
@@ -1650,23 +1615,24 @@ export default {
         let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationPCB");
         const { data, forms, result, msg } = res.data;
         if (result) {
-          // 以下代码因为匹配拉线由分线列表标签移到待排产中，改为了新的excel表格
-          // this.$set(this.tableData, this.tagRemark, data);
+          this.$set(this.tableData, 1, data);
           // 清空选中的，把选中的数据重新绑定
-          // this.resultMsg = res.data.resultMsg;
-          // let templateData = JSON.parse(JSON.stringify(this.selectionData[this.tagRemark]));
-          // this.$set(this.selectionData, this.tagRemark, []);
-          // let newData = this.tableData[this.tagRemark].filter((a) =>
-          //   templateData.some((b) => b.OrderID == a.OrderID)
-          // );
-          // if (newData.length != 0) {
-          //   newData.forEach((c) => {
-          //     this.$nextTick(() => {
-          //       _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-          //       _this.selectionData[this.tagRemark].push(c);
-          //     });
-          //   });
-          // }
+
+          this.resultMsg = res.data.resultMsg;
+
+          let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
+          this.$set(this.selectionData, 1, []);
+          let newData = this.tableData[1].filter((a) =>
+            templateData.some((b) => b.OrderID == a.OrderID)
+          );
+          if (newData.length != 0) {
+            newData.forEach((c) => {
+              this.$nextTick(() => {
+                _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
+                _this.selectionData[1].push(c);
+              });
+            });
+          }
           this.adminLoading = false;
           this.$message({
             message: msg,
@@ -1686,18 +1652,18 @@ export default {
 
     // 齐套计算
     async dataComputedDate() {
-      // if (this.selectionData[this.tagRemark].length == 0) {
+      // if (this.selectionData[1].length == 0) {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
       // }
       this.adminLoading = true;
-      let res = await OrderPlanMaterialForm(this.tableData[this.tagRemark]);
+      let res = await OrderPlanMaterialForm(this.tableData[1]);
       const { data, forms, result, msg } = res.data;
       if (result) {
         this.adminLoading = false;
         this.$set(this.tableData, 1, data);
-        let templateData = JSON.parse(JSON.stringify(this.selectionData[this.tagRemark]));
-        this.$set(this.selectionData, this.tagRemark, []);
+        let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
+        this.$set(this.selectionData, 1, []);
         // 清空选中的，把选中的数据重新绑定
         let newData = this.tableData[1].filter((a) =>
           templateData.some((b) => b.OrderID == a.OrderID)
@@ -1706,7 +1672,7 @@ export default {
           newData.forEach((c) => {
             this.$nextTick(() => {
               _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-              _this.selectionData[this.tagRemark].push(c);
+              _this.selectionData[1].push(c);
             });
           });
         }
@@ -1725,15 +1691,13 @@ export default {
       }
       // }
     },
-    // 更新计划
+    // 下达
     async MOPlanSaveToDayPlan() {
-      // 匹配拉线由分线列表标签移到待排产中，表格不一样需要修改以下代码
-      this.getSelectionData();
-      if (this.selectionData[this.tagRemark].length == 0) {
+      if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要更新的计划！");
         return;
       }
-      let submitData = this.selectionData[this.tagRemark]; //this.selectionData[this.tagRemark];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
+      let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
       submitData.forEach((m) => {
         m["MOSchedulingType"] = 1;
         m["dicID"] = 7960;
@@ -1742,7 +1706,7 @@ export default {
       let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.dataSearch(this.tagRemark);
+        this.dataSearch(1);
         this.adminLoading = false;
         this.$message({
           message: msg,
