@@ -302,7 +302,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            WorkOrderTypeID:'604ed9c8fbbad5'
+            WorkOrderTypeID:['604ed9c8fbbad5','6033a5371438ef']
           },
           forms: [],
         },
