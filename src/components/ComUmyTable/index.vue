@@ -23,7 +23,6 @@
       @row-dblclick="handleRowdbClick"
       show-header-overflow="ellipsis"
       @sort-change="sortChange"
-      @filter-change="filterChange"
     >
       <ux-table-column
         :reserve-selection="true"
@@ -1284,14 +1283,6 @@ export default {
       } else {
         return false;
       }
-    },
-    //后端筛选
-    filterChange(filters){
-      // 筛选值
-      let val = filters.datas[0]
-      // 筛选的字段
-      let property = filters.property
-      this.$emit('filterChange',val,property,this.remark)
     },
   },
   mounted() {

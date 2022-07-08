@@ -50,18 +50,16 @@
         :filter-recover-method="filterRecoverMethod"
       >
         <template #filter="{ $panel, column }">
-          <!-- <template> -->
-            <input
-             v-for="(option, index) in column.filters" :key="index"
-              class="my-input"
-              type="type"
-              v-model="option.data"
-              @input="$panel.changeOption($event, !!option.data, option)"
-              @keyup.enter="$panel.confirmFilter()"
-              placeholder="按回车确认筛选"
-              style="margin:10px;height:35px"
-            >
-          <!-- </template> -->
+          <input
+            v-for="(option, index) in column.filters" :key="index"
+            class="my-input"
+            type="type"
+            v-model.trim="option.data"
+            @input="$panel.changeOption($event, !!option.data, option)"
+            @keyup.enter="$panel.confirmFilter()"
+            placeholder="按回车确认筛选"
+            style="margin:10px;height:35px"
+          >
         </template>
           <template slot-scope="scope">
             <span v-if="x.routerName">

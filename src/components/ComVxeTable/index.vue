@@ -42,6 +42,7 @@
       @cell-dblclick="handleRowdbClick"
       @sort-change="sortChange"
       @custom="toolbarCustomEvent"
+      @filter-change="filterChange"
     >
       <vxe-column
         :reserve-selection="true"
@@ -72,12 +73,13 @@
         :filter-recover-method="filterRecoverMethod"
       >
         <template #filter="{ $panel, column }">
-          <template v-for="(option, index) in column.filters">
+          <template>
             <input
               class="my-input"
               type="type"
+              v-for="(option, index) in column.filters"
               :key="index"
-              v-model="option.data"
+              v-model.trim="option.data"
               @input="$panel.changeOption($event, !!option.data, option)"
               @keyup.enter="$panel.confirmFilter()"
               placeholder="按回车确认筛选"
@@ -1442,6 +1444,14 @@ export default {
     // 筛选列选框控制
     checkColumnCustomMethod({ column }) {
       return true;
+    },
+    //后端筛选
+    filterChange(filters){
+      // 筛选值
+      let val = filters.datas[0]
+      // 筛选的字段
+      let property = filters.property
+      this.$emit('filterChange',val,property,this.remark)
     },
     // 显示隐藏列
     toolbarCustomEvent(params) {
