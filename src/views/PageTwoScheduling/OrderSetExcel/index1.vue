@@ -376,9 +376,9 @@ export default {
       tableLoading: [false, false, false],
       isClear: [false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
