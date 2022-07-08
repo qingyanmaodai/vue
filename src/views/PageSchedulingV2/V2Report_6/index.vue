@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--复期明细表-->
 <template>
   <div
     class="container flex_flex"
@@ -109,6 +109,7 @@
                 @pageChange="pageChange"
                 @pageSize="pageSize"
                 @sortChange="sortChange"
+                @filterChange="filterChange"
               />
             </div>
           </div>
@@ -207,6 +208,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    filterChange(val,property,remark){
+      this.formSearchs[remark].datas[property] = val
+      this.dataSearch(remark)
+    },
     cellStyle({ row, column }) {
       if (
         column.property == "JudgeResult" &&
@@ -340,6 +346,7 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
+      console.log('this.formSearchs[remarkTb].datas',this.formSearchs[remarkTb].datas)
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
