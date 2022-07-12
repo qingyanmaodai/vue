@@ -45,7 +45,7 @@
         :title="x.label"
         :min-width="x.width"
         :fixed="x.fix"
-        :filters="x.filters?[{ data: '' }]:[{data:''}]"
+        :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
         :filter-method="filterMethod"
         :filter-recover-method="filterRecoverMethod"
       >
@@ -147,6 +147,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 import XEUtils from "xe-utils";
 export default {
   props: {
@@ -307,6 +308,7 @@ export default {
   },
   data() {
     return {
+      ControlTypeList:['textbox','textarea','el-input','el-input-number','el-autocomplete'],//允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -612,11 +614,12 @@ export default {
     },
     // 筛选条件
     filterMethod({ option, row, column }) {
-      // if (option.data) {
-      //   if (row[column.property]) {
-      //     return row[column.property].includes(option.data);
-      //   }
-      // }
+      if (option.data) {
+        if (row[column.property]) {
+          return JSON.stringify(row[column.property]).includes(option.data);
+          // return row[column.property].includes(option.data);
+        }
+      }
       // 已改为调用筛选时后端接口方法filterChange
     },
     filterRecoverMethod({ option }) {
@@ -629,6 +632,7 @@ export default {
       let val = filters.datas[0]
       // 筛选的字段
       let property = filters.property
+      // this.remark 操作的表格下标
       this.$emit('filterChange',val,property,this.remark)
     },
   },
@@ -651,7 +655,8 @@ export default {
     },
     tableData() {
       if (this.tableData) {
-        this.$refs.vxeTable.reloadData(this.tableData);
+        // this.$refs.vxeTable.reloadData(this.tableData);//加载数据并清除所有状态,使用这个调用后端筛选、排序接口后条件被清空
+        this.$refs.vxeTable.loadData(this.tableData);//加载数据
       }
       if (this.tableData && this.isApanMethods) {
         this.info();

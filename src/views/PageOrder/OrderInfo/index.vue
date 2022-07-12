@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--生产订单 -->
 <template>
   <div class="container">
     <div
@@ -52,6 +52,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -186,6 +187,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;

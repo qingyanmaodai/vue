@@ -1,4 +1,4 @@
-<!--备料任务指派-->
+<!--配件总排期-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -152,6 +152,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
+          @filterChange="filterChange"
         />
       </div>
       <span slot="footer" class="dialog-footer">
@@ -391,6 +392,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 跳转至页面配置
     toPageSetting(id) {
       this.$router.push({

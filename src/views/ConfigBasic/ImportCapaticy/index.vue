@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--委外业务关联-->
 <template>
   <div
     class="container"
@@ -60,6 +60,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @handleRowClick="handleRowClick"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -231,6 +232,11 @@ export default {
     }, 350);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;

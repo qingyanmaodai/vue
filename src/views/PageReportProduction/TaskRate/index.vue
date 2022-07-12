@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--每日计划达成-->
 <template>
   <div
     class="container"
@@ -95,6 +95,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -153,6 +154,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;

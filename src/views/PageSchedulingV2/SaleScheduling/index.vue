@@ -1,4 +1,4 @@
-<!--销售排程-->
+<!--装配总排期-->
 <template>
   <div
     class="container"
@@ -81,6 +81,7 @@
             @toPage="toPage"
             @computedqty="computedqty"
             @computedqty2="computedqty2"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -327,6 +328,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
+          @filterChange="filterChange"
         />
       </div>
       <span
@@ -945,6 +947,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 计算生产材积
     computedqty(row, val, prop, index) {
       let total = "";

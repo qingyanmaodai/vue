@@ -61,6 +61,7 @@
             @handleRowClick="handleRowClick"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -209,6 +210,7 @@
             @sortChange="sortChange"
             @toPage="usingSearch"
             @selectfun="selectFun"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -389,6 +391,11 @@ export default {
     }, 600);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 获取所有仓库
     async getWarehosueData() {
       let form = {};

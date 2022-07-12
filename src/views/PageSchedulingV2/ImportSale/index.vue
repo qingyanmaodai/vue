@@ -462,7 +462,6 @@ export default {
         });
         colHeader1.push(x.label);
       });
-      debugger;
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);

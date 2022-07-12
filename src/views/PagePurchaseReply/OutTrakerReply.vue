@@ -136,6 +136,7 @@
                 :footerLabel="footerLabel[0]"
                 @toPage="usingSearch"
                 @sortChange="sortChange"
+                @filterChange="filterChange"
               />
             </div>
           </div>

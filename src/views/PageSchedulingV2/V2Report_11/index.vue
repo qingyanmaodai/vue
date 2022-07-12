@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--排程齐套报表-->
 <template>
   <div
     class="container"
@@ -51,6 +51,7 @@
             @pageSize="pageSize"
             @sortChange="sortChange"
             @handleRowClick="handleRowClick"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -121,6 +122,7 @@
             @toPage="usingSearch"
             :pagination="tablePagination[1]"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -152,6 +154,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
         <div class="admin_content">
@@ -170,6 +173,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -247,6 +251,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 行内样式
     cellStyle0({ row, column }) {},
     // 收缩头部

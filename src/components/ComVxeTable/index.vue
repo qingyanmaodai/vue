@@ -68,24 +68,22 @@
         :title="x.label"
         :min-width="x.width"
         :fixed="x.fix"
-        :filters="x.filters?[{ data: '' }]:[{data:''}]"
+        :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
         :filter-method="filterMethod"
         :filter-recover-method="filterRecoverMethod"
       >
         <template #filter="{ $panel, column }">
-          <template>
-            <input
-              class="my-input"
-              type="type"
-              v-for="(option, index) in column.filters"
-              :key="index"
-              v-model.trim="option.data"
-              @input="$panel.changeOption($event, !!option.data, option)"
-              @keyup.enter="$panel.confirmFilter()"
-              placeholder="按回车确认筛选"
-              style="margin:10px;height:35px"
-            >
-          </template>
+          <input
+            class="my-input"
+            type="type"
+            v-for="(option, index) in column.filters"
+            :key="index"
+            v-model.trim="option.data"
+            @input="$panel.changeOption($event, !!option.data, option)"
+            @keyup.enter="$panel.confirmFilter()"
+            placeholder="按回车确认筛选"
+            style="margin:10px;height:35px"
+          >
         </template>
         <template v-if="x.children">
           <vxe-column
@@ -96,15 +94,15 @@
             :tree-node="z==0?true:x.treeNode?x.treeNode:false"
             :key="k"
             :fixed="i.fix"
-            :filters="x.filters?[{ data: '' }]:[{data:''}]"
+            :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
             :filter-method="filterMethod"
             :filter-recover-method="filterRecoverMethod"
           >
             <template #filter="{ $panel, column }">
-              <template v-for="(option, index) in column.filters">
                 <input
                   class="my-input"
                   type="type"
+                  v-for="(option, index) in column.filters"
                   :key="index"
                   v-model="option.data"
                   @input="$panel.changeOption($event, !!option.data, option)"
@@ -112,7 +110,6 @@
                   placeholder="按回车确认筛选"
                   style="margin:10px;height:35px"
                 >
-              </template>
             </template>
             <template slot-scope="scope">
               <span v-if="i.active">
@@ -1116,6 +1113,7 @@ export default {
   },
   data() {
     return {
+      ControlTypeList:['textbox','textarea','el-input','el-input-number','el-autocomplete'],//允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -1451,12 +1449,14 @@ export default {
       let val = filters.datas[0]
       // 筛选的字段
       let property = filters.property
+      // this.remark 操作的表格下标
       this.$emit('filterChange',val,property,this.remark)
+      console.log('filters',filters)
+      console.log('tableHeader',this.tableHeader)
     },
     // 显示隐藏列
     toolbarCustomEvent(params) {
       const visibleColumn = this.$refs.vxeTable.getColumns();
-      debugger;
       switch (params.type) {
         case "confirm": {
           //确认
@@ -1536,7 +1536,8 @@ export default {
     },
     tableData() {
       if (this.tableData) {
-        this.$refs.vxeTable.reloadData(this.tableData);
+        // this.$refs.vxeTable.reloadData(this.tableData);//加载数据并清除所有状态,使用这个调用后端筛选、排序接口后条件被清空
+        this.$refs.vxeTable.loadData(this.tableData);//加载数据
       }
       if (this.tableData && this.isSpanMethods) {
         this.info();
