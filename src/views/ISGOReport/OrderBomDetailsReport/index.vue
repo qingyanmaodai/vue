@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "报工明细列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

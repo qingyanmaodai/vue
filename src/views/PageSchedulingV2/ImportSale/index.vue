@@ -129,7 +129,7 @@ export default {
       fileList: [],
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "销售导入列表",
+      title: this.$route.meta.title,
       spread: null,
       drawer: false,
       isLoading: [false],
@@ -462,7 +462,6 @@ export default {
         });
         colHeader1.push(x.label);
       });
-      debugger;
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);

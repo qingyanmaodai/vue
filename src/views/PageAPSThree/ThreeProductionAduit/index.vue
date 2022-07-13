@@ -147,7 +147,7 @@ export default {
       expendColl: true,
       expendColl2: true,
       expendCollText2: "全屏",
-      title: "",
+      title: this.$route.meta.title,
       height1: "300px",
       height2: "300px",
       height3: "300px",

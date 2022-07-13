@@ -111,7 +111,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "计划达成列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

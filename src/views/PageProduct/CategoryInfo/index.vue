@@ -198,7 +198,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       delData: [[], [], [], []],
-      title: "产品列表",
+      title: this.$route.meta.title,
       title2: "工艺列表",
       drawer: false,
       formSearchs: [

@@ -136,7 +136,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "按钮列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

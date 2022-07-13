@@ -110,7 +110,7 @@ export default {
       autoGenerateColumns: true,
       spread: null,
       ////////////////// Search /////////////////
-      title: "日计划列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

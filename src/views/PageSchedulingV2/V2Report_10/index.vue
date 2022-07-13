@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--欠发追踪-->
 <template>
   <div
     class="container"
@@ -52,6 +52,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -71,7 +72,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "欠发追踪报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -111,6 +112,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
      // 行内样式 红ff7b7b 黄fdfd8f 绿9fff9f
     cellStyle0({ row, column }) {
       if (column.property == "StockQtyAllocationResult") {

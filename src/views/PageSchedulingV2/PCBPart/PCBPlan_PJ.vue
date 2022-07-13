@@ -1,4 +1,4 @@
-<!--备料任务指派-->
+<!--配件总排期-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -152,6 +152,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
+          @filterChange="filterChange"
         />
       </div>
       <span slot="footer" class="dialog-footer">
@@ -171,6 +172,7 @@ import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
+GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import  "@/styles/excel.scss";
@@ -216,7 +218,7 @@ export default {
         { label: "待转入备料", value: 3 },
         { label: "已转入备料", value: 4 },
       ],
-      title: "",
+      title: this.$route.meta.title,
       labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,
@@ -391,6 +393,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 跳转至页面配置
     toPageSetting(id) {
       this.$router.push({
@@ -502,6 +509,9 @@ export default {
       var cellrange =new GC.Spread.Sheets.Range(-1, 1, -1, colIndex);
       var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
       sheet.rowFilter(hideRowFilter);
+      hideRowFilter.filterDialogVisibleInfo({
+        sortByValue:false
+      })
 
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {

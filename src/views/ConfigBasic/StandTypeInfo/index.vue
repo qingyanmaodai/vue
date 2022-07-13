@@ -135,7 +135,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "班次列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -282,7 +282,6 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
-      a;
     },
     // 判断按钮权限
     judgeBtn() {

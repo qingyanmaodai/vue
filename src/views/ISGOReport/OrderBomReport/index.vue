@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "订单完成详情列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

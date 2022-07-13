@@ -114,7 +114,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "审核明细列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

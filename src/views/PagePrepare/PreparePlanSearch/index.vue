@@ -114,7 +114,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "备料计划查询",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

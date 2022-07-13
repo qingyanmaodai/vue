@@ -261,7 +261,7 @@ export default {
       ],
       selectionData: [[]],
       ////////////////// Search /////////////////
-      title: "订单列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

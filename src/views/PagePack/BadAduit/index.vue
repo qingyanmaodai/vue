@@ -225,7 +225,7 @@ export default {
       tableHeight2: "400px",
       customDialog: "oneStyle",
       ////////////////// Search /////////////////
-      title: "不良单据列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

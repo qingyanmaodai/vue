@@ -194,7 +194,7 @@ export default {
         ],
       },
       ////////////////// Search /////////////////
-      title: "半成品列表",
+      title: this.$route.meta.title,
       rightName: "配置半成品",
       drawer: false,
       delData: [[]],

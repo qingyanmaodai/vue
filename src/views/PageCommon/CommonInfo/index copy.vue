@@ -121,7 +121,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "数据列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

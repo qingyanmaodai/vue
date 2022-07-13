@@ -260,7 +260,7 @@ export default {
         { label: "暂停", value: 2 },
         { label: "分线列表", value: 4 },
       ],
-      title: "周计划管理列表",
+      title: this.$route.meta.title,
       resultMsg: "",
       delData: [[]],
       formSearchs: [

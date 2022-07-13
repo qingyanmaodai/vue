@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--菜单权限-->
 <template>
   <div
     class="container"
@@ -22,7 +22,9 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+            <el-col :span="4">
+              <span class="title">{{ title }}</span>
+            </el-col>
             <el-col
               :span="20"
               class="flex_flex_end"
@@ -337,7 +339,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "菜单列表",
+      title: this.$route.meta.title,
       drawerTitle: "新增菜单/按钮",
       dialogTitle: "",
       checkdBtnCodes: [],

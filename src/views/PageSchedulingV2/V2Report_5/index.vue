@@ -156,7 +156,7 @@ export default {
       tableDialog: false,
       searchForm: { SalesOrderDetailID: "" },
       ////////////////// Search /////////////////
-      title: "发料进度汇总",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

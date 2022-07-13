@@ -169,7 +169,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "学员跟进表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       updateData: [[]],

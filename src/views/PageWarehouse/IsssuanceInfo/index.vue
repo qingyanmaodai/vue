@@ -336,7 +336,7 @@ export default {
       GoodsDialog: false,
       tableHeight2: "400px",
       ////////////////// Search /////////////////
-      title: "出库单列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

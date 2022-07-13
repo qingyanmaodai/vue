@@ -131,7 +131,7 @@ export default {
       fileList: [],
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "计件导入列表",
+      title: this.$route.meta.title,
       spread: null,
       drawer: false,
       isLoading: [false],

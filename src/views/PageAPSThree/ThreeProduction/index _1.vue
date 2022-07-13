@@ -157,7 +157,7 @@ export default {
       ///////////////新增弹框//////////////
       dialogShow: false,
       ////////////////// Search /////////////////
-      title: "生产报工",
+      title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {

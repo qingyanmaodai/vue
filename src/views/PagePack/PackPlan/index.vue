@@ -143,7 +143,7 @@ export default {
         { label: "未匹配", value: 0 },
       ],
       ////////////////// Search /////////////////
-      title: "订单列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

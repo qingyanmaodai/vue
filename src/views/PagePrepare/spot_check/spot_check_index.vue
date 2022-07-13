@@ -61,6 +61,7 @@
             @handleRowClick="handleRowClick"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -209,6 +210,7 @@
             @sortChange="sortChange"
             @toPage="usingSearch"
             @selectfun="selectFun"
+             @filterChange="filterChange"
           />
         </div>
       </div>
@@ -293,7 +295,7 @@ export default {
       expendColl: false,
       expendCollText: "收缩",
       selectionData: [[], []],
-      title: "备料追踪列表",
+      title: this.$route.meta.title,
       dialogShow: false,
       height2: "240px",
       height3: "180px",
@@ -391,6 +393,11 @@ export default {
     }, 600);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 获取所有仓库
     async getWarehosueData() {
       let form = {};

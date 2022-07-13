@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--备料齐套报表-->
 <template>
   <div
     class="container"
@@ -52,6 +52,7 @@
           @pageSize="pageSize"
           @toPage="lookDetails"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -80,6 +81,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -109,6 +111,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -134,7 +137,7 @@ export default {
       ////////////////// Search /////////////////
       dialogShow: false,
       dialogShow2: false,
-      title: "备料齐套报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -186,6 +189,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;

@@ -27,6 +27,7 @@
       resizable
       auto-resize
       @sort-change="sortChange"
+      @filter-change="filterChange"
     >
       <vxe-column
         type="seq"
@@ -44,23 +45,21 @@
         :title="x.label"
         :min-width="x.width"
         :fixed="x.fix"
-        :filters="x.filters?[{ data: '' }]:[{data:''}]"
+        :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
         :filter-method="filterMethod"
         :filter-recover-method="filterRecoverMethod"
       >
         <template #filter="{ $panel, column }">
-          <template v-for="(option, index) in column.filters">
-            <input
-              class="my-input"
-              type="type"
-              :key="index"
-              v-model="option.data"
-              @input="$panel.changeOption($event, !!option.data, option)"
-              @keyup.enter="$panel.confirmFilter()"
-              placeholder="按回车确认筛选"
-              style="margin:10px;height:35px"
-            >
-          </template>
+          <input
+            v-for="(option, index) in column.filters" :key="index"
+            class="my-input"
+            type="type"
+            v-model.trim="option.data"
+            @input="$panel.changeOption($event, !!option.data, option)"
+            @keyup.enter="$panel.confirmFilter()"
+            placeholder="按回车确认筛选"
+            style="margin:10px;height:35px"
+          >
         </template>
           <template slot-scope="scope">
             <span v-if="x.routerName">
@@ -148,6 +147,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 import XEUtils from "xe-utils";
 export default {
   props: {
@@ -308,6 +308,7 @@ export default {
   },
   data() {
     return {
+      ControlTypeList:['textbox','textarea','el-input','el-input-number','el-autocomplete'],//允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -615,13 +616,24 @@ export default {
     filterMethod({ option, row, column }) {
       if (option.data) {
         if (row[column.property]) {
-          return row[column.property].includes(option.data);
+          return JSON.stringify(row[column.property]).includes(option.data);
+          // return row[column.property].includes(option.data);
         }
       }
+      // 已改为调用筛选时后端接口方法filterChange
     },
     filterRecoverMethod({ option }) {
       // 如果是自定义筛选模板，当为点击确认时，该选项将被恢复为默认值
       option.data = "";
+    },
+    //后端筛选
+    filterChange(filters){
+      // 筛选值
+      let val = filters.datas[0]
+      // 筛选的字段
+      let property = filters.property
+      // this.remark 操作的表格下标
+      this.$emit('filterChange',val,property,this.remark)
     },
   },
   mounted() {
@@ -643,7 +655,8 @@ export default {
     },
     tableData() {
       if (this.tableData) {
-        this.$refs.vxeTable.reloadData(this.tableData);
+        // this.$refs.vxeTable.reloadData(this.tableData);//加载数据并清除所有状态,使用这个调用后端筛选、排序接口后条件被清空
+        this.$refs.vxeTable.loadData(this.tableData);//加载数据
       }
       if (this.tableData && this.isApanMethods) {
         this.info();
@@ -660,7 +673,7 @@ export default {
   /* width: 100px; */
   z-index: 99;
   height: 30px;
-  left: 10px;
+  left: 110px;
   top: 6px;
   background: rgba(0, 0, 0, 0);
 }

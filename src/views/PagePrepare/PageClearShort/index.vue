@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "超领列表",
+      title: this.$route.meta.title,
       isEdit:false,
       drawer: false,
       formSearchs: [

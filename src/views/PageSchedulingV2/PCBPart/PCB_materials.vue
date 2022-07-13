@@ -114,7 +114,7 @@ export default {
   },
   data() {
     return {
-        title:'PCB备料列表',//表名
+        title:this.$route.meta.title,//表名
         height:'740px',
         adminLoading:false,//加载状态
         currentIndex:0,//当前表下标

@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--点检明细-->
 <template>
   <div
     class="container"
@@ -44,6 +44,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -63,7 +64,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "备料达成明细",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -134,6 +135,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     cellStyle({row,column}){
      if(column.property == 'IsInspectName'  && row.IsInspectName == '是'){
        return {

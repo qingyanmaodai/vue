@@ -461,7 +461,7 @@ export default {
       adminLoading: false,
       ////////////////// Search /////////////////
       sysID: [{ ID: 10257 }, { ID: 10258 }, { ID: 10259 }, { ID: 10260 }, { ID: 10261 }, { ID: 10262 }, { ID: 10263 }],
-      title: "月嫂档案表",
+      title: this.$route.meta.title,
       Status2: [
         { label: "能力标签", value: 0 },
         { label: "培训考核结果", value: 1 },

@@ -106,7 +106,7 @@ export default {
         { label: "复期异常", value: 3 },
         { label: "复期变更", value: 4 },
       ],
-      title: "备料计划",
+      title: this.$route.meta.title,
       labelStatus1: 1,
       PrepareDate: "",
       adminLoading: false,

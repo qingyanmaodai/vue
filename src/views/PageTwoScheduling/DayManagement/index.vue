@@ -271,7 +271,7 @@ export default {
       includeFields: [], // 包含合计的字段
       labelStatus1: 0,
       Status1: [],
-      title: "预排日计划列表",
+      title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {

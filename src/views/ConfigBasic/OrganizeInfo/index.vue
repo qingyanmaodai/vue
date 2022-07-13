@@ -144,7 +144,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "组织架构列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

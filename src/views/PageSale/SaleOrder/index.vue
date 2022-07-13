@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "销售列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

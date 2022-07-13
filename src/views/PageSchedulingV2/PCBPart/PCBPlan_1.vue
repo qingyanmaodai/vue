@@ -1,4 +1,4 @@
-<!--备料任务指派-->
+<!--PCB总排期-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -123,6 +123,7 @@
             @selectfun="selectFun"
             @keyupEnter="editSort"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -181,7 +182,7 @@ export default {
        // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
       ],
-      title: "",
+      title: this.$route.meta.title,
       labelStatus1: 1,
       PrepareDate: "",
       adminLoading: false,
@@ -407,6 +408,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     backData() {
       this.getSelectionData();
       console.log(this.selectionData[1]);

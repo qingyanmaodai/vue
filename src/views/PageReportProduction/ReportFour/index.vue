@@ -98,7 +98,7 @@ export default {
         { label: "物料明细表", value: 1 },
         { label: "欠料明细表", value: 2 },
       ],
-      title: "",
+      title: this.$route.meta.title,
       labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,

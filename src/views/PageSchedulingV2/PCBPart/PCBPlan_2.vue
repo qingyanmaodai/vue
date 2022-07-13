@@ -143,7 +143,7 @@ export default {
         { label: "已转备料", value: 2 },
         { label: "无工单", value: 2 },
       ],
-      title: "",
+      title:this.$route.meta.title,
       labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,

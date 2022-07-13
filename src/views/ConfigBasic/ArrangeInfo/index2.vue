@@ -143,7 +143,7 @@ export default {
         children: "children",
       },
       ////////////////// Search /////////////////
-      title: "组织列表",
+      title: this.$route.meta.title,
       drawerTitle: "新增人员",
       drawer: false,
       delData: [[]],
