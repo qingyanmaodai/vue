@@ -1363,7 +1363,7 @@ export default {
       }
 
       submitData.forEach((m) => {
-        m["MOSchedulingType"] = 3;
+        m["MOSchedulingType"] = 2;
       });
       this.adminLoading = true;
       let res = await MOPlanStep1(submitData);

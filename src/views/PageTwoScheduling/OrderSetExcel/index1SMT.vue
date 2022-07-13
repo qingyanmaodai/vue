@@ -41,14 +41,14 @@
                 >
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
+                <!-- <el-button
                   type="primary"
                   size="mini"
                   v-show="labelStatus1 != 4"
-                  @click="MOPlanStep1CalculationPre(0)"
+                  @click="MOPlanStep1Calculation(0)"
                 >
                   预排运算
-                </el-button>
+                </el-button> -->
                 <el-button
                   v-show="labelStatus1 == 1"
                   type="primary"
@@ -1552,7 +1552,7 @@ export default {
         this.adminLoading = true;
         let res = await GetSearch(
           submitData,
-          "/APSAPI/MOPlanStep1CalculationV1"
+          "/APSAPI/MOPlanStep1CalculationSMT"
         );
         const { data, forms, result, msg } = res.data;
         if (result) {
@@ -1573,49 +1573,47 @@ export default {
       }
     },
     //正排倒排计算，匹配拉线
+    //正排倒排计算，匹配拉线
     async MOPlanStep1Calculation() {
-      let submitData = [];
-      // this.tableData[1].forEach((x) => {
-      //   x["Type"] = 0;
-      //   x["dicID"] = 7960;
-      //   x["isChecked"] = true;
-      //   submitData.push(x);
-      // });
-      // 匹配拉线由分线列表标签移到待排产中，表格不一样需要修改以下代码
+      // if (this.selectionData[1].length == 0) {
+      //   this.$message.error("请选择需要批量填写开始日期的数据！");
+      //   return;
+      // }
+           let submitData = [];
       this.getSelectionData();
-      this.selectionData[this.tagRemark].forEach((x) => {
+      this.selectionData[0].forEach((x) => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
+        x["AutoDays2"] = this.AutoDays2;
         submitData.push(x);
       });
-
+   
       if (submitData.length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
+        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationSMT");
         const { data, forms, result, msg } = res.data;
         if (result) {
-	  // 以下代码因为匹配拉线由分线列表标签移到待排产中，改为了新的excel表格
-          // this.$set(this.tableData, this.tagRemark, data);
+          this.$set(this.tableData, 1, data);
           // 清空选中的，把选中的数据重新绑定
 
-          // this.resultMsg = res.data.resultMsg;
+          this.resultMsg = res.data.resultMsg;
 
-          // let templateData = JSON.parse(JSON.stringify(this.selectionData[this.tagRemark]));
-          // this.$set(this.selectionData, this.tagRemark, []);
-          // let newData = this.tableData[this.tagRemark].filter((a) =>
-          //   templateData.some((b) => b.OrderID == a.OrderID)
-          // );
-          // if (newData.length != 0) {
-          //   newData.forEach((c) => {
-          //     this.$nextTick(() => {
-          //       _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-          //       _this.selectionData[this.tagRemark].push(c);
-          //     });
-          //   });
-          // }
+          let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
+          this.$set(this.selectionData, 1, []);
+          let newData = this.tableData[1].filter((a) =>
+            templateData.some((b) => b.OrderID == a.OrderID)
+          );
+          if (newData.length != 0) {
+            newData.forEach((c) => {
+              this.$nextTick(() => {
+                _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
+                _this.selectionData[1].push(c);
+              });
+            });
+          }
           this.adminLoading = false;
           this.$message({
             message: msg,
@@ -1688,7 +1686,7 @@ export default {
         m["dicID"] = 7960;
       });
       this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
+      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlanAll");
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(this.tagRemark);
