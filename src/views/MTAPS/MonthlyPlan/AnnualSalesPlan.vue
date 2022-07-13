@@ -109,28 +109,14 @@ export default {
         height:'740px',
         adminLoading:false,//加载状态
         currentIndex:0,//当前表下标
-        // isLoading: [false,false],//每个表查询条件加载
-        tabList:[
-          { label: "待转入备料", value: 0 },
-          { label: "已转入备料", value: 1 }
-        ],
         tabStatus:0,
         btnForm: [],//拥有的按钮权限
         parmsBtn: [
-          {
-            ButtonCode: "save",
-            BtnName: "生成备料任务",
-            isLoading: false,
-            Methods: "readyTask",
-            Type: "primary",
-            Icon: "",
-            Size: "small",
-            signName:'0',
-          },
+          
         ],
         formSearchs:[//不同标签页面的查询条件
           {
-            datas: {IsSetPrepare:'未生成'},//查询入参
+            datas: {},//查询入参
             forms: [],// 页面显示的查询条件
           }
         ],
@@ -139,15 +125,15 @@ export default {
         tableLoading:[false],//每个表加载
         isClear: [false],
         tablePagination: [//表分页参数
-          { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         ],
-        sysID:[{ID:6734}],
+        sysID:[{ID:8978}],
+        tagRemark: 0,
         spread: null,//excel初始
     }
   },
   created() {
     _this = this;
-    // _this.adminLoading = true;
     _this.judgeBtn();
     _this.getTableHeader()
   },
@@ -241,23 +227,23 @@ export default {
     },
     // 获取表格数据
     async getTableData(params,index){
-      this.currentIndex = index;
       this.$set(this.tableLoading, index, true);
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if(data.length===0){
-            for(let i=0;i<1000;i++){
-                data.push({})
-            }
-            this.$set(this.tableData, index, data);
+        if(data.length===0){//查询数据为空时，默认初始化1000空行，方便用户粘贴自己的excel表内容到系统中
+          let num =1000
+          for(let i=0;i<num;i++){
+              data.push({})
+          }
+          this.$set(this.tableData, index, data);
+          this.$set(this.tablePagination[index], "pageTotal", num);
         }else{
-            this.$set(this.tableData, index, data);
-            this.$set(this.tablePagination[index], "pageTotal", count);
+          this.$set(this.tableData, index, data);
+          this.$set(this.tablePagination[index], "pageTotal", count);
         }
-        
         this.setData();
       } else {
         this.$message({
@@ -279,22 +265,14 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = []
-        this.tableColumns[this.currentIndex].forEach((x) => {
-        // if (i == 0) {
-        //   colInfos.push({
-        //     name: x.prop,
-        //     displayName: x.label,
-        //     cellType: new GC.Spread.Sheets.CellTypes.Text(),
-        //     size: parseInt(x.width),
-        //   });
-        // } else {
+        let colIndex = 0
+        this.tableColumns[this.currentIndex].forEach((x,index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
-        // }
-        
+          colIndex++
       });
       
         // 设置整个列头的背景色和前景色。
@@ -318,32 +296,28 @@ export default {
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-
-        if(this.tabStatus===0){//标签下表为0显示复选框，否则不显示
-          // 复选框
-          let checkbox = {
-            name: "isChecked",//字段名
-            displayName: "选择",//列名
-            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60,
-          };
-          colInfos.unshift(checkbox);
-          // 头部加入复选框
-          sheet.setCellType(
-            0,
-            0,
-            new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
-          );
-        }else if(this.currentIndex===1){
-          if(colInfos.length&&colInfos[0].name==='isChecked'){
-            colInfos.splice(0,1)
-          }
-        }
         
         console.log('colInfos',colInfos)
-        
-
+        // sheet.getCell(1,10, colIndex).locked(false);
+        // sheet.setValue(1,1,"unLocked");
+        // sheet.getRange(-1, 1, -1, colIndex).locked(false);
+        // sheet.getRange(5, -1, 1, -1,GC.Spread.Sheets.SheetArea.viewport).locked(false);
+        // sheet.options.isProtected = true;
+        // sheet.setIsProtected(true);
+        var style = new GC.Spread.Sheets.Style();
+        style.locked = false;//设置样式为锁定状态
+        sheet.setStyle(0, 1, style);//列为-1 表示整行
+        sheet.options.isProtected = true;
+        // 列筛选
+      // 参数2 开始列
+      // 参数3 
+      // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, 1, -1, colIndex);
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter);
+        hideRowFilter.filterDialogVisibleInfo({
+          sortByValue:false
+        })
         //渲染数据源
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
@@ -355,7 +329,7 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
-      
+      this.tagRemark = remarkTb
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
@@ -395,55 +369,6 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
-    // 标签页切换状态
-    changeStatus(x, index) {
-      this.tabStatus = index
-      if(index===0){
-        this.currentIndex = 0
-        this.formSearchs[this.currentIndex].datas["IsSetPrepare"] ='未生成'
-      }else if(index===1){
-        this.currentIndex = 0
-        this.formSearchs[this.currentIndex].datas["IsSetPrepare"] ='已生成'
-      }
-      this.dataSearch(this.currentIndex);
-    },
-    // 生成备料任务
-    async readyTask(){
-      let sheet = this.spread.getActiveSheet();
-      let data = sheet.getDataSource();
-      let submitData = [];
-      if (data.length != 0) {
-        data.forEach((x) => {
-          if (x.isChecked) {
-            submitData.push(x);
-          }
-        });
-        console.log('submitData',submitData)
-        if (submitData.length != 0) {
-          this.adminLoading = true
-          let res = await GetSearch(submitData,'/APSAPI/SetPreParePlanV2');
-          const { result, data, count, msg } = res.data;
-          if (result) {
-            this.dataSearch(this.currentIndex);
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        }else{
-          this.$message.error("请选择需要操作的数据！");
-        }
-      }
-    }
   }
 }
 </script>
