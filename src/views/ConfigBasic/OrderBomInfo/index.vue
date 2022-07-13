@@ -73,7 +73,7 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">明细列表</span></el-col>
+              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col
                 :span="20"
                 class="flex_flex_end"
@@ -341,6 +341,7 @@ export default {
   },
   data() {
     return {
+      title: this.$route.meta.title,
       tag: 0,
       //////////////左侧树节点//////////////
       fileList: [],

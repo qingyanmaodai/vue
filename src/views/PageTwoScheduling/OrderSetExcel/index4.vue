@@ -121,7 +121,7 @@ export default {
       autoGenerateColumns: true,
       spread: null,
       ////////////////// Search /////////////////
-      title: "订单列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

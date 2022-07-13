@@ -140,7 +140,7 @@ export default {
       showDialog: false,
       hasSelect: [true, true, true, false],
       sysID: [{ ID: 3066 }],
-      title: "产品关联模具表",
+      title: this.$route.meta.title,
       adminLoading: false,
       checkdBtnCodes: [],
       drawer: false,

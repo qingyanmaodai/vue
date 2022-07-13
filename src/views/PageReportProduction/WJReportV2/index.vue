@@ -130,7 +130,7 @@ export default {
       // 多级表头
       generalExportData: [],
       generalExportHeader: [],
-      title: "报废汇总列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

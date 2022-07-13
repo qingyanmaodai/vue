@@ -364,7 +364,7 @@ export default {
       GoodsDialog: false,
       tableHeight2: document.documentElement.clientHeight - 520 + "px",
       ////////////////// Search /////////////////
-      title: "销售列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

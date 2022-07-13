@@ -1,4 +1,4 @@
-<!--备料任务指派-->
+<!--送货通知单-->
 <template>
   <div
     class="container"
@@ -69,6 +69,7 @@
             @pageSize="pageSize"
             @selectfun="selectFun"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -108,7 +109,7 @@ export default {
         { label: "未通知", value: "未通知", num: 0 },
         { label: "已通知", value: "已通知", num: 0 },
       ],
-      title: "欠料送货通知列表",
+      title: this.$route.meta.title,
       labelStatus1: 0,
       DemandReplyDate: "",
       adminLoading: false,
@@ -171,6 +172,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;

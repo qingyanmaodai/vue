@@ -159,7 +159,7 @@ export default {
       categoryDialog: false,
       processDialog: false,
       adminLoading: false,
-      title: "工艺列表",
+      title: this.$route.meta.title,
       title2: "工序列表",
       drawer: false,
       formSearchs: [

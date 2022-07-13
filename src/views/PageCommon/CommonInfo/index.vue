@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--历史导入/已关闭工单/委外业务关联-->
 <template>
   <div
     class="container"
@@ -105,6 +105,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -136,7 +137,7 @@ export default {
       ////////////////// Search /////////////////
       isAdd: false,
       adminLoading: false,
-      title: "数据列表",
+      title:this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -259,6 +260,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;

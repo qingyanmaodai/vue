@@ -110,7 +110,7 @@ export default {
       // 多级表头
       generalExportData: [],
       generalExportHeader: [],
-      title: "",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

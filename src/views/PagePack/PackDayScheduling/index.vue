@@ -257,7 +257,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "当日排程",
+      title: this.$route.meta.title,
       drawer: false,
       isLoading: [false, false],
       formSearchs: [

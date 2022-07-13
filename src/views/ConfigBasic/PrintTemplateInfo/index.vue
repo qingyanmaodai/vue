@@ -267,7 +267,7 @@ export default {
         Height: "200mm",
       },
       ////////////////// Search /////////////////
-      title: "打印模板列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

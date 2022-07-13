@@ -1,4 +1,5 @@
 
+<!-- 产品库 -->
 <template>
   <div
     class="container flex_flex"
@@ -131,6 +132,7 @@
             @pageSize="pageSize"
             @selectfun="selectFun"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -375,7 +377,7 @@ export default {
       ProcessGroupID: "",
       dialogShow: false,
       categorys: [],
-      title: "产品列表",
+      title: this.$route.meta.title,
       title2: "配置类型",
       MaterialType: "",
       materialTypes: [
@@ -473,6 +475,11 @@ export default {
     }, 450);
   },
   methods: {
+    // 筛选
+    filterChange(val,property,remark){
+      this.formSearchs[remark].datas[property] = val
+      this.dataSearch(remark)
+    },
     // 获取线别组织
     async getOrgData() {
       this.treeData = [];
@@ -609,7 +616,14 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if(this.formSearchs[remarkTb].forms.length){
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element)=>{
+              if(element.prop===name){
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            })
+          }
         }
       }
     },

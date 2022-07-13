@@ -100,7 +100,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "交货回复列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -154,6 +154,7 @@ export default {
     this.getTableHeader();
   },
   mounted() {
+    console.log('this.$route',this.$route.meta.title)
     setTimeout(() => {
       this.setHeight();
     }, 350);

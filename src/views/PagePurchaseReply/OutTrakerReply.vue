@@ -1,4 +1,4 @@
-<!--组织信息-->
+<!--试产复期-->
 <template>
   <div
     class="container flex_flex"
@@ -57,11 +57,12 @@
                 <el-row>
                   <el-col :span="4">
 
-                    <span class="title"> <i
+                    <span class="title">
+                      <!-- <i
                         class="el-icon-d-arrow-left"
                         v-show="showAside"
                         @click="showAside = !showAside"
-                      ></i>
+                      ></i> -->
                       <i
                         class="el-icon-d-arrow-right"
                         v-show="!showAside"
@@ -136,6 +137,7 @@
                 :footerLabel="footerLabel[0]"
                 @toPage="usingSearch"
                 @sortChange="sortChange"
+                @filterChange="filterChange"
               />
             </div>
           </div>
@@ -167,6 +169,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
+            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -227,7 +230,7 @@ export default {
       treeData: [],
       treeListTmp: [],
       ////////////////// Search /////////////////
-      title: "采购回复列表",
+      title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {
@@ -298,6 +301,11 @@ export default {
     }, 500);
   },
   methods: {
+    // 筛选
+    filterChange(val,property,remark){
+      this.formSearchs[remark].datas[property] = val
+      this.dataSearch(remark)
+    },
     getData(){
        this.formSearchs[0].datas["PMCRemark"] = [
           "试产",

@@ -128,7 +128,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "数据ID列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

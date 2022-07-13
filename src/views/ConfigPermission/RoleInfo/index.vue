@@ -360,7 +360,7 @@ export default {
       adminLoading: false,
       ////////////////// Search /////////////////
       sureLoading: false,
-      title: "角色列表",
+      title: this.$route.meta.title,
       drawerTitle: "新增角色",
       delData: [[]],
       operationStatus: true,

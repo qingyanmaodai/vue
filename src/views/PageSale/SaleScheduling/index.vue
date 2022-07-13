@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "月销售列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

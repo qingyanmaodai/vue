@@ -124,7 +124,7 @@ export default {
       autoGenerateColumns: true,
       spread: null,
       ////////////////// Search /////////////////
-      title: "订单列表",
+      title: this.$route.meta.title,
       Status1: [
         { label: "全部", value: "" },
         { label: "待转入备料", value: "是" },

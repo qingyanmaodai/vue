@@ -231,7 +231,7 @@ export default {
         Status: 1,
       },
       ////////////////// Search /////////////////
-      title: "打印模板列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

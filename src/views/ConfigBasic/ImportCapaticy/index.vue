@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--委外业务关联-->
 <template>
   <div
     class="container"
@@ -60,6 +60,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @handleRowClick="handleRowClick"
+          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -144,7 +145,7 @@ export default {
       adminLoading: false,
       sysID: [{ ID: 7928 }, { ID: 15 }],
       ////////////////// Search /////////////////
-      title: "产能配置",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -231,6 +232,11 @@ export default {
     }, 350);
   },
   methods: {
+    // 筛选
+    async filterChange(val,property,remarkTb){
+      this.formSearchs[remarkTb].datas[property] = val
+      this.dataSearch(remarkTb)
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;

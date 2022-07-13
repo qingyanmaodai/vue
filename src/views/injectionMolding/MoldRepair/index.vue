@@ -38,7 +38,7 @@ export default {
       adminLoading: false,
       ////////////////// Search /////////////////
       labelStatus1: 0,
-      title: "模具维修列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

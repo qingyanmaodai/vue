@@ -185,7 +185,7 @@ export default {
         { label: "单个配置", value: 0 },
         { label: "多个配置", value: 1 },
       ],
-      title: "线别列表",
+      title: this.$route.meta.title,
       dialogShow: false,
       drawer: false,
       delData: [[]],

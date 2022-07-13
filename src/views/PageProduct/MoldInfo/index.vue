@@ -61,7 +61,7 @@ export default {
         { label: "改模", value: 2 },
         { label: "弃用", value: 0 },
       ],
-      title: "模具列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

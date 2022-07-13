@@ -144,7 +144,7 @@ export default {
           value: 2,
         },
       ],
-      title: "",
+      title: this.$route.meta.title,
       dialogVisible: false,
       drawer: false,
       formSearchs: [

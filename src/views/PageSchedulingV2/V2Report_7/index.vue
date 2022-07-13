@@ -141,7 +141,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "全局回货汇总",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

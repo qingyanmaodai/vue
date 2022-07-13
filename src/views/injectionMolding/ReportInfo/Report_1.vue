@@ -78,7 +78,7 @@ export default {
       tableDialog: false,
       isAdd: false,
       adminLoading: false,
-      title: "月材料列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [
