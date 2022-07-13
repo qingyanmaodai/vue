@@ -52,7 +52,6 @@
             @sortChange="sortChange"
             @toPage="toPage"
             @handleRowClick="handleRowClick"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -123,7 +122,6 @@
             @pageSize="pageSize"
             :pagination="tablePagination[1]"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -208,11 +206,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    async filterChange(val,property,remarkTb){
-      this.formSearchs[remarkTb].datas[property] = val
-      this.dataSearch(remarkTb)
-    },
     // 行内样式
     cellStyle0({ row, column }) {
       if (column.property == "IsCompleteInspect") {

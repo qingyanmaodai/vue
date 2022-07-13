@@ -42,7 +42,6 @@
       @cell-dblclick="handleRowdbClick"
       @sort-change="sortChange"
       @custom="toolbarCustomEvent"
-      @filter-change="filterChange"
     >
       <vxe-column
         :reserve-selection="true"
@@ -68,7 +67,7 @@
         :title="x.label"
         :min-width="x.width"
         :fixed="x.fix"
-        :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
+        :filters="x.filters?[{data: ''}]:[{data: ''}]"
         :filter-method="filterMethod"
         :filter-recover-method="filterRecoverMethod"
       >
@@ -94,7 +93,7 @@
             :tree-node="z==0?true:x.treeNode?x.treeNode:false"
             :key="k"
             :fixed="i.fix"
-            :filters="x.filters?[{data: ''}]:(ControlTypeList.includes(x.ControlType)?[{data: ''}]:null)"
+            :filters="x.filters?[{data: ''}]:[{data: ''}]"
             :filter-method="filterMethod"
             :filter-recover-method="filterRecoverMethod"
           >
@@ -1113,7 +1112,6 @@ export default {
   },
   data() {
     return {
-      ControlTypeList:['textbox','textarea','el-input','el-input-number','el-autocomplete'],//允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {

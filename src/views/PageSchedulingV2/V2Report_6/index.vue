@@ -109,7 +109,6 @@
                 @pageChange="pageChange"
                 @pageSize="pageSize"
                 @sortChange="sortChange"
-                @filterChange="filterChange"
               />
             </div>
           </div>
@@ -208,11 +207,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    filterChange(val,property,remark){
-      this.formSearchs[remark].datas[property] = val
-      this.dataSearch(remark)
-    },
     cellStyle({ row, column }) {
       if (
         column.property == "JudgeResult" &&

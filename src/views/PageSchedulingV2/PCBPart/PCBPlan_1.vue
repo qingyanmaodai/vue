@@ -123,7 +123,6 @@
             @selectfun="selectFun"
             @keyupEnter="editSort"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -408,11 +407,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    async filterChange(val,property,remarkTb){
-      this.formSearchs[remarkTb].datas[property] = val
-      this.dataSearch(remarkTb)
-    },
     backData() {
       this.getSelectionData();
       console.log(this.selectionData[1]);

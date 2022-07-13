@@ -132,7 +132,6 @@
             @pageSize="pageSize"
             @selectfun="selectFun"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -475,11 +474,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    filterChange(val,property,remark){
-      this.formSearchs[remark].datas[property] = val
-      this.dataSearch(remark)
-    },
     // 获取线别组织
     async getOrgData() {
       this.treeData = [];

@@ -25,7 +25,7 @@
             :hasSelect="hasSelect[y]" :tableLoading="tableLoading[y]" :remark="y" :sysID="sysID[y].ID"
             :isClear="isClear[y]" :cellStyle="cellStyle0" :pagination="tablePagination[y]" @pageChange="pageChange"
                     @selectfun="selectFun"
-            @pageSize="pageSize" @sortChange="sortChange" @filterChange="filterChange"/>
+            @pageSize="pageSize" @sortChange="sortChange"/>
         </div>
 
       </div>
@@ -169,11 +169,6 @@
       }, 450);
     },
     methods: {
-      // 筛选
-      async filterChange(val,property,remarkTb){
-        this.formSearchs[remarkTb].datas[property] = val
-        this.dataSearch(remarkTb)
-      },
       // 判断按钮权限
       judgeBtn() {
         let routeBtn = this.$route.meta.btns;

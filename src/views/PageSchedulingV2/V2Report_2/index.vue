@@ -69,7 +69,6 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
-          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -140,7 +139,6 @@
               @handleRowClick="handleRowClick"
               @pageSize="pageSize"
               @sortChange="sortChange"
-              @filterChange="filterChange"
             />
           </div>
         </el-tab-pane>
@@ -265,7 +263,6 @@
               @sortChange="sortChange"
               @toPage="usingSearch"
               @selectfun="selectFun"
-              @filterChange="filterChange"
             />
           </div>
         </el-tab-pane>
@@ -298,7 +295,6 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
         <div class="admin_content">
@@ -318,7 +314,6 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -458,11 +453,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    async filterChange(val,property,remarkTb){
-      this.formSearchs[remarkTb].datas[property] = val
-      this.dataSearch(remarkTb)
-    },
     async getWarehosueData() {
       let form = {};
       form["dicID"] = 80;

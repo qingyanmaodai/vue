@@ -55,7 +55,6 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
-          @filterChange="filterChange"
         />
       </div>
     </div>
@@ -302,11 +301,6 @@ export default {
     }, 450);
   },
   methods: {
-    // 筛选
-    async filterChange(val,property,remarkTb){
-      this.formSearchs[remarkTb].datas[property] = val
-      this.dataSearch(remarkTb)
-    },
     drawChart(id, option) {
       let myChart = echarts.init(document.getElementById(id));
       myChart.setOption(option, true);

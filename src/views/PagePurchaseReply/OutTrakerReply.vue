@@ -137,7 +137,6 @@
                 :footerLabel="footerLabel[0]"
                 @toPage="usingSearch"
                 @sortChange="sortChange"
-                @filterChange="filterChange"
               />
             </div>
           </div>
@@ -169,7 +168,6 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -301,11 +299,6 @@ export default {
     }, 500);
   },
   methods: {
-    // 筛选
-    filterChange(val,property,remark){
-      this.formSearchs[remark].datas[property] = val
-      this.dataSearch(remark)
-    },
     getData(){
        this.formSearchs[0].datas["PMCRemark"] = [
           "试产",

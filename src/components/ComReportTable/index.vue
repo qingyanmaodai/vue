@@ -27,7 +27,6 @@
       resizable
       auto-resize
       @sort-change="sortChange"
-      @filter-change="filterChange"
     >
       <vxe-column
         type="seq"

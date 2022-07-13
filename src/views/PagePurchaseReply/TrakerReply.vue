@@ -137,7 +137,6 @@
                 @selectfun="selectFun"
                 @toPage="usingSearch"
                 @sortChange="sortChange"
-                @filterChange="filterChange"
               />
             </div>
           </div>
@@ -169,7 +168,6 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
-            @filterChange="filterChange"
           />
         </div>
       </div>
@@ -292,11 +290,6 @@ export default {
     }, 500);
   },
   methods: {
-    // 筛选
-    async filterChange(val,property,remarkTb){
-      this.formSearchs[remarkTb].datas[property] = val
-      this.dataSearch(remarkTb)
-    },
     // 获取查询到的所有欠料数
     async getTotalOweNum() {
       let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
