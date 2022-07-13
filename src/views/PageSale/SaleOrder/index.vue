@@ -25,7 +25,7 @@
           <el-row>
             <el-col :span="4"><span class="title">{{ title }}</span></el-col>
             <el-col
-              ::span="20"
+              :span="20"
               class="flex_flex_end"
             >
               <div
