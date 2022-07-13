@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "预扣自动关闭报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

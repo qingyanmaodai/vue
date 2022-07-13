@@ -333,7 +333,7 @@ export default {
       adminLoading: false,
       ////////////////// Search /////////////////
       sysID: [{ ID: 10269 }, { ID: 10270 }, { ID: 10271 }, { ID: 10272 }],
-      title: "月嫂档案表",
+      title: this.$route.meta.title,
       Status2: [
         { label: "能力标签", value: 0 },
         { label: "持有证书", value: 1 },

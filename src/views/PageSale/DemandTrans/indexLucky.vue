@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "需求转换列表",
+      title: this.$route.meta.title,
       drawer: false,
       isLoading: [false, false, false],
       formSearchs: [

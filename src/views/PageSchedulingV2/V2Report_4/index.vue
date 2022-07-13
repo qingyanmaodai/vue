@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "备料达成明细",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

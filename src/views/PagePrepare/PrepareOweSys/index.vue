@@ -137,7 +137,7 @@ export default {
       ////////////////// Search /////////////////
       dialogShow: false,
       dialogShow2: false,
-      title: "备料齐套报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

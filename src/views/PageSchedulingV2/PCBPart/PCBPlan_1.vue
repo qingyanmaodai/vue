@@ -182,7 +182,7 @@ export default {
        // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
       ],
-      title: "",
+      title: this.$route.meta.title,
       labelStatus1: 1,
       PrepareDate: "",
       adminLoading: false,

@@ -109,7 +109,7 @@ export default {
         { label: "未通知", value: "未通知", num: 0 },
         { label: "已通知", value: "已通知", num: 0 },
       ],
-      title: "欠料送货通知列表",
+      title: this.$route.meta.title,
       labelStatus1: 0,
       DemandReplyDate: "",
       adminLoading: false,

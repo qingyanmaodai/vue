@@ -371,7 +371,7 @@ export default {
       labelStatus2: 0,
       ////////////////// Search /////////////////
       includeFields: ["DemandQty", "RealOweQty", "ShortQty", "UnIssuedQty"],
-      title: "备料达成明细",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

@@ -1,4 +1,4 @@
-<!--历史导入/已关闭工单-->
+<!--历史导入/已关闭工单/委外业务关联-->
 <template>
   <div
     class="container"
@@ -137,7 +137,7 @@ export default {
       ////////////////// Search /////////////////
       isAdd: false,
       adminLoading: false,
-      title: "数据列表",
+      title:this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

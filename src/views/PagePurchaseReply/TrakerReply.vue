@@ -230,7 +230,7 @@ export default {
       treeData: [],
       treeListTmp: [],
       ////////////////// Search /////////////////
-      title: "采购回复列表",
+      title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {

@@ -285,7 +285,7 @@ export default {
         UserName: "",
         Time: "",
       },
-      title: "欠料分析列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

@@ -67,7 +67,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "字段属性列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

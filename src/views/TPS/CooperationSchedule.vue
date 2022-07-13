@@ -169,7 +169,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "合作月嫂档期排班表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       updateData: [[]],

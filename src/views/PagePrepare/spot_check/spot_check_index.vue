@@ -295,7 +295,7 @@ export default {
       expendColl: false,
       expendCollText: "收缩",
       selectionData: [[], []],
-      title: "备料追踪列表",
+      title: this.$route.meta.title,
       dialogShow: false,
       height2: "240px",
       height3: "180px",

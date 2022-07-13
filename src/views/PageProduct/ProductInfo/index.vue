@@ -377,7 +377,7 @@ export default {
       ProcessGroupID: "",
       dialogShow: false,
       categorys: [],
-      title: "产品列表",
+      title: this.$route.meta.title,
       title2: "配置类型",
       MaterialType: "",
       materialTypes: [

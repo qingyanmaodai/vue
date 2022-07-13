@@ -290,7 +290,7 @@ export default {
   },
   data() {
     return {
-      title: "异常原因维护列表",
+      title: this.$route.meta.title,
       Type: "生产异常",
       sureLoading: false,
       drawerTitle: "新增异常原因",

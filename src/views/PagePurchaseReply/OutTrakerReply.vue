@@ -57,11 +57,12 @@
                 <el-row>
                   <el-col :span="4">
 
-                    <span class="title"> <i
+                    <span class="title">
+                      <!-- <i
                         class="el-icon-d-arrow-left"
                         v-show="showAside"
                         @click="showAside = !showAside"
-                      ></i>
+                      ></i> -->
                       <i
                         class="el-icon-d-arrow-right"
                         v-show="!showAside"
@@ -229,7 +230,7 @@ export default {
       treeData: [],
       treeListTmp: [],
       ////////////////// Search /////////////////
-      title: "采购回复列表",
+      title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {

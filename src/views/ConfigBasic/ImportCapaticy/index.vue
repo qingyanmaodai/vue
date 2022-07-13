@@ -145,7 +145,7 @@ export default {
       adminLoading: false,
       sysID: [{ ID: 7928 }, { ID: 15 }],
       ////////////////// Search /////////////////
-      title: "产能配置",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

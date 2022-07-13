@@ -112,7 +112,7 @@ export default {
       // 多级表头
       generalExportData: [],
       generalExportHeader: [],
-      title: "",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
@@ -544,7 +544,6 @@ export default {
     },
     // 获取图表数据
     async getEchartData(xAxis, data1, data2) {
-      debugger;
       _this.$set(_this.echart_one.xAxis, "data", []);
       _this.echart_one.series.forEach((o) => {
         o.data = [];

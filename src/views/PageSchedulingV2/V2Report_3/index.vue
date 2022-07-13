@@ -144,7 +144,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "备料日期汇总",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

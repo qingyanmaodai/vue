@@ -1577,7 +1577,7 @@ export default {
   /* width: 100px; */
   z-index: 99;
   height: 30px;
-  left: 10px;
+  left: 110px;
   top: 6px;
   background: rgba(0, 0, 0, 0);
 }

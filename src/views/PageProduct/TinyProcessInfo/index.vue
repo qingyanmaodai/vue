@@ -111,7 +111,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "二级工序列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

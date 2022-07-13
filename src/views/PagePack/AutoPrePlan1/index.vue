@@ -219,7 +219,7 @@ export default {
       },
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "排程列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

@@ -115,7 +115,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "产能列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

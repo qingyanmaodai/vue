@@ -110,7 +110,7 @@ export default {
       // 多级表头
       generalExportData: [],
       generalExportHeader: [],
-      title: "不达成维护列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

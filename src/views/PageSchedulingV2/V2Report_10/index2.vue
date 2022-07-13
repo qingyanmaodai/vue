@@ -141,7 +141,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "欠发追踪汇总",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

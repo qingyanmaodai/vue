@@ -142,7 +142,7 @@ export default {
         { label: "横向", value: 1 },
       ],
       ////////////////// Search /////////////////
-      title: "日计划列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "",
+      title: this.$route.meta.title,
       dialogVisible: false,
       drawer: false,
       formSearchs: [

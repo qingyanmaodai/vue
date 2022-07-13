@@ -252,7 +252,7 @@ export default {
         children: "children",
       },
       isOpen: true,
-      title: "日计划列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

@@ -129,7 +129,7 @@ export default {
       fileList: [],
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "销售导入列表",
+      title: this.$route.meta.title,
       spread: null,
       drawer: false,
       isLoading: [false],

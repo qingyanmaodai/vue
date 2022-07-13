@@ -216,7 +216,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "数据列表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [

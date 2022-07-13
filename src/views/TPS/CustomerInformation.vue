@@ -169,7 +169,7 @@ export default {
     return {
       adminLoading: false,
       ////////////////// Search /////////////////
-      title: "客户资料表",
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       updateData: [[]],

@@ -104,7 +104,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       adminLoading: false,
-      title: "包装计划列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

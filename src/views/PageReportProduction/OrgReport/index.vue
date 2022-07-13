@@ -148,7 +148,7 @@ export default {
       // 多级表头
       generalExportData: [],
       generalExportHeader: [],
-      title: "日计划达成列表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

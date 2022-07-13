@@ -485,7 +485,7 @@ export default {
       },
       ////////////////// Search /////////////////
       multiple: true,
-      title: "计划列表",
+      title: this.$route.meta.title,
       drawer: false,
       tag: 0,
       userData: [],

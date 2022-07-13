@@ -158,7 +158,7 @@ export default {
         { label: "复期异常", value: 2 },
         { label: "复期变更", value: 3 },
       ],
-      title: "备料回复清单",
+      title: this.$route.meta.title,
       labelStatus1: 0,
       DemandReplyDate: "",
       adminLoading: false,

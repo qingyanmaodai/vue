@@ -171,7 +171,7 @@ export default {
       ////////////////// Search /////////////////
       treeHeight: "",
       showAside: true,
-      title: "复期报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {

@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      title: "欠发追踪报表",
+      title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
         {
