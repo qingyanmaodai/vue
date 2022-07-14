@@ -96,6 +96,8 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
+                :editable="!x.editable?false:true"
+                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>
@@ -263,6 +265,8 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
+                :editable="!x.editable?false:true"
+                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>
@@ -432,6 +436,8 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
+                :editable="!x.editable?false:true"
+                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>
@@ -1004,6 +1010,7 @@ export default {
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
+        console.log('searchForm',this.searchForm)
         this.row = this.searchForm.length <= 6 ? 0 : 1;
         this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
         this.tag = this.searchForm.length % 7;
