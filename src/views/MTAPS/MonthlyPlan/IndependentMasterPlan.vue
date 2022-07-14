@@ -1,4 +1,4 @@
-<!-- 年度销售预测 -->
+<!-- 独立主计划 -->
 <template>
     <div
     class="container"
@@ -98,9 +98,8 @@ import {
   GetSearch,
   ExportData,
 } from "@/api/Common";
-import { indexOf } from 'xe-utils';
 export default {
-  name: "AnnualSalesPlan",
+  name: "IndependentMasterPlan",
   components: {
     ComSearch,
   },
@@ -113,13 +112,40 @@ export default {
         tabStatus:0,
         btnForm: [],//拥有的按钮权限
         parmsBtn: [
-          {
+           {
+            BtnName: "初始化保存",
+            ButtonCode: "save",
+            Type: "success",
+            Ghost: true,
+            Size: "small",
+            Methods: "initSave",
+            Icon: "",
+           },
+           {
             BtnName: "保存",
             ButtonCode: "save",
             Type: "success",
             Ghost: true,
             Size: "small",
             Methods: "dataSave",
+            Icon: "",
+           },
+           {
+            BtnName: "计算配套",
+            ButtonCode: "save",
+            Type: "primary",
+            Ghost: true,
+            Size: "small",
+            Methods: "calComplete",
+            Icon: "",
+           },
+           {
+            BtnName: "加入集中运算",
+            ButtonCode: "save",
+            Type: "primary",
+            Ghost: true,
+            Size: "small",
+            Methods: "joinOperation",
             Icon: "",
            },
         ],
@@ -136,14 +162,13 @@ export default {
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         ],
-        sysID:[{ID:8978}],
+        selectionData:[[]],
+        sysID:[{ID:8980}],
         tagRemark: 0,
         spread: null,//excel初始
-        currentMonth:'',
     }
   },
   created() {
-    
     _this = this;
     _this.judgeBtn();
     _this.getTableHeader()
@@ -217,28 +242,13 @@ export default {
         forms.some((x, z) => {
           
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y,i) => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
               this.$set(this.formSearchs[z].datas, [y.prop], "");
             }
-            //选择控价类型“el-date-picker”时，接口默认返回的是data,此页面需要年份，所以需要转化
-            if(y.prop==='FYear'){
-              y.type = "year"
-              y.editable = false 
-              y.clearable = false //年份必填项，设置不可清空
-             
-            }
           });
-          console.log('x',x)
-          //获取今年第一天
-          const date1 = new Date();
-          const year1 = date1.getFullYear();
-          this.currentMonth = date1.getMonth()+1
-          console.log('month',this.currentMonth)
-          const firstMonth = year1 + '-' + '01' + '-' + '01';
-          this.formSearchs[this.tagRemark].datas['FYear'] = firstMonth
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
         });
@@ -259,8 +269,17 @@ export default {
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.$set(this.tableData, index, data);
-        this.$set(this.tablePagination[index], "pageTotal", count);
+        if(data.length===0){//查询数据为空时，默认初始化1000空行，方便用户粘贴自己的excel表内容到系统中
+          let num =1000
+          for(let i=0;i<num;i++){
+              data.push({})
+          }
+          this.$set(this.tableData, index, data);
+          this.$set(this.tablePagination[index], "pageTotal", num);
+        }else{
+          this.$set(this.tableData, index, data);
+          this.$set(this.tablePagination[index], "pageTotal", count);
+        }
         this.setData();
       } else {
         this.$message({
@@ -282,20 +301,38 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = []
-        this.tableColumns[this.currentIndex].forEach((x) => {
+        let colIndex = 0
+        this.tableColumns[this.currentIndex].forEach((x,index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
-        });
+          colIndex++
+      });
+      // 选框
       
+      let checkbox = {
+        name: "isChecked",
+        displayName: "选择",
+        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+        size: 60,
+      };
+      for (var name in checkbox) {
+        colInfos[0][name] = checkbox[name];
+      }
+      sheet.setCellType(
+        0,
+        0,
+        new HeaderCheckBoxCellType(),
+        GCsheets.SheetArea.colHeader
+      );
         // 设置整个列头的背景色和前景色。
         /**
-         * 参数1:起始行
-         * 参数2:起始列
-         * 参数3:结束行
-         * 参数4:结束列
+         * 参数1:表示行
+         * 参数2:列，-1表示
+         * 参数3:
+         * 参数4:
          * 参数5:
          */
         let colHeaderStyle = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
@@ -315,29 +352,6 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
-        //一定要放在渲染完后
-        /**
-         * 参数1:起始行
-         * 参数2:起始列
-         * 参数3:行数
-         * 参数4:列数
-         */
-        // 指定可编辑区域
-        const monthList = [1,2,3,4,5,6,7,8,9,10,11,12]
-        const nameList = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12']
-        this.tableColumns[this.currentIndex].forEach((item,index) => {
-          if(nameList.includes(item.prop)&&item.displayName){
-            // 大于当前月份的列可编辑
-            let month  = item.prop.split('M')
-            if(Number(month[1])>this.currentMonth){
-              console.log('Number(month[1]',Number(month[1]))
-              sheet.getRange(-1,index, -1, 1).locked(false);
-            }
-          }
-          
-        });
-        // 锁定表格
-        sheet.options.isProtected = true;
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
@@ -385,48 +399,166 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
+    // 初始化保存
+    initSave(){
+        if(this.tableData[this.tagRemark].length){
+            this.$confirm('初始化保存将会覆盖所有旧数据，确定操作吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                    }).then(async() => {
+                        //确定操作
+                        this.adminLoading = true
+                        let list = []
+                        this.tableData[this.tagRemark].forEach(item=>{
+                          item['dicID'] = 8980
+                          if(item.OrderNo){
+                            list.push(item)
+                          }
+                        })
+                        let res = await GetSearch(list, "/APSAPI/ImportOrderPlan")
+                        try {
+                          const { result, data, count, msg } = res.data;
+                        if(result){
+                          this.dataSearch(this.tagRemark)
+                          this.adminLoading = false
+                        }else {
+                          this.adminLoading = false
+                          this.$message({
+                            message: msg,
+                            type: "error",
+                            dangerouslyUseHTMLString: true,
+                          });
+                        }
+                        
+                      } catch (error) {
+                        if(error){
+                          this.adminLoading = false
+                        }
+                      }
+                    }).catch(() => {
+                        //取消操作
+                    });
+        }else{
+            this.$message.error("当前表数据为空，请添加再保存！")
+        }
+    },
     // 保存
     async dataSave(){
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows();//获取修改过的数据
-      let submitData = [];
-      let curYear = new Date(this.formSearchs[this.tagRemark].datas['FYear'])
-      let year = curYear.getFullYear()
-      console.log('ye',curYear.getFullYear())
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          x.item['dicID'] = 8978 
-          x.item['FYear'] = year
-          submitData.push(x.item);
-        });
-      }
-      if(submitData.length){
-        console.log('修改了',submitData)
-        this.adminLoading = true
-        let res = await GetSearch(submitData, "/APSAPI/SaveData")
-        try {
-          const { result, data, count, msg } = res.data;
-        if(result){
-          this.dataSearch(this.tagRemark)
-          this.adminLoading = false
-        }else {
-          this.adminLoading = false
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
+      if(this.tableData[this.tagRemark].length){
+        let sheet = this.spread.getActiveSheet();
+        let newData = sheet.getDirtyRows();//获取修改过的数据
+        let submitData = [];
+        if (newData.length != 0) {
+          newData.forEach((x) => {
+            x.item['dicID'] = 8980 
+            submitData.push(x.item);
           });
-      }
-          
+        }
+        if(submitData.length){
+          console.log('修改了',submitData)
+          this.adminLoading = true
+          let res = await GetSearch(submitData, "/APSAPI/SaveData")
+          try {
+            const { result, data, count, msg } = res.data;
+          if(result){
+            this.dataSearch(this.tagRemark)
+            this.adminLoading = false
+          }else {
+            this.adminLoading = false
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+        }
+        
         } catch (error) {
           if(error){
             this.adminLoading = false
           }
         }
-        
+      
       }else{
         this.$message.error("当前数据没做修改，请先修改再保存！")
       }
+      }else{
+          this.$message.error("当前表数据为空，请添加再保存！")
+      }
+    },
+    // 计算配套
+    async calComplete(){
+        if(this.tableData[this.tagRemark].length){
+          this.adminLoading = true
+          let res = await GetSearch(this.tableData[this.tagRemark], "/APSAPI/OrderPlanMaterialForm")
+          try {
+            const { result, data, count, msg } = res.data;
+          if(result){
+            this.dataSearch(this.tagRemark)
+            this.adminLoading = false
+          }else {
+            this.adminLoading = false
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        } catch (error) {
+          if(error){
+            this.adminLoading = false
+          }
+        }
+        }else{
+            this.$message.error("当前表数据为空，请添加再保存！")
+        }
+    },
+    // 加入集中运算
+    async joinOperation(){
+        this.getSelectionData()
+        if(this.selectionData[this.tagRemark].length){
+          console.log('selectionData',this.selectionData[this.tagRemark])
+          this.adminLoading = true
+          this.selectionData[this.tagRemark].forEach(item=>{
+            item['ProductionStatus'] = 21
+          })
+          
+          let res = await GetSearch( this.selectionData[this.tagRemark], "/APSAPI/SaveData")
+          try {
+            const { result, data, count, msg } = res.data;
+          if(result){
+            this.dataSearch(this.tagRemark)
+            this.adminLoading = false
+          }else {
+            this.adminLoading = false
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          
+          } catch (error) {
+            if(error){
+              this.adminLoading = false
+            }
+          }
+        }else{
+            this.$message.error("请选择需要操作的数据！")
+        }
+    },
+    // 获取选中的数据
+    getSelectionData() {
+    let sheet = this.spread.getActiveSheet();
+    let newData = sheet.getDataSource();
+    this.selectionData[this.tagRemark] = [];
+    if (newData.length != 0) {
+        newData.forEach((x) => {
+        if (x.isChecked) {
+            this.selectionData[this.tagRemark].push(x);
+        }
+        });
+    }
     },
   }
 }
