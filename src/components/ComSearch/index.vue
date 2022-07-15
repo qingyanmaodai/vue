@@ -96,8 +96,6 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
-                :editable="!x.editable?false:true"
-                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>
@@ -265,8 +263,6 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
-                :editable="!x.editable?false:true"
-                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>
@@ -436,8 +432,6 @@
                 v-model="searchData[x.prop]"
                 type="year"
                 placeholder="选择年"
-                :editable="!x.editable?false:true"
-                :clearable="!x.clearable?false:true"
               >
               </el-date-picker>
             </el-form-item>

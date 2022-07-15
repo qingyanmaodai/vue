@@ -56,27 +56,6 @@
               >SysID:{{ sysID[currentIndex].ID }}
             </span>
           </div>
-          <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[currentIndex].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
-                :page-size="tablePagination[currentIndex].pageSize"
-                :total="tablePagination[currentIndex].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
         </div>
       </div>
     </div>
@@ -173,6 +152,9 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader()
   },
+  activated() {
+    this.spread.refresh();
+  },
   mounted() {
     setTimeout(() => {
       this.setHeight();
@@ -229,6 +211,7 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
+      this.adminLoading = true
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -251,9 +234,10 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
+          this.adminLoading = false
         });
       } else {
-        // this.adminLoading = false;
+        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
@@ -264,22 +248,19 @@ export default {
     // 获取表格数据
     async getTableData(params,index){
       this.$set(this.tableLoading, index, true);
-      params["rows"] = this.tablePagination[index].pageSize;
-      params["page"] = this.tablePagination[index].pageIndex;
+      // params["rows"] = this.tablePagination[index].pageSize;
+      // params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if(data.length===0){//查询数据为空时，默认初始化1000空行，方便用户粘贴自己的excel表内容到系统中
-          let num =1000
-          for(let i=0;i<num;i++){
-              data.push({})
-          }
-          this.$set(this.tableData, index, data);
-          this.$set(this.tablePagination[index], "pageTotal", num);
-        }else{
-          this.$set(this.tableData, index, data);
-          this.$set(this.tablePagination[index], "pageTotal", count);
+        //添加1000空行，方便用户粘贴自己的excel表内容到系统中
+        let num =1000
+        for(let i=0;i<num;i++){
+            data.push({})
         }
+        this.$set(this.tableData, index, data);
+        // this.$set(this.tablePagination[index], "pageTotal", num);
+       
         this.setData();
       } else {
         this.$message({
@@ -352,6 +333,7 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.refresh(); //重新定位宽高度
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
@@ -362,7 +344,7 @@ export default {
       this.tagRemark = remarkTb
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
-      this.tablePagination[remarkTb].pageIndex = 1;
+      // this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 重置
@@ -402,7 +384,7 @@ export default {
     // 初始化保存
     initSave(){
         if(this.tableData[this.tagRemark].length){
-            this.$confirm('初始化保存将会覆盖所有旧数据，确定操作吗?', '提示', {
+            this.$confirm('将初始化当前单据的数据，确定操作吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -412,7 +394,7 @@ export default {
                         let list = []
                         this.tableData[this.tagRemark].forEach(item=>{
                           item['dicID'] = 8980
-                          if(item.OrderNo){
+                          if(item.OrderNo){//有单据的数据才做保存
                             list.push(item)
                           }
                         })
@@ -490,7 +472,13 @@ export default {
     async calComplete(){
         if(this.tableData[this.tagRemark].length){
           this.adminLoading = true
-          let res = await GetSearch(this.tableData[this.tagRemark], "/APSAPI/OrderPlanMaterialForm")
+          let submitData = []
+          this.tableData[this.tagRemark].forEach(item=>{
+            if(item.OrderNo){
+              submitData.push(item)
+            }
+          })
+          let res = await GetSearch(submitData, "/APSAPI/OrderPlanMaterialForm")
           try {
             const { result, data, count, msg } = res.data;
           if(result){

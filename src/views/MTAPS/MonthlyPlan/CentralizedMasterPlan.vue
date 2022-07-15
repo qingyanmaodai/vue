@@ -164,6 +164,9 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader()
   },
+  activated() {
+    this.spread.refresh();
+  },
   mounted() {
     setTimeout(() => {
       this.setHeight();
@@ -220,6 +223,7 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
+      this.adminLoading = true
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -242,9 +246,10 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
+          this.adminLoading = false
         });
       } else {
-        // this.adminLoading = false;
+        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
@@ -333,6 +338,7 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.refresh(); //重新定位宽高度
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }

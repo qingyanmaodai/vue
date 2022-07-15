@@ -116,10 +116,10 @@ export default {
   },
   data() {
     return {
-      itemTitle:'独立配套欠料明细',
+      itemTitle:'集中配套欠料明细',
       Status1: [
-        { label: "独立配套计算汇总", value: 0 },
-        { label: "独立配套欠料明细", value: 1 },
+        { label: "集中配套计算汇总", value: 0 },
+        { label: "集中配套欠料明细", value: 1 },
       ],
         title:this.$route.meta.title,//表名
         height:'740px',
@@ -148,7 +148,7 @@ export default {
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         ],
-        sysID:[{ID:8985},{ID:8984}],
+        sysID:[{ID:8982},{ID:8983}],
         tagRemark: 0,
         spread: null,//excel初始
         itemSpread:null,
