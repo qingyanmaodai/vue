@@ -397,7 +397,7 @@ export default {
       if (newData.length != 0) {
         newData.forEach((x) => {
           x.item['dicID'] = 8978 
-          x.item['FYear'] = year
+          x.item['FYear'] = curYear
           submitData.push(x.item);
         });
       }

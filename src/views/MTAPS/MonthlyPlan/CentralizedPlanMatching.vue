@@ -159,6 +159,9 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader()
   },
+  activated() {
+    this.spread.refresh();
+  },
   mounted() {
     setTimeout(() => {
       this.setHeight();

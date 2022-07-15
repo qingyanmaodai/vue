@@ -384,7 +384,7 @@ export default {
     // 初始化保存
     initSave(){
         if(this.tableData[this.tagRemark].length){
-            this.$confirm('初始化保存将会覆盖所有旧数据，确定操作吗?', '提示', {
+            this.$confirm('将初始化当前单据的数据，确定操作吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -394,7 +394,7 @@ export default {
                         let list = []
                         this.tableData[this.tagRemark].forEach(item=>{
                           item['dicID'] = 8980
-                          if(item.OrderNo){
+                          if(item.OrderNo){//有单据的数据才做保存
                             list.push(item)
                           }
                         })
@@ -472,7 +472,13 @@ export default {
     async calComplete(){
         if(this.tableData[this.tagRemark].length){
           this.adminLoading = true
-          let res = await GetSearch(this.tableData[this.tagRemark], "/APSAPI/OrderPlanMaterialForm")
+          let submitData = []
+          this.tableData[this.tagRemark].forEach(item=>{
+            if(item.OrderNo){
+              submitData.push(item)
+            }
+          })
+          let res = await GetSearch(submitData, "/APSAPI/OrderPlanMaterialForm")
           try {
             const { result, data, count, msg } = res.data;
           if(result){
