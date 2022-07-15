@@ -148,6 +148,9 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader()
   },
+  activated() {
+    this.spread.refresh();
+  },
   mounted() {
     setTimeout(() => {
       this.setHeight();
@@ -204,6 +207,7 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
+      this.adminLoading = true
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -223,27 +227,19 @@ export default {
             } else {
               this.$set(this.formSearchs[z].datas, [y.prop], "");
             }
-            //选择控价类型“el-date-picker”时，接口默认返回的是data,此页面需要年份，所以需要转化
-            if(y.prop==='FYear'){
-              y.type = "year"
-              y.editable = false 
-              y.clearable = false //年份必填项，设置不可清空
-             
-            }
           });
           console.log('x',x)
           //获取今年第一天
           const date1 = new Date();
           const year1 = date1.getFullYear();
           this.currentMonth = date1.getMonth()+1
-          console.log('month',this.currentMonth)
-          const firstMonth = year1 + '-' + '01' + '-' + '01';
-          this.formSearchs[this.tagRemark].datas['FYear'] = firstMonth
+          this.formSearchs[this.tagRemark].datas['FYear'] = year1
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
+          this.adminLoading = false;
         });
       } else {
-        // this.adminLoading = false;
+        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
@@ -315,6 +311,7 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.refresh(); //重新定位宽高度
         //一定要放在渲染完后
         /**
          * 参数1:起始行
@@ -338,6 +335,7 @@ export default {
         });
         // 锁定表格
         sheet.options.isProtected = true;
+        
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
@@ -387,12 +385,15 @@ export default {
     },
     // 保存
     async dataSave(){
+      if(!this.formSearchs[this.tagRemark].datas['FYear']){
+        this.$message.error("年份不能为空，请输入！")
+        return
+      }
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDirtyRows();//获取修改过的数据
       let submitData = [];
-      let curYear = new Date(this.formSearchs[this.tagRemark].datas['FYear'])
-      let year = curYear.getFullYear()
-      console.log('ye',curYear.getFullYear())
+      let curYear = this.formSearchs[this.tagRemark].datas['FYear']
+      console.log('ye',curYear)
       if (newData.length != 0) {
         newData.forEach((x) => {
           x.item['dicID'] = 8978 

@@ -145,6 +145,9 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader()
   },
+  activated() {
+    this.spread.refresh();
+  },
   mounted() {
     setTimeout(() => {
       this.setHeight();
@@ -299,6 +302,7 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.refresh(); //重新定位宽高度
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }

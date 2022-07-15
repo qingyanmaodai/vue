@@ -91,87 +91,6 @@
       </div>
     </div>
   </div>
-  
-  <div class="itemTable">
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[tagRemark+1].datas"
-        :searchForm="formSearchs[tagRemark+1].forms"
-        :remark="tagRemark+1"
-        :isLoading="tableLoading[tagRemark+1]"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-        :defaultShow="true"
-      />
-    </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"><span class="title">{{ itemTitle }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
-            >
-            </el-col>
-          </el-row>
-        </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-          style="margin-bottom:10px"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[tagRemark+1]"
-          >
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread2"
-            >
-              <gc-worksheet></gc-worksheet>
-            </gc-spread-sheets>
-
-          </div>
-        </div>
-        <div  class="flex_row_spaceBtn">
-          <div>
-            <span
-              @click="toPageSetting(sysID[tagRemark+1].ID)"
-              class="primaryColor cursor"
-              >SysID:{{ sysID[tagRemark+1].ID }}
-            </span>
-          </div>
-          <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[tagRemark+1].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
-                :page-size="tablePagination[tagRemark+1].pageSize"
-                :total="tablePagination[tagRemark+1].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
-    
   </div>
 </template>
 <script>
@@ -200,7 +119,7 @@ export default {
       itemTitle:'独立配套欠料明细',
       Status1: [
         { label: "独立配套计算汇总", value: 0 },
-        { label: "集中配套计算汇总", value: 1 },
+        { label: "独立配套欠料明细", value: 1 },
       ],
         title:this.$route.meta.title,//表名
         height:'740px',
@@ -220,26 +139,16 @@ export default {
             datas: {},//查询入参
             forms: [],// 页面显示的查询条件
           },
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          },
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          },
         ],
-        tableData: [[],[],[],[]],//表格渲染数据,sysID有几个就有几个数组
-        tableColumns: [[],[],[],[]],//表格表头列
-        tableLoading:[false,false,false,false],//每个表加载
-        isClear: [false,false,false,false],
+        tableData: [[],[]],//表格渲染数据,sysID有几个就有几个数组
+        tableColumns: [[],[]],//表格表头列
+        tableLoading:[false,false],//每个表加载
+        isClear: [false,false],
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         ],
-        sysID:[{ID:8985},{ID:8984},{ID:8982},{ID:8983}],
+        sysID:[{ID:8985},{ID:8984}],
         tagRemark: 0,
         spread: null,//excel初始
         itemSpread:null,
@@ -261,11 +170,6 @@ export default {
       console.log('spread',spread)
       this.spread = spread;
     },
-    //初始化SpreadJS
-    initSpread2: function (spread) {
-      console.log('spread',spread)
-      this.itemSpread = spread;
-    },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
       if (parms) {
@@ -282,7 +186,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = (rem+ 33)/2 + "px";
+      let newHeight = (rem+ 33) + "px";
       this.$set(this, "height", newHeight);
     },
      // 跳转至属性配置
@@ -354,7 +258,6 @@ export default {
         this.$set(this.tableData, index, data);
         this.$set(this.tablePagination[index], "pageTotal", count);
         this.setData();
-        this.setData2()
       } else {
         this.$message({
           message: msg,
@@ -410,61 +313,7 @@ export default {
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
-        sheet.bind(GC.Spread.Sheets.Events.CellClick,
-        function(e, args) {
-          console.log('表格点击事件',e)
-          console.log('args',args)
-        });
-      } catch (error) {
-        console.log('表格渲染的错误信息:',error)
-      }
-      console.log('this.tableColumns',this.tableColumns)
-      
-    },
-    async setData2() {
-      try {
-        // 获取活动表单
-        let sheet = this.itemSpread.getActiveSheet();
-        // console.log('sheet0',sheet.getSheet(0))
-        // 重置表单
-        // sheet.reset();
-        // 渲染列
-        let colInfos = []
-        let colIndex = 0
-        this.tableColumns[this.tagRemark+1].forEach((x,index) => {
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            size: parseInt(x.width),
-          });
-          colIndex++
-      });
-      
-        // 设置整个列头的背景色和前景色。
-        /**
-         * 参数1:表示行
-         * 参数2:列，-1表示
-         * 参数3:
-         * 参数4:
-         * 参数5:
-         */
-        let colHeaderStyle = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeaderStyle.foreColor('000000d9')
-        colHeaderStyle.backColor("#f3f3f3")
-        colHeaderStyle.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif")
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        
-        //设置数据渲染的单元格默认的样式
-        var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font = "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        
-        sheet.setDataSource(this.tableData[this.currentIndex]);
-        //渲染列
-        sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.refresh(); //重新定位宽高度
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
@@ -516,12 +365,7 @@ export default {
     // 切换状态
     changeStatus(item, index) {
       this.currentIndex = index;
-      if(index===0){
-        this.itemTitle ='独立配套欠料明细'
-      }else if(index===1){
-        this.itemTitle ='集中配套欠料明细'
-      }
-      this.dataSearch(index);
+      this.dataSearch(index) 
     },
   }
 }

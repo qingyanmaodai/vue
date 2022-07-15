@@ -1,19 +1,20 @@
-<!-- 独立主计划 -->
+<!-- 计划配套汇总 -->
 <template>
     <div
     class="container"
     v-loading="adminLoading"
   >
+  <div class="mainTable">
     <div
       class="admin_head"
       ref="headRef"
     >
       <ComSearch
         ref="searchRef"
-        :searchData="formSearchs[currentIndex].datas"
-        :searchForm="formSearchs[currentIndex].forms"
-        :remark="currentIndex"
-        :isLoading="tableLoading[currentIndex]"
+        :searchData="formSearchs[tagRemark].datas"
+        :searchForm="formSearchs[tagRemark].forms"
+        :remark="tagRemark"
+        :isLoading="tableLoading[tagRemark]"
         :btnForm="btnForm"
         @btnClick="btnClick"
         :defaultShow="true"
@@ -28,16 +29,25 @@
               :span="20"
               class="flex_flex_end"
             >
+                <div
+                  :class="currentIndex == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
+                  :key="y"
+                >
+                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                </div>
             </el-col>
           </el-row>
         </div>
         <div
           class="flex_column"
           :style="{'height':height}"
+          style="margin-bottom:10px"
         >
           <div
             class="spreadContainer"
-            v-loading="tableLoading[currentIndex]"
+            v-loading="tableLoading[tagRemark]"
           >
             <gc-spread-sheets
               class="sample-spreadsheets"
@@ -51,14 +61,36 @@
         <div  class="flex_row_spaceBtn">
           <div>
             <span
-              @click="toPageSetting(sysID[currentIndex].ID)"
+              @click="toPageSetting(sysID[tagRemark].ID)"
               class="primaryColor cursor"
-              >SysID:{{ sysID[currentIndex].ID }}
+              >SysID:{{ sysID[tagRemark].ID }}
             </span>
           </div>
+          <div class="flex">
+              <el-pagination
+                background
+                @size-change="val=>pageSize(val,0)"
+                :current-page="tablePagination[tagRemark].pageIndex"
+                :page-sizes="[
+                200,
+                500,
+                1000,
+                2000,
+                3000,
+                5000,
+                10000
+                ]"
+                :page-size="tablePagination[tagRemark].pageSize"
+                :total="tablePagination[tagRemark].pageTotal"
+                @current-change="val=>pageChange(val,0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
+              </el-pagination>
+            </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 <script>
@@ -78,12 +110,17 @@ import {
   ExportData,
 } from "@/api/Common";
 export default {
-  name: "IndependentMasterPlan",
+  name: "PlanMatchingSummary",
   components: {
     ComSearch,
   },
   data() {
     return {
+      itemTitle:'集中配套欠料明细',
+      Status1: [
+        { label: "集中配套计算汇总", value: 0 },
+        { label: "集中配套欠料明细", value: 1 },
+      ],
         title:this.$route.meta.title,//表名
         height:'740px',
         adminLoading:false,//加载状态
@@ -91,69 +128,36 @@ export default {
         tabStatus:0,
         btnForm: [],//拥有的按钮权限
         parmsBtn: [
-           {
-            BtnName: "初始化保存",
-            ButtonCode: "save",
-            Type: "success",
-            Ghost: true,
-            Size: "small",
-            Methods: "initSave",
-            Icon: "",
-           },
-           {
-            BtnName: "保存",
-            ButtonCode: "save",
-            Type: "success",
-            Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
-           },
-           {
-            BtnName: "计算配套",
-            ButtonCode: "save",
-            Type: "primary",
-            Ghost: true,
-            Size: "small",
-            Methods: "calComplete",
-            Icon: "",
-           },
-           {
-            BtnName: "加入集中运算",
-            ButtonCode: "save",
-            Type: "primary",
-            Ghost: true,
-            Size: "small",
-            Methods: "joinOperation",
-            Icon: "",
-           },
+          
         ],
         formSearchs:[//不同标签页面的查询条件
           {
             datas: {},//查询入参
             forms: [],// 页面显示的查询条件
-          }
+          },
+          {
+            datas: {},//查询入参
+            forms: [],// 页面显示的查询条件
+          },
         ],
-        tableData: [[]],//表格渲染数据,sysID有几个就有几个数组
-        tableColumns: [[]],//表格表头列
-        tableLoading:[false],//每个表加载
-        isClear: [false],
+        tableData: [[],[]],//表格渲染数据,sysID有几个就有几个数组
+        tableColumns: [[],[]],//表格表头列
+        tableLoading:[false,false],//每个表加载
+        isClear: [false,false],
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         ],
-        selectionData:[[]],
-        sysID:[{ID:8980}],
+        sysID:[{ID:8982},{ID:8983}],
         tagRemark: 0,
         spread: null,//excel初始
+        itemSpread:null,
     }
   },
   created() {
     _this = this;
     _this.judgeBtn();
     _this.getTableHeader()
-  },
-  activated() {
-    this.spread.refresh();
   },
   mounted() {
     setTimeout(() => {
@@ -182,7 +186,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 33 + "px";
+      let newHeight = (rem+ 33) + "px";
       this.$set(this, "height", newHeight);
     },
      // 跳转至属性配置
@@ -211,7 +215,6 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
-      this.adminLoading = true
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -234,10 +237,9 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
-          this.adminLoading = false
         });
       } else {
-        this.adminLoading = false;
+        // this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
@@ -248,19 +250,13 @@ export default {
     // 获取表格数据
     async getTableData(params,index){
       this.$set(this.tableLoading, index, true);
-      // params["rows"] = this.tablePagination[index].pageSize;
-      // params["page"] = this.tablePagination[index].pageIndex;
+      params["rows"] = this.tablePagination[index].pageSize;
+      params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
       if (result) {
-        //添加1000空行，方便用户粘贴自己的excel表内容到系统中
-        let num =1000
-        for(let i=0;i<num;i++){
-            data.push({})
-        }
         this.$set(this.tableData, index, data);
-        // this.$set(this.tablePagination[index], "pageTotal", num);
-       
+        this.$set(this.tablePagination[index], "pageTotal", count);
         this.setData();
       } else {
         this.$message({
@@ -279,11 +275,11 @@ export default {
         let sheet = this.spread.getActiveSheet();
         // console.log('sheet0',sheet.getSheet(0))
         // 重置表单
-        sheet.reset();
+        // sheet.reset();
         // 渲染列
         let colInfos = []
         let colIndex = 0
-        this.tableColumns[this.currentIndex].forEach((x,index) => {
+        this.tableColumns[this.tagRemark].forEach((x,index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
@@ -291,23 +287,7 @@ export default {
           });
           colIndex++
       });
-      // 选框
       
-      let checkbox = {
-        name: "isChecked",
-        displayName: "选择",
-        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60,
-      };
-      for (var name in checkbox) {
-        colInfos[0][name] = checkbox[name];
-      }
-      sheet.setCellType(
-        0,
-        0,
-        new HeaderCheckBoxCellType(),
-        GCsheets.SheetArea.colHeader
-      );
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -337,6 +317,7 @@ export default {
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
+      console.log('this.tableColumns',this.tableColumns)
       
     },
     // 查询
@@ -344,7 +325,7 @@ export default {
       this.tagRemark = remarkTb
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
-      // this.tablePagination[remarkTb].pageIndex = 1;
+      this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 重置
@@ -381,167 +362,19 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
-    // 初始化保存
-    initSave(){
-        if(this.tableData[this.tagRemark].length){
-            this.$confirm('初始化保存将会覆盖所有旧数据，确定操作吗?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                    }).then(async() => {
-                        //确定操作
-                        this.adminLoading = true
-                        let list = []
-                        this.tableData[this.tagRemark].forEach(item=>{
-                          item['dicID'] = 8980
-                          if(item.OrderNo){
-                            list.push(item)
-                          }
-                        })
-                        let res = await GetSearch(list, "/APSAPI/ImportOrderPlan")
-                        try {
-                          const { result, data, count, msg } = res.data;
-                        if(result){
-                          this.dataSearch(this.tagRemark)
-                          this.adminLoading = false
-                        }else {
-                          this.adminLoading = false
-                          this.$message({
-                            message: msg,
-                            type: "error",
-                            dangerouslyUseHTMLString: true,
-                          });
-                        }
-                        
-                      } catch (error) {
-                        if(error){
-                          this.adminLoading = false
-                        }
-                      }
-                    }).catch(() => {
-                        //取消操作
-                    });
-        }else{
-            this.$message.error("当前表数据为空，请添加再保存！")
-        }
-    },
-    // 保存
-    async dataSave(){
-      if(this.tableData[this.tagRemark].length){
-        let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDirtyRows();//获取修改过的数据
-        let submitData = [];
-        if (newData.length != 0) {
-          newData.forEach((x) => {
-            x.item['dicID'] = 8980 
-            submitData.push(x.item);
-          });
-        }
-        if(submitData.length){
-          console.log('修改了',submitData)
-          this.adminLoading = true
-          let res = await GetSearch(submitData, "/APSAPI/SaveData")
-          try {
-            const { result, data, count, msg } = res.data;
-          if(result){
-            this.dataSearch(this.tagRemark)
-            this.adminLoading = false
-          }else {
-            this.adminLoading = false
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-        }
-        
-        } catch (error) {
-          if(error){
-            this.adminLoading = false
-          }
-        }
-      
-      }else{
-        this.$message.error("当前数据没做修改，请先修改再保存！")
-      }
-      }else{
-          this.$message.error("当前表数据为空，请添加再保存！")
-      }
-    },
-    // 计算配套
-    async calComplete(){
-        if(this.tableData[this.tagRemark].length){
-          this.adminLoading = true
-          let res = await GetSearch(this.tableData[this.tagRemark], "/APSAPI/OrderPlanMaterialForm")
-          try {
-            const { result, data, count, msg } = res.data;
-          if(result){
-            this.dataSearch(this.tagRemark)
-            this.adminLoading = false
-          }else {
-            this.adminLoading = false
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        } catch (error) {
-          if(error){
-            this.adminLoading = false
-          }
-        }
-        }else{
-            this.$message.error("当前表数据为空，请添加再保存！")
-        }
-    },
-    // 加入集中运算
-    async joinOperation(){
-        this.getSelectionData()
-        if(this.selectionData[this.tagRemark].length){
-          console.log('selectionData',this.selectionData[this.tagRemark])
-          this.adminLoading = true
-          this.selectionData[this.tagRemark].forEach(item=>{
-            item['ProductionStatus'] = 21
-          })
-          
-          let res = await GetSearch( this.selectionData[this.tagRemark], "/APSAPI/SaveData")
-          try {
-            const { result, data, count, msg } = res.data;
-          if(result){
-            this.dataSearch(this.tagRemark)
-            this.adminLoading = false
-          }else {
-            this.adminLoading = false
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-          
-          } catch (error) {
-            if(error){
-              this.adminLoading = false
-            }
-          }
-        }else{
-            this.$message.error("请选择需要操作的数据！")
-        }
-    },
-    // 获取选中的数据
-    getSelectionData() {
-    let sheet = this.spread.getActiveSheet();
-    let newData = sheet.getDataSource();
-    this.selectionData[this.tagRemark] = [];
-    if (newData.length != 0) {
-        newData.forEach((x) => {
-        if (x.isChecked) {
-            this.selectionData[this.tagRemark].push(x);
-        }
-        });
-    }
+    // 切换状态
+    changeStatus(item, index) {
+      this.currentIndex = index;
+      this.dataSearch(index) 
     },
   }
 }
 </script>
+<style lang="scss" scoped>
+  .mainTable{
+    margin-bottom: 10px;
+  }
+  .container .admin_head{
+    margin-bottom: 0px
+  }
+</style>
