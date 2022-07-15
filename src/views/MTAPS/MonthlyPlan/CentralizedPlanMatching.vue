@@ -218,6 +218,7 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
+      this.adminLoading = true
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -240,9 +241,10 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
+          this.adminLoading = false
         });
       } else {
-        // this.adminLoading = false;
+        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
