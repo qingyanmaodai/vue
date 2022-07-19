@@ -13,7 +13,7 @@ let base_url;
 //http://121.9.64.70:9998   --恒美外网访问地址
 //http://192.168.30.23:9999 --美特
 
-let apsUrl = 'http://127.0.0.1';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = 'http://192.168.18.82:9998';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 
 localStorage.setItem('apsurl', apsUrl);
