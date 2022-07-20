@@ -1,89 +1,13 @@
 <template>
-<div>
   <!-- <card> -->
-    <div>
-      <div>
-        <!-- <Form
-          @submit.native.prevent
-          class="searchCondition"
-          ref="formSearch"
-          :model="formSearch"
-          :label-width="100"
-        >
-          <Row>
-            <i-col :span="6">
-              <FormItem
-                label="计划开始时间:"
-                prop="planStartTime"
-                class="m-b-10"
-              >
-                <DatePicker
-                  v-model.trim="formSearch.planStartTime"
-                  type="date"
-                  style="width: 100%"
-                  placeholder="请选择"
-                  :editable="false"
-                  :clearable="false"
-                />
-              </FormItem>
-            </i-col>
-            <i-col :span="6">
-              <FormItem
-                label="计划结束时间:"
-                prop="planOverTime"
-                class="m-b-10"
-              >
-                <DatePicker
-                  v-model.trim="formSearch.planOverTime"
-                  type="date"
-                  style="width: 100%"
-                  placeholder="请选择"
-                  :editable="false"
-                  :clearable="false"
-                />
-              </FormItem>
-            </i-col>
-            <i-col :span="8">
-              <FormItem label="" prop="inputValue" :label-width="10">
-                <Input
-                  ref="inputValue"
-                  v-model.trim="formSearch.inputValue"
-                  type="text"
-                  placeholder="请输入"
-                  clearable
-                  @on-enter="$refs.JgPage.reset(pageSize)"
-                  @on-clear="$refs.inputValue.focus()"
-                >
-                  <Select
-                    v-model.trim="formSearch.selectValue"
-                    slot="prepend"
-                    class="select"
-                    style="width: 100px; color: #fff; background-color: #00bb7c"
-                    placeholder="查询条件"
-                  >
-                    <Option value="billNo" label="订单跟踪号"
-                      >订单跟踪号</Option
-                    >
-                    <Option value="detailCode" label="任务单号"
-                      >任务单号</Option
-                    >
-                    <Option value="invCode" label="存货编码">存货编码</Option>
-                    <Option value="invName" label="存货名称">存货名称</Option>
-                  </Select>
-                </Input>
-              </FormItem>
-            </i-col>
-            <i-col :span="4">
-              <FormItem :label-width="10">
-                <Button type="primary" @click="$refs.JgPage.reset(pageSize)"
-                  >查询</Button
-                >
-              </FormItem>
-            </i-col>
-          </Row>
-        </Form> -->
+    <div  class="container" v-loading="adminLoading">
+      <div class="admin_head" ref="headRef">
+        <!-- <div v-for="(item,i) in 3" :key="i" v-show="labelStatus1 == i"> -->
+          <ComSearch ref="searchRef" :searchData="formSearchs[tagRemark].datas" :searchForm="formSearchs[tagRemark].forms" :remark="tagRemark"
+            :signName="labelStatus1" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
+        <!-- </div> -->
       </div>
-      <div>
+      <!-- <div>
         <div class="toolbox" id="toolbox">
           列显示/隐藏:
           <label><input type="checkbox" id="id" checked /> 序号</label>
@@ -97,23 +21,72 @@
           <label><input type="checkbox" id="invCode" checked /> 存货编码</label>
           <label><input type="checkbox" id="invName" checked /> 存货名称</label>
           <label><input type="checkbox" id="produceQty" /> 计划数量</label>
-          <label><input type="checkbox" id="completedQty" /> 完成数量</label>
+          <label><input type="checkbox" id="confirmQty" /> 完成数量</label>
           <label
             ><input type="checkbox" id="completionRate" checked /> 完成率</label
           >
            
         </div>
+      </div> -->
+      <!-- 图表 -->
+    <div>
+      <div  class="admin_content">
+        <div class="gstc-wrapper" id="gstc" ref="gstc"></div>
+        <!-- <div id="gen"><div>... 数据加载中，请等待 ...</div></div> -->
+        <div>
+            <div
+              class="flex_row_spaceBtn pagination"
+            >
+              <div>
+                <span
+                  @click="toPageSetting"
+                  class="primaryColor cursor"
+                >SysID:{{ sysID[tagRemark].ID }}
+                </span>
+              </div>
+              <div class="flex">
+                <el-pagination
+                  background
+                  @size-change="handleSizeChange"
+                  :current-page="tablePagination[tagRemark].pageIndex"
+                  :page-sizes="[
+                    10,
+                    20,
+                    30,
+                    50,
+                    100,
+                    150,
+                    200,
+                    250,
+                    300,
+                    350,
+                    500,
+                    400,
+                    800,
+                    1000,
+                    1500,
+                    2000,
+                    3000,
+                    4000,
+                    5000
+                  ]"
+                  :page-size="tablePagination[tagRemark].pageSize"
+                  :total="tablePagination[tagRemark].pageTotal"
+                  @current-change="pageChange"
+                  layout="total, sizes, prev, pager, next,jumper"
+                >
+                </el-pagination>
+              </div>
+            </div>
+        </div>
       </div>
     </div>
-    <!-- 图表 -->
-    <div>
-      <div class="gstc-wrapper" id="gstc" ref="gstc"></div>
-      <!-- <div id="gen"><div>... 数据加载中，请等待 ...</div></div> -->
-    </div>
+    
 
     <!-- <JgPage ref="JgPage" :total="totalCount" @getData="getData" /> -->
   <!-- </card> -->
-  </div>
+    </div>
+    
 </template>
 
 <script>
@@ -133,7 +106,12 @@ import { Plugin as DependencyLines } from "gantt-schedule-timeline-calendar/dist
 // import JgSelect from "@/components/jg-select/index";
 // import JgVxeTable from "@/components/jg-vxe-table-new";
 // import JgPage from "@/BASEMODULE/components/jg-page";
-// import { getAllDate } from "@/libs/util";
+import { getAllDate } from "@/utils/formatDate";
+import ComSearch from "@/components/ComSearch";
+import {
+    GetHeader,
+    GetSearchData
+  } from "@/api/Common";
 let gstc, state, that;
 globalThis.GSTC = gstc; //全局对象
 globalThis.state = state; //全局对象
@@ -180,13 +158,13 @@ function itemSlot(vido, props) {
       <p>任务单号：${props.item.detailCode ? props.item.detailCode : ""}</p>
       <p>存货编码：${props.item.invCode ? props.item.invCode : ""}</p>
       <p>存货名称：${props.item.invName ? props.item.invName : ""}</p>
-      <p>计划数量：${props.item.produceQty >= 0 ? props.item.produceQty : 0}</p>
+      <p>计划数量：${props.item.PlanQty >= 0 ? props.item.PlanQty : 0}</p>
       <p>完成数量：${
-        props.item.completedQty >= 0 ? props.item.completedQty : 0
+        props.item.confirmQty >= 0 ? props.item.confirmQty : 0
       }</p>
       <p>完成率：${
-        props.item.completedQty >= 0 && props.item.produceQty >= 0
-          ? (props.item.completedQty / props.item.produceQty) * 100
+        props.item.ConfirmQty >= 0 && props.item.PlanQty >= 0
+          ? (props.item.ConfirmQty / props.item.PlanQty) * 100
           : 0
       }
       </p>
@@ -200,7 +178,7 @@ function itemSlot(vido, props) {
     cache(
       props && props.item
         ? html`${content}${html`<div
-            class=${props.item.detailCode ? "dot" : ""}
+            class=${props.item ? "dot" : ""}
             data-gstcid=${props.item.id}
             data-type="chart-timeline-items-row-item"
             title="订单明细"
@@ -239,9 +217,37 @@ export default {
     // JgSelect,
     // JgVxeTable,
     // JgPage,
+    ComSearch,
   },
   data() {
     return {
+      colData:{},
+      labelStatus1: 0,
+      formSearchs: [{
+          datas: {},
+          forms: [],
+        },
+      ],
+      tagRemark: 0,
+      isLoading: false,
+      sysID: [{ID: 6723}],
+      btnForm: [],
+      parmsBtn: [],
+      adminLoading: false,
+      tableData: [
+          []
+      ],
+      tableColumns: [
+        []
+      ],
+      tableLoading: [false,],
+      isClear: [false,],
+      tablePagination: [{
+          pageIndex: 1,
+          pageSize: 0,
+          pageTotal: 0,
+        },
+      ],
       num: 0,
       itemsData: {}, //右侧项目集合
       rowsData: {}, //行数据集合
@@ -291,7 +297,7 @@ export default {
                   content: "订单跟踪号",
                 },
                 hidden: false,
-                expander: true,
+                // expander: true,
                 // sortable: "order",
                 // activeColumnId:'order'
               },
@@ -360,9 +366,9 @@ export default {
                 // sortable: "label",
                 // hidden:true,//隐藏列、
               },
-              completedQty: {
-                id: "completedQty",
-                data: "completedQty",
+              confirmQty: {
+                id: "confirmQty",
+                data: "confirmQty",
                 width: 80,
                 header: {
                   content: "完成数量",
@@ -491,13 +497,13 @@ export default {
         {
           minWidth: 100,
           title: "计划数量",
-          field: "produceQty",
+          field: "PlanQty",
           sortable: true,
         },
         {
           minWidth: 100,
           title: "完成数量",
-          field: "completedQty",
+          field: "confirmQty",
           sortable: true,
         },
         {
@@ -576,13 +582,13 @@ export default {
         {
           width: 80,
           title: "计划数量",
-          field: "produceQty",
+          field: "PlanQty",
           sortable: true,
         },
         {
           width: 80,
           title: "完成数量",
-          field: "completedQty",
+          field: "ConfirmQty",
           sortable: true,
         },
         {
@@ -591,8 +597,8 @@ export default {
           field: "completionRate",
           sortable: true,
           formatter: ({ row }) => {
-            if (row.completedQty >= 0 && row.produceQty >= 0) {
-              return (row.completedQty / row.produceQty) * 100;
+            if (row.ConfirmQty >= 0 && row.PlanQty >= 0) {
+              return (row.ConfirmQty / row.PlanQty) * 100;
             }
           },
         },
@@ -602,9 +608,9 @@ export default {
           field: "planStartTime",
           sortable: true,
           formatter: ({ row }) => {
-            // return row.planStartTime
-            //   ? this.$moment(row.planStartTime).format("YYYY-MM-DD HH:mm:ss")
-            //   : "";
+            return row.planStartTime
+              ? this.$moment(row.planStartTime).format("YYYY-MM-DD HH:mm:ss")
+              : "";
           },
         },
         {
@@ -613,9 +619,9 @@ export default {
           field: "planOverTime",
           sortable: true,
           formatter: ({ row }) => {
-            // return row.planOverTime
-            //   ? this.$moment(row.planOverTime).format("YYYY-MM-DD HH:mm:ss")
-            //   : "";
+            return row.planOverTime
+              ? this.$moment(row.planOverTime).format("YYYY-MM-DD HH:mm:ss")
+              : "";
           },
         },
         {
@@ -638,11 +644,14 @@ export default {
         },
       ],
       updataTableHeight: this.$_.debounce(() => {
-        this.computTableHeight(true);
+        // this.computTableHeight(true);
       }),
     };
   },
-  created() {},
+  created() {
+    this.judgeBtn();
+    this.getTableHeader()
+  },
   mounted() {
     that = this;
     //初始化计划开始时间和结束时间为当前时间开始的一个月查询范围
@@ -662,7 +671,8 @@ export default {
     // 监听窗口变动
     // this.$nextTick(this.computTableHeight);
     this.computTableHeight();
-    window.addEventListener("resize", this.updataTableHeight);
+    
+    // window.addEventListener("resize", this.updataTableHeight);
 
     this.config.innerHeight = this.tableHeight;
     state = GSTC.api.stateFromConfig(this.config);
@@ -674,156 +684,156 @@ export default {
     // 列显示隐藏
     let allCheck = true;
     // 序号显示隐藏的触发事件
-    document.getElementById("id").addEventListener("change", (ev) => {
-      this.config.list.columns.data.id.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.id.hidden", () => {
-        return !ev.target.checked;
-      });
-      // 触发每个切换按钮时，需要判断当前是否全隐藏状态，如果全部隐藏不显示全局切换按钮，否则显示
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    // 机台显示隐藏的触发事件
-    document.getElementById("billNo").addEventListener("change", (ev) => {
-      this.config.list.columns.data.billNo.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.billNo.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    // 主资源显示隐藏的触发事件
-    document.getElementById("pType").addEventListener("change", (ev) => {
-      this.config.list.columns.data.pType.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.pType.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document.getElementById("detailCode").addEventListener("change", (ev) => {
-      this.config.list.columns.data.detailCode.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.detailCode.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document.getElementById("invCode").addEventListener("change", (ev) => {
-      this.config.list.columns.data.invCode.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.invCode.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document.getElementById("invName").addEventListener("change", (ev) => {
-      this.config.list.columns.data.invName.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.invName.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document.getElementById("produceQty").addEventListener("change", (ev) => {
-      this.config.list.columns.data.produceQty.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.produceQty.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document.getElementById("completedQty").addEventListener("change", (ev) => {
-      this.config.list.columns.data.completedQty.hidden = !ev.target.checked;
-      state.update("config.list.columns.data.completedQty.hidden", () => {
-        return !ev.target.checked;
-      });
-      allCheck = false;
-      for (let obj in this.config.list.columns.data) {
-        if (!this.config.list.columns.data[obj].hidden) {
-          allCheck = true;
-          break;
-        }
-      }
-      state.update("config.list.toggle.display", () => {
-        return allCheck;
-      });
-    });
-    document
-      .getElementById("completionRate")
-      .addEventListener("change", (ev) => {
-        this.config.list.columns.data.completionRate.hidden =
-          !ev.target.checked;
-        state.update("config.list.columns.data.completionRate.hidden", () => {
-          return !ev.target.checked;
-        });
-        allCheck = false;
-        for (let obj in this.config.list.columns.data) {
-          if (!this.config.list.columns.data[obj].hidden) {
-            allCheck = true;
-            break;
-          }
-        }
-        state.update("config.list.toggle.display", () => {
-          return allCheck;
-        });
-      });
+    // document.getElementById("id").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.id.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.id.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   // 触发每个切换按钮时，需要判断当前是否全隐藏状态，如果全部隐藏不显示全局切换按钮，否则显示
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // // 机台显示隐藏的触发事件
+    // document.getElementById("billNo").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.billNo.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.billNo.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // // 主资源显示隐藏的触发事件
+    // document.getElementById("pType").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.pType.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.pType.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document.getElementById("detailCode").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.detailCode.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.detailCode.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document.getElementById("invCode").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.invCode.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.invCode.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document.getElementById("invName").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.invName.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.invName.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document.getElementById("produceQty").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.produceQty.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.produceQty.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document.getElementById("completedQty").addEventListener("change", (ev) => {
+    //   this.config.list.columns.data.completedQty.hidden = !ev.target.checked;
+    //   state.update("config.list.columns.data.completedQty.hidden", () => {
+    //     return !ev.target.checked;
+    //   });
+    //   allCheck = false;
+    //   for (let obj in this.config.list.columns.data) {
+    //     if (!this.config.list.columns.data[obj].hidden) {
+    //       allCheck = true;
+    //       break;
+    //     }
+    //   }
+    //   state.update("config.list.toggle.display", () => {
+    //     return allCheck;
+    //   });
+    // });
+    // document
+    //   .getElementById("completionRate")
+    //   .addEventListener("change", (ev) => {
+    //     this.config.list.columns.data.completionRate.hidden =
+    //       !ev.target.checked;
+    //     state.update("config.list.columns.data.completionRate.hidden", () => {
+    //       return !ev.target.checked;
+    //     });
+    //     allCheck = false;
+    //     for (let obj in this.config.list.columns.data) {
+    //       if (!this.config.list.columns.data[obj].hidden) {
+    //         allCheck = true;
+    //         break;
+    //       }
+    //     }
+    //     state.update("config.list.toggle.display", () => {
+    //       return allCheck;
+    //     });
+    //   });
   },
   beforeUnmount() {
     if (gstc) gstc.destroy();
@@ -865,7 +875,9 @@ export default {
           config.list.rows = this.rowsData;
           config.chart.items = this.itemsData;
           config.chart.time.from = minStartTime;
-          config.chart.time.to = dateApi(this.$moment(this.formSearch.planOverTime).format("YYYY-MM-DD")).valueOf();;
+          config.chart.time.to = dateApi(this.$moment(this.formSearch.planOverTime).format("YYYY-MM-DD")).valueOf();
+          config.chart.time.to = dateApi(this.formSearch.planOverTime).valueOf();
+          config.list.columns.data = this.colData
           console.log('config',config)
           return config;
         });
@@ -913,7 +925,7 @@ export default {
           });
           //判断是否单工序，单工序不需要连接线
 
-          item.children = this.handleTree(item.children);
+          // item.children = this.handleTree(item.children);
         }
         return true;
       });
@@ -926,35 +938,36 @@ export default {
         self.$Message.warning("输入框输入内容时，需要选择查询条件!");
         return;
       }
-    //   let options = {
-    //     url: "/api/plan/jgaps-detailed-scheduling/order-gantt-Chart",
-    //     params: {
-    //       params: {
-    //         planStartTime: '',
-    //         planOverTime: '',
-    //       },
-    //       pageIndex,
-    //       pageRows,
-    //     },
-    //   };
-    //   if (self.formSearch.inputValue && self.formSearch.selectValue) {
-    //     // 传入动态查询条件字段,此代码导致控制台报错，未找到解决方法
-    //     options.params.params[self.formSearch.selectValue] = _.cloneDeep(
-    //       self.formSearch.inputValue
-    //     );
-    //   }
-    //   self.treeData = [];
-    //   self.rowsData = {};
-    //   self.itemsData = {};
-    //   let minStartTime = 0;
-    //   let maxEndTime = 0;
+      let options = {
+        url: "/api/plan/jgaps-detailed-scheduling/order-gantt-Chart",
+        params: {
+          params: {
+            planStartTime: '',
+            planOverTime: '',
+          },
+          pageIndex,
+          pageRows,
+        },
+      };
+      if (self.formSearch.inputValue && self.formSearch.selectValue) {
+        // 传入动态查询条件字段,此代码导致控制台报错，未找到解决方法
+        options.params.params[self.formSearch.selectValue] = _.cloneDeep(
+          self.formSearch.inputValue
+        );
+      }
+      self.treeData = [];
+      self.rowsData = {};
+      self.itemsData = {};
+      let minStartTime = 0;
+      let maxEndTime = 0;
     //   // 参数1和参数2获取开始到结束期间的所有日期
-    //   let allDates = getAllDate(
-    //     options.params.params.planStartTime,
-    //     options.params.params.planOverTime
-    //   );
+      let allDates = getAllDate(
+        options.params.params.planStartTime,
+        options.params.params.planOverTime
+      );
     //   let res = await HttpUtil.requestData(options);
       let res = {
+        data:{
   "preIndex": 1,
   "curIndex": 1,
   "nextIndex": 1,
@@ -963,20 +976,20 @@ export default {
   "pagesCount": 1,
   "data": [
     {
-      "produceQty": 100,
+      "PlanQty": 100,
       "color": "#446C00",
       "children": [
         {
-          "produceQty": 100,
+          "PlanQty": 100,
           "color": "#446C00",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000004",
+              "OrderNo": "20220716000004",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10080000005B",
+              "Code": "10080000005B",
               "invName": "多功能烤盘汤锅组件/米白色",
               "invStd": null,
               "unitId": null,
@@ -1018,13 +1031,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 100,
+              "PlanQty": 100,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 0,
+              "ConfirmQty": 0,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1095,31 +1108,31 @@ export default {
           "startTime": "2022-07-19 08:53:29",
           "endTime": "2022-07-19 09:23:29",
           "billNo": "5101-220315004",
-          "completedQty": 0
+          "ConfirmQty": 0
         }
       ],
       "startTime": "2022-07-19 08:53:29",
       "invName": "多功能烤盘汤锅组件/米白色",
       "endTime": "2022-07-19 09:23:29",
-      "invCode": "10080000005B",
+      "Code": "10080000005B",
       "billNo": "5101-220315004",
-      "completedQty": 0
+      "ConfirmQty": 0
     },
     {
-      "produceQty": 30,
+      "PlanQty": 30,
       "color": "#083BF9",
       "children": [
         {
-          "produceQty": 30,
+          "PlanQty": 30,
           "color": "#083BF9",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000003",
+              "OrderNo": "20220716000003",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10070000001A",
+              "Code": "10070000001A",
               "invName": "空气烤炸杯烤盘组件",
               "invStd": null,
               "unitId": null,
@@ -1161,13 +1174,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 30,
+              "PlanQty": 30,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 0,
+              "ConfirmQty": 0,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1238,31 +1251,31 @@ export default {
           "startTime": "2022-07-19 09:23:30",
           "endTime": "2022-07-19 09:32:30",
           "billNo": "5101-220315002",
-          "completedQty": 0
+          "ConfirmQty": 0
         }
       ],
       "startTime": "2022-07-19 09:23:30",
       "invName": "空气烤炸杯烤盘组件",
       "endTime": "2022-07-19 09:32:30",
-      "invCode": "10070000001A",
+      "Code": "10070000001A",
       "billNo": "5101-220315002",
-      "completedQty": 0
+      "ConfirmQty": 0
     },
     {
-      "produceQty": 15,
+      "PlanQty": 15,
       "color": "#D62175",
       "children": [
         {
-          "produceQty": 15,
+          "PlanQty": 15,
           "color": "#D62175",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000005",
+              "OrderNo": "20220716000005",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10010000055A",
+              "Code": "10010000055A",
               "invName": "韩国-EMK无烟烤盘(配件)",
               "invStd": null,
               "unitId": null,
@@ -1304,13 +1317,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 15,
+              "PlanQty": 15,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 0,
+              "ConfirmQty": 0,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1381,31 +1394,31 @@ export default {
           "startTime": "2022-07-19 09:32:31",
           "endTime": "2022-07-19 09:37:01",
           "billNo": "5101-220422001",
-          "completedQty": 0
+          "ConfirmQty": 0
         }
       ],
       "startTime": "2022-07-19 09:32:31",
       "invName": "韩国-EMK无烟烤盘(配件)",
       "endTime": "2022-07-19 09:37:01",
-      "invCode": "10010000055A",
+      "Code": "10010000055A",
       "billNo": "5101-220422001",
-      "completedQty": 0
+      "ConfirmQty": 0
     },
     {
-      "produceQty": 690,
+      "PlanQty": 690,
       "color": "#F390C9",
       "children": [
         {
-          "produceQty": 690,
+          "PlanQty": 690,
           "color": "#F390C9",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000011",
+              "OrderNo": "20220716000011",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10220010001A",
+              "Code": "10220010001A",
               "invName": "AF702109机械玻璃空气烤炸锅/大宇",
               "invStd": null,
               "unitId": null,
@@ -1447,13 +1460,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 690,
+              "PlanQty": 690,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 0,
+              "ConfirmQty": 0,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1524,31 +1537,31 @@ export default {
           "startTime": "2022-07-19 09:37:02",
           "endTime": "2022-07-19 15:04:02",
           "billNo": "5101-220606001",
-          "completedQty": 0
+          "ConfirmQty": 0
         }
       ],
       "startTime": "2022-07-19 09:37:02",
       "invName": "AF702109机械玻璃空气烤炸锅/大宇",
       "endTime": "2022-07-19 15:04:02",
-      "invCode": "10220010001A",
+      "Code": "10220010001A",
       "billNo": "5101-220606001",
-      "completedQty": 0
+      "ConfirmQty": 0
     },
     {
-      "produceQty": 63,
+      "PlanQty": 63,
       "color": "#D29419",
       "children": [
         {
-          "produceQty": 63,
+          "PlanQty": 63,
           "color": "#D29419",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000016",
+              "OrderNo": "20220716000016",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10010010004E",
+              "Code": "10010010004E",
               "invName": "无烟烤盘（澳洲/（彩盒外箱）新程序V1",
               "invStd": null,
               "unitId": null,
@@ -1590,13 +1603,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 63,
+              "PlanQty": 63,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 9,
+              "ConfirmQty": 9,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1667,31 +1680,31 @@ export default {
           "startTime": "2022-07-19 15:04:03",
           "endTime": "2022-07-19 15:22:57",
           "billNo": "5101-220616002",
-          "completedQty": 9
+          "ConfirmQty": 9
         }
       ],
       "startTime": "2022-07-19 15:04:03",
       "invName": "无烟烤盘（澳洲/（彩盒外箱）新程序V1",
       "endTime": "2022-07-19 15:22:57",
-      "invCode": "10010010004E",
+      "Code": "10010010004E",
       "billNo": "5101-220616002",
-      "completedQty": 9
+      "ConfirmQty": 9
     },
     {
-      "produceQty": 553,
+      "PlanQty": 553,
       "color": "#47E4A1",
       "children": [
         {
-          "produceQty": 553,
+          "PlanQty": 553,
           "color": "#47E4A1",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000015",
+              "OrderNo": "20220716000015",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10010010004D",
+              "Code": "10010010004D",
               "invName": "无烟烤盘（澳洲/（彩盒外箱）新程序/V1",
               "invStd": null,
               "unitId": null,
@@ -1733,13 +1746,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 553,
+              "PlanQty": 553,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 140,
+              "ConfirmQty": 140,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1810,31 +1823,31 @@ export default {
           "startTime": "2022-07-19 15:22:58",
           "endTime": "2022-07-19 19:08:52",
           "billNo": "5101-220616001",
-          "completedQty": 140
+          "ConfirmQty": 140
         }
       ],
       "startTime": "2022-07-19 15:22:58",
       "invName": "无烟烤盘（澳洲/（彩盒外箱）新程序/V1",
       "endTime": "2022-07-19 19:08:52",
-      "invCode": "10010010004D",
+      "Code": "10010010004D",
       "billNo": "5101-220616001",
-      "completedQty": 140
+      "ConfirmQty": 140
     },
     {
-      "produceQty": 3000,
+      "PlanQty": 3000,
       "color": "#279B58",
       "children": [
         {
-          "produceQty": 3000,
+          "PlanQty": 3000,
           "color": "#279B58",
           "children": [
             {
               "scheduleType": null,
-              "orderCode": "20220716000019",
+              "OrderNo": "20220716000019",
               "depCode": null,
               "depName": null,
               "proModel": null,
-              "invCode": "10140080001A",
+              "Code": "10140080001A",
               "invName": "SG201922-A无烟烤盘-米白+灰色/杜邦山姆会员店",
               "invStd": null,
               "unitId": null,
@@ -1876,13 +1889,13 @@ export default {
               "wasteQty": null,
               "hangUpStatus": null,
               "occupiedCapacity": null,
-              "produceQty": 3000,
+              "PlanQty": 3000,
               "produceInvCode": null,
               "releaseStatus": null,
               "produceInvName": null,
               "level": null,
               "locking": null,
-              "completedQty": 0,
+              "ConfirmQty": 0,
               "proInvCode": null,
               "apsModelCode": null,
               "kittingState": null,
@@ -1953,26 +1966,31 @@ export default {
           "startTime": "2022-07-19 19:08:53",
           "endTime": "2022-07-21 09:08:53",
           "billNo": "5101-220706005",
-          "completedQty": 0
+          "ConfirmQty": 0
         }
       ],
       "startTime": "2022-07-19 19:08:53",
       "invName": "SG201922-A无烟烤盘-米白+灰色/杜邦山姆会员店",
       "endTime": "2022-07-21 09:08:53",
-      "invCode": "10140080001A",
+      "Code": "10140080001A",
       "billNo": "5101-220706005",
-      "completedQty": 0
+      "ConfirmQty": 0
     }
   ],
   "firstIndex": 1,
   "lastIndex": 1
-}
+        },
+        code:200
+      }
+      console.log('res',res)
       try {
         if (res.code == 200 && res.data.data != null) {
+          
           self.totalCount = res.data.count;
           self.current = res.data.curIndex;
           self.pageSize = res.data.pageSize;
           if (res.data.data.length) {
+            console.log('res.data.data',res.data.data)
             const date = GSTC.api.date;
             // 递归拿到合并的数据
             let dataList = _.cloneDeep(res.data.data);
@@ -2081,11 +2099,11 @@ export default {
                     billNo: list[i].pType ? "" : list[i].billNo, //为了阶梯式展示，有工序大类不展示订单跟踪号
                     pName: list[i].pName,
                     detailCode: list[i].detailCode,
-                    invCode: list[i].invCode,
+                    Code: list[i].Code,
                     invName: list[i].invName,
-                    produceQty: list[i].produceQty,
-                    completedQty: list[i].completedQty,
-                    orderCode: list[i].orderCode,
+                    PlanQty: list[i].PlanQty,
+                    ConfirmQty: list[i].ConfirmQty,
+                    OrderNo: list[i].OrderNo,
                     pType: list[i].detailCode ? "" : list[i].pType, //为了阶梯式展示，有订单跟踪号不展示工序大类
                     startTime:list[i].startTime?this.$moment(list[i].startTime).format("YYYY-MM-DD HH:mm:ss"):'',
                     endTime:list[i].endTime?this.$moment(list[i].endTime).format("YYYY-MM-DD HH:mm:ss"):'',
@@ -2098,10 +2116,10 @@ export default {
                         : "",
                     },
                     completionRate:
-                      list[i].completedQty >= 0 && list[i].produceQty >= 0
+                      list[i].ConfirmQty >= 0 && list[i].PlanQty >= 0
                         ? parseFloat(
                             (
-                              (list[i].completedQty / list[i].produceQty) *
+                              (list[i].ConfirmQty / list[i].PlanQty) *
                               100
                             ).toFixed(2)
                           )
@@ -2126,11 +2144,11 @@ export default {
                     billNo: list[i].billNo,
                     pName: list[i].pName,
                     detailCode: list[i].detailCode,
-                    invCode: list[i].invCode,
+                    Code: list[i].Code,
                     invName: list[i].invName,
-                    produceQty: list[i].produceQty,
-                    completedQty: list[i].completedQty,
-                    orderCode: list[i].orderCode,
+                    PlanQty: list[i].PlanQty,
+                    ConfirmQty: list[i].ConfirmQty,
+                    OrderNo: list[i].OrderNo,
                     pType: list[i].pType,
                     startTime:list[i].startTime?this.$moment(list[i].startTime).format("YYYY-MM-DD HH:mm:ss"):'',
                     endTime:list[i].endTime?this.$moment(list[i].endTime).format("YYYY-MM-DD HH:mm:ss"):'',
@@ -2143,10 +2161,10 @@ export default {
                         : "",
                     },
                     progress:
-                      list[i].completedQty >= 0 && list[i].produceQty >= 0
+                      list[i].confirmQty >= 0 && list[i].PlanQty >= 0
                         ? parseFloat(
                             (
-                              (list[i].completedQty / list[i].produceQty) *
+                              (list[i].confirmQty / list[i].PlanQty) *
                               100
                             ).toFixed(2)
                           )
@@ -2192,34 +2210,249 @@ export default {
     },
     // 动态计算表格高度
     computTableHeight() {
-      const contentH =
-        document.getElementsByClassName("content-wrapper")[0].offsetHeight;
-      const height = contentH - 40;
-      this.tableHeight = height < 200 ? 200 : height;
+      // const contentH =
+      //   document.getElementsByClassName("main-container")[0].offsetHeight;
+      // const height = contentH - 200;
+      // this.tableHeight = height < 200 ? 200 : height;
+    },
+    // 统一渲染按钮事件
+    btnClick(methods, parms, index, remarkTb) {
+      if (parms) {
+        // 下标 要用的数据 标题 ref
+        this[methods](remarkTb, index, parms);
+      } else {
+        this[methods](remarkTb, index);
+      }
+    },
+    // 判断按钮权限
+      judgeBtn() {
+        let routeBtn = this.$route.meta.btns;
+        let newBtn = [];
+        let permission = false;
+
+        if (routeBtn.length != 0) {
+          routeBtn.forEach((x) => {
+            // alert(x.ButtonCode)
+            if (x.ButtonCode == "edit") {
+              permission = true;
+            }
+            let newData = this.parmsBtn.filter((y) => {
+              return x.ButtonCode == y.ButtonCode;
+            });
+            if (newData.length != 0) {
+              newBtn = newBtn.concat(newData);
+            }
+          });
+        }
+        this.$set(this, "btnForm", newBtn);
+      },
+      // 获取表头数据
+      async getTableHeader() {
+        let IDs = this.sysID;
+        let res = await GetHeader(IDs);
+        const {
+          datas,
+          forms,
+          result,
+          msg
+        } = res.data;
+        if (result) {
+          // 获取每个表头
+          let list = []
+          let obj = {}
+          datas.some((m, i) => {
+            m.forEach((n) => {
+              // 进行验证
+              this.verifyDta(n);
+              if (n.childrens && n.children.length != 0) {
+                n.childrens.forEach((x) => {
+                  this.verifyDta(x);
+                });
+              }
+              // for(let obj in n){
+              //   if(){
+
+              //   }
+              // }
+              // let name= n['prop']
+              obj = 
+                {
+                [n['prop']]:{
+                id: n['prop'],
+                data: n['prop'],
+                width: Number(n['width']),
+                header: {
+                  content: n['label'],
+                },
+                hidden: true,
+                }
+              }
+              this.colData = Object.assign(this.colData,obj)
+              // this.$nextTick(()=>{
+              //   setTimeout(() => {
+              // state.update("config", (config) => {
+              //   config.list.columns.data = Object.assign(config.list.columns.data,obj)
+              //   this.config.list.columns.data = config.list.columns.data 
+              //   console.log('config',config.list.columns)
+              //   return config;
+              // });
+              // },10000)
+              // })
+              
+              
+            });
+            this.$set(this.tableColumns, i, m);
+            
+            // console.log('this.config.list.columns.data',this.config.list.columns.data)
+            console.log('this.colData',this.colData)
+            
+            
+            // billNo: {
+            //     id: "billNo",
+            //     data: "billNo",
+            //     width: 130,
+            //     header: {
+            //       content: "订单跟踪号",
+            //     },
+            //     hidden: false,
+            //     // expander: true,
+            //     // sortable: "order",
+            //     // activeColumnId:'order'
+            //   },
+          });
+          // 获取查询的初始化字段 组件 按钮
+          forms.some((x, z) => {
+            this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+            x.forEach((y) => {
+              if (y.prop && y.value) {
+                this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+              } else {
+                this.$set(this.formSearchs[z].datas, [y.prop], "");
+              }
+            });
+            this.$set(this.formSearchs[z], "forms", x);
+          });
+          // this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
+          this.dataSearch(0);
+          // this.$nextTick(()=>{
+          //   list.forEach(item=>{
+          //     // setTimeout(() => {
+          //     state.update("config", (config) => {
+          //       config.list.columns.data = Object.assign(config.list.columns.data,item)
+          //       this.config.list.columns.data = config.list.columns.data 
+          //       console.log('config',config.list.columns)
+          //       return config;
+          //     });
+              
+          //   // }, 0);
+          //   })
+            
+          // })
+          // this.$forceUpdate()
+          // this.$nextTick(()=>{
+          //   this.config.list.columns.data = {...this.config.list.columns.data}
+          // })
+          
+        }
+      },
+      // 验证数据
+    verifyDta(n) {
+      // if (n.prop == "ShortQty") {
+      //   return;
+      // }
+      for (let name in n) {
+        if (
+          (name == "component" && n[name]) ||
+          (name == "button" && n[name]) ||
+          (name == "active" && n[name])
+        ) {
+          n[name] = eval("(" + n[name] + ")");
+        }
+      }
+    },
+     // 查询
+      dataSearch(remarkTb) {
+        this.tagRemark = remarkTb;
+        this.tableData[remarkTb] = [];
+        this.$set(this.tableLoading, remarkTb, true);
+        this.$set(this.isClear, remarkTb, true);
+        this.tablePagination[remarkTb].pageIndex = 1;
+        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        setTimeout(() => {
+          this.$set(this.isClear, remarkTb, false);
+        });
+      },
+      // 获取表格数据
+      async getTableData(form, remarkTb) {
+        this.$set(this.tableLoading, remarkTb, true);
+        form["rows"] = this.tablePagination[remarkTb].pageSize;
+        form["page"] = this.tablePagination[remarkTb].pageIndex;
+        let res = await GetSearchData(form);
+        const {
+          result,
+          data,
+          count,
+          msg
+        } = res.data;
+        if (result) {
+          this.$set(this.tableData, remarkTb, data);
+          this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.$set(this.tableLoading, remarkTb, false);
+      },
+      // 第几页
+      pageChange(val, remarkTb, filtertb) {
+        this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      },
+      // 页数
+      handleSizeChange(val, remarkTb, filtertb) {
+        this.$set(this.tablePagination[remarkTb], "pageSize", val);
+        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      },
+    // 跳转至页面配置
+    toPageSetting() {
+      this.$router.push({
+        name: "FieldInfo",
+        params: { ID: this.sysID },
+      });
+      
     },
   },
 };
 </script>
-<!-- <style lang="less" scoped>
-.select /deep/.ivu-select-placeholder {
+<style lang="scss" scoped>
+::v-deep .gstc__scroll-bar--vertical {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    position: initial;
+    right: 0;
+}
+.select ::v-deep .ivu-select-placeholder {
   color: #fff;
 }
-.select /deep/.ivu-icon {
+.select ::v-deep .ivu-icon {
   color: #fff;
 }
-/deep/.gstc {
+::v-deep .gstc {
   border: 1px solid #e8eaec;
 }
 // 进度条圆角
-/deep/.gstc__chart-timeline-items-row-item {
+::v-deep .gstc__chart-timeline-items-row-item {
   border-radius: 4px;
 }
 // 插件自带默认当天列标黄，不需要去除颜色
-/deep/.gstc__chart-timeline-grid-row-cell.current {
+::v-deep .gstc__chart-timeline-grid-row-cell.current {
   background: #fff;
 }
 // 点击图标颜色
-/deep/.dot {
+::v-deep .dot {
   width: 12px;
   height: 12px;
   position: absolute;
@@ -2227,32 +2460,33 @@ export default {
   border-radius: 100%;
   cursor: pointer;
   z-index: 3;
+  left: 0px;
 }
-/deep/.active {
+::v-deep .active {
   background: #a2f7c3;
 }
-.input /deep/.ivu-select-placeholder {
+.input ::v-deep .ivu-select-placeholder {
   color: #fff;
 }
-.input /deep/.ivu-icon {
+.input ::v-deep .ivu-icon {
   color: #fff;
 }
 //列标题居中
-/deep/.gstc__list-column-header-resizer-container {
+::v-deep .gstc__list-column-header-resizer-container {
   text-align: center;
 }
 //列内容居中
-/deep/.gstc__list-column-row-content {
+::v-deep .gstc__list-column-row-content {
   text-align: center;
 }
 // 圆点点击事件生效
-/deep/.gstc__chart-timeline-items-row {
+::v-deep .gstc__chart-timeline-items-row {
   pointer-events: auto !important;
 }
-/deep/.gstc__chart-calendar-date-content--day{
+::v-deep .gstc__chart-calendar-date-content--day{
   font-size: 16px !important;
 }
-/deep/.gstc__chart-calendar-dates--level-1{
+::v-deep .gstc__chart-calendar-dates--level-1{
   font-size: 13px;
 }
-</style> -->
+</style>
