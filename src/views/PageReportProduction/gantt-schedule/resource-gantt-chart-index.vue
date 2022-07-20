@@ -279,116 +279,117 @@ export default {
           rows: this.rowsData ? this.rowsData : {},
           // 列定义
           columns: {
-            data: {
-              id: {
-                id: "id",
-                data: "id",
-                width: 50,
-                header: {
-                  content: "序号",
-                },
-                hidden: false,
-              },
-              billNo: {
-                id: "billNo",
-                data: "billNo",
-                width: 130,
-                header: {
-                  content: "订单跟踪号",
-                },
-                hidden: false,
-                // expander: true,
-                // sortable: "order",
-                // activeColumnId:'order'
-              },
-              pType: {
-                id: "pType",
-                data: ({ row }) => {
-                  if (row.pType != null) {
-                    let obj = this.$_.filter(
-                      this.$store.getters.getDicItemsType("DETAILED_PLAN"),
-                      { dicCode: row.pType }
-                    )[0];
-                    return obj && obj.dicName ? obj.dicName : "";
-                  }
-                }, //字段,
-                width: 80,
-                header: {
-                  content: "工序大类",
-                },
-                hidden: false,
-                // sortable: "order",
-                // activeColumnId:'order'
-              },
-              detailCode: {
-                id: "detailCode",
-                data: "detailCode",
-                width: 80,
+            data: this.colData?this.colData :{},
+            // {
+            //   id: {
+            //     id: "id",
+            //     data: "id",
+            //     width: 50,
+            //     header: {
+            //       content: "序号",
+            //     },
+            //     hidden: false,
+            //   },
+            //   billNo: {
+            //     id: "billNo",
+            //     data: "billNo",
+            //     width: 130,
+            //     header: {
+            //       content: "订单跟踪号",
+            //     },
+            //     hidden: false,
+            //     // expander: true,
+            //     // sortable: "order",
+            //     // activeColumnId:'order'
+            //   },
+            //   pType: {
+            //     id: "pType",
+            //     data: ({ row }) => {
+            //       if (row.pType != null) {
+            //         let obj = this.$_.filter(
+            //           this.$store.getters.getDicItemsType("DETAILED_PLAN"),
+            //           { dicCode: row.pType }
+            //         )[0];
+            //         return obj && obj.dicName ? obj.dicName : "";
+            //       }
+            //     }, //字段,
+            //     width: 80,
+            //     header: {
+            //       content: "工序大类",
+            //     },
+            //     hidden: false,
+            //     // sortable: "order",
+            //     // activeColumnId:'order'
+            //   },
+            //   detailCode: {
+            //     id: "detailCode",
+            //     data: "detailCode",
+            //     width: 80,
 
-                header: {
-                  content: "任务单号",
-                },
-                hidden: false,
-                // sortable: "label",
-                // hidden:true,//隐藏列
-              },
-              invCode: {
-                id: "invCode",
-                data: "invCode",
-                width: 80,
-                header: {
-                  content: "存货编码",
-                },
-                hidden: false,
-                // sortable: "label",
-                // hidden:true,//隐藏列
+            //     header: {
+            //       content: "任务单号",
+            //     },
+            //     hidden: false,
+            //     // sortable: "label",
+            //     // hidden:true,//隐藏列
+            //   },
+            //   invCode: {
+            //     id: "invCode",
+            //     data: "invCode",
+            //     width: 80,
+            //     header: {
+            //       content: "存货编码",
+            //     },
+            //     hidden: false,
+            //     // sortable: "label",
+            //     // hidden:true,//隐藏列
                 
-              },
-              invName: {
-                id: "invName",
-                data: "invName",
-                width: 80,
-                header: {
-                  content: "存货名称",
-                },
-                hidden: false,
-                // sortable: "label",
-                // hidden:true,//隐藏列
-              },
-              produceQty: {
-                id: "produceQty",
-                data: "produceQty",
-                width: 80,
-                header: {
-                  content: "计划数量",
-                },
-                hidden: true,
-                // sortable: "label",
-                // hidden:true,//隐藏列、
-              },
-              confirmQty: {
-                id: "confirmQty",
-                data: "confirmQty",
-                width: 80,
-                header: {
-                  content: "完成数量",
-                },
-                hidden: true,
-                // sortable: "label",
-                // hidden:true,//隐藏列
+            //   },
+            //   invName: {
+            //     id: "invName",
+            //     data: "invName",
+            //     width: 80,
+            //     header: {
+            //       content: "存货名称",
+            //     },
+            //     hidden: false,
+            //     // sortable: "label",
+            //     // hidden:true,//隐藏列
+            //   },
+            //   produceQty: {
+            //     id: "produceQty",
+            //     data: "produceQty",
+            //     width: 80,
+            //     header: {
+            //       content: "计划数量",
+            //     },
+            //     hidden: true,
+            //     // sortable: "label",
+            //     // hidden:true,//隐藏列、
+            //   },
+            //   confirmQty: {
+            //     id: "confirmQty",
+            //     data: "confirmQty",
+            //     width: 80,
+            //     header: {
+            //       content: "完成数量",
+            //     },
+            //     hidden: true,
+            //     // sortable: "label",
+            //     // hidden:true,//隐藏列
                 
-              },
-              completionRate: {
-                id: "completionRate",
-                data: "completionRate",
-                width: 80,
-                header: {
-                  content: "完成率(%)",
-                },
-                hidden: false,
+            //   },
+            //   completionRate: {
+            //     id: "completionRate",
+            //     data: "completionRate",
+            //     width: 80,
+            //     header: {
+            //       content: "完成率(%)",
+            //     },
+            //     hidden: false,
                 
-              },
-            },
+            //   },
+            // },
             resizer: {
               // width: 5000,
               // dots: 100,
