@@ -723,6 +723,14 @@ export default {
         if (cellType instanceof GCsheets.CellTypes.HyperLink) {
         }
       });
+       // 列筛选
+      // 参数2 开始列
+      // 参数3 
+      // 参数4 结束列
+      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      
+      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter)
 
 
 
