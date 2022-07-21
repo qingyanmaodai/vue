@@ -56,8 +56,8 @@ import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
-import { mapState } from "vuex";
 GC.Spread.Common.CultureManager.culture("zh-cn");
+import { mapState } from "vuex";
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
@@ -731,6 +731,7 @@ this.spread.refresh();
           cellIndex++;
         });
       });
+      
 
       let cellIndex = 0;
       let viewSortIndex=0;//排序的索引
@@ -766,14 +767,14 @@ this.spread.refresh();
       });
       sheet.options.protectionOptions.allowResizeColumns = true;
       //sheet.options.isProtected = true;
-
-
-
-
-
-
-
-
+      // 列筛选
+      // 参数2 开始列
+      // 参数3 
+      // 参数4 结束列
+      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      
+      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter)
 
       var insertRowsCopyStyle = {
         canUndo: true,
