@@ -33,6 +33,7 @@
     "postcss-px2rem-exclude": "0.0.6",
     "print-js": "^1.6.0",
     "screenfull": "^5.1.0",
+    "tippy.js": "^6.3.7",
     "umy-ui": "^1.1.6",
     "vue": "2.6.10",
     "vue-router": "3.0.6",

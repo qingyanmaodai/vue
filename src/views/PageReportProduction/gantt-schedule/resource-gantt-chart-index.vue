@@ -1,95 +1,69 @@
 <template>
-  <!-- <card> -->
     <div  class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
-        <!-- <div v-for="(item,i) in 3" :key="i" v-show="labelStatus1 == i"> -->
           <ComSearch ref="searchRef" :searchData="formSearchs[tagRemark].datas" :searchForm="formSearchs[tagRemark].forms" :remark="tagRemark"
             :signName="labelStatus1" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
-        <!-- </div> -->
       </div>
-      <!-- <div>
-        <div class="toolbox" id="toolbox">
-          列显示/隐藏:
-          <label><input type="checkbox" id="id" checked /> 序号</label>
-          <label
-            ><input type="checkbox" id="billNo" checked /> 订单跟踪号</label
-          >
-          <label><input type="checkbox" id="pType" checked /> 工序大类</label>
-          <label
-            ><input type="checkbox" id="detailCode" checked /> 任务单号</label
-          >
-          <label><input type="checkbox" id="invCode" checked /> 存货编码</label>
-          <label><input type="checkbox" id="invName" checked /> 存货名称</label>
-          <label><input type="checkbox" id="produceQty" /> 计划数量</label>
-          <label><input type="checkbox" id="confirmQty" /> 完成数量</label>
-          <label
-            ><input type="checkbox" id="completionRate" checked /> 完成率</label
-          >
-           
-        </div>
-      </div> -->
       <!-- 图表 -->
-    <div>
-      <div  class="admin_content">
-        <div class="gstc-wrapper" id="gstc" ref="gstc"></div>
-        <!-- <div id="gen"><div>... 数据加载中，请等待 ...</div></div> -->
-        <div>
-            <div
-              class="flex_row_spaceBtn pagination"
-            >
-              <div>
-                <span
-                  @click="toPageSetting"
-                  class="primaryColor cursor"
-                >SysID:{{ sysID[tagRemark].ID }}
-                </span>
+      <div>
+        <div  class="admin_content">
+          <div class="gstc-wrapper" id="gstc" ref="gstc"></div>
+          <!-- <div id="gen"><div>... 数据加载中，请等待 ...</div></div> -->
+          <div>
+              <div
+                class="flex_row_spaceBtn pagination"
+              >
+                <div>
+                  <span
+                    @click="toPageSetting"
+                    class="primaryColor cursor"
+                  >SysID:{{ sysID[tagRemark].ID }}
+                  </span>
+                </div>
+                <div class="flex">
+                  <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    :current-page="tablePagination[tagRemark].pageIndex"
+                    :page-sizes="[
+                      10,
+                      20,
+                      30,
+                      50,
+                      100,
+                      150,
+                      200,
+                      250,
+                      300,
+                      350,
+                      500,
+                      400,
+                      800,
+                      1000,
+                      1500,
+                      2000,
+                      3000,
+                      4000,
+                      5000
+                    ]"
+                    :page-size="tablePagination[tagRemark].pageSize"
+                    :total="tablePagination[tagRemark].pageTotal"
+                    @current-change="pageChange"
+                    layout="total, sizes, prev, pager, next,jumper"
+                  >
+                  </el-pagination>
+                </div>
               </div>
-              <div class="flex">
-                <el-pagination
-                  background
-                  @size-change="handleSizeChange"
-                  :current-page="tablePagination[tagRemark].pageIndex"
-                  :page-sizes="[
-                    10,
-                    20,
-                    30,
-                    50,
-                    100,
-                    150,
-                    200,
-                    250,
-                    300,
-                    350,
-                    500,
-                    400,
-                    800,
-                    1000,
-                    1500,
-                    2000,
-                    3000,
-                    4000,
-                    5000
-                  ]"
-                  :page-size="tablePagination[tagRemark].pageSize"
-                  :total="tablePagination[tagRemark].pageTotal"
-                  @current-change="pageChange"
-                  layout="total, sizes, prev, pager, next,jumper"
-                >
-                </el-pagination>
-              </div>
-            </div>
+          </div>
         </div>
       </div>
-    </div>
-    
-
-    <!-- <JgPage ref="JgPage" :total="totalCount" @getData="getData" /> -->
-  <!-- </card> -->
     </div>
     
 </template>
-
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
 <script>
+
 import GSTC from "./plugin/gstc.esm.min.js";
 // import GSTC from "gantt-schedule-timeline-calendar/dist/gstc.wasm.esm.min.js";
 import "gantt-schedule-timeline-calendar/dist/style.css";
@@ -101,13 +75,10 @@ import { Plugin as CalendarScroll } from "gantt-schedule-timeline-calendar/dist/
 import { Plugin as ProgressBar } from "gantt-schedule-timeline-calendar/dist/plugins/progress-bar.esm.min.js";
 import { Plugin as TimeBookmarks } from "gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min.js";
 import { Plugin as DependencyLines } from "gantt-schedule-timeline-calendar/dist/plugins/dependency-lines.esm.min.js";
-// import dayjs from "../../"
-// import dayjs from 
-// import JgSelect from "@/components/jg-select/index";
-// import JgVxeTable from "@/components/jg-vxe-table-new";
-// import JgPage from "@/BASEMODULE/components/jg-page";
 import { getAllDate } from "@/utils/formatDate";
 import ComSearch from "@/components/ComSearch";
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // optional for styling
 import {
     GetHeader,
     GetSearchData
@@ -151,26 +122,35 @@ function itemSlot(vido, props) {
       )[0];
       props.item.pTypeName = obj && obj.dicName ? obj.dicName : "";
     }
-    that.$Modal.info({
-      title: "订单明细",
-      content: `<p>订单跟踪号：${props.item.billNo ? props.item.billNo : ""}</p>
-      <p>工序大类：${props.item.pTypeName}</p>
-      <p>任务单号：${props.item.detailCode ? props.item.detailCode : ""}</p>
-      <p>存货编码：${props.item.invCode ? props.item.invCode : ""}</p>
-      <p>存货名称：${props.item.invName ? props.item.invName : ""}</p>
-      <p>计划数量：${props.item.PlanQty >= 0 ? props.item.PlanQty : 0}</p>
-      <p>完成数量：${
-        props.item.confirmQty >= 0 ? props.item.confirmQty : 0
-      }</p>
-      <p>完成率：${
-        props.item.ConfirmQty >= 0 && props.item.PlanQty >= 0
-          ? (props.item.ConfirmQty / props.item.PlanQty) * 100
-          : 0
-      }
-      </p>
-       <p>计划开始时间：${props.item.startTime ? props.item.startTime: ""}</p>
-      <p>计划结束时间：${props.item.endTime ? props.item.endTime:""}</p>`,
-    });
+    // that.$Modal.info({
+    //   title: "订单明细",
+    //   content: `<p>订单跟踪号：${props.item.billNo ? props.item.billNo : ""}</p>
+    //   <p>工序大类：${props.item.pTypeName}</p>
+    //   <p>任务单号：${props.item.detailCode ? props.item.detailCode : ""}</p>
+    //   <p>存货编码：${props.item.invCode ? props.item.invCode : ""}</p>
+    //   <p>存货名称：${props.item.invName ? props.item.invName : ""}</p>
+    //   <p>计划数量：${props.item.PlanQty >= 0 ? props.item.PlanQty : 0}</p>
+    //   <p>完成数量：${
+    //     props.item.confirmQty >= 0 ? props.item.confirmQty : 0
+    //   }</p>
+    //   <p>完成率：${
+    //     props.item.ConfirmQty >= 0 && props.item.PlanQty >= 0
+    //       ? (props.item.ConfirmQty / props.item.PlanQty) * 100
+    //       : 0
+    //   }
+    //   </p>
+    //    <p>计划开始时间：${props.item.startTime ? props.item.startTime: ""}</p>
+    //   <p>计划结束时间：${props.item.endTime ? props.item.endTime:""}</p>`,
+    // });
+        that.$alert('这是一段内容', '标题名称', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
   }
   // onClick()
   // return render function
@@ -180,13 +160,63 @@ function itemSlot(vido, props) {
         ? html`${content}${html`<div
             class=${props.item ? "dot" : ""}
             data-gstcid=${props.item.id}
-            data-type="chart-timeline-items-row-item"
+            data-type="chart-timeline-items-row-item-progress-bar"
             title="订单明细"
-            @click="${onClick}"
+            @mouseenter="${onClick}"
           ></div>`}`
         : null
     );
 }
+
+function setTippyContent(element, data) {
+  console.log('data',data)
+  if (!gstc) return;
+  if ((!data || !data.item) && element._tippy) return element._tippy.destroy();
+  const itemData = gstc.api.getItemData(data.item.id);
+  if (!itemData) return element._tippy.destroy();
+  if (itemData.detached && element._tippy) return element._tippy.destroy();
+  // @ts-ignore
+  if (!itemData.detached && !element._tippy) tippy(element, { trigger: 'mouseenter click',allowHTML: true });
+  if (!element._tippy) return;
+  const startDate = itemData.time.startDate;
+  const endDate = itemData.time.endDate;
+  const tooltipContent =`
+      <p>订单跟踪号：${data.item.billNo ? data.item.billNo : ""}</p>
+      <p>任务单号：${data.item.detailCode ? data.item.detailCode : ""}</p>
+      <p>存货编码：${data.item.invCode ? data.item.invCode : ""}</p>
+      <p>存货名称：${data.item.invName ? data.item.invName : ""}</p>
+      <p>计划数量：${data.item.PlanQty >= 0 ? data.item.PlanQty : 0}</p>
+      <p>完成数量：${
+        data.item.confirmQty >= 0 ? data.item.confirmQty : 0
+      }</p>
+      <p>完成率：${
+        data.item.ConfirmQty >= 0 && data.item.PlanQty >= 0
+          ? (data.item.ConfirmQty / data.item.PlanQty) * 100
+          : 0
+      }
+      </p>
+       <p>计划开始时间：${data.item.startTime ? data.item.startTime: ""}</p>
+      <p>计划结束时间：${data.item.endTime ? data.item.endTime:""}</p>`
+  
+  element._tippy.setContent(tooltipContent);
+}
+
+function itemTippy(element, data) {
+  setTippyContent(element, data);
+  return {
+    update(element, data) {
+      if (element._tippy) element._tippy.destroy();
+      setTippyContent(element, data);
+    },
+    destroy(element, data) {
+      if (element._tippy) element._tippy.destroy();
+    },
+  };
+}
+// function tippy(button, {
+//   // default
+//   trigger: 'mouseenter'
+// });
 const days = [
   {
     zoomTo: 100, // we want to display this format for all zoom levels until 100
@@ -214,9 +244,6 @@ const hours = [
 export default {
   name: "order-gantt-chart-index",
   components: {
-    // JgSelect,
-    // JgVxeTable,
-    // JgPage,
     ComSearch,
   },
   data() {
@@ -280,116 +307,6 @@ export default {
           // 列定义
           columns: {
             data: this.colData?this.colData :{},
-            // {
-            //   id: {
-            //     id: "id",
-            //     data: "id",
-            //     width: 50,
-            //     header: {
-            //       content: "序号",
-            //     },
-            //     hidden: false,
-            //   },
-            //   billNo: {
-            //     id: "billNo",
-            //     data: "billNo",
-            //     width: 130,
-            //     header: {
-            //       content: "订单跟踪号",
-            //     },
-            //     hidden: false,
-            //     // expander: true,
-            //     // sortable: "order",
-            //     // activeColumnId:'order'
-            //   },
-            //   pType: {
-            //     id: "pType",
-            //     data: ({ row }) => {
-            //       if (row.pType != null) {
-            //         let obj = this.$_.filter(
-            //           this.$store.getters.getDicItemsType("DETAILED_PLAN"),
-            //           { dicCode: row.pType }
-            //         )[0];
-            //         return obj && obj.dicName ? obj.dicName : "";
-            //       }
-            //     }, //字段,
-            //     width: 80,
-            //     header: {
-            //       content: "工序大类",
-            //     },
-            //     hidden: false,
-            //     // sortable: "order",
-            //     // activeColumnId:'order'
-            //   },
-            //   detailCode: {
-            //     id: "detailCode",
-            //     data: "detailCode",
-            //     width: 80,
-
-            //     header: {
-            //       content: "任务单号",
-            //     },
-            //     hidden: false,
-            //     // sortable: "label",
-            //     // hidden:true,//隐藏列
-            //   },
-            //   invCode: {
-            //     id: "invCode",
-            //     data: "invCode",
-            //     width: 80,
-            //     header: {
-            //       content: "存货编码",
-            //     },
-            //     hidden: false,
-            //     // sortable: "label",
-            //     // hidden:true,//隐藏列
-                
-            //   },
-            //   invName: {
-            //     id: "invName",
-            //     data: "invName",
-            //     width: 80,
-            //     header: {
-            //       content: "存货名称",
-            //     },
-            //     hidden: false,
-            //     // sortable: "label",
-            //     // hidden:true,//隐藏列
-            //   },
-            //   produceQty: {
-            //     id: "produceQty",
-            //     data: "produceQty",
-            //     width: 80,
-            //     header: {
-            //       content: "计划数量",
-            //     },
-            //     hidden: true,
-            //     // sortable: "label",
-            //     // hidden:true,//隐藏列、
-            //   },
-            //   confirmQty: {
-            //     id: "confirmQty",
-            //     data: "confirmQty",
-            //     width: 80,
-            //     header: {
-            //       content: "完成数量",
-            //     },
-            //     hidden: true,
-            //     // sortable: "label",
-            //     // hidden:true,//隐藏列
-                
-            //   },
-            //   completionRate: {
-            //     id: "completionRate",
-            //     data: "completionRate",
-            //     width: 80,
-            //     header: {
-            //       content: "完成率(%)",
-            //     },
-            //     hidden: false,
-                
-            //   },
-            // },
             resizer: {
               // width: 5000,
               // dots: 100,
@@ -455,65 +372,16 @@ export default {
             "十二月",
           ],
         },
-        actions: {},
+        actions: {
+          'chart-timeline-items-row-item': [itemTippy],
+        },
         slots: {
-          "chart-timeline-items-row-item": { outer: [itemSlot] },
+          // "chart-timeline-items-row-item": { outer: [itemSlot] },
         },
       },
       orderList: [],
       treeData: [],
       strokeColor: "#BFEFFF",
-      plGanttColumns: [
-        { width: 40, title: "序号", fixed: "left", type: "seq" },
-        {
-          minWidth: 100,
-          title: "订单跟踪号",
-          field: "billNo",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "工序类型",
-          field: "pName",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "任务单号",
-          field: "detailCode",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "存货编码",
-          field: "invCode",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "存货名称",
-          field: "invName",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "计划数量",
-          field: "PlanQty",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "完成数量",
-          field: "confirmQty",
-          sortable: true,
-        },
-        {
-          minWidth: 100,
-          title: "完成率(%)",
-          field: "completionRate",
-          sortable: true,
-        },
-      ],
       rowPlCode: "",
       formSearch: {
         selectValue: null,
@@ -521,137 +389,115 @@ export default {
         planOverTime: null,
         planStartTime: null,
       },
-      plParams: {
-        params: { useStatus: 0 },
-      },
-      plColumns: [
-        { title: "主资源编码", key: "plCode" },
-        { title: "主资源名称", key: "plName" },
-      ],
-      plValue: [],
-      tableOptions: {
-        rowId: "eid",
-        toolbarConfig: {
-          perfect: true,
-          zoom: true,
-          slots: {
-            // 自定义工具栏模板
-            tools: "toolbar_tools",
-            // 自定义插槽模板
-            buttons: "toolbar_buttons",
-          },
-        },
-      },
       pageSize: 10,
       current: 1,
       totalCount: 0,
       tableHeight: 443,
       tableData: [],
-      columns: [
-        { width: 40, title: "序号", fixed: "left", type: "seq" },
-        {
-          minWidth: 150,
-          title: "订单跟踪号",
-          field: "billNo",
-          sortable: true,
-        },
-        { width: 100, title: "工序类型", field: "pName", sortable: true },
-        {
-          minWidth: 150,
-          title: "任务单号",
-          field: "detailCode",
-          sortable: true,
-        },
-        {
-          minWidth: 150,
-          title: "存货编码",
-          field: "invCode",
-          sortable: true,
-        },
-        {
-          minWidth: 150,
-          title: "存货名称",
-          field: "invName",
-          sortable: true,
-        },
-        {
-          minWidth: 200,
-          title: "规格型号",
-          field: "invStd",
-          sortable: true,
-        },
-        {
-          width: 80,
-          title: "计划数量",
-          field: "PlanQty",
-          sortable: true,
-        },
-        {
-          width: 80,
-          title: "完成数量",
-          field: "ConfirmQty",
-          sortable: true,
-        },
-        {
-          width: 80,
-          title: "完成率(%)",
-          field: "completionRate",
-          sortable: true,
-          formatter: ({ row }) => {
-            if (row.ConfirmQty >= 0 && row.PlanQty >= 0) {
-              return (row.ConfirmQty / row.PlanQty) * 100;
-            }
-          },
-        },
-        {
-          width: 150,
-          title: "计划开始时间",
-          field: "planStartTime",
-          sortable: true,
-          formatter: ({ row }) => {
-            return row.planStartTime
-              ? this.$moment(row.planStartTime).format("YYYY-MM-DD HH:mm:ss")
-              : "";
-          },
-        },
-        {
-          width: 150,
-          title: "计划结束时间",
-          field: "planOverTime",
-          sortable: true,
-          formatter: ({ row }) => {
-            return row.planOverTime
-              ? this.$moment(row.planOverTime).format("YYYY-MM-DD HH:mm:ss")
-              : "";
-          },
-        },
-        {
-          minWidth: 150,
-          title: "主资源名称",
-          field: "plName",
-          sortable: true,
-        },
-        {
-          minWidth: 150,
-          title: "机台/线体名称",
-          field: "pmName",
-          sortable: true,
-        },
-        {
-          minWidth: 150,
-          title: "模具名称",
-          field: "pplName",
-          sortable: true,
-        },
-      ],
+      // columns: [
+      //   { width: 40, title: "序号", fixed: "left", type: "seq" },
+      //   {
+      //     minWidth: 150,
+      //     title: "订单跟踪号",
+      //     field: "billNo",
+      //     sortable: true,
+      //   },
+      //   { width: 100, title: "工序类型", field: "pName", sortable: true },
+      //   {
+      //     minWidth: 150,
+      //     title: "任务单号",
+      //     field: "detailCode",
+      //     sortable: true,
+      //   },
+      //   {
+      //     minWidth: 150,
+      //     title: "存货编码",
+      //     field: "invCode",
+      //     sortable: true,
+      //   },
+      //   {
+      //     minWidth: 150,
+      //     title: "存货名称",
+      //     field: "invName",
+      //     sortable: true,
+      //   },
+      //   {
+      //     minWidth: 200,
+      //     title: "规格型号",
+      //     field: "invStd",
+      //     sortable: true,
+      //   },
+      //   {
+      //     width: 80,
+      //     title: "计划数量",
+      //     field: "PlanQty",
+      //     sortable: true,
+      //   },
+      //   {
+      //     width: 80,
+      //     title: "完成数量",
+      //     field: "ConfirmQty",
+      //     sortable: true,
+      //   },
+      //   {
+      //     width: 80,
+      //     title: "完成率(%)",
+      //     field: "completionRate",
+      //     sortable: true,
+      //     formatter: ({ row }) => {
+      //       if (row.ConfirmQty >= 0 && row.PlanQty >= 0) {
+      //         return (row.ConfirmQty / row.PlanQty) * 100;
+      //       }
+      //     },
+      //   },
+      //   {
+      //     width: 150,
+      //     title: "计划开始时间",
+      //     field: "planStartTime",
+      //     sortable: true,
+      //     formatter: ({ row }) => {
+      //       return row.planStartTime
+      //         ? this.$moment(row.planStartTime).format("YYYY-MM-DD HH:mm:ss")
+      //         : "";
+      //     },
+      //   },
+      //   {
+      //     width: 150,
+      //     title: "计划结束时间",
+      //     field: "planOverTime",
+      //     sortable: true,
+      //     formatter: ({ row }) => {
+      //       return row.planOverTime
+      //         ? this.$moment(row.planOverTime).format("YYYY-MM-DD HH:mm:ss")
+      //         : "";
+      //     },
+      //   },
+      //   {
+      //     minWidth: 150,
+      //     title: "主资源名称",
+      //     field: "plName",
+      //     sortable: true,
+      //   },
+      //   {
+      //     minWidth: 150,
+      //     title: "机台/线体名称",
+      //     field: "pmName",
+      //     sortable: true,
+      //   },
+      //   {
+      //     minWidth: 150,
+      //     title: "模具名称",
+      //     field: "pplName",
+      //     sortable: true,
+      //   },
+      // ],
       updataTableHeight: this.$_.debounce(() => {
-        // this.computTableHeight(true);
+        this.computTableHeight(true);
       }),
     };
   },
   created() {
-    this.judgeBtn();
-    this.getTableHeader()
+    
   },
   mounted() {
     that = this;
@@ -670,17 +516,22 @@ export default {
     this.formSearch.planOverTime = endDate;
     // 初始化组件并将其挂载到 DOM
     // 监听窗口变动
-    // this.$nextTick(this.computTableHeight);
+    // this.$nextTick(()=>{
+    //   this.computTableHeight
+    // });
     this.computTableHeight();
-    
+    this.judgeBtn();
+    this.getTableHeader()
     // window.addEventListener("resize", this.updataTableHeight);
-
-    this.config.innerHeight = this.tableHeight;
-    state = GSTC.api.stateFromConfig(this.config);
-    gstc = GSTC({
-      element: this.$refs["gstc"],
-      state,
-    });
+    this.$nextTick(()=>{
+      this.config.innerHeight = this.tableHeight;
+        state = GSTC.api.stateFromConfig(this.config);
+        gstc = GSTC({
+          element: this.$refs["gstc"],
+          state,
+        });
+    })
+    
     this.getData();
     // 列显示隐藏
     let allCheck = true;
@@ -889,7 +740,7 @@ export default {
         }
       }, 0);
     },
-    // 后端拿到的数据没有不零和计算得到的getAllDate格式不一样需要转化
+    // 后端拿到的数据没有为零和计算得到的getAllDate格式不一样需要转化
     timeFormat(date) {
       let y = date.getFullYear(); // 年
       let m = date.getMonth() + 1; // 月
@@ -2211,10 +2062,13 @@ export default {
     },
     // 动态计算表格高度
     computTableHeight() {
-      // const contentH =
-      //   document.getElementsByClassName("main-container")[0].offsetHeight;
-      // const height = contentH - 200;
-      // this.tableHeight = height < 200 ? 200 : height;
+      const contentH =
+        document.getElementsByClassName("app-wrapper")[0].offsetHeight;
+      const height = contentH - 650;
+      this.tableHeight = height < 200 ? 200 : height;
+      console.log('document.getElementsByClassName("container")',document.getElementsByClassName("app-wrapper"))
+      console.log('contentH',contentH)
+      console.log('this.tableHeight',this.tableHeight)
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -2249,6 +2103,7 @@ export default {
       },
       // 获取表头数据
       async getTableHeader() {
+        this.colData = {}
         let IDs = this.sysID;
         let res = await GetHeader(IDs);
         const {
@@ -2259,7 +2114,6 @@ export default {
         } = res.data;
         if (result) {
           // 获取每个表头
-          let list = []
           let obj = {}
           datas.some((m, i) => {
             m.forEach((n) => {
@@ -2270,14 +2124,7 @@ export default {
                   this.verifyDta(x);
                 });
               }
-              // for(let obj in n){
-              //   if(){
-
-              //   }
-              // }
-              // let name= n['prop']
-              obj = 
-                {
+              obj = {
                 [n['prop']]:{
                 id: n['prop'],
                 data: n['prop'],
@@ -2285,41 +2132,13 @@ export default {
                 header: {
                   content: n['label'],
                 },
-                hidden: true,
+                hidden: false,
                 }
               }
               this.colData = Object.assign(this.colData,obj)
-              // this.$nextTick(()=>{
-              //   setTimeout(() => {
-              // state.update("config", (config) => {
-              //   config.list.columns.data = Object.assign(config.list.columns.data,obj)
-              //   this.config.list.columns.data = config.list.columns.data 
-              //   console.log('config',config.list.columns)
-              //   return config;
-              // });
-              // },10000)
-              // })
-              
-              
             });
             this.$set(this.tableColumns, i, m);
             
-            // console.log('this.config.list.columns.data',this.config.list.columns.data)
-            console.log('this.colData',this.colData)
-            
-            
-            // billNo: {
-            //     id: "billNo",
-            //     data: "billNo",
-            //     width: 130,
-            //     header: {
-            //       content: "订单跟踪号",
-            //     },
-            //     hidden: false,
-            //     // expander: true,
-            //     // sortable: "order",
-            //     // activeColumnId:'order'
-            //   },
           });
           // 获取查询的初始化字段 组件 按钮
           forms.some((x, z) => {
@@ -2333,34 +2152,22 @@ export default {
             });
             this.$set(this.formSearchs[z], "forms", x);
           });
-          // this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
           this.dataSearch(0);
-          // this.$nextTick(()=>{
-          //   list.forEach(item=>{
-          //     // setTimeout(() => {
-          //     state.update("config", (config) => {
-          //       config.list.columns.data = Object.assign(config.list.columns.data,item)
-          //       this.config.list.columns.data = config.list.columns.data 
-          //       console.log('config',config.list.columns)
-          //       return config;
-          //     });
-              
-          //   // }, 0);
-          //   })
-            
-          // })
-          // this.$forceUpdate()
-          // this.$nextTick(()=>{
-          //   this.config.list.columns.data = {...this.config.list.columns.data}
-          // })
-          
+          // 甘特图动态列更新
+          this.$nextTick(()=>{
+            setTimeout(() => {
+              state.update("config", (config) => {
+                config.list.columns.data = this.colData
+                // this.config.list.columns.data = this.colData 
+                console.log('config',config.list.columns)
+                return config;
+              });
+            },0)
+          })
         }
       },
       // 验证数据
     verifyDta(n) {
-      // if (n.prop == "ShortQty") {
-      //   return;
-      // }
       for (let name in n) {
         if (
           (name == "component" && n[name]) ||
@@ -2371,52 +2178,52 @@ export default {
         }
       }
     },
-     // 查询
-      dataSearch(remarkTb) {
-        this.tagRemark = remarkTb;
-        this.tableData[remarkTb] = [];
-        this.$set(this.tableLoading, remarkTb, true);
-        this.$set(this.isClear, remarkTb, true);
-        this.tablePagination[remarkTb].pageIndex = 1;
-        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-        setTimeout(() => {
-          this.$set(this.isClear, remarkTb, false);
+    // 查询
+    dataSearch(remarkTb) {
+      this.tagRemark = remarkTb;
+      this.tableData[remarkTb] = [];
+      this.$set(this.tableLoading, remarkTb, true);
+      this.$set(this.isClear, remarkTb, true);
+      this.tablePagination[remarkTb].pageIndex = 1;
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      setTimeout(() => {
+        this.$set(this.isClear, remarkTb, false);
+      });
+    },
+    // 获取表格数据
+    async getTableData(form, remarkTb) {
+      this.$set(this.tableLoading, remarkTb, true);
+      form["rows"] = this.tablePagination[remarkTb].pageSize;
+      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      let res = await GetSearchData(form);
+      const {
+        result,
+        data,
+        count,
+        msg
+      } = res.data;
+      if (result) {
+        this.$set(this.tableData, remarkTb, data);
+        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
         });
-      },
-      // 获取表格数据
-      async getTableData(form, remarkTb) {
-        this.$set(this.tableLoading, remarkTb, true);
-        form["rows"] = this.tablePagination[remarkTb].pageSize;
-        form["page"] = this.tablePagination[remarkTb].pageIndex;
-        let res = await GetSearchData(form);
-        const {
-          result,
-          data,
-          count,
-          msg
-        } = res.data;
-        if (result) {
-          this.$set(this.tableData, remarkTb, data);
-          this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-        this.$set(this.tableLoading, remarkTb, false);
-      },
-      // 第几页
-      pageChange(val, remarkTb, filtertb) {
-        this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-      },
-      // 页数
-      handleSizeChange(val, remarkTb, filtertb) {
-        this.$set(this.tablePagination[remarkTb], "pageSize", val);
-        this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-      },
+      }
+      this.$set(this.tableLoading, remarkTb, false);
+    },
+    // 第几页
+    pageChange(val, remarkTb, filtertb) {
+      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
+    // 页数
+    handleSizeChange(val, remarkTb, filtertb) {
+      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
     // 跳转至页面配置
     toPageSetting() {
       this.$router.push({
