@@ -749,7 +749,6 @@ export default {
     },
     // 是否只显示没有免检的订单
     clickitem2(val) {
-      console.log('val',val)
       val == this.losePrepareDate2
         ? (this.losePrepareDate2 = 0)
         : (this.losePrepareDate2 = 1);

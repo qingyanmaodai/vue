@@ -99,7 +99,7 @@
           </div>
         </div>
         <div
-          v-for="item in [0, 2, 3, 4]"
+          v-for="item in [0, 2, 3, 4,5]"
           :key="item"
           v-show="labelStatus1 == item"
         >
@@ -168,8 +168,8 @@ export default {
         { ID: 5615 },
         { ID: 5156 },
         { ID: 5156 },
-        { ID: 5641 },
-        { ID: 5641 },
+        { ID: 5156 },
+        { ID: 5156 },
         { ID: 5156 },
       ],
       Status1: [
@@ -180,6 +180,8 @@ export default {
         // { label: "补焊待排", value: 3 },
        // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
+        { label: "待转入备料", value: 4 },
+        { label: "已转入备料", value: 5 },
       ],
       title: this.$route.meta.title,
       labelStatus1: 1,
@@ -202,11 +204,11 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: {IsSetPrepare:'未生成'},
           forms: [],
         },
         {
-          datas: {},
+          datas: {IsSetPrepare:'已生成'},
           forms: [],
         },
         {
@@ -356,6 +358,28 @@ export default {
           Methods: "dataSave",
           Icon: "",
         },
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 0,
+          Size: "small",
+          Params: "1",
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "生成备料任务",
+          isLoading: false,
+          Methods: "readyTask",
+          Type: "primary",
+          Icon: "",
+          signName: 3,
+          Size: "small",
+          Params: 4,
+        },
       ],
       tableData: [[], [], [], [], [], [], []],
       delData: [[], [], [], [], [], [], []],
@@ -366,8 +390,8 @@ export default {
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
@@ -409,7 +433,6 @@ export default {
   methods: {
     backData() {
       this.getSelectionData();
-      console.log(this.selectionData[1]);
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
@@ -589,7 +612,6 @@ export default {
           }
           cellIndex++;
 
-          console.log('row',row)
          var rowSheet = sheet.getRange(
             index,
             num,
@@ -769,7 +791,14 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if(this.formSearchs[remarkTb].forms.length){
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element)=>{
+              if(element.prop===name){
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            })
+          }
         }
       }
     },
@@ -869,9 +898,9 @@ export default {
 
         // this.formSearchs[4].datas["ProcessID"] = "P202009092233413";
         // this.formSearchs[4].datas["SchedulingStatus"] = "0";
-      //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
-        this.formSearchs[3].datas["CompletionStatus"] = "1";
-        this.formSearchs[4].datas["productionstatus"] = "25";
+      // //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
+      //   this.formSearchs[3].datas["CompletionStatus"] = "1";
+      //   this.formSearchs[4].datas["productionstatus"] = "25";
         this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
         this.getTableData(this.formSearchs[1].datas, 1);
 
@@ -1051,7 +1080,6 @@ export default {
         this.selectionData[1],
         "/APSAPI/MOPlanStep1CalculationV2"
       );
-      //console.log(this.selectionData[remarkTb].);
       const { result, data, count, msg } = res.data;
 
       if (result) {
@@ -1103,8 +1131,6 @@ export default {
     // 转入日计划
     async setPlan(remarkTb, index, params) {
       let arr = this.getSelectionData();
-      console.log('remarkTb',remarkTb)
-      console.log('this.selectionData',this.selectionData)
       if (this.ruleForm.LineIDs.length == 0 && false) {
         this.$message.error("请选择生产线再转入日计划！");
       } else {
@@ -1210,6 +1236,34 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+      }
+    },
+    // 备料任务
+    async readyTask(remarkTb, index, MOSchedulingType) {
+      let submitData = this.selectionData[remarkTb]
+      if (submitData.length != 0) {
+        this.adminLoading = true;
+        let url = "/APSAPI/SetPreParePlanV2"
+        let res = await GetSearch(submitData, url);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.dataSearch(this.tagRemark);
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }else{
+        this.$message.error("请选择需要操作的数据！");
       }
     },
   },
