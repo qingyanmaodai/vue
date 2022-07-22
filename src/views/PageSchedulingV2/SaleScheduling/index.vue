@@ -348,7 +348,7 @@
     <el-dialog
       title="工单分析"
       :visible.sync="orderDialog"
-      width="50%"
+      width="70%"
     >
       <div
         class="container"
@@ -1667,7 +1667,9 @@ export default {
         // this.formSearchs[8].datas["SalesOrderDetailID"] =
         //   row.SalesOrderDetailID;
         // this.dataSearch(8);
-        this.formSearchs[9].datas["OrderID"] = row.OrderID;
+        console.log('row',row)
+        this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+        // this.formSearchs[9].datas["OrderID"] = row.OrderID; 接口没返回此字段，会查出所有工单的数据，所有注释代码
         this.dataSearch(9);
         this.formatDialog = true;
       }
