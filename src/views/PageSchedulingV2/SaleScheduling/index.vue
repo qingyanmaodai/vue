@@ -454,7 +454,7 @@ export default {
   },
   data() {
     return {
-      height1: "360px",
+      height1: "500px",
       orderDialog: false,
       SN: null,
       searchTag: 0,
@@ -784,7 +784,7 @@ export default {
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 200, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 500, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
@@ -902,7 +902,6 @@ export default {
       ],
       startNum: 0,
       formatDialog: false,
-      height1: "280px",
     };
   },
   watch: {
@@ -1667,7 +1666,7 @@ export default {
         // this.formSearchs[8].datas["SalesOrderDetailID"] =
         //   row.SalesOrderDetailID;
         // this.dataSearch(8);
-        console.log('row',row)
+        this.formSearchs[9].datas["OweQty"] = 0;
         this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
         // this.formSearchs[9].datas["OrderID"] = row.OrderID; 接口没返回此字段，会查出所有工单的数据，所有注释代码
         this.dataSearch(9);
