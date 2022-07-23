@@ -326,7 +326,7 @@ export default {
           if(nameList.includes(item.prop)&&item.displayName){
             // 大于当前月份的列可编辑
             let month  = item.prop.split('M')
-            if(Number(month[1])>this.currentMonth){
+            if(Number(month[1])>=this.currentMonth){
               console.log('Number(month[1]',Number(month[1]))
               sheet.getRange(-1,index, -1, 1).locked(false);
             }
