@@ -248,7 +248,7 @@ export default {
     // 获取表格数据
     async getTableData(params,index){
       this.$set(this.tableLoading, index, true);
-      // params["rows"] = this.tablePagination[index].pageSize;
+      params["rows"] = 0;
       // params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
