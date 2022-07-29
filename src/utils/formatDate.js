@@ -1,3 +1,4 @@
+// 当前日期，格式年月日
 function formatTime() {
     let date = new Date();
     let year = date.getFullYear();
@@ -8,7 +9,7 @@ function formatTime() {
     let ss = zero(date.getSeconds());
     return year + "-" + month + "-" + day + " " + hh + ":" + mm + ":" + ss;
 }
-
+// 小于10前面补0
 function zero(num) {
     if (Number(num) < 10) {
         return '0' + num
@@ -17,7 +18,7 @@ function zero(num) {
         return num
     }
 }
-
+// 当前日期，格式年月日
 function formatTodayDate() {
     let date = new Date();
     let year = date.getFullYear();
@@ -25,6 +26,7 @@ function formatTodayDate() {
     let day = zero(date.getDate());
     return year + "-" + month + "-" + day;
 }
+// 当前日期前一天，格式年月日
 function formatOldDate() {
     let date = new Date();
     let newDate = date.setDate(date.getDate() - 1);
@@ -56,10 +58,41 @@ export const getAllDate = (start, end) => {
       stamp = stamp + oneDay
     }
     return dateArr
-  }
+}
+
+// 传入日期前一天，格式年月日
+export const formatBeforeDate=(dates) =>{
+    let date = new Date(dates);
+    let newDate = date.setDate(date.getDate() - 1);
+    newDate = new Date(newDate)
+    let year = newDate.getFullYear();
+    let month = zero(newDate.getMonth() + 1);
+    let day = zero(newDate.getDate());
+    console.log('前一天',year + "-" + month + "-" + day)
+    return year + "-" + month + "-" + day;
+}
+// 传入日期后一天，格式年月日
+export const formatAfterDate=(dates)=> {
+    let date = new Date(dates);
+ 	let newDate = date.setDate(date.getDate() + 1);
+ 	newDate = new Date(newDate)
+ 	let year = newDate.getFullYear();
+ 	let month = zero(newDate.getMonth() + 1);
+ 	let day = zero(newDate.getDate());
+    console.log('后一天',year + "-" + month + "-" + day)
+ 	return year + "-" + month + "-" + day;
+}
+// 传入日期当天天，格式年月日
+export const formatDate=(dates)=> {
+    let date = new Date(dates);
+    let year = date.getFullYear();
+    let month = zero(date.getMonth() + 1);
+    let day = zero(date.getDate());
+    return year + "-" + month + "-" + day;
+}
 
 export default {
     formatTodayDate,
     formatTime,
-    formatOldDate
+    formatOldDate,
 }
