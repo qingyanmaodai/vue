@@ -481,7 +481,7 @@ export default {
                   // 设置默认值
                   list[i].id = list[i].RowNumber
                   list[i].dependant = [];
-                  list[i].vacations = [];
+                  list[i].vacations = list[i].calendar;
                   //甘特图左侧展示数据
                   let rowsObj = {
                     [list[i].id]: {
@@ -489,6 +489,7 @@ export default {
                       id: list[i].id.toString(),
                       rowId: list[i].id.toString(),
                       LineName: list[i].LineName,
+                      vacations: list[i].vacations, //非工作日
                       gap: {
                         //项目间的垂直间距，必写，不然会报错
                         top: 0,
@@ -507,68 +508,73 @@ export default {
                       this.getRandomColor();
                       // 赋值父级颜色，子级复用
                       children[x].bgCodor = this.strokeColor;
+                      if(this.formSearchs[this.tagRemark].datas.StartDate&&this.formSearchs[this.tagRemark].datas.StartDate.length){
+                        this.beforeDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[0]).format("YYYY-MM-DD")
+                        this.afterDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[1]).format("YYYY-MM-DD")
+                      }else{
+                        // 取最早的时间作为右侧开始时间列
+                        if(i==0&&x==0){
+                          this.beforeDay = this.$moment(children[x].StartDate).format("YYYY-MM-DD")
+                        }
+                        // 取最晚的时间作为右侧结束时间列
+                        if(i==list.length-1 &&x==children.length-1){
+                          this.afterDay = this.$moment(children[x].EndTime).format("YYYY-MM-DD")
+                        }
+                      }
                       itemsObj = {
-                    [children[x].id]: {
-                      seq: children[x].RowNumber, //列序号
-                      id: children[x].id.toString(),
-                      rowId: list[i].id.toString(),
-                      // parentId: list[i].parentId,
-                      label: children[x].LineName, //进度条中显示的内容
-                      LineName: children[x].LineName,
-                      OrderNo: children[x].OrderNo,
-                      Code: children[x].Code,
-                      ProcessPartName: children[x].ProcessPartName,
-                      PlanQty: children[x].PlanQty,
-                      HasQty: children[x].HasQty,
-                      OrderNo: children[x].OrderNo,
-                      StartDate:children[x].StartDate?this.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
-                      StartTime:children[x].StartTime?this.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                      EndTime:children[x].EndTime?this.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                      time: {
-                        start: children[x].StartTime
-                          ? date(children[x].StartTime).valueOf()
-                          : "",
-                        end: children[x].EndTime
-                          ? date(children[x].EndTime).valueOf()
-                          : "",
-                      },
-                      progress:
-                        children[x].HasQty >= 0 && children[x].PlanQty >= 0
-                          ? parseFloat(
-                              (
-                                (children[x].HasQty / children[x].PlanQty) *
-                                100
-                              ).toFixed(2)
-                            )
-                          : 0, //进度条百分比
-                      vacations: children[x].vacations, //非工作日
-                      type: "milestone", //类型task、milestone、project
-                      // collapsed: true, //树结构默认收缩
-                      style: {
-                        background: children[x].bgCodor,
-                      },
-                      dependant: children[x].dependant, //在父级写入连接的子级
-                      gap: {
-                        //项目之间的垂直间隙
-                        top: 4,
-                        bottom: 4,
-                      },
-                    },
-                  };
-                  
-                  this.itemsData = _.assign(this.itemsData, itemsObj);
-                  // if(x==children.length){
-                  //   break
-                  // }
+                        [children[x].id]: {
+                          seq: children[x].RowNumber, //列序号
+                          id: children[x].id.toString(),
+                          rowId: list[i].id.toString(),
+                          label: children[x].LineName, //进度条中显示的内容
+                          LineName: children[x].LineName,
+                          OrderNo: children[x].OrderNo,
+                          Code: children[x].Code,
+                          Spec: children[x].Spec,
+                          ProcessPartName: children[x].ProcessPartName,
+                          PlanQty: children[x].PlanQty,
+                          HasQty: children[x].HasQty,
+                          OrderNo: children[x].OrderNo,
+                          StartDate:children[x].StartDate?this.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
+                          StartTime:children[x].StartTime?this.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          EndTime:children[x].EndTime?this.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          time: {
+                            start: children[x].StartTime
+                              ? date(children[x].StartTime).valueOf()
+                              : "",
+                            end: children[x].EndTime
+                              ? date(children[x].EndTime).valueOf()
+                              : "",
+                          },
+                          progress:
+                            children[x].HasQty >= 0 && children[x].PlanQty >= 0
+                              ? parseFloat(
+                                  (
+                                    (children[x].HasQty / children[x].PlanQty) *
+                                    100
+                                  ).toFixed(2)
+                                )
+                              : 0, //进度条百分比
+                          vacations: list[i].vacations, //非工作日
+                          type: "milestone", //类型task、milestone、project
+                          // collapsed: true, //树结构默认收缩
+                          style: {
+                            background: children[x].bgCodor,
+                          },
+                          dependant: children[x].dependant, //在父级写入连接的子级
+                          gap: {
+                            //项目之间的垂直间隙
+                            top: 4,
+                            bottom: 4,
+                          },
+                        },
+                      };
+                      this.itemsData = _.assign(this.itemsData, itemsObj);
                     }
                   }
-                  console.log('this.rowsData',this.rowsData)
-                  console.log('this.itemsData',this.itemsData)
                 }
               });
-              // });
             }
-        // }
         // 更新图表配置
         this.$nextTick(()=>{
           this.configUpdate(this.beforeDay, this.afterDay);
@@ -576,13 +582,11 @@ export default {
         })
         }else {
           this.$message({
-                  message: msg,
-                  type: "error",
-                  dangerouslyUseHTMLString: true,
-                });
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
         }
-        
-        
       } catch (error) {
         if (error) {
           // 更新图表配置
@@ -593,16 +597,9 @@ export default {
     },
     // 动态计算表格高度
     computTableHeight() {
-      const contentH =
-        document.getElementsByClassName("main-container")[0].offsetHeight;
+      const contentH = document.getElementsByClassName("main-container")[0].offsetHeight;
       const height = contentH - 300;
-      console.log('contentH',document.getElementsByClassName("admin_content"))
-      console.log('contentH',contentH)
-      console.log('height',height)
       this.tableHeight = height < 200 ? 800 : height;
-      // console.log('document.getElementsByClassName("container")',document.getElementsByClassName("app-wrapper"))
-      // console.log('contentH',contentH)
-      // console.log('this.tableHeight',this.tableHeight)
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -642,11 +639,8 @@ export default {
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
-      let permission = false;
-
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          // alert(x.ButtonCode)
           if (x.ButtonCode == "edit") {
             permission = true;
           }
@@ -709,11 +703,6 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        console.log('this.formSearchs',this.formSearchs)
-        // if(this.formSearchs[this.tagRemark].datas.PlanDay.length){
-        //   this.beforeDay = formatDate(this.formSearchs[this.tagRemark].datas.PlanDay[0])
-        //   this.afterDay = formatDate(this.formSearchs[this.tagRemark].datas.PlanDay[1])
-        // }
         await this.dataSearch(0);
       }
     },
@@ -741,68 +730,24 @@ export default {
         this.$set(this.isClear, remarkTb, false);
       });
     },
-    // 获取表格数据
-    // async getTableData(form, remarkTb) {
-    //    this.$set(this.tableLoading, remarkTb, true);
-    //   form["rows"] = 0;
-    //   form["page"] = this.tablePagination[remarkTb].pageIndex;
-    //   let res = await GetSearch(form,'/APSAPI/GetGantt');
-    //   const { result, data, count, msg,content } = res.data;
-    //   if (result) {
-
-    //   }else {
-    //     this.$message({
-    //             message: msg,
-    //             type: "error",
-    //             dangerouslyUseHTMLString: true,
-    //           });
-    //   }
-    //   this.$set(this.tableLoading, remarkTb, false);
- 
-    //   await this.getData(this.tablePagination[remarkTb].pageIndex,this.tablePagination[remarkTb].pageSize)
-    //   // this.$set(this.tableLoading, remarkTb, true);
-    //   // form["rows"] = this.tablePagination[remarkTb].pageSize;
-    //   // form["page"] = this.tablePagination[remarkTb].pageIndex;
-    //   // let res = await GetSearchData(form);
-    //   // const {
-    //   //   result,
-    //   //   data,
-    //   //   count,
-    //   //   msg
-    //   // } = res.data;
-    //   // if (result) {
-    //   //   this.$set(this.tableData, remarkTb, data);
-    //   //   this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-    //   // } else {
-    //   //   this.$message({
-    //   //     message: msg,
-    //   //     type: "error",
-    //   //     dangerouslyUseHTMLString: true,
-    //   //   });
-    //   // }
-    //   // this.$set(this.tableLoading, remarkTb, false);
-    // },
     // 跳转至页面配置
     toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
         params: { ID: this.sysID[this.tagRemark].ID },
       });
-      
     },
     changeHeight(val){
       try {
         if(this.num>0){
           let height = val
-          // this.$nextTick(()=>{
-            height = val;
-            this.config.chart.item.height = val
-            state.update('config.chart', (chart) => {
-              chart.item.height = height
-              return chart;
-            });
-            this.refresh()
-          // })
+          height = val;
+          this.config.chart.item.height = val
+          state.update('config.chart', (chart) => {
+            chart.item.height = height
+            return chart;
+          });
+          this.refresh()
         }
       } catch (error) {
         
@@ -811,11 +756,7 @@ export default {
     changeWidth(val){
       try {
         if(this.num>0){
-
-        
-        const period = this.zoomType;
         let zoom = this.config.chart.time.zoom;
-        let index = 0
         if(val==0){//年跟月间隔不规则，需要定值
           zoom = 25;
           index = 0
@@ -826,335 +767,116 @@ export default {
           zoom -= val;
           index = 0
         }
-        // this.$nextTick(()=>{
-              state.update('config.chart', (chart) => {
-                chart.time.zoom = zoom;
-                return chart;
-              });
-        // })
-    //      this.computTableHeight();
-    // window.addEventListener("resize", this.updataTableHeight);
-      }
+        state.update('config.chart', (chart) => {
+          chart.time.zoom = zoom;
+          return chart;
+        });
+       }
       } catch (error) {
         
       }
-      
-      
-      // this.$forceUpdate()
-      
-    },
-    changeZoomType(val){
-      console.log('zoom',this.config.chart.time.zoom)
-      const period = val;
-      let zoom = this.config.chart.time.zoom;
-      let index = 0
-      switch (period) {
-        case 'hour':
-          zoom = 19.5;
-          index = 0
-          break;
-        case 'day':
-          zoom = 20;
-          index = 1
-          break;
-        case 'month':
-          zoom = 26;
-          index = 2
-          break;
-      }
-      console.log('结果zoom',zoom)
-      this.$nextTick(()=>{
-        state.update('config.chart', (chart) => {
-        chart.time.zoom = zoom;
-        chart.time.from = dateApi(this.beforeDay).valueOf();
-        chart.time.to = dateApi(this.afterDay).endOf('day').valueOf();
-        return chart;
-      });
-      })
-      
     },
     refresh(){
-      console.log('this.treeData',this.treeData)
       var dataList = _.cloneDeep(this.treeData);
-      const date = GSTC.api.date
       this.$nextTick(() => {
-                // this.handleTree(_.cloneDeep(dataList));
-                // let list = this.treeData;
-                // let elmentList = this.treeData;
-                const date = GSTC.api.date;
-                let list = dataList;
-                let elmentList = dataList;
-                for (let i = 0; i < list.length; i++) {
-                  // this.getRandomColor();
-                  // // 赋值父级颜色，子级复用
-                  // list[i].bgCodor = this.strokeColor;
-                  list[i].id = list[i].RowNumber
-                  list[i].dependant = [];
-                  list[i].vacations = [];
-                  // console.log('list[i]',list[i])
-                  // 此循环给子级赋值父级id
-                  // for (let x = 0; x < elmentList.length; x++) {
-                  //   elmentList[x].id = elmentList[i].RowNumber
-                  //   // if (
-                  //   //   elmentList[x].billNo === list[i].billNo &&
-                  //   //   !list[i].seq &&
-                  //   //   elmentList[x].level === list[i].level - 1
-                  //   // ) {
-                  //   //   if (list[i].pType && list[i].level != 2) {
-                  //   //     if (elmentList[x].pType === list[i].pType) {
-                  //   //       if (list[i].detailCode) {
-                  //   //         if (list[i].detailCode === list[i].detailCode) {
-                  //   //           list[i]["parentId"] = elmentList[x].id;
-                  //   //         }
-                  //   //       } else {
-                  //   //         list[i]["parentId"] = elmentList[x].id;
-                  //   //       }
-                  //   //     }
-                  //   //   } else {
-                  //   //     list[i]["parentId"] = elmentList[x].id;
-                  //   //   }
-                  //   // }
-                  //   //取下一级相同订单的级别连线id
-                  //   // if (
-                  //   //   elmentList[x].billNo === list[i].billNo &&
-                  //   //   elmentList[x].level === list[i].level + 1 &&
-                  //   //   !list[i].singProcess
-                  //   // ) {
-                  //   //   if (list[i].pType) {
-                  //   //     if (elmentList[x].pType === list[i].pType) {
-                  //   //       if (!list[i].dependant.includes(elmentList[x].id)) {
-                  //   //         list[i].dependant.push(elmentList[x].id);
-                  //   //       }
-                  //   //     }
-                  //   //   } else {
-                  //   //     if (!list[i].dependant.includes(elmentList[x].id)) {
-                  //   //       list[i].dependant.push(elmentList[x].id);
-                  //   //     }
-                  //   //   }
-                  //   // }
-                  //   // 针对树结构阶梯式连线
-                  //   if (
-                  //     elmentList[x].billNo === list[i].billNo &&
-                  //     elmentList[x].id === list[i].id + 1 &&
-                  //     !list[i].singProcess
-                  //   ) {
-                      
-                  //         list[i].dependant.push(elmentList[x].id);
-                      
-                  //   }
-                  //   if (
-                  //     elmentList[x].billNo === list[i].billNo &&
-                  //     elmentList[x].calendar &&
-                  //     elmentList[x].pType === list[i].pType
-                  //   ) {
-                  //     //后端返回的日期格式不一致需要转化
-                  //     if (
-                  //       elmentList[x].calendar &&
-                  //       elmentList[x].calendar.length
-                  //     ) {
-                  //       for (let q = 0; q < elmentList[x].calendar.length; q++) {
-                  //         elmentList[x].calendar[q] = this.timeFormat(
-                  //           new Date(elmentList[x].calendar[q])
-                  //         );
-                  //       }
-                  //       // for (let p = 0; p < allDates.length; p++) {
-                  //       //   if (!elmentList[x].calendar.includes(allDates[p])) {
-                  //       //     list[i].vacations.push(allDates[p]);
-                  //       //   }
-                  //       // }
-                  //       list[i].vacations = list[i].calendar
-                  //     }
-                  //   }
-                  // }
-                  
-                  let itemsObj = this.itemsData
-                  // 甘特图右侧展示内容
-                  if(list[i].OrderNoList.length){
-                    let children = list[i].OrderNoList
-                    // console.log('item',children)
-                    for(let x=0;x<children.length;x++){
-                      console.log('list[i]',i)
-                      console.log('children',x)
-                      // 取最早的时间作为右侧开始时间列
-                      if(i==0&&x==0){
-                        this.beforeDay = this.$moment(children[x].StartDate).format("YYYY-MM-DD")
-                      }
-                      // 取最晚的时间作为右侧结束时间列
-                      if(i==list.length-1 &&x==children.length-1){
-                        this.afterDay = this.$moment(children[x].EndTime).format("YYYY-MM-DD")
-                      }
-                      console.log('this.beforeDay',this.beforeDay)
-                      console.log('this.afterDay',this.afterDay)
-                      this.getRandomColor();
-                  // 赋值父级颜色，子级复用
-                      children[x].bgCodor = this.strokeColor;
-                      itemsObj = {
-                    [children[x].id]: {
-                      seq: children[x].RowNumber, //列序号
-                      id: children[x].id.toString(),
-                      rowId: list[i].id.toString(),
-                      // parentId: list[i].parentId,
-                      label: children[x].LineName, //进度条中显示的内容
-                      LineName: children[x].LineName,
-                      OrderNo: children[x].OrderNo,
-                      Code: children[x].Code,
-                      ProcessPartName: children[x].ProcessPartName,
-                      PlanQty: children[x].PlanQty,
-                      HasQty: children[x].HasQty,
-                      OrderNo: children[x].OrderNo,
-                      StartDate:children[x].StartDate?this.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
-                      StartTime:children[x].StartTime?this.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                      EndTime:children[x].EndTime?this.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                      time: {
-                        start: children[x].StartTime
-                          ? date(children[x].StartTime).valueOf()
-                          : "",
-                        end: children[x].EndTime
-                          ? date(children[x].EndTime).valueOf()
-                          : "",
-                      },
-                      progress:
-                        children[x].HasQty >= 0 && children[x].PlanQty >= 0
-                          ? parseFloat(
-                              (
-                                (children[x].HasQty / children[x].PlanQty) *
-                                100
-                              ).toFixed(2)
-                            )
-                          : 0, //进度条百分比
-                      vacations: children[x].vacations, //非工作日
-                      type: "milestone", //类型task、milestone、project
-                      // collapsed: true, //树结构默认收缩
-                      style: {
-                        background: children[x].bgCodor,
-                      },
-                      dependant: children[x].dependant, //在父级写入连接的子级
-                      gap: {
-                        //项目之间的垂直间隙
-                        top: 4,
-                        bottom: 4,
-                      },
-                    },
-                  };
-                  
-                  this.itemsData = _.assign(this.itemsData, itemsObj);
-                  // if(x==children.length){
-                  //   break
-                  // }
-                    }
-                    //甘特图左侧展示数据
-                  // let rowsObj = {
-                  //   [list[i].id]: {
-                  //     seq: list[i].RowNumber, //列序号
-                  //     id: list[i].id.toString(),
-                  //     rowId: list[i].id.toString(),
-                  //     LineName: list[i].LineName,
-                  //     // OrderNo: list[i].OrderNo,
-                  //     // Code: list[i].Code,
-                  //     // ProcessPartName: list[i].ProcessPartName,
-                  //     // PlanQty: list[i].PlanQty,
-                  //     // HasQty: list[i].HasQty,
-                  //     // OrderNo: list[i].OrderNo,
-                  //     // StartDate:list[i].StartDate?this.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
-                  //     // StartTime:list[i].StartTime?this.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  //     // EndTime:list[i].EndTime?this.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  //     // time: {
-                  //     //   start: list[i].StartTime
-                  //     //     ? date(list[i].StartTime).valueOf()
-                  //     //     : "",
-                  //     //   end: list[i].EndTime
-                  //     //     ? date(list[i].EndTime).valueOf()
-                  //     //     : "",
-                  //     // },
-                  //     // completionRate:
-                  //     //   list[i].HasQty >= 0 && list[i].PlanQty >= 0
-                  //     //     ? parseFloat(
-                  //     //         (
-                  //     //           (list[i].HasQty / list[i].PlanQty) *
-                  //     //           100
-                  //     //         ).toFixed(2)
-                  //     //       )
-                  //     //     : 0, //百分比
-                  //     // vacations: list[i].vacations, //非工作日
-                  //     // expanded: true, //默认子级展开
-                  //     gap: {
-                  //       //项目间的垂直间距，必写，不然会报错
-                  //       top: 0,
-                  //       bottom: 0,
-                  //     },
-                  //   },
-                  // };
+        const date = GSTC.api.date;
+        let list = dataList;
+        for (let i = 0; i < list.length; i++) {
+          // 设置默认值
+          list[i].id = list[i].RowNumber
+          list[i].dependant = [];
+          list[i].vacations = list[i].calendar
+          //甘特图左侧展示数据
+          let rowsObj = {
+            [list[i].id]: {
+              seq: list[i].RowNumber, //列序号
+              id: list[i].id.toString(),
+              rowId: list[i].id.toString(),
+              LineName: list[i].LineName,
+              gap: {
+                //项目间的垂直间距，必写，不然会报错
+                top: 0,
+                bottom: 0,
+              },
+            },
+          };
+          this.rowsData = _.assign(this.rowsData, rowsObj);
 
-                  // this.rowsData = _.assign(this.rowsData, rowsObj);
-                  //   children.forEach(item=>{
-                      
-                   
-                  // let itemsObj = {
-                  //   [list[i].id]: {
-                  //     seq: item.RowNumber, //列序号
-                  //     id: item.id.toString(),
-                  //     // rowId: list[i].id.toString(),
-                  //     // parentId: list[i].parentId,
-                  //     label: item.LineName, //进度条中显示的内容
-                  //     LineName: item.LineName,
-                  //     OrderNo: item.OrderNo,
-                  //     Code: item.Code,
-                  //     ProcessPartName: item.ProcessPartName,
-                  //     PlanQty: item.PlanQty,
-                  //     HasQty: item.HasQty,
-                  //     OrderNo: item.OrderNo,
-                  //     StartDate:item.StartDate?this.$moment(item.StartDate).format("YYYY-MM-DD"):'',
-                  //     StartTime:item.StartTime?this.$moment(item.StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  //     EndTime:item.EndTime?this.$moment(item.EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  //     time: {
-                  //       start: item.StartTime
-                  //         ? date(item.StartTime).valueOf()
-                  //         : "",
-                  //       end: item.EndTime
-                  //         ? date(item.EndTime).valueOf()
-                  //         : "",
-                  //     },
-                  //     progress:
-                  //       item.HasQty >= 0 && item.PlanQty >= 0
-                  //         ? parseFloat(
-                  //             (
-                  //               (item.HasQty / item.PlanQty) *
-                  //               100
-                  //             ).toFixed(2)
-                  //           )
-                  //         : 0, //进度条百分比
-                  //     vacations: item.vacations, //非工作日
-                  //     type: "milestone", //类型task、milestone、project
-                  //     // collapsed: true, //树结构默认收缩
-                  //     style: {
-                  //       background: item.bgCodor,
-                  //     },
-                  //     dependant: item.dependant, //在父级写入连接的子级
-                  //     gap: {
-                  //       //项目之间的垂直间隙
-                  //       top: 4,
-                  //       bottom: 4,
-                  //     },
-                  //   },
-                  // };
-                  
-                  // this.itemsData = _.assign(this.itemsData, itemsObj);
-                  //  })
-                  }
-                  
-                  // this.config.list.rows = this.rowsData;
-                  // this.config.chart.items = this.itemsData;
-                  // this.config.chart.time.from = date(this.beforeDay).valueOf();
-                  // this.config.chart.time.to = date(this.afterDay).valueOf();
-                  // console.log('this.beforeDay',this.beforeDay)
-                  // console.log('this.afterDay',this.afterDay)
-                  // this.config.chart.time.from = minStartTime;
-                  // this.config.chart.time.to = date(this.$moment(this.formSearch.planOverTime).format("YYYY-MM-DD")).valueOf();
-                  
-                  console.log('this.rowsData',this.rowsData)
-                  console.log('this.itemsData',this.itemsData)
+          // 甘特图右侧展示内容
+          if(list[i].OrderNoList.length){
+            let children = list[i].OrderNoList
+            let itemsObj = {}
+            for(let x=0;x<children.length;x++){
+              // 取随机色
+              this.getRandomColor();
+              // 赋值父级颜色，子级复用
+              children[x].bgCodor = this.strokeColor;
+              if(this.formSearchs[this.tagRemark].datas.StartDate&&this.formSearchs[this.tagRemark].datas.StartDate.length){
+                this.beforeDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[0]).format("YYYY-MM-DD")
+                this.afterDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[1]).format("YYYY-MM-DD")
+              }else{
+                // 取最早的时间作为右侧开始时间列
+                if(i==0&&x==0){
+                  this.beforeDay = this.$moment(children[x].StartDate).format("YYYY-MM-DD")
                 }
-              });
+                // 取最晚的时间作为右侧结束时间列
+                if(i==list.length-1 &&x==children.length-1){
+                  this.afterDay = this.$moment(children[x].EndTime).format("YYYY-MM-DD")
+                }
+              }
+              itemsObj = {
+                [children[x].id]: {
+                  seq: children[x].RowNumber, //列序号
+                  id: children[x].id.toString(),
+                  rowId: list[i].id.toString(),
+                  label: children[x].LineName, //进度条中显示的内容
+                  LineName: children[x].LineName,
+                  OrderNo: children[x].OrderNo,
+                  Code: children[x].Code,
+                  Spec: children[x].Spec,
+                  ProcessPartName: children[x].ProcessPartName,
+                  PlanQty: children[x].PlanQty,
+                  HasQty: children[x].HasQty,
+                  OrderNo: children[x].OrderNo,
+                  StartDate:children[x].StartDate?this.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
+                  StartTime:children[x].StartTime?this.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                  EndTime:children[x].EndTime?this.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                  time: {
+                    start: children[x].StartTime
+                      ? date(children[x].StartTime).valueOf()
+                      : "",
+                    end: children[x].EndTime
+                      ? date(children[x].EndTime).valueOf()
+                      : "",
+                  },
+                  progress:
+                    children[x].HasQty >= 0 && children[x].PlanQty >= 0
+                      ? parseFloat(
+                          (
+                            (children[x].HasQty / children[x].PlanQty) *
+                            100
+                          ).toFixed(2)
+                        )
+                      : 0, //进度条百分比
+                  vacations: list[i].vacations, //非工作日
+                  type: "milestone", //类型task、milestone、project
+                  // collapsed: true, //树结构默认收缩
+                  style: {
+                    background: children[x].bgCodor,
+                  },
+                  dependant: children[x].dependant, //在父级写入连接的子级
+                  gap: {
+                    //项目之间的垂直间隙
+                    top: 4,
+                    bottom: 4,
+                  },
+                },
+              };
+              this.itemsData = _.assign(this.itemsData, itemsObj);
+            }
+          }
+        }
+      });
     }
   },
 };
