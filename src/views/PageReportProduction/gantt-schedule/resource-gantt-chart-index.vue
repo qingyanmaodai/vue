@@ -251,7 +251,7 @@ export default {
       beforeDay:'',
       afterDay:'',
       customHightSize: 30,
-      customWidthSize: 0.5,
+      customWidthSize: 2,
       colData:{},
       labelStatus1: 0,
       formSearchs: [{
@@ -326,7 +326,7 @@ export default {
             // 时间轴开始截至，
             from: 0, //设置左侧的特定时间
             to: 0, //设置右侧的特定时间
-            zoom:21, // 10-22 缩放，默认 Shift + 滚轮， 默认缩放展示时间粒度， 一共有 小时、天、周、月、年
+            zoom:18.5, // 10-22 缩放，默认 Shift + 滚轮， 默认缩放展示时间粒度， 一共有 小时、天、周、月、年
           },
           item: {
             gap: {
@@ -841,6 +841,8 @@ export default {
           return chart;
         });
         })
+        console.log('zoom',zoom)
+        console.log('customWidthSize',this.customWidthSize)
        }
     },
     refresh(){
