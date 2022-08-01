@@ -29,6 +29,11 @@ import './assets/icon/iconfont.css'
 
 import 'lib-flexible'
 import '../rem'
+
+import moment from 'moment'
+import _ from 'lodash'
+Vue.prototype.$moment = moment
+Vue.prototype.$_ = _
 // import 'default-passive-events'
 /**
  * If you don't want to use mock-server
