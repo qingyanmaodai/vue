@@ -246,9 +246,11 @@ export default {
   },
   data() {
     return {
+      weekStartDate:'',
+      weekEndDate:'',
       beforeDay:'',
       afterDay:'',
-      customHightSize: 0,
+      customHightSize: 30,
       customWidthSize: 0.5,
       colData:{},
       labelStatus1: 0,
@@ -399,11 +401,45 @@ export default {
           state,
         });
     })
+
+    
   },
   beforeUnmount() {
     if (gstc) gstc.destroy();
   },
   methods: {
+     getWeek(n, type) { // 周
+      let now = new Date()
+      let day = now.getDay() //返回星期几的某一天;
+      if (!type) {
+        if (n == 1) {
+          let dayNumber = day == 0 ? 0 : 7 - day
+          now.setDate(now.getDate() + dayNumber + 1)
+        } else if (n == -1) {
+          let dayNumber = day == 0 ? 6: day - 1
+          now.setDate(now.getDate() - dayNumber - 7)
+        } else {
+          let dayNumber = day == 0 ? 6: day - 1
+          now.setDate(now.getDate() - dayNumber)
+        }
+      } else {
+        if (n == 1) {
+          let dayNumber = day == 0 ? 0 : 7 - day
+          now.setDate(now.getDate() + dayNumber + 1 + 6) // 在周开始的日期上+6天=周结束
+        } else if (n == -1) {
+          let dayNumber = day == 0 ? 6: day - 1
+          now.setDate(now.getDate() - dayNumber - 7 + 6)
+        } else {
+          let dayNumber = day == 0 ? 0: 7 - day
+          now.setDate(now.getDate() + dayNumber)
+        }
+      }
+      let date = now.getDate()
+      let month = now.getMonth() + 1
+
+      let s = now.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date)
+      return s
+    },
     // 假日标记，rows写入非工作日，属性必填，值可为空，否则报错
     onCellCreateVacation({ time, row, vido, content }) {
       if (
@@ -457,26 +493,27 @@ export default {
     },
     // 主表甘特图查询数据
     async getTableData(form, remarkTb) {
-      this.adminLoading = true
-       this.$set(this.tableLoading, remarkTb, true);
+      const self = this
+      self.adminLoading = true
+       self.$set(self.tableLoading, remarkTb, true);
       form["rows"] = 0;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form["page"] = self.tablePagination[remarkTb].pageIndex;
       let res = await GetSearch(form,'/APSAPI/GetGantt');
       const { result, data, count, msg,content } = res.data;
-      this.treeData = [];
-      this.rowsData = {};
-      this.itemsData = {};
+      self.treeData = [];
+      self.rowsData = {};
+      self.itemsData = {};
       try {
         if (result) {
             if (data.length) {
               const date = GSTC.api.date;
-              // 赋值，用于改变高度时更新作用
-              this.treeData = _.cloneDeep(data)
               // 赋值条数
-              this.$set(this.tablePagination[remarkTb], "pageTotal", data.length);
+              self.$set(self.tablePagination[remarkTb], "pageTotal", data.length);
 
-              this.$nextTick(() => {
+              self.$nextTick(() => {
                 let list = _.cloneDeep(data);
+                
+                let num = 0
                 for (let i = 0; i < list.length; i++) {
                   // 设置默认值
                   list[i].id = list[i].RowNumber
@@ -487,9 +524,42 @@ export default {
                     [list[i].id]: {
                       seq: list[i].RowNumber, //列序号
                       id: list[i].id.toString(),
-                      rowId: list[i].id.toString(),
+                      label: list[i].LineName, //进度条中显示的内容
                       LineName: list[i].LineName,
+                      OrderNo: list[i].OrderNo,
+                          Code: list[i].Code,
+                          Spec: list[i].Spec,
+                          ProcessPartName: list[i].ProcessPartName,
+                          PlanQty: list[i].PlanQty,
+                          HasQty: list[i].HasQty,
+                          OrderNo: list[i].OrderNo,
+                          StartDate:list[i].StartDate?self.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
+                          StartTime:list[i].StartTime?self.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          EndTime:list[i].EndTime?self.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          time: {
+                            start: list[i].StartTime
+                              ? date(list[i].StartTime).valueOf()
+                              : "",
+                            end: list[i].EndTime
+                              ? date(list[i].EndTime).valueOf()
+                              : "",
+                          },
+                          progress:
+                            list[i].HasQty >= 0 && list[i].PlanQty >= 0
+                              ? parseFloat(
+                                  (
+                                    (list[i].HasQty / list[i].PlanQty) *
+                                    100
+                                  ).toFixed(2)
+                                )
+                              : 0, //进度条百分比
                       vacations: list[i].vacations, //非工作日
+                      type: "milestone", //类型task、milestone、project
+                      // collapsed: true, //树结构默认收缩
+                      style: {
+                        background: list[i].bgCodor,
+                      },
+                      // dependant: children[x].dependant, //在父级写入连接的子级
                       gap: {
                         //项目间的垂直间距，必写，不然会报错
                         top: 0,
@@ -497,34 +567,21 @@ export default {
                       },
                     },
                   };
-                  this.rowsData = _.assign(this.rowsData, rowsObj);
+                  self.rowsData = _.assign(self.rowsData, rowsObj);
 
                   // 甘特图右侧展示内容
                   if(list[i].OrderNoList.length){
                     let children = list[i].OrderNoList
-                    let itemsObj = {}
+                    
                     for(let x=0;x<children.length;x++){
+                      num  = i.toString() + x
                       // 取随机色
-                      this.getRandomColor();
-                      // 赋值父级颜色，子级复用
-                      children[x].bgCodor = this.strokeColor;
-                      if(this.formSearchs[this.tagRemark].datas.StartDate&&this.formSearchs[this.tagRemark].datas.StartDate.length){
-                        this.beforeDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[0]).format("YYYY-MM-DD")
-                        this.afterDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[1]).format("YYYY-MM-DD")
-                      }else{
-                        // 取最早的时间作为右侧开始时间列
-                        if(i==0&&x==0){
-                          this.beforeDay = this.$moment(children[x].StartDate).format("YYYY-MM-DD")
-                        }
-                        // 取最晚的时间作为右侧结束时间列
-                        if(i==list.length-1 &&x==children.length-1){
-                          this.afterDay = this.$moment(children[x].EndTime).format("YYYY-MM-DD")
-                        }
-                      }
-                      itemsObj = {
-                        [children[x].id]: {
+                      let color = self.getRandomColor();
+                      children[x].bgCodor = color;
+                      let itemsObj = {
+                        [num]: {
                           seq: children[x].RowNumber, //列序号
-                          id: children[x].id.toString(),
+                          id: num,
                           rowId: list[i].id.toString(),
                           label: children[x].LineName, //进度条中显示的内容
                           LineName: children[x].LineName,
@@ -535,9 +592,9 @@ export default {
                           PlanQty: children[x].PlanQty,
                           HasQty: children[x].HasQty,
                           OrderNo: children[x].OrderNo,
-                          StartDate:children[x].StartDate?this.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
-                          StartTime:children[x].StartTime?this.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                          EndTime:children[x].EndTime?this.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          StartDate:children[x].StartDate?self.$moment(children[x].StartDate).format("YYYY-MM-DD"):'',
+                          StartTime:children[x].StartTime?self.$moment(children[x].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                          EndTime:children[x].EndTime?self.$moment(children[x].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
                           time: {
                             start: children[x].StartTime
                               ? date(children[x].StartTime).valueOf()
@@ -561,7 +618,7 @@ export default {
                           style: {
                             background: children[x].bgCodor,
                           },
-                          dependant: children[x].dependant, //在父级写入连接的子级
+                          // dependant: children[x].dependant, //在父级写入连接的子级
                           gap: {
                             //项目之间的垂直间隙
                             top: 4,
@@ -569,19 +626,22 @@ export default {
                           },
                         },
                       };
-                      this.itemsData = _.assign(this.itemsData, itemsObj);
+                      self.itemsData = _.assign(self.itemsData, itemsObj);
+                      
                     }
                   }
                 }
+                // 赋值，用于改变高度时更新作用
+                self.treeData = list
               });
             }
         // 更新图表配置
-        this.$nextTick(()=>{
-          this.configUpdate(this.beforeDay, this.afterDay);
-          this.adminLoading = false
+        self.$nextTick(()=>{
+          self.configUpdate(self.beforeDay, self.afterDay);
+          self.adminLoading = false
         })
         }else {
-          this.$message({
+          self.$message({
             message: msg,
             type: "error",
             dangerouslyUseHTMLString: true,
@@ -590,8 +650,8 @@ export default {
       } catch (error) {
         if (error) {
           // 更新图表配置
-          this.configUpdate(this.beforeDay, this.afterDay);
-          this.adminLoading = false
+          self.configUpdate(self.beforeDay, self.afterDay);
+          self.adminLoading = false
         }
       }
     },
@@ -703,6 +763,12 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
+        // 初始化时默认上线日期
+        this.weekStartDate = this.getWeek(0, 0) // 获取本周开始日期
+	      this.weekEndDate = this.getWeek(0, 1) // 获取本周结束日期
+        this.formSearchs[this.tagRemark].datas['StartDate'] = []
+        this.formSearchs[this.tagRemark].datas['StartDate'][0] = this.weekStartDate
+        this.formSearchs[this.tagRemark].datas['StartDate'][1] = this.weekEndDate
         await this.dataSearch(0);
       }
     },
@@ -720,6 +786,13 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
+      if(!this.formSearchs[remarkTb].datas['StartDate']){
+        this.$message.error("请选择上线日期！")
+        return
+      }
+      //每次查询获取图标日期
+      this.beforeDay = this.formSearchs[remarkTb].datas['StartDate'][0]
+      this.afterDay = this.formSearchs[remarkTb].datas['StartDate'][1]
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -738,7 +811,6 @@ export default {
       });
     },
     changeHeight(val){
-      try {
         if(this.num>0){
           let height = val
           height = val;
@@ -749,50 +821,81 @@ export default {
           });
           this.refresh()
         }
-      } catch (error) {
-        
-      }
     },
     changeWidth(val){
-      try {
         if(this.num>0){
         let zoom = this.config.chart.time.zoom;
         if(val==0){//年跟月间隔不规则，需要定值
           zoom = 25;
-          index = 0
         }else if(val==0.5){//月跟日间隔不规则，需要定值
           zoom = 21
+        }else if(zoom==19.5){
+          zoom -= val;
         }else{
           zoom = 20.5
           zoom -= val;
-          index = 0
         }
-        state.update('config.chart', (chart) => {
+        this.$nextTick(()=>{
+          state.update('config.chart', (chart) => {
           chart.time.zoom = zoom;
           return chart;
         });
+        })
        }
-      } catch (error) {
-        
-      }
     },
     refresh(){
+      try {
       var dataList = _.cloneDeep(this.treeData);
       this.$nextTick(() => {
         const date = GSTC.api.date;
         let list = dataList;
+        let num = 0
         for (let i = 0; i < list.length; i++) {
           // 设置默认值
           list[i].id = list[i].RowNumber
           list[i].dependant = [];
-          list[i].vacations = list[i].calendar
+          list[i].vacations = list[i].calendar;
           //甘特图左侧展示数据
           let rowsObj = {
             [list[i].id]: {
               seq: list[i].RowNumber, //列序号
               id: list[i].id.toString(),
-              rowId: list[i].id.toString(),
+              label: list[i].LineName, //进度条中显示的内容
               LineName: list[i].LineName,
+              OrderNo: list[i].OrderNo,
+                  Code: list[i].Code,
+                  Spec: list[i].Spec,
+                  ProcessPartName: list[i].ProcessPartName,
+                  PlanQty: list[i].PlanQty,
+                  HasQty: list[i].HasQty,
+                  OrderNo: list[i].OrderNo,
+                  StartDate:list[i].StartDate?this.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
+                  StartTime:list[i].StartTime?this.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                  EndTime:list[i].EndTime?this.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                  time: {
+                    start: list[i].StartTime
+                      ? date(list[i].StartTime).valueOf()
+                      : "",
+                    end: list[i].EndTime
+                      ? date(list[i].EndTime).valueOf()
+                      : "",
+                  },
+                  progress:
+                    list[i].HasQty >= 0 && list[i].PlanQty >= 0
+                      ? parseFloat(
+                          (
+                            (list[i].HasQty / list[i].PlanQty) *
+                            100
+                          ).toFixed(2)
+                        )
+                      : 0, //进度条百分比
+              vacations: list[i].vacations, //非工作日
+              type: "milestone", //类型task、milestone、project
+              // collapsed: true, //树结构默认收缩
+              style: {
+                background: list[i].bgCodor,
+              },
+              // dependant: children[x].dependant, //在父级写入连接的子级
               gap: {
                 //项目间的垂直间距，必写，不然会报错
                 top: 0,
@@ -805,29 +908,14 @@ export default {
           // 甘特图右侧展示内容
           if(list[i].OrderNoList.length){
             let children = list[i].OrderNoList
-            let itemsObj = {}
+            
             for(let x=0;x<children.length;x++){
-              // 取随机色
-              this.getRandomColor();
-              // 赋值父级颜色，子级复用
-              children[x].bgCodor = this.strokeColor;
-              if(this.formSearchs[this.tagRemark].datas.StartDate&&this.formSearchs[this.tagRemark].datas.StartDate.length){
-                this.beforeDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[0]).format("YYYY-MM-DD")
-                this.afterDay = this.$moment(this.formSearchs[this.tagRemark].datas.StartDate[1]).format("YYYY-MM-DD")
-              }else{
-                // 取最早的时间作为右侧开始时间列
-                if(i==0&&x==0){
-                  this.beforeDay = this.$moment(children[x].StartDate).format("YYYY-MM-DD")
-                }
-                // 取最晚的时间作为右侧结束时间列
-                if(i==list.length-1 &&x==children.length-1){
-                  this.afterDay = this.$moment(children[x].EndTime).format("YYYY-MM-DD")
-                }
-              }
-              itemsObj = {
-                [children[x].id]: {
+              num  = i.toString() + x
+              console.log('children[x]',children[x])
+              let itemsObj = {
+                [num]: {
                   seq: children[x].RowNumber, //列序号
-                  id: children[x].id.toString(),
+                  id: num,
                   rowId: list[i].id.toString(),
                   label: children[x].LineName, //进度条中显示的内容
                   LineName: children[x].LineName,
@@ -864,7 +952,7 @@ export default {
                   style: {
                     background: children[x].bgCodor,
                   },
-                  dependant: children[x].dependant, //在父级写入连接的子级
+                  // dependant: children[x].dependant, //在父级写入连接的子级
                   gap: {
                     //项目之间的垂直间隙
                     top: 4,
@@ -873,10 +961,18 @@ export default {
                 },
               };
               this.itemsData = _.assign(this.itemsData, itemsObj);
+              
             }
           }
         }
       });
+      // 更新图表配置
+        this.$nextTick(()=>{
+          this.configUpdate(this.beforeDay, this.afterDay);
+        })
+      } catch (error) {
+        
+      }
     }
   },
 };
