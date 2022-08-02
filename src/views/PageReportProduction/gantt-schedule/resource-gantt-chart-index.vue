@@ -54,7 +54,6 @@ import { Plugin as CalendarScroll } from "gantt-schedule-timeline-calendar/dist/
 import { Plugin as ProgressBar } from "gantt-schedule-timeline-calendar/dist/plugins/progress-bar.esm.min.js";
 import { Plugin as TimeBookmarks } from "gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min.js";
 import { Plugin as DependencyLines } from "gantt-schedule-timeline-calendar/dist/plugins/dependency-lines.esm.min.js";
-import { getAllDate,formatDate } from "@/utils/formatDate";
 import ComSearch from "@/components/ComSearch";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
@@ -524,35 +523,26 @@ export default {
                     [list[i].id]: {
                       seq: list[i].RowNumber, //列序号
                       id: list[i].id.toString(),
-                      label: list[i].LineName, //进度条中显示的内容
+                      label: list[i].OrderNo, //进度条中显示的内容
                       LineName: list[i].LineName,
                       OrderNo: list[i].OrderNo,
-                          Code: list[i].Code,
-                          Spec: list[i].Spec,
-                          ProcessPartName: list[i].ProcessPartName,
-                          PlanQty: list[i].PlanQty,
-                          HasQty: list[i].HasQty,
-                          OrderNo: list[i].OrderNo,
-                          StartDate:list[i].StartDate?self.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
-                          StartTime:list[i].StartTime?self.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                          EndTime:list[i].EndTime?self.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                          time: {
-                            start: list[i].StartTime
-                              ? date(list[i].StartTime).valueOf()
-                              : "",
-                            end: list[i].EndTime
-                              ? date(list[i].EndTime).valueOf()
-                              : "",
-                          },
-                          progress:
-                            list[i].HasQty >= 0 && list[i].PlanQty >= 0
-                              ? parseFloat(
-                                  (
-                                    (list[i].HasQty / list[i].PlanQty) *
-                                    100
-                                  ).toFixed(2)
-                                )
-                              : 0, //进度条百分比
+                      Code: list[i].Code,
+                      Spec: list[i].Spec,
+                      ProcessPartName: list[i].ProcessPartName,
+                      PlanQty: list[i].PlanQty,
+                      HasQty: list[i].HasQty,
+                      StartDate:list[i].StartDate?self.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
+                      StartTime:list[i].StartTime?self.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                      EndTime:list[i].EndTime?self.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+                      time: {
+                        start: list[i].StartTime
+                          ? date(list[i].StartTime).valueOf()
+                          : "",
+                        end: list[i].EndTime
+                          ? date(list[i].EndTime).valueOf()
+                          : "",
+                      },
+                      // progress:list[x].Exend1?list[x].Exend1: 0, //进度条百分比
                       vacations: list[i].vacations, //非工作日
                       type: "milestone", //类型task、milestone、project
                       // collapsed: true, //树结构默认收缩
@@ -583,7 +573,7 @@ export default {
                           seq: children[x].RowNumber, //列序号
                           id: num,
                           rowId: list[i].id.toString(),
-                          label: children[x].LineName, //进度条中显示的内容
+                          label: children[x].OrderNo, //进度条中显示的内容
                           LineName: children[x].LineName,
                           OrderNo: children[x].OrderNo,
                           Code: children[x].Code,
@@ -603,15 +593,7 @@ export default {
                               ? date(children[x].EndTime).valueOf()
                               : "",
                           },
-                          progress:
-                            children[x].HasQty >= 0 && children[x].PlanQty >= 0
-                              ? parseFloat(
-                                  (
-                                    (children[x].HasQty / children[x].PlanQty) *
-                                    100
-                                  ).toFixed(2)
-                                )
-                              : 0, //进度条百分比
+                          progress:children[x].Exend1?children[x].Exend1: 0, //进度条百分比
                           vacations: list[i].vacations, //非工作日
                           type: "milestone", //类型task、milestone、project
                           // collapsed: true, //树结构默认收缩
@@ -862,35 +844,26 @@ export default {
             [list[i].id]: {
               seq: list[i].RowNumber, //列序号
               id: list[i].id.toString(),
-              label: list[i].LineName, //进度条中显示的内容
+              label: list[i].OrderNo, //进度条中显示的内容
               LineName: list[i].LineName,
               OrderNo: list[i].OrderNo,
-                  Code: list[i].Code,
-                  Spec: list[i].Spec,
-                  ProcessPartName: list[i].ProcessPartName,
-                  PlanQty: list[i].PlanQty,
-                  HasQty: list[i].HasQty,
-                  OrderNo: list[i].OrderNo,
-                  StartDate:list[i].StartDate?this.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
-                  StartTime:list[i].StartTime?this.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  EndTime:list[i].EndTime?this.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
-                  time: {
-                    start: list[i].StartTime
-                      ? date(list[i].StartTime).valueOf()
-                      : "",
-                    end: list[i].EndTime
-                      ? date(list[i].EndTime).valueOf()
-                      : "",
-                  },
-                  progress:
-                    list[i].HasQty >= 0 && list[i].PlanQty >= 0
-                      ? parseFloat(
-                          (
-                            (list[i].HasQty / list[i].PlanQty) *
-                            100
-                          ).toFixed(2)
-                        )
-                      : 0, //进度条百分比
+              Code: list[i].Code,
+              Spec: list[i].Spec,
+              ProcessPartName: list[i].ProcessPartName,
+              PlanQty: list[i].PlanQty,
+              HasQty: list[i].HasQty,
+              StartDate:list[i].StartDate?this.$moment(list[i].StartDate).format("YYYY-MM-DD"):'',
+              StartTime:list[i].StartTime?this.$moment(list[i].StartTime).format("YYYY-MM-DD HH:mm:ss"):'',
+              EndTime:list[i].EndTime?this.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss"):'',
+              time: {
+                start: list[i].StartTime
+                  ? date(list[i].StartTime).valueOf()
+                  : "",
+                end: list[i].EndTime
+                  ? date(list[i].EndTime).valueOf()
+                  : "",
+              },
+              // progress:list[x].Exend1?list[x].Exend1: 0, //进度条百分比
               vacations: list[i].vacations, //非工作日
               type: "milestone", //类型task、milestone、project
               // collapsed: true, //树结构默认收缩
@@ -919,7 +892,7 @@ export default {
                   seq: children[x].RowNumber, //列序号
                   id: num,
                   rowId: list[i].id.toString(),
-                  label: children[x].LineName, //进度条中显示的内容
+                  label: children[x].OrderNo, //进度条中显示的内容
                   LineName: children[x].LineName,
                   OrderNo: children[x].OrderNo,
                   Code: children[x].Code,
@@ -939,15 +912,7 @@ export default {
                       ? date(children[x].EndTime).valueOf()
                       : "",
                   },
-                  progress:
-                    children[x].HasQty >= 0 && children[x].PlanQty >= 0
-                      ? parseFloat(
-                          (
-                            (children[x].HasQty / children[x].PlanQty) *
-                            100
-                          ).toFixed(2)
-                        )
-                      : 0, //进度条百分比
+                  progress:children[x].Exend1?children[x].Exend1: 0, //进度条百分比
                   vacations: list[i].vacations, //非工作日
                   type: "milestone", //类型task、milestone、project
                   // collapsed: true, //树结构默认收缩
