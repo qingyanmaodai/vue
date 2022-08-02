@@ -195,7 +195,7 @@
               ></el-input>
             </el-form-item>
 
-            <el-form-item label="确认数：" prop="ConfirmQty" v-show="labelStatus1 == 1">
+            <el-form-item label="确认数：" prop="ConfirmQty" v-show="labelStatus1 == 1||labelStatus1 == 2">
               <el-input
                 v-model="currentRow[labelStatus1].ConfirmQty"
                 type="text"
@@ -704,7 +704,7 @@ export default {
         headHeight -
         this.$store.getters.reduceHeight;
       let newHeight = rem + 20+ "px";
-      this.height1 = rem - 30+ "px";
+      this.height1 = rem - 50+ "px";
       this.$set(this, "height", newHeight);
     },
     // 第几页
