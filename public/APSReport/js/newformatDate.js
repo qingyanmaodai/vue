@@ -115,6 +115,46 @@ function formatLastMonthDate() {
 	let day = zero(newDate.getDate());
 	return year + "-" + month + "-" + day;
 }
+// 获取当前时间,// 年月日 星期几 时分秒
+function getTodayTime() {
+	var date = new Date();
+	var seperator1 = "年";
+	var seperator2 = "月";
+	var seperator3 = "日";
+	var seperator4 = ":";
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	var hour = date.getHours();
+	var minute = date.getMinutes();
+	var seconds = date.getSeconds();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+
+	}
+	if (hour >= 0 && hour <= 9) {
+		hour = "0" + hour;
+
+	}
+	if (minute >= 0 && minute <= 9) {
+		minute = "0" + minute;
+
+	}
+	if (seconds >= 0 && seconds <= 9) {
+		seconds = "0" + seconds;
+
+	}
+	var a = new Array("日", "一", "二", "三", "四", "五", "六");
+	var week = new Date().getDay();
+	var str = "星期" + a[week];
+	// 年月日 星期几 时分秒
+	let todayDate = year + seperator1 + month + seperator2 + strDate + seperator3 + '  ' + str + ' ' + hour + seperator4 + minute + seperator4 + seconds;
+	return todayDate
+}
 
 export default {
 	formatTodayDate,
@@ -127,5 +167,6 @@ export default {
 	formatMonthDate,
 	formatTime,
 	formatLastMonthDate,
-	formatTommorowFiveDate
+	formatTommorowFiveDate,
+	getTodayTime
 }

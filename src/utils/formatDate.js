@@ -54,7 +54,8 @@ export const getAllDate = (start, end) => {
     let stamp
     const oneDay = 24 * 60 * 60 * 1000;
     for (stamp = unixDb; stamp <= unixDe;) {
-      dateArr.push(moment(new Date(parseInt(stamp))).format('YYYY-MM-DD'))
+      let date = formatDate(stamp)
+      dateArr.push(date)
       stamp = stamp + oneDay
     }
     return dateArr
