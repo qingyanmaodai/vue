@@ -9,6 +9,9 @@
   </head>
   <body style="padding: 0; margin: 0 ;">
     <div  v-cloak id="app" class="page flex-col">
+      <div class="loading">
+        <div class="loadbox"> <img src="../APSReport/picture/loading.gif"> 页面加载中... </div>
+      </div>
       <div class="group_1 flex-col">
         <div class="group_2 flex-row">
           <span class="paragraph_1"
@@ -558,9 +561,9 @@
         }, 1000)
         
         this.$nextTick(async()=>{
-          let routeUrl =  window.location.href+'?OrganizeIDs=""'
+          let routeUrl =  window.location.href+'?ID=""'
           console.log('route',window.location.href)
-          let OrganizeIDs = this.getQueryString('OrganizeIDs')
+          let OrganizeIDs = this.getQueryString('ID')
           // 看板车间名称
           if(OrganizeIDs){
             // 179 制一部;180 制二部;181 制三部;182 制四部;183 制五部
@@ -589,6 +592,7 @@
                 _this.getDayRateData(_this.form.OrganizeID)
                 setTimeout(() => {
                   _this.gundong()
+                  $(".loading").fadeOut()
                 }, 1000);
               }
 						}
