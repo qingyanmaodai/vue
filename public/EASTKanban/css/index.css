@@ -12,7 +12,7 @@
 .group_1 {
   width: 1920px;
   height: 1080px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPngaaf0552f71d78bc1494f477dc31f5bde9d40dc158f4905dbd25a958e578b8da2)
+  background: url(../img/east_bg.jpg)
     100% no-repeat;
   background-size: 100% 100%;
 }
@@ -479,9 +479,9 @@
   position: absolute;
   left: 50px;
   top: 40px;
-  width: 141px;
-  height: 43px;
-  background: url(https://lanhu.oss-cn-beijing.aliyuncs.com/SketchPng7f8458b13a6361b0eb195e20f2594c9943a6bbac73fa12a80fef873fe9ff8929)
+  width: 224px;
+  height: 66px;
+  background: url(../img/east.png)
     100% no-repeat;
   background-size: 100% 100%;
 }
