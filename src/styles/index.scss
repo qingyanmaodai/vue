@@ -1485,3 +1485,10 @@ label {
 .vxe-cell--filter {
   padding: 0.1em .1em 0 .15em !important;
 }
+// 选项卡标签页外边距
+.tabs .el-tabs__content{
+  padding: 0px;
+}
+.tabs .el-tabs__item{
+  font-weight: bolder
+}

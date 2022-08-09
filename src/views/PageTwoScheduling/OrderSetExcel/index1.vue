@@ -113,93 +113,101 @@
               </el-col>
             </el-row>
           </div>
-
-          <div v-show="labelStatus1 <=2">
-            <div class="admin_content">
-              <div class="flex_column" :style="{ height: height }">
-                <div class="spreadContainer" v-loading="tableLoading[0]">
-                  <gc-spread-sheets
-                    class="sample-spreadsheets"
-                    @workbookInitialized="initSpread"
-                  >
-                    <gc-worksheet></gc-worksheet>
-                  </gc-spread-sheets>
-                </div>
-              </div>
-              <div class="flex_row_spaceBtn pagination">
-                <div>
-                  <span @click="toPageSetting" class="primaryColor cursor"
-                    >SysID:7942
-                  </span>
-                </div>
-                <div class="flex">
-                  <el-pagination
-                    background
-                    @size-change="(val) => pageSize(val, 0)"
-                    :current-page="tablePagination[0].pageIndex"
-                    :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                    :page-size="tablePagination[0].pageSize"
-                    :total="tablePagination[0].pageTotal"
-                    @current-change="(val) => pageChange(val, 0)"
-                    layout="total, sizes, prev, pager, next,jumper"
-                  >
-                  </el-pagination>
+          
+            <div v-show="labelStatus1 <=2">
+              <el-tabs v-model="activeName"  type="border-card" @tab-click="handleClick" class="tabs">
+                <el-tab-pane label="主需求" name="first">
+                </el-tab-pane>
+                <el-tab-pane label="辅需求" name="second">
+                </el-tab-pane>
+              </el-tabs>
+              <div v-show="activeName">
+                 <div class="admin_content">
+                  <div class="flex_column" :style="{ height: height }">
+                    <div class="spreadContainer" v-loading="tableLoading[0]">
+                      <gc-spread-sheets
+                        class="sample-spreadsheets"
+                        @workbookInitialized="initSpread"
+                      >
+                        <gc-worksheet></gc-worksheet>
+                      </gc-spread-sheets>
+                    </div>
+                  </div>
+                  <div class="flex_row_spaceBtn pagination">
+                    <div>
+                      <span @click="toPageSetting" class="primaryColor cursor"
+                        >SysID:7942
+                      </span>
+                    </div>
+                    <div class="flex">
+                      <el-pagination
+                        background
+                        @size-change="(val) => pageSize(val, 0)"
+                        :current-page="tablePagination[0].pageIndex"
+                        :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                        :page-size="tablePagination[0].pageSize"
+                        :total="tablePagination[0].pageTotal"
+                        @current-change="(val) => pageChange(val, 0)"
+                        layout="total, sizes, prev, pager, next,jumper"
+                      >
+                      </el-pagination>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <ComVxeTable
-            ref="tableRefTwo"
-            v-show="labelStatus1 == 3"
-            :rowKey="'RowNumber'"
-            :height="height"
-            :hasSelect="true"
-            :tableData="tableData[2]"
-            :tableHeader="tableColumns[2]"
-            :tableLoading="tableLoading[2]"
-            :remark="2"
-            :sysID="sysID[2].ID"
-            :isEdit="isEdit"
-            :showFooter="true"
-            :includeFields="includeFields"
-     
+            <ComVxeTable
+              ref="tableRefTwo"
+              v-show="labelStatus1 == 3"
+              :rowKey="'RowNumber'"
+              :height="height"
+              :hasSelect="true"
+              :tableData="tableData[2]"
+              :tableHeader="tableColumns[2]"
+              :tableLoading="tableLoading[2]"
+              :remark="2"
+              :sysID="sysID[2].ID"
+              :isEdit="isEdit"
+              :showFooter="true"
+              :includeFields="includeFields"
+      
+            
+              :isClear="isClear[2]"
+              :showPagination="false"
+              :pagination="tablePagination[2]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @selectfun="selectFun"
+              @changeline="changeline"
+              @sortChange="sortChange"
+            />
+            <ComVxeTable
+              ref="tableRefTwo"
+              v-show="labelStatus1 == 4"
+              :rowKey="'RowNumber'"
+              :height="height"
+              :hasSelect="true"
+              :tableData="tableData[1]"
+              :tableHeader="tableColumns[1]"
+              :tableLoading="tableLoading[1]"
+              :remark="1"
+              :sysID="sysID[1].ID"
+              :isEdit="isEdit"
+              :showFooter="true"
+              :includeFields="includeFields"
+              :cellStyle="cellStyle"
+              :tableRowClassName="tableRowClassName"
+              :isClear="isClear[1]"
+              :showPagination="true"
+              :pagination="tablePagination[1]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @selectfun="selectFun"
+              @changeline="changeline"
+              @sortChange="sortChange"
+            />
+            <div style="color: red; font-weight: bold">{{ resultMsg }}</div>
           
-            :isClear="isClear[2]"
-            :showPagination="false"
-            :pagination="tablePagination[2]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @selectfun="selectFun"
-            @changeline="changeline"
-            @sortChange="sortChange"
-          />
-
-          <ComVxeTable
-            ref="tableRefTwo"
-            v-show="labelStatus1 == 4"
-            :rowKey="'RowNumber'"
-            :height="height"
-            :hasSelect="true"
-            :tableData="tableData[1]"
-            :tableHeader="tableColumns[1]"
-            :tableLoading="tableLoading[1]"
-            :remark="1"
-            :sysID="sysID[1].ID"
-            :isEdit="isEdit"
-            :showFooter="true"
-            :includeFields="includeFields"
-            :cellStyle="cellStyle"
-            :tableRowClassName="tableRowClassName"
-            :isClear="isClear[1]"
-            :showPagination="true"
-            :pagination="tablePagination[1]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @selectfun="selectFun"
-            @changeline="changeline"
-            @sortChange="sortChange"
-          />
-          <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
     </div>
@@ -256,6 +264,7 @@ export default {
   },
   data() {
     return {
+      activeName: 'first',
       dialogSearchForm:{
         OrderID:'',
       },
@@ -420,6 +429,15 @@ export default {
     }, 500);
   },
   methods: {
+     handleClick(tab, event) {
+      console.log(tab.name, event);
+      if(tab.name==='first'){
+        this.formSearchs[this.tagRemark].datas["Extend26"] = 1
+      }else if(tab.name==='second'){
+        this.formSearchs[this.tagRemark].datas["Extend26"] = 0
+      }
+      this.dataSearch(this.tagRemark)
+    },
     async subSAP() {
       this.getSelectionData(1);
       this.adminLoading = true;
@@ -1144,7 +1162,14 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if(this.formSearchs[remarkTb].forms.length){
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element)=>{
+              if(element.prop===name){
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            })
+          }
         }
       }
     },
@@ -1203,7 +1228,8 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
-                this.formSearchs[1].datas["ProcessPartName"] ='PCB'; //默认待排
+        this.formSearchs[0].datas["Extend26"] = 1
+        this.formSearchs[1].datas["ProcessPartName"] ='PCB'; //默认待排
         this.dataSearch(0);
       }
     },
