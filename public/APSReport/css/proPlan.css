@@ -15,7 +15,7 @@
   width: 1920px;
   height: 1080px;
   background: url(../images/east_bg.jpg)
-    100% no-repeat;
+    center center no-repeat;
   background-size: 100% 100%;
 
   /* background-size: 100% 100%; */
@@ -37,7 +37,7 @@
   /* width: 1920px; */
   width: 100%;
   height: 94px;
-  background: url(../images/east_header2.png) -1px -1px
+  background: url(../images/east_header2.png) center center
     no-repeat;
   /* background-size: 1922px 95px; */
   background-size: cover;
@@ -516,7 +516,7 @@
 .group_4 {
   position: relative;
   /* width: 100%; */
-  height: 987px;
+  /* height: 987px; */
   margin: 30px 40px;
   /* margin-bottom: 1px; */
 }
@@ -1192,18 +1192,18 @@
   /* left: 40px; */
   /* top: 30px; */
   width: 100%;
-  height: 514px;
+  height: 100%;
   background: url(../images/east_body2.png)
     100% no-repeat;
   background-size: 100% 100%;
 }
 
 .section_1 {
-  width: 50%;
-  margin: auto;
+  width: 100%;
+  /* margin: auto; */
   height: 10px;
   background: url(../images/east_body1.png) center center no-repeat;
-  background-size: 67% 100%;
+  background-size: 34% 100%;
 }
 
 .text_3 {
@@ -1218,7 +1218,7 @@
   /* text-align: right; */
   white-space: nowrap;
   line-height: 28px;
-  margin: 10px 0 0 0px;
+  margin: 15px 0 0 0px;
 }
 
 .text-wrapper_2 {
@@ -2204,8 +2204,8 @@
   /* position: absolute; */
   /* left: 817px; */
   /* top: 574px; */
-  width: 30%;
-  height: 383px;
+  width: 35%;
+  /* height: 383px; */
   background: url(../images/east_footer2-2.png)
     100% no-repeat;
   background-size: 100% 100%;
@@ -2213,18 +2213,18 @@
 }
 
 .group_7 {
+  width: 100%;
   /* width: 221px; */
   height: 10px;
   background: url(../images/east_footer2-1.png) center center no-repeat;
-  background-size: 222px 10px;
-  /* margin-left: 214px; */
+  background-size: 34% 100%;
 }
 
 .group_8 {
   position: relative;
   width: 100%;
   /* height: 48px; */
-  margin: 12px 0 0 0px;
+  margin-top: 15px;
 }
 
 .text_69 {
@@ -2241,16 +2241,17 @@
 }
 
 .text_70 {
-  width: 131px;
+  /* width: 131px; */
   height: 28px;
   overflow-wrap: break-word;
   color: rgba(0, 255, 244, 1);
   font-size: 24px;
   font-family: PingFangSC-Regular;
-  text-align: right;
   white-space: nowrap;
   line-height: 28px;
-  margin-left: 234px;
+  /* margin-left: 234px; */
+  text-align: center;
+  width: 100%;
 }
 
 .image-text_1 {
@@ -2892,51 +2893,57 @@
   /* left: 1491px; */
   /* top: 574px; */
   width: 20%;
-  height: 383px;
+  /* height: 383px; */
   background: url(../images/east_footer3-2.png)
     100% no-repeat;
   background-size: 100% 100%;
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .group_13 {
+  width: 100%;
   /* width: 133px; */
   height: 10px;
   background: url(../images/east_footer3-1.png) center center no-repeat;
-  background-size: 135px 10px;
-  /* margin-left: 129px; */
-  /* margin: auto; */
+  background-size: 34% 100%;
 }
 
 .text-wrapper_10 {
-  width: 216px;
+  width: 100%;
   height: 28px;
-  margin: 12px 0 0 15px;
+  margin-top: 15px;
+  /* margin: 12px 0 0 15px; */
 }
 
 .text_101 {
-  width: 72px;
+  /* width: 72px; */
   height: 14px;
   overflow-wrap: break-word;
   color: rgba(255, 255, 255, 1);
   font-size: 12px;
   font-family: PingFangSC-Regular;
-  text-align: left;
+  /* text-align: left; */
   white-space: nowrap;
   line-height: 14px;
+  /* margin-top: 50px; */
+  position: absolute;
+  margin-left: 15px;
   margin-top: 50px;
 }
 
 .text_102 {
-  width: 120px;
+  /* width: 120px; */
   height: 28px;
   overflow-wrap: break-word;
   color: rgba(0, 255, 244, 1);
   font-size: 24px;
   font-family: PingFangSC-Regular;
-  text-align: right;
+  /* text-align: right; */
   white-space: nowrap;
   line-height: 28px;
+  /* width: 100%; */
+  text-align: center;
+  margin: auto;
 }
 
 .image-text_2 {
@@ -2945,6 +2952,8 @@
   margin: 9px 0 30px 91px; */
   width: 100%;
   margin: auto;
+  position: relative;
+  bottom: 15px;
 }
 
 .text_103 {
@@ -2993,6 +3002,7 @@
   /* font-family: PingFangSC-Medium; */
   /* text-align: right; */
   white-space: nowrap;
+  text-align: center;
   /* line-height: 30px; */
 }
 
@@ -3021,6 +3031,7 @@
   /* font-family: PingFangSC-Medium; */
   /* text-align: right; */
   white-space: nowrap;
+  text-align: center;
   /* line-height: 30px;
   margin-left: 1px; */
 }
@@ -3037,34 +3048,29 @@
   /* position: absolute; */
   /* left: 40px; */
   /* top: 574px; */
-  width: 40%;
-  height: 383px;
+  width: 41%;
+  /* height: 383px; */
   background: url(../images/east_footer1-2.png)
     100% no-repeat;
   background-size: 100% 100%;
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .group_15 {
-  width: 255px;
+  width: 100%;
   height: 10px;
   background: url(../images/east_footer1-1.png) center center no-repeat;
-  background-size: 100% 100%;
-  /* margin-left: 247px; */
-  margin: auto;
+  background-size: 34% 100%;
 }
 
 .text_109 {
-  width: 80px;
-  height: 28px;
   overflow-wrap: break-word;
   color: rgba(0, 255, 244, 1);
   font-size: 24px;
   font-family: PingFangSC-Regular;
-  text-align: right;
   white-space: nowrap;
-  line-height: 28px;
-  margin: 11px 0 0 335px;
+  margin-top: 15px;
+  text-align: center;
 }
 
 .text-wrapper_12 {
@@ -3153,9 +3159,9 @@
 }
 
 .image-text_3 {
-  width: 747px;
+  /* width: 747px;
   height: 82px;
-  margin-top: 10px;
+  margin-top: 10px; */
 }
 
 .text-wrapper_13 {
@@ -3668,17 +3674,20 @@
   /* line-height: 25px; */
 }
 .table1{
-  height: 420px;
+  height: 76.5%;
+  /* height: 420px; */
   overflow: hidden;
   vertical-align: top;
   word-break: break-all;
   position: relative;
 }
 .table2{
-  height: 280px;
+  height: 70%;
+  /* height: 280px; */
   overflow: hidden;
   vertical-align: top;
   word-break: break-all;
+  position: relative;
 }
 .tableWidthRatio3{
   width: 3%;
@@ -3686,11 +3695,20 @@
 .tableWidthRatio4{
   width: 4%;
 }
+.tableWidthRatio5{
+  width: 5%;
+}
 .tableWidthRatio7{
   width: 7%;
 }
+.tableWidthRatio8{
+  width: 8%;
+}
 .tableWidthRatio10{
   width: 10%;
+}
+.tableWidthRatio13{
+  width: 13%;
 }
 .tableWidthRatio15{
   width: 15%;
@@ -3716,4 +3734,37 @@
 }
 .footer{
   width: 100%;
+  margin-top: 30px;
 }
+.color1{
+  color: rgba(255, 212, 62, 1);
+}
+.color2{
+  color: rgba(89, 163, 255, 1);
+}
+.color3{
+  color: rgba(26, 222, 151, 1);
+}
+.color4{
+  color: rgba(235, 145, 136, 1);
+}
+.widthPadding{
+  padding: 0 10px;
+}
+
+#weekEchart div{
+  width: 100% !important;
+}
+html{
+  height: 100%;
+}
+#header{
+  height: 50%;
+
+}
+#footer{
+  height: 40%;
+  position: relative;
+}
+
+
