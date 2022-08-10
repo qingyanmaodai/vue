@@ -70,8 +70,8 @@
       </div>
     </div>
     <div class="login_footer flex_row_spaceRound">
-      <div class="text">系统管理员：</div>
-      <div class="text">报障热线：</div>
+      <!-- <div class="text">系统管理员：</div>
+      <div class="text">报障热线：</div> -->
     </div>
   </div>
 </template>
