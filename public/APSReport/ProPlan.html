@@ -571,7 +571,7 @@
         },
         // 今日生产计划
         getToDayPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:10 })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:0 })
 					.then(function (res) {
             _this.todayList = []
 						if (res.result) {
@@ -596,7 +596,7 @@
         },
         // 明日生产计划
         getTomorrowPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:10 })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:0 })
 					.then(function (res) {
             _this.tomorrowList = []
 						if (res.result) {
