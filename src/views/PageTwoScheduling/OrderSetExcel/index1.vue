@@ -116,6 +116,8 @@
           
             <div v-show="labelStatus1 <=2">
               <el-tabs v-model="activeName"  type="border-card" @tab-click="handleClick" class="tabs">
+                <el-tab-pane label="全部" name="all">
+                </el-tab-pane>
                 <el-tab-pane label="主需求" name="first">
                 </el-tab-pane>
                 <el-tab-pane label="辅需求" name="second">
@@ -264,7 +266,7 @@ export default {
   },
   data() {
     return {
-      activeName: 'first',
+      activeName: 'all',
       dialogSearchForm:{
         OrderID:'',
       },
@@ -435,6 +437,8 @@ export default {
         this.formSearchs[this.tagRemark].datas["Extend26"] = 1
       }else if(tab.name==='second'){
         this.formSearchs[this.tagRemark].datas["Extend26"] = 0
+      }else{
+        this.formSearchs[this.tagRemark].datas["Extend26"] = ''
       }
       this.dataSearch(this.tagRemark)
     },
@@ -1228,7 +1232,6 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
-        this.formSearchs[0].datas["Extend26"] = 1
         this.formSearchs[1].datas["ProcessPartName"] ='PCB'; //默认待排
         this.dataSearch(0);
       }
