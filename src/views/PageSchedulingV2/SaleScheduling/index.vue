@@ -379,6 +379,18 @@
       :visible.sync="formatDialog"
       width="70%"
     >
+        <div>
+          <ComSearch
+          class="margin_bottom_10 dialog_search"
+          ref="searchRef"
+          :searchData="formSearchs[9].datas"
+          :searchForm="formSearchs[9].forms"
+          :remark="9"
+          :isLoading="isLoading[9]"
+          :btnForm="btnForm[9]"
+          @btnClick="btnClick"
+        />
+        </div>
       <div
         class="container"
         style="background-color: #f0f2f5;"
@@ -402,8 +414,9 @@
             @sortChange="sortChange"
           />
         </div> -->
+        
         <div class="admin_content">
-
+          
           <ComReportTable
             :rowKey="'RowNumber'"
             :height="height1"
@@ -1667,7 +1680,12 @@ export default {
         //   row.SalesOrderDetailID;
         // this.dataSearch(8);
         this.formSearchs[9].datas["OweQty"] = 0;
-        this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+        // this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+        let MOSList = []
+        MOSList = row.MOS?row.MOS.split(','):[]
+        this.formSearchs[9].datas["OrderNo"] = MOSList;
+        
+         console.log('MOSList',MOSList)
         // this.formSearchs[9].datas["OrderID"] = row.OrderID; 接口没返回此字段，会查出所有工单的数据，所有注释代码
         this.dataSearch(9);
         this.formatDialog = true;
