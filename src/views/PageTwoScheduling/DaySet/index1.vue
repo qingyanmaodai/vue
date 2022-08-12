@@ -591,7 +591,6 @@ this.spread.refresh();
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      console.log(this.checkBoxCellTypeLine);
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
