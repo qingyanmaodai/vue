@@ -108,7 +108,6 @@ export default {
   },
   data() {
     return {
-        linesList:[],
         title:this.$route.meta.title,//表名
         height:'740px',
         adminLoading:false,//加载状态
@@ -140,7 +139,7 @@ export default {
         ],
         sysID:[{ID:8986}],
         spread: null,//excel初始
-        checkBoxCellTypeLine: "",
+        checkBoxCellTypeDep: "",
     }
   },
   activated() {
@@ -265,7 +264,7 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData)
+      console.log('this.tableData',this.tableData[this.tagRemark])
     },
     // excle表数据渲染
     async setData() {
@@ -285,7 +284,7 @@ export default {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
-            cellType: this.checkBoxCellTypeLine,
+            cellType: this.checkBoxCellTypeDep,
             size: parseInt(x.width),
           });
         } else {
@@ -420,7 +419,6 @@ export default {
     },
     // 获取责任部门数据
     async getDepData() {
-      this.linesList = [];
       let form = {
         DataSourceID:'D2208110001'
       }
@@ -434,13 +432,12 @@ export default {
             newData.push({ text: x.title, value: x.title });
           });
         }
-        this.linesList = newData;
-        this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeLine.editorValueType(
+        this.checkBoxCellTypeDep = new GCsheets.CellTypes.ComboBox();
+        this.checkBoxCellTypeDep.editorValueType(
           GC.Spread.Sheets.CellTypes.EditorValueType.value
         );
-        this.checkBoxCellTypeLine.items(newData);
-        this.checkBoxCellTypeLine.itemHeight(24);
+        this.checkBoxCellTypeDep.items(newData);
+        this.checkBoxCellTypeDep.itemHeight(24);
       } else {
         this.adminLoading = false;
         this.$message({

@@ -98,8 +98,12 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
+  GetSearch
 } from "@/api/Common";
 import { mapState } from "vuex";
+import {
+  HeaderCheckBoxCellType
+}  from "@/static/data.js";
 export default {
   name: "DeliveryRules",
   components: {
@@ -107,7 +111,7 @@ export default {
   },
   data() {
     return {
-        linesList:[],
+        depList:[],
         title:this.$route.meta.title,//表名
         height:'740px',
         adminLoading:false,//加载状态
@@ -127,8 +131,17 @@ export default {
             ButtonCode: "save",
             BtnName: "新增",
             isLoading: false,
-            Methods: "rowAdd",
+            Methods: "addRow",
             Type: "success",
+            Icon: "",
+            Size: "small",
+            },
+            {
+            ButtonCode: "delete",
+            BtnName: "删除",
+            isLoading: false,
+            Methods: "deleteRow",
+            Type: "danger",
             Icon: "",
             Size: "small",
             },
@@ -146,9 +159,12 @@ export default {
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         ],
-        sysID:[{ID:8991}],
+        sysID:[{ID:8992}],
         spread: null,//excel初始
-        checkBoxCellTypeLine: "",
+        checkBoxCellTypeRuleType: "",
+        checkBoxCellTypeSuplier:'',
+        sheetSelectObj: { start: 0, end: 0, count: 0 },
+        headerList:[]
     }
   },
   activated() {
@@ -158,7 +174,8 @@ export default {
     _this = this;
     _this.judgeBtn();
     _this.getTableHeader()
-    _this.getDepData(this.userInfo.WorkFlowInstanceID);
+    _this.getRuleTypeData();
+    _this.getSuplierData();
   },
   mounted() {
     setTimeout(() => {
@@ -273,7 +290,7 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData)
+      console.log('this.tableData',this.tableData[this.tagRemark])
     },
     // excle表数据渲染
     async setData() {
@@ -288,12 +305,20 @@ export default {
         let colInfos = []
         let ControlTypeList = ['combobox']//配置表的下拉类型
         this.tableColumns[this.tagRemark].forEach((x) => {
-        if (x.prop == "ResponsibleDept"&&ControlTypeList.includes(x.ControlType)) {
-          // 责任部门配置为下拉
+        if (x.prop == "SuplierCode"&&ControlTypeList.includes(x.ControlType)) {
+          // 配置为下拉
           colInfos.push({
             name: x.prop,
             displayName: x.label,
-            cellType: this.checkBoxCellTypeLine,
+            cellType: this.checkBoxCellTypeSuplier,
+            size: parseInt(x.width),
+          });
+        }else if(x.prop == "RuleType"&&ControlTypeList.includes(x.ControlType)){
+          // 配置为下拉
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            cellType: this.checkBoxCellTypeRuleType,
             size: parseInt(x.width),
           });
         } else {
@@ -335,13 +360,122 @@ export default {
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        if(colInfos.length&&colInfos[0].name==='isChecked'){
-          colInfos.splice(0,1)
+
+        sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+        );
+        let checkbox = {
+            name: "isChecked",
+            displayName: "选择",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 60,
+        };
+            for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
         }
 
+        var insertRowsCopyStyle = {
+        canUndo: true,
+        name: "insertRowsCopyStyle",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            sheet.suspendPaint();
+            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+              console.log(_this.sheetSelectRows);
+
+            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+            //删除旧行
+            if (_this.sheetSelectObj.start > options.activeRow) {
+              //说明从下面插入上面
+              sheet.copyTo(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+           
+              sheet.deleteRows(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                _this.sheetSelectObj.count
+              );
+            } else {
+              //从上面往下面插入
+              sheet.copyTo(
+                _this.sheetSelectObj.start,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+              sheet.deleteRows(
+                _this.sheetSelectObj.start,
+                _this.sheetSelectObj.count
+              );
+              
+            }
+            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+ 
+            let lineID=_this.sheetSelectRows[0][lineIDIndex]
+            let isFind=false;
+            let viewSort=1;
+   
+
+            for(var i=0;i<count;i++ )
+            {
+ 
+              if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
+              {
+                  isFind=true;      
+                
+              }
+             if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+              {
+               
+                break;
+              }
+              if(isFind)
+              {
+                sheet.setValue(i,viewSortIndex,viewSort);
+                viewSort++;
+              }
+             
+                
+            }
+      
+            // Commands.startTransaction(context, options);
+
+            // sheet.suspendPaint();
+
+            // var beforeRowCount = 0;
+
+            //  sheet.suspendPaint();
+
+            // Commands.endTransaction(context, options);
+            sheet.resumePaint();
+
+            return true;
+          }
+        },
+      };
+        this.spread.commandManager().register("insertRowsCopyStyle", insertRowsCopyStyle);
+console.log('colInfos',colInfos)
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
+        this.headerList = colInfos
         sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
         //一定要放在渲染完后
@@ -399,15 +533,19 @@ export default {
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          submitData.push(x.item);
+            if(x.item.SuplierCode&&x.item.RuleType){
+                x.item['dicID'] = 8992
+                submitData.push(x.item);
+            }
         });
       }
+      
       if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据！");
+        this.$message.error("没修改过任何数据或供应商代码和规格类型为空！");
         return;
       }
       this.adminLoading = true;
-    let res = await SaveData(submitData);
+      let res = await SaveData(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(this.tagRemark);
@@ -426,30 +564,58 @@ export default {
         });
       }
     },
-    // 获取责任部门数据
-    async getDepData(ERPOrderCode) {
-      this.linesList = [];
-      let res = await GetSearchData({
-        dicID: 36,
-        OrganizeTypeID: 6,
-        ERPOrderCode: ERPOrderCode,
-      });
+    // 获取规则类型
+    async getRuleTypeData() {
+      let form = {
+        DataSourceID:'D2208110002'
+      }
+      let res = await GetSearch(form, "/APSAPI/GetDataSource")
       const { data, forms, result, msg } = res.data;
       if (result) {
         let newData = [];
         this.adminLoading = false;
         if (data.length != 0) {
           data.forEach((x) => {
-            newData.push({ text: x.OrganizeName, value: x.OrganizeID });
+            newData.push({ text: x.title, value: x.title });
           });
         }
-        this.linesList = newData;
-        this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeLine.editorValueType(
+        this.checkBoxCellTypeRuleType = new GCsheets.CellTypes.ComboBox();
+        this.checkBoxCellTypeRuleType.editorValueType(
           GC.Spread.Sheets.CellTypes.EditorValueType.value
         );
-        this.checkBoxCellTypeLine.items(newData);
-        this.checkBoxCellTypeLine.itemHeight(24);
+        this.checkBoxCellTypeRuleType.items(newData);
+        this.checkBoxCellTypeRuleType.itemHeight(24);
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    
+    // 获取供应商数据
+    async getSuplierData() {
+      let form = {
+        DataSourceID:'201907041451178663'
+      }
+      let res = await GetSearch(form, "/APSAPI/GetDataSource")
+      const { data, forms, result, msg } = res.data;
+      if (result) {
+        let newData = [];
+        this.adminLoading = false;
+        if (data.length != 0) {
+          data.forEach((x) => {
+            newData.push({ text: x.SupplierName, value: x.SupplierID });
+          });
+        }
+        this.checkBoxCellTypeSuplier = new GCsheets.CellTypes.ComboBox();
+        this.checkBoxCellTypeSuplier.editorValueType(
+          GC.Spread.Sheets.CellTypes.EditorValueType.value
+        );
+        this.checkBoxCellTypeSuplier.items(newData);
+        this.checkBoxCellTypeSuplier.itemHeight(24);
       } else {
         this.adminLoading = false;
         this.$message({
@@ -460,9 +626,30 @@ export default {
       }
     },
     // 行新增
-    rowAdd(){
-        
+    addRow () {
+        let spread = this.spread;
+        let sheet = spread.getActiveSheet();
+        if (sheet) {
+            let list =[
+                {
+                    RowNumber:this.tableData[this.tagRemark].length?parseInt(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1]['RowNumber'] +1):1,
+                }
+                ]
+            this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
+            sheet.setDataSource(this.tableData[this.tagRemark]);
+            sheet.bindColumns(this.headerList)
+            console.log('this.tableData[this.tagRemark] ',this.tableData[this.tagRemark])
+            console.log('num',Number(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1].RowNumber))
+        }
+    },
+
+    deleteRow () {
+        let spread = this.spread;
+        let sheet = spread.getActiveSheet();
+        if (sheet) {
+            
+        }
+    },
     }
-  }
 }
 </script>
