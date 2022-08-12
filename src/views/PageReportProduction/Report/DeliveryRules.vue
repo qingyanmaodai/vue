@@ -1,4 +1,4 @@
-<!-- 易事特达成率汇总表 -->
+<!-- 易事特送货规则 -->
 <template>
     <div
     class="container"
@@ -98,11 +98,10 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
 } from "@/api/Common";
 import { mapState } from "vuex";
 export default {
-  name: "AchievingRateTable",
+  name: "DeliveryRules",
   components: {
     ComSearch,
   },
@@ -116,14 +115,23 @@ export default {
         btnForm: [],//拥有的按钮权限
         parmsBtn: [
           {
-          ButtonCode: "save",
-          BtnName: "保存",
-          isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-        },
+            ButtonCode: "save",
+            BtnName: "保存",
+            isLoading: false,
+            Methods: "dataSave",
+            Type: "success",
+            Icon: "",
+            Size: "small",
+          },
+          {
+            ButtonCode: "save",
+            BtnName: "新增",
+            isLoading: false,
+            Methods: "rowAdd",
+            Type: "success",
+            Icon: "",
+            Size: "small",
+            },
         ],
         formSearchs:[//不同标签页面的查询条件
           {
@@ -138,7 +146,7 @@ export default {
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         ],
-        sysID:[{ID:8986}],
+        sysID:[{ID:8991}],
         spread: null,//excel初始
         checkBoxCellTypeLine: "",
     }
@@ -150,7 +158,7 @@ export default {
     _this = this;
     _this.judgeBtn();
     _this.getTableHeader()
-    _this.getDepData();
+    _this.getDepData(this.userInfo.WorkFlowInstanceID);
   },
   mounted() {
     setTimeout(() => {
@@ -419,19 +427,20 @@ export default {
       }
     },
     // 获取责任部门数据
-    async getDepData() {
+    async getDepData(ERPOrderCode) {
       this.linesList = [];
-      let form = {
-        DataSourceID:'D2208110001'
-      }
-      let res = await GetSearch(form, "/APSAPI/GetDataSource")
+      let res = await GetSearchData({
+        dicID: 36,
+        OrganizeTypeID: 6,
+        ERPOrderCode: ERPOrderCode,
+      });
       const { data, forms, result, msg } = res.data;
       if (result) {
         let newData = [];
         this.adminLoading = false;
         if (data.length != 0) {
           data.forEach((x) => {
-            newData.push({ text: x.title, value: x.title });
+            newData.push({ text: x.OrganizeName, value: x.OrganizeID });
           });
         }
         this.linesList = newData;
@@ -450,6 +459,10 @@ export default {
         });
       }
     },
+    // 行新增
+    rowAdd(){
+        
+    }
   }
 }
 </script>
