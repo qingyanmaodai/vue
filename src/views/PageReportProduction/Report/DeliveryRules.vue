@@ -191,7 +191,7 @@ export default {
   methods:{
     //初始化SpreadJS
     initSpread: function (spread) {
-      console.log('spread',spread)
+      // console.log('spread',spread)
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -534,6 +534,7 @@ console.log('colInfos',colInfos)
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
+          console.log('c')
             if(x.item.SuplierCode&&x.item.RuleType){
                 x.item['dicID'] = 8992
                 submitData.push(x.item);
@@ -608,13 +609,14 @@ console.log('colInfos',colInfos)
         this.adminLoading = false;
         if (data.length != 0) {
           data.forEach((x) => {
-            newData.push({ text: x.SupplierName, value: x.SupplierID });
+            newData.push({ text: x.SupplierName, value: x.Code });
           });
         }
         this.checkBoxCellTypeSuplier = new GCsheets.CellTypes.ComboBox();
         this.checkBoxCellTypeSuplier.editorValueType(
           GC.Spread.Sheets.CellTypes.EditorValueType.value
         );
+        this.checkBoxCellTypeSuplier.editable(true)
         this.checkBoxCellTypeSuplier.items(newData);
         this.checkBoxCellTypeSuplier.itemHeight(24);
       } else {
@@ -633,14 +635,16 @@ console.log('colInfos',colInfos)
         if (sheet) {
             let list =[
                 {
-                    RowNumber:this.tableData[this.tagRemark].length?parseInt(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1]['RowNumber'] +1):1,
+                    // RowNumber:this.tableData[this.tagRemark].length?parseInt(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1]['RowNumber'] +1):1,
+                    rowNum :_.uniqueId('rowNum_')
                 }
                 ]
             this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
-            sheet.setDataSource(this.tableData[this.tagRemark]);
-            sheet.bindColumns(this.headerList)
-            console.log('this.tableData[this.tagRemark] ',this.tableData[this.tagRemark])
-            console.log('num',Number(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1].RowNumber))
+            this.setData()
+            // sheet.setDataSource(this.tableData[this.tagRemark]);
+            // sheet.bindColumns(this.headerList)
+            // console.log('this.tableData[this.tagRemark] ',this.tableData[this.tagRemark])
+            // console.log('num',Number(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1].RowNumber))
         }
     },
 
@@ -665,22 +669,41 @@ console.log('colInfos',colInfos)
             let sheet = this.spread.getActiveSheet();
             let newData = sheet.getDataSource();
             this.selectionData[this.tagRemark] = [];
+            console.log('newData',newData)
+            // return
             if (newData.length != 0) {
               newData.forEach((item,i) => {
                 if (item.isChecked) {
+                  // 
+                  item.ElementDeleteFlag = 1
+                  if(item.rowNum){
+                    this.tableData[this.tagRemark] = _.filter(this.tableData[this.tagRemark],function(o){
+                      if(o.rowNum!=item.rowNum){
+                        return o
+                      }
+                    })
+                    console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
+                    // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
+                    // sheet.setDataSource(this.tableData[this.tagRemark]);
+                    // sheet.bindColumns(this.headerList)
+                    this.setData()
+                    }else{
+                    this.selectionData[this.tagRemark].push(item);
+                  }
                   
-                  this.tableData[this.tagRemark]= _.filter(this.tableData[this.tagRemark],function(o){
-                    if(o.RowNumber!=item.RowNumber){
-                      return o
-                    }
-                  })
-                  
-                  // this.selectionData[this.tagRemark].push(x);
                 }
               });
+              // console.log('this.selectionData[this.tagRemark]',this.selectionData[this.tagRemark])
               // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
+              // this.tableData[this.tagRemark].map((ele)=>{
+              //   ele.ElementDeleteFlag = 1
+              // })
+              // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
+              if(this.selectionData[this.tagRemark].length){
+
+              
               this.adminLoading = true;
-              let res = await SaveData(this.tableData[this.tagRemark]);
+              let res = await SaveData(this.selectionData[this.tagRemark]);
               const { result, data, count, msg } = res.data;
               if (result) {
                 this.dataSearch(this.tagRemark);
@@ -698,9 +721,10 @@ console.log('colInfos',colInfos)
                   dangerouslyUseHTMLString: true,
                 });
               }
+              }
                   // sheet.setDataSource(this.tableData[this.tagRemark]);
                   // sheet.bindColumns(this.headerList)
-              console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
+              // console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
             }
           })
           .catch(() => {});

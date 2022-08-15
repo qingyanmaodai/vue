@@ -1,4 +1,4 @@
-<!-- 送货需求 -->
+<!-- 送货计划 -->
 <template>
     <div
     class="container"
@@ -137,7 +137,7 @@ export default {
         tablePagination: [//表分页参数
           { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         ],
-        sysID:[{ID:7903}],
+        sysID:[{ID:8993}],
         spread: null,//excel初始
     }
   },
@@ -158,7 +158,6 @@ export default {
   methods:{
     //初始化SpreadJS
     initSpread: function (spread) {
-      console.log('spread',spread)
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -189,9 +188,7 @@ export default {
     },
     // 拥有什么按钮权限
     judgeBtn() {
-        console.log('this.$route.meta',this.$route.meta)
       let routeBtn = this.$route.meta.btns;
-      console.log('routeBtn',routeBtn)
       let newBtn = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
@@ -212,7 +209,6 @@ export default {
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
-        console.log('datas',datas)
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
         });
@@ -259,7 +255,6 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData)
     },
     // excle表数据渲染
     async setData() {
