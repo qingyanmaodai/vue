@@ -164,7 +164,8 @@ export default {
         checkBoxCellTypeRuleType: "",
         checkBoxCellTypeSuplier:'',
         sheetSelectObj: { start: 0, end: 0, count: 0 },
-        headerList:[]
+        headerList:[],
+        selectionData:[[]],
     }
   },
   activated() {
@@ -644,11 +645,82 @@ console.log('colInfos',colInfos)
     },
 
     deleteRow () {
-        let spread = this.spread;
-        let sheet = spread.getActiveSheet();
-        if (sheet) {
+        // let spread = this.spread;
+        // let sheet = spread.getActiveSheet();
+        // if (sheet) {
             
+        // }
+        this.getSelectionData()
+        this.$nextTick(()=>{
+          if(this.selectionData[this.tagRemark].length==0){
+          this.$message.error("请选择需要删除的数据！");
+          return;
+        }else{
+          this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        })
+          .then(async() => {
+            let sheet = this.spread.getActiveSheet();
+            let newData = sheet.getDataSource();
+            this.selectionData[this.tagRemark] = [];
+            if (newData.length != 0) {
+              newData.forEach((item,i) => {
+                if (item.isChecked) {
+                  
+                  this.tableData[this.tagRemark]= _.filter(this.tableData[this.tagRemark],function(o){
+                    if(o.RowNumber!=item.RowNumber){
+                      return o
+                    }
+                  })
+                  
+                  // this.selectionData[this.tagRemark].push(x);
+                }
+              });
+              // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
+              this.adminLoading = true;
+              let res = await SaveData(this.tableData[this.tagRemark]);
+              const { result, data, count, msg } = res.data;
+              if (result) {
+                this.dataSearch(this.tagRemark);
+                this.adminLoading = false;
+                this.$message({
+                  message: msg,
+                  type: "success",
+                  dangerouslyUseHTMLString: true,
+                });
+              } else {
+                this.adminLoading = false;
+                this.$message({
+                  message: msg,
+                  type: "error",
+                  dangerouslyUseHTMLString: true,
+                });
+              }
+                  // sheet.setDataSource(this.tableData[this.tagRemark]);
+                  // sheet.bindColumns(this.headerList)
+              console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
+            }
+          })
+          .catch(() => {});
         }
+        })
+        
+        
+    },
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          if (x.isChecked) {
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
+      }
     },
     }
 }
