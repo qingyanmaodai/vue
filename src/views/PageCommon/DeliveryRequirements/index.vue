@@ -97,7 +97,8 @@ import {
   GetHeader,
   GetSearchData,
   ExportData,
-  SaveData
+  SaveData,
+  GetSearch
 } from "@/api/Common";
 export default {
   name: "DeliveryRequirements",
@@ -121,6 +122,15 @@ export default {
             Ghost: true,
             Size: "small",
             Methods: "dataSave",
+            Icon: "",
+          },
+          {
+            ButtonCode: "save",
+            BtnName: "同步",
+            Type: "danger",
+            Ghost: true,
+            Size: "small",
+            Methods: "syncSave",
             Icon: "",
           }
         ],
@@ -378,8 +388,32 @@ export default {
       }else{
         this.$message.error("当前数据没做修改，请先修改再保存！")
       }
-      
     },
+    // 同步
+    async syncSave(){
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/PushDeliveryData");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+        this.adminLoading = false;
+        this.dataSearch(this.tagRemark);
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+      } catch (error) {
+        if(error){
+          console.log('error',error)
+          this.adminLoading = false;
+        }
+      }
+      
+    }
   }
 }
 </script>

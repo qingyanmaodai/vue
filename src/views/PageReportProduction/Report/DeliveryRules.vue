@@ -166,6 +166,7 @@ export default {
         sheetSelectObj: { start: 0, end: 0, count: 0 },
         headerList:[],
         selectionData:[[]],
+        dataSourceDate:{},
     }
   },
   activated() {
@@ -175,8 +176,7 @@ export default {
     _this = this;
     _this.judgeBtn();
     _this.getTableHeader()
-    _this.getRuleTypeData();
-    _this.getSuplierData();
+    
   },
   mounted() {
     setTimeout(() => {
@@ -191,7 +191,6 @@ export default {
   methods:{
     //初始化SpreadJS
     initSpread: function (spread) {
-      // console.log('spread',spread)
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -223,7 +222,6 @@ export default {
     // 拥有什么按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
-      console.log('routeBtn',routeBtn)
       let newBtn = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
@@ -239,31 +237,47 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
+      this.adminLoading = true;
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
-        console.log('datas',datas)
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
+          m.forEach((y) => {
+            // 获取表头需要下拉配置的项
+          if(y.ControlType == "combobox" && y.isEdit&&y.DataSourceID){
+            this.dataSourceDate = {...this.dataSourceDate,...{[y.prop]:[]}}
+          }
+          })
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], "")
+            }
+            // 通过表头对应获取数据源
+            for(let obj in this.dataSourceDate){
+              if(obj === y.prop){
+                y.options.map(ele=>{
+                  ele.text = ele.label
+                })
+                this.dataSourceDate = {...this.dataSourceDate,...{[obj]:y.options}}
+              }
+              
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
         });
+        this.adminLoading = false
       } else {
-        // this.adminLoading = false;
+        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
@@ -291,45 +305,38 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData[this.tagRemark])
     },
     // excle表数据渲染
     async setData() {
       try {
         // 获取活动表单
         let sheet = this.spread.getActiveSheet();
-        // console.log('sheet0',sheet.getSheet(0))
         // 重置表单
         sheet.reset();
         // 渲染列
         let cellIndex = 0
         let colInfos = []
-        let ControlTypeList = ['combobox']//配置表的下拉类型
         this.tableColumns[this.tagRemark].forEach((x) => {
-        if (x.prop == "SuplierCode"&&ControlTypeList.includes(x.ControlType)) {
-          // 配置为下拉
-          colInfos.push({
+          if(x.ControlType == "combobox" && x.isEdit){
+            var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
+            cellType.editorValueType(
+              GC.Spread.Sheets.CellTypes.EditorValueType.value
+            );
+            cellType.items(this.dataSourceDate[x.prop]);
+            cellType.editable(true)
+             colInfos.push({
             name: x.prop,
             displayName: x.label,
-            cellType: this.checkBoxCellTypeSuplier,
+            cellType: cellType,
             size: parseInt(x.width),
-          });
-        }else if(x.prop == "RuleType"&&ControlTypeList.includes(x.ControlType)){
-          // 配置为下拉
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            cellType: this.checkBoxCellTypeRuleType,
-            size: parseInt(x.width),
-          });
-        } else {
-          colInfos.push({
+            });
+          }else{
+            colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-          });
-          
-        }
+            })
+          }
         cellIndex++
       });
       // 列筛选
@@ -389,10 +396,6 @@ export default {
           } else {
             sheet.suspendPaint();
             sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-              console.log(_this.sheetSelectRows);
-
-            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
             //删除旧行
             if (_this.sheetSelectObj.start > options.activeRow) {
               //说明从下面插入上面
@@ -452,27 +455,13 @@ export default {
                 sheet.setValue(i,viewSortIndex,viewSort);
                 viewSort++;
               }
-             
-                
             }
-      
-            // Commands.startTransaction(context, options);
-
-            // sheet.suspendPaint();
-
-            // var beforeRowCount = 0;
-
-            //  sheet.suspendPaint();
-
-            // Commands.endTransaction(context, options);
             sheet.resumePaint();
-
             return true;
           }
         },
       };
         this.spread.commandManager().register("insertRowsCopyStyle", insertRowsCopyStyle);
-console.log('colInfos',colInfos)
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
@@ -534,14 +523,12 @@ console.log('colInfos',colInfos)
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          console.log('c')
             if(x.item.SuplierCode&&x.item.RuleType){
                 x.item['dicID'] = 8992
                 submitData.push(x.item);
             }
         });
       }
-      
       if (submitData.length == 0) {
         this.$message.error("没修改过任何数据或供应商代码和规格类型为空！");
         return;
@@ -566,68 +553,6 @@ console.log('colInfos',colInfos)
         });
       }
     },
-    // 获取规则类型
-    async getRuleTypeData() {
-      let form = {
-        DataSourceID:'D2208110002'
-      }
-      let res = await GetSearch(form, "/APSAPI/GetDataSource")
-      const { data, forms, result, msg } = res.data;
-      if (result) {
-        let newData = [];
-        this.adminLoading = false;
-        if (data.length != 0) {
-          data.forEach((x) => {
-            newData.push({ text: x.title, value: x.title });
-          });
-        }
-        this.checkBoxCellTypeRuleType = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeRuleType.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-        this.checkBoxCellTypeRuleType.items(newData);
-        this.checkBoxCellTypeRuleType.itemHeight(24);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    
-    // 获取供应商数据
-    async getSuplierData() {
-      let form = {
-        DataSourceID:'201907041451178663'
-      }
-      let res = await GetSearch(form, "/APSAPI/GetDataSource")
-      const { data, forms, result, msg } = res.data;
-      if (result) {
-        let newData = [];
-        this.adminLoading = false;
-        if (data.length != 0) {
-          data.forEach((x) => {
-            newData.push({ text: x.SupplierName, value: x.Code });
-          });
-        }
-        this.checkBoxCellTypeSuplier = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeSuplier.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-        this.checkBoxCellTypeSuplier.editable(true)
-        this.checkBoxCellTypeSuplier.items(newData);
-        this.checkBoxCellTypeSuplier.itemHeight(24);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
     // 行新增
     addRow () {
         let spread = this.spread;
@@ -641,19 +566,10 @@ console.log('colInfos',colInfos)
                 ]
             this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
             this.setData()
-            // sheet.setDataSource(this.tableData[this.tagRemark]);
-            // sheet.bindColumns(this.headerList)
-            // console.log('this.tableData[this.tagRemark] ',this.tableData[this.tagRemark])
-            // console.log('num',Number(this.tableData[this.tagRemark][this.tableData[this.tagRemark].length-1].RowNumber))
         }
     },
 
     deleteRow () {
-        // let spread = this.spread;
-        // let sheet = spread.getActiveSheet();
-        // if (sheet) {
-            
-        // }
         this.getSelectionData()
         this.$nextTick(()=>{
           if(this.selectionData[this.tagRemark].length==0){
@@ -669,8 +585,6 @@ console.log('colInfos',colInfos)
             let sheet = this.spread.getActiveSheet();
             let newData = sheet.getDataSource();
             this.selectionData[this.tagRemark] = [];
-            console.log('newData',newData)
-            // return
             if (newData.length != 0) {
               newData.forEach((item,i) => {
                 if (item.isChecked) {
@@ -682,10 +596,6 @@ console.log('colInfos',colInfos)
                         return o
                       }
                     })
-                    console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
-                    // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
-                    // sheet.setDataSource(this.tableData[this.tagRemark]);
-                    // sheet.bindColumns(this.headerList)
                     this.setData()
                     }else{
                     this.selectionData[this.tagRemark].push(item);
@@ -693,15 +603,7 @@ console.log('colInfos',colInfos)
                   
                 }
               });
-              // console.log('this.selectionData[this.tagRemark]',this.selectionData[this.tagRemark])
-              // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
-              // this.tableData[this.tagRemark].map((ele)=>{
-              //   ele.ElementDeleteFlag = 1
-              // })
-              // this.tableData[this.tagRemark] = [...this.tableData[this.tagRemark],...list]
               if(this.selectionData[this.tagRemark].length){
-
-              
               this.adminLoading = true;
               let res = await SaveData(this.selectionData[this.tagRemark]);
               const { result, data, count, msg } = res.data;
@@ -722,16 +624,11 @@ console.log('colInfos',colInfos)
                 });
               }
               }
-                  // sheet.setDataSource(this.tableData[this.tagRemark]);
-                  // sheet.bindColumns(this.headerList)
-              // console.log('this.tableData[this.tagRemark]',this.tableData[this.tagRemark])
             }
           })
           .catch(() => {});
         }
         })
-        
-        
     },
     // 获取选中的数据
     getSelectionData() {
