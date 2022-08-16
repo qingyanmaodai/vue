@@ -1,13 +1,7 @@
 <!-- 送货计划 -->
 <template>
-    <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[tagRemark].datas"
@@ -24,33 +18,23 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[tagRemark]"
-          >
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
             >
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
-
           </div>
         </div>
-        <div  class="flex_row_spaceBtn">
+        <div class="flex_row_spaceBtn">
           <div>
             <span
               @click="toPageSetting(sysID[tagRemark].ID)"
@@ -59,26 +43,18 @@
             </span>
           </div>
           <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[tagRemark].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
-                :page-size="tablePagination[tagRemark].pageSize"
-                :total="tablePagination[tagRemark].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[tagRemark].pageIndex"
+              :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
+              :page-size="tablePagination[tagRemark].pageSize"
+              :total="tablePagination[tagRemark].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -98,7 +74,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "DeliveryRequirements",
@@ -107,65 +83,68 @@ export default {
   },
   data() {
     return {
-        title:this.$route.meta.title,//表名
-        height:'740px',
-        adminLoading:false,//加载状态
-        // isLoading: [false,false],//每个表查询条件加载
-        tabStatus:0,
-        tagRemark:0,
-        btnForm: [],//拥有的按钮权限
-        parmsBtn: [
-            {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
-            Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
-          },
-          {
-            ButtonCode: "save",
-            BtnName: "同步",
-            Type: "danger",
-            Ghost: true,
-            Size: "small",
-            Methods: "syncSave",
-            Icon: "",
-          }
-        ],
-        formSearchs:[//不同标签页面的查询条件
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          }
-        ],
-        tableData: [[]],//表格渲染数据,sysID有几个就有几个数组
-        tableColumns: [[]],//表格表头列
-        tableLoading:[false],//每个表加载
-        isClear: [false],
-        tablePagination: [//表分页参数
-          { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
-        ],
-        sysID:[{ID:8993}],
-        spread: null,//excel初始
-    }
+      title: this.$route.meta.title, //表名
+      height: "740px",
+      adminLoading: false, //加载状态
+      tabStatus: 0,
+      tagRemark: 0,
+      btnForm: [], //拥有的按钮权限
+      parmsBtn: [
+        {
+          ButtonCode: "save",
+          BtnName: "保存",
+          Type: "success",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataSave",
+          Icon: "",
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "同步",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncSave",
+          Icon: "",
+        },
+      ],
+      formSearchs: [
+        //不同标签页面的查询条件
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+        },
+      ],
+      tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[]], //表格表头列
+      tableLoading: [false], //每个表加载
+      isClear: [false],
+      tablePagination: [
+        //表分页参数
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+      ],
+      sysID: [{ ID: 8993 }],
+      spread: null, //excel初始
+    };
   },
   activated() {
-    this.spread.refresh();
+    if (this.spread) {
+      this.spread.refresh();
+    }
   },
   created() {
     _this = this;
     _this.adminLoading = true;
     _this.judgeBtn();
-    _this.getTableHeader()
+    _this.getTableHeader();
   },
   mounted() {
     setTimeout(() => {
       this.setHeight();
     }, 350);
   },
-  methods:{
+  methods: {
     //初始化SpreadJS
     initSpread: function (spread) {
       this.spread = spread;
@@ -189,7 +168,7 @@ export default {
       let newHeight = rem + 33 + "px";
       this.$set(this, "height", newHeight);
     },
-     // 跳转至属性配置
+    // 跳转至属性配置
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
@@ -224,7 +203,6 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
@@ -247,7 +225,7 @@ export default {
       }
     },
     // 获取表格数据
-    async getTableData(params,index){
+    async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
@@ -274,15 +252,15 @@ export default {
         // 重置表单
         sheet.reset();
         // 渲染列
-        let colInfos = []
+        let colInfos = [];
         this.tableColumns[this.tagRemark].forEach((x) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
-      });
-      
+        });
+
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -291,33 +269,44 @@ export default {
          * 参数4:
          * 参数5:
          */
-        let colHeaderStyle = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeaderStyle.foreColor('000000d9')
-        colHeaderStyle.backColor("#f3f3f3")
-        colHeaderStyle.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif")
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        
+        let colHeaderStyle = sheet.getRange(
+          0,
+          -1,
+          1,
+          -1,
+          GC.Spread.Sheets.SheetArea.colHeader
+        );
+        colHeaderStyle.foreColor("000000d9");
+        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.font(
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+        );
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font = "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        defaultStyle.font =
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
+        sheet.setDefaultStyle(
+          defaultStyle,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
 
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
-        sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
       } catch (error) {
-        console.log('表格渲染的错误信息:',error)
+        console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
-      
     },
     // 查询
     dataSearch(remarkTb) {
-      this.tagRemark = remarkTb
+      this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
@@ -327,13 +316,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -359,61 +348,59 @@ export default {
     },
     // 保存
     async dataSave(remarkTb) {
-        let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows();//获取修改过的数据
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
           submitData.push(x.item);
         });
-        this.adminLoading = true
+        this.adminLoading = true;
         let res = await SaveData(submitData);
         const { datas, forms, result, msg } = res.data;
         if (result) {
-            this.adminLoading = false;
-            this.$message({
+          this.adminLoading = false;
+          this.$message({
             message: msg,
             type: "success",
             dangerouslyUseHTMLString: true,
-            });
-            this.dataSearch(remarkTb);
+          });
+          this.dataSearch(remarkTb);
         } else {
-            this.adminLoading = false;
-            this.$message({
+          this.adminLoading = false;
+          this.$message({
             message: msg,
             type: "error",
             dangerouslyUseHTMLString: true,
-            });
+          });
         }
-      }else{
-        this.$message.error("当前数据没做修改，请先修改再保存！")
+      } else {
+        this.$message.error("当前数据没做修改，请先修改再保存！");
       }
     },
     // 同步
-    async syncSave(){
+    async syncSave() {
       this.adminLoading = true;
       let res = await GetSearch("", "/APSAPI/PushDeliveryData");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
-        this.adminLoading = false;
-        this.dataSearch(this.tagRemark);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
       } catch (error) {
-        if(error){
-          console.log('error',error)
+        if (error) {
           this.adminLoading = false;
         }
       }
-      
-    }
-  }
-}
+    },
+  },
+};
 </script>
