@@ -515,14 +515,14 @@ export default {
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          if (x.item.SuplierCode && x.item.RuleType) {
+          if (x.item.SuplierCode) {
             x.item["dicID"] = 8992;
             submitData.push(x.item);
           }
         });
       }
       if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据或供应商代码和规格类型为空！");
+        this.$message.error("没修改过任何数据或供应商代码为空！");
         return;
       }
       this.adminLoading = true;
