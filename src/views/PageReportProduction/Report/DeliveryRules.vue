@@ -555,7 +555,11 @@ export default {
           ...this.tableData[this.tagRemark],
           ...list,
         ];
-        this.setData();
+        // this.setData();
+        //渲染数据源
+        sheet.setDataSource(this.tableData[this.tagRemark]);
+        //渲染列
+        sheet.bindColumns(this.headerList); 
         this.adminLoading = false;
       }
     },
@@ -591,7 +595,11 @@ export default {
                           }
                         }
                       );
-                      this.setData();
+                      // this.setData();
+                      //渲染数据源
+                      sheet.setDataSource(this.tableData[this.tagRemark]);
+                      //渲染列
+                      sheet.bindColumns(this.headerList); 
                     } else {
                       //接口返回的数据删除需要调接口删除
                       isHasID = true;
