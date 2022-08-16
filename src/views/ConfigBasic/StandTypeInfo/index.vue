@@ -368,6 +368,7 @@ export default {
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
+        this.delData[remarkTb] = []
       });
     },
     // 重置
@@ -570,11 +571,16 @@ export default {
     // 点击新增班次
     openDrawer() {
       this.dialogShow = true;
+      console.log('this.delData[remarkTb]',this.delData[this.tagRemark])
       if (this.delData[0].length != 0) {
         let row = this.delData[0][0];
         this.formData.ParentWorkingTimesID = row.WorkingTimesID;
         this.formData.ParentWorkingTimesName = row.WorkingTimesName;
         this.formData.WorkingTimesName = "";
+      }else{
+        // 没选中时班次清空
+        this.formData.ParentWorkingTimesID = '';
+        this.formData.ParentWorkingTimesName = '';
       }
     },
     // 弹框确定添加
