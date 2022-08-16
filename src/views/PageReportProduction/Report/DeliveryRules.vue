@@ -43,7 +43,8 @@
             </span>
           </div>
           <div class="flex">
-            <el-pagination
+            <span>共{{tablePagination[tagRemark].pageTotal}}条</span>
+            <!-- <el-pagination
               background
               @size-change="(val) => pageSize(val, 0)"
               :current-page="tablePagination[tagRemark].pageIndex"
@@ -53,7 +54,7 @@
               @current-change="(val) => pageChange(val, 0)"
               layout="total, sizes, prev, pager, next,jumper"
             >
-            </el-pagination>
+            </el-pagination> -->
           </div>
         </div>
       </div>
@@ -127,7 +128,7 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       sysID: [{ ID: 8992 }],
       spread: null, //excel初始
@@ -293,6 +294,9 @@ export default {
         let cellIndex = 0;
         let colInfos = [];
         this.tableColumns[this.tagRemark].forEach((x) => {
+          if(x.DataType=="varchar"||x.DataType=='nvarchar'){
+            sheet.setFormatter(-1,cellIndex , "@");
+          }
           if (x.ControlType == "combobox" && x.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
             cellType.editorValueType(
@@ -300,6 +304,7 @@ export default {
             );
             cellType.items(this.dataSourceDate[x.prop]);
             cellType.editable(true);
+            
             colInfos.push({
               name: x.prop,
               displayName: x.label,
@@ -324,7 +329,7 @@ export default {
           cellrange
         );
         sheet.rowFilter(hideRowFilter);
-
+        
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
