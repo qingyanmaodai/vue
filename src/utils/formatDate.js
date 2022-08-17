@@ -91,6 +91,16 @@ export const formatDate=(dates)=> {
     let day = zero(date.getDate());
     return year + "-" + month + "-" + day;
 }
+// 当前时间的后1.5个月
+export const formatNextMonthDate=()=> {
+    let date = new Date();
+    let newDate = date.setDate(date.getDate() + 15);
+ 	newDate = new Date(newDate)
+    let year = newDate.getFullYear();
+    let month = zero(newDate.getMonth() + 2);
+    let day = zero(newDate.getDate());
+    return year + "-" + month + "-" + day;
+}
 
 export default {
     formatTodayDate,

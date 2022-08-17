@@ -19,9 +19,33 @@
         <div class="ant-table-title">
           <el-row>
             <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
+              ><span class="title">{{ title }}</span></el-col>
+            <el-col :span="20" class="flex_flex_end"> 
+            <div style="margin-right:10px;">
+              <span>计算周期：</span>
+                  <el-date-picker 
+                  v-model="machineCycle" type="daterange"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                  placeholder="请选择"
+                >
+                  </el-date-picker>
+            </div>
+            <div>
+              <el-button
+               style="margin-right:10px;"
+              plain
+              v-for="(item, i) in parmsBtn2"
+              :key="i"
+              :type="item.Type ? item.Type : 'primary'"
+              :icon="item.Icon"
+              size="small"
+              @click="btnClick(item.Methods, item.Params, i)"
             >
-            <el-col :span="20" class="flex_flex_end"> </el-col>
+              {{ item.BtnName }}</el-button>
+            </div>
+              
+            </el-col>
           </el-row>
         </div>
         <div class="flex_column" :style="{ height: height }">
@@ -76,6 +100,7 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
+import formatDate,{formatNextMonthDate} from "@/utils/formatDate"
 export default {
   name: "DeliveryRequirements",
   components: {
@@ -83,6 +108,7 @@ export default {
   },
   data() {
     return {
+      machineCycle:'',
       title: this.$route.meta.title, //表名
       height: "740px",
       adminLoading: false, //加载状态
@@ -106,6 +132,19 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "syncSave",
+          Icon: "",
+        },
+        
+      ],
+      // 表头添加动态按钮
+      parmsBtn2:[
+        {
+          ButtonCode: "save",
+          BtnName: "计算",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          Methods: "calculateSave",
           Icon: "",
         },
       ],
@@ -138,6 +177,9 @@ export default {
     _this.adminLoading = true;
     _this.judgeBtn();
     _this.getTableHeader();
+    // 计算周期默认时间：今天~1.5月
+    _this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
+    console.log('formatNextMonthDate',formatNextMonthDate())
   },
   mounted() {
     setTimeout(() => {
@@ -179,6 +221,7 @@ export default {
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
+      let btn2 = []
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
@@ -187,9 +230,17 @@ export default {
           if (newData.length != 0) {
             newBtn = newBtn.concat(newData);
           }
+          let newData2 = this.parmsBtn2.filter((y) => {
+            return x.ButtonCode == y.ButtonCode;
+          });
+          if (newData2.length != 0) {
+            btn2 = btn2.concat(newData2);
+          }
         });
       }
+      console.log('parmsBtn2',this.parmsBtn2)
       this.$set(this, "btnForm", newBtn);
+      this.$set(this, "parmsBtn2", btn2);
     },
     // 获取表头
     async getTableHeader() {
@@ -401,6 +452,33 @@ export default {
         }
       }
     },
+    // 计算
+    async calculateSave(){
+      let form = {
+        StartDate:_this.machineCycle.length?_this.machineCycle[0]:'',
+        EndDate:_this.machineCycle.length?_this.machineCycle[1]:''
+      }
+      this.adminLoading = true;
+      let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
+    }
   },
 };
 </script>
