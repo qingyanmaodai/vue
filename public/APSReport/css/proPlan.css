@@ -3749,6 +3749,9 @@
   color: rgba(235, 145, 136, 1);
 }
 .widthPadding{
+  padding: 0 17px;
+}
+.widthPadding2{
   padding: 0 10px;
 }
 

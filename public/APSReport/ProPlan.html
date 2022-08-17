@@ -86,7 +86,7 @@
                 <span class="tableWidthRatio5 tableTitle">顺序</span>
                 <span class="tableWidthRatio20 tableTitle">产品编码</span>
                 <span class="tableWidthRatio10 tableTitle">数量</span>
-                <span class="tableWidthRatio15 tableTitle widthPadding">交期</span>
+                <span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>
                 <span class="tableWidthRatio15 tableTitle">备注</span>
               </div>
               <div class="wrap2 table2">
@@ -97,7 +97,7 @@
                     <span class="tableWidthRatio5 tableContent color1">{{ele.ViewSort}}</span>
                     <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
                     <span class="tableWidthRatio10 tableContent color2">{{ele.PlanQty}}</span>
-                    <span class="tableWidthRatio15 tableContent widthPadding">{{ele.EndDate}}</span>
+                    <span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span>
                     <span class="tableWidthRatio15 tableContent clampEllipsis1"  :title="ele.Remark1">{{ele.Remark1}}</span>
                   </div>
                 </div>
@@ -571,7 +571,7 @@
         },
         // 今日生产计划
         getToDayPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:0 })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:10 })
 					.then(function (res) {
             _this.todayList = []
 						if (res.result) {
@@ -596,7 +596,7 @@
         },
         // 明日生产计划
         getTomorrowPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:0 })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:10 })
 					.then(function (res) {
             _this.tomorrowList = []
 						if (res.result) {
@@ -700,10 +700,6 @@
   display: none;
   
   }
-.str_move {
-  position: relative;
-  overflow: hidden;
-}
 .navboxall{height: calc(100%);}
 .navboxall2{height: calc(100% - 100px);}
 </style>
