@@ -127,6 +127,7 @@
                       size="mini"
                       v-model="scope.row[item.prop]"
                       :disabled="scope.row['disabled']"
+                      @input="totalTimesChange(scope)"
                     ></el-input>
                   </template>
                 </ux-table-column>
@@ -431,7 +432,7 @@ export default {
           Week5: "",
           Week6: "",
           Week7: "",
-          disabled: false,
+          disabled: true,
         },
       ],
       tableHeader: [
@@ -552,6 +553,16 @@ export default {
     }, 450);
   },
   methods: {
+    //累计时长计算
+    totalTimesChange(scope){
+      if(scope.rowIndex!=0){
+        // 上班/加班时间发生改变时计算累加时长
+        let name = "Week" + scope.columnIndex;
+        let workTimes =this.tableData[1][name]?this.tableData[1][name]:0
+        let overTimes = this.tableData[2][name]?this.tableData[2][name]:0
+        this.tableData[3][name] = parseFloat(workTimes) + parseFloat(overTimes);
+      }
+    },
     getDays(year, month) {
       let days = new Date(year, month, 0).getDate();
       return days;
@@ -823,7 +834,6 @@ export default {
       let res = await GetWorkTimeData(obj);
       const { result, data, count, msg } = res.data;
       if (result) {
-        console.log(data);
         data.some((x, i) => {
           for (var name in x) {
             this.$set(this.calenderData[i], name, x[name]);
@@ -1040,8 +1050,6 @@ export default {
               x.YearMonth = YearMonth;
             });
             obj["submitData"] = _this.calenderData;
-            console.log(obj);
-            debugger;
             return;
             let res = await SaveLineWorkingTimes(obj);
             const { result, data, count, msg } = res.data;
