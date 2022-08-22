@@ -208,6 +208,11 @@ export default {
       this.setHeight();
     }, 450);
   },
+  activated() {
+    if (this.spread) {
+      this.spread.refresh();
+    }
+  },
   methods: {
     initSpread: function (spread) {
       this.spread = spread;
@@ -583,6 +588,7 @@ export default {
       this.adminLoading = false;
       this.tableLoading[0] = false;
       this.spread.repaint();
+      this.spread.refresh()
       // this.spread.suspendPaint();
       // this.spread.isPaintSuspended(false);
     },
@@ -590,7 +596,7 @@ export default {
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: id },
+        params: { ID: this.sysID[this.tagRemark].ID },
       });
     },
     // 改变状态
