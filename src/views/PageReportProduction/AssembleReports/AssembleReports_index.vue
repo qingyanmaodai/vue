@@ -144,7 +144,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem -10+ "px";
       this.$set(this, "height", newHeight);
     },
     // 第几页
