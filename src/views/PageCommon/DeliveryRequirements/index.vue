@@ -28,6 +28,8 @@
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
+                  :clearable="false"
+                  :editable="false"
                 >
                   </el-date-picker>
             </div>
@@ -179,7 +181,15 @@ export default {
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
     _this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
-    console.log('formatNextMonthDate',formatNextMonthDate())
+    console.log('roles',this.$store.getters.roles)
+    // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
+    if(_this.$store.getters.roles.length){
+      _this.$store.getters.roles.forEach(item=>{
+        if(item.RoleID==='R2103250001'){
+          _this.formSearchs[_this.tagRemark].datas['Account'] = item.Account
+        }
+      })
+    }
   },
   mounted() {
     setTimeout(() => {
