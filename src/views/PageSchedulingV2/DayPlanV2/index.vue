@@ -725,6 +725,9 @@ export default {
       if (!currentRow[currentlabel]) {
         return;
       }
+      if(val==0){//输入0不触发自动计算
+        return
+      }
       if (
         !currentRow[currentlabel].TotalHours ||
         parseInt(currentRow[currentlabel].TotalHours) <= 0
@@ -741,7 +744,6 @@ export default {
       // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
       this.tableColumns[0].some((x, i) => {
         if (i <= colIndex) {
-          debugger;
           list.push(currentRow[x.prop]);
           if (x.prop2 && i != colIndex && currentRow[x.prop]) {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
@@ -751,7 +753,6 @@ export default {
         }
       });
       remainNum = Qty - editNum;
-      debugger;
       if (parseInt(val) > remainNum) {
         this.$message.error(
           "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
@@ -974,7 +975,6 @@ export default {
       this.adminLoading = true;
     let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;
-      debugger;
       if (result) {
         this.dataSearch(0);
         this.adminLoading = false;
