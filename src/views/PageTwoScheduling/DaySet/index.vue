@@ -981,6 +981,8 @@ sheet.getCell(index, cellIndex).cellType(cellType);
       if(val==null)
       {
         val=0;
+      }else if(val==0){//输入0不触发自动计算
+        return
       }
      let currentRow = dataSource[rowIndex];
       if(currentRow.ID==-1)

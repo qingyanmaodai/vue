@@ -932,6 +932,7 @@ this.spread.refresh();
 
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
+        
         const { sheet, row, col } = args;
         const cellType = sheet.getCellType(row, col);
         if (cellType instanceof GCsheets.CellTypes.Button) {
@@ -943,10 +944,14 @@ this.spread.refresh();
       });
       //表格编辑事件
 
-      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
+      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {
+        console.log('argse',e)
+        console.log('args',args)
+      });
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-
+        console.log('argse',e)
+        console.log('args',args)
         _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
@@ -958,10 +963,14 @@ this.spread.refresh();
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
+        console.log('val',val)
       let sheet = this.spread.getActiveSheet();
       //let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
+      }
+      else if(val==0){//输入0不触发自动计算
+        return
       }
       let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
       if (currentRow.ID == -1) {
