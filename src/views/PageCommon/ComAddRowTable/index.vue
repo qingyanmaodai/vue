@@ -391,7 +391,7 @@ export default {
         
         console.log('this.addNum',this.addNum)
         
-        this.tableData[remarkTb].push(obj)
+        this.tableData[remarkTb].unshift(obj)
         }
             
         
@@ -442,36 +442,19 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
-        console.log('this.tableColumns',this.tableColumns)
-        console.log('this.formSearchs[z]',this.formSearchs[remarkTb].required)
-        console.log('this.tableData[remarkTb]',this.tableData[remarkTb])
-        // return
     if(this.tableData[remarkTb].length){
         if(this.formSearchs[remarkTb].required.length){
             // 动态检验必填项
             for(let i=0;i<this.tableData[remarkTb].length;i++){
                 for(let x=0;x<this.formSearchs[remarkTb].required.length;x++){
+                    console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
                     if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]){
                     this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
-                    break
+                    return
                 }
-                }
-                return
-            // if(!this.tableData[remarkTb][i].OrganizeID){
-            //     this.$message.error('组织不能为空，请选择组织')
-            //     return
-            // }
-            // if(!this.tableData[remarkTb][i].StartDate){
-            //     this.$message.error('开始日期不能为空，请填写开始日期')
-            //     return
-            // }
-            // if(!this.tableData[remarkTb][i].EndDate){
-            //     this.$message.error('结束日期不能为空，请填写结束日期')
-            //     return
-            // }
+            }
         }
         }
-        
         this.adminLoading = true;
         let res = await SaveData(this.tableData[remarkTb]);
         const { datas, forms, result, msg } = res.data;
@@ -518,7 +501,7 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n,index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
@@ -530,12 +513,11 @@ export default {
             if(n.DataSourceID&&n.ControlType==='combobox'){
                 this.DataSourceList = {[n.DataSourceName]:[],...this.DataSourceList}
             }
+            if(n.Required){
+                this.formSearchs[this.tagRemark].required.push(n)
+            }
           });
           this.$set(this.tableColumns, i, m);
-          if(m.Required){
-            this.$set(this.formSearchs[i],"required",m)
-          }
-          
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {

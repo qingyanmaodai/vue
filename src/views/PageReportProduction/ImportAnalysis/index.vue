@@ -152,10 +152,13 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
+import {
+  HeaderCheckBoxCellType
+} from "@/static/data.js";
 import formatDates,{formatNextMonthDate,formatDate} from "@/utils/formatDate"
 import XLSX from "xlsx";
 export default {
-  name: "DeliveryRequirements",
+  name: "ImportAnalysis",
   components: {
     ComSearch,
   },
@@ -206,6 +209,15 @@ export default {
           Methods: "Analysis",
           Icon: "",
         },
+        {
+          ButtonCode: "delete",
+          BtnName: "删除",
+          isLoading: false,
+          Methods: "deleteRow",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+        },
       ],
       // 表头添加动态按钮
       parmsBtn2:[
@@ -239,6 +251,7 @@ export default {
       spread: null, //excel初始
       fileList: [],
       file: [],
+      selectionData:[[]],
     };
   },
   activated() {
@@ -334,9 +347,11 @@ export default {
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
           console.log('m',m)
-          if(m.Required){
-            this.$set(this.formSearchs[i],"required",m)
-          }
+          m.forEach((n,index) => {
+            if(n.Required){
+                this.formSearchs[this.tagRemark].required.push(n)
+            }
+          });
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -397,6 +412,23 @@ export default {
             size: parseInt(x.width),
           });
         });
+        // 选框
+        sheet.setCellType(
+        0,
+        0,
+        new HeaderCheckBoxCellType(),
+        GCsheets.SheetArea.colHeader
+      );
+
+      let checkbox = {
+        name: "isChecked",
+        displayName: "选择",
+        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+        size: 60,
+      };
+      for (var name in checkbox) {
+        colInfos[0][name] = checkbox[name];
+      }
 
         // 设置整个列头的背景色和前景色。
         /**
@@ -594,15 +626,17 @@ export default {
       const reader = new FileReader(); //上传就解析文件
       var that = this;
       reader.onload = function (e) {
+        console.log('e',e)
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
-          cellDates: true
+          cellDates: true,
+          dateNF: 'yyyy-MM-dd'
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
             sheetName: sheetName,
-            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName]),
+            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName],{ raw: true }),
           });
         });
         console.log('result导入数据',result)
@@ -612,8 +646,6 @@ export default {
     },
     // 解析文件
     async dataSys(importData) {
-        
-        
       if (importData && importData.length > 0) {
         let DataList = [];
         importData[0].sheet.forEach((m) => {
@@ -629,6 +661,11 @@ export default {
                         obj[item.prop] = m[key]
                     }
                     
+                }else if(isNaN(key)&&!isNaN(Date.parse(key))){
+                  //判断列是否为日期格式，是也加入
+                  obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
+                }{
+
                 }
                 
             })
@@ -645,19 +682,20 @@ export default {
             for(let i=0;i<DataList.length;i++){
                 for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
                     if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
-                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请选择`)
-                    break
+                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请填写`)
+                    this.adminLoading = false;
+                    return
                 }
                 }
-                this.adminLoading = false;
-                return
         }
         }
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
-          this.dataSearch(this.tagRemark);
+          // this.dataSearch(this.tagRemark);
+          // 导入可能存在表头格式不一样，需要更新
+          this.getTableHeader()
           this.$message({
             message: msg,
             type: "success",
@@ -726,6 +764,54 @@ export default {
         }
       }
     },
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          if (x.isChecked) {
+            x.ElementDeleteFlag = 1;//删除标识
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
+      }
+    },
+    deleteRow(){
+        this.getSelectionData();
+         if (this.selectionData[this.tagRemark].length == 0) {
+          this.$message.error("请选择需要删除的数据！");
+          return;
+        } else {
+          this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "info",
+          })
+            .then(async () => {
+                  this.adminLoading = true;
+                  let res = await SaveData(this.selectionData[this.tagRemark]);
+                  const { result, data, count, msg } = res.data;
+                  if (result) {
+                    this.dataSearch(this.tagRemark);
+                    this.adminLoading = false;
+                    this.$message({
+                      message: msg,
+                      type: "success",
+                      dangerouslyUseHTMLString: true,
+                    });
+                  } else {
+                    this.adminLoading = false;
+                    this.$message({
+                      message: msg,
+                      type: "error",
+                      dangerouslyUseHTMLString: true,
+                    });
+                  }
+            })
+        }
+    }
   },
 };
 </script>

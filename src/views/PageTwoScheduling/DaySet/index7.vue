@@ -146,7 +146,7 @@ export default {
           Size: "small",
         },
                {
-          ButtonCode: "save",
+          ButtonCode: "SyncSAP",
           BtnName: "同步SAP",
           isLoading: false,
           Methods: "updateSAP",
