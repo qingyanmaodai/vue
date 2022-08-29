@@ -638,24 +638,21 @@ export default {
           obj["StartDate"]=_this.machineCycle.length?_this.machineCycle[0]:'',
           obj["EndDate"]=_this.machineCycle.length?_this.machineCycle[1]:''
           DataList.push(obj);
-          console.log('DataList',DataList)
         });
         // 必填校验
-        // if(this.formSearchs[this.tagRemark].required.length){
-        //     // 动态检验必填项
-        //     for(let i=0;i<DataList.length;i++){
-        //         for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
-        //             if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
-        //             this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请选择`)
-        //             break
-        //         }
-        //         }
-        //         this.adminLoading = false;
-        //         return
-        // }
-        // }
-        this.adminLoading = false;
-        return
+        if(this.formSearchs[this.tagRemark].required.length){
+            // 动态检验必填项
+            for(let i=0;i<DataList.length;i++){
+                for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
+                    if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
+                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请选择`)
+                    break
+                }
+                }
+                this.adminLoading = false;
+                return
+        }
+        }
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
