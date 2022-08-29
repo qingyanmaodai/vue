@@ -143,7 +143,7 @@ export default {
           Params: { dataName: "selectionData" },
         },
         {
-          ButtonCode: "save",
+          ButtonCode: "SyncSAP",
           BtnName: "同步SAP",
           isLoading: false,
           Methods: "updateSAP",

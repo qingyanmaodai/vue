@@ -158,7 +158,7 @@ import {
 import formatDates,{formatNextMonthDate,formatDate} from "@/utils/formatDate"
 import XLSX from "xlsx";
 export default {
-  name: "DeliveryRequirements",
+  name: "ImportAnalysis",
   components: {
     ComSearch,
   },
@@ -626,15 +626,17 @@ export default {
       const reader = new FileReader(); //上传就解析文件
       var that = this;
       reader.onload = function (e) {
+        console.log('e',e)
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
-          cellDates: true
+          cellDates: true,
+          dateNF: 'yyyy-MM-dd'
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
             sheetName: sheetName,
-            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName]),
+            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName],{ raw: true }),
           });
         });
         console.log('result导入数据',result)
@@ -644,8 +646,6 @@ export default {
     },
     // 解析文件
     async dataSys(importData) {
-        
-        
       if (importData && importData.length > 0) {
         let DataList = [];
         importData[0].sheet.forEach((m) => {
@@ -661,6 +661,11 @@ export default {
                         obj[item.prop] = m[key]
                     }
                     
+                }else if(isNaN(key)&&!isNaN(Date.parse(key))){
+                  //判断列是否为日期格式，是也加入
+                  obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
+                }{
+
                 }
                 
             })
@@ -677,19 +682,20 @@ export default {
             for(let i=0;i<DataList.length;i++){
                 for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
                     if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
-                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请选择`)
+                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请填写`)
+                    this.adminLoading = false;
                     return
                 }
                 }
-                this.adminLoading = false;
-                
         }
         }
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
-          this.dataSearch(this.tagRemark);
+          // this.dataSearch(this.tagRemark);
+          // 导入可能存在表头格式不一样，需要更新
+          this.getTableHeader()
           this.$message({
             message: msg,
             type: "success",
