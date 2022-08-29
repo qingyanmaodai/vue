@@ -152,7 +152,7 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
-import formatDate,{formatNextMonthDate} from "@/utils/formatDate"
+import formatDates,{formatNextMonthDate,formatDate} from "@/utils/formatDate"
 import XLSX from "xlsx";
 export default {
   name: "DeliveryRequirements",
@@ -161,6 +161,7 @@ export default {
   },
   data() {
     return {
+      dialogImport:false,
       machineCycle:'',
       title: this.$route.meta.title, //表名
       height: "740px",
@@ -223,6 +224,7 @@ export default {
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
+          required:[],//获取必填项
         },
       ],
       tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
@@ -233,7 +235,7 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 8993 }],
+      sysID: [{ ID: 8994 }],
       spread: null, //excel初始
       fileList: [],
       file: [],
@@ -250,7 +252,7 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
-    _this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
+    _this.machineCycle = [formatDates.formatTodayDate(),formatNextMonthDate()]
     console.log('roles',this.$store.getters.roles)
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
     if(_this.$store.getters.roles.length){
@@ -331,6 +333,10 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
+          console.log('m',m)
+          if(m.Required){
+            this.$set(this.formSearchs[i],"required",m)
+          }
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -591,6 +597,7 @@ export default {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
+          cellDates: true
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
@@ -605,21 +612,50 @@ export default {
     },
     // 解析文件
     async dataSys(importData) {
+        
+        
       if (importData && importData.length > 0) {
         let DataList = [];
         importData[0].sheet.forEach((m) => {
           var obj = {};
-        //   debugger;
-          obj["Remark1"] = m["料号"];
-          obj["ProcessID"] = m["工序"];
-          obj["Capacity"] = m["时产能"];
-          obj["StandardPeoples"] = m["标准人力"];
-          obj["Efficiency"] = m["效率"];
+          for(let key in m){
+            // 判断是否和配置里的取名一致，一致才可导入
+            this.tableColumns[this.tagRemark].map((item)=>{
+                if(item.label === key){
+                    if(item.DataType ==='datetime'){
+                        obj[item.prop] = m[key]?this.$moment(m[key]).add(1, 'days').format('YYYY-MM-DD'):''
+                        // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                    }else{
+                        obj[item.prop] = m[key]
+                    }
+                    
+                }
+                
+            })
+          }
+        // 以下为固定入参
           obj["dicID"] = this.sysID[this.tagRemark].ID;
           obj["StartDate"]=_this.machineCycle.length?_this.machineCycle[0]:'',
           obj["EndDate"]=_this.machineCycle.length?_this.machineCycle[1]:''
           DataList.push(obj);
+          console.log('DataList',DataList)
         });
+        // 必填校验
+        // if(this.formSearchs[this.tagRemark].required.length){
+        //     // 动态检验必填项
+        //     for(let i=0;i<DataList.length;i++){
+        //         for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
+        //             if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
+        //             this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请选择`)
+        //             break
+        //         }
+        //         }
+        //         this.adminLoading = false;
+        //         return
+        // }
+        // }
+        this.adminLoading = false;
+        return
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
