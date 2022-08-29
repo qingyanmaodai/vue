@@ -423,6 +423,15 @@ export default {
         });
       });
     },
+     // 导出
+    async dataExport(remarkTb) {
+      this.adminLoading = true;
+      let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
+      form["rows"] = 0;
+      let res = await ExportData(form);
+      this.adminLoading = false;
+      this.$store.dispatch("user/exportData", res.data);
+    },
   },
 };
 </script>
