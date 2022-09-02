@@ -648,6 +648,7 @@ export default {
     async dataSys(importData) {
       if (importData && importData.length > 0) {
         let DataList = [];
+    
         importData[0].sheet.forEach((m) => {
           var obj = {};
           for(let key in m){
@@ -674,14 +675,22 @@ export default {
           obj["dicID"] = this.sysID[this.tagRemark].ID;
           obj["StartDate"]=_this.machineCycle.length?_this.machineCycle[0]:'',
           obj["EndDate"]=_this.machineCycle.length?_this.machineCycle[1]:''
+          obj["Account"]=this.$store.getters.userInfo.Account;
           DataList.push(obj);
         });
         // 必填校验
         if(this.formSearchs[this.tagRemark].required.length){
             // 动态检验必填项
+            console.log(DataList)
+            console.log(this.formSearchs[this.tagRemark])
             for(let i=0;i<DataList.length;i++){
+            
+          
                 for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
+ 
+
                     if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
+                 
                     this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请填写`)
                     this.adminLoading = false;
                     return

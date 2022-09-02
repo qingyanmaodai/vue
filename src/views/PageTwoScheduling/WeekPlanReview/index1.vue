@@ -116,6 +116,7 @@ import {
   GetHeader,
   GetSearchData,
   ExportData,
+    GetSearch,
   SaveData
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
@@ -479,7 +480,7 @@ export default {
         this.$message.error('请选择需要审核的数据!')
         return 
       }
-      this.$confirm("是否确定审核!")
+      this.$confirm("是否确定审核?")
         .then( async() => {
           // 确认
           this.selectionData[this.tagRemark].map(item=>{
@@ -487,7 +488,7 @@ export default {
             item.Status = 3
           })
           this.adminLoading = true
-          let res = await SaveData(this.selectionData[this.tagRemark])
+          let res = await GetSearch(this.selectionData[this.tagRemark],'/APSAPI/UpdateOrderStartDate?isUpdate=1')
           const { result, data, count, msg } = res.data;
           if (result) {
             this.selectionData[this.tagRemark]=[]
