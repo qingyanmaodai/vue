@@ -84,7 +84,9 @@
               </span>
             </div>
             <div class="flex">
-              <el-pagination
+              <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
+              <span>共{{tablePagination[1].pageTotal}}条</span>
+              <!-- <el-pagination
                 background
                 @size-change="(val) => pageSize(val, 1)"
                 :current-page="tablePagination[1].pageIndex"
@@ -94,7 +96,7 @@
                 @current-change="(val) => pageChange(val, 1)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
-              </el-pagination>
+              </el-pagination> -->
             </div>
           </div>
         </div>
@@ -388,7 +390,7 @@ export default {
       isClear: [false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
