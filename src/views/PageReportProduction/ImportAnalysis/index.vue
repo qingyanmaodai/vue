@@ -19,34 +19,36 @@
         <div class="ant-table-title">
           <el-row>
             <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col>
-            <el-col :span="20" class="flex_flex_end"> 
-            <div style="margin-right:10px;">
-              <span>对比周期：</span>
-                  <el-date-picker 
-                  v-model="machineCycle" type="daterange"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end">
+              <div style="margin-right: 10px">
+                <span>对比周期：</span>
+                <el-date-picker
+                  v-model="machineCycle"
+                  type="daterange"
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
                   :clearable="false"
                   :editable="false"
                 >
-                  </el-date-picker>
-            </div>
-            <div>
-              <el-button
-               style="margin-right:10px;"
-              plain
-              v-for="(item, i) in parmsBtn2"
-              :key="i"
-              :type="item.Type ? item.Type : 'primary'"
-              :icon="item.Icon"
-              size="small"
-              @click="btnClick(item.Methods, item.Params, i)"
-            >
-              {{ item.BtnName }}</el-button>
-            </div>
-              
+                </el-date-picker>
+              </div>
+              <div>
+                <el-button
+                  style="margin-right: 10px"
+                  plain
+                  v-for="(item, i) in parmsBtn2"
+                  :key="i"
+                  :type="item.Type ? item.Type : 'primary'"
+                  :icon="item.Icon"
+                  size="small"
+                  @click="btnClick(item.Methods, item.Params, i)"
+                >
+                  {{ item.BtnName }}</el-button
+                >
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -86,53 +88,40 @@
     </div>
     <!-- 导入文件 -->
     <div>
-        <el-dialog
-      title="导入并分析"
-      :visible.sync="dialogImport"
-      width="50%"
-    >
-      <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
-        style="padding-top: 10px"
-        class="upload-demo"
-        drag
-        :limit="1"
-        :multiple="false"
-        name="files"
-        ref="upload"
-        :on-change="handleChanged"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        accept=".xls, .xlsx"
-      >
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
-        </div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
+      <el-dialog title="导入并分析" :visible.sync="dialogImport" width="50%">
+        <el-upload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          style="padding-top: 10px"
+          class="upload-demo"
+          drag
+          :limit="1"
+          :multiple="false"
+          name="files"
+          ref="upload"
+          :on-change="handleChanged"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          accept=".xls, .xlsx"
         >
-          只能上传xls、xslx文件且仅支持上传一个文件
-        </div>
-      </el-upload>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogImport = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="sureImport"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xls、xslx文件且仅支持上传一个文件
+          </div>
+        </el-upload>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogImport = false" size="small"
+            >取 消</el-button
+          >
+          <el-button size="small" type="primary" @click="sureImport"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -152,10 +141,11 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
-import {
-  HeaderCheckBoxCellType
-} from "@/static/data.js";
-import formatDates,{formatNextMonthDate,formatDate} from "@/utils/formatDate"
+import { HeaderCheckBoxCellType } from "@/static/data.js";
+import formatDates, {
+  formatNextMonthDate,
+  formatDate,
+} from "@/utils/formatDate";
 import XLSX from "xlsx";
 export default {
   name: "ImportAnalysis",
@@ -164,8 +154,9 @@ export default {
   },
   data() {
     return {
-      dialogImport:false,
-      machineCycle:'',
+      colAdd: [],
+      dialogImport: false,
+      machineCycle: "",
       title: this.$route.meta.title, //表名
       height: "740px",
       adminLoading: false, //加载状态
@@ -220,7 +211,7 @@ export default {
         },
       ],
       // 表头添加动态按钮
-      parmsBtn2:[
+      parmsBtn2: [
         // {
         //   ButtonCode: "save",
         //   BtnName: "计算",
@@ -236,7 +227,7 @@ export default {
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required:[],//获取必填项
+          required: [], //获取必填项
         },
       ],
       tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
@@ -251,7 +242,7 @@ export default {
       spread: null, //excel初始
       fileList: [],
       file: [],
-      selectionData:[[]],
+      selectionData: [[]],
     };
   },
   activated() {
@@ -265,15 +256,15 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
-    _this.machineCycle = [formatDates.formatTodayDate(),formatNextMonthDate()]
-    console.log('roles',this.$store.getters.roles)
+    _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
+    console.log("roles", this.$store.getters.roles);
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
-    if(_this.$store.getters.roles.length){
-      _this.$store.getters.roles.forEach(item=>{
-        if(item.RoleID==='R2103250001'){
-          _this.formSearchs[_this.tagRemark].datas['Account'] = item.Account
+    if (_this.$store.getters.roles.length) {
+      _this.$store.getters.roles.forEach((item) => {
+        if (item.RoleID === "R2103250001") {
+          _this.formSearchs[_this.tagRemark].datas["Account"] = item.Account;
         }
-      })
+      });
     }
   },
   mounted() {
@@ -316,7 +307,7 @@ export default {
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
-      let btn2 = []
+      let btn2 = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
@@ -333,7 +324,7 @@ export default {
           }
         });
       }
-      console.log('parmsBtn2',this.parmsBtn2)
+      console.log("parmsBtn2", this.parmsBtn2);
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "parmsBtn2", btn2);
     },
@@ -346,10 +337,10 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
-          console.log('m',m)
-          m.forEach((n,index) => {
-            if(n.Required){
-                this.formSearchs[this.tagRemark].required.push(n)
+          console.log("m", m);
+          m.forEach((n, index) => {
+            if (n.Required) {
+              this.formSearchs[this.tagRemark].required.push(n);
             }
           });
         });
@@ -414,21 +405,21 @@ export default {
         });
         // 选框
         sheet.setCellType(
-        0,
-        0,
-        new HeaderCheckBoxCellType(),
-        GCsheets.SheetArea.colHeader
-      );
+          0,
+          0,
+          new HeaderCheckBoxCellType(),
+          GCsheets.SheetArea.colHeader
+        );
 
-      let checkbox = {
-        name: "isChecked",
-        displayName: "选择",
-        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60,
-      };
-      for (var name in checkbox) {
-        colInfos[0][name] = checkbox[name];
-      }
+        let checkbox = {
+          name: "isChecked",
+          displayName: "选择",
+          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+          size: 60,
+        };
+        for (var name in checkbox) {
+          colInfos[0][name] = checkbox[name];
+        }
 
         // 设置整个列头的背景色和前景色。
         /**
@@ -571,11 +562,11 @@ export default {
       }
     },
     // 计算
-    async calculateSave(){
+    async calculateSave() {
       let form = {
-        StartDate:_this.machineCycle.length?_this.machineCycle[0]:'',
-        EndDate:_this.machineCycle.length?_this.machineCycle[1]:''
-      }
+        StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+        EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+      };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
       const { result, data, count, msg } = res.data;
@@ -626,85 +617,171 @@ export default {
       const reader = new FileReader(); //上传就解析文件
       var that = this;
       reader.onload = function (e) {
-        console.log('e',e)
+        console.log("e", e);
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
           cellDates: true,
-          dateNF: 'yyyy-MM-dd'
+          dateNF: "yyyy-MM-dd",
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
             sheetName: sheetName,
-            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName],{ raw: true }),
+            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
+              defval: null,
+            }),
           });
         });
-        console.log('result导入数据',result)
+        console.log("result导入数据", result);
         that.dataSys(result); // 解析文件
       };
       reader.readAsBinaryString(file.raw);
     },
     // 解析文件
     async dataSys(importData) {
+      this.adminLoading = true;
       if (importData && importData.length > 0) {
         let DataList = [];
-    
+        let colObj = {
+          DataType: "datetime",
+          label: "",
+          prop: "",
+          width: 100,
+        };
+        let isDate = false;
+        this.colAdd = [];
         importData[0].sheet.forEach((m) => {
           var obj = {};
-          for(let key in m){
+          for (let key in m) {
+            console.log('key',key)
+            console.log('m',m)
             // 判断是否和配置里的取名一致，一致才可导入
-            this.tableColumns[this.tagRemark].map((item)=>{
-                if(item.label === key){
-                    if(item.DataType ==='datetime'){
-                        obj[item.prop] = m[key]?this.$moment(m[key]).add(1, 'days').format('YYYY-MM-DD'):''
-                        // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-                    }else{
-                        obj[item.prop] = m[key]
-                    }
-                    
-                }else if(isNaN(key)&&!isNaN(Date.parse(key))){
-                  //判断列是否为日期格式，是也加入
-                  obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
-                }{
-
+            for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
+              let item = this.tableColumns[this.tagRemark][i];
+              if (item.label === key) {
+                if (item.DataType === "datetime") {
+                  obj[item.prop] = m[key]
+                    ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
+                    : "";
+                  // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                } else {
+                  obj[item.prop] = m[key];
                 }
-                
-            })
+              } else if (isNaN(key) && !isNaN(Date.parse(key))) {
+                //判断列是否为日期格式，是也加入
+                // obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
+                // colObj['label'] = this.$moment(key).format('YYYY-MM-DD')
+                // colObj['prop'] = this.$moment(key).format('YYYY-MM-DD')
+                if (
+                  !this.colAdd.includes(this.$moment(key).format("YYYY-MM-DD"))
+                ) {
+                  console.log(
+                    "obj日期格式",
+                    this.$moment(key).format("YYYY-MM-DD")
+                  );
+                  obj["DemandToDay"] = this.$moment(key).format("YYYY-MM-DD");
+                  obj["OweQty"] = m[key];
+                  this.colAdd.push(this.$moment(key).format("YYYY-MM-DD"));
+                  obj["dicID"] = this.sysID[this.tagRemark].ID;
+                  (obj["StartDate"] = _this.machineCycle.length
+                    ? _this.machineCycle[0]
+                    : ""),
+                    (obj["EndDate"] = _this.machineCycle.length
+                      ? _this.machineCycle[1]
+                      : "");
+                  obj["Account"] = this.$store.getters.userInfo.Account;
+                  DataList.push(obj);
+                  isDate = true;
+                  break;
+
+                  // continue;
+                }
+                // console.log('this.tableColumns',this.tableColumns[this.tagRemark])
+                //       console.log('key',key)
+                // console.log('val',m[key])
+
+                // console.log('this.colAdd',this.colAdd)
+              }
+            }
+
+            // this.tableColumns[this.tagRemark].map((item)=>{
+            //     if(item.label === key){
+            //         if(item.DataType ==='datetime'){
+            //           obj[item.prop] = m[key]?this.$moment(m[key]).add(1, 'days').format('YYYY-MM-DD'):''
+            //           // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+            //         }else{
+            //           obj[item.prop] = m[key]
+            //         }
+
+            //     }else if(isNaN(key)&&!isNaN(Date.parse(key))){
+            //       obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
+            //       obj['OweQty'] = m[key]
+
+            //       //判断列是否为日期格式，是也加入
+            //       // obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
+            //       // colObj['label'] = this.$moment(key).format('YYYY-MM-DD')
+            //       // colObj['prop'] = this.$moment(key).format('YYYY-MM-DD')
+            //       // if(!this.colAdd.includes(this.$moment(key).format('YYYY-MM-DD'))){
+            //       //   this.colAdd.push(this.$moment(key).format('YYYY-MM-DD'))
+            //       // }
+            //       // console.log('this.tableColumns',this.tableColumns[this.tagRemark])
+            // //       console.log('key',key)
+            // // console.log('val',m[key])
+
+            // // console.log('this.colAdd',this.colAdd)
+            //     }
+
+            // })
           }
-        // 以下为固定入参
-          obj["dicID"] = this.sysID[this.tagRemark].ID;
-          obj["StartDate"]=_this.machineCycle.length?_this.machineCycle[0]:'',
-          obj["EndDate"]=_this.machineCycle.length?_this.machineCycle[1]:''
-          obj["Account"]=this.$store.getters.userInfo.Account;
-          DataList.push(obj);
+
+          // 以下为固定入参
+          if (!isDate) {
+            obj["dicID"] = this.sysID[this.tagRemark].ID;
+            (obj["StartDate"] = _this.machineCycle.length
+              ? _this.machineCycle[0]
+              : ""),
+              (obj["EndDate"] = _this.machineCycle.length
+                ? _this.machineCycle[1]
+                : "");
+            obj["Account"] = this.$store.getters.userInfo.Account;
+            DataList.push(obj);
+          }
         });
         // 必填校验
-        if(this.formSearchs[this.tagRemark].required.length){
-            // 动态检验必填项
-            console.log(DataList)
-            console.log(this.formSearchs[this.tagRemark])
-            for(let i=0;i<DataList.length;i++){
-            
-          
-                for(let x=0;x<this.formSearchs[this.tagRemark].required.length;x++){
- 
+        if (this.formSearchs[this.tagRemark].required.length) {
+          // 动态检验必填项
+          // console.log(DataList)
+          // console.log(this.formSearchs[this.tagRemark])
+          for (let i = 0; i < DataList.length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[this.tagRemark].required.length;
+              x++
+            ) {
+              if (
+                !DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ]
+              ) {
+                this.$message.error(
+                  `${
+                    this.formSearchs[this.tagRemark].required[x]["label"]
+                  }不能为空，请填写`
+                );
+                this.adminLoading = false;
+                return;
+              }
+            }
+          }
+        }
 
-                    if(!DataList[i][this.formSearchs[this.tagRemark].required[x]['prop']]){
-                 
-                    this.$message.error(`${this.formSearchs[this.tagRemark].required[x]['label']}不能为空，请填写`)
-                    this.adminLoading = false;
-                    return
-                }
-                }
-        }
-        }
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
           // this.dataSearch(this.tagRemark);
           // 导入可能存在表头格式不一样，需要更新
-          this.getTableHeader()
+          this.getTableHeader();
           this.$message({
             message: msg,
             type: "success",
@@ -748,10 +825,10 @@ export default {
     },
     // 分析
     async Analysis() {
-        let form = {
-        StartDate:_this.machineCycle.length?_this.machineCycle[0]:'',
-        EndDate:_this.machineCycle.length?_this.machineCycle[1]:''
-      }
+      let form = {
+        StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+        EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+      };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
       const { result, data, count, msg } = res.data;
@@ -781,46 +858,45 @@ export default {
       if (newData.length != 0) {
         newData.forEach((x) => {
           if (x.isChecked) {
-            x.ElementDeleteFlag = 1;//删除标识
+            x.ElementDeleteFlag = 1; //删除标识
             this.selectionData[this.tagRemark].push(x);
           }
         });
       }
     },
-    deleteRow(){
-        this.getSelectionData();
-         if (this.selectionData[this.tagRemark].length == 0) {
-          this.$message.error("请选择需要删除的数据！");
-          return;
-        } else {
-          this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "info",
-          })
-            .then(async () => {
-                  this.adminLoading = true;
-                  let res = await SaveData(this.selectionData[this.tagRemark]);
-                  const { result, data, count, msg } = res.data;
-                  if (result) {
-                    this.dataSearch(this.tagRemark);
-                    this.adminLoading = false;
-                    this.$message({
-                      message: msg,
-                      type: "success",
-                      dangerouslyUseHTMLString: true,
-                    });
-                  } else {
-                    this.adminLoading = false;
-                    this.$message({
-                      message: msg,
-                      type: "error",
-                      dangerouslyUseHTMLString: true,
-                    });
-                  }
-            })
-        }
-    }
+    deleteRow() {
+      this.getSelectionData();
+      if (this.selectionData[this.tagRemark].length == 0) {
+        this.$message.error("请选择需要删除的数据！");
+        return;
+      } else {
+        this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info",
+        }).then(async () => {
+          this.adminLoading = true;
+          let res = await SaveData(this.selectionData[this.tagRemark]);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.dataSearch(this.tagRemark);
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        });
+      }
+    },
   },
 };
 </script>
