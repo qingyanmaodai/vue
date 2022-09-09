@@ -617,7 +617,7 @@ export default {
       const reader = new FileReader(); //上传就解析文件
       var that = this;
       reader.onload = function (e) {
-        console.log("e", e);
+        // console.log("e", e);
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
@@ -632,7 +632,7 @@ export default {
             }),
           });
         });
-        console.log("result导入数据", result);
+        // console.log("result导入数据", result);
         that.dataSys(result); // 解析文件
       };
       reader.readAsBinaryString(file.raw);
@@ -642,19 +642,11 @@ export default {
       this.adminLoading = true;
       if (importData && importData.length > 0) {
         let DataList = [];
-        let colObj = {
-          DataType: "datetime",
-          label: "",
-          prop: "",
-          width: 100,
-        };
         let isDate = false;
         this.colAdd = [];
+        var obj = {};
         importData[0].sheet.forEach((m) => {
-          var obj = {};
           for (let key in m) {
-            console.log('key',key)
-            console.log('m',m)
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
@@ -667,73 +659,27 @@ export default {
                 } else {
                   obj[item.prop] = m[key];
                 }
-              } else if (isNaN(key) && !isNaN(Date.parse(key))) {
-                //判断列是否为日期格式，是也加入
-                // obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
-                // colObj['label'] = this.$moment(key).format('YYYY-MM-DD')
-                // colObj['prop'] = this.$moment(key).format('YYYY-MM-DD')
-                if (
-                  !this.colAdd.includes(this.$moment(key).format("YYYY-MM-DD"))
-                ) {
-                  console.log(
-                    "obj日期格式",
-                    this.$moment(key).format("YYYY-MM-DD")
-                  );
-                  obj["DemandToDay"] = this.$moment(key).format("YYYY-MM-DD");
-                  obj["OweQty"] = m[key];
-                  this.colAdd.push(this.$moment(key).format("YYYY-MM-DD"));
-                  obj["dicID"] = this.sysID[this.tagRemark].ID;
-                  (obj["StartDate"] = _this.machineCycle.length
-                    ? _this.machineCycle[0]
-                    : ""),
-                    (obj["EndDate"] = _this.machineCycle.length
-                      ? _this.machineCycle[1]
-                      : "");
-                  obj["Account"] = this.$store.getters.userInfo.Account;
-                  DataList.push(obj);
+              }
+               else if (isNaN(key) && !isNaN(Date.parse(key))){
                   isDate = true;
-                  break;
-
-                  // continue;
-                }
-                // console.log('this.tableColumns',this.tableColumns[this.tagRemark])
-                //       console.log('key',key)
-                // console.log('val',m[key])
-
-                // console.log('this.colAdd',this.colAdd)
+                console.log('key',key)
+                console.log(' m[key]', m[key])
+                obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
+                obj['OweQty'] = m[key]
+                obj["dicID"] = _this.sysID[_this.tagRemark].ID;
+                obj["StartDate"] = _this.machineCycle.length
+                    ? _this.machineCycle[0]
+                    : "",
+                obj["EndDate"] = _this.machineCycle.length
+                      ? _this.machineCycle[1]
+                      : "";
+                obj["Account"] = _this.$store.getters.userInfo.Account;
+                // 需要使用...obj 不然值回写有问题
+                DataList.push({...obj});
+                break
               }
             }
-
-            // this.tableColumns[this.tagRemark].map((item)=>{
-            //     if(item.label === key){
-            //         if(item.DataType ==='datetime'){
-            //           obj[item.prop] = m[key]?this.$moment(m[key]).add(1, 'days').format('YYYY-MM-DD'):''
-            //           // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-            //         }else{
-            //           obj[item.prop] = m[key]
-            //         }
-
-            //     }else if(isNaN(key)&&!isNaN(Date.parse(key))){
-            //       obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-            //       obj['OweQty'] = m[key]
-
-            //       //判断列是否为日期格式，是也加入
-            //       // obj[this.$moment(key).format('YYYY-MM-DD')] = m[key]
-            //       // colObj['label'] = this.$moment(key).format('YYYY-MM-DD')
-            //       // colObj['prop'] = this.$moment(key).format('YYYY-MM-DD')
-            //       // if(!this.colAdd.includes(this.$moment(key).format('YYYY-MM-DD'))){
-            //       //   this.colAdd.push(this.$moment(key).format('YYYY-MM-DD'))
-            //       // }
-            //       // console.log('this.tableColumns',this.tableColumns[this.tagRemark])
-            // //       console.log('key',key)
-            // // console.log('val',m[key])
-
-            // // console.log('this.colAdd',this.colAdd)
-            //     }
-
-            // })
           }
-
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
@@ -750,8 +696,6 @@ export default {
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
-          // console.log(DataList)
-          // console.log(this.formSearchs[this.tagRemark])
           for (let i = 0; i < DataList.length; i++) {
             for (
               let x = 0;
@@ -797,6 +741,53 @@ export default {
         }
       }
     },
+    formatDateTime(date, format) {
+    if (date) {
+        if (typeof date === 'string') {
+            date = date.replace(/-/g, '/')
+        }
+        date = new Date(Date.parse(date));
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m: m;
+        let d = date.getDate();
+        d = d < 10 ? '0' + d: d;
+        let h = date.getHours();
+        h = h < 10 ? '0' + h: h;
+        let minute = date.getMinutes();
+        minute = minute < 10 ? '0' + minute: minute;
+        let second = date.getSeconds();
+        second = second < 10 ? '0' + second: second;
+        if (!format) {
+            format = 'YYYY-MM-DD hh:mm:ss';
+        }
+        if (format.indexOf('YYYY') >= 0 || format.indexOf('yyyy') >= 0) {
+            format = format.replace(/YYYY/g, y);
+            format = format.replace(/yyyy/g, y);
+        }
+        if (format.indexOf('MM') >= 0) {
+            format = format.replace(/MM/g, m);
+        }
+        if (format.indexOf('DD') >= 0 || format.indexOf('dd') >= 0) {
+            format = format.replace(/DD/g, d);
+            format = format.replace(/dd/g, d);
+        }
+        if (format.indexOf('HH') >= 0 || format.indexOf('hh') >= 0) {
+            format = format.replace(/hh/g, h);
+            format = format.replace(/HH/g, h);
+        }
+        if (format.indexOf('mm') >= 0) {
+            format = format.replace(/mm/g, minute);
+        }
+        if (format.indexOf('SS') >= 0 || format.indexOf('ss') >= 0) {
+            format = format.replace(/ss/g, second);
+            format = format.replace(/SS/g, second);
+        }
+        return format;
+    } else {
+        return '';
+    }
+},
     handleChanged(file, fileList) {
       var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
       const extension = ext === "xlsx" || ext === "xls";
