@@ -1233,7 +1233,7 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
-        this.formSearchs[1].datas["ProcessPartName"] ='PCB'; //默认待排
+        this.formSearchs[1].datas["ProcessPartName"] =['PCB','加工']; //默认待排
         this.dataSearch(0);
       }
     },
