@@ -855,6 +855,7 @@ sheet.options.isProtected = true;
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[0] = false;
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {

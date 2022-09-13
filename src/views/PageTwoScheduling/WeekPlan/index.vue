@@ -587,6 +587,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {

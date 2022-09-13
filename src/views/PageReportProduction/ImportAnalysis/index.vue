@@ -392,6 +392,8 @@ export default {
       try {
         // 获取活动表单
         let sheet = this.spread.getActiveSheet();
+        
+        // sheet.visible(false)
         // 重置表单
         sheet.reset();
         // 渲染列
@@ -459,10 +461,12 @@ export default {
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
     },
     // 查询
     dataSearch(remarkTb) {
@@ -741,53 +745,6 @@ export default {
         }
       }
     },
-    formatDateTime(date, format) {
-    if (date) {
-        if (typeof date === 'string') {
-            date = date.replace(/-/g, '/')
-        }
-        date = new Date(Date.parse(date));
-        let y = date.getFullYear();
-        let m = date.getMonth() + 1;
-        m = m < 10 ? '0' + m: m;
-        let d = date.getDate();
-        d = d < 10 ? '0' + d: d;
-        let h = date.getHours();
-        h = h < 10 ? '0' + h: h;
-        let minute = date.getMinutes();
-        minute = minute < 10 ? '0' + minute: minute;
-        let second = date.getSeconds();
-        second = second < 10 ? '0' + second: second;
-        if (!format) {
-            format = 'YYYY-MM-DD hh:mm:ss';
-        }
-        if (format.indexOf('YYYY') >= 0 || format.indexOf('yyyy') >= 0) {
-            format = format.replace(/YYYY/g, y);
-            format = format.replace(/yyyy/g, y);
-        }
-        if (format.indexOf('MM') >= 0) {
-            format = format.replace(/MM/g, m);
-        }
-        if (format.indexOf('DD') >= 0 || format.indexOf('dd') >= 0) {
-            format = format.replace(/DD/g, d);
-            format = format.replace(/dd/g, d);
-        }
-        if (format.indexOf('HH') >= 0 || format.indexOf('hh') >= 0) {
-            format = format.replace(/hh/g, h);
-            format = format.replace(/HH/g, h);
-        }
-        if (format.indexOf('mm') >= 0) {
-            format = format.replace(/mm/g, minute);
-        }
-        if (format.indexOf('SS') >= 0 || format.indexOf('ss') >= 0) {
-            format = format.replace(/ss/g, second);
-            format = format.replace(/SS/g, second);
-        }
-        return format;
-    } else {
-        return '';
-    }
-},
     handleChanged(file, fileList) {
       var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
       const extension = ext === "xlsx" || ext === "xls";

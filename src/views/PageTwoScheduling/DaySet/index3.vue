@@ -210,7 +210,10 @@ export default {
     // },10000);
   },
   activated() {
-    this.spread.refresh();
+    if(this.spread)
+    {
+      this.spread.refresh();
+    }
   },
   computed: {
     ...mapState({
@@ -669,6 +672,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {

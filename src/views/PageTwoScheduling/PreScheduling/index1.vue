@@ -625,8 +625,8 @@ export default {
       row.backColor("#F3F3F3");
 
       sheet.setDataSource(this.tableData[0]);
-      debugger;
       sheet.bindColumns(this.colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {

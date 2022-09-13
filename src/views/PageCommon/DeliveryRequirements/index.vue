@@ -360,6 +360,7 @@ export default {
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }

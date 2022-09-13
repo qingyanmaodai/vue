@@ -589,6 +589,7 @@ export default {
       this.tableLoading[0] = false;
       this.spread.repaint();
       this.spread.refresh()
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
       // this.spread.suspendPaint();
       // this.spread.isPaintSuspended(false);
     },

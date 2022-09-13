@@ -662,6 +662,7 @@ this.spread.refresh();
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {
