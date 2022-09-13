@@ -7,15 +7,15 @@
     <link rel="stylesheet" type="text/css" href="./css/common.css" />
     <link rel="stylesheet" type="text/css" href="./css/WorkShop.css" />
   </head>
-  <body>
-    <div class="page flex-col">
+  <body style="padding: 0; margin: 0;">
+    <div   v-cloak id="app" class="page flex-col">
       <div class="wrap1 flex-col">
         <div class="mod1 flex-col">
           <div class="group43 flex-col">
             <div class="group44 flex-col">
               <div class="box34 flex-row justify-between">
                 <span class="info1"
-                  >2022年06月30日&nbsp;星期三&nbsp;&nbsp;18:05:24</span
+                  >{{todayDate}}</span
                 >
                 <span class="info2">金羚APS系统看板</span>
               </div>
@@ -649,4 +649,44 @@
       </div>
     </div>
   </body>
+  <script src="./js/vue.js" type="text/javascript"></script>
+  <script src="./js/axios.min.js" type="text/javascript"></script>
+  <script src="./js/token.js?ver=5" type="text/javascript"></script>
+  <script src="./js/jquery-1.11.0.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="./js/jquery.limarquee.js"></script>
+  <script type="text/javascript" src="./js/echarts.min.js"></script>
+  <script type="module">
+    import formatDate  from './js/newFormatDate.js'
+    var app = new Vue({
+      el: "#app",
+      components: {
+      },
+      data(){
+        return{
+          time:null,
+          todayDate: '',
+        }
+      },
+      created(){
+        this.todayDate = formatDate.getTodayTime()
+        if(this.time){
+          clearInterval(this.time)
+        }
+        this.time = setInterval(() => {
+          this.todayDate = formatDate.getTodayTime()
+        }, 1000)
+        
+      },
+      })
+      const _this = app
+  </script>
 </html>
+<style lang="scss" scoped>
+  [v-cloak]{
+  /*比较大的段落，防止闪烁，看到花括号*/
+  display: none;
+  
+  }
+// .navboxall{height: calc(100%);}
+// .navboxall2{height: calc(100% - 100px);}
+</style>
