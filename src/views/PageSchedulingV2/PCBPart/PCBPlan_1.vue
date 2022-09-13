@@ -424,8 +424,11 @@ export default {
     // 获取所有按钮
     this.judgeBtn();
   },
-    activated() {
-    this.spread.refresh();
+  activated() {
+      if(this.spread)
+      {
+          this.spread.refresh();
+      }
   },
   mounted() {
     setTimeout(() => {

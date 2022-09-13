@@ -99,7 +99,6 @@
         treeData: [],
         treeData2: [],
         autoGenerateColumns: true,
-        spread: null,
         ////////////////// Search /////////////////
         title: this.$route.meta.title,
         drawer: false,
@@ -204,7 +203,7 @@
       this.judgeBtn();
       this.getTableHeader();
 
-      this.timeOut();
+      // this.timeOut();
     },
     computed: {
       ...mapState({
@@ -213,13 +212,13 @@
     },
     beforeRouteEnter(to, form, next) {
     //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
-    
         next();
-        if(this.spread)
-        {
-            this.spread.refresh(); //重新定位宽高度
-        }
-
+    },
+    activated() {
+      if(this.spread)
+      {
+          this.spread.refresh();
+      }
     },
     mounted() {
       setTimeout(() => {
@@ -227,18 +226,18 @@
       }, 300);
     },
     methods: {
-      timeOut() {
-        if (this.time) {
-          clearTimeout(this.time);
-        }
-        if (this.spread) {
-          this.spread.refresh();
-        }
-        this.time = setTimeout(() => {
-          //重新定位宽高度
-          this.timeOut();
-        }, 2000);
-      },
+      // timeOut() {
+      //   if (this.time) {
+      //     clearTimeout(this.time);
+      //   }
+      //   if (this.spread) {
+      //     this.spread.refresh();
+      //   }
+      //   this.time = setTimeout(() => {
+      //     //重新定位宽高度
+      //     this.timeOut();
+      //   }, 2000);
+      // },
       initSpread: function(spread) {
         this.spread = spread;
       },
@@ -569,6 +568,8 @@
             // a.datas["ProcessID"] = 'P202009092233201';
           })
           // this.dataSearch(0);
+        }else{
+          this.adminLoading = false
         }
       },
       // 验证数据
@@ -938,7 +939,7 @@
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[0] = false;
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        // this.spread.options.tabStripVisible = false;//是否显示表单标签
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {

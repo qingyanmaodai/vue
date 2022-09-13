@@ -200,16 +200,17 @@
         userInfo: (state) => state.user.userInfo,
       }),
     },
-      beforeRouteEnter(to, form, next) {
+    beforeRouteEnter(to, form, next) {
     //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
     
-    next();
-    if(this.spread)
-    {
-    this.spread.refresh(); //重新定位宽高度
-    }
-
-  },
+      next();
+    },
+    activated() {
+      if(this.spread)
+      {
+          this.spread.refresh();
+      }
+    },
     mounted() {
       setTimeout(() => {
         this.setHeight();

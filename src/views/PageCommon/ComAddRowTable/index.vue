@@ -201,7 +201,6 @@ export default {
   beforeRouteEnter(to, form, next) {
     next();
   },
-    
   watch: {
     $route: {
     //   handler: function (val, oldVal) {
