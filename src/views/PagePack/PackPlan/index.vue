@@ -719,6 +719,7 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
       // this.spread.isPaintSuspended(false);
     },
     // 刷新页面

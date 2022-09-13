@@ -461,6 +461,7 @@ export default {
         this.headerList = colInfos;
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
         //一定要放在渲染完后
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
@@ -565,6 +566,7 @@ export default {
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(this.headerList); 
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
         this.adminLoading = false;
       }
     },
@@ -605,6 +607,7 @@ export default {
                       sheet.setDataSource(this.tableData[this.tagRemark]);
                       //渲染列
                       sheet.bindColumns(this.headerList); 
+                      this.spread.options.tabStripVisible = false;//是否显示表单标签
                     } else {
                       //接口返回的数据删除需要调接口删除
                       isHasID = true;

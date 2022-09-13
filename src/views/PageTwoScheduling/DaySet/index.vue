@@ -225,7 +225,10 @@ export default {
   },
     activated()
   {
-this.spread.refresh();
+    if(this.spread)
+    {
+      this.spread.refresh();
+    }
   },
   computed: {
     ...mapState({
@@ -674,6 +677,7 @@ keyDown() {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
       
 
  let colindex=0;

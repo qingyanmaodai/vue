@@ -636,6 +636,7 @@
 
         sheet.setDataSource(this.tableData[0]);
         sheet.bindColumns(colInfos);
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
 
         let cellIndex = 0;
         let viewSortIndex=0;//排序的索引

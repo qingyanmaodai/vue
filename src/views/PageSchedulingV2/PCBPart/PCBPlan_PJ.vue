@@ -638,6 +638,7 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
     },
     // 判断按钮权限
     judgeBtn() {

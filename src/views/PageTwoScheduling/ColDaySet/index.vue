@@ -480,6 +480,7 @@ export default {
       ); // 列方向上向上合并
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
 
       var row = sheet.getRange(
         0,

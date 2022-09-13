@@ -556,6 +556,7 @@ export default {
       sheet.frozenColumnCount(5);
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
+      this.spread.options.tabStripVisible = false;//是否显示表单标签
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;

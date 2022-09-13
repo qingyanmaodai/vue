@@ -335,7 +335,7 @@ export default {
         });
         // 锁定表格
         sheet.options.isProtected = true;
-        
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
       } catch (error) {
         console.log('表格渲染的错误信息:',error)
       }
