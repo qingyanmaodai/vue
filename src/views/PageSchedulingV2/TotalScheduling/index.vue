@@ -29,7 +29,7 @@
                     clearable
                     filterable
                     size="mini"
-                    v-model="ruleForm.LineIDs"
+                    v-model.trim="ruleForm.LineIDs"
                     @change="setFooterLabel"
                     style="width: 320px"
                   >
@@ -340,7 +340,7 @@
         ],
         height: "707px",
         showPagination: true,
-        tagRemark: 0,
+        tagRemark: 1,
         isLoading: false,
         initialBtnData: [],
         tagRremark: 1,
@@ -673,6 +673,7 @@
         }
       },
       getSelectionData() {
+        console.log('this.tagRemark',this.tagRemark)
         let sheet = this.spread.getActiveSheet();
         let newData = sheet.getDataSource();
         this.selectionData[this.tagRemark] = [];
@@ -1112,8 +1113,8 @@
       },
       // 转入日计划
       async setPlan(remarkTb, index, params) {
-        let arr = this.getSelectionData();
-        if (this.ruleForm.LineIDs.length == 0 && false) {
+        this.getSelectionData();
+        if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
           this.$message.error("请选择生产线再转入日计划！");
         } else {
           if (this.selectionData[remarkTb].length == 0) {
@@ -1187,6 +1188,7 @@
       },
       // 选线获取剩余工时
       setFooterLabel(val) {
+        // this.ruleForm.LineIDs = []
         let LineIDs = this.lines.filter((a) =>
           this.ruleForm.LineIDs.some((b) => b == a.LineID)
         );
