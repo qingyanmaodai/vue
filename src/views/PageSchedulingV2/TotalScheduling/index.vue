@@ -24,7 +24,7 @@
               >
               <el-col :span="20" class="flex_flex_end">
                 <div>
-                  <span>选择机台/班组：</span>
+                  <!-- <span>选择机台/班组：</span>
                   <el-select
                     clearable
                     filterable
@@ -40,11 +40,11 @@
                       :value="item.LineID"
                     >
                     </el-option>
-                  </el-select>
+                  </el-select> -->
                   <span>生产时段：</span>
                   <el-date-picker
                     v-model="ruleForm.ProducedDate"
-                    type="date"
+                    type="daterange"
                     size="mini"
                     placeholder="选择生产时段"
                   >
@@ -354,6 +354,7 @@
           ProducedDate: "",
         },
         lines: [],
+        checkBoxCellTypeLine: "",
       };
     },
     watch: {},
@@ -467,10 +468,11 @@
         let colInfos = [];
   
         this.tableColumns[1].forEach((x) => {
-          if (x.prop == "LineID") {
+          console.log('x',x)
+          if (x.prop == "LineID"||x.prop == "SMTLineID") {
             colInfos.push({
               name: x.prop,
-              displayName: "线别",
+              displayName: x.label,
               cellType: this.checkBoxCellTypeLine,
               size: parseInt(x.width),
             });
@@ -653,6 +655,10 @@
             dangerouslyUseHTMLString: true,
           });
         } else {
+          this.selectionData[0].map(item=>{
+            item["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):'';
+            item["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):'';
+          })
           this.adminLoading = true;
           let res = await GetSearch(
             this.selectionData[0],
@@ -1114,13 +1120,23 @@
       // 转入日计划
       async setPlan(remarkTb, index, params) {
         this.getSelectionData();
-        if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
-          this.$message.error("请选择生产线再转入日计划！");
-        } else {
+        // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
+        //   this.$message.error("请选择生产线再转入日计划！");
+        // } else {
           if (this.selectionData[remarkTb].length == 0) {
             this.$message.error("请选择需要转入日计划的数据！");
           } else {
-            let ProcessID = "";
+            let isNoCapacity1 = true
+            this.selectionData[remarkTb].forEach((element) => {
+              if(!element.Capacity1){
+                isNoCapacity1 = false
+              }
+            })
+            if(!isNoCapacity1){
+              this.$message.error("转入日计划的数据存在产能空，请进行排期计算或维护产品产能！");
+              return
+            }
+            // let ProcessID = "";
             this.adminLoading = true;
             // if (remarkTb == 1) {
             //   ProcessID = "P202009092233201";
@@ -1147,15 +1163,18 @@
               // }
   
               if (isOk) {
-                d["LineIDs"] = this.ruleForm.LineIDs;
-                d["ProducedDate"] = this.ruleForm.ProducedDate;
+                console.log('d',d)
+                d["LineID"] = d.SMTLineID;
+                // d["ProducedDate"] = this.ruleForm.ProducedDate;
+                d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):'';
+                d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):'';
                 d["ProcessID"] = params.ProcessID;
-                d["LineID"] = null;
                 okCount++;
               } else {
                 errMsg += d["OrderNo"] + "已转入或者无此工序";
               }
             });
+            console.log('this.selectionData[remarkTb]',this.selectionData[remarkTb])
             if (errMsg != "") {
               this.$message({
                 message: errMsg,
@@ -1166,7 +1185,7 @@
             if (okCount > 0) {
               let res = await GetSearch(
                 this.selectionData[remarkTb],
-                "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=1"
+                "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
               );
               const { result, data, count, msg } = res.data;
               if (result) {
@@ -1184,7 +1203,7 @@
                this.adminLoading = false;
             }
           }
-        }
+        // }
       },
       // 选线获取剩余工时
       setFooterLabel(val) {
@@ -1207,13 +1226,24 @@
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
+          let newData = [];
           if (data.length != 0) {
             data.forEach((a) => {
-              a["LineID"] = a.OrganizeID;
-              a["LineName"] = a.OrganizeName;
+              // a["LineID"] = a.OrganizeID;
+              // a["LineName"] = a.OrganizeName;
+              newData.push({
+                text: a.OrganizeName,
+                value: a.OrganizeID
+              });
             });
           }
-          this.lines = data;
+          this.lines = newData;
+          this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+          this.checkBoxCellTypeLine.editorValueType(
+            GC.Spread.Sheets.CellTypes.EditorValueType.value
+          );
+          this.checkBoxCellTypeLine.items(newData);
+          this.checkBoxCellTypeLine.itemHeight(24);
         } else {
           this.$message({
             message: msg,
