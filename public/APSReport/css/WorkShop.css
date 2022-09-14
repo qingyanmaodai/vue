@@ -1,7 +1,7 @@
 .page {
     position: relative;
     background-color: rgba(255, 255, 255, 1);
-    overflow: hidden;
+    /* overflow: hidden; */
     width: 100%;
     /* height: 100%; */
     height: calc(100%)
@@ -22,7 +22,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    margin:0 20px;
+    /* margin:0 20px; */
   }
   
   .group43 {
@@ -35,19 +35,29 @@
   .group44 {
     height: 66px;
     background: url(../images/ws_header.png)
-      100% no-repeat;
-    width: 1880px;
+      center center no-repeat;
+    width: 100%;
+    position: relative;
   }
   
   .box34 {
-    width: 1041px;
+    /* width: 1041px;
     height: 42px;
-    margin: 14px 0 0 30px;
+    margin: 14px 0 0 30px; */
+    height: 66px;
+    position: absolute;
+  }
+  .header_title{
+    display: flex;
+    width: 100%;
+    /* align-items: center; */
+    justify-content: center;
+    margin-top: 18px;
   }
   
   .info1 {
-    width: 316px;
-    height: 20px;
+    /* width: 316px;
+    height: 20px; */
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 20px;
@@ -59,8 +69,8 @@
   }
   
   .info2 {
-    width: 262px;
-    height: 42px;
+    /* width: 262px;
+    height: 42px; */
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 30px;
@@ -68,7 +78,7 @@
     font-family: PingFangSC-Semibold;
     white-space: nowrap;
     line-height: 42px;
-    text-align: right;
+    /* text-align: right; */
   }
   
   .group45 {
@@ -354,16 +364,16 @@
   }
   
   .block4 {
-    width: 9px;
+    /* width: 9px;
     height: 17px;
-    background-color: rgba(22, 133, 211, 1);
+    background-color: rgba(22, 133, 211, 1); */
   }
   
   .block5 {
-    width: 9px;
+    /* width: 9px;
     height: 17px;
     background-color: rgba(37, 181, 217, 1);
-    margin-left: 8px;
+    margin-left: 8px; */
   }
   
   .block6 {
@@ -552,16 +562,16 @@
   }
   
   .block7 {
-    width: 9px;
+    /* width: 9px;
     height: 17px;
-    background-color: rgba(22, 133, 211, 1);
+    background-color: rgba(22, 133, 211, 1); */
   }
   
   .block8 {
-    width: 9px;
+    /* width: 9px;
     height: 17px;
     background-color: rgba(37, 181, 217, 1);
-    margin-left: 8px;
+    margin-left: 8px; */
   }
   
   .block9 {
