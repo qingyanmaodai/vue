@@ -82,28 +82,41 @@
   }
   
   .group45 {
-    width: 1880px;
-    height: 285px;
+    width:100%;
+    /* width: 1880px; */
+    /* height: 285px; */
     margin-top: 20px;
+  }
+  /* .main41 {
+    z-index: 18;
+    height: 285px;
+    width:50%;
+    position: relative;
+  } */
+  .content{
+    margin-top: 10px;
+    height: 240px;
+    padding: 10px 15px;
   }
   
   .main42 {
     z-index: 18;
-    height: 285px;
+    height: 285px;  
     background: url(../images/ws_page1.png)
       100% no-repeat;
-    width: 300px;
-    position: relative;
+    width: 16%;
+    background-size: 100% 100%;
+    /* position: relative; */
   }
   
   .outer26 {
-    width: 64px;
-    height: 22px;
-    margin: 7px 0 0 43px;
+    /* width: 64px; */
+    height: 35px;
+    margin-left: 10%;
   }
   
   .info34 {
-    width: 64px;
+    /* width: 64px; */
     height: 22px;
     display: inline-block;
     color: rgba(46, 185, 214, 1);
@@ -111,43 +124,43 @@
     font-family: PingFangSC-Semibold;
     white-space: nowrap;
     line-height: 22px;
-    text-align: right;
+    /* text-align: right; */
   }
   
   .group7 {
-    width: 174px;
+    /* width: 174px; */
     height: 31px;
-    margin: 29px 0 0 63px;
+    /* margin: 29px 0 0 63px; */
   }
   
   .word1 {
-    width: 66px;
-    height: 31px;
+    /* width: 66px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .info3 {
-    width: 67px;
-    height: 31px;
+    /* width: 67px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .group8 {
-    width: 198px;
+    /* width: 198px; */
     height: 26px;
-    margin: 5px 0 0 51px;
+    /* margin: 5px 0 0 51px; */
   }
   
   .main1 {
@@ -155,6 +168,7 @@
     height: 26px;
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
+      margin-right: 10px;
   }
   
   .main2 {
@@ -162,55 +176,57 @@
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
     width: 90px;
+    margin-left: 10px;
   }
   
   .txt1 {
-    width: 45px;
-    height: 18px;
+    /* width: 45px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
-    margin: 4px 0 0 23px;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right; */
+    /* margin: 4px 0 0 23px; */
   }
   
   .group9 {
-    width: 162px;
+    /* width: 162px; */
     height: 31px;
-    margin: 13px 0 0 63px;
+    /* margin: 13px 0 0 63px; */
   }
   
   .info4 {
-    width: 66px;
-    height: 31px;
+    /* width: 66px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .word2 {
-    width: 42px;
-    height: 31px;
+    /* width: 42px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 46, 0, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .group10 {
-    width: 198px;
+    /* width: 198px; */
     height: 26px;
-    margin: 6px 0 0 51px;
+    /* margin: 6px 0 0 51px; */
   }
   
   .layer2 {
@@ -218,19 +234,21 @@
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
     width: 90px;
+    margin-right: 10px;
   }
   
   .info5 {
-    width: 60px;
-    height: 18px;
+    /* width: 60px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
-    margin: 3px 0 0 15px;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right;
+    margin: 3px 0 0 15px; */
   }
   
   .layer3 {
@@ -238,55 +256,57 @@
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
     width: 90px;
+    margin-left: 10px;
   }
   
   .txt2 {
-    width: 60px;
-    height: 18px;
+    /* width: 60px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
-    margin: 3px 0 0 15px;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right;
+    margin: 3px 0 0 15px; */
   }
   
   .group11 {
-    width: 145px;
+    /* width: 145px; */
     height: 31px;
-    margin: 13px 0 0 75px;
+    /* margin: 13px 0 0 75px; */
   }
   
   .word3 {
-    width: 42px;
-    height: 31px;
+    /* width: 42px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .txt3 {
-    width: 32px;
-    height: 31px;
+    /* width: 32px; */
+    /* height: 31px; */
     display: inline-block;
     color: rgba(255, 46, 0, 1);
     font-size: 26px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 31px;
-    text-align: right;
+    /* line-height: 31px; */
+    text-align: center;
   }
   
   .group12 {
-    width: 198px;
+    /* width: 198px; */
     height: 26px;
-    margin: 5px 0 14px 51px;
+    /* margin: 5px 0 14px 51px; */
   }
   
   .mod2 {
@@ -294,19 +314,21 @@
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
     width: 90px;
+    margin-right: 10px;
   }
   
   .word4 {
-    width: 60px;
-    height: 18px;
+    /* width: 60px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
-    margin: 4px 0 0 15px;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right;
+    margin: 4px 0 0 15px; */
   }
   
   .mod3 {
@@ -314,47 +336,51 @@
     background: url(../images/ws_page1-1.png)
       100% no-repeat;
     width: 90px;
+    margin-left: 10px;
   }
   
   .info6 {
-    width: 60px;
-    height: 18px;
+    /* width: 60px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
-    margin: 4px 0 0 15px;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right;
+    margin: 4px 0 0 15px; */
   }
   
   .word5 {
     z-index: 34;
-    position: absolute;
-    left: 66px;
+    /* position: absolute; */
+    /* left: 66px;
     top: 98px;
-    width: 60px;
-    height: 18px;
+    width: 60px; */
+    /* height: 18px; */
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
     font-family: PingFangSC-Regular;
     white-space: nowrap;
-    line-height: 18px;
-    text-align: right;
+    line-height: 26px;
+    text-align: center;
+    /* text-align: right; */
   }
   
   .main43 {
     width: 301px;
     height: 280px;
-    margin: 5px 0 0 20px;
+    /* margin: 5px 0 0 20px; */
     /* z-index: 18;
     height: 285px; */
     background: url(../images/ws_page1.png)
       100% no-repeat;
-    /* width: 300px;
-    position: relative; */
+      width: 16%;
+    background-size: 100% 100%;
+    /* position: relative; */
   }
   
   .wrap6 {
@@ -548,11 +574,12 @@
   }
   
   .main44 {
-    width: 301px;
+    width: 16%;
     height: 280px;
-    margin: 5px 0 0 19px;
+    /* margin: 5px 0 0 20px; */
     background: url(../images/ws_page1.png)
     100% no-repeat;
+    background-size: 100% 100%;
   }
   
   .mod17 {
@@ -825,8 +852,9 @@
     height: 285px;
     background: url(../images/ws_page2.png)
       100% no-repeat;
-    margin-left: 19px;
-    width: 920px;
+    /* margin-left: 20px; */
+    width: 50%;
+    background-size: 100% 100%;
     position: relative;
   }
   
@@ -1295,7 +1323,7 @@
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
-    margin-left: 5px;
+    margin-left: 10px;
   }
   
   .group29 {
@@ -1806,7 +1834,7 @@
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
-    margin-left: 5px;
+    margin-left: 10px;
   }
   
   .word27 {
@@ -2816,7 +2844,7 @@
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
-    margin-left: 5px;
+    margin-left: 10px;
   }
   
   .main20 {
