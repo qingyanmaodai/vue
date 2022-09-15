@@ -666,8 +666,6 @@ export default {
               }
                else if (isNaN(key) && !isNaN(Date.parse(key))){
                   isDate = true;
-                console.log('key',key)
-                console.log(' m[key]', m[key])
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
                 obj['OweQty'] = m[key]
                 obj["dicID"] = _this.sysID[_this.tagRemark].ID;
@@ -707,9 +705,13 @@ export default {
               x++
             ) {
               if (
-                !DataList[i][
+                DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]
+                ]===undefined||DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ]===null||DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ]===''
               ) {
                 this.$message.error(
                   `${
@@ -722,7 +724,6 @@ export default {
             }
           }
         }
-
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
