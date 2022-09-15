@@ -1166,8 +1166,8 @@
                 console.log('d',d)
                 d["LineID"] = d.SMTLineID;
                 // d["ProducedDate"] = this.ruleForm.ProducedDate;
-                d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):'';
-                d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):'';
+                d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):d["StartDate1"];
+                d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):d["StartDate1"];
                 d["ProcessID"] = params.ProcessID;
                 okCount++;
               } else {
