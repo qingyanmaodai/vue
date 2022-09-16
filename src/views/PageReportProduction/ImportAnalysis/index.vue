@@ -257,7 +257,6 @@ export default {
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
     _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
-    console.log("roles", this.$store.getters.roles);
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
     if (_this.$store.getters.roles.length) {
       _this.$store.getters.roles.forEach((item) => {
@@ -324,7 +323,6 @@ export default {
           }
         });
       }
-      console.log("parmsBtn2", this.parmsBtn2);
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "parmsBtn2", btn2);
     },
@@ -337,7 +335,6 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
-          console.log("m", m);
           m.forEach((n, index) => {
             if (n.Required) {
               this.formSearchs[this.tagRemark].required.push(n);
@@ -456,12 +453,21 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-
+        
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false;//是否显示表单标签
+        // 设置行颜色，最终判断有错误整行底色红色
+        this.tableData[this.tagRemark].forEach((row, index) => {
+          if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
+            sheet.getCell(index, -1).backColor("red");
+          }
+        })
+        this.spread.resumePaint();
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
@@ -621,7 +627,6 @@ export default {
       const reader = new FileReader(); //上传就解析文件
       var that = this;
       reader.onload = function (e) {
-        // console.log("e", e);
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
@@ -636,10 +641,12 @@ export default {
             }),
           });
         });
-        // console.log("result导入数据", result);
         that.dataSys(result); // 解析文件
       };
       reader.readAsBinaryString(file.raw);
+    },
+    isValidDate(date) {
+      return date instanceof Date && !isNaN(date.getTime())
     },
     // 解析文件
     async dataSys(importData) {
@@ -649,22 +656,33 @@ export default {
         let isDate = false;
         this.colAdd = [];
         var obj = {};
-        importData[0].sheet.forEach((m) => {
+        let errorDate = false
+        let rowNo = 0// excel行号
+        let propName = ''
+        importData[0].sheet.forEach((m,y) => {
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
               if (item.label === key) {
                 if (item.DataType === "datetime") {
-                  obj[item.prop] = m[key]
+                  if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
+                    errorDate = true
+                    propName = key
+                    rowNo =Number(m.__rowNum__)+1
+                  }else{
+                    obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
                     : "";
+                  }
                   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                 } else {
                   obj[item.prop] = m[key];
                 }
+                
               }
-               else if (isNaN(key) && !isNaN(Date.parse(key))){
+               else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
+                // 列为日期的格式
                   isDate = true;
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
                 obj['OweQty'] = m[key]
@@ -676,11 +694,13 @@ export default {
                       ? _this.machineCycle[1]
                       : "";
                 obj["Account"] = _this.$store.getters.userInfo.Account;
+                obj["row"] = m.__rowNum__;
                 // 需要使用...obj 不然值回写有问题
                 DataList.push({...obj});
                 break
               }
             }
+            
           }
           // 以下为固定入参
           if (!isDate) {
@@ -695,6 +715,11 @@ export default {
             DataList.push(obj);
           }
         });
+        if(errorDate){
+          this.adminLoading = false;
+              this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
+                return;
+        }
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
@@ -713,10 +738,11 @@ export default {
                   this.formSearchs[this.tagRemark].required[x]["prop"]
                 ]===''
               ) {
+                rowNo = Number(DataList[i]['row'])+1
                 this.$message.error(
-                  `${
+                  `第${rowNo}行,【${
                     this.formSearchs[this.tagRemark].required[x]["label"]
-                  }不能为空，请填写`
+                  }】不能为空，请填写`
                 );
                 this.adminLoading = false;
                 return;
