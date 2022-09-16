@@ -147,7 +147,6 @@ import formatDates, {
   formatDate,
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
-import { number } from 'echarts/lib/export';
 export default {
   name: "ImportAnalysis",
   components: {

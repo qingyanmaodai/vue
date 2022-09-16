@@ -152,7 +152,7 @@
     GetSearch,
   } from "@/api/Common";
   export default {
-    name: "PCBPlan_1",
+    name: "TotalScheduling",
     components: {
       ComSearch,
       ComVxeTable,
@@ -644,6 +644,7 @@
         sheet.options.protectionOptions.allowResizeColumns = true;//禁用改变行高
         sheet.options.isProtected = true;//锁定表格
         this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.refresh()
       },
       async ToPlan() {
         //转入月计划

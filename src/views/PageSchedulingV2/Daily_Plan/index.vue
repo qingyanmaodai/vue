@@ -76,7 +76,7 @@
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "PCB_daily_plan",
+      name: "Daily_Plan",
       components: {
         ComSearch,
         ComReportTable,
@@ -939,6 +939,7 @@
           this.spread.resumePaint();
           this.adminLoading = false;
           this.tableLoading[0] = false;
+          this.spread.refresh()
           // this.spread.options.tabStripVisible = false;//是否显示表单标签
         },
         // 自动计算数量
