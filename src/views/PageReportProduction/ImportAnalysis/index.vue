@@ -759,9 +759,7 @@ export default {
             }
           }
         }
-        this.adminLoading = false;
-        console.log('导入成功')
-        return // 测试完去掉
+       
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
