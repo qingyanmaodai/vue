@@ -454,12 +454,21 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-
+        
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false;//是否显示表单标签
+        // 设置行颜色，最终判断有错误整行底色红色
+        this.tableData[this.tagRemark].forEach((row, index) => {
+          if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
+            sheet.getCell(index, -1).backColor("red");
+          }
+        })
+        this.spread.resumePaint();
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
@@ -638,7 +647,7 @@ export default {
       reader.readAsBinaryString(file.raw);
     },
     isValidDate(date) {
-  return date instanceof Date && !isNaN(date.getTime())
+      return date instanceof Date && !isNaN(date.getTime())
     },
     // 解析文件
     async dataSys(importData) {
@@ -649,46 +658,31 @@ export default {
         this.colAdd = [];
         var obj = {};
         let errorDate = false
-        let rowNo = 0
+        let rowNo = 0// excel行号
         let propName = ''
         importData[0].sheet.forEach((m,y) => {
-          console.log('m',m.__rowNum__)
-          console.log('y',y)
-          // excel行号
-          
           for (let key in m) {
-           
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
-              // console.log('m',m)
-            
               if (item.label === key) {
                 if (item.DataType === "datetime") {
-                  if(m[key]&&!this.isValidDate(m[key])){
-                //     this.$message.error('日期存在错误，请检查！');
-                // return;
-                errorDate = true
-                propName = key
-                rowNo =Number(m.__rowNum__)+1
-                // debugger
-                    
+                  if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
+                    errorDate = true
+                    propName = key
+                    rowNo =Number(m.__rowNum__)+1
                   }else{
                     obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
                     : "";
                   }
-                  
-                    if(item.label =='PO创建日期'){
-                  console.log('PO创建日期', m[key])
-                }
                   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                 } else {
                   obj[item.prop] = m[key];
                 }
                 
               }
-               else if (isNaN(key) && !isNaN(Date.parse(key))){
+               else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
                 // 列为日期的格式
                   isDate = true;
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
@@ -745,8 +739,6 @@ export default {
                   this.formSearchs[this.tagRemark].required[x]["prop"]
                 ]===''
               ) {
-                console.log('i',i)
-                console.log('DataList[i]',DataList[i])
                 rowNo = Number(DataList[i]['row'])+1
                 this.$message.error(
                   `第${rowNo}行,【${
@@ -759,9 +751,6 @@ export default {
             }
           }
         }
-        this.adminLoading = false;
-        console.log('导入成功')
-        return // 测试完去掉
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
