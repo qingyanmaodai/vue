@@ -80,7 +80,7 @@
                 </div>
                 <div class="main42 flex-col">
                   <div class="outer26 flex-row">
-                    <span class="info34">本月已接订单</span>
+                    <span class="info34">本月工单状态</span>
                   </div>
                   <div class="content  flex-col justify-between align-center">
                   <div class="group7 flex-row justify-center">
@@ -89,10 +89,10 @@
                   </div>
                   <div class="group8 flex-row ">
                     <div class="main1 flex-col">
-                      <span class="word5">未开始</span>
+                      <span class="word5">未开工</span>
                     </div>
                     <div class="main2 flex-col">
-                      <span class="txt1">生产中</span>
+                      <span class="txt1">已开工</span>
                     </div>
                   </div>
                   <div class="group9 flex-row justify-center">
@@ -101,10 +101,10 @@
                   </div>
                   <div class="group10 flex-row">
                     <div class="layer2 flex-col">
-                      <span class="info5">已完成</span>
+                      <span class="info5">全部领料</span>
                     </div>
                     <div class="layer3 flex-col">
-                      <span class="txt2">已出库</span>
+                      <span class="txt2">部分领料</span>
                     </div>
                   </div>
                   <div class="group11 flex-row justify-center">
@@ -113,10 +113,10 @@
                   </div>
                   <div class="group12 flex-row">
                     <div class="mod2 flex-col">
-                      <span class="word4">未如期</span>
+                      <span class="word4">未领料</span>
                     </div>
                     <div class="mod3 flex-col">
-                      <span class="info6">结案及时率</span>
+                      <span class="info6">已完成</span>
                     </div>
                   </div>
                 </div>
@@ -124,7 +124,7 @@
               
               <div class="main45 flex-col">
                   <div class="bd34 flex-row justify-start">
-                    <span class="word76">车间近7天生产计划</span>
+                    <span class="word76">7日包装生产计划</span>
                   </div>
                   <div class="main3 flex-row  justify-between">
                     <span class="word tableWidthRatio8">组装线别</span>
@@ -743,6 +743,14 @@ MatRateOption :{
     top: "20%",
     bottom: "10%",
   },
+  legend: {
+    // x: "4%",
+    // top: "20%",
+    textStyle: {
+      color: "#90979c",
+    },
+    // data: ["", "", "平均"],
+  },
   xAxis: {
     nameTextStyle: {
       color: "#FFFFFF",
@@ -798,6 +806,7 @@ MatRateOption :{
         align: "center",
       },
       data: [],
+      // renderItem: renderItem,
     },
     {
       z: 2,
@@ -827,6 +836,34 @@ MatRateOption :{
         },
       },
     },
+    {
+      name: "总数",
+      type: "line",
+      symbolSize: 10,
+      symbol: "circle",
+      itemStyle: {
+        normal: {
+          color: "#FFFFFF",
+          boderColor:'#17DB94',//描边颜色
+          borderWidth:100,
+          borderType : 'solid',
+          lineStyle: {
+            color: "#17DB94", //改变折线颜色
+          },
+          // barBorderRadius: 0,
+          label: {
+            show: true,
+            position: "top",
+            formatter: function (p) {
+              return p.value > 0 ? (p.value)+'%' : "";
+            },
+          },
+        },
+      },
+      data: [
+        92, 89, 87
+      ],
+    },
   ],
 },
         
@@ -847,9 +884,9 @@ MatRateOption :{
         
       },
       mounted(){
-        this.yListData = ["154", "121", "146", "135", "115"];
-        this.xList = ["第一部门", "第二部门", "第三部门", "第四部门", "第五部门"];
-        this.color = ["#FF9A40", "#F3CD48", "#20D6B3", "#4BE6E6", "#4BE6E6"];
+        this.yListData = ["154", "121", "146"];
+        this.xList = ["第一部门", "第二部门", "第三部门",];
+        this.color = ["#FF9A40", "#F3CD48", "#20D6B3",];
         this.xData = this.xList.map((item, index) => {
   return {
     value: item,
@@ -868,19 +905,23 @@ this.colors = [
     colorStops: [
       {
         offset: 0.5,
-        color: "rgba(255, 154, 64, 0.7)",
+        color:'RGBA(255, 214, 128, 1)',
+        // color: "RGBA(255, 214, 128, 0.7)",
       },
       {
         offset: 0.5,
-        color: "rgba(255, 154, 64, 0.4)",
+        color:'RGBA(255, 214, 128, 1)',
+        // color: "rgba(255, 154, 64, 0.4)",
       },
       {
         offset: 0.5,
-        color: "rgba(255, 154, 64, 0.6)",
+        color:'RGBA(241, 192, 84, 1)',
+        // color: "rgba(255, 154, 64, 0.6)",
       },
       {
         offset: 1,
-        color: "rgba(255, 154, 64, 0.4)",
+        color:'RGBA(241, 192, 84, 1)',
+        // color: "rgba(255, 154, 64, 0.4)",
       },
     ],
   },
@@ -934,60 +975,62 @@ this.colors = [
       },
     ],
   },
-  {
-    type: "linear",
-    x: 0,
-    x2: 1,
-    y: 0,
-    y2: 0,
-    colorStops: [
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.7)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.4)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.6)",
-      },
-      {
-        offset: 1,
-        color: "rgba(75, 230, 230, 0.4)",
-      },
-    ],
-  },
-  {
-    type: "linear",
-    x: 0,
-    x2: 1,
-    y: 0,
-    y2: 0,
-    colorStops: [
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.4)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.4)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(75, 230, 230, 0.6)",
-      },
-      {
-        offset: 1,
-        color: "rgba(75, 230, 230, 0.4)",
-      },
-    ],
-  },]
+  // {
+  //   type: "linear",
+  //   x: 0,
+  //   x2: 1,
+  //   y: 0,
+  //   y2: 0,
+  //   colorStops: [
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.7)",
+  //     },
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.4)",
+  //     },
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.6)",
+  //     },
+  //     {
+  //       offset: 1,
+  //       color: "rgba(75, 230, 230, 0.4)",
+  //     },
+  //   ],
+  // },
+  // {
+  //   type: "linear",
+  //   x: 0,
+  //   x2: 1,
+  //   y: 0,
+  //   y2: 0,
+  //   colorStops: [
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.4)",
+  //     },
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.4)",
+  //     },
+  //     {
+  //       offset: 0.5,
+  //       color: "rgba(75, 230, 230, 0.6)",
+  //     },
+  //     {
+  //       offset: 1,
+  //       color: "rgba(75, 230, 230, 0.4)",
+  //     },
+  //   ],
+  // },
+]
 this.MatRateOption.xAxis.data = this.xData
 this.MatRateOption.series[0].data = this.yListData
 this.MatRateOption.series[1].data = this.yListData
 this.MatRateOption.series[2].data = this.yListData
+// this.MatRateOption.series[3].data = this.yListData
 
 this.MatRateOption.series[0].itemStyle.normal.color= function (params) {
             return _this.colors[params.dataIndex % 7];
