@@ -563,6 +563,7 @@ this.spread.refresh();
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form["Extend12"] = this.userInfo.Extend2;
       form["dicID"] = this.sysID;
        form["ControlID"]=this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
