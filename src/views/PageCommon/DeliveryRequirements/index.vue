@@ -355,7 +355,8 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-
+         // 冻结列
+         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列

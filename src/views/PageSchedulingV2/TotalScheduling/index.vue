@@ -541,9 +541,8 @@
           GC.Spread.Sheets.LineStyle.min
         );
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        // 冻结第一列
-  
-        sheet.frozenColumnCount(this.tableColumns[1][0].FixCount);
+        // 冻结列,配置表返回固定列不对
+        // sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
   
         sheet.setDataSource(this.tableData[1]);
         sheet.bindColumns(colInfos);

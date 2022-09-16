@@ -1129,9 +1129,7 @@
           this.lines = [];
           let res = await GetSearchData({
             dicID: 5144,
-            OrganizeTypeID: 6,
-            ParentID:3,
-            // ProcessID:'P202009092233201',
+            ParentID:'183,184',
             OrganizeIDs: OrganizeIDs,
           });
           const {
@@ -1153,6 +1151,7 @@
                 });
               });
             }
+            console.log('newData',newData)
             this.lines = newData;
             this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
             this.checkBoxCellTypeLine.editorValueType(
