@@ -131,18 +131,18 @@
                 dataName: "selectionData"
               },
             },
-                   {
-              ButtonCode: "save",
-              BtnName: "下推",
-              isLoading: false,
-              Methods: "setPlan",
-              Type: "danger",
-              Icon: "",
-              Size: "small",
-              Params: {
-                dataName: "selectionData"
-              },
-            },
+            //        {
+            //   ButtonCode: "save",
+            //   BtnName: "下推",
+            //   isLoading: false,
+            //   Methods: "setPlan",
+            //   Type: "danger",
+            //   Icon: "",
+            //   Size: "small",
+            //   Params: {
+            //     dataName: "selectionData"
+            //   },
+            // },
             // {
             //   ButtonCode: "save",
             //   BtnName: "重排",
