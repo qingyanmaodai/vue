@@ -187,7 +187,7 @@
                     <span class="word22">T2</span>
                   </div> -->
                 </div>
-                <div class="navboxall" id="MatRateOption"></div>
+                <div class="navboxall2" id="MatRateOption"></div>
                 <!-- <div class="box8 flex-col"></div>
                 <div class="box9 flex-col"></div>
                 <div class="box10 flex-col"></div>
@@ -635,9 +635,6 @@
             {LineName:'7D',OrderNo:'MO037341',Code:'2.01.01.01.APB30-6-1A(5Y)',Qty:1500,day1:100,day2:200,day3:300,day4:400,day5:500,day6:600,day7:700},
             {LineName:'7D',OrderNo:'MO036286',Code:'2.01.01.01.APB30-6-1A(5Y)',Qty:300,day1:10,day2:20,day3:30,day4:40,day5:50,day6:60,day7:70},
           ],
-          
-
-
           time:null,
           todayDate: '',
           WorkCapOption:{
@@ -651,14 +648,14 @@
               }
             },
             // legend: {
-            //   // textStyle:{
-            //   //   color:'#fff',//图例文本颜色
-            //   // },
+            //   textStyle:{
+            //     color:'#fff',//图例文本颜色
+            //   },
             // },
             grid: {
               left: 0,
               right: 0,
-              bottom: '1%',
+              bottom: '-8%',
               top:'2%',
               containLabel: true//自适应画布大小
             },
@@ -782,70 +779,114 @@ MatRateOption :{
   title: {
     // text: "各部门一月份完成项目数",
     textStyle: {
-      color: "#FFFFFF",
-      fontWeight: "800",
-      fontSize: `20`,
+      // color: "#FFFFFF",
+      // fontWeight: "800",
+      // fontSize: `20`,
     },
-    left: "center",
-    top: "2%",
-  },
-  tooltip: {
-    show: true,
+    // left: "center",
+    // top: "2%",
   },
   grid: {
-    left: "10%",
-    right: "10%",
-    top: "20%",
-    bottom: "10%",
+    left: '-5%',
+    right: '5%',
+    bottom: 0,
+    top:0,
+    containLabel: true//自适应画布大小
   },
+  tooltip: {
+              trigger: 'item',
+              show: true,
+            },
+  // legend: {
+  //   show: true,
+  //   // x: "4%",
+  //   // top: "20%",
+  //   textStyle: {
+  //     color: "#fff",
+  //   },
+  //   // data: ['计划数', '报工数', '完成率'],
+  //   // data: ["", "", "平均"],
+  // },
   legend: {
-    // x: "4%",
-    // top: "20%",
-    textStyle: {
-      color: "#90979c",
-    },
-    // data: ["", "", "平均"],
-  },
+              top: 0,
+              // left: '0%',
+              // bottom:0,
+              // right:'20%',
+              // orient: 'vertical',//图例布局方向
+              right: 10,
+              textStyle:{
+                color:'#fff'// 图例文字颜色
+              }
+            },
   xAxis: {
     nameTextStyle: {
-      color: "#FFFFFF",
-      padding: [0, 0, 0, 20],
+      // color: "#FFFFFF",
+      // padding: [0, 0, 0, 20],
     },
     data: [], //{}
     show: true,
+    // color:'red',
     type: "category",
     axisLine: {
       show: true,
+      lineStyle:{
+        color:'#807FA5',
+        width:1,
+      }
+    },
+    axisTick: {
+      show: false//是否显示刻度
     },
     splitLine: {
       show: false,
       lineStyle: {
-        color: "rgba(255,255,255,0.2)",
+        // color: "rgba(255,255,255,0.2)",
       },
     },
     axisLabel: {
-      fontSize: 12,
-      margin: 20,
+      // fontSize: 12,
+      // margin: 20,
     },
   },
-  yAxis: {
-    show: true,
-    splitNumber: 8,
+  yAxis: [
+  {
+    show: false,//轴刻度线
+    // splitNumber: 8,
     axisLine: {
       show: false,
     },
     splitLine: {
-      show: true,
+      show: false,//轴线
       lineStyle: {
-        color: "rgba(76, 230, 231, 0.1)",
+        // color: "rgba(76, 230, 231, 0.1)",
       },
     },
     axisLabel: {
-      color: "rgba(157, 207, 207, 1)",
+      // color: "rgba(157, 207, 207, 1)",
     },
   },
+  {
+      type: "value",
+      splitLine: {
+        show: false,
+      },
+      axisLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false,
+      },
+      axisLabel: {
+        fontSize: 14,
+        color: "#65C6E7",
+      },
+      min:0,
+      max:100,
+    },
+  ],
   series: [
     {
+      name: "计划订单数",
       type: "bar",
       barWidth: 40,
       itemStyle: {
@@ -857,7 +898,7 @@ MatRateOption :{
         show: true,
         position: [20, -30],
         color: "#ffffff",
-        fontSize: 12,
+        // fontSize: 12,
         align: "center",
       },
       data: [],
@@ -892,6 +933,7 @@ MatRateOption :{
       },
     },
     {
+      name: "配套计划数",
       type: "bar",
       barWidth: 40,
       itemStyle: {
@@ -903,7 +945,7 @@ MatRateOption :{
         show: true,
         position: [20, -30],
         color: "#ffffff",
-        fontSize: 12,
+        // fontSize: 12,
         align: "center",
       },
       data: [],
@@ -984,6 +1026,8 @@ MatRateOption :{
       },
       mounted(){
         this.yListData = ["154", "121", "146"];
+        this.yListData2 = ["100", "100", "100"];
+        this.yListData3 = [80, 90, 100];
         this.xList = ["第一部门", "第二部门", "第三部门",];
         this.color = ["#FF9A40", "#F3CD48", "#20D6B3",];
         this.xData = this.xList.map((item, index) => {
@@ -999,10 +1043,10 @@ this.MatRateOption.xAxis.data = this.xData
 this.MatRateOption.series[0].data = this.yListData
 this.MatRateOption.series[1].data = this.yListData
 this.MatRateOption.series[2].data = this.yListData
-this.MatRateOption.series[3].data = this.yListData
-this.MatRateOption.series[4].data = this.yListData
-this.MatRateOption.series[5].data = this.yListData
-this.MatRateOption.series[6].data = this.yListData
+this.MatRateOption.series[3].data = this.yListData2
+this.MatRateOption.series[4].data = this.yListData2
+this.MatRateOption.series[5].data = this.yListData2
+this.MatRateOption.series[6].data = this.yListData3
 // this.MatRateOption.series[3].data = this.yListData
 
 this.MatRateOption.series[0].itemStyle.normal.color= function (params) {
@@ -1062,5 +1106,5 @@ this.MatRateOption.series[0].itemStyle.normal.color= function (params) {
   
   }
 .navboxall{height: calc(100% - 20px);}
-.navboxall2{height: calc(100% - 100px);}
+.navboxall2{height: calc(100% - 40px);}
 </style>
