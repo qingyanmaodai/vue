@@ -22,7 +22,7 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <div style="margin-right: 10px">
+              <!-- <div style="margin-right: 10px">
                 <span>对比周期：</span>
                 <el-date-picker
                   v-model="machineCycle"
@@ -34,7 +34,7 @@
                   :editable="false"
                 >
                 </el-date-picker>
-              </div>
+              </div> -->
               <div>
                 <el-button
                   style="margin-right: 10px"
@@ -256,7 +256,7 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
-    _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
+    // _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
     if (_this.$store.getters.roles.length) {
       _this.$store.getters.roles.forEach((item) => {
@@ -574,8 +574,8 @@ export default {
     // 计算
     async calculateSave() {
       let form = {
-        StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+        // StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+        // EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
       };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
@@ -687,12 +687,12 @@ export default {
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
                 obj['OweQty'] = m[key]
                 obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                obj["StartDate"] = _this.machineCycle.length
-                    ? _this.machineCycle[0]
-                    : "",
-                obj["EndDate"] = _this.machineCycle.length
-                      ? _this.machineCycle[1]
-                      : "";
+                // obj["StartDate"] = _this.machineCycle.length
+                //     ? _this.machineCycle[0]
+                //     : "",
+                // obj["EndDate"] = _this.machineCycle.length
+                //       ? _this.machineCycle[1]
+                //       : "";
                 obj["Account"] = _this.$store.getters.userInfo.Account;
                 obj["row"] = m.__rowNum__;
                 // 需要使用...obj 不然值回写有问题
@@ -705,12 +705,12 @@ export default {
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            (obj["StartDate"] = _this.machineCycle.length
-              ? _this.machineCycle[0]
-              : ""),
-              (obj["EndDate"] = _this.machineCycle.length
-                ? _this.machineCycle[1]
-                : "");
+            // (obj["StartDate"] = _this.machineCycle.length
+            //   ? _this.machineCycle[0]
+            //   : ""),
+            //   (obj["EndDate"] = _this.machineCycle.length
+            //     ? _this.machineCycle[1]
+            //     : "");
             obj["Account"] = this.$store.getters.userInfo.Account;
             DataList.push(obj);
           }
@@ -801,8 +801,8 @@ export default {
     // 分析
     async Analysis() {
       let form = {
-        StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+        // StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+        // EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
       };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
