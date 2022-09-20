@@ -22,7 +22,7 @@
               ><span class="title">{{ title }}</span></el-col>
             <el-col :span="20" class="flex_flex_end"> 
             <div style="margin-right:10px;">
-              <span>计算截至日期：</span>
+              <span>计算截止日期：</span>
                   <el-date-picker 
                   v-model="machineCycle" type="date"
                   size="small"
