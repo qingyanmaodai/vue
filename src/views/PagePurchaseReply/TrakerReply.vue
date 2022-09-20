@@ -951,7 +951,7 @@ export default {
     // 可用量查询
     usingSearch(row, prop) {
       this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      this.formSearchs[1].datas["Remark1"] = "送货";
+     // this.formSearchs[1].datas["Remark1"] = "送货";
       this.dataSearch(1);
       this.dialogShow = true;
     },

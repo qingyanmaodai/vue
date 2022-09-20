@@ -22,19 +22,19 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <!-- <div style="margin-right: 10px">
-                <span>对比周期：</span>
+              <div style="margin-right: 10px">
+                <span>截至日期</span>
                 <el-date-picker
                   v-model="machineCycle"
-                  type="daterange"
+                  type="date"
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
-                  :clearable="false"
-                  :editable="false"
+         
+                
                 >
                 </el-date-picker>
-              </div> -->
+              </div>
               <div>
                 <el-button
                   style="margin-right: 10px"
@@ -574,8 +574,8 @@ export default {
     // 计算
     async calculateSave() {
       let form = {
-        // StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        // EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+        StartDate: null,
+        EndDate: _this.machineCycle,
       };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
@@ -708,9 +708,7 @@ export default {
             // (obj["StartDate"] = _this.machineCycle.length
             //   ? _this.machineCycle[0]
             //   : ""),
-            //   (obj["EndDate"] = _this.machineCycle.length
-            //     ? _this.machineCycle[1]
-            //     : "");
+             obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
             DataList.push(obj);
           }
@@ -801,8 +799,8 @@ export default {
     // 分析
     async Analysis() {
       let form = {
-        // StartDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        // EndDate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+        StartDate:null,
+        EndDate: _this.machineCycle
       };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
@@ -810,6 +808,11 @@ export default {
       try {
         if (result) {
           this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;

@@ -920,7 +920,7 @@ export default {
       if (newData.length != 0) {
         newData.forEach((x, y) => {
           if (x.isChecked) {
-            if (!x.ProcessGroupID) {
+            if (!x.ProcessGroupID&&x.OrderNo) {
               resultTag = true;
               this.$message.error("第" + (y + 1) + "行工艺不能为空");
             } else {

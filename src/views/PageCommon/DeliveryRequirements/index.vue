@@ -22,14 +22,13 @@
               ><span class="title">{{ title }}</span></el-col>
             <el-col :span="20" class="flex_flex_end"> 
             <div style="margin-right:10px;">
-              <span>计算周期：</span>
+              <span>计算截至日期：</span>
                   <el-date-picker 
-                  v-model="machineCycle" type="daterange"
+                  v-model="machineCycle" type="date"
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
-                  :clearable="false"
-                  :editable="false"
+                
                 >
                   </el-date-picker>
             </div>
@@ -180,7 +179,7 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
-    _this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
+    //_this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
     console.log('roles',this.$store.getters.roles)
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
     if(_this.$store.getters.roles.length){
@@ -467,8 +466,8 @@ export default {
     // 计算
     async calculateSave(){
       let form = {
-        StartDate:_this.machineCycle.length?_this.machineCycle[0]:'',
-        EndDate:_this.machineCycle.length?_this.machineCycle[1]:''
+        StartDate:null,
+        EndDate:_this.machineCycle
       }
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
@@ -476,6 +475,11 @@ export default {
       try {
         if (result) {
           this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
