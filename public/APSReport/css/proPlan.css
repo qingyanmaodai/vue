@@ -3680,6 +3680,7 @@
   vertical-align: top;
   word-break: break-all;
   position: relative;
+  
 }
 .table2{
   height: 70%;
@@ -3706,6 +3707,9 @@
 }
 .tableWidthRatio10{
   width: 10%;
+}
+.tableWidthRatio11{
+  width: 11%;
 }
 .tableWidthRatio13{
   width: 13%;
