@@ -23,7 +23,7 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <div style="margin-right: 10px">
-                <span>截至日期</span>
+                <span>截止日期</span>
                 <el-date-picker
                   v-model="machineCycle"
                   type="date"
