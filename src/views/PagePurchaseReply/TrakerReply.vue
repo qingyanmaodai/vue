@@ -293,13 +293,13 @@ export default {
     // 获取查询到的所有欠料数
     async getTotalOweNum() {
       let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
-      form["fields"] = "isnull(sum(RealOweQty),0) as RealOweQty";
+      form["fields"] = "isnull(sum(OweQty),0) as OweQty";
       form["rows"] = 0;
       let res = await GetSearchData(form);
       const { result, data, msg } = res.data;
       if (result) {
         let StringValue =
-          "当前查询结果【欠料合计：" + `${data[0].RealOweQty}` + "】";
+          "当前查询结果【欠料合计：" + `${data[0].OweQty}` + "】";
         this.$set(this.footerLabel, 0, StringValue);
       } else {
         this.$message({
