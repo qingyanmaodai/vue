@@ -23,7 +23,7 @@
       </div>
       <div>
         <div class="admin_content">
-          <div class="ant-table-title">
+          <div class="ant-table-title"  ref="ant1">
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col
@@ -43,7 +43,7 @@
           </div>
           <ComUmyTable
             :rowKey="'RowNumber'"
-            :height="'281px'"
+            :height="height1"
             :tableData="tableData[0]"
             :tableHeader="tableColumns[0]"
             :tableLoading="tableLoading[0]"
@@ -100,7 +100,7 @@
       </div>
       <div>
         <div class="admin_content">
-          <div class="ant-table-title">
+          <div class="ant-table-title" ref="ant2">
             <el-row>
               <el-col :span="4"><span class="title">{{ title2 }}</span></el-col>
               <el-col
@@ -121,7 +121,7 @@
           <ComUmyTable
             v-show="labelStatus2 ==1"
             :rowKey="'RowNumber'"
-            :height="height"
+            :height="height2"
             :tableData="tableData[1]"
             :tableHeader="tableColumns[1]"
             :tableLoading="tableLoading[1]"
@@ -138,7 +138,7 @@
           <ComUmyTable
             v-show="labelStatus2 ==2"
             :rowKey="'RowNumber'"
-            :height="height"
+            :height="height2"
             :tableData="tableData[2]"
             :tableHeader="tableColumns[2]"
             :tableLoading="tableLoading[2]"
@@ -155,7 +155,7 @@
           <ComUmyTable
             v-show="labelStatus2 ==3"
             :rowKey="'RowNumber'"
-            :height="height"
+            :height="height2"
             :tableData="tableData[3]"
             :tableHeader="tableColumns[3]"
             :tableLoading="tableLoading[3]"
@@ -301,7 +301,8 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      height: "200px",
+      height1: "200px",
+      height2: "200px",
       showPagination: true,
       tagRemark: 0,
       isLoading: [false, false, false, false],
@@ -370,20 +371,15 @@ export default {
     },
     // 高度控制
     setHeight() {
-      let headHeight = this.$refs.up_admin.offsetHeight;
+      let headHeight = this.$refs.headRef.offsetHeight;
       let headHeight2 = this.$refs.headRef2.offsetHeight;
-      let newHeight = 0;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        headHeight2 -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem - 7 + "px";
-      } else {
-        newHeight = rem - 10 + "px";
-      }
-      this.height = newHeight;
+      let headHeight3 = this.$refs.ant1.offsetHeight;
+      let headHeight4 = this.$refs.ant2.offsetHeight;
+      let rem = document.documentElement.clientHeight - headHeight - headHeight2 - this.$store.getters.reduceHeight - headHeight3 -headHeight4;
+      let newHeight1 = Math.floor(rem/2)-10+'px';
+      let newHeight2 = Math.floor(rem/2)-20+'px';
+      this.$set(this, "height1", newHeight1);
+      this.$set(this, "height2", newHeight2);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
