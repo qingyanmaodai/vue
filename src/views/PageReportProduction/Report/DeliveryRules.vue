@@ -21,7 +21,11 @@
             <el-col :span="4"
               ><span class="title">{{ title }}</span></el-col
             >
-            <el-col :span="20" class="flex_flex_end"> </el-col>
+            <el-col :span="20" class="flex_flex_end">
+              <span>新增行数：</span>
+                  <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"></el-input-number>
+              <el-divider direction="vertical"></el-divider>
+            </el-col>
           </el-row>
         </div>
         <div class="flex_column" :style="{ height: height }">
@@ -80,6 +84,7 @@ export default {
   },
   data() {
     return {
+      addNum:1,
       depList: [],
       title: this.$route.meta.title, //表名
       height: "740px",
@@ -550,19 +555,28 @@ export default {
     },
     // 行新增
     addRow() {
+      if(!this.addNum){
+            this.$message.error('请输入需要添加的行数!')
+            return
+        }
+        
       let spread = this.spread;
       let sheet = spread.getActiveSheet();
       if (sheet) {
         this.adminLoading = true;
-        let list = [
-          {
-            rowNum: _.uniqueId("rowNum_"), //随机生成数
-          },
-        ];
-        this.tableData[this.tagRemark] = [
-          ...this.tableData[this.tagRemark],
-          ...list,
-        ];
+        for(let x=0;x<this.addNum;x++){
+          let list = [
+            {
+              rowNum: _.uniqueId("rowNum_"), //随机生成数
+            },
+          ];
+          this.tableData[this.tagRemark] = [
+            ...this.tableData[this.tagRemark],
+            ...list,
+          ];
+        }
+        
+        
         // this.setData();
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
