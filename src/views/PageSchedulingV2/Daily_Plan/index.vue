@@ -143,18 +143,18 @@
             //     dataName: "selectionData"
             //   },
             // },
-            // {
-            //   ButtonCode: "save",
-            //   BtnName: "重排",
-            //   isLoading: false,
-            //   Methods: "resetScheduling",
-            //   Type: "danger",
-            //   Icon: "",
-            //   Size: "small",
-            //   Params: {
-            //     dataName: "resetScheduling"
-            //   },
-            // },
+            {
+              ButtonCode: "reset",
+              BtnName: "重排",
+              isLoading: false,
+              Methods: "resetScheduling",
+              Type: "danger",
+              Icon: "",
+              Size: "small",
+              Params: {
+                dataName: "resetScheduling"
+              },
+            },
           ],
           tableData: [
             []
@@ -438,7 +438,7 @@
           .catch((_) => {});
       },
         resetScheduling() {
-          this.$confirm("确定要重新排全部数据吗？")
+          this.$confirm("确定要重排全部数据吗？")
             .then(async (_) => {
               this.adminLoading = true;
   
