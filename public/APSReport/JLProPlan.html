@@ -10,13 +10,13 @@
   <body style="padding: 0; margin: 0 ;">
     <div  v-cloak id="app" class="page flex-col">
       <div class="loading">
-        <!-- <div class="loadbox"> <img src="./picture/loading.gif"> 页面加载中... </div> -->
+        <div class="loadbox"> <img src="./picture/loading.gif"> 页面加载中... </div>
       </div>
       <div class="group_1 flex-col" >
         <div class="group_2 flex-row justify-between">
           <div class="headLeft">
              <!-- LOGO图片 -->
-            <!-- <div class="group_3 flex-col"></div> -->
+            <div class="jl_logo flex-col" id="jl_logo"></div>
           </div>
           
           <div class="headCenter">
@@ -33,12 +33,10 @@
               <div class="section_1 flex-col"></div>
               <span class="text_3">周生产计划</span>
               <div class="text-wrapper_2 flex-row justify-between">
-                  <span class="tableWidthRatio10 tableTitle">生产线</span>
-                  <span class="tableWidthRatio15 tableTitle">生产订单</span>
-                  <!-- <span class="tableWidthRatio3 tableTitle">顺序</span> -->
-                  <span class="tableWidthRatio15 tableTitle">产品编码</span>
-                  <!-- <span class="tableWidthRatio31 tableTitle">物料描述</span> -->
-                  <span class="tableWidthRatio10 tableTitle">计划数</span>
+                  <span class="tableWidthRatio7 tableTitle">生产线</span>
+                  <span class="tableWidthRatio10 tableTitle">生产订单</span>
+                  <span class="tableWidthRatio20 tableTitle">产品编码</span>
+                  <span class="tableWidthRatio10 tableTitle">工单数</span>
                   <span class="tableWidthRatio7 tableTitle">d1</span>
                   <span class="tableWidthRatio7 tableTitle">d2</span>
                   <span class="tableWidthRatio7 tableTitle">d3</span>
@@ -46,46 +44,20 @@
                   <span class="tableWidthRatio7 tableTitle">d5</span>
                   <span class="tableWidthRatio7 tableTitle">d6</span>
                   <span class="tableWidthRatio7 tableTitle">d7</span>
-                  <!-- <span class="tableWidthRatio10 tableTitle">当日报工</span>
-                  <span class="tableWidthRatio4 tableTitle">欠数</span>
-                  <span class="tableWidthRatio4 tableTitle">完成率</span>
-                  <span class="tableWidthRatio7 tableTitle widthPadding">交期</span>
-                  <span class="tableWidthRatio7 tableTitle widthPadding">上线时间</span>
-                  <span class="tableWidthRatio7 tableTitle">备注</span> -->
-  
-                  <!-- <span class="text_4">生产线</span>
-                  <span class="text_4">生产订单</span>
-                  <span class="text_5">顺序</span>
-                  <span class="text_6">产品编码</span>
-                  <span class="text_7">物料描述</span>
-                  <span class="text_8">数量</span>
-                  <span class="text_9">当日报工</span>
-                  <span class="text_10">欠数</span>
-                  <span class="text_11">完成率</span>
-                  <span class="text_12">交期</span>
-                  <span class="text_13">上线时间</span>
-                  <span class="text_14">备注</span> -->
               </div>
               <div class="table1 wrap">
-                <div class="text-wrapper_3 flex-row justify-between" v-for="(item,index) in todayList" :key="index" >
-                  <span class="tableWidthRatio11 tableContent">{{item.LineName}}</span>
-                  <span class="tableWidthRatio15 tableContent">{{item.OrderNo}}</span>
-                  <!-- <span class="tableWidthRatio3 tableContent color1">{{item.ViewSort}}</span> -->
-                  <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
-                  <!-- <span class="tableWidthRatio31 tableContent">{{item.Spec}}</span> -->
+                <div class="text-wrapper_3 flex-row justify-between" v-for="(item,index) in weeksList" :key="index" >
+                  <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
+                  <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
+                  <span class="tableWidthRatio20 tableContent">{{item.Code}}</span>
                   <span class="tableWidthRatio10 tableContent color2">{{item.PlanQty}}</span> 
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <span class="tableWidthRatio7 tableContent color3">{{item.HasQty}}</span>
-                  <!-- <span class="tableWidthRatio4 tableContent color4">{{item.OweQty}}</span> 
-                  <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP1}}%</span> -->
-                  <!-- <span class="tableWidthRatio7 tableContent widthPadding">{{item.EndDate}}</span>
-                  <span class="tableWidthRatio7 tableContent widthPadding">{{item.StartDate}}</span>
-                  <span class="tableWidthRatio7 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span> -->
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
+                  <span class="tableWidthRatio7 tableContent color3">{{item.Qty}}</span>
                 </div>
               </div>
             </div>
@@ -106,14 +78,14 @@
               </div>
               <div class="wrap2 table2">
                 <div class="image-text_3 flex-col justify-between">
-                  <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
-                    <span class="tableWidthRatio20 tableContent">{{ele.EndDate}}</span>
+                  <div class="text-wrapper_13 flex-row" v-for="(ele,i) in OweMatList" :key="i">
+                    <span class="tableWidthRatio20 tableContent">{{ele.DemandDate}}</span>
                     <!-- <span class="tableWidthRatio20 tableContent">{{ele.OrderNo}}</span> -->
                     <!-- <span class="tableWidthRatio5 tableContent color1">{{ele.ViewSort}}</span> -->
-                    <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
-                    <span class="tableWidthRatio20 tableContent clampEllipsis1">{{ele.MaterialName}}</span>
+                    <span class="tableWidthRatio20 tableContent">{{ele.ProductCode}}</span>
+                    <span class="tableWidthRatio20 tableContent clampEllipsis1">{{ele.ProductName}}</span>
                     <span class="tableWidthRatio20 tableContent color2">{{ele.OweQty}}</span>
-                    <span class="tableWidthRatio20 tableContent color2"></span>
+                    <span class="tableWidthRatio20 tableContent color3 clampEllipsis1" :title="ele.POSuplierName">{{ele.POSuplierName}}</span>
                     <!-- <span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span> -->
                     <!-- <span class="tableWidthRatio15 tableContent clampEllipsis1"  :title="ele.Remark1">{{ele.Remark1}}</span> -->
                   </div>
@@ -199,8 +171,8 @@
           OrganizeIDs:'',
           time:null,
           todayDate: '',
-          todayList:[],
-          tomorrowList:[],
+          weeksList:[],
+          OweMatList:[],
           weekOption: {
             // 提示框
             tooltip: {
@@ -459,21 +431,33 @@
           this.todayDate = formatDate.getTodayTime()
         }, 1000)
         
-        this.$nextTick(async()=>{
-          let OrganizeIDs = this.getQueryString('ID')
-          // 看板车间名称
-          if(OrganizeIDs){
-            // 179 制一部;180 制二部;181 制三部;182 制四部;183 制五部
-            await this.getOrgData(OrganizeIDs)
-          }else{
-            OrganizeIDs = 179
-            await this.getOrgData(OrganizeIDs)
-          }
-        })
+        // this.$nextTick(async()=>{
+        //   let OrganizeIDs = this.getQueryString('ID')
+        //   // 看板车间名称
+        //   if(OrganizeIDs){
+        //     // 179 制一部;180 制二部;181 制三部;182 制四部;183 制五部
+        //     await this.getOrgData(OrganizeIDs)
+        //   }else{
+        //     OrganizeIDs = 179
+        //     await this.getOrgData(OrganizeIDs)
+        //   }
+        // })
         
         
       },
       mounted() {
+        // 周计划
+        this.getWeeksPlanData()
+        // 欠料明细
+        this.getOweMatPlanData()
+        // 七日达成率
+        this.getWeekRateData()
+        // 日计划达成率
+        this.getDayRateData()
+        $(".loading").fadeOut()
+        this.$nextTick(()=>{
+                this.gundong()
+              })
       },
       methods:{
         // 重新加载整个页面
@@ -481,39 +465,39 @@
           location.reload();
         },
         // 获取组织名称
-        getOrgData(OrganizeIDs) {
+        // getOrgData(OrganizeIDs) {
           
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
-            .then(function (res) {
-              if (res.result) {
-                if (res.data.length != 0) {
-                  _this.form = res.data[0];
-                }
-                if(_this.form.OrganizeID){
-                  _this.getToDayPlanData(_this.form.OrganizeID)
-                  _this.getTomorrowPlanData(_this.form.OrganizeID)
-                  _this.getWeekRateData(_this.form.OrganizeID)
-                  _this.getDayRateData(_this.form.OrganizeID)
-                  if(_this.gudtime){
-                    clearTimeout(_this.gudtime)
-                  }
-                  _this.gudtime = setTimeout(() => {
-                    _this.gundong()
-                    $(".loading").fadeOut()
-                  }, 1000);
-                }
-              }
-              else {
-                _this.$message({
-                  message: res.msg,
-                  type: 'error'
-                });
-              }
-            })
-            .catch(function (error) {
+        //   axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+        //     .then(function (res) {
+        //       if (res.result) {
+        //         if (res.data.length != 0) {
+        //           _this.form = res.data[0];
+        //         }
+        //         if(_this.form.OrganizeID){
+        //           _this.getWeeksPlanData(_this.form.OrganizeID)
+        //           _this.getOweMatPlanData(_this.form.OrganizeID)
+        //           _this.getWeekRateData(_this.form.OrganizeID)
+        //           _this.getDayRateData(_this.form.OrganizeID)
+        //           if(_this.gudtime){
+        //             clearTimeout(_this.gudtime)
+        //           }
+        //           _this.gudtime = setTimeout(() => {
+        //             _this.gundong()
+        //             $(".loading").fadeOut()
+        //           }, 1000);
+        //         }
+        //       }
+        //       else {
+        //         _this.$message({
+        //           message: res.msg,
+        //           type: 'error'
+        //         });
+        //       }
+        //     })
+        //     .catch(function (error) {
 
-            });
-        },
+        //     });
+        // },
         // 渲染echart图
         barData(id,option){
           let chartDom = document.getElementById(id);
@@ -587,119 +571,167 @@
           let r = window.location.search.substr(1).match(reg);
           if (r != null) return decodeURIComponent(r[2]); return null;
         },
-        // 今日生产计划
-        getToDayPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:0 })
-					.then(function (res) {
-            _this.todayList = []
-						if (res.result) {
-							_this.todayList = res.data
-              console.log('res.data222',res.data)
-						}
-						else {
-							_this.$message({
-								message: res.msg,
-								type: 'error'
-							});
-						}
-					})
-					.catch(function (error) {
+        // 周生产计划
+        getWeeksPlanData(){
+          // axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:0 })
+					// .then(function (res) {
+            // _this.weeksList = []
+						// if (res.result) {
+              // _this.weeksList = res.data
+							this.weeksList = [
+                {LineName:'1A',OrderNo:'MO037593',Code:'2.01.01.01.APB15-3-1A(5Y/NR)',PlanQty:7000,Qty:1000},
+                {LineName:'1B',OrderNo:'MO037597',Code:'2.01.01.01.APC10-0-2',PlanQty:7000,Qty:1000},
+                {LineName:'2A',OrderNo:'MO036398',Code:'2.01.01.01.APC15-2-1(1712)',PlanQty:7000,Qty:1000},
+                {LineName:'2B',OrderNo:'MO038002',Code:'2.01.01.01.APC15-2-1F',PlanQty:7000,Qty:1000},
+                {LineName:'3A',OrderNo:'MO036389',Code:'2.01.01.01.APC15-2-2',PlanQty:7000,Qty:1000},
+                {LineName:'3B',OrderNo:'MO038005',Code:'2.01.01.01.APC20-3-1(1805)',PlanQty:7000,Qty:1000},
+                {LineName:'5A',OrderNo:'MO036376',Code:'2.01.01.01.BPT10-22-1D(2005)',PlanQty:7000,Qty:1000},
+                {LineName:'7A',OrderNo:'MO036371',Code:'2.01.01.01.BPT10-22-1D-02(白色面板/2005)',PlanQty:7000,Qty:1000},
+                {LineName:'7B',OrderNo:'MO036368',Code:'2.01.01.01.BPT10-23-2D(2004)',PlanQty:7000,Qty:1000},
+                {LineName:'7C',OrderNo:'MO036366',Code:'2.01.01.01.BPT10-23-2D-01(白色面板/2006)',PlanQty:7000,Qty:1000},
+                {LineName:'7D',OrderNo:'MO038009',Code:'2.01.01.01.BPT15-23-1D1(2005/NR/滚珠)',PlanQty:7000,Qty:1000},
+                {LineName:'9A',OrderNo:'MO036359',Code:'2.01.01.01.BPT15-44-1(AL)',PlanQty:7000,Qty:1000},
+                {LineName:'9B',OrderNo:'MO038015',Code:'2.01.01.01.BPT15-44-1(PP)',PlanQty:7000,Qty:1000},
+                {LineName:'9C',OrderNo:'MO037346',Code:'2.01.01.03.FB-40DS(塑叶/2009)',PlanQty:7000,Qty:1000},
+                {LineName:'9D',OrderNo:'MO036357',Code:'2.01.01.03.FB-40D(铁叶/2022)',PlanQty:7000,Qty:1000},
+              ]
+              
+						// }
+						// else {
+						// 	_this.$message({
+						// 		message: res.msg,
+						// 		type: 'error'
+						// 	});
+						// }
+					// })
+					// .catch(function (error) {
 
-					});
+					// });
           // 五分钟刷新一次数据
           var todayTimer = setInterval(function() {
               clearInterval(todayTimer);
-              _this.getToDayPlanData(OrganizeIDs)
+              _this.getWeeksPlanData()
           }, 1000*60*5)
         },
-        // 明日生产计划
-        getTomorrowPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:0 })
-					.then(function (res) {
-            _this.tomorrowList = []
-						if (res.result) {
-							_this.tomorrowList = res.data
-              console.log('res.data2',res.data)
-						}
-						else {
-							_this.$message({
-								message: res.msg,
-								type: 'error'
-							});
-						}
-					})
-					.catch(function (error) {
+        // 欠料明细
+        getOweMatPlanData(){
+          // axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTommorowDate()],rows:0 })
+					// .then(function (res) {
+          //   _this.OweMatList = []
+					// 	if (res.result) {
+							// _this.OweMatList = res.data
+              this.OweMatList = [
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2639,POSuplierName:'江门市研创电器塑料有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-300,POSuplierName:'江门市中力纸制品有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2639,POSuplierName:'台山市白沙镇三八宝琴标牌塑料制品厂,'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-1181,POSuplierName:''},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-3000,POSuplierName:''},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-3000,POSuplierName:''},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-3000,POSuplierName:'台山市白沙镇三八宝琴标牌塑料制品厂'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2479,POSuplierName:'深圳市宝安区福永鸿杰五金弹簧厂'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-180,POSuplierName:'江门市合益印刷有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2512,POSuplierName:'江门市新洋包装材料有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-54.5455,POSuplierName:'台山市白沙镇三八宝琴标牌塑料制品厂'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2448,POSuplierName:'江门市新洋包装材料有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-3000,POSuplierName:'深圳市宝安区福永鸿杰五金弹簧厂'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2070,POSuplierName:'江门市研创电器塑料有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-3000,POSuplierName:'江门市新洋包装材料有限公司'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-6000,POSuplierName:'台山市白沙镇三八宝琴标牌塑料制品厂'},
+                {DemandDate:'2022-09-21',ProductName:'窗玻璃安装式换气扇',ProductCode:'2.01.01.01.APC20-3-1(1805)',OweQty:-2943,POSuplierName:'江门市中力纸制品有限公司'},
+              ]
+              
+					// 	}
+					// 	else {
+					// 		_this.$message({
+					// 			message: res.msg,
+					// 			type: 'error'
+					// 		});
+					// 	}
+					// })
+					// .catch(function (error) {
 
-					});
+					// });
           // 五分钟刷新一次数据
           var tomorrowTimer = setInterval(function() {
               clearInterval(tomorrowTimer);
-              _this.getTomorrowPlanData(OrganizeIDs)
+              _this.getOweMatPlanData()
           }, 1000*60*5)
         },
         // 周计划达成率
-        getWeekRateData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:['',formatDate.formatOldDate()],rows:7,sort:'PlanDay DESC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
-					.then(function (res) {
-            _this.weekOptionData = []
+        getWeekRateData(){
+          // axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:['',formatDate.formatOldDate()],rows:7,sort:'PlanDay DESC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
+					// .then(function (res) {
+          //   _this.weekOptionData = []
            
-						if (res.result) {
-              _this.weekOptionData = res.data
-                _this.weekOptionData.map(item=>{
+					// 	if (res.result) {
+              // _this.weekOptionData = res.data
+              this.weekOptionData = [
+                {PlanDay:'2022-09-21',PlanQty:363,HasQty:100,PlanQtyP1:0.28},
+                {PlanDay:'2022-09-20',PlanQty:5809,HasQty:100,PlanQtyP1:0},
+                {PlanDay:'2022-09-19',PlanQty:1871,HasQty:100,PlanQtyP1:0},
+                {PlanDay:'2022-09-17',PlanQty:275,HasQty:10,PlanQtyP1:0},
+                {PlanDay:'2022-09-16',PlanQty:275,HasQty:10,PlanQtyP1:0},
+                {PlanDay:'2022-09-15',PlanQty:1000,HasQty:100,PlanQtyP1:0},
+                {PlanDay:'2022-09-14',PlanQty:1000,HasQty:100,PlanQtyP1:0},
+              ]
+              this.weekOptionData.map(item=>{
                    //截取日期的最后两位
-                   _this.weekOption.xAxis[0].data.unshift(item.PlanDay.slice(-2))
-                  _this.weekOption.series[0].data.unshift(item.PlanQty?parseFloat(item.PlanQty.toFixed(2)):0)
-                  _this.weekOption.series[1].data.unshift(item.HasQty?parseFloat(item.HasQty.toFixed(2)):0)
-                  _this.weekOption.series[2].data.unshift(item.HasQty?parseFloat(((item.HasQty/item.PlanQty)*100).toFixed(2)):0)
+                   this.weekOption.xAxis[0].data.unshift(item.PlanDay.slice(-2))
+                   this.weekOption.series[0].data.unshift(item.PlanQty?parseFloat(item.PlanQty.toFixed(2)):0)
+                   this.weekOption.series[1].data.unshift(item.HasQty?parseFloat(item.HasQty.toFixed(2)):0)
+                   this.weekOption.series[2].data.unshift(item.HasQty?parseFloat(((item.HasQty/item.PlanQty)*100).toFixed(2)):0)
                 })
               // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
-          _this.$nextTick(()=>{
+              this.$nextTick(()=>{
             _this.barData('weekEchart',_this.weekOption)
           })
-						}
-						else {
-							_this.$message({
-								message: res.msg,
-								type: 'error'
-							});
-						}
-					})
-					.catch(function (error) {
+					// 	}
+					// 	else {
+					// 		_this.$message({
+					// 			message: res.msg,
+					// 			type: 'error'
+					// 		});
+					// 	}
+					// })
+					// .catch(function (error) {
 
-					});
+					// });
           
         },
         // 日计划达成率
-        getDayRateData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:1,fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
-					.then(function (res) {
-            _this.todayOptionData =[]
-						if (res.result) {
-							_this.todayOptionData = res.data
+        getDayRateData(){
+          // axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:1,fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
+					// .then(function (res) {
+          //   _this.todayOptionData =[]
+					// 	if (res.result) {
+					// 		_this.todayOptionData = res.data
           // if(_this.todayOptionData.length){
-            _this.perComplete = 0
-            _this.todayOptionData.map(item=>{
+            this.todayOptionData = [
+            {PlanDay:'2022-09-22',PlanQty:363,HasQty:100,PlanQtyP1:0.28}
+            ]
+            this.perComplete = 0
+            this.todayOptionData.map(item=>{
              
-              _this.todayOption.series[0].data[0] = {value:item.HasQty,name:'报工数'}
-              _this.todayOption.series[0].data[1] = {value:item.PlanQty - item.HasQty,name:'未完成数'}
-              _this.perComplete = parseFloat(((item.PlanQtyP1)*100).toFixed(2))
+              this.todayOption.series[0].data[0] = {value:item.HasQty,name:'报工数'}
+              this.todayOption.series[0].data[1] = {value:item.PlanQty - item.HasQty,name:'未完成数'}
+              this.perComplete = parseFloat(((item.PlanQtyP1)*100).toFixed(2))
             })
           // }
           // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
-          _this.$nextTick(()=>{
-            _this.barData('dayEchart',_this.todayOption)
+          this.$nextTick(()=>{
+            this.barData('dayEchart',_this.todayOption)
           })
-						}
-						else {
-							_this.$message({
-								message: res.msg,
-								type: 'error'
-							});
-						}
-					})
-					.catch(function (error) {
+					// 	}
+					// 	else {
+					// 		_this.$message({
+					// 			message: res.msg,
+					// 			type: 'error'
+					// 		});
+					// 	}
+					// })
+					// .catch(function (error) {
 
-					});
+					// });
         },
       },
       beforeUnmount() {
@@ -720,4 +752,5 @@
   }
 .navboxall{height: calc(100%);}
 .navboxall2{height: calc(100% - 100px);}
+
 </style>

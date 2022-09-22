@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>恒美APS一分厂综合看板</title>
   <link rel="stylesheet" type="text/css" href="./css/common.css" />
   <link rel="stylesheet" type="text/css" href="./css/WorkShop.css" />
 </head>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="group11 flex-row justify-center">
                   <span class="info50">{{list[2].weilingliao}}</span>
-                  <span class="word3">{{list[2].wancheng}}%</span>
+                  <span class="word3">{{list[2].wancheng}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
@@ -132,9 +132,9 @@
                 <span class="word76">7日包装生产计划</span>
               </div>
               <div class="main3 flex-row  justify-between">
-                <span class="word tableWidthRatio8">组装线别</span>
-                <span class="word tableWidthRatio10">订单号</span>
-                <span class="word tableWidthRatio26">产品编码</span>
+                <span class="word tableWidthRatio15">组装线别</span>
+                <span class="word tableWidthRatio15">订单号</span>
+                <span class="word tableWidthRatio15">产品编码</span>
                 <span class="word tableWidthRatio7">计划数</span>
                 <span class="word tableWidthRatio7">T1</span>
                 <span class="word tableWidthRatio7">T2</span>
@@ -147,9 +147,9 @@
               <div class="table1 wrap">
                 <div >
                   <div  class=" text-wrapper flex-row justify-between" v-for="(item,index) in list[3]" :key="index"> 
-                    <span class="tableWidthRatio8 tableContent">{{item.LineName}}</span>
-                    <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
-                    <span class="tableWidthRatio26 tableContent">{{item.Code}}</span>
+                    <span class="tableWidthRatio15 tableContent">{{item.LineName}}</span>
+                    <span class="tableWidthRatio15 tableContent">{{item.OrderNo}}</span>
+                    <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.Qty}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.day1}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.day2}}</span>
@@ -252,17 +252,17 @@
               </div>
               <div class="main3 flex-row  justify-between">
                 <span class="word tableWidthRatio20">订单号</span>
-                <span class="word tableWidthRatio50">产品型号</span>
-                <span class="word tableWidthRatio15">计划数</span>
-                <span class="word tableWidthRatio15">欠料数</span>
+                <span class="word tableWidthRatio40">产品型号</span>
+                <span class="word tableWidthRatio20">计划数</span>
+                <span class="word tableWidthRatio20">欠料数</span>
               </div>
               <div class="table1 wrap">
                 <div>
                   <div class="text-wrapper flex-row justify-between" v-for="(item,index) in list[12]" :key="index">
                     <span class="tableWidthRatio20 tableContent">{{item.OrderNo}}</span>
-                    <span class="tableWidthRatio50 tableContent">{{item.Code}}</span>
-                    <span class="tableWidthRatio15 tableContent">{{item.PlanQty}}</span>
-                    <span class="tableWidthRatio15 tableContent">{{item.Qty}}</span>
+                    <span class="tableWidthRatio40 tableContent">{{item.Code}}</span>
+                    <span class="tableWidthRatio20 tableContent">{{item.PlanQty}}</span>
+                    <span class="tableWidthRatio20 tableContent">{{item.Qty}}</span>
                   </div>
                 </div>
               </div>
@@ -889,7 +889,7 @@
                 color:'#1EE1FF'
               },
               // avoidLabelOverlap:true,
-              name: '工序1',
+              name: '包装',
               type: 'line',
               areaStyle: {},
               emphasis: {
@@ -908,7 +908,7 @@
                 show: true,
                 position: 'top',
               },
-              name: '工序2',
+              name: '氩焊',
               type: 'line',
               emphasis: {
                 focus: 'series'
@@ -919,7 +919,7 @@
               data: []
             },
             {
-              name: '工序3',
+              name: '绕线',
               type: 'line',
               label: {
                 show: true,
@@ -1609,7 +1609,19 @@
 
         //   })
         this.list[1] = [
-          {processName:'总装',Qty:1}
+          {processName:'包装',Qty:1},
+          {processName:'排潮至放瓷珠',Qty:10},
+          {processName:'压角两边',Qty:20},
+          {processName:'压角两边',Qty:30},
+          {processName:'泡酒精打耐压',Qty:40},
+          {processName:'单检密封圈',Qty:50},
+          {processName:'退火至铆法兰',Qty:60},
+          {processName:'碰焊',Qty:70},
+          {processName:'手动喷砂',Qty:80},
+          {processName:'自动喷砂',Qty:90},
+          {processName:'碰固定片(白管)',Qty:100},
+          {processName:'弯管2(白管)',Qty:150},
+          
         ]
         if(this.list[1].length){
           this.list[1].map(item=>{
@@ -1641,20 +1653,20 @@
 
         //   })
         this.list[3] =[
-        { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', Qty: 4000, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', Qty: 950, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7B', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', Qty: 815, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7A', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', Qty: 850, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7C', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', Qty: 2300, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001076', Code: 'YD-236A', Qty: 4000, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001063', Code: 'YD-236A', Qty: 950, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001001', Code: 'YD-236A', Qty: 815, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO000890', Code: 'QR-928A', Qty: 850, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO001025', Code: 'QR-1648A', Qty: 2300, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO000917', Code: 'QR-1648A', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO001192', Code: 'QR-1649A', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO001130', Code: 'QR-1649A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO001026', Code: 'QR-1649A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO000962', Code: 'QR-1322A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1热水器', OrderNo: 'MO000901', Code: 'QR-1540A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1热水器', OrderNo: 'MO001029', Code: 'QR-1652A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1热水器', OrderNo: 'MO000902', Code: 'QR-1426A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1热水器', OrderNo: 'MO001248', Code: 'QR-1724A', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
         ]
         // this.$nextTick(()=>{
         //   this.gundong()
@@ -1737,14 +1749,15 @@
 
         //   })
         this.list[6] =[
-        { LineName: '7A', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', Qty: 4000, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', Qty: 950, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7C', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', Qty: 815, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', Qty: 850, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '1A', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', Qty: 2300, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '1B', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '3A', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '3B', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, HasQty: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001076', Code: 'YD-236A', Qty: 4000, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001063', Code: 'YD-236A', Qty: 950, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO001001', Code: 'YD-236A', Qty: 815, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO000890', Code: 'QR-928A', Qty: 850, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1油汀', OrderNo: 'MO001025', Code: 'QR-1648A', Qty: 2300, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO000917', Code: 'QR-1649A', Qty: 1500, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO001192', Code: 'QR-1322A', Qty: 1500, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO001130', Code: 'QR-1426A', Qty: 300, HasQty: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
+        
         ]
         if(this.list[6].length){
           this.list[6].map(item=>{
@@ -1971,14 +1984,14 @@
 
         //   })
         this.list[12] = [
-          { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 4000, Qty: 100 },
-          { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 950, Qty: 100 },
-          { LineName: '7B', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', PlanQty: 815, Qty: 100 },
-          { LineName: '7A', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', PlanQty: 850, Qty: 100 },
-          { LineName: '7C', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', PlanQty: 2300, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 300, Qty: 10 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001076', Code: 'YD-236', PlanQty: 4000, Qty: 100 },
+          { LineName: 'Z1洗碗机', OrderNo: 'MO001063', Code: 'YD-236', PlanQty: 950, Qty: 100 },
+          { LineName: 'Z1油汀', OrderNo: 'MO001001', Code: 'QR-928A', PlanQty: 815, Qty: 100 },
+          { LineName: 'Z1油汀', OrderNo: 'MO000890', Code: 'QR-928A', PlanQty: 850, Qty: 100 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO001025', Code: 'QR-1648A', PlanQty: 2300, Qty: 100 },
+          { LineName: 'Z1氩焊', OrderNo: 'MO000917', Code: 'QR-1648A', PlanQty: 1500, Qty: 100 },
+          { LineName: 'Z1热水器', OrderNo: 'MO001192', Code: 'QR-1322A', PlanQty: 1500, Qty: 100 },
+          { LineName: 'Z1热水器', OrderNo: 'MO001130', Code: 'QR-1322A', PlanQty: 300, Qty: 10 },
         ]
         this.$nextTick(()=>{
           this.gundong()
