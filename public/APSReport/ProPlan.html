@@ -464,25 +464,27 @@
         },
         // 获取组织名称
         getOrgData(OrganizeIDs) {
-          
           axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
-            .then(function (res) {
+            .then( async(res) =>{
               if (res.result) {
                 if (res.data.length != 0) {
                   _this.form = res.data[0];
                 }
                 if(_this.form.OrganizeID){
-                  _this.getToDayPlanData(_this.form.OrganizeID)
-                  _this.getTomorrowPlanData(_this.form.OrganizeID)
-                  _this.getWeekRateData(_this.form.OrganizeID)
-                  _this.getDayRateData(_this.form.OrganizeID)
+                  await _this.getToDayPlanData(_this.form.OrganizeID)
+                  await _this.getTomorrowPlanData(_this.form.OrganizeID)
+                  await _this.getWeekRateData(_this.form.OrganizeID)
+                  await _this.getDayRateData(_this.form.OrganizeID)
+                  $(".loading").fadeOut()
                   if(_this.gudtime){
                     clearTimeout(_this.gudtime)
                   }
-                  _this.gudtime = setTimeout(() => {
+                  this.$nextTick(()=>{
+                    _this.gudtime = setTimeout(() => {
                     _this.gundong()
-                    $(".loading").fadeOut()
                   }, 1000);
+                  })
+                  
                 }
               }
               else {

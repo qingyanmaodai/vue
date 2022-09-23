@@ -445,15 +445,15 @@
         
         
       },
-      mounted() {
+      async mounted() {
         // 周计划
-        this.getWeeksPlanData()
+        await this.getWeeksPlanData()
         // 欠料明细
-        this.getOweMatPlanData()
+        await this.getOweMatPlanData()
         // 七日达成率
-        this.getWeekRateData()
+        await this.getWeekRateData()
         // 日计划达成率
-        this.getDayRateData()
+        await this.getDayRateData()
         $(".loading").fadeOut()
         this.$nextTick(()=>{
                 this.gundong()
