@@ -88,7 +88,7 @@
     </div>
     <!-- 导入文件 -->
     <div>
-      <el-dialog title="导入并分析" :visible.sync="dialogImport" width="50%">
+      <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
         <el-upload
           action="https://jsonplaceholder.typicode.com/posts/"
           style="padding-top: 10px"
@@ -184,7 +184,7 @@ export default {
         // },
         {
           ButtonCode: "import",
-          BtnName: "导入并分析",
+          BtnName: "导入",
           Type: "danger",
           Ghost: true,
           Size: "small",
