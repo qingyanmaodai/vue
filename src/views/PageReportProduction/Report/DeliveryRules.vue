@@ -571,8 +571,7 @@ export default {
             },
           ];
           this.tableData[this.tagRemark] = [
-            ...this.tableData[this.tagRemark],
-            ...list,
+          ...list,...this.tableData[this.tagRemark],
           ];
         }
         
