@@ -1217,7 +1217,7 @@
   /* text-align: right; */
   white-space: nowrap;
   line-height: 28px;
-  margin: 15px 0 0 0px;
+  margin: 20px 0 0 0px;
 }
 
 .text-wrapper_2 {
@@ -3691,6 +3691,15 @@
   position: relative;
   
 }
+#table1{
+  height: 87%;
+  /* height: 420px; */
+  overflow: hidden;
+  vertical-align: top;
+  word-break: break-all;
+  position: relative;
+  
+}
 .table2{
   height: 70%;
   /* height: 280px; */
@@ -3717,6 +3726,9 @@
 .tableWidthRatio8{
   width: 8%;
 }
+.tableWidthRatio9{
+  width: 9%;
+}
 .tableWidthRatio10{
   width: 10%;
 }
@@ -3737,6 +3749,9 @@
 }
 .tableWidthRatio20{
   width: 20%;
+}
+.tableWidthRatio36{
+  width: 36%;
 }
 .tableWidthRatio40{
   width: 40%;
