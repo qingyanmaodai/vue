@@ -636,7 +636,7 @@
                 size: parseInt(x.width),
               });
               this.tableData[0].map((item,index)=>{
-                newData = item.Lines
+                newData = x.items
                 // 设置列表每行下拉菜单
                 list = new GCsheets.CellTypes.ComboBox();
                 list.editorValueType(
@@ -1169,13 +1169,13 @@
               });
             }
             console.log('newData',newData)
-            this.lines = newData;
-            this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-            this.checkBoxCellTypeLine.editorValueType(
-              GC.Spread.Sheets.CellTypes.EditorValueType.value
-            );
-            this.checkBoxCellTypeLine.items(newData);
-            this.checkBoxCellTypeLine.itemHeight(24);
+           // this.lines = newData;
+            // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+            // this.checkBoxCellTypeLine.editorValueType(
+            //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+            // );
+            // this.checkBoxCellTypeLine.items(newData);
+            // this.checkBoxCellTypeLine.itemHeight(24);
             this.formSearchs[0].datas.ControlID = this.userInfo.WorkFlowInstanceID
             this.getTableData(this.formSearchs[0].datas, 0);
           } else {

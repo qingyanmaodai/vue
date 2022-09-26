@@ -906,11 +906,19 @@
       },
       // 获取表格数据
       async getTableData(form, remarkTb) {
+        console.log(form)
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
+        form["AutoDays2"] =20
+    
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
+       if(remarkTb==1)
+        {
+          this.tableColumns[remarkTb] = res.data.Columns[0];
+          console.log(this.tableColumns[remarkTb])
+        };
         this.$set(this.tableLoading, remarkTb, false);
         if (result) {
           // if(data.length != 0){

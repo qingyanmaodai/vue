@@ -14,11 +14,9 @@ let base_url;
 //http://192.168.30.23:9999 --美特
 //http://192.168.128.160    --金羚
 
-<<<<<<< HEAD
+ 
 let apsUrl = 'http://127.0.0.1';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
-=======
-let apsUrl = 'http://192.168.128.160';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
->>>>>>> 67b57a954ffeb578d376c8d3b8dc6e82c350b973
+ 
 
 
 localStorage.setItem('apsurl', apsUrl);
