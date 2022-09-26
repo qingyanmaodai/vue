@@ -90,6 +90,7 @@
           LineName: "",
           OrganizeName: "",
           clickData: {},
+          AutoDays2: 30,
           treeProps: {
             label: "OrganizeName",
             children: "children",
