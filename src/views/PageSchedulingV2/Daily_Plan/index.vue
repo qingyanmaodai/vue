@@ -629,25 +629,20 @@
           let newData = [];
           let list = []
           this.tableColumns[0].forEach((x,i) => {
-            if (x.prop == "LineID"&&(x.ControlType==='comboboxMultiple'||x.ControlType==='combobox')) {
+            if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
+              let ComboBox = null
+              ComboBox= new GCsheets.CellTypes.ComboBox();
+              ComboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value
+              );
+              ComboBox.items(x.items);
+              ComboBox.itemHeight(24);
               colInfos.push({
                 name: x.prop,
                 displayName:x.label,
-                cellType:'',
+                cellType:ComboBox,
                 size: parseInt(x.width),
               });
-              this.tableData[0].map((item,index)=>{
-                newData = x.items
-                // 设置列表每行下拉菜单
-                list = new GCsheets.CellTypes.ComboBox();
-                list.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value
-                );
-                list.items(newData);
-                list.itemHeight(24);
-                sheet.getCell(index, i, GCsheets.SheetArea.viewport).cellType(list)
-                
-              })
             } else {
               colInfos.push({
                 name: x.prop,
