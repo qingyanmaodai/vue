@@ -163,7 +163,7 @@
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
           { ID: 5156 },
-          { ID: 5615 },
+          { ID: 6736 },
           { ID: 5156 },
           { ID: 5156 },
           { ID: 5156 },
@@ -1168,7 +1168,7 @@
                 // d["ProducedDate"] = this.ruleForm.ProducedDate;
                 d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):d["StartDate1"];
                 d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):d["StartDate1"];
-                d["ProcessID"] = params.ProcessID;
+                d["ProcessID"] = d.ProcessID1;
                 okCount++;
               } else {
                 errMsg += d["OrderNo"] + "已转入或者无此工序";
