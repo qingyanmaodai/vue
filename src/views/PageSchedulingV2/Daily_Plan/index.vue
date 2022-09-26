@@ -562,12 +562,14 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
-            this.getOrgData();
+            // this.getOrgData();
             //   this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
              this.formSearchs.forEach(a=>{
               // a.datas["ProcessID"] = 'P202009092233201';
             })
             // this.dataSearch(0);
+            this.getTableData(this.formSearchs[0].datas, 0);
+            this.adminLoading = false
           }else{
             this.adminLoading = false
           }
@@ -613,6 +615,7 @@
         },
         // 渲染数据
         setData() {
+          console.log('item.Lines123')
           this.spread.suspendPaint();
           let sheet = this.spread.getActiveSheet();
           sheet.options.allowCellOverflow = true;
@@ -622,14 +625,28 @@
           sheet.defaults.rowHeaderColWidth = 60;
           let colHeader1 = [];
           let colInfos = [];
-          this.tableColumns[0].forEach((x) => {
-            if (x.prop == "LineID") {
+          let newData = [];
+          let list = []
+          this.tableColumns[0].forEach((x,i) => {
+            if (x.prop == "LineID"&&(x.ControlType==='comboboxMultiple'||x.ControlType==='combobox')) {
               colInfos.push({
                 name: x.prop,
-                displayName: "线别",
-                cellType: this.checkBoxCellTypeLine,
+                displayName:x.label,
+                cellType:'',
                 size: parseInt(x.width),
               });
+              this.tableData[0].map((item,index)=>{
+                newData = item.Lines
+                // 设置列表每行下拉菜单
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(
+                  GC.Spread.Sheets.CellTypes.EditorValueType.value
+                );
+                list.items(newData);
+                list.itemHeight(24);
+                sheet.getCell(index, i, GCsheets.SheetArea.viewport).cellType(list)
+                
+              })
             } else {
               colInfos.push({
                 name: x.prop,
@@ -1159,7 +1176,7 @@
             );
             this.checkBoxCellTypeLine.items(newData);
             this.checkBoxCellTypeLine.itemHeight(24);
-            this.formSearchs[0].datas.ControlID = "202";
+            this.formSearchs[0].datas.ControlID = this.userInfo.WorkFlowInstanceID
             this.getTableData(this.formSearchs[0].datas, 0);
           } else {
             this.adminLoading = false;
