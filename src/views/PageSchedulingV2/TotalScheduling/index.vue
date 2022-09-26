@@ -469,11 +469,20 @@
   
         this.tableColumns[1].forEach((x) => {
           console.log('x',x)
-          if (x.prop == "LineID"||x.prop == "SMTLineID") {
+          if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
+
+let combobox=null;
+           combobox = new GCsheets.CellTypes.ComboBox();
+         combobox.editorValueType(
+            GC.Spread.Sheets.CellTypes.EditorValueType.value
+          );
+         combobox.items(x.items);
+         combobox.itemHeight(24);
+
             colInfos.push({
               name: x.prop,
               displayName: x.label,
-              cellType: this.checkBoxCellTypeLine,
+              cellType:combobox,
               size: parseInt(x.width),
             });
           } else {
@@ -1034,7 +1043,7 @@
           return;
         }
         this.adminLoading = true;
-        let res = await SaveData(submitData);
+        let res = await GetSearch(submitData,'/APSAPI/SaveWeekPlan');
   
         const { result, data, count, msg } = res.data;
   
@@ -1245,7 +1254,7 @@
               });
             });
           }
-          this.lines = newData;
+          
           this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
           this.checkBoxCellTypeLine.editorValueType(
             GC.Spread.Sheets.CellTypes.EditorValueType.value
