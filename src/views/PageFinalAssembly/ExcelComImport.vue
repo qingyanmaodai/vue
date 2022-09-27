@@ -22,33 +22,7 @@
                 ><span class="title">{{ title }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
-                <div style="margin-right: 10px">
-                  <span>截止日期</span>
-                  <el-date-picker
-                    v-model="machineCycle"
-                    type="date"
-                    size="small"
-                    value-format="yyyy-MM-dd"
-                    placeholder="请选择"
-           
-                  
-                  >
-                  </el-date-picker>
-                </div>
-                <div>
-                  <el-button
-                    style="margin-right: 10px"
-                    plain
-                    v-for="(item, i) in parmsBtn2"
-                    :key="i"
-                    :type="item.Type ? item.Type : 'primary'"
-                    :icon="item.Icon"
-                    size="small"
-                    @click="btnClick(item.Methods, item.Params, i)"
-                  >
-                    {{ item.BtnName }}</el-button
-                  >
-                </div>
+                
               </el-col>
             </el-row>
           </div>
@@ -127,6 +101,7 @@
   </template>
   <script>
   var _this;
+  let rand = Math.random();
   const GCsheets = GC.Spread.Sheets;
   import "@grapecity/spread-sheets-vue";
   import GC from "@grapecity/spread-sheets";
@@ -148,7 +123,7 @@
   } from "@/utils/formatDate";
   import XLSX from "xlsx";
   export default {
-    name: "ImportAnalysis",
+    name: "ExcelComImport"+rand,
     components: {
       ComSearch,
     },
@@ -173,15 +148,6 @@
             Methods: "dataSave",
             Icon: "",
           },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "同步",
-          //   Type: "danger",
-          //   Ghost: true,
-          //   Size: "small",
-          //   Methods: "syncSave",
-          //   Icon: "",
-          // },
           {
             ButtonCode: "import",
             BtnName: "导入",
@@ -189,15 +155,6 @@
             Ghost: true,
             Size: "small",
             Methods: "dataImport",
-            Icon: "",
-          },
-          {
-            ButtonCode: "import",
-            BtnName: "分析",
-            Type: "danger",
-            Ghost: true,
-            Size: "small",
-            Methods: "Analysis",
             Icon: "",
           },
           {
@@ -209,18 +166,6 @@
             Icon: "",
             Size: "small",
           },
-        ],
-        // 表头添加动态按钮
-        parmsBtn2: [
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "计算",
-          //   Type: "primary",
-          //   Ghost: true,
-          //   Size: "small",
-          //   Methods: "calculateSave",
-          //   Icon: "",
-          // },
         ],
         formSearchs: [
           //不同标签页面的查询条件
@@ -253,6 +198,9 @@
     created() {
       _this = this;
       _this.adminLoading = true;
+      let route = this.$route;
+      console.log('route.meta',route.meta)
+      this.sysID[this.tagRemark].ID = parseInt(route.meta.dicID);
       _this.judgeBtn();
       _this.getTableHeader();
       // 计算周期默认时间：今天~1.5月
@@ -315,16 +263,9 @@
             if (newData.length != 0) {
               newBtn = newBtn.concat(newData);
             }
-            let newData2 = this.parmsBtn2.filter((y) => {
-              return x.ButtonCode == y.ButtonCode;
-            });
-            if (newData2.length != 0) {
-              btn2 = btn2.concat(newData2);
-            }
           });
         }
         this.$set(this, "btnForm", newBtn);
-        this.$set(this, "parmsBtn2", btn2);
       },
       // 获取表头
       async getTableHeader() {
@@ -548,56 +489,6 @@
           this.$message.error("当前数据没做修改，请先修改再保存！");
         }
       },
-      // 同步
-      async syncSave() {
-        this.adminLoading = true;
-        let res = await GetSearch("", "/APSAPI/PushDeliveryData");
-        const { result, data, count, msg } = res.data;
-        try {
-          if (result) {
-            this.adminLoading = false;
-            this.dataSearch(this.tagRemark);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        } catch (error) {
-          if (error) {
-            this.adminLoading = false;
-          }
-        }
-      },
-      // 计算
-      async calculateSave() {
-        let form = {
-          StartDate: null,
-          EndDate: _this.machineCycle,
-        };
-        this.adminLoading = true;
-        let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
-        const { result, data, count, msg } = res.data;
-        try {
-          if (result) {
-            this.adminLoading = false;
-            this.dataSearch(this.tagRemark);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        } catch (error) {
-          if (error) {
-            this.adminLoading = false;
-          }
-        }
-      },
       // 导入并分析模板
       dataImport() {
         this.dialogImport = true;
@@ -684,8 +575,8 @@
                  else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
                   // 列为日期的格式
                     isDate = true;
-                  obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-                  obj['OweQty'] = m[key]
+                  // obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
+                  // obj['OweQty'] = m[key]
                   obj["dicID"] = _this.sysID[_this.tagRemark].ID;
                   // obj["StartDate"] = _this.machineCycle.length
                   //     ? _this.machineCycle[0]
@@ -693,7 +584,7 @@
                   // obj["EndDate"] = _this.machineCycle.length
                   //       ? _this.machineCycle[1]
                   //       : "";
-                  obj["Account"] = _this.$store.getters.userInfo.Account;
+                  // obj["Account"] = _this.$store.getters.userInfo.Account;
                   obj["row"] = m.__rowNum__;
                   // 需要使用...obj 不然值回写有问题
                   DataList.push({...obj});
@@ -709,7 +600,7 @@
               //   ? _this.machineCycle[0]
               //   : ""),
                obj["EndDate"] =_this.machineCycle;
-              obj["Account"] = this.$store.getters.userInfo.Account;
+              // obj["Account"] = this.$store.getters.userInfo.Account;
               DataList.push(obj);
             }
           });
@@ -748,7 +639,7 @@
               }
             }
           }
-          let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
+          let res = await SaveData(DataList);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
