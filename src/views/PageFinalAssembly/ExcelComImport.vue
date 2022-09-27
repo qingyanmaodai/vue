@@ -1,4 +1,4 @@
-<!-- EXCEL表格导入 -->
+<!-- EXCEL表格公共导入 -->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
