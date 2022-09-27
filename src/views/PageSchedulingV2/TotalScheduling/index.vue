@@ -163,7 +163,7 @@
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
           { ID: 5156 },
-          { ID: 6736 },
+          { ID: 6736,ConfigStartWeek:1 },//一些扩展的参数，这里表示是周一
           { ID: 5156 },
           { ID: 5156 },
           { ID: 5156 },
@@ -245,6 +245,16 @@
             Size: "small",
             signName: 1,
             Methods: "saveSort",
+            Icon: "",
+          },
+          {
+            ButtonCode: "downLoadErpData",
+            BtnName: "下载ERP数据",
+            Type: "warning",
+            Ghost: true,
+            Size: "small",
+            signName: 1,
+            Methods: "downERP",
             Icon: "",
           },
           {
@@ -422,7 +432,7 @@
       },
       // 判断按钮权限
       judgeBtn() {
-        console.log('this.$route.meta.btns',this.$route.meta.btns)
+       
         let routeBtn = this.$route.meta.btns;
         let newBtn = [];
         let permission = false;
@@ -448,7 +458,7 @@
             }
           });
         }
-        console.log('newBtn',newBtn)
+    
         this.$set(this, "btnForm", newBtn);
         this.$set(this, "isEdit", permission);
       },
@@ -468,7 +478,7 @@
         let colInfos = [];
   
         this.tableColumns[1].forEach((x) => {
-          console.log('x',x)
+     
           if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
 
 let combobox=null;
@@ -688,7 +698,7 @@ let combobox=null;
         }
       },
       getSelectionData() {
-        console.log('this.tagRemark',this.tagRemark)
+   
         let sheet = this.spread.getActiveSheet();
         let newData = sheet.getDataSource();
         this.selectionData[this.tagRemark] = [];
@@ -896,6 +906,7 @@ let combobox=null;
         //   this.formSearchs[3].datas["CompletionStatus"] = "1";
         //   this.formSearchs[4].datas["productionstatus"] = "25";
           this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
+          this.formSearchs[1].datas["ConfigStartWeek"] ="1"
           this.getTableData(this.formSearchs[1].datas, 1);
   
           this.adminLoading = false;
@@ -915,18 +926,23 @@ let combobox=null;
       },
       // 获取表格数据
       async getTableData(form, remarkTb) {
-        console.log(form)
+      
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        form["AutoDays2"] =20
+        if(remarkTb==1)
+        {
+           form["AutoDays2"] =20
+           form["StartWeek"] =1
+        }
+
     
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
        if(remarkTb==1)
         {
           this.tableColumns[remarkTb] = res.data.Columns[0];
-          console.log(this.tableColumns[remarkTb])
+        
         };
         this.$set(this.tableLoading, remarkTb, false);
         if (result) {
@@ -1063,6 +1079,31 @@ let combobox=null;
         }
         this.adminLoading = false;
       },
+
+      async downERP()
+      {
+    
+        this.adminLoading = true;
+        let res = await GetSearch(null,'/APSAPI/GetErpData');
+  
+        const { result, data, count, msg } = res.data;
+  
+        if (result) {
+          this.dataSearch(1);
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.adminLoading = false;
+      },
       // 清空排期
       clearPlan(remarkTb) {
         if (this.selectionData[remarkTb].length != 0) {
@@ -1180,7 +1221,7 @@ let combobox=null;
               // }
   
               if (isOk) {
-                console.log('d',d)
+            
                 d["LineID"] = d.SMTLineID;
                 // d["ProducedDate"] = this.ruleForm.ProducedDate;
                 d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):d["StartDate1"];
@@ -1191,7 +1232,7 @@ let combobox=null;
                 errMsg += d["OrderNo"] + "已转入或者无此工序";
               }
             });
-            console.log('this.selectionData[remarkTb]',this.selectionData[remarkTb])
+    
             if (errMsg != "") {
               this.$message({
                 message: errMsg,
