@@ -248,6 +248,16 @@
             Icon: "",
           },
           {
+            ButtonCode: "downLoadErpData",
+            BtnName: "下载ERP数据",
+            Type: "warning",
+            Ghost: true,
+            Size: "small",
+            signName: 1,
+            Methods: "downERP",
+            Icon: "",
+          },
+          {
             ButtonCode: "computedPlan",
             BtnName: "计算排期",
             Type: "warning",
@@ -1050,6 +1060,31 @@ let combobox=null;
         }
         this.adminLoading = true;
         let res = await GetSearch(submitData,'/APSAPI/SaveWeekPlan');
+  
+        const { result, data, count, msg } = res.data;
+  
+        if (result) {
+          this.dataSearch(1);
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.adminLoading = false;
+      },
+
+      async downERP()
+      {
+    
+        this.adminLoading = true;
+        let res = await GetSearch(null,'/APSAPI/GetErpData');
   
         const { result, data, count, msg } = res.data;
   
