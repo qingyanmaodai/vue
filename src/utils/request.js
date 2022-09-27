@@ -15,7 +15,7 @@ let base_url;
 //http://192.168.128.160    --金羚
 
  
-let apsUrl = '';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = 'http://192.168.128.160';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
  
 
 
