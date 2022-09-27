@@ -403,11 +403,11 @@
           sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
           this.spread.options.tabStripVisible = false;//是否显示表单标签
           // 设置行颜色，最终判断有错误整行底色红色
-          this.tableData[this.tagRemark].forEach((row, index) => {
-            if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
-              sheet.getCell(index, -1).backColor("red");
-            }
-          })
+          // this.tableData[this.tagRemark].forEach((row, index) => {
+          //   if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
+          //     sheet.getCell(index, -1).backColor("red");
+          //   }
+          // })
           this.spread.resumePaint();
         } catch (error) {
           console.log("表格渲染的错误信息:", error);
@@ -567,12 +567,14 @@
                       : "";
                     }
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                  }else if(item.DataType === "int"){
+                    obj[item.prop] = parseInt(m[key])
                   } else {
                     obj[item.prop] = m[key];
                   }
                   
                 }
-                 else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
+                 else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且数大于0才导入
                   // 列为日期的格式
                     isDate = true;
                   // obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
@@ -599,7 +601,7 @@
               // (obj["StartDate"] = _this.machineCycle.length
               //   ? _this.machineCycle[0]
               //   : ""),
-               obj["EndDate"] =_this.machineCycle;
+              //  obj["EndDate"] =_this.machineCycle;
               // obj["Account"] = this.$store.getters.userInfo.Account;
               DataList.push(obj);
             }
@@ -686,38 +688,6 @@
           this.fileList.findIndex((item) => item.url === file.url),
           1
         );
-      },
-      // 分析
-      async Analysis() {
-        let form = {
-          StartDate:null,
-          EndDate: _this.machineCycle
-        };
-        this.adminLoading = true;
-        let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
-        const { result, data, count, msg } = res.data;
-        try {
-          if (result) {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-            this.dataSearch(this.tagRemark);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        } catch (error) {
-          if (error) {
-            this.adminLoading = false;
-          }
-        }
       },
       // 获取选中的数据
       getSelectionData() {
