@@ -39,6 +39,16 @@
           </div>
         </div>
       </div>
+      <!-- 点击齐套率弹框-->
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="7916"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
   </div>
 </template>
@@ -75,15 +85,20 @@
   import {
     SaveMOPlanStep4
   } from "@/api/PageTwoScheduling";
+  import DialogTable from "@/components/Dialog/dialogTable";
   export default {
     name: "PCB_daily_plan",
     components: {
       ComSearch,
       ComReportTable,
       ComAsideTree,
+      DialogTable
     },
     data() {
       return {
+        dialogSearchForm:{
+        },
+        colDialogVisible:false,
         labelStatus1: 0,
         Status1: [],
         //////////////左侧树节点//////////////
@@ -936,6 +951,22 @@
           //   sheet.setArray(args.row, i, [2021]);
           // }
         });
+
+        // 表格单击齐套率弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (item.name === "FormRate" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderNo =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
+      });
+      
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[0] = false;
