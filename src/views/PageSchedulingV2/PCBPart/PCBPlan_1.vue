@@ -128,6 +128,17 @@
           />
         </div>
       </div>
+
+      <!-- 点击齐套率弹框-->
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="7916"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
   </div>
 </template>
@@ -155,14 +166,19 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "PCBPlan_1",
   components: {
     ComSearch,
     ComVxeTable,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+      },
+      colDialogVisible:false,
       ////////////////// Search /////////////////
       footerLabel: ["", "", "", "", "", "", ""],
       sysID: [
@@ -664,6 +680,22 @@ export default {
         // 自动计算数量
         
       });
+
+      // 表格单击齐套率弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (item.name === "FormRate" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderNo =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
+      });
+
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[1] = false;
