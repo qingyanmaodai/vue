@@ -19,10 +19,13 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
+            <el-col :span="12"
+              >
+              <span class="title" style="margin-right:10px">{{ title }}</span>
+              <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
+              </el-col
             >
-            <el-col :span="20" class="flex_flex_end">
+            <el-col :span="12" class="flex_flex_end">
               <div>
                 <!-- <span>选择机台/班组：</span>
                 <el-select
