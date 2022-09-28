@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1,2, 3, 4]" :key="i" v-show="labelStatus1 == i">
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -85,7 +85,7 @@
             </div>
             <div class="flex">
               <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
-              <span>共{{tablePagination[1].pageTotal}}条</span>
+              <span>共{{ tablePagination[1].pageTotal }}条</span>
               <!-- <el-pagination
                 background
                 @size-change="(val) => pageSize(val, 1)"
@@ -101,7 +101,7 @@
           </div>
         </div>
         <div
-          v-for="item in [0, 2, 3, 4,5]"
+          v-for="item in [0, 2, 3, 4, 5]"
           :key="item"
           v-show="labelStatus1 == item"
         >
@@ -130,7 +130,15 @@
       </div>
 
       <!-- 点击齐套率弹框-->
-    <DialogTable title="订单齐套分析" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="5165"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
   </div>
 </template>
@@ -144,9 +152,7 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
-import {
-  HeaderCheckBoxCellType,
-} from "@/static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -160,19 +166,19 @@ export default {
   components: {
     ComSearch,
     ComVxeTable,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
-      dialogSearchForm:{
-        OrderID:'',
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
+      colDialogVisible: false,
       footerLabel: ["", "", "", "", "", "", ""],
       sysID: [
         { ID: 5156 },
-        { ID: 6736,ConfigStartWeek:1 },//一些扩展的参数，这里表示是周一
+        { ID: 6736, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
         { ID: 5156 },
         { ID: 5156 },
         { ID: 5156 },
@@ -183,7 +189,7 @@ export default {
         { label: "待排订单", value: 0 },
         { label: "滚动周计划", value: 1 },
         // { label: "SMT待排", value: 2 },
-       // { label: "SMT已排", value: 2 },
+        // { label: "SMT已排", value: 2 },
         { label: "已完成", value: 3 },
       ],
       title: this.$route.meta.title,
@@ -207,11 +213,11 @@ export default {
           forms: [],
         },
         {
-          datas: {IsSetPrepare:'未生成'},
+          datas: { IsSetPrepare: "未生成" },
           forms: [],
         },
         {
-          datas: {IsSetPrepare:'已生成'},
+          datas: { IsSetPrepare: "已生成" },
           forms: [],
         },
         {
@@ -225,7 +231,7 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [
-          {
+        {
           ButtonCode: "to_weeks_plan",
           BtnName: "转入周计划",
           Type: "danger",
@@ -320,7 +326,7 @@ export default {
           Params: { ProcessID: "P2208290001" },
           Icon: "",
         },
-        
+
         {
           ButtonCode: "returnOrder",
           BtnName: "退回",
@@ -331,17 +337,17 @@ export default {
           Methods: "backData",
           Icon: "",
         },
-       
-      //   {
-      //     ButtonCode: "to_days_plan",
-      //     BtnName: "转入日计划",
-      //     Type: "primary",
-      //     Ghost: true,
-      //     Size: "small",
-      //     signName: [2, 4],
-      //     Methods: "setPlan",
-      //     Icon: "",
-      //   },
+
+        //   {
+        //     ButtonCode: "to_days_plan",
+        //     BtnName: "转入日计划",
+        //     Type: "primary",
+        //     Ghost: true,
+        //     Size: "small",
+        //     signName: [2, 4],
+        //     Methods: "setPlan",
+        //     Icon: "",
+        //   },
       ],
       tableData: [[], [], [], [], [], [], []],
       delData: [[], [], [], [], [], [], []],
@@ -386,10 +392,9 @@ export default {
     this.judgeBtn();
   },
   activated() {
-      if(this.spread)
-      {
-          this.spread.refresh();
-      }
+    if (this.spread) {
+      this.spread.refresh();
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -409,24 +414,24 @@ export default {
         this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
       }
     },
-    async dataBackSave(data1, index){
+    async dataBackSave(data1, index) {
       this.adminLoading = true;
       let res = await SaveData(data1);
       const { result, data, count, msg } = res.data;
 
       if (result) {
-          this.dataSearch(1);
-          this.$message({
+        this.dataSearch(1);
+        this.$message({
           message: msg,
           type: "success",
           dangerouslyUseHTMLString: true,
-          });
+        });
       } else {
-          this.$message({
+        this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
-          });
+        });
       }
       this.adminLoading = false;
     },
@@ -441,7 +446,6 @@ export default {
     },
     // 判断按钮权限
     judgeBtn() {
-     
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
       let permission = false;
@@ -452,22 +456,21 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
-              if(x.ButtonCode == y.ButtonCode){
-                  y.BtnName = x.ButtonName
-                  y.Methods = x.OnClick||y.Methods
-                  y.Type = x.ButtonType||y.Type
-                  return y
-              }
-              // return x.ButtonCode == y.ButtonCode
-             
+            if (x.ButtonCode == y.ButtonCode) {
+              y.BtnName = x.ButtonName;
+              y.Methods = x.OnClick || y.Methods;
+              y.Type = x.ButtonType || y.Type;
+              return y;
+            }
+            // return x.ButtonCode == y.ButtonCode
           });
-         
+
           if (newData.length != 0) {
             newBtn = newBtn.concat(newData);
           }
         });
       }
-  
+
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
     },
@@ -487,21 +490,22 @@ export default {
       let colInfos = [];
 
       this.tableColumns[1].forEach((x) => {
-   
-        if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
-
-let combobox=null;
-         combobox = new GCsheets.CellTypes.ComboBox();
-       combobox.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-       combobox.items(x.items);
-       combobox.itemHeight(24);
+        if (
+          x.ControlType === "comboboxMultiple" ||
+          x.ControlType === "combobox"
+        ) {
+          let combobox = null;
+          combobox = new GCsheets.CellTypes.ComboBox();
+          combobox.editorValueType(
+            GC.Spread.Sheets.CellTypes.EditorValueType.value
+          );
+          combobox.items(x.items);
+          combobox.itemHeight(24);
 
           colInfos.push({
             name: x.prop,
             displayName: x.label,
-            cellType:combobox,
+            cellType: combobox,
             size: parseInt(x.width),
           });
         } else {
@@ -576,7 +580,7 @@ let combobox=null;
       sheet.bindColumns(colInfos);
 
       let cellIndex = 0;
-      
+
       this.tableColumns[1].forEach((m) => {
         //行，start,end
         if (m.isEdit) {
@@ -595,15 +599,13 @@ let combobox=null;
           // );
           // cell.foreColor("gray");
         }
-       
-       
 
         cellIndex++;
       });
-      var colindexs = [1,2,3,4,5]
+      var colindexs = [1, 2, 3, 4, 5];
       this.tableData[1].forEach((row, index) => {
         let cellIndex = 0;
-        this.tableColumns[1].forEach((m,num) => {
+        this.tableColumns[1].forEach((m, num) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -619,43 +621,79 @@ let combobox=null;
           }
           cellIndex++;
 
-         var rowSheet = sheet.getRange(
+          var rowSheet = sheet.getRange(
             index,
             num,
             1,
             1,
             GC.Spread.Sheets.SheetArea.viewport
-          )
+          );
           // SMT已排、插件已排、补焊已排、测试已排、三防漆已排字段结尾1~5区分，单元格样式动态生成
-        for(let i=0;i<colindexs.length;i++){
-          if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "是") {
-            rowSheet.backColor("#4CD964");
-            rowSheet.foreColor("balck");
-          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "否") {
-            rowSheet.backColor("#FFFF00");
-            rowSheet.foreColor("black");
-          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "无补焊") {
-            rowSheet.foreColor("black");
-            rowSheet.backColor("");
+          for (let i = 0; i < colindexs.length; i++) {
+            if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "是"
+            ) {
+              rowSheet.backColor("#4CD964");
+              rowSheet.foreColor("balck");
+            } else if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "否"
+            ) {
+              rowSheet.backColor("#FFFF00");
+              rowSheet.foreColor("black");
+            } else if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "无补焊"
+            ) {
+              rowSheet.foreColor("black");
+              rowSheet.backColor("");
+            }
           }
-        }
 
-       
-        rowSheet = sheet.getRange(
-          index,
-          num,
-          1,
-          1,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        let rowSheet3 = null
-        if(row["FormRate"] =="100.00%"&&m.name ==="FormRate"){//齐套时背景色为绿色
-          rowSheet3 = sheet.getCell(
-                  index,//行
-                  num,//列
-                  GC.Spread.Sheets.SheetArea.viewport
-                );
-                rowSheet3.backColor("#67c23a");
+          rowSheet = sheet.getRange(
+            index,
+            num,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          let rowSheet3 = null;
+          if (row["FormRate"] == "100.00%" && m.name === "FormRate") {
+            //齐套时背景色为绿色
+            rowSheet3 = sheet.getCell(
+              index, //行
+              num, //列
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            rowSheet3.backColor("#67c23a");
+          }
+          // 齐套率字体蓝色
+          if (m.name === "FormRate") {
+            rowSheet3 = sheet.getCell(
+              -1, //行
+              num, //列
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            rowSheet3.foreColor("#2a06ecd9");
+          }
+          //成品库存单元格背景色
+          if(m.name ==='StockQty'){
+            rowSheet3 = sheet.getCell(
+              index, //行
+              num, //列
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            rowSheet3.backColor("#c2e7b0");
+          }
+          // 电机库存单元格背景色
+          if(m.name ==='Extend17'){
+            rowSheet3 = sheet.getCell(
+              index, //行
+              num, //列
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            rowSheet3.backColor("#f0f9eb");
           }
         });
       });
@@ -675,31 +713,31 @@ let combobox=null;
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-        
       });
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        console.log('this.tableColumns',_this.tableColumns)
-          if(_this.tableColumns[_this.tagRemark].length){
-            _this.tableColumns[_this.tagRemark].map((item,index)=>{
-              if(item.name ==="FormRate"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.OrderNo = _this.tableData[_this.tagRemark][args.row].OrderNo
-              }
-            })
-          }
+        console.log("this.tableColumns", _this.tableColumns);
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (item.name === "FormRate" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderNo =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
       });
-
 
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[1] = false;
-      sheet.options.protectionOptions.allowResizeColumns = true;//禁用改变行高
-      sheet.options.isProtected = true;//锁定表格
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
-      this.spread.refresh()
+      sheet.options.protectionOptions.allowResizeColumns = true; //禁用改变行高
+      sheet.options.isProtected = true; //锁定表格
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
+      this.spread.refresh();
     },
     async ToPlan() {
       //转入月计划
@@ -711,10 +749,14 @@ let combobox=null;
           dangerouslyUseHTMLString: true,
         });
       } else {
-        this.selectionData[0].map(item=>{
-          item["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):'';
-          item["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):'';
-        })
+        this.selectionData[0].map((item) => {
+          item["StartDate"] = this.ruleForm.ProducedDate
+            ? this.$moment(this.ruleForm.ProducedDate[0]).format("YYYY-MM-DD")
+            : "";
+          item["EndDate"] = this.ruleForm.ProducedDate
+            ? this.$moment(this.ruleForm.ProducedDate[1]).format("YYYY-MM-DD")
+            : "";
+        });
         this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[0],
@@ -735,7 +777,6 @@ let combobox=null;
       }
     },
     getSelectionData() {
- 
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
@@ -832,13 +873,13 @@ let combobox=null;
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -934,16 +975,16 @@ let combobox=null;
         // this.formSearchs[0].datas["sort"] = "PrepareStatus asc";
         // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
         // this.formSearchs[2].datas["SchedulingStatus"] = "0";
-       // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
+        // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
         this.formSearchs[2].datas["CompletionStatus"] = "1";
 
         // this.formSearchs[4].datas["ProcessID"] = "P202009092233413";
         // this.formSearchs[4].datas["SchedulingStatus"] = "0";
-      // //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
-      //   this.formSearchs[3].datas["CompletionStatus"] = "1";
-      //   this.formSearchs[4].datas["productionstatus"] = "25";
-        this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
-        this.formSearchs[1].datas["ConfigStartWeek"] ="1"
+        // //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
+        //   this.formSearchs[3].datas["CompletionStatus"] = "1";
+        //   this.formSearchs[4].datas["productionstatus"] = "25";
+        this.formSearchs[1].datas["productionstatus"] = [21, 22, 23, 24, 26];
+        this.formSearchs[1].datas["ConfigStartWeek"] = "1";
         this.getTableData(this.formSearchs[1].datas, 1);
 
         this.adminLoading = false;
@@ -963,24 +1004,19 @@ let combobox=null;
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
-    
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      if(remarkTb==1)
-      {
-         form["AutoDays2"] =20
-         form["StartWeek"] =1
+      if (remarkTb == 1) {
+        form["AutoDays2"] = 20;
+        form["StartWeek"] = 1;
       }
 
-  
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-     if(remarkTb==1)
-      {
+      if (remarkTb == 1) {
         this.tableColumns[remarkTb] = res.data.Columns[0];
-      
-      };
+      }
       this.$set(this.tableLoading, remarkTb, false);
       if (result) {
         // if(data.length != 0){
@@ -1096,7 +1132,7 @@ let combobox=null;
         return;
       }
       this.adminLoading = true;
-      let res = await GetSearch(submitData,'/APSAPI/SaveWeekPlan');
+      let res = await GetSearch(submitData, "/APSAPI/SaveWeekPlan");
 
       const { result, data, count, msg } = res.data;
 
@@ -1117,11 +1153,9 @@ let combobox=null;
       this.adminLoading = false;
     },
 
-    async downERP()
-    {
-  
+    async downERP() {
       this.adminLoading = true;
-      let res = await GetSearch(null,'/APSAPI/GetErpData');
+      let res = await GetSearch(null, "/APSAPI/GetErpData");
 
       const { result, data, count, msg } = res.data;
 
@@ -1187,30 +1221,28 @@ let combobox=null;
 
     // 保存
     async dataSave(data1, index) {
-      
-      console.log('触发总排期保存')
-      if(this.tableData[this.tagRemark].length){
-          this.adminLoading = true;
-          let res = await SaveData(this.tableData[this.tagRemark]);
-          const { result, data, count, msg } = res.data;
-  
-          if (result) {
+      console.log("触发总排期保存");
+      if (this.tableData[this.tagRemark].length) {
+        this.adminLoading = true;
+        let res = await SaveData(this.tableData[this.tagRemark]);
+        const { result, data, count, msg } = res.data;
+
+        if (result) {
           this.dataSearch(this.tagRemark);
           this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
           });
-          } else {
+        } else {
           this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
           });
-          }
-          this.adminLoading = false;
-          }
-      
+        }
+        this.adminLoading = false;
+      }
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
@@ -1218,86 +1250,91 @@ let combobox=null;
       // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
       //   this.$message.error("请选择生产线再转入日计划！");
       // } else {
-        if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要转入日计划的数据！");
-        } else {
-          let isNoCapacity1 = true
-          this.selectionData[remarkTb].forEach((element) => {
-            if(!element.Capacity1){
-              isNoCapacity1 = false
-            }
-          })
-          if(!isNoCapacity1){
-            this.$message.error("转入日计划的数据存在产能空，请进行排期计算或维护产品产能！");
-            return
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要转入日计划的数据！");
+      } else {
+        let isNoCapacity1 = true;
+        this.selectionData[remarkTb].forEach((element) => {
+          if (!element.Capacity1) {
+            isNoCapacity1 = false;
           }
-          // let ProcessID = "";
-          this.adminLoading = true;
-          // if (remarkTb == 1) {
-          //   ProcessID = "P202009092233201";
-          // } else if (remarkTb == 3) {
-          //   ProcessID = "P202009092233413";
+        });
+        if (!isNoCapacity1) {
+          this.$message.error(
+            "转入日计划的数据存在产能空，请进行排期计算或维护产品产能！"
+          );
+          return;
+        }
+        // let ProcessID = "";
+        this.adminLoading = true;
+        // if (remarkTb == 1) {
+        //   ProcessID = "P202009092233201";
+        // } else if (remarkTb == 3) {
+        //   ProcessID = "P202009092233413";
+        // }
+
+        let errMsg = "";
+        // let okCount = 0;
+        let okCount = this.selectionData[remarkTb].length;
+        this.selectionData[remarkTb].forEach((d) => {
+          let isOk = true;
+          //判断是否转入
+          // if (
+          //   params.ProcessID == "P202009092233201" &&
+          //   d["IsToPlanDay1"] != "否"
+          // ) {
+          //   isOk = false;
+          // } else if (
+          //   params.ProcessID == "P202009092233413" &&
+          //   d["IsToPlanDay2"] != "否"
+          // ) {
+          //   isOk = false;
           // }
 
-          let errMsg = "";
-          // let okCount = 0;
-          let okCount = this.selectionData[remarkTb].length;
-          this.selectionData[remarkTb].forEach((d) => {
-            let isOk = true;
-            //判断是否转入
-            // if (
-            //   params.ProcessID == "P202009092233201" &&
-            //   d["IsToPlanDay1"] != "否"
-            // ) {
-            //   isOk = false;
-            // } else if (
-            //   params.ProcessID == "P202009092233413" &&
-            //   d["IsToPlanDay2"] != "否"
-            // ) {
-            //   isOk = false;
-            // }
+          if (isOk) {
+            d["LineID"] = d.SMTLineID;
+            // d["ProducedDate"] = this.ruleForm.ProducedDate;
+            d["StartDate"] = this.ruleForm.ProducedDate
+              ? this.$moment(this.ruleForm.ProducedDate[0]).format("YYYY-MM-DD")
+              : d["StartDate1"];
+            d["EndDate"] = this.ruleForm.ProducedDate
+              ? this.$moment(this.ruleForm.ProducedDate[1]).format("YYYY-MM-DD")
+              : d["StartDate1"];
+            d["ProcessID"] = d.ProcessID1;
+            okCount++;
+          } else {
+            errMsg += d["OrderNo"] + "已转入或者无此工序";
+          }
+        });
 
-            if (isOk) {
-          
-              d["LineID"] = d.SMTLineID;
-              // d["ProducedDate"] = this.ruleForm.ProducedDate;
-              d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):d["StartDate1"];
-              d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):d["StartDate1"];
-              d["ProcessID"] = d.ProcessID1;
-              okCount++;
-            } else {
-              errMsg += d["OrderNo"] + "已转入或者无此工序";
-            }
+        if (errMsg != "") {
+          this.$message({
+            message: errMsg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
           });
-  
-          if (errMsg != "") {
+        }
+        if (okCount > 0) {
+          let res = await GetSearch(
+            this.selectionData[remarkTb],
+            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
+          );
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            this.dataSearch(remarkTb);
+          } else {
+            this.adminLoading = false;
             this.$message({
-              message: errMsg,
+              message: msg,
               type: "error",
               dangerouslyUseHTMLString: true,
             });
           }
-          if (okCount > 0) {
-            let res = await GetSearch(
-              this.selectionData[remarkTb],
-              "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
-            );
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.adminLoading = false;
-              this.dataSearch(remarkTb);
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } else {
-             this.adminLoading = false;
-          }
+        } else {
+          this.adminLoading = false;
         }
+      }
       // }
     },
     // 选线获取剩余工时
@@ -1328,11 +1365,11 @@ let combobox=null;
             // a["LineName"] = a.OrganizeName;
             newData.push({
               text: a.OrganizeName,
-              value: a.OrganizeID
+              value: a.OrganizeID,
             });
           });
         }
-        
+
         this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
         this.checkBoxCellTypeLine.editorValueType(
           GC.Spread.Sheets.CellTypes.EditorValueType.value
@@ -1349,10 +1386,10 @@ let combobox=null;
     },
     // 备料任务
     async readyTask(remarkTb, index, MOSchedulingType) {
-      let submitData = this.selectionData[remarkTb]
+      let submitData = this.selectionData[remarkTb];
       if (submitData.length != 0) {
         this.adminLoading = true;
-        let url = "/APSAPI/SetPreParePlanV2"
+        let url = "/APSAPI/SetPreParePlanV2";
         let res = await GetSearch(submitData, url);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -1371,7 +1408,7 @@ let combobox=null;
             dangerouslyUseHTMLString: true,
           });
         }
-      }else{
+      } else {
         this.$message.error("请选择需要操作的数据！");
       }
     },
