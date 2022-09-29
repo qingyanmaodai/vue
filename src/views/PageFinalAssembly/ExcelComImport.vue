@@ -181,20 +181,9 @@ export default {
     _this = this;
     _this.adminLoading = true;
     let route = this.$route;
-    console.log("route.meta", route.meta);
     this.sysID[this.tagRemark].ID = parseInt(route.meta.dicID);
     _this.judgeBtn();
     _this.getTableHeader();
-    // 计算周期默认时间：今天~1.5月
-    // _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
-    // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
-    // if (_this.$store.getters.roles.length) {
-    //   _this.$store.getters.roles.forEach((item) => {
-    //     if (item.RoleID === "R2103250001") {
-    //       _this.formSearchs[_this.tagRemark].datas["Account"] = item.Account;
-    //     }
-    //   });
-    // }
   },
   mounted() {
     setTimeout(() => {
@@ -360,8 +349,6 @@ export default {
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
         }
-        console.log('colInfos',colInfos)
-
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -404,12 +391,6 @@ export default {
         this.headerList = colInfos;
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false; //是否显示表单标签
-        // 设置行颜色，最终判断有错误整行底色红色
-        // this.tableData[this.tagRemark].forEach((row, index) => {
-        //   if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
-        //     sheet.getCell(index, -1).backColor("red");
-        //   }
-        // })
         // 动态启用单元格列编辑
         this.tableColumns[this.tagRemark].forEach((m,index) => {
         //行，start,end
@@ -567,31 +548,14 @@ export default {
         let errorDate = false;
         let rowNo = 0; // excel行号
         let propName = "";
-        let num = 0;
         importData[0].sheet.forEach((m, y) => {
           let obj = {};
           obj["dicID"] = this.sysID[this.tagRemark].ID;
-          num++;
-          console.log("m" + num, m);
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
               if (item.label === key) {
-                // if (item.DataType === "datetime") {
-                //   if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
-                //     errorDate = true
-                //     propName = key
-                rowNo = Number(m.__rowNum__) + 1;
-                //   }else{
-                //     obj[item.prop] = m[key]
-                //     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
-                //     : "";
-                //   }
-                //   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-                // } else {
-                //   obj[item.prop] = m[key];
-                // }
                 if (item.DataType === "datetime") {
                   // 字段日期类型的判断
                   if (m[key] && !this.isValidDate(m[key])) {
@@ -607,47 +571,19 @@ export default {
                   }
                 } else if (item.DataType === "int") {
                   obj[item.prop] = parseInt(m[key]);
-                } else if (m[key] && !this.isValidDate(m[key])) {
-                } else {
+                } 
+                else {
                   obj[item.prop] = m[key];
                 }
-
-                break;
-              } else if (isNaN(key) && !isNaN(Date.parse(key)) && m[key] > 0) {
-                //导入日期并且欠料数大于0才导入
+              } else if (isNaN(key) && !isNaN(Date.parse(key))) {
                 // 列为日期的格式
                 isDate = true;
-                // obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-                // obj['OweQty'] = m[key]
-                obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                // obj["StartDate"] = _this.machineCycle.length
-                //     ? _this.machineCycle[0]
-                //     : "",
-                // obj["EndDate"] = _this.machineCycle.length
-                //       ? _this.machineCycle[1]
-                //       : "";
-                // obj["Account"] = _this.$store.getters.userInfo.Account;
-                obj["row"] = m.__rowNum__;
-                // 需要使用...obj 不然值回写有问题
-                DataList.push({ ...obj });
-                // break
+                obj[key] = m[key];
               }
             }
-            console.log("obj2", obj);
-            console.log("m22", m);
           }
-          // 以下为固定入参
-          if (!isDate) {
-            // obj["dicID"] = this.sysID[this.tagRemark].ID;
-            // (obj["StartDate"] = _this.machineCycle.length
-            //   ? _this.machineCycle[0]
-            //   : ""),
-            //  obj["EndDate"] =_this.machineCycle;
-            // obj["Account"] = this.$store.getters.userInfo.Account;
-            DataList.push({ ...obj });
-          }
+          DataList.push({ ...obj });
         });
-        console.log("DataList", DataList);
         if (errorDate) {
           this.adminLoading = false;
           this.$message.error(
@@ -692,7 +628,6 @@ export default {
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
           // 导入可能存在表头格式不一样，需要更新
           this.getTableHeader();
           this.$message({
@@ -815,25 +750,6 @@ export default {
               }
             }
           }
-          // this.adminLoading = true;
-          // let res = await SaveData(this.selectionData[this.tagRemark]);
-          // const { result, data, count, msg } = res.data;
-          // if (result) {
-          //   this.dataSearch(this.tagRemark);
-          //   this.adminLoading = false;
-          //   this.$message({
-          //     message: msg,
-          //     type: "success",
-          //     dangerouslyUseHTMLString: true,
-          //   });
-          // } else {
-          //   this.adminLoading = false;
-          //   this.$message({
-          //     message: msg,
-          //     type: "error",
-          //     dangerouslyUseHTMLString: true,
-          //   });
-          // }
         });
       }
     },
