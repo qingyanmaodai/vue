@@ -723,8 +723,8 @@ export default {
             if (item.name === "FormRate" && args.col === index) {
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
-              _this.dialogSearchForm.OrderNo =
-                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[_this.tagRemark][args.row].OrderID;
               _this.dialogSearchForm.OweQty = 0;
             }
           });
@@ -1254,17 +1254,19 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
+        console.log(this.selectionData[remarkTb])
         this.selectionData[remarkTb].forEach((element) => {
-          if (!element.Capacity1) {
+          if (!element.Capacity1&&element.OrderNo) {
             isNoCapacity1 = false;
+            console.log(element.OrderNo)
           }
         });
-        if (!isNoCapacity1) {
-          this.$message.error(
-            "转入日计划的数据存在产能空，请进行排期计算或维护产品产能！"
-          );
-          return;
-        }
+        // if (!isNoCapacity1) {
+        //   this.$message.error(
+        //     "转入日计划的数据存在产能空，请进行排期计算或维护产品产能！"
+        //   );
+        //   return;
+        // }
         // let ProcessID = "";
         this.adminLoading = true;
         // if (remarkTb == 1) {
