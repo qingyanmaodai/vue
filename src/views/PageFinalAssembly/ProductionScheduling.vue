@@ -152,7 +152,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "TotalScheduling",
+  name: "ProductionScheduling",
   components: {
     ComSearch,
     ComVxeTable,

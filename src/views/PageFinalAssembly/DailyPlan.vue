@@ -76,7 +76,7 @@
     SaveMOPlanStep4
   } from "@/api/PageTwoScheduling";
   export default {
-    name: "Daily_Plan",
+    name: "DailyPlan",
     components: {
       ComSearch,
       ComReportTable,

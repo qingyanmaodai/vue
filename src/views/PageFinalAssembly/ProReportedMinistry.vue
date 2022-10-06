@@ -79,7 +79,7 @@ import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
 export default {
-  name: "PCB_submitted_ministry",
+  name: "ProReportedMinistry",
   components: {
     ComSearch,
     ComVxeTable,
