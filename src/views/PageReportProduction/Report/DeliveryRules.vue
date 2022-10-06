@@ -324,6 +324,16 @@ export default {
             });
           }
           cellIndex++;
+
+          //动态设置列对齐方式
+          let cell = sheet.getCell(-1, cellIndex, GC.Spread.Sheets.SheetArea.viewport);
+          if(x.align){
+            cell.hAlign(GC.Spread.Sheets.HorizontalAlign[x.align]);
+            cell.vAlign(GC.Spread.Sheets.HorizontalAlign[x.align]);
+          }else{
+            cell.hAlign(GC.Spread.Sheets.HorizontalAlign.left)
+            cell.vAlign(GC.Spread.Sheets.HorizontalAlign.left)
+          }
         });
         // 列筛选
         // 参数2 开始列
@@ -355,15 +365,11 @@ export default {
         colHeaderStyle.font(
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
         );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
 
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
