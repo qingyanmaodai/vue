@@ -213,7 +213,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  mode: 'history', // 去掉地址栏的#
+  // mode: 'history', // 去掉地址栏的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes,
 })

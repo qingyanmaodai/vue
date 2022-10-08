@@ -1,22 +1,30 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+          </el-row>
+        </div>
       <ComVxeTable
         :rowKey="'RowNumber'"
         :height="height"
-        :tableData="tableData[0]"
-        :tableHeader="tableColumns[0]"
-        :tableLoading="tableLoading[0]"
-        :remark="0"
+        :tableData="tableData[tagRemark]"
+        :tableHeader="tableColumns[tagRemark]"
+        :tableLoading="tableLoading[tagRemark]"
+        :remark="tagRemark"
         :isEdit="isEdit"
-        :isClear="isClear[0]"
+        :isClear="isClear[tagRemark]"
         :hasSelect="isSelect"
-        :pagination="tablePagination[0]"
+        :pagination="tablePagination[tagRemark]"
+        :showPagination="false"
+        @toPage="toPage"
       />
     </div>
   </div>
 </template>
 <script>
+    var _this;
 import ComVxeTable from "@/components/ComVxeTable";
 export default {
   name: "KanbanManagesAddresses",
@@ -25,24 +33,30 @@ export default {
   },
   data() {
     return {
+        title: this.$route.meta.title,
         adminLoading:false,
         height: "707px",
         tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 100, pageTotal: 0 }],
+      tablePagination: [{ pageIndex: 1, pageSize: 1000, pageTotal: 0 }],
       sysID: [{ ID: 8993 }],
       isSelect: false,
       isEdit: false,
       tagRemark:0,
     };
   },
-  created(){
+  mounted(){
+    _this = this
+    let apsurl = localStorage.getItem('apsurl')
+    console.log('apsurl',apsurl)
     this.tableColumns[this.tagRemark] = [
-        {label:'产线',prop:'LineName'},
-        {label:'制造部',prop:'OrganizeName'},
-        {label:'看板地址',prop:'Addresses'},
+        {label:'序号',prop:'id',width:60,},
+        {label:'产线ID',prop:'LineID',width:80},
+        {label:'产线名称',prop:'LineName',width:80},
+        {label:'制造部',prop:'OrganizeName',width:80},
+        {label:'看板地址',prop:'url',width:100,routerName:true},
     ]
     this.tableData[this.tagRemark] = [
         {id:1,LineID:1207,LineName:'66机柜线',OrganizeName:'制二部',Addresses:'/APSReport/ProPlan.html'},
@@ -94,9 +108,42 @@ export default {
         {id:47,LineID:184,LineName:'制七部',OrganizeName:'制七部',Addresses:'/APSReport/ProPlan.html'},
         {id:48,LineID:'',LineName:'综合看板',OrganizeName:'易事特',Addresses:'/APSReport/index2.html'},
     ]
+    if(this.tableData[this.tagRemark].length){
+        this.tableData[this.tagRemark].map(item=>{
+            if(item.LineID){
+                item['url'] = apsurl+item.Addresses+'?ID='+item.LineID
+            }else{
+                item['url'] = apsurl+item.Addresses
+            }
+            
+        })
+    }
+    this.tablePagination[this.tagRemark].pageTotal =this.tableData[this.tagRemark].length
+    setTimeout(() => {
+      this.setHeight();
+    }, 450);
+  },
+  created(){
+    
   },
   methods:{
+    // 高度控制
+    setHeight() {
+    //   let headHeight = this.$refs.headRef.offsetHeight;
 
+      let rem =
+        document.documentElement.clientHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + "px";
+      this.$set(this, "height", newHeight);
+    },
+    // 新窗口打開看板
+    toPage(row,prop) {
+        console.log('row',row)
+        console.log('prop',prop)
+            window.open(row.url)
+        
+    },
   }
 };
 </script>

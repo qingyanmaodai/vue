@@ -123,6 +123,16 @@
         </span>
       </el-dialog>
     </div>
+    <!-- 点击行弹框-->
+    <DialogTable
+        title="送货预测需求明细"
+        :tableDialog="colDialogVisible"
+        :sysID="8999"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
   </div>
 </template>
 <script>
@@ -147,13 +157,18 @@ import formatDates, {
   formatDate,
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "ImportAnalysis",
   components: {
     ComSearch,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        },
+        colDialogVisible:false,
       colAdd: [],
       dialogImport: false,
       machineCycle: "",
@@ -453,6 +468,22 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
+
+        // 表格单击齐套率弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+        console.log('111点击')
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (args.col === index) {
+              // 显示表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.ItemCode =
+              _this.tableData[_this.tagRemark][args.row].ItemCode;
+              _this.dialogSearchForm.Account = _this.tableData[_this.tagRemark][args.row].Account;
+            }
+          });
+        }
+      });
         
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
@@ -468,6 +499,9 @@ export default {
           }
         })
         this.spread.resumePaint();
+
+
+        
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
