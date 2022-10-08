@@ -16,7 +16,11 @@ let base_url;
 //http://jinlingfan.gicp.net:5999 金羚外网
 
  
+<<<<<<< HEAD
+let apsUrl = '';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+=======
 let apsUrl = 'http://192.168.18.82';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+>>>>>>> 4d2ea3d26791ce173bf46da41dda235a84252ff5
  
 
 

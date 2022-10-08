@@ -391,7 +391,7 @@ export default {
       RowNumber:100000,
       treeData: [
         { MaterialType: "成品" },
-        { MaterialType: "原材料" },
+       
         { MaterialType: "整机" },
         { MaterialType: "PCBA" },
       ],

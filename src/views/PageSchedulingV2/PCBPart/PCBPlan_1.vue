@@ -683,13 +683,16 @@ export default {
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        if (_this.tableColumns[_this.tagRemark].length) {
-          _this.tableColumns[_this.tagRemark].map((item, index) => {
+        if (_this.tableColumns[1].length) {
+          _this.tableColumns[1].map((item, index) => {
+           console.log(item.name)
+           console.log(args.col +'abc'+index)
             if (item.name === "FormRate" && args.col === index) {
+             
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
-              _this.dialogSearchForm.OrderNo =
-                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[1][args.row].OrderID;
               _this.dialogSearchForm.OweQty = 0;
             }
           });
