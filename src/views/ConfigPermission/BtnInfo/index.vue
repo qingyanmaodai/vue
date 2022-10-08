@@ -389,6 +389,7 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
+          console.log('this.tableColumns',this.tableColumns)
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
