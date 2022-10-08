@@ -312,7 +312,7 @@ export default {
                 }
             }
         })
-        this.tableData[remarkTb].push(obj)
+        this.tableData[remarkTb].unshift(obj)
     },
     // 删行
     async deleteRow(remarkTb) {

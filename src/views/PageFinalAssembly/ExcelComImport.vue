@@ -1,4 +1,4 @@
-<!-- 送货计划导入分析 -->
+<!-- EXCEL表格公共导入 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -22,33 +22,15 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <div style="margin-right: 10px">
-                <span>截止日期</span>
-                <el-date-picker
-                  v-model="machineCycle"
-                  type="date"
-                  size="small"
-                  value-format="yyyy-MM-dd"
-                  placeholder="请选择"
-         
-                
-                >
-                </el-date-picker>
-              </div>
-              <div>
-                <el-button
-                  style="margin-right: 10px"
-                  plain
-                  v-for="(item, i) in parmsBtn2"
-                  :key="i"
-                  :type="item.Type ? item.Type : 'primary'"
-                  :icon="item.Icon"
-                  size="small"
-                  @click="btnClick(item.Methods, item.Params, i)"
-                >
-                  {{ item.BtnName }}</el-button
-                >
-              </div>
+              <span>新增行数：</span>
+              <el-input-number
+                v-model.trim="addNum"
+                :min="1"
+                :max="100"
+                :step="10"
+                placeholder="请输入"
+              ></el-input-number>
+              <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
         </div>
@@ -123,20 +105,11 @@
         </span>
       </el-dialog>
     </div>
-    <!-- 点击行弹框-->
-    <DialogTable
-        title="送货预测需求明细"
-        :tableDialog="colDialogVisible"
-        :sysID="8999"
-        width="80%"
-        @closeDialog="colDialogVisible = false"
-        :searchForm="dialogSearchForm"
-        :isToolbar="false"
-      ></DialogTable>
   </div>
 </template>
-<script>
+  <script>
 var _this;
+let rand = Math.random();
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
@@ -157,18 +130,14 @@ import formatDates, {
   formatDate,
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
-import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "ImportAnalysis",
+  name: "ExcelComImport" + rand,
   components: {
     ComSearch,
-    DialogTable
   },
   data() {
     return {
-      dialogSearchForm:{
-        },
-        colDialogVisible:false,
+      addNum: 1,
       colAdd: [],
       dialogImport: false,
       machineCycle: "",
@@ -178,65 +147,7 @@ export default {
       tabStatus: 0,
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
-        },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "同步",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "syncSave",
-        //   Icon: "",
-        // },
-        {
-          ButtonCode: "import",
-          BtnName: "导入",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Icon: "",
-        },
-        {
-          ButtonCode: "import",
-          BtnName: "分析",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "Analysis",
-          Icon: "",
-        },
-        {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          isLoading: false,
-          Methods: "deleteRow",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-        },
-      ],
-      // 表头添加动态按钮
-      parmsBtn2: [
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "计算",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "calculateSave",
-        //   Icon: "",
-        // },
-      ],
+      parmsBtn: [],
       formSearchs: [
         //不同标签页面的查询条件
         {
@@ -253,11 +164,12 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 8994 }],
+      sysID: [{ ID: 8997 }],
       spread: null, //excel初始
       fileList: [],
       file: [],
       selectionData: [[]],
+      headerList: [],
     };
   },
   activated() {
@@ -268,18 +180,10 @@ export default {
   created() {
     _this = this;
     _this.adminLoading = true;
+    let route = this.$route;
+    this.sysID[this.tagRemark].ID = parseInt(route.meta.dicID);
     _this.judgeBtn();
     _this.getTableHeader();
-    // 计算周期默认时间：今天~1.5月
-    // _this.machineCycle = [formatDates.formatTodayDate(), formatNextMonthDate()];
-    // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
-    if (_this.$store.getters.roles.length) {
-      _this.$store.getters.roles.forEach((item) => {
-        if (item.RoleID === "R2103250001") {
-          _this.formSearchs[_this.tagRemark].datas["Account"] = item.Account;
-        }
-      });
-    }
   },
   mounted() {
     setTimeout(() => {
@@ -293,11 +197,27 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      if (parms) {
-        // 下标 要用的数据 标题 ref
-        this[methods](remarkTb, index, parms);
+      if (methods) {
+        try {
+          if (parms) {
+            // 下标 要用的数据 标题 ref
+            this[methods](remarkTb, index, parms);
+          } else {
+            this[methods](remarkTb, index);
+          }
+        } catch (error) {
+          this.$message({
+            message: "配置的事件找不到或错误，请检查！",
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
       } else {
-        this[methods](remarkTb, index);
+        this.$message({
+          message: "此按钮没配置事件，请检查！",
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 高度控制
@@ -307,7 +227,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 33 + "px";
+      let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置
@@ -320,26 +240,21 @@ export default {
     // 拥有什么按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let btn2 = [];
+      let btnsList = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
+          // 动态获取按钮，只适用页面单标签使用
+          btnsList.push({
+            ButtonCode: x.ButtonCode,
+            BtnName: x.ButtonName,
+            isLoading: false,
+            Methods: x.OnClick,
+            Type: x.ButtonType,
+            Icon: x.Icon,
           });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-          let newData2 = this.parmsBtn2.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData2.length != 0) {
-            btn2 = btn2.concat(newData2);
-          }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "parmsBtn2", btn2);
+      this.$set(this, "btnForm", btnsList);
     },
     // 获取表头
     async getTableHeader() {
@@ -404,13 +319,13 @@ export default {
       try {
         // 获取活动表单
         let sheet = this.spread.getActiveSheet();
-        
+
         // sheet.visible(false)
         // 重置表单
         sheet.reset();
         // 渲染列
         let colInfos = [];
-        this.tableColumns[this.tagRemark].forEach((x) => {
+        this.tableColumns[this.tagRemark].forEach((x,index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
@@ -434,7 +349,6 @@ export default {
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
         }
-
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -469,44 +383,35 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
 
-        // 表格单击齐套率弹框事件
-      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        console.log('111点击')
-        if (_this.tableColumns[_this.tagRemark].length) {
-          _this.tableColumns[_this.tagRemark].map((item, index) => {
-            if (args.col === index) {
-              // 显示表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.ItemCode =
-              _this.tableData[_this.tagRemark][args.row].ItemCode;
-              _this.dialogSearchForm.Account = _this.tableData[_this.tagRemark][args.row].Account;
-            }
-          });
-        }
-      });
-        
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
+        this.headerList = colInfos;
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
-        // 设置行颜色，最终判断有错误整行底色红色
-        this.tableData[this.tagRemark].forEach((row, index) => {
-          if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
-            sheet.getCell(index, -1).backColor("red");
-          }
-        })
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
+        // 动态启用单元格列编辑
+        this.tableColumns[this.tagRemark].forEach((m,index) => {
+        //行，start,end
+        if (m.isEdit) {
+          sheet.getRange(-1, index, 1, 1).locked(false);
+          var cell = sheet.getCell(
+            -1,
+            index,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          cell.foreColor("#2a06ecd9");
+        } 
+        });
+        // 锁定表格
+        sheet.options.isProtected = true;
         this.spread.resumePaint();
-
-
-        
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
     // 查询
     dataSearch(remarkTb) {
@@ -582,56 +487,6 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
       }
     },
-    // 同步
-    async syncSave() {
-      this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/PushDeliveryData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    // 计算
-    async calculateSave() {
-      let form = {
-        StartDate: null,
-        EndDate: _this.machineCycle,
-      };
-      this.adminLoading = true;
-      let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
     // 导入并分析模板
     dataImport() {
       this.dialogImport = true;
@@ -680,7 +535,7 @@ export default {
       reader.readAsBinaryString(file.raw);
     },
     isValidDate(date) {
-      return date instanceof Date && !isNaN(date.getTime())
+      return date instanceof Date && !isNaN(date.getTime());
     },
     // 解析文件
     async dataSys(importData) {
@@ -689,68 +544,52 @@ export default {
         let DataList = [];
         let isDate = false;
         this.colAdd = [];
-        var obj = {};
-        let errorDate = false
-        let rowNo = 0// excel行号
-        let propName = ''
-        importData[0].sheet.forEach((m,y) => {
+
+        let errorDate = false;
+        let rowNo = 0; // excel行号
+        let propName = "";
+        importData[0].sheet.forEach((m, y) => {
+          let obj = {};
+          obj["dicID"] = this.sysID[this.tagRemark].ID;
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
               if (item.label === key) {
                 if (item.DataType === "datetime") {
-                  if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
-                    errorDate = true
-                    propName = key
-                    rowNo =Number(m.__rowNum__)+1
-                  }else{
+                  // 字段日期类型的判断
+                  if (m[key] && !this.isValidDate(m[key])) {
+                    //预防用户输入日期格式不正确的判断
+                    errorDate = true;
+                    propName = key;
+                    rowNo = Number(m.__rowNum__) + 1;
+                  } else {
                     obj[item.prop] = m[key]
-                    ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
-                    : "";
+                      ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
+                      : "";
+                    // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                   }
-                  // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-                } else {
+                } else if (item.DataType === "int") {
+                  obj[item.prop] = parseInt(m[key]);
+                } 
+                else {
                   obj[item.prop] = m[key];
                 }
-                
-              }
-               else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
+              } else if (isNaN(key) && !isNaN(Date.parse(key))) {
                 // 列为日期的格式
-                  isDate = true;
-                obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-                obj['OweQty'] = m[key]
-                obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                // obj["StartDate"] = _this.machineCycle.length
-                //     ? _this.machineCycle[0]
-                //     : "",
-                // obj["EndDate"] = _this.machineCycle.length
-                //       ? _this.machineCycle[1]
-                //       : "";
-                obj["Account"] = _this.$store.getters.userInfo.Account;
-                obj["row"] = m.__rowNum__;
-                // 需要使用...obj 不然值回写有问题
-                DataList.push({...obj});
-                break
+                isDate = true;
+                obj[key] = m[key];
               }
             }
-            
           }
-          // 以下为固定入参
-          if (!isDate) {
-            obj["dicID"] = this.sysID[this.tagRemark].ID;
-            // (obj["StartDate"] = _this.machineCycle.length
-            //   ? _this.machineCycle[0]
-            //   : ""),
-             obj["EndDate"] =_this.machineCycle;
-            obj["Account"] = this.$store.getters.userInfo.Account;
-            DataList.push(obj);
-          }
+          DataList.push({ ...obj });
         });
-        if(errorDate){
+        if (errorDate) {
           this.adminLoading = false;
-              this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
-                return;
+          this.$message.error(
+            `第${rowNo}行,【${propName}】格式存在错误，请检查！`
+          );
+          return;
         }
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
@@ -764,13 +603,15 @@ export default {
               if (
                 DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===undefined||DataList[i][
+                ] === undefined ||
+                DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===null||DataList[i][
+                ] === null ||
+                DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===''
+                ] === ""
               ) {
-                rowNo = Number(DataList[i]['row'])+1
+                rowNo = Number(DataList[i]["row"]) + 1;
                 this.$message.error(
                   `第${rowNo}行,【${
                     this.formSearchs[this.tagRemark].required[x]["label"]
@@ -782,11 +623,11 @@ export default {
             }
           }
         }
-        let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
+
+        let res = await SaveData(DataList);
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
           // 导入可能存在表头格式不一样，需要更新
           this.getTableHeader();
           this.$message({
@@ -830,38 +671,6 @@ export default {
         1
       );
     },
-    // 分析
-    async Analysis() {
-      let form = {
-        StartDate:null,
-        EndDate: _this.machineCycle
-      };
-      this.adminLoading = true;
-      let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
     // 获取选中的数据
     getSelectionData() {
       let sheet = this.spread.getActiveSheet();
@@ -876,7 +685,8 @@ export default {
         });
       }
     },
-    deleteRow() {
+    //批量删除
+    dataDelete() {
       this.getSelectionData();
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要删除的数据！");
@@ -887,26 +697,92 @@ export default {
           cancelButtonText: "取消",
           type: "info",
         }).then(async () => {
-          this.adminLoading = true;
-          let res = await SaveData(this.selectionData[this.tagRemark]);
-          const { result, data, count, msg } = res.data;
-          if (result) {
-            this.dataSearch(this.tagRemark);
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
+          let sheet = this.spread.getActiveSheet();
+          let newData = sheet.getDataSource();
+          this.selectionData[this.tagRemark] = [];
+          let isHasID = false;
+          if (newData.length != 0) {
+            newData.forEach((item, i) => {
+              if (item.isChecked) {
+                item.ElementDeleteFlag = 1;
+                if (item.rowNum) {
+                  //添加没保存的独立删除
+                  this.tableData[this.tagRemark] = _.filter(
+                    this.tableData[this.tagRemark],
+                    function (o) {
+                      if (o.rowNum != item.rowNum) {
+                        return o;
+                      }
+                    }
+                  );
+                  // this.setData();
+                  //渲染数据源
+                  sheet.setDataSource(this.tableData[this.tagRemark]);
+                  //渲染列
+                  sheet.bindColumns(this.headerList);
+                  this.spread.options.tabStripVisible = false; //是否显示表单标签
+                } else {
+                  //接口返回的数据删除需要调接口删除
+                  isHasID = true;
+                  this.selectionData[this.tagRemark].push(item);
+                }
+              }
             });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
+            if (this.selectionData[this.tagRemark].length && isHasID) {
+              this.adminLoading = true;
+              let res = await SaveData(this.selectionData[this.tagRemark]);
+              const { result, data, count, msg } = res.data;
+              if (result) {
+                this.dataSearch(this.tagRemark);
+                this.adminLoading = false;
+                this.$message({
+                  message: msg,
+                  type: "success",
+                  dangerouslyUseHTMLString: true,
+                });
+              } else {
+                this.adminLoading = false;
+                this.$message({
+                  message: msg,
+                  type: "error",
+                  dangerouslyUseHTMLString: true,
+                });
+              }
+            }
           }
         });
+      }
+    },
+    // 行新增
+    addRow() {
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+
+      let spread = this.spread;
+      let sheet = spread.getActiveSheet();
+      if (sheet) {
+        this.adminLoading = true;
+        for (let x = 0; x < this.addNum; x++) {
+          let list = [
+            {
+              rowNum: _.uniqueId("rowNum_"), //随机生成数
+            },
+          ];
+          this.tableData[this.tagRemark] = [
+            ...list,
+            ...this.tableData[this.tagRemark],
+          ];
+        }
+
+        // this.setData();
+        //渲染数据源
+        sheet.setDataSource(this.tableData[this.tagRemark]);
+        //渲染列
+        sheet.bindColumns(this.headerList);
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
+        this.adminLoading = false;
       }
     },
   },

@@ -70,6 +70,7 @@
         :filters="x.filters?[{data: ''}]:[{data: ''}]"
         :filter-method="filterMethod"
         :filter-recover-method="filterRecoverMethod"
+        :align="x.align"
       >
         <template #filter="{ $panel, column }">
           <input

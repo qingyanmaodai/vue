@@ -1,4 +1,4 @@
-<!--PCB总排期-->
+<!--总装-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -24,12 +24,12 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <div>
-                <span>选择机台/班组：</span>
+                <!-- <span>选择机台/班组：</span>
                 <el-select
                   clearable
                   filterable
                   size="mini"
-                  v-model="ruleForm.LineIDs"
+                  v-model.trim="ruleForm.LineIDs"
                   @change="setFooterLabel"
                   style="width: 320px"
                 >
@@ -40,11 +40,11 @@
                     :value="item.LineID"
                   >
                   </el-option>
-                </el-select>
+                </el-select> -->
                 <span>生产时段：</span>
                 <el-date-picker
                   v-model="ruleForm.ProducedDate"
-                  type="date"
+                  type="daterange"
                   size="mini"
                   placeholder="选择生产时段"
                 >
@@ -128,17 +128,6 @@
           />
         </div>
       </div>
-
-      <!-- 点击齐套率弹框-->
-      <DialogTable
-        title="订单齐套分析"
-        :tableDialog="colDialogVisible"
-        :sysID="7916"
-        width="80%"
-        @closeDialog="colDialogVisible = false"
-        :searchForm="dialogSearchForm"
-        :isToolbar="false"
-      ></DialogTable>
     </div>
   </div>
 </template>
@@ -153,11 +142,7 @@ import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
   HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
 } from "@/static/data.js";
 import {
   GetHeader,
@@ -166,24 +151,19 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
-import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "PCBPlan_1",
+  name: "ProductionScheduling",
   components: {
     ComSearch,
     ComVxeTable,
-    DialogTable
   },
   data() {
     return {
-      dialogSearchForm:{
-      },
-      colDialogVisible:false,
       ////////////////// Search /////////////////
       footerLabel: ["", "", "", "", "", "", ""],
       sysID: [
         { ID: 5156 },
-        { ID: 5615 },
+        { ID: 6736,ConfigStartWeek:1 },//一些扩展的参数，这里表示是周一
         { ID: 5156 },
         { ID: 5156 },
         { ID: 5156 },
@@ -191,15 +171,11 @@ export default {
         { ID: 5156 },
       ],
       Status1: [
-        { label: "PCB总排期", value: 0 },
-        { label: "PCB月计划", value: 1 },
+        { label: "待排订单", value: 0 },
+        { label: "滚动周计划", value: 1 },
         // { label: "SMT待排", value: 2 },
        // { label: "SMT已排", value: 2 },
-        // { label: "补焊待排", value: 3 },
-       // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
-        { label: "待转入备料", value: 4 },
-        { label: "已转入备料", value: 5 },
       ],
       title: this.$route.meta.title,
       labelStatus1: 1,
@@ -240,130 +216,14 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "同步装配",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "refreshPlan",
-          Icon: "",
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "warning",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "saveSort",
-          Icon: "",
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "计算排期",
-          Type: "warning",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "computedPlan",
-          Icon: "",
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "转入月计划",
+          {
+          ButtonCode: "to_weeks_plan",
+          BtnName: "转入周计划",
           Type: "danger",
           Ghost: true,
           Size: "small",
           signName: 0,
           Methods: "ToPlan",
-          Icon: "",
-        },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "转入日计划",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: [2, 4],
-        //   Methods: "setPlan",
-        //   Icon: "",
-        // },
-        {
-          ButtonCode: "save",
-          BtnName: "SMT",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "setPlan",
-          Params: { ProcessID: "P202009092233201" },
-          Icon: "",
-        },
-           {
-          ButtonCode: "save",
-          BtnName: "插件",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "setPlan",
-          Params: { ProcessID: "P202009092233322" },
-          Icon: "",
-        },
-           {
-          ButtonCode: "save",
-          BtnName: "补焊",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 1,
-          Methods: "setPlan",
-          Params: { ProcessID: "P202009092233413" },
-          Icon: "",
-        },
-        //    {
-        //   ButtonCode: "save",
-        //   BtnName: "测试",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: 1,
-        //   Methods: "setPlan",
-        //   Params: { ProcessID: "P202009092233524" },
-        //   Icon: "",
-        // },
-        //    {
-        //   ButtonCode: "save",
-        //   BtnName: "三防漆",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: 1,
-        //   Methods: "setPlan",
-        //   Params: { ProcessID: "P202103171023547" },
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "转入补焊",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: 1,
-        //   Params: { ProcessID: "P202009092233413" },
-        //   Methods: "setPlan",
-        //   Icon: "",
-        // },
-        {
-          ButtonCode: "save",
-          BtnName: "退回",
-          Type: "danger",
-          Ghost: true,
-          signName: 1,
-          Size: "small",
-          Methods: "backData",
           Icon: "",
         },
         {
@@ -376,28 +236,103 @@ export default {
           Methods: "dataSave",
           Icon: "",
         },
+
         {
           ButtonCode: "save",
-          BtnName: "生成备料任务",
-          isLoading: false,
-          Methods: "readyTask",
-          Type: "primary",
-          Icon: "",
-          signName: 0,
+          BtnName: "保存",
+          Type: "warning",
+          Ghost: true,
           Size: "small",
-          Params: "1",
+          signName: 1,
+          Methods: "saveSort",
+          Icon: "",
         },
         {
-          ButtonCode: "save",
-          BtnName: "生成备料任务",
-          isLoading: false,
-          Methods: "readyTask",
-          Type: "primary",
-          Icon: "",
-          signName: 3,
+          ButtonCode: "downLoadErpData",
+          BtnName: "下载ERP数据",
+          Type: "warning",
+          Ghost: true,
           Size: "small",
-          Params: 4,
+          signName: 1,
+          Methods: "downERP",
+          Icon: "",
         },
+        {
+          ButtonCode: "computedPlan",
+          BtnName: "计算排期",
+          Type: "warning",
+          Ghost: true,
+          Size: "small",
+          signName: 1,
+          Methods: "computedPlan",
+          Icon: "",
+        },
+        // {
+        //   ButtonCode: "SMT",
+        //   BtnName: "SMT",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 1,
+        //   Methods: "setPlan",
+        //   Params: { ProcessID: "P202009092233201" },
+        //   Icon: "",
+        // },
+        //    {
+        //   ButtonCode: "TEST",
+        //   BtnName: "测试",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 1,
+        //   Methods: "setPlan",
+        //   Params: { ProcessID: "P202009092233524" },
+        //   Icon: "",
+        // },
+        //    {
+        //   ButtonCode: "sanfangqi",
+        //   BtnName: "三防漆",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 1,
+        //   Methods: "setPlan",
+        //   Params: { ProcessID: "P202103171023547" },
+        //   Icon: "",
+        // },
+        {
+          ButtonCode: "to_days_plan",
+          BtnName: "转入日计划",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          signName: 1,
+          Methods: "setPlan",
+          Params: { ProcessID: "P2208290001" },
+          Icon: "",
+        },
+        
+        {
+          ButtonCode: "returnOrder",
+          BtnName: "退回",
+          Type: "danger",
+          Ghost: true,
+          signName: 1,
+          Size: "small",
+          Methods: "backData",
+          Icon: "",
+        },
+       
+      //   {
+      //     ButtonCode: "to_days_plan",
+      //     BtnName: "转入日计划",
+      //     Type: "primary",
+      //     Ghost: true,
+      //     Size: "small",
+      //     signName: [2, 4],
+      //     Methods: "setPlan",
+      //     Icon: "",
+      //   },
       ],
       tableData: [[], [], [], [], [], [], []],
       delData: [[], [], [], [], [], [], []],
@@ -415,7 +350,7 @@ export default {
       ],
       height: "707px",
       showPagination: true,
-      tagRemark: 0,
+      tagRemark: 1,
       isLoading: false,
       initialBtnData: [],
       tagRremark: 1,
@@ -429,6 +364,7 @@ export default {
         ProducedDate: "",
       },
       lines: [],
+      checkBoxCellTypeLine: "",
     };
   },
   watch: {},
@@ -454,15 +390,36 @@ export default {
   methods: {
     backData() {
       this.getSelectionData();
-      if (this.selectionData[1].length == 0) {
+      if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
-        this.selectionData[1].forEach((a) => {
+        this.selectionData[this.tagRemark].forEach((a) => {
           a["ElementDeleteFlag"] = 1;
         });
-        this.dataSave(this.selectionData[1], 0);
+        this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
       }
+    },
+    async dataBackSave(data1, index){
+      this.adminLoading = true;
+      let res = await SaveData(data1);
+      const { result, data, count, msg } = res.data;
+
+      if (result) {
+          this.dataSearch(1);
+          this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+          });
+      } else {
+          this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+          });
+      }
+      this.adminLoading = false;
     },
     // 跳转至页面配置
     toPageSetting(id) {
@@ -475,23 +432,33 @@ export default {
     },
     // 判断按钮权限
     judgeBtn() {
+     
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
       let permission = false;
-
+      // this.parmsBtn = []
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
           if (x.ButtonCode == "edit") {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
+              if(x.ButtonCode == y.ButtonCode){
+                  y.BtnName = x.ButtonName
+                  y.Methods = x.OnClick||y.Methods
+                  y.Type = x.ButtonType||y.Type
+                  return y
+              }
+              // return x.ButtonCode == y.ButtonCode
+             
           });
+         
           if (newData.length != 0) {
             newBtn = newBtn.concat(newData);
           }
         });
       }
+  
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
     },
@@ -511,11 +478,21 @@ export default {
       let colInfos = [];
 
       this.tableColumns[1].forEach((x) => {
-        if (x.prop == "LineID") {
+   
+        if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
+
+let combobox=null;
+         combobox = new GCsheets.CellTypes.ComboBox();
+       combobox.editorValueType(
+          GC.Spread.Sheets.CellTypes.EditorValueType.value
+        );
+       combobox.items(x.items);
+       combobox.itemHeight(24);
+
           colInfos.push({
             name: x.prop,
-            displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
+            displayName: x.label,
+            cellType:combobox,
             size: parseInt(x.width),
           });
         } else {
@@ -583,9 +560,8 @@ export default {
         GC.Spread.Sheets.LineStyle.min
       );
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-      // 冻结第一列
-
-      sheet.frozenColumnCount(this.tableColumns[1][0].FixCount);
+      // 冻结列,配置表返回固定列不对
+      // sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
 
       sheet.setDataSource(this.tableData[1]);
       sheet.bindColumns(colInfos);
@@ -680,31 +656,13 @@ export default {
         // 自动计算数量
         
       });
-
-      // 表格单击齐套率弹框事件
-      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        if (_this.tableColumns[1].length) {
-          _this.tableColumns[1].map((item, index) => {
-           console.log(item.name)
-           console.log(args.col +'abc'+index)
-            if (item.name === "FormRate" && args.col === index) {
-             
-              // 显示ERP供需平衡表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.OrderID =
-                _this.tableData[1][args.row].OrderID;
-              _this.dialogSearchForm.OweQty = 0;
-            }
-          });
-        }
-      });
-
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[1] = false;
       sheet.options.protectionOptions.allowResizeColumns = true;//禁用改变行高
       sheet.options.isProtected = true;//锁定表格
       this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.refresh()
     },
     async ToPlan() {
       //转入月计划
@@ -716,6 +674,10 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       } else {
+        this.selectionData[0].map(item=>{
+          item["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):'';
+          item["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):'';
+        })
         this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[0],
@@ -736,13 +698,14 @@ export default {
       }
     },
     getSelectionData() {
+ 
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
-      this.selectionData[1] = [];
+      this.selectionData[this.tagRemark] = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
           if (x.isChecked) {
-            this.selectionData[1].push(x);
+            this.selectionData[this.tagRemark].push(x);
           }
         });
       }
@@ -943,6 +906,7 @@ export default {
       //   this.formSearchs[3].datas["CompletionStatus"] = "1";
       //   this.formSearchs[4].datas["productionstatus"] = "25";
         this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
+        this.formSearchs[1].datas["ConfigStartWeek"] ="1"
         this.getTableData(this.formSearchs[1].datas, 1);
 
         this.adminLoading = false;
@@ -962,11 +926,24 @@ export default {
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
+    
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
+      if(remarkTb==1)
+      {
+         form["AutoDays2"] =20
+         form["StartWeek"] =1
+      }
+
+  
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
+     if(remarkTb==1)
+      {
+        this.tableColumns[remarkTb] = res.data.Columns[0];
+      
+      };
       this.$set(this.tableLoading, remarkTb, false);
       if (result) {
         // if(data.length != 0){
@@ -1082,7 +1059,32 @@ export default {
         return;
       }
       this.adminLoading = true;
-      let res = await SaveData(submitData);
+      let res = await GetSearch(submitData,'/APSAPI/SaveWeekPlan');
+
+      const { result, data, count, msg } = res.data;
+
+      if (result) {
+        this.dataSearch(1);
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+      this.adminLoading = false;
+    },
+
+    async downERP()
+    {
+  
+      this.adminLoading = true;
+      let res = await GetSearch(null,'/APSAPI/GetErpData');
 
       const { result, data, count, msg } = res.data;
 
@@ -1110,7 +1112,7 @@ export default {
         });
       }
     },
-    // 计算PCB排程
+    // 计算排程
     async computedPlan(remarkTb) {
       this.getSelectionData();
       this.adminLoading = true;
@@ -1118,17 +1120,17 @@ export default {
         m["isChecked"] = true;
       });
       let res = await GetSearch(
-        this.selectionData[1],
+        this.selectionData[this.tagRemark],
         "/APSAPI/MOPlanStep1CalculationV2"
       );
       const { result, data, count, msg } = res.data;
 
       if (result) {
         this.adminLoading = false;
-        this.$set(this.tableData, 1, data);
+        this.$set(this.tableData, this.tagRemark, data);
         // 重新勾选上
-        this.selectionData[1] = [];
-        this.dataSearch(1);
+        this.selectionData[this.tagRemark] = [];
+        this.dataSearch(this.tagRemark);
         // let refName = "tableRef" + remarkTb;
         // data.forEach((b) => {
         //   this.$nextTick(() => {
@@ -1148,37 +1150,51 @@ export default {
 
     // 保存
     async dataSave(data1, index) {
-      this.adminLoading = true;
-
-      let res = await SaveData(data1);
-      const { result, data, count, msg } = res.data;
-
-      if (result) {
-        this.dataSearch(1);
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-      this.adminLoading = false;
+      
+      console.log('触发总排期保存')
+      if(this.tableData[this.tagRemark].length){
+          this.adminLoading = true;
+          let res = await SaveData(this.tableData[this.tagRemark]);
+          const { result, data, count, msg } = res.data;
+  
+          if (result) {
+          this.dataSearch(this.tagRemark);
+          this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+          });
+          } else {
+          this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+          });
+          }
+          this.adminLoading = false;
+          }
+      
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
-      let arr = this.getSelectionData();
-      if (this.ruleForm.LineIDs.length == 0 && false) {
-        this.$message.error("请选择生产线再转入日计划！");
-      } else {
+      this.getSelectionData();
+      // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
+      //   this.$message.error("请选择生产线再转入日计划！");
+      // } else {
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要转入日计划的数据！");
         } else {
-          let ProcessID = "";
+          let isNoCapacity1 = true
+          this.selectionData[remarkTb].forEach((element) => {
+            if(!element.Capacity1){
+              isNoCapacity1 = false
+            }
+          })
+          if(!isNoCapacity1){
+            this.$message.error("转入日计划的数据存在产能空，请进行排期计算或维护产品产能！");
+            return
+          }
+          // let ProcessID = "";
           this.adminLoading = true;
           // if (remarkTb == 1) {
           //   ProcessID = "P202009092233201";
@@ -1205,15 +1221,18 @@ export default {
             // }
 
             if (isOk) {
-              d["LineIDs"] = this.ruleForm.LineIDs;
-              d["ProducedDate"] = this.ruleForm.ProducedDate;
-              d["ProcessID"] = params.ProcessID;
-              d["LineID"] = null;
+          
+              d["LineID"] = d.SMTLineID;
+              // d["ProducedDate"] = this.ruleForm.ProducedDate;
+              d["StartDate"] = this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD'):d["StartDate1"];
+              d["EndDate"] =this.ruleForm.ProducedDate?this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD'):d["StartDate1"];
+              d["ProcessID"] = d.ProcessID1;
               okCount++;
             } else {
               errMsg += d["OrderNo"] + "已转入或者无此工序";
             }
           });
+  
           if (errMsg != "") {
             this.$message({
               message: errMsg,
@@ -1224,7 +1243,7 @@ export default {
           if (okCount > 0) {
             let res = await GetSearch(
               this.selectionData[remarkTb],
-              "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=1"
+              "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
             );
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -1242,10 +1261,11 @@ export default {
              this.adminLoading = false;
           }
         }
-      }
+      // }
     },
     // 选线获取剩余工时
     setFooterLabel(val) {
+      // this.ruleForm.LineIDs = []
       let LineIDs = this.lines.filter((a) =>
         this.ruleForm.LineIDs.some((b) => b == a.LineID)
       );
@@ -1264,13 +1284,24 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
+        let newData = [];
         if (data.length != 0) {
           data.forEach((a) => {
-            a["LineID"] = a.OrganizeID;
-            a["LineName"] = a.OrganizeName;
+            // a["LineID"] = a.OrganizeID;
+            // a["LineName"] = a.OrganizeName;
+            newData.push({
+              text: a.OrganizeName,
+              value: a.OrganizeID
+            });
           });
         }
-        this.lines = data;
+        
+        this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+        this.checkBoxCellTypeLine.editorValueType(
+          GC.Spread.Sheets.CellTypes.EditorValueType.value
+        );
+        this.checkBoxCellTypeLine.items(newData);
+        this.checkBoxCellTypeLine.itemHeight(24);
       } else {
         this.$message({
           message: msg,
