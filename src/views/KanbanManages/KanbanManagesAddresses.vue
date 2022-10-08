@@ -139,9 +139,7 @@ export default {
     },
     // 新窗口打開看板
     toPage(row,prop) {
-        console.log('row',row)
-        console.log('prop',prop)
-            window.open(row.url)
+        window.open(row.url)
         
     },
   }
