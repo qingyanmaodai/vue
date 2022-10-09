@@ -471,8 +471,7 @@ export default {
 
         // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
-        console.log('111点击')
-        debugger;
+   
         if (_this.tableColumns[_this.tagRemark].length) {
           _this.tableColumns[_this.tagRemark].map((item, index) => {
             if (args.col === index) {
