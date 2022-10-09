@@ -103,7 +103,6 @@
     </div>
 </template>
 <script>
-let rand = Math.random();
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import {
@@ -114,7 +113,7 @@ import {
   GetSearch
 } from "@/api/Common";
 export default {
-  name: "ComAddRowTable" + rand,
+  name: "ComAddRowTable",
   components: {
     ComSearch,
     ComVxeTable
@@ -178,73 +177,11 @@ export default {
         addNum:1,
     }
   },
-  //离开的时候保存当前
-  beforeRouteLeave(to, form, next) {
- 
-    let dicForm = {
-      dicData: this.formSearchs[this.tagRemark].datas,
-      dicForm: this.formSearchs[this.tagRemark].forms,
-        tablePagination:this.tablePagination,
-       required: this.formSearchs[this.tagRemark].required
-    };
-    sessionStorage.setItem("dicIDForm" + this.sysID[this.tagRemark].ID, JSON.stringify(dicForm));
-    let dicIDData = {
-      dicID: this.sysID[this.tagRemark].ID,
-      tableColumns: this.tableColumns[this.tagRemark],
-      tableData: this.tableData[this.tagRemark],
-    
-    };
-    sessionStorage.setItem("dicIDData" + this.sysID[this.tagRemark].ID, JSON.stringify(dicIDData));
-    next();
-  },
-
-  beforeRouteEnter(to, form, next) {
-    next();
-  },
-  watch: {
-    $route: {
-    //   handler: function (val, oldVal) {
-    //     this.sysID[this.tagRemark].ID = parseInt(val.query.dicID);
-    //   },
-      // 深度观察监听
-      deep: true,
-    },
-  },
   created() {
     let routeBtn = this.$route;
     this.sysID[this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
     this.judgeBtn();
-    // this.getTableHeader();
-    console.log('this.$route',this.$route)
-    if (sessionStorage.getItem("dicIDForm" + this.sysID[this.tagRemark].ID)) {
-      let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.sysID[this.tagRemark].ID));
-      if (tmp) {
-        this.$set(this.formSearchs[this.tagRemark], "datas", tmp.dicData);
-        this.$set(this.formSearchs[this.tagRemark], "forms", tmp.dicForm);
-        this.$set(this.formSearchs[this.tagRemark].datas, "dicID", this.sysID[this.tagRemark].ID);
-        this.$set(this.formSearchs[this.tagRemark], "required", tmp.required);
-        if(tmp.tablePagination)
-        {
-       this.tablePagination=tmp.tablePagination;
-        }
- 
-      }
-    }
-    let showTag = JSON.parse(sessionStorage.getItem("dicIDData" + this.sysID[this.tagRemark].ID));
-    if (
-      showTag &&
-      showTag.tableColumns.length != 0 &&
-      showTag.tableData.length != 0
-    ) {
-      let newData = showTag;
-      this.$set(this.tableColumns, 0, newData.tableColumns);
-      this.$nextTick(() => {
-        this.$set(this.tableData, 0, newData.tableData);
-      });
-    } else {
-      this.adminLoading = true;
-      this.getTableHeader();
-    }
+    this.getTableHeader();
   },
   mounted() {
     setTimeout(() => {
