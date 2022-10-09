@@ -307,9 +307,9 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           // 因为此表ID跟日计划ID一致，需要额外做显示隐藏列，现通过APP可见参数“IsVisibleApp”控制，过滤掉没选择APP可见的
-          // if(m.IsVisibleApp){
+          if(m.IsVisibleApp){
             this.$set(this.tableColumns, i, m);
-          // }
+          }
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
