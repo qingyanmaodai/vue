@@ -52,11 +52,11 @@ export default {
     let apsurl = localStorage.getItem('apsurl')
     console.log('apsurl',apsurl)
     this.tableColumns[this.tagRemark] = [
-        {label:'序号',prop:'id',width:60,},
-        {label:'产线ID',prop:'LineID',width:80},
-        {label:'产线名称',prop:'LineName',width:80},
-        {label:'制造部',prop:'OrganizeName',width:80},
-        {label:'看板地址',prop:'url',width:100,routerName:true},
+        {label:'序号',prop:'id',width:'60',},
+        {label:'产线ID',prop:'LineID',width:'150',sortable:"custom"},
+        {label:'产线名称',prop:'LineName',width:'150',sortable:"custom"},
+        {label:'制造部',prop:'OrganizeName',width:'150',sortable:"custom"},
+        {label:'看板地址',prop:'url',width:'500',sortable:"custom",routerName:true},
     ]
     this.tableData[this.tagRemark] = [
         {id:1,LineID:1207,LineName:'66机柜线',OrganizeName:'制二部',Addresses:'/APSReport/ProPlan.html'},
@@ -119,6 +119,8 @@ export default {
         })
     }
     this.tablePagination[this.tagRemark].pageTotal =this.tableData[this.tagRemark].length
+    // this.$set(this.tableColumns, this.tagRemark, this.tableColumns);
+    // this.$set(this.tableData, this.tagRemark, this.tableData);
     setTimeout(() => {
       this.setHeight();
     }, 450);
@@ -139,9 +141,7 @@ export default {
     },
     // 新窗口打開看板
     toPage(row,prop) {
-        console.log('row',row)
-        console.log('prop',prop)
-            window.open(row.url)
+        window.open(row.url)
         
     },
   }
