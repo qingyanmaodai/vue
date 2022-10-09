@@ -3,19 +3,41 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
+        v-for="(item,i) in Status1"
+        :key="i"
+        v-show="labelStatus1 == i"
         ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
+        :searchData="formSearchs[i].datas"
+        :searchForm="formSearchs[i].forms"
+        :remark="i"
         :isLoading="isLoading"
+        :signName="labelStatus1"
         :btnForm="btnForm"
         @btnClick="btnClick"
       />
     </div>
     <div>
       <div class="admin_content">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+            <el-col
+              :span="20"
+              class="flex_flex_end"
+            >
+              <div
+                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                v-for="(item, y) in Status1"
+                :key="y"
+              >
+                <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                <el-divider direction="vertical"></el-divider>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
         <div class="flex_column" :style="{ height: height }">
-          <div class="spreadContainer" v-loading="tableLoading[0]">
+          <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
@@ -26,18 +48,18 @@
         </div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span @click="toPageSetting" class="primaryColor cursor"
-              >SysID:{{ sysID }}
+            <span @click="toPageSetting(sysID[tagRemark].ID)" class="primaryColor cursor"
+              >SysID:{{ sysID[tagRemark].ID }}
             </span>
           </div>
           <div class="flex">
             <el-pagination
               background
               @size-change="(val) => pageSize(val, 0)"
-              :current-page="tablePagination[0].pageIndex"
+              :current-page="tablePagination[tagRemark].pageIndex"
               :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-              :page-size="tablePagination[0].pageSize"
-              :total="tablePagination[0].pageTotal"
+              :page-size="tablePagination[tagRemark].pageSize"
+              :total="tablePagination[tagRemark].pageTotal"
               @current-change="(val) => pageChange(val, 0)"
               layout="total, sizes, prev, pager, next,jumper"
             >
@@ -59,8 +81,6 @@ import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import { mapState } from "vuex";
 import ComSearch from "@/components/ComSearch";
-import ComReportTable from "@/components/ComReportTable";
-import ComAsideTree from "@/components/ComAsideTree";
 import {
   GetHeader,
   GetSearchData,
@@ -70,30 +90,46 @@ export default {
   name: "DailyPlanquery",
   components: {
     ComSearch,
-    ComReportTable,
-    ComAsideTree,
   },
   data() {
     return {
-      //////////////左侧树节点//////////////
-      LineName: "",
-      OrganizeName: "",
-      clickData: {},
-      treeProps: {
-        label: "OrganizeName",
-        children: "children",
-      },
-      treeListTmp: [],
-      treeListTmp2: [],
-      treeData: [],
-      treeData2: [],
-      autoGenerateColumns: true,
-      spread: null,
+      labelStatus1:0,
+      Status1: [
+        { label: "一部插件", value: 0 },
+        { label: "一部SMT", value: 1 },
+        { label: "二部", value: 2 },
+        { label: "三部", value: 3 },
+        { label: "四部", value: 4 },
+        { label: "五部", value: 5 },
+        { label: "七部", value: 6 },
+      ],
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawer: false,
-      delData: [[]],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -101,36 +137,33 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [],
-      tableData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 3000, pageTotal: 0 }],
+      tableData: [[],[],[],[],[],[],[],],
+      tableColumns: [[],[],[],[],[],[],[]],
+      tableLoading: [false,false,false,false,false,false,false],
+      isClear: [false,false,false,false,false,false,false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 }
+      ],
       height: "707px",
-      treeHeight: "765px",
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: 7945,
+      sysID: [{ ID: 7945 }, { ID: 7946 }, { ID: 7956 }, { ID: 7957 }, { ID: 6734 }, { ID: 7955 }, { ID: 7954 }],
       spread: null,
       adminLoading: false,
       checkBoxCellTypeLine: "",
-      isOpen: true,
-      selectionData: [[]],
-      NoWorkHour: [],
-      LineViewSort: [],
-      spread: null,
-      sheetSelectRows: [],
-      sheetSelectObj: { start: 0, end: 0, count: 0 },
+      selectionData: [[],[],[],[],[],[],[]],
     };
   },
   created() {
     _this = this;
     this.adminLoading = true;
-    let routeBtn = this.$route;
-    console.log('routeBtn.meta',routeBtn.meta)
-    this.sysID = parseInt(routeBtn.meta.dicID);
     this.judgeBtn();
     this.getTableHeader();
   },
@@ -145,39 +178,6 @@ export default {
     }),
   },
   mounted() {},
-  //离开的时候保存当前
-  beforeRouteLeave(to, form, next) {
- 
- let dicForm = {
-   dicData: this.formSearchs[0].datas,
-   dicForm: this.formSearchs[0].forms,
-     tablePagination:this.tablePagination
- };
- sessionStorage.setItem("dicIDForm" + this.sysID, JSON.stringify(dicForm));
- let dicIDData = {
-   dicID: this.sysID,
-   tableColumns: this.tableColumns[0],
-   tableData: this.tableData[0],
- 
- };
- sessionStorage.setItem("dicIDData" + this.sysID, JSON.stringify(dicIDData));
- next();
-},
-
-beforeRouteEnter(to, form, next) {
- next();
-},
- 
-watch: {
- $route: {
-   handler: function (val, oldVal) {
-    console.log('val.query',val.query)
-    //  this.sysID = parseInt(val.query.dicID);
-   },
-   // 深度观察监听
-   deep: true,
- },
-},
   methods: {
     initSpread: function (spread) {
       this.spread = spread;
@@ -205,7 +205,6 @@ watch: {
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
       let newHeight = "";
       let rem =
@@ -273,12 +272,20 @@ watch: {
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
+      
     },
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if(this.formSearchs[remarkTb].forms.length){
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element)=>{
+              if(element.prop===name){
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            })
+          }
         }
       }
     },
@@ -293,13 +300,16 @@ watch: {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: this.sysID }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
+          // 因为此表ID跟日计划ID一致，需要额外做显示隐藏列，现通过APP可见参数“IsVisibleApp”控制，过滤掉没选择APP可见的
+          // if(m.IsVisibleApp){
+            this.$set(this.tableColumns, i, m);
+          // }
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -313,9 +323,7 @@ watch: {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        console.log("gettable");
-        this.getOrgData();
-        // this.dataSearch(0);
+        this.getLineData(this.userInfo.WorkFlowInstanceID);
       }
     },
     // 验证数据
@@ -335,7 +343,6 @@ watch: {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID;
       form["ControlID"] = this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
 
@@ -358,16 +365,12 @@ watch: {
     setData() {
       this.spread.suspendPaint();
       let sheet = this.spread.getActiveSheet();
-      sheet.options.allowCellOverflow = true;
-      sheet.defaults.rowHeight = 23;
-      sheet.defaults.colWidth = 100;
-      sheet.defaults.colHeaderRowHeight = 23;
-      sheet.defaults.rowHeaderColWidth = 60;
+      sheet.reset();
       let colInfos = [];
-      this.tableColumns[0] = this.tableColumns[0].filter(x=>{
+      this.tableColumns[this.tagRemark] = this.tableColumns[this.tagRemark].filter(x=>{
         return x.prop!='isChecked'
       })
-      this.tableColumns[0].forEach((x) => {
+      this.tableColumns[this.tagRemark].forEach((x,colIndex) => {
         if (x.prop == "LineID") {
           colInfos.push({
             name: x.prop,
@@ -383,19 +386,21 @@ watch: {
           });
         }
       });
+      
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-      // 参数1，row
-      // 参数3，col
-      // 参数2，rowCount
-      // 参数4，colCount
-      // 自动向上合并相同文本内容
-      this.tableColumns[0].forEach((m,colIndex) => {
+      
+      this.tableColumns[this.tagRemark].forEach((m,colIndex) => {
+        // 参数1，row
+        // 参数3，col
+        // 参数2，rowCount
+        // 参数4，colCount
+        // 自动向上合并相同文本内容
         if(m.prop === "LineID"){
-            let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
-            sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
+          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
+          sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
         }else if(m.prop === "LineName"){
-            let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
-            sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
+          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
+          sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
         }
       })
 
@@ -425,16 +430,38 @@ watch: {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
+      if(this.tableColumns[this.tagRemark].length){
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
+      }
+    // debugger
+    this.tableData[this.tagRemark].forEach((row, index) => {
+      let cellIndex = 0;
+        this.tableColumns[0].forEach((m) => {
+          //行，start,end
+          if (m.DataType == "bit" && m.isEdit) {
+            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+            cellType.caption("");
+            cellType.textTrue("");
+            cellType.textFalse("");
+            cellType.textIndeterminate("");
+            cellType.textAlign(
+              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            );
+            cellType.isThreeState(false);
+            sheet.getCell(index, cellIndex).cellType(cellType);
+          }
+          cellIndex++;
+        });
+      });
 
-      sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
-
-      sheet.setDataSource(this.tableData[0]);
+      sheet.setDataSource(this.tableData[this.tagRemark]);
       sheet.bindColumns(colInfos);
       this.spread.options.tabStripVisible = false; //是否显示表单标签
+      this.spread.refresh(); //重新定位宽高度
       
       this.spread.resumePaint();
       this.adminLoading = false;
-      this.tableLoading[0] = false;
+      this.tableLoading[this.tagRemark] = false;
     },
     // 刷新页面
     refrshPage() {
@@ -448,48 +475,11 @@ watch: {
       });
     },
     // 跳转至页面配置
-    toPageSetting() {
+    toPageSetting(ID) {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: this.sysID },
+        params: { ID: ID },
       });
-    },
-    //////////////////////////////
-    async getOrgData() {
-      this.getLineData(this.userInfo.WorkFlowInstanceID);
-      return;
-      this.treeListTmp = [];
-      this.treeData = [];
-      let form = {
-        ERPOrderCode: this.userInfo.WorkFlowInstanceID,
-        OrganizeTypeID: 5,
-        dicID: 3026,
-        Status: 1,
-      };
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.treeData = JSON.parse(JSON.stringify(data));
-        this.treeListTmp = this.treeData;
-        if (data.length != 0) {
-          this.$nextTick(function () {
-            _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
-          });
-          // this.$set(
-          //   this.formSearchs[0].datas,
-          //   "ControlID",
-          //   data[0].ERPOrderCode
-          // );
-          this.getLineData(this.userInfo.WorkFlowInstanceID);
-        }
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     // 获取线别数据
     async getLineData(ERPOrderCode) {
@@ -502,8 +492,6 @@ watch: {
       const { data, forms, result, msg } = res.data;
       if (result) {
         let newData = [];
-        this.treeData2 = data;
-        this.treeListTmp2 = data;
         this.adminLoading = false;
         if (data.length != 0) {
           data.forEach((x) => {
@@ -517,8 +505,7 @@ watch: {
         );
         this.checkBoxCellTypeLine.items(newData);
         this.checkBoxCellTypeLine.itemHeight(24);
-        //this.formSearchs[0].datas.ControlID="201";
-        this.getTableData(this.formSearchs[0].datas, 0);
+        this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
       } else {
         this.adminLoading = false;
         this.$message({
@@ -528,81 +515,9 @@ watch: {
         });
       }
     },
-    searchTree(msg, dataName, dataName2, valueName) {
-      this[dataName] = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-      let tmp = msg
-        ? this.rebuildData(msg, treeListTmp, valueName)
-        : JSON.parse(JSON.stringify(treeListTmp));
-      this[dataName].push(...tmp);
-    },
-    rebuildData(value, arr, valueName) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach((element) => {
-          if (element[valueName].indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children,
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children, valueName);
-              const obj = {
-                ...element,
-                children: ab,
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
-    },
-    // 单击出来组织人员
-    handleNodeClick(data, node) {
-      this.clickData = data;
-      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-      //this.dataSearch(0);
-      this.getLineData(data.OrganizeID);
-    },
-    // 单击出来线别
-    handleNodeClick2(data, node) {
-      this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-      this.dataSearch(0);
-    },
     changeStatus(item, index) {
       this.labelStatus1 = index;
-    },
-    // 下拉选择事件
-    handleCommand(val) {
-      if (val == 1 && !this.isOpen) {
-        this.isOpen = true;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      } else if (val == 2 && this.isOpen) {
-        // 改变每个节点的状态
-        this.isOpen = false;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      }
-    },
-    // 改变节点状态
-    changeTreeNodeStatus(node) {
-      node.expanded = this.isOpen;
-      for (let i = 0; i < node.childNodes.length; i++) {
-        // 改变节点的自身expanded状态
-        node.childNodes[i].expanded = this.isOpen;
-        // 遍历子节点
-        if (node.childNodes[i].childNodes.length > 0) {
-          this.changeTreeNodeStatus(node.childNodes[i]);
-        }
-      }
+      this.dataSearch(index)
     },
   },
 };
