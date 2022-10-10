@@ -299,9 +299,6 @@ export default {
         let cellIndex = 0;
         let colInfos = [];
         this.tableColumns[this.tagRemark].forEach((x) => {
-          if(x.DataType=="varchar"||x.DataType=='nvarchar'){
-            sheet.setFormatter(-1,cellIndex , "@");
-          }
           if (x.ControlType == "combobox" && x.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
             cellType.editorValueType(
@@ -315,6 +312,13 @@ export default {
               displayName: x.label,
               cellType: cellType,
               size: parseInt(x.width),
+            });
+          }else if(x.DataType=="varchar"||x.DataType=='nvarchar'){
+            colInfos.push({
+              name: x.prop,
+              displayName: x.label,
+              size: parseInt(x.width),
+              formatter: '@'//类型为字符串时转为字符串，以免数字开头为0被清情况
             });
           } else {
             colInfos.push({
