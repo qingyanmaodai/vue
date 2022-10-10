@@ -91,10 +91,12 @@
           :remark="0"
           :sysID="6723"
           :isClear="isClear[0]"
+          :isEdit="true"
           :pagination="tablePagination[0]"
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          
         />
       </div>
     </div>
@@ -104,12 +106,14 @@
 <script>
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
-import { GetHeader, GetSearchData, ExportData } from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData,SaveData } from "@/api/Common";
+import ComVxeTable from "@/components/ComVxeTable";
 export default {
   name: "TaskRate",
   components: {
     ComSearch,
     ComReportTable,
+    ComVxeTable
   },
   data() {
     return {
@@ -133,18 +137,12 @@ export default {
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
+      isEdit:false,
     };
   },
-  watch: {
-    $route: {
-      handler: function (val, oldVal) {
-        // this.$set(this,'btnForm',val.meta.btns);
-      },
-      // 深度观察监听
-      deep: true,
-    },
-  },
   created() {
+    // 获取所有按钮
+    this.judgeBtn();
     this.getTableHeader();
   },
   mounted() {
@@ -153,6 +151,51 @@ export default {
     }, 450);
   },
   methods: {
+    // 判断按钮权限
+    judgeBtn() {
+      let routeBtn = this.$route.meta.btns;
+      console.log('routeBtn',routeBtn)
+      let btnsList = [];
+      let permission = false;
+      if (routeBtn.length != 0) {
+        routeBtn.forEach((x) => {
+          // 动态获取按钮，只适用页面单标签使用
+          btnsList.push({
+            ButtonCode: x.ButtonCode,
+            BtnName: x.ButtonName,
+            isLoading: false,
+            Methods: x.OnClick,
+            Type: x.ButtonType,
+            Icon: x.Icon,
+          });
+          // if (x.ButtonCode == "edit") {
+          //   permission = true;
+          // }
+        });
+      }
+      this.$set(this, "btnForm", btnsList);
+      // this.$set(this, "isEdit", permission);
+    },
+    // 保存
+    async dataSave(remarkTb, index) {
+      let res = await SaveData(this.tableData[remarkTb]);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+
+        this.dataSearch(remarkTb);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
@@ -200,11 +243,27 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      if (parms) {
-        // 下标 要用的数据 标题 ref
-        this[methods](remarkTb, index, parms);
+      if (methods) {
+        try {
+          if (parms) {
+            // 下标 要用的数据 标题 ref
+            this[methods](remarkTb, index, parms);
+          } else {
+            this[methods](remarkTb, index);
+          }
+        } catch (error) {
+          this.$message({
+            message: "配置的事件找不到或错误，请检查！",
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
       } else {
-        this[methods](remarkTb, index);
+        this.$message({
+          message: "此按钮没配置事件，请检查！",
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 查询
@@ -236,8 +295,6 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
     },
-    // 保存
-    dataSave(remarkTb) {},
     // 获取表头数据
     async getTableHeader() {
       let IDs = [{ ID: 6723 }];
