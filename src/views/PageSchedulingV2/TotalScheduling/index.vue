@@ -459,10 +459,11 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
+            // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = x.ButtonName;
-              y.Methods = x.OnClick || y.Methods;
-              y.Type = x.ButtonType || y.Type;
+              y.Methods = y.Methods||x.OnClick;
+              y.Type = y.Type || x.ButtonType;
               return y;
             }
             // return x.ButtonCode == y.ButtonCode
