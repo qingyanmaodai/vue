@@ -181,7 +181,7 @@
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
           { ID: 5156 },
-          { ID: 6736, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 7942, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
           { ID: 5156 },
           { ID: 5156 },
           { ID: 5156 },
