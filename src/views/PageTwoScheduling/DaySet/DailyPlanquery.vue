@@ -307,9 +307,13 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           // 因为此表ID跟日计划ID一致，需要额外做显示隐藏列，现通过APP可见参数“IsVisibleApp”控制，过滤掉没选择APP可见的
-          if(m.IsVisibleApp){
-            this.$set(this.tableColumns, i, m);
-          }
+          m.forEach((x,y)=>{
+            //特殊处理，因为这个页面用的是各部的日计划ID，但此页面需要隐藏一些列时再通过“IsVisibleApp”过滤，配置表中没有类似日期的会x.IsVisibleApp==null，所以需要默认显示
+            if(x.IsVisibleApp==null||x.IsVisibleApp){
+              this.$set(this.tableColumns[i], y, x);
+            }
+          })
+          
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
