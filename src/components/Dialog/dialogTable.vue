@@ -38,6 +38,7 @@
         @sortChange="sortChange"
         @selectfun="selectFun"
         @toPageSetting="toPageSetting"
+        :cell-style="cellStyle"
       />
     </div>
     <span
@@ -139,6 +140,13 @@ export default {
     isToolbar: {
       type: Boolean,
       default: true,
+    },
+    // 单元格样式
+    cellStyle: {
+      type: Function,
+      default: () => {
+        return null;
+      },
     },
   },
   data() {

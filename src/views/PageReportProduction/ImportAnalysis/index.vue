@@ -132,6 +132,7 @@
         @closeDialog="colDialogVisible = false"
         :searchForm="dialogSearchForm"
         :isToolbar="false"
+        :cellStyle="cellStyle"
       ></DialogTable>
   </div>
 </template>
@@ -506,6 +507,8 @@ export default {
           if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
             sheet.getCell(index, -1).backColor("red");
           }
+          
+          
         })
         this.spread.resumePaint();
 
@@ -516,6 +519,17 @@ export default {
       }
       this.spread.refresh(); //重新定位宽高度
       this.spread.options.tabStripVisible = false;//是否显示表单标签
+    },
+     // 单元格样式控制
+     cellStyle({ row, column }) {
+      //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
+      if (row['Remark1']&&row["Remark1"] == "错误") {
+        if(column.property === "Remark1" || column.property === 'AvailableQty'){
+          return {  
+          color: "red",
+        };
+        }
+      }
     },
     // 查询
     dataSearch(remarkTb) {
