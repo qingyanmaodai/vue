@@ -22,14 +22,14 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <span>新增行数：</span>
+              <!-- <span>新增行数：</span>
               <el-input-number
                 v-model.trim="addNum"
                 :min="1"
                 :max="100"
                 :step="10"
                 placeholder="请输入"
-              ></el-input-number>
+              ></el-input-number> -->
               <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
@@ -117,15 +117,15 @@ export default {
           Icon: "",
           Size: "small",
         },
-        {
-          ButtonCode: "add",
-          BtnName: "增行",
-          isLoading: false,
-          Methods: "addRow",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-        },
+        // {
+        //   ButtonCode: "addRow",
+        //   BtnName: "增行",
+        //   isLoading: false,
+        //   Methods: "addRow",
+        //   Type: "success",
+        //   Icon: "",
+        //   Size: "small",
+        // },
         {
           ButtonCode: "delete",
           BtnName: "删除",
