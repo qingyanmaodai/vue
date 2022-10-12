@@ -167,7 +167,7 @@ export default {
           Params: { dataName: "delData" },
         },
         {
-          ButtonCode: "sync",
+          ButtonCode: "syncBalance",
           BtnName: "同步供需平衡表",
           Type: "danger",
           Ghost: true,
