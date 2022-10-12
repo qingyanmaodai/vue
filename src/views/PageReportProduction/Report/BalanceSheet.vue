@@ -90,7 +90,7 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, SaveData,GetSearch } from "@/api/Common";
 import { mapState } from "vuex";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
@@ -118,7 +118,7 @@ export default {
           Size: "small",
         },
         {
-          ButtonCode: "addRow",
+          ButtonCode: "add",
           BtnName: "增行",
           isLoading: false,
           Methods: "addRow",
