@@ -420,12 +420,13 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = [];
-        this.tableColumns[this.tagRemark].forEach((x) => {
+        this.tableColumns[this.tagRemark].forEach((x,index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
+      
         });
         // 选框
         sheet.setCellType(
@@ -465,15 +466,15 @@ export default {
         colHeaderStyle.font(
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
         );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
 
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
@@ -521,9 +522,9 @@ export default {
       this.spread.options.tabStripVisible = false;//是否显示表单标签
     },
      // 单元格样式控制
-     cellStyle({ row, column }) {
+    cellStyle({ row, column }) {
       //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
-      if (row['Remark1']&&row["Remark1"] == "错误") {
+      if (row['DBResult']&&row["DBResult"] == "错误") {
         if(column.property === "Remark1" || column.property === 'AvailableQty'){
           return {  
           color: "red",
@@ -735,10 +736,13 @@ export default {
         let DataList = [];
         let isDate = false;
         this.colAdd = [];
-        var obj = {};
+        let obj = {};
         let errorDate = false
+        let timeoutStatus = false
         let rowNo = 0// excel行号
         let propName = ''
+        let split = []//存储需求到料日期过期信息
+        let errorDateList = []//存储日期格式错误信息
         importData[0].sheet.forEach((m,y) => {
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
@@ -750,15 +754,39 @@ export default {
                     errorDate = true
                     propName = key
                     rowNo =Number(m.__rowNum__)+1
+                    errorDateList.push(`第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`)
                   }else{
                     obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
                     : "";
                   }
                   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+
+                  // 判断需求到料日期是否大于今天
+                console.log('formatDates.formatTodayDate()',formatDates.formatTodayDate())
+                console.log('fitem.prop',item.prop)
+                console.log('obj[item.prop]',obj[item.prop])
+                if(item.prop==='DemandToDay'&&obj[item.prop]<formatDates.formatTodayDate()){
+                  // this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
+                  timeoutStatus = true
+                    propName = key
+                    rowNo =Number(m.__rowNum__)+1
+                    // break
+                    // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
+                    split.push(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`)
+            
+          // this.$Modal.warning({
+          //   title: '导入异常信息',
+          //   content: txt,
+          // })
+          
+                    return
+
+                }
                 } else {
                   obj[item.prop] = m[key];
                 }
+                
                 
               }
                else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
@@ -790,15 +818,14 @@ export default {
             //   : ""),
              obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
+            obj["row"] = m.__rowNum__;
             DataList.push(obj);
           }
         });
-        if(errorDate){
-          this.adminLoading = false;
-              this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
-                return;
-        }
+        
         // 必填校验
+        let requiredList = []
+        // let requiredStatus = false
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
           for (let i = 0; i < DataList.length; i++) {
@@ -816,18 +843,63 @@ export default {
                   this.formSearchs[this.tagRemark].required[x]["prop"]
                 ]===''
               ) {
+                console.log('row',DataList[i]['row'])
                 rowNo = Number(DataList[i]['row'])+1
-                this.$message.error(
-                  `第${rowNo}行,【${
-                    this.formSearchs[this.tagRemark].required[x]["label"]
-                  }】不能为空，请填写`
-                );
+                // requiredStatus = true
+                requiredList.push(`第${rowNo}行,【${this.formSearchs[this.tagRemark].required[x]["label"]}】不能为空，导入失败，请填写`)
+                // this.$message.error(
+                //   `第${rowNo}行,【${
+                //     this.formSearchs[this.tagRemark].required[x]["label"]
+                //   }】不能为空，请填写`
+                // );
                 this.adminLoading = false;
-                return;
+                break
+                // return;
               }
             }
           }
         }
+        if(errorDate){//日期格式错误
+          this.adminLoading = false;
+          // this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
+          let txt = ''
+          errorDateList.map((value, index, array) => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
+          })
+          this.$alert(txt,  {
+            dangerouslyUseHTMLString: true,
+            title:'导入异常信息!',
+          });
+          return;
+        }else if(timeoutStatus){//日期延期
+          this.adminLoading = false;
+          let txt = ''
+          split.map((value, index, array) => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
+          })
+          this.$alert(txt,  {
+            dangerouslyUseHTMLString: true,
+            title:'导入异常信息!',
+          });
+          // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
+          return;
+        }else if(requiredList.length){//必填校验失败
+          
+          this.adminLoading = false;
+          let txt = ''
+          requiredList.map((value, index, array) => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
+          })
+          this.$alert(txt,  {
+            dangerouslyUseHTMLString: true,
+            title:'导入异常信息!',
+          });
+          // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
+          return;
+        }
+        console.log('DataList',DataList)
+        this.adminLoading = false
+        return
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
