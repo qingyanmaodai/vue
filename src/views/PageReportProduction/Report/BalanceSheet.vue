@@ -53,7 +53,28 @@
             </span>
           </div>
           <div class="flex">
-            <span>共{{ tablePagination[tagRemark].pageTotal }}条</span>
+            <div class="flex">
+              <el-pagination
+                background
+                @size-change="val=>pageSize(val,0)"
+                :current-page="tablePagination[tagRemark].pageIndex"
+                :page-sizes="[
+                200,
+                500,
+                1000,
+                2000,
+                3000,
+                5000,
+                10000
+                ]"
+                :page-size="tablePagination[tagRemark].pageSize"
+                :total="tablePagination[tagRemark].pageTotal"
+                @current-change="val=>pageChange(val,0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
+              </el-pagination>
+            </div>
+            <!-- <span>共{{ tablePagination[tagRemark].pageTotal }}条</span> -->
           </div>
         </div>
       </div>
@@ -73,7 +94,7 @@ import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
 import { mapState } from "vuex";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
-  name: "ComSearchExcel",
+  name: "BalanceSheet",
   components: {
     ComSearch,
   },
@@ -138,9 +159,9 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 1198 }],
+      sysID: [{ ID: 7968 }],
       spread: null, //excel初始
       checkBoxCellTypeRuleType: "",
       checkBoxCellTypeSuplier: "",
@@ -156,8 +177,8 @@ export default {
   },
   created() {
     _this = this;
-    let routeBtn = _this.$route;
-    _this.sysID[_this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
+    // let routeBtn = _this.$route;
+    // _this.sysID[_this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
     _this.judgeBtn();
     _this.getTableHeader();
   },
