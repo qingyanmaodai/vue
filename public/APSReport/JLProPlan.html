@@ -41,7 +41,7 @@
               </div>
               <div class="table1 wrap">
                 <div class="text-wrapper_13 flex-row justify-between" v-for="(item,index) in weeksList" :key="index" >
-                  <span class="tableWidthRatio7 tableContent">{{item.Extend9}}</span>
+                  <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
                   <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
                   <span class="tableWidthRatio20 tableContent">{{item.Code}}</span>
                   <span class="tableWidthRatio10 tableContent color2">{{item.Qty}}</span> 
@@ -405,9 +405,11 @@
       async mounted() {
         this.$nextTick(async()=>{
           let OrganizeIDs = this.getQueryString('ID')
+          let ProcessIDs = this.getQueryString('ProcessIDs')
+          console.log('ProcessIDs',ProcessIDs)
           // 看板车间名称
           if(OrganizeIDs){
-            await this.getOrgData(OrganizeIDs)
+            await this.getOrgData(OrganizeIDs,ProcessIDs)
           }else{
             OrganizeIDs = 162//没有传入ID默认的ID
             await this.getOrgData(OrganizeIDs)
@@ -421,23 +423,23 @@
           location.reload();
         },
         // 获取组织名称
-        getOrgData(OrganizeIDs) {
-          
+        getOrgData(OrganizeIDs,ProcessIDs) {
           axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
             .then(async (res)=> {
               if (res.result) {
                 if (res.data.length != 0) {
                   _this.form = res.data[0];
+                  _this.form.ProcessIDs = _this.form.ProcessIDs||ProcessIDs
                 }
-                if(OrganizeIDs){
+                if(_this.form.OrganizeID){
                   // 周计划
-                await _this.getWeeksPlanData(OrganizeIDs)
+                await _this.getWeeksPlanData(_this.form.OrganizeID,_this.form.ProcessIDs)
                 // 欠料明细
-                await _this.getOweMatPlanData(_this.form.OrganizeID)
+                await _this.getOweMatPlanData(_this.form.OrganizeID,_this.form.ProcessIDs)
                 // 七日达成率
-                await _this.getWeekRateData(_this.form.OrganizeID)
+                await _this.getWeekRateData(_this.form.OrganizeID,_this.form.ProcessIDs)
                 // 日计划达成率
-                await _this.getDayRateData(_this.form.OrganizeID)
+                await _this.getDayRateData(_this.form.OrganizeID,_this.form.ProcessIDs)
                 $(".loading").fadeOut()
                 _this.gudtime = setTimeout(() => {
                     _this.gundong()
@@ -527,9 +529,9 @@
           let r = window.location.search.substr(1).match(reg);
           if (r != null) return decodeURIComponent(r[2]); return null;
         },
-        // 周生产计划
-        getWeeksPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6736, OrganizeIDs:OrganizeIDs,StartDate1:[formatDate.formatTodayDate(),formatDate.formatAddSevenDate()],rows:0 })
+        // 7日生产计划
+        getWeeksPlanData(OrganizeIDs,ProcessIDs){
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,StartDate:[formatDate.formatTodayDate(),formatDate.formatAddSevenDate()],rows:0 })
 					.then(function (res) {
             _this.weeksList = []
 						if (res.result) {
@@ -539,11 +541,15 @@
               if(_this.weeksList.length){
                 for(let key in _this.weeksList[0]){
                   // 获取七日日期
-                  if(key.indexOf('-')>-1){
+                  if(key.indexOf('-')>-1&&key.indexOf('dy')==-1){
+                    num++
                     _this.weeksDay.push({
                       dayName:key.slice(-2),
                       key:key
                     })
+                    if(num===7){
+                      return
+                    }
                   }
                 }
               }
@@ -561,12 +567,12 @@
           // 五分钟刷新一次数据
           var todayTimer = setInterval(function() {
               clearInterval(todayTimer);
-              _this.getWeeksPlanData(OrganizeIDs)
+              _this.getWeeksPlanData(OrganizeIDs,ProcessIDs)
           }, 1000*60*5)
         },
         // 欠料明细
-        getOweMatPlanData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594, OrganizeIDs:OrganizeIDs,rows:0,OweQty: "0", })
+        getOweMatPlanData(OrganizeIDs,ProcessIDs){
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,rows:0,OweQty: "0", })
 					.then(function (res) {
             _this.OweMatList = []
 						if (res.result) {
@@ -585,12 +591,12 @@
           // 五分钟刷新一次数据
           var tomorrowTimer = setInterval(function() {
               clearInterval(tomorrowTimer);
-              _this.getOweMatPlanData(OrganizeIDs)
+              _this.getOweMatPlanData(OrganizeIDs,ProcessIDs)
           }, 1000*60*5)
         },
-        // 周计划达成率
-        getWeekRateData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723, OrganizeIDs:OrganizeIDs,PlanDay:['',formatDate.formatOldDate()],rows:7,sort:'PlanDay DESC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
+        // 7日计划达成率
+        getWeekRateData(OrganizeIDs,ProcessIDs){
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,PlanDay:['',formatDate.formatOldDate()],rows:7,sort:'PlanDay DESC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
 					.then(function (res) {
             _this.weekOptionData = []
            
@@ -621,8 +627,8 @@
           
         },
         // 日计划达成率
-        getDayRateData(OrganizeIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723, OrganizeIDs:OrganizeIDs,PlanDay:[formatDate.formatTodayDate()],rows:1,sort:'PlanDay ASC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
+        getDayRateData(OrganizeIDs,ProcessIDs){
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,PlanDay:[formatDate.formatTodayDate()],rows:1,sort:'PlanDay ASC',fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
 					.then(function (res) {
             _this.todayOptionData =[]
 						if (res.result) {

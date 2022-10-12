@@ -320,6 +320,7 @@
     },
     data() {
       return {
+        OrganizeIDsList:[],
         form:{},
         OrganizeIDs:'',
         large: true,
@@ -1559,13 +1560,28 @@
     },
     methods: {
       getOrgIDsData(OrganizeIDs){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026 })
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026,OrganizeIDs })
             .then(async(res) =>{
               if (res.result) {
-                  
+                  if(res.data.length){
+                    this.handleTree(res.data)
+                    console.log('OrganizeIDsList',this.OrganizeIDsList)
+                  }
               }
             })
       },
+      //树结构递归
+    handleTree(data) {
+      // let list = []
+      return data.filter((item, index) => {
+        this.OrganizeIDsList.push(item.OrganizeID)
+
+        if (item.children && item.children.length>0) {
+          item.children = this.handleTree(item.children)
+        }
+        return 
+      })
+    },
       // 接收路由传参
       getQueryString(name) {
           let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -1574,7 +1590,7 @@
         },
       // 获取组织名称
       getOrgData(OrganizeIDs) {
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+          axiosPostRequst(`/APSAPI/GetOrgData`, { dicID: 3026, OrganizeID: OrganizeIDs })
             .then(async(res) =>{
               if (res.result) {
                 if (res.data.length != 0) {
