@@ -19,7 +19,7 @@
               <span class="info1">{{todayDate}}</span>
             </div>
             <div class="header_title">
-              <span class="info2">金羚APS总装看板</span>
+              <span class="info2">{{form.OrganizeName}}综合看板</span>
             </div>
             <div class="headRight">
               <span class="img"> <image @click="moreLarge" src="./images/large.png" class="fullScreen"/></span>
@@ -34,8 +34,8 @@
               </div>
               <div class="content  flex-col justify-between align-center">
                 <div class="group7 flex-row justify-center">
-                  <span class="word1">{{list[0].TotalPeoples}}</span>
-                  <span class="info3">{{list[0].unProductionQty?parseFloat(((list[0].unProductionQty/list[0].ProductionQty)*100).toFixed(2)):0}}%</span>
+                  <span class="word1">{{form.TotalPeoples||0}}</span>
+                  <span class="word2">{{list[0].unProductionQty?parseFloat(((list[0].unProductionQty/list[0].ProductionQty)*100).toFixed(2)):0}}%</span>
                 </div>
                 <div class="group8 flex-row ">
                   <div class="main1 flex-col">
@@ -59,21 +59,21 @@
                 </div>
                 <div class="group11 flex-row justify-center">
                   <span class="info4">{{list[0].ruzhi}}</span>
-                  <span class="word2">{{list[0].lizhi}}</span>
+                  <span class="info4">{{list[0].lizhi}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
-                    <span class="word4">当月入职</span>
+                    <span class="word4">总装线体</span>
                   </div>
                   <div class="mod3 flex-col">
-                    <span class="info6">当月离职</span>
+                    <span class="info6">丝印线体</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="main43 flex-col justify-between">
               <div class="outer26 flex-row">
-                <span class="info34">包装人均小时产能</span>
+                <span class="info34">昨日人均产能</span>
               </div>
               <div class="content2">
                 <div class="flex-row justify-between">
@@ -129,7 +129,7 @@
 
             <div class="main45 flex-col">
               <div class="bd34 flex-row justify-start">
-                <span class="word76">7日包装生产计划</span>
+                <span class="word76">周生产计划</span>
               </div>
               <div class="main3 flex-row  justify-between">
                 <span class="word tableWidthRatio8">组装线别</span>
@@ -167,19 +167,19 @@
           <div class="group46 flex-row justify-between">
             <div class="outer27 flex-col">
               <div class=" flex-col">
-                <span class="word77">周配套率</span>
+                <span class="word77">周计划达成</span>
               </div>
               <div class="navboxall" id="WeeksRateOption"></div>
             </div>
             <div class="outer28 flex-col">
               <div class="group47 flex-row">
-                <span class="word78">15日实时产量</span>
+                <span class="word78">近15日产量趋势</span>
               </div>
               <div class="navboxall" id="RealTimeProOption"></div>
             </div>
             <div class="outer29 flex-col">
               <div class="block58 flex-row">
-                <span class="txt44">各品类工单齐套率</span>
+                <span class="txt44">周齐套率</span>
               </div>
               <div class="navboxall" id="OrderCapOption"></div>
             </div>
@@ -188,7 +188,7 @@
           <div class="group48 flex-row justify-between">
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周生产不良率</span>
+                <span class="info34">周计划达成率</span>
               </div>
               <div class="content flex-col justify-between">
                 <div class="navboxall3" id="weeksBadOption"></div>
@@ -206,7 +206,7 @@
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周计划达成率</span>
+                <span class="info34">日计划达成率</span>
               </div>
               <div class="content flex-col justify-between">
                 <div class="navboxall3" id="weeksFinishOption"></div>
@@ -224,7 +224,7 @@
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周不良分布</span>
+                <span class="info34">不达成原因分布</span>
               </div>
               <div class="content1 flex-col justify-between">
                 <div class="navboxall2" id="WeeksBadQtyOption"></div>
@@ -232,7 +232,7 @@
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周不达成分布</span>
+                <span class="info34">欠料类型分布</span>
               </div>
               <div class="content1 flex-col justify-between">
                 <div class="navboxall2" id="WeeksUnfinishOption"></div>
@@ -240,7 +240,7 @@
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">欠料分布</span>
+                <span class="info34">欠料属性分布</span>
               </div>
               <div class="content1 flex-col justify-between">
                 <div class="navboxall2" id="WeeksOweMatOption"></div>
@@ -248,13 +248,13 @@
             </div>
             <div class="group49 flex-col">
               <div class="bd34 flex-row justify-start">
-                <span class="txt46">欠料明细</span>
+                <span class="txt46">电机供需分析</span>
               </div>
               <div class="main3 flex-row  justify-between">
-                <span class="word tableWidthRatio20">订单号</span>
-                <span class="word tableWidthRatio50">产品型号</span>
-                <span class="word tableWidthRatio15">计划数</span>
-                <span class="word tableWidthRatio15">欠料数</span>
+                <span class="word tableWidthRatio20">工单号</span>
+                <span class="word tableWidthRatio50">电机料号</span>
+                <span class="word tableWidthRatio15">电机库存</span>
+                <!-- <span class="word tableWidthRatio15">欠料数</span> -->
               </div>
               <div class="table1 wrap">
                 <div>
@@ -262,7 +262,7 @@
                     <span class="tableWidthRatio20 tableContent">{{item.OrderNo}}</span>
                     <span class="tableWidthRatio50 tableContent">{{item.Code}}</span>
                     <span class="tableWidthRatio15 tableContent">{{item.PlanQty}}</span>
-                    <span class="tableWidthRatio15 tableContent">{{item.Qty}}</span>
+                    <!-- <span class="tableWidthRatio15 tableContent">{{item.Qty}}</span> -->
                   </div>
                 </div>
               </div>
@@ -320,6 +320,8 @@
     },
     data() {
       return {
+        form:{},
+        OrganizeIDs:'',
         large: true,
         list: [[], [], [], [], [], [], [], [], [], [], [], [], []],
         time: null,
@@ -1539,36 +1541,93 @@
       this.time = setInterval(() => {
         this.todayDate = formatDate.getTodayTime()
       }, 1000)
+
+      this.$nextTick(async()=>{
+          let OrganizeIDs = this.getQueryString('ID')
+          // 看板车间名称
+          if(OrganizeIDs){
+            await this.getOrgData(OrganizeIDs)
+          }else{
+            OrganizeIDs = 162//没有传入ID默认的ID
+            await this.getOrgData(OrganizeIDs)
+          }
+          
+      })
     },
     mounted() {
-      // 人员管理
-      this.getPersonData()
-      // 人均小时产能
-      this.getProcessCapData()
-      // 本月工单状态
-      this.getOrderData()
-      // 七日包装计划
-      this.getProPlanData()
-      // 周配套率
-      this.getWeeksCapData()
-      // 15日实时产量
-      this.getRealTimeProData()
-      // 各品类工单齐套率
-      this.getOrderCapData()
-      // 周生产不良率
-      this.getWeeksBadData()
-      // 周计划达成率
-      this.getWeeksFinishData()
-      // 周不良分布
-      this.getWeeksBadQtyData()
-      // 周不达成分布
-      this.getWeeksUnfinishData()
-      // 欠料分布
-      this.getOweMatData()
-      // 欠料明细
-      this.getOweMatDetailsData()
+      
     },
     methods: {
+      getOrgIDsData(OrganizeIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026 })
+            .then(async(res) =>{
+              if (res.result) {
+                  
+              }
+            })
+      },
+      // 接收路由传参
+      getQueryString(name) {
+          let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+          let r = window.location.search.substr(1).match(reg);
+          if (r != null) return decodeURIComponent(r[2]); return null;
+        },
+      // 获取组织名称
+      getOrgData(OrganizeIDs) {
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+            .then(async(res) =>{
+              if (res.result) {
+                if (res.data.length != 0) {
+                  _this.form = res.data[0];
+                }
+                if(_this.form.OrganizeID){
+                  // 人员管理
+                  await this.getPersonData(_this.form.OrganizeID)
+                  // 人均小时产能
+                  await this.getProcessCapData(_this.form.OrganizeID)
+                  // 本月工单状态
+                  await this.getOrderData(_this.form.OrganizeID)
+                  // 七日包装计划
+                  await this.getProPlanData(_this.form.OrganizeID)
+                  // 周配套率
+                  await this.getWeeksCapData(_this.form.OrganizeID)
+                  // 15日实时产量
+                  await this.getRealTimeProData(_this.form.OrganizeID)
+                  // 各品类工单齐套率
+                  await this.getOrderCapData(_this.form.OrganizeID)
+                  // 周生产不良率
+                  await this.getWeeksBadData(_this.form.OrganizeID)
+                  // 周计划达成率
+                  await this.getWeeksFinishData(_this.form.OrganizeID)
+                  // 周不良分布
+                  await this.getWeeksBadQtyData(_this.form.OrganizeID)
+                  // 周不达成分布
+                  await this.getWeeksUnfinishData(_this.form.OrganizeID)
+                  // 欠料分布
+                  await this.getOweMatData(_this.form.OrganizeID)
+                  // 欠料明细
+                  await this.getOweMatDetailsData(_this.form.OrganizeID)
+                  await this.getOrgIDsData(_this.form.OrganizeID)
+                  if(_this.gudtime){
+                    clearTimeout(_this.gudtime)
+                  }
+                  _this.gudtime = setTimeout(() => {
+                    _this.gundong()
+                    $(".loading").fadeOut()
+                  }, 1000);
+                }
+              }
+              else {
+                _this.$message({
+                  message: res.msg,
+                  type: 'error'
+                });
+              }
+            })
+            .catch(function (error) {
+
+            });
+        },
       // 渲染echart图
       barData(id, option) {
         let chartDom = document.getElementById(id);
@@ -1589,7 +1648,7 @@
         // }, 1000*60*5)
       },
       //获取人员管理数据
-      getPersonData() {
+      getPersonData(OrganizeID) {
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1603,7 +1662,7 @@
         }
       },
       // 获取某车间所有工序人均小时产能
-      getProcessCapData(){
+      getProcessCapData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1620,7 +1679,7 @@
         this.barData('PerHourCapOption', this.PerHourCapOption)
       },
       // 获取本月工单状态
-      getOrderData(){
+      getOrderData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1635,7 +1694,7 @@
         }
       },
       // 获取七日包装计划
-      getProPlanData(){
+      getProPlanData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1659,12 +1718,10 @@
         // this.$nextTick(()=>{
         //   this.gundong()
         // })
-        setTimeout(() => {
-                    _this.gundong()
-                  }, 1000);
+ 
       },
       // 周配套率
-      getWeeksCapData(){
+      getWeeksCapData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1697,7 +1754,7 @@
       // }, 100);
       },
       // 15日实时产量
-      getRealTimeProData(){
+      getRealTimeProData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1731,7 +1788,7 @@
         this.barData('RealTimeProOption', this.RealTimeProOption)
       },
       // 各品类工单齐套率
-      getOrderCapData(){
+      getOrderCapData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1758,7 +1815,7 @@
         this.barData('OrderCapOption', this.OrderCapOption)
       },
       // 周生产不良率
-      getWeeksBadData(){
+      getWeeksBadData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1774,7 +1831,7 @@
         this.barData('weeksBadOption', this.weeksBadOption)
       },
       // 周计划达成率
-      getWeeksFinishData(){
+      getWeeksFinishData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1790,7 +1847,7 @@
         this.barData('weeksFinishOption', this.weeksFinishOption)
       },
       // 周不良分布
-      getWeeksBadQtyData(){
+      getWeeksBadQtyData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1849,7 +1906,7 @@
 
       },
       // 周不达成分布
-      getWeeksUnfinishData(){
+      getWeeksUnfinishData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1907,7 +1964,7 @@
         this.barData('WeeksUnfinishOption', this.WeeksUnfinishOption)
       },
       // 欠料分布
-      getOweMatData(){
+      getOweMatData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1965,7 +2022,7 @@
         this.barData('WeeksOweMatOption', this.WeeksOweMatOption)
       },
       // 欠料明细
-      getOweMatDetailsData(){
+      getOweMatDetailsData(OrganizeID){
         // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
         //   .then(function (res) {
 
@@ -1980,9 +2037,6 @@
           { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
           { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 300, Qty: 10 },
         ]
-        this.$nextTick(()=>{
-          this.gundong()
-        })
         
       },
       // 滚动数据
