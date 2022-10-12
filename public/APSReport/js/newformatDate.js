@@ -95,6 +95,15 @@ function formatSevenDate() {
 	let day = zero(newDate.getDate());
 	return year + "-" + month + "-" + day;
 }
+function formatAddSevenDate() {
+	let date = new Date();
+	let newDate = date.setDate(date.getDate() + 6);
+	newDate = new Date(newDate)
+	let year = newDate.getFullYear();
+	let month = zero(newDate.getMonth() + 1);
+	let day = zero(newDate.getDate());
+	return year + "-" + month + "-" + day;
+}
 
 
 function formatMonthDate() {
@@ -168,5 +177,6 @@ export default {
 	formatTime,
 	formatLastMonthDate,
 	formatTommorowFiveDate,
-	getTodayTime
+	getTodayTime,
+	formatAddSevenDate
 }
