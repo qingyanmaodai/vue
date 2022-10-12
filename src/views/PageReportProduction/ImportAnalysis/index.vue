@@ -465,15 +465,15 @@ export default {
         colHeaderStyle.font(
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
         );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
 
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
@@ -523,7 +523,7 @@ export default {
      // 单元格样式控制
      cellStyle({ row, column }) {
       //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
-      if (row['Remark1']&&row["Remark1"] == "错误") {
+      if (row['DBResult']&&row["DBResult"] == "错误") {
         if(column.property === "Remark1" || column.property === 'AvailableQty'){
           return {  
           color: "red",

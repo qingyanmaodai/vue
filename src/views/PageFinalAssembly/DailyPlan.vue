@@ -762,7 +762,7 @@
             rowSheet.backColor("#A0CFFF");
           }
         })
-
+  
 
 
       var insertRowsCopyStyle = {
