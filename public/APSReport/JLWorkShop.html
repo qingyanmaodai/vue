@@ -1564,7 +1564,7 @@
             .then(async(res) =>{
               if (res.result) {
                   if(res.data.length){
-                    this.handleTree(res.data)
+                    await this.handleTree(res.data)
                     console.log('OrganizeIDsList',this.OrganizeIDsList)
                   }
               }
