@@ -224,6 +224,15 @@ export default {
           Icon: "",
           Size: "small",
         },
+        {
+          ButtonCode: "sync",
+          BtnName: "同步供需平衡表",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncBalance",
+          Icon: "",
+        },
       ],
       // 表头添加动态按钮
       parmsBtn2: [
@@ -586,6 +595,29 @@ export default {
     async syncSave() {
       this.adminLoading = true;
       let res = await GetSearch("", "/APSAPI/PushDeliveryData");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
+    },
+    // 同步供需平衡表
+    async syncBalance() {
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/GetZAPSF001");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {

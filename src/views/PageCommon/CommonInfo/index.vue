@@ -166,6 +166,15 @@ export default {
           Size: "small",
           Params: { dataName: "delData" },
         },
+        {
+          ButtonCode: "sync",
+          BtnName: "同步供需平衡表",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncBalance",
+          Icon: "",
+        },
       ],
       tableData: [[]],
       tableColumns: [[]],
@@ -259,6 +268,29 @@ export default {
     }, 450);
   },
   methods: {
+    // 同步供需平衡表
+    async syncBalance() {
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/GetZAPSF001");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
+    },
     // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
