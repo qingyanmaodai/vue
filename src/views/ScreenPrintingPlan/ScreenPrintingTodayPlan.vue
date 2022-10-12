@@ -27,7 +27,7 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor">SysID:6734
+              <span @click="toPageSetting" class="primaryColor cursor">SysID:7945
               </span>
             </div>
             <div class="flex">
@@ -176,7 +176,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: 6734,
+          sysID: 7945,
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -537,7 +537,7 @@
         // 获取表头数据
         async getTableHeader() {
           let IDs = [{
-            ID: 6734
+            ID: 7945
           }];
           let res = await GetHeader(IDs);
           const {
@@ -592,7 +592,7 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 6734;
+          form["dicID"] = 7945;
           let res = await GetSearchData(form);
   
           const {
