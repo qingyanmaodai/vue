@@ -585,6 +585,7 @@ export default {
           let list = [
             {
               rowNum: _.uniqueId("rowNum_"), //随机生成数
+              Status:1
             },
           ];
           this.tableData[this.tagRemark] = [
