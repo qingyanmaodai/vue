@@ -536,7 +536,8 @@
             _this.weeksList = []
 						if (res.result) {
               _this.weeksDay = []
-              _this.weeksList = res.data
+              if(res.data.length){
+                _this.weeksList = res.data.filter(x=>{return x.Code})
               let num = 0
               if(_this.weeksList.length){
                 for(let key in _this.weeksList[0]){
@@ -553,6 +554,8 @@
                   }
                 }
               }
+              }
+              
 						}
 						else {
 							_this.$message({
