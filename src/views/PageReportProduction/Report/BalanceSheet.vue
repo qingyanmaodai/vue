@@ -159,7 +159,7 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       sysID: [{ ID: 7968 }],
       spread: null, //excel初始

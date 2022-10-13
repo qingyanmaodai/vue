@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!-- 七部日计划 -->
 <template>
   <div
     class="container"
@@ -51,7 +51,7 @@
               <span
                 @click="toPageSetting"
                 class="primaryColor cursor"
-              >SysID:7954
+              >SysID:sysID[0].ID
               </span>
             </div>
             <div class="flex">
@@ -145,12 +145,12 @@ export default {
           Icon: "",
           Size: "small",
         },
-               {
-          ButtonCode: "SyncSAP",
-          BtnName: "同步SAP",
+        {
+          ButtonCode: "save",
+          BtnName: "暂停",
           isLoading: false,
-          Methods: "updateSAP",
-          Type: "danger",
+          Methods: "suspend",
+          Type: "warning",
           Icon: "",
           Size: "small",
           Params: { dataName: "selectionData" },
@@ -160,6 +160,16 @@ export default {
           BtnName: "退回",
           isLoading: false,
           Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData" },
+        },
+        {
+          ButtonCode: "SyncSAP",
+          BtnName: "同步SAP",
+          isLoading: false,
+          Methods: "updateSAP",
           Type: "danger",
           Icon: "",
           Size: "small",
@@ -187,12 +197,17 @@ export default {
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: 7954,
+      sysID: [{ ID: 7954 }],
       spread: null,
       adminLoading: false,
       checkBoxCellTypeLine: "",
-      isOpen: true,
+     isOpen: true,
       selectionData: [[]],
+          NoWorkHour: [],
+      LineViewSort: [],
+      spread: null,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   watch: {},
@@ -202,10 +217,17 @@ export default {
     this.judgeBtn();
     this.getTableHeader();
 
-      setInterval(()=>{
-        this.spread.refresh();//重新定位宽高度
+    //   setInterval(()=>{
+    //     this.spread.refresh();//重新定位宽高度
 
-    },2000);
+    // },10000);
+  },
+    activated()
+  {
+    if(this.spread)
+    {
+      this.spread.refresh();
+    }
   },
   computed: {
     ...mapState({
@@ -216,8 +238,75 @@ export default {
     // setTimeout(() => {
     //   this.setHeight();
     // }, 300);
+    this.keyDown()
   },
   methods: {
+    // 监听键盘
+keyDown() {
+    document.onkeydown = (e) => {
+        //事件对象兼容
+        let e1 = e || event || window.event || arguments.callee.caller.arguments[0]
+
+ if(e.ctrlKey&&e.keyCode==83)
+{ 
+ e.preventDefault();
+ e.returnValue=false;
+ 
+ this.dataSaveDay()
+ return false;
+}
+       
+    }
+},
+ updateSAP(remarkTb, index, parms) {
+    let res = null;
+   
+    this.getSelectionData();
+    let newData = [];
+    if (parms && parms.dataName) {
+      if (this[parms.dataName][remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this[parms.dataName][remarkTb].forEach((x) => {
+          let obj = x;
+ 
+          newData.push(obj);
+        });
+      }
+    } else {
+      this.tableData[remarkTb].forEach((y) => {
+        let obj2 = y;
+  
+        newData.push(obj2);
+      });
+    }
+    this.$confirm("确定要同步的【" + newData.length + "】数据吗，如果已经同步过则无法再次同步")
+      .then(async (_) => {
+         this.adminLoading = true;
+  
+    let res = await    GetSearch(newData, "/APSAPI/UpdateERPInfo");
+    const { result, data, count, msg } = res.data;
+     
+    if (result) {
+     
+      this.adminLoading = false;
+      this.$message({
+        message: msg,
+        type: "success",
+        dangerouslyUseHTMLString: true,
+      });
+    } else {
+      this.adminLoading = false;
+      this.$message({
+        message: msg,
+        type: "error",
+        dangerouslyUseHTMLString: true,
+      });
+    }
+      })
+      .catch((_) => {});
+  },
     initSpread: function (spread) {
       this.spread = spread;
     },
@@ -331,7 +420,7 @@ export default {
      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
-    async dataDel(remarkTb, index, parms) {
+   async dataDel(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
       let newData = [];
@@ -454,7 +543,7 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 7954 }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -497,7 +586,8 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = 7954;
+      form["dicID"] = this.sysID[remarkTb].ID;
+          form["ControlID"]=this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
    
       const { result, data, count, msg } = res.data;
@@ -567,38 +657,20 @@ export default {
       }
 
       //  colInfos.unshift(checkbox);
-      var row = sheet.getRange(
-        0,
-        -1,
-        1,
-        -1,
-        GC.Spread.Sheets.SheetArea.colHeader
-      );
-      row.backColor("#f3f3f3");
-      row.foreColor("#000000d9");
-      row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
-      var defaultStyle = new GC.Spread.Sheets.Style();
+   var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
         "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
       defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-        "1px solid #CCCCCC",
-        GC.Spread.Sheets.LineStyle.min
-      );
-      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-        "1px solid #CCCCCC",
-        GC.Spread.Sheets.LineStyle.min
-      );
-      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-        "1px solid transparent",
-        GC.Spread.Sheets.LineStyle.min
-      );
-      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-        "1px solid transparent",
-        GC.Spread.Sheets.LineStyle.min
-      );
+    defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
+
+
+ 
       // 冻结第一列
     
       sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
@@ -606,31 +678,91 @@ export default {
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
       this.spread.options.tabStripVisible = false;//是否显示表单标签
-      let colindex=0;
-      colInfos.forEach(m=>{
-    
-        if(m.name=="Capacity")
+      
+
+ let colindex=0;
+      for(let m of colInfos)
+      {
+   if(m.name=="Capacity")
         {
-     var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
- 
-    row.foreColor("red");
-    return;
+        var rowSheet = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+      rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+     rowSheet.foreColor("red");
+      break;
         }
         colindex++;
+      }
+   
 
-      });
+
 this.tableData[0].forEach((row,index)=>{
  
-if(!row["Code"])
+    var rowSheet = sheet.getRange(index, 0, 1, colindex, GC.Spread.Sheets.SheetArea.viewport);
+     var rowSheet2 = sheet.getRange(index, colindex, 1, colInfos.length-colindex, GC.Spread.Sheets.SheetArea.viewport);
+if(row["Code"]==null)
 {
-       var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
-
-    row.backColor("#019fde");
-     row.foreColor("white");
+    
+ 
+     rowSheet.backColor("#A0CFFF");
+     rowSheet.foreColor("balck");
+        rowSheet2.backColor("#A0CFFF");
+     rowSheet2.foreColor("balck");
+     
 }
+else if(row["MFGOrganizeID"]===162)
+{
+     // row.backColor();
+     rowSheet.backColor("#FFFF00");
+       rowSheet.foreColor("black");
+        rowSheet2.backColor("#FFFF00");
+      
+}
+else 
+{
+     // row.backColor();
+        rowSheet.foreColor("black");
+       rowSheet.backColor("#FFFFFF");
+       rowSheet.foreColor("black");
+        rowSheet2.backColor("#FFFFFF");
+}
+  let cellIndex=0;
+     this.tableColumns[0].forEach((m) => {
+        //行，start,end
+        if (m.DataType=="bit"&&m.isEdit) {
+         
+
+            
+         var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+cellType.caption("");
+cellType.textTrue("");
+cellType.textFalse("");
+cellType.textIndeterminate("");
+cellType.textAlign(GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center);
+cellType.isThreeState(false);
+sheet.getCell(index, cellIndex).cellType(cellType);
+        }  
+ cellIndex++;
+      });
+
+  
 });
+ 
+     
+ 
+     
       let cellIndex = 0;
+        let viewSortIndex=0;//排序的索引
+      let lineIDIndex=0
       this.tableColumns[0].forEach((m) => {
+        //行，start,end
+        if(m.prop=="ViewSort")
+        {
+          viewSortIndex=cellIndex;
+        }
+        if(m.prop=="LineID")
+        {
+          lineIDIndex=cellIndex;
+        }
         //行，start,end
         if (m.isEdit) {
           sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -641,16 +773,213 @@ if(!row["Code"])
           );
           //cell.foreColor("#2a06ecd9");
         } else {
-          // var cell = sheet.getCell(
-          //   -1,
-          //   cellIndex,
-          //   GC.Spread.Sheets.SheetArea.viewport
-          // );
-          // cell.foreColor("gray");
+          var cell = sheet.getCell(
+            -1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+            cell.foreColor("gray");
         }
 
         cellIndex++;
       });
+             sheet.options.protectionOptions.allowResizeColumns= true;
+//sheet.options.isProtected = true;
+
+
+
+
+
+
+
+
+
+
+
+
+      var insertRowsCopyStyle = {
+        canUndo: true,
+        name: "insertRowsCopyStyle",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            sheet.suspendPaint();
+            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+            // console.log(_this.sheetSelectRows);
+
+            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+            //删除旧行
+            if (_this.sheetSelectObj.start > options.activeRow) {
+              //说明从下面插入上面
+              sheet.copyTo(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+           
+          //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                _this.sheetSelectObj.count
+              );
+              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+            } else {
+              //从上面往下面插入
+              sheet.copyTo(
+                _this.sheetSelectObj.start,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+            //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start,
+                _this.sheetSelectObj.count
+              );
+              
+            }
+            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+ 
+            let lineID=_this.sheetSelectRows[0][lineIDIndex]
+            let isFind=false;
+            let viewSort=1;
+   
+
+            for(var i=0;i<count;i++ )
+            {
+ 
+              if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
+              {
+                  isFind=true;      
+                
+              }
+    if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+              {
+               
+                break;
+              }
+              if(isFind)
+              {
+                sheet.setValue(i,viewSortIndex,viewSort);
+                viewSort++;
+              }
+             
+                
+            }
+      
+            // Commands.startTransaction(context, options);
+
+            // sheet.suspendPaint();
+
+            // var beforeRowCount = 0;
+
+            //  sheet.suspendPaint();
+
+            // Commands.endTransaction(context, options);
+            sheet.resumePaint();
+
+            return true;
+          }
+        },
+      };
+
+      //修改剪切,已经不用
+      var insertRowsCut = {
+        canUndo: true,
+        name: "insertRowsCut",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            //  console.log(options);
+            context.commandManager().execute(options);
+            this.sheetSelectRows = sheet.getArray(
+              options.selections[0].row,
+              0,
+              options.selections[0].rowCount,
+              sheet.getColumnCount()
+            );
+            this.sheetSelectObj.start = options.selections[0].row;
+
+            this.sheetSelectObj.count = options.selections[0].rowCount;
+            return true;
+          }
+        },
+      };
+
+
+
+
+
+
+
+
+
+      this.spread
+        .commandManager()
+        .register("insertRowsCopyStyle", insertRowsCopyStyle);
+      //修改剪切
+      this.spread.commandManager().register("insertRowsCut", insertRowsCut);
+
+      function MyContextMenu() {}
+      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+        this.spread
+      );
+      MyContextMenu.prototype.onOpenMenu = function (
+        menuData,
+        itemsDataForShown,
+        hitInfo,
+        spread
+      ) {
+        itemsDataForShown.forEach(function (item, index) {
+          // console.log(item);
+          if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
+            item.command = "insertRowsCopyStyle";
+          }
+          //  else if (item && item.name === "gc.spread.cut") {
+
+          //     item.command = "insertRowsCut";
+          //   }
+        });
+      };
+
+     var contextMenu = new MyContextMenu();
+      this.spread.contextMenu = contextMenu;
+      // 剪贴板事件绑定
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          console.log(sheet.getDataItem(s.row));
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[0].length
+          );
+          _this.sheetSelectObj.start = s.row;
+
+          _this.sheetSelectObj.count = s.rowCount;
+        }
+      );
+
+
+
+
+
 
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
@@ -681,14 +1010,14 @@ if(!row["Code"])
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
        let sheet = this.spread.getActiveSheet();
-       let dataSource=sheet.getDataSource();
+     //  let dataSource=sheet.getDataSource();
       if(val==null)
       {
-        val=0;
+       return;
       }else if(val==0){//输入0不触发自动计算
         return
       }
-      let currentRow = dataSource[rowIndex];
+     let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
       if(currentRow.ID==-1)
       {
         return false;
@@ -760,6 +1089,10 @@ if(!row["Code"])
            sheet.setDataSource(this.tableData[0]);
             return ;
       }
+       if(currentRow[currentlabel]==null)
+ {
+   return;
+ }
       if (
         !currentRow[currentlabel].TotalHours ||
         parseInt(currentRow[currentlabel].TotalHours) <= 0
@@ -906,7 +1239,7 @@ if(!row["Code"])
         );
         this.checkBoxCellTypeLine.items(newData);
         this.checkBoxCellTypeLine.itemHeight(24);
-       // this.formSearchs[0].datas.ControlID="201";
+        //this.formSearchs[0].datas.ControlID="201";
         this.getTableData(this.formSearchs[0].datas, 0);
       } else {
         this.adminLoading = false;
@@ -958,7 +1291,7 @@ if(!row["Code"])
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
-      //this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+     // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       //this.dataSearch(0);
       this.getLineData(data.OrganizeID);
     },
@@ -973,7 +1306,8 @@ if(!row["Code"])
     // 保存日计划
     async dataSaveDay() {
       let sheet = this.spread.getActiveSheet();
-        if(sheet.isEditing())
+       
+  if(sheet.isEditing())
   {
     sheet.endEdit();
   }
@@ -981,6 +1315,13 @@ if(!row["Code"])
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
+          submitData.push(x.item);
+        });
+      }
+      newData =sheet.getInsertRows();
+          if (newData.length != 0) {
+        newData.forEach((x) => {
+          x.item["dicID"]=this.sysID;
           submitData.push(x.item);
         });
       }
@@ -1008,6 +1349,36 @@ if(!row["Code"])
           dangerouslyUseHTMLString: true,
         });
       }
+    },
+    async suspend(remarkTb, index, parms) {
+      let res = null;
+      this.getSelectionData();
+      let newData = [];
+
+      this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
+        .then((_) => {
+        if (parms && parms.dataName) {
+        if (this[parms.dataName][remarkTb].length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+          return;
+        } else {
+          this[parms.dataName][remarkTb].forEach((x) => {
+            let obj = x;
+            obj["ProductionStatus"] = 24
+            newData.push(obj);
+          });
+        }
+      } else {
+        this.tableData[remarkTb].forEach((y) => {
+          let obj2 = y;
+         obj["ProductionStatus"] = 24
+          newData.push(obj2);
+        });
+      }
+           this.adminLoading = true;
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
     // 下拉选择事件
     handleCommand(val) {
