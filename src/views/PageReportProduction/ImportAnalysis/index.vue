@@ -740,6 +740,7 @@ export default {
         let rowNo = 0// excel行号
         let propName = ''
         let split = []//存储需求到料日期过期信息
+        let groupList = []
         importData[0].sheet.forEach((m,y) => {
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
@@ -778,13 +779,13 @@ export default {
                 obj["Account"] = _this.$store.getters.userInfo.Account;
                 obj["row"] = m.__rowNum__;
                 // 需要使用...obj 不然值回写有问题
+                
                 DataList.push({...obj});
                 break
               }
             }
-            
-            obj["合并"] = m['ResourceNO']+m['LineNum']+m['ItemCode']
-            console.log('obj["合并"]',obj["合并"])
+            // console.log('m',m)
+           
           }
           // 以下为固定入参
           if (!isDate) {
@@ -792,10 +793,35 @@ export default {
             obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
+            console.log('obj',obj)
+           
+            // if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+            //   let list = obj["合并"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+            //   groupList.push(list)
+            //   // objValue和srcValue，这两者为mergeWith（A，B，func）中，A和B的某个Key对应的Value
+            //   // 具体的合并逻辑则交给该函数来执行
+            //   function customizer(objValue, srcValue) {
+            //     console.log(objValue, srcValue);
+            //       // 如果是数组，我们将元素进行聚合
+            //       if (isArray(objValue)) {
+            //           return objValue.concat(srcValue);
+            //       } else if (typeof objValue === 'object' && typeof srcValue === 'object') {
+            //           // 若是object类型的对象，我们进行递归
+            //           return _.mergeWith(objValue, srcValue, customizer)
+            //       } else {
+            //           // 否则，单纯的将值进行累加
+            //           return objValue + srcValue
+            //       }
+            //   }
+            //   const res = _.mergeWith(obj, obj, customizer)
+            //   console.log('res',res)
+            // }
+            console.log('groupList',groupList)
+            console.log('obj["合并"]',obj["合并"])
             // 需要使用...obj 不然值回写有问题
             DataList.push({...obj});
           }
-          
+         
         });
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
