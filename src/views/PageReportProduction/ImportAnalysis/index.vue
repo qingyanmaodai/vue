@@ -737,12 +737,9 @@ export default {
         let isDate = false;
         this.colAdd = [];
         let obj = {};
-        let errorDate = false
-        let timeoutStatus = false
         let rowNo = 0// excel行号
         let propName = ''
         let split = []//存储需求到料日期过期信息
-        let errorDateList = []//存储日期格式错误信息
         importData[0].sheet.forEach((m,y) => {
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
@@ -751,43 +748,26 @@ export default {
               if (item.label === key) {
                 if (item.DataType === "datetime") {
                   if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
-                    errorDate = true
                     propName = key
                     rowNo =Number(m.__rowNum__)+1
-                    errorDateList.push(`第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`)
+                    // 异常提示
+                    split.push(`第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`)
                   }else{
                     obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
                     : "";
                   }
                   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-
                   // 判断需求到料日期是否大于今天
-                console.log('formatDates.formatTodayDate()',formatDates.formatTodayDate())
-                console.log('fitem.prop',item.prop)
-                console.log('obj[item.prop]',obj[item.prop])
                 if(item.prop==='DemandToDay'&&obj[item.prop]<formatDates.formatTodayDate()){
-                  // this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
-                  timeoutStatus = true
                     propName = key
                     rowNo =Number(m.__rowNum__)+1
-                    // break
-                    // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
-                    split.push(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`)
-            
-          // this.$Modal.warning({
-          //   title: '导入异常信息',
-          //   content: txt,
-          // })
-          
-                    return
-
+                    // 异常提示
+                    split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
                 }
                 } else {
                   obj[item.prop] = m[key];
                 }
-                
-                
               }
                else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
                 // 列为日期的格式
@@ -795,12 +775,6 @@ export default {
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
                 obj['OweQty'] = m[key]
                 obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                // obj["StartDate"] = _this.machineCycle.length
-                //     ? _this.machineCycle[0]
-                //     : "",
-                // obj["EndDate"] = _this.machineCycle.length
-                //       ? _this.machineCycle[1]
-                //       : "";
                 obj["Account"] = _this.$store.getters.userInfo.Account;
                 obj["row"] = m.__rowNum__;
                 // 需要使用...obj 不然值回写有问题
@@ -809,23 +783,21 @@ export default {
               }
             }
             
+            obj["合并"] = m['ResourceNO']+m['LineNum']+m['ItemCode']
+            console.log('obj["合并"]',obj["合并"])
           }
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            // (obj["StartDate"] = _this.machineCycle.length
-            //   ? _this.machineCycle[0]
-            //   : ""),
-             obj["EndDate"] =_this.machineCycle;
+            obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
-            DataList.push(obj);
+            // 需要使用...obj 不然值回写有问题
+            DataList.push({...obj});
           }
+          
         });
-        
         // 必填校验
-        let requiredList = []
-        // let requiredStatus = false
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
           for (let i = 0; i < DataList.length; i++) {
@@ -843,35 +815,16 @@ export default {
                   this.formSearchs[this.tagRemark].required[x]["prop"]
                 ]===''
               ) {
-                console.log('row',DataList[i]['row'])
                 rowNo = Number(DataList[i]['row'])+1
-                // requiredStatus = true
-                requiredList.push(`第${rowNo}行,【${this.formSearchs[this.tagRemark].required[x]["label"]}】不能为空，导入失败，请填写`)
-                // this.$message.error(
-                //   `第${rowNo}行,【${
-                //     this.formSearchs[this.tagRemark].required[x]["label"]
-                //   }】不能为空，请填写`
-                // );
+                // 异常提示
+                split.push(`第${rowNo}行,【${this.formSearchs[this.tagRemark].required[x]["label"]}】不能为空，导入失败，请填写`)
                 this.adminLoading = false;
-                break
-                // return;
               }
             }
           }
         }
-        if(errorDate){//日期格式错误
-          this.adminLoading = false;
-          // this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
-          let txt = ''
-          errorDateList.map((value, index, array) => {
-            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
-          })
-          this.$alert(txt,  {
-            dangerouslyUseHTMLString: true,
-            title:'导入异常信息!',
-          });
-          return;
-        }else if(timeoutStatus){//日期延期
+        console.log('DataList123',DataList) 
+        if(split.length){//必填校验失败
           this.adminLoading = false;
           let txt = ''
           split.map((value, index, array) => {
@@ -880,21 +833,8 @@ export default {
           this.$alert(txt,  {
             dangerouslyUseHTMLString: true,
             title:'导入异常信息!',
+            customClass: 'message-width'
           });
-          // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
-          return;
-        }else if(requiredList.length){//必填校验失败
-          
-          this.adminLoading = false;
-          let txt = ''
-          requiredList.map((value, index, array) => {
-            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
-          })
-          this.$alert(txt,  {
-            dangerouslyUseHTMLString: true,
-            title:'导入异常信息!',
-          });
-          // this.$message.error(`第${rowNo}行,【${propName}】不能小于今天，导入失败，请检查！`);
           return;
         }
         console.log('DataList',DataList)
@@ -1030,3 +970,8 @@ export default {
   },
 };
 </script>
+<style>
+.message-width{
+  width:400px
+}
+</style>
