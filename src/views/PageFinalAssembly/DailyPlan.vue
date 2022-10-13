@@ -709,7 +709,7 @@
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
         // 冻结第一列
 
-        sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 
         sheet.setDataSource(this.tableData[0]);
         sheet.bindColumns(colInfos);
