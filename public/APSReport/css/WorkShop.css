@@ -74,8 +74,8 @@
     height: 20px; */
     display: inline-block;
     color: rgba(255, 255, 255, 1);
-    font-size: 20px;
-    font-family: PingFangSC-Semibold;
+    font-size: 24px;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 20px;
     text-align: left;
@@ -88,13 +88,15 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 30px;
-    letter-spacing: 2.4375px;
-    font-family: PingFangSC-Semibold;
+    /* letter-spacing: 2.4375px; */
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
-    line-height: 42px;
-    display: flex;
-    align-items: center;
-    /* text-align: right; */
+    /* line-height: 42px; */
+    width: 450px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto;
+    text-align: center;
   }
   
   .group45 {
@@ -156,7 +158,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     /* text-align: right; */
@@ -175,7 +177,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -189,7 +191,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -225,7 +227,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -246,7 +248,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -260,7 +262,7 @@
     display: inline-block;
     color: rgba(255, 46, 0, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -273,7 +275,7 @@
     display: inline-block;
     color: rgba(255, 46, 0, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -286,7 +288,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px; */
     text-align: center;
@@ -314,7 +316,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -336,7 +338,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -372,7 +374,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -394,7 +396,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -412,7 +414,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 26px;
     text-align: center;
@@ -478,7 +480,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 15px;
     text-align: left;
@@ -491,7 +493,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 17px;
     text-align: center; */
@@ -509,7 +511,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: left;
   }
@@ -616,7 +618,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: center;
     margin-left: 12px;
@@ -677,7 +679,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -689,7 +691,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -721,7 +723,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -740,7 +742,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -752,7 +754,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -777,7 +779,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -797,7 +799,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -816,7 +818,7 @@
     display: inline-block;
     color: rgba(255, 46, 0, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -828,7 +830,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 31px;
     text-align: right;
@@ -853,7 +855,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -873,7 +875,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -890,7 +892,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -916,11 +918,11 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     /* text-align: right; */
-    margin-left: 18px;
+    margin-left: 35px;
   }
   
   .main3 {
@@ -948,10 +950,10 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
-    text-align: left; */
+    /* text-align: left;  */
   }
   
   .word10 {
@@ -960,7 +962,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -973,11 +975,11 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
-    white-space: nowrap;
+    /* font-family: PingFangSC-Regular; */
+    /* white-space: nowrap;
     line-height: 17px;
     text-align: right;
-    margin: 2px 0 0 39px; */
+    margin: 2px 0 0 39px; */ 
   }
   
   .info10 {
@@ -986,11 +988,11 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
-    white-space: nowrap;
+    /* font-family: PingFangSC-Regular; */
+    /* white-space: nowrap;
     line-height: 17px;
     text-align: right;
-    margin: 2px 0 0 21px; */
+    margin: 2px 0 0 21px;  */
   }
   
   /* .word12 {
@@ -1005,14 +1007,14 @@
     text-align: right;
     margin: 2px 0 0 39px;
   }
-  
+   */
   .word13 {
     width: 18px;
     height: 17px;
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1025,7 +1027,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1038,7 +1040,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1051,7 +1053,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1064,7 +1066,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1090,7 +1092,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1103,7 +1105,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -1156,7 +1158,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1171,7 +1173,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1186,7 +1188,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1201,7 +1203,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1216,7 +1218,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1231,7 +1233,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1246,7 +1248,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1261,7 +1263,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1276,7 +1278,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1291,7 +1293,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1306,7 +1308,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1321,7 +1323,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -1359,10 +1361,10 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 25px;
-    margin-left: 10px;
+    margin-left: 35px;
     /* text-align: center; */
   }
   
@@ -1385,7 +1387,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -1404,7 +1406,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -1429,7 +1431,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -1447,7 +1449,7 @@
     display: inline-block;
     color: rgba(23, 219, 148, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1459,7 +1461,7 @@
     display: inline-block;
     color: rgba(23, 219, 148, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1472,7 +1474,7 @@
     display: inline-block;
     color: rgba(23, 219, 148, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1522,7 +1524,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -1534,7 +1536,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -1546,7 +1548,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -1598,7 +1600,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1614,7 +1616,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1630,7 +1632,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1646,7 +1648,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1667,7 +1669,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1698,7 +1700,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -1728,7 +1730,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 25px;
     /* text-align: right; */
@@ -1746,7 +1748,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 13px;
     text-align: center;
@@ -1765,7 +1767,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -1777,7 +1779,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1790,7 +1792,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1803,7 +1805,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1842,7 +1844,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 14px;
     text-align: left;
     margin-left: 9px;
@@ -1860,7 +1862,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1878,7 +1880,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 13px;
     text-align: center;
@@ -1898,7 +1900,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1911,7 +1913,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1924,7 +1926,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1937,7 +1939,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -1962,7 +1964,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 13px;
     text-align: center;
@@ -1974,7 +1976,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 13px;
     text-align: center;
@@ -1987,7 +1989,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 9px;
     text-align: center;
@@ -2000,7 +2002,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 9px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 9px;
     text-align: center;
@@ -2050,7 +2052,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2062,7 +2064,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2075,7 +2077,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2088,7 +2090,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2101,7 +2103,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2114,7 +2116,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2127,7 +2129,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2140,7 +2142,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2153,7 +2155,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2166,7 +2168,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2179,7 +2181,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2192,7 +2194,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2205,7 +2207,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2218,7 +2220,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -2383,7 +2385,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2399,7 +2401,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2415,7 +2417,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2489,7 +2491,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2547,7 +2549,7 @@
   .block58 {
     /* width: 144px; */
     height: 25px;
-    margin-left: 4px;
+    margin-left: 45px;
   }
   
   .txt44 {
@@ -2556,7 +2558,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 25px;
     /* text-align: right; */
@@ -2580,7 +2582,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -2592,7 +2594,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2605,7 +2607,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2635,7 +2637,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2659,7 +2661,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2672,7 +2674,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2702,7 +2704,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2726,7 +2728,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2739,7 +2741,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2769,7 +2771,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2799,7 +2801,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2812,7 +2814,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2831,7 +2833,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2844,7 +2846,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2874,7 +2876,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2909,7 +2911,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: left;
@@ -2928,7 +2930,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2953,7 +2955,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -2971,7 +2973,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2983,7 +2985,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -2996,7 +2998,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -3026,7 +3028,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -3050,7 +3052,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -3074,7 +3076,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -3098,7 +3100,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3110,7 +3112,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3123,7 +3125,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3136,7 +3138,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3149,7 +3151,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3162,7 +3164,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3175,7 +3177,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3279,7 +3281,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 14px;
     text-align: left;
     margin: 6px 0 0 10px;
@@ -3295,7 +3297,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: center;
@@ -3363,7 +3365,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -3381,7 +3383,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: left;
@@ -3420,7 +3422,7 @@
     display: inline-block;
     color: rgba(26, 222, 151, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px;
     text-align: right; */
@@ -3432,7 +3434,7 @@
     display: inline-block;
     color: rgba(235, 136, 136, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px;
     text-align: right; */
@@ -3450,7 +3452,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3462,7 +3464,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3484,7 +3486,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3520,7 +3522,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 24px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 29px;
     text-align: right;
@@ -3581,7 +3583,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: left;
@@ -3610,7 +3612,7 @@
     display: inline-block;
     color: rgba(92, 207, 255, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px;
     text-align: right; */
@@ -3622,7 +3624,7 @@
     display: inline-block;
     color: rgba(255, 209, 139, 1);
     font-size: 26px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 31px;
     text-align: right; */
@@ -3640,7 +3642,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 18px;
     text-align: right; */
@@ -3652,7 +3654,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     /* line-height: 18px;
     text-align: right; */
@@ -3673,7 +3675,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3709,7 +3711,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 24px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 29px;
     text-align: right;
@@ -3744,7 +3746,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -3770,14 +3772,14 @@
   
   .paragraph10 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word68 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(235, 136, 136, 1);
     line-height: 14px;
   }
@@ -3804,14 +3806,14 @@
   
   .paragraph11 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .txt40 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(26, 222, 151, 1);
     line-height: 14px;
   }
@@ -3835,7 +3837,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -3851,7 +3853,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -3888,14 +3890,14 @@
   
   .infoBox9 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word70 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(34, 144, 246, 1);
     line-height: 14px;
   }
@@ -3913,14 +3915,14 @@
   
   .paragraph12 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word71 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(246, 187, 34, 1);
     line-height: 14px;
   }
@@ -3998,14 +4000,14 @@
   
   .paragraph10 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word68 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(235, 136, 136, 1);
     line-height: 14px;
   }
@@ -4032,14 +4034,14 @@
   
   .paragraph11 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .txt40 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(26, 222, 151, 1);
     line-height: 14px;
   }
@@ -4063,7 +4065,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -4079,7 +4081,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -4116,14 +4118,14 @@
   
   .infoBox9 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word70 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(34, 144, 246, 1);
     line-height: 14px;
   }
@@ -4141,14 +4143,14 @@
   
   .paragraph12 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word71 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(246, 187, 34, 1);
     line-height: 14px;
   }
@@ -4226,14 +4228,14 @@
   
   .paragraph10 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word68 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(235, 136, 136, 1);
     line-height: 14px;
   }
@@ -4260,14 +4262,14 @@
   
   .paragraph11 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .txt40 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(26, 222, 151, 1);
     line-height: 14px;
   }
@@ -4291,7 +4293,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
     text-align: right;
@@ -4307,7 +4309,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 15px;
     text-align: right;
@@ -4344,14 +4346,14 @@
   
   .infoBox9 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word70 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(34, 144, 246, 1);
     line-height: 14px;
   }
@@ -4369,14 +4371,14 @@
   
   .paragraph12 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(255, 255, 255, 1);
     line-height: 14px;
   }
   
   .word71 {
     font-size: 12px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     color: rgba(246, 187, 34, 1);
     line-height: 14px;
   }
@@ -4393,7 +4395,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: center;
@@ -4412,7 +4414,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -4424,7 +4426,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -4437,7 +4439,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -4450,7 +4452,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 14px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 17px;
     text-align: right;
@@ -4500,7 +4502,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -4546,7 +4548,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -4568,7 +4570,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -4590,7 +4592,7 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 22px;
     text-align: right;
@@ -4616,10 +4618,10 @@
     display: inline-block;
     color: rgba(46, 185, 214, 1);
     font-size: 16px;
-    font-family: PingFangSC-Semibold;
+    /* font-family: PingFangSC-Semibold; */
     white-space: nowrap;
     line-height: 35px;
-    margin-left: 60px;
+    margin-left: 40px;
     /* text-align: right; */
     /* margin: 7px 0 0 27px; */
   }
@@ -4634,7 +4636,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -4649,7 +4651,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -4664,7 +4666,7 @@
     display: inline-block;
     color: rgba(255, 255, 255, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
@@ -4679,7 +4681,7 @@
     display: inline-block;
     color: rgba(255, 212, 62, 1);
     font-size: 15px;
-    font-family: PingFangSC-Regular;
+    /* font-family: PingFangSC-Regular; */
     line-height: 17px;
     text-align: right;
   }
