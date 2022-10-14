@@ -1000,9 +1000,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-</style>
-<style lang="less">
+<style lang="scss">
   .message-width{
     width:500px ;
     height: 90%;
