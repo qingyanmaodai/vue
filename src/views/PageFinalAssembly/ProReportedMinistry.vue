@@ -108,15 +108,21 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+          },
           forms: [],
         },
       ],
@@ -309,19 +315,19 @@ export default {
     },
     // 保存
     async dataSave(remarkTb) {
-      if (this.tableData[0].length == 0) {
+      if (this.tableData[remarkTb].length == 0) {
         this.$message.error("暂无可保存的数据！");
       } else {
-        let flag = this.tableData[0].map((a) => {
+        let flag = this.tableData[remarkTb].map((a) => {
           !a.ProducedQty || parseFloat(a.ProducedQty == 0);
         }); // 判断必填报工数
         if (flag.length == 0) {
-          for (let item of this.tableData[0].values()) {
+          for (let item of this.tableData[remarkTb].values()) {
             item["dicID"] = 5586;
             item["ProducedDate"] = item.PlanDay;
           }
           console.log(this.tableData[0]);
-          let res = await SaveData(this.tableData[0]);
+          let res = await SaveData(this.tableData[remarkTb]);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.$set(this.tableData, remarkTb, data);
@@ -449,6 +455,7 @@ export default {
         if (res.data.result) {
           this.dataSearch(0);
           this.dataSearch(1);
+          this.selectionData[0] = []
         } else {
           this.$message.error(res.data.msg);
         }
