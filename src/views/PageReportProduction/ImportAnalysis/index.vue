@@ -766,7 +766,13 @@ export default {
                     // 异常提示
                     split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
                 }
-                } else {
+                } else if(item.prop==='OweQty') {
+                  if(m[key]>0){//导入欠料数大于0才导入
+                    obj[item.prop] = m[key];
+                  }else{
+                    return
+                  }
+                }else{
                   obj[item.prop] = m[key];
                 }
               }
@@ -778,14 +784,15 @@ export default {
                 obj["dicID"] = _this.sysID[_this.tagRemark].ID;
                 obj["Account"] = _this.$store.getters.userInfo.Account;
                 obj["row"] = m.__rowNum__;
+                if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+                  obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+                  obj["Sum"] = 0
+            }
                 // 需要使用...obj 不然值回写有问题
-                
                 DataList.push({...obj});
                 break
               }
             }
-            // console.log('m',m)
-           
           }
           // 以下为固定入参
           if (!isDate) {
@@ -793,36 +800,37 @@ export default {
             obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
-            console.log('obj',obj)
-           
-            // if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-            //   let list = obj["合并"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
-            //   groupList.push(list)
-            //   // objValue和srcValue，这两者为mergeWith（A，B，func）中，A和B的某个Key对应的Value
-            //   // 具体的合并逻辑则交给该函数来执行
-            //   function customizer(objValue, srcValue) {
-            //     console.log(objValue, srcValue);
-            //       // 如果是数组，我们将元素进行聚合
-            //       if (isArray(objValue)) {
-            //           return objValue.concat(srcValue);
-            //       } else if (typeof objValue === 'object' && typeof srcValue === 'object') {
-            //           // 若是object类型的对象，我们进行递归
-            //           return _.mergeWith(objValue, srcValue, customizer)
-            //       } else {
-            //           // 否则，单纯的将值进行累加
-            //           return objValue + srcValue
-            //       }
-            //   }
-            //   const res = _.mergeWith(obj, obj, customizer)
-            //   console.log('res',res)
-            // }
-            console.log('groupList',groupList)
-            console.log('obj["合并"]',obj["合并"])
+            if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+              obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+              obj["Sum"] = 0
+            }
             // 需要使用...obj 不然值回写有问题
             DataList.push({...obj});
           }
          
         });
+        // 过滤掉组合出来空的数据
+          let list = _.filter(DataList,(params) =>{
+            if(params.groupBy){
+              return params
+            }
+          })
+          groupList = _.groupBy(list,'groupBy')
+        //  组合后的数据数量对比资源可用量
+          for(let key in groupList){
+            if(groupList[key].length){
+              let total = 0
+              let AvailableQty =0
+              groupList[key].map((element,x)=>{
+                total += element.OweQty
+                AvailableQty = element.AvailableQty||0
+                if(total>AvailableQty){//同个资源单号+行号+物料编码的欠料数>可用资源抛出异常
+                // 异常提示
+                split.push(`第${Number(element.row)+1}行,物料【${element.ItemCode}】欠数超量，导入失败，请检查！`)
+              }
+              })
+            }
+          }
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
@@ -849,11 +857,10 @@ export default {
             }
           }
         }
-        console.log('DataList123',DataList) 
-        if(split.length){//必填校验失败
+        if(split.length){//异常集合
           this.adminLoading = false;
           let txt = ''
-          split.map((value, index, array) => {
+          split.map((value) => {
             return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
           })
           this.$alert(txt,  {
@@ -863,7 +870,6 @@ export default {
           });
           return;
         }
-        console.log('DataList',DataList)
         this.adminLoading = false
         return
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
@@ -996,8 +1002,16 @@ export default {
   },
 };
 </script>
-<style>
-.message-width{
-  width:400px
+<style lang="less" scoped>
+</style>
+<style lang="less">
+  .message-width{
+    width:500px ;
+    height: 90%;
+    .el-message-box__content{
+      height: 93% ;
+      overflow-y: scroll ;
+    }
 }
+
 </style>
