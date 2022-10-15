@@ -318,20 +318,28 @@ export default {
       if (this.tableData[remarkTb].length == 0) {
         this.$message.error("暂无可保存的数据！");
       } else {
-        let flag = this.tableData[remarkTb].map((a) => {
-          !a.ProducedQty || parseFloat(a.ProducedQty == 0);
-        }); // 判断必填报工数
-        if (flag.length == 0) {
+        let flag = []
+        this.tableData[remarkTb] = [...this.tableData[remarkTb]]
+        for(let i=0;i<this.tableData[remarkTb].length;i++){
+          let a = this.tableData[remarkTb][i]
+          if(!a.ProductionQty){
+            flag.push(a)
+          }else if(parseFloat(a.ProductionQty) == 0){
+            flag.push(a)
+          }
+        } // 判断必填报工数
+        this.$nextTick(async()=>{
+          if (flag.length == 0) {
           for (let item of this.tableData[remarkTb].values()) {
             item["dicID"] = 5586;
             item["ProducedDate"] = item.PlanDay;
           }
-          console.log(this.tableData[0]);
           let res = await SaveData(this.tableData[remarkTb]);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.$set(this.tableData, remarkTb, data);
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+            this.dataSearch(remarkTb)
           } else {
             this.$message({
               message: msg,
@@ -339,7 +347,11 @@ export default {
               dangerouslyUseHTMLString: true,
             });
           }
+        }else{
+          this.$message.error(`报工数不能为空或0,请填写！`)
         }
+        })
+        
       }
     },
     // 获取表头数据

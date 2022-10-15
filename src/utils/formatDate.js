@@ -101,9 +101,20 @@ export const formatNextMonthDate=()=> {
     let day = zero(newDate.getDate());
     return year + "-" + month + "-" + day;
 }
+// 当前时间+30
+function formatOneMonthDate() {
+    let date = new Date();
+    let newDate = date.setDate(date.getDate());
+ 	newDate = new Date(newDate)
+    let year = newDate.getFullYear();
+    let month = zero(newDate.getMonth() + 2);
+    let day = zero(newDate.getDate());
+    return year + "-" + month + "-" + day;
+}
 
 export default {
     formatTodayDate,
     formatTime,
     formatOldDate,
+    formatOneMonthDate
 }
