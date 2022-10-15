@@ -384,6 +384,8 @@
       // 获取表格数据
       async getTableData(params, index) {
         this.$set(this.tableLoading, index, true);
+        params["SDate"] = this.machineCycle.length?this.machineCycle[0]:'';
+        params["Edate"] = this.machineCycle.length?this.machineCycle[1]:'';
         params["rows"] = this.tablePagination[index].pageSize;
         params["page"] = this.tablePagination[index].pageIndex;
         let res = await GetSearchData(params);
