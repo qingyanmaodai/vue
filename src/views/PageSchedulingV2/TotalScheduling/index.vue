@@ -326,7 +326,18 @@ export default {
           Size: "small",
           signName: 1,
           Methods: "setPlan",
-          Params: { ProcessID: "P2208290001" },
+          Params: { },
+          Icon: "",
+        },
+        {
+          ButtonCode: "to_days_plan",
+          BtnName: "带数量转入日计划",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          signName: 1,
+          Methods: "setPlan",
+          Params: { isQty: 1 },
           Icon: "",
         },
 
@@ -459,9 +470,10 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
+            console.log('y',y)
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = x.ButtonName;
+              y.BtnName = y.BtnName||x.ButtonName;
               y.Methods = y.Methods||x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
@@ -1249,6 +1261,7 @@ export default {
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
+      console.log('params',params)
       this.getSelectionData();
       // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
       //   this.$message.error("请选择生产线再转入日计划！");
@@ -1320,9 +1333,11 @@ export default {
           });
         }
         if (okCount > 0) {
+          // 如果接收到参数isQty传入地址栏
+          let url = params&&params.isQty===1?'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1':'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1'
           let res = await GetSearch(
             this.selectionData[remarkTb],
-            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1"
+            url
           );
           const { result, data, count, msg } = res.data;
           if (result) {
