@@ -22,7 +22,7 @@
             <el-col :span="12"
               >
               <span class="title" style="margin-right:10px">{{ title }}</span>
-              <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
+              <!-- <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span> -->
               </el-col
             >
             <el-col :span="12" class="flex_flex_end">
@@ -1322,7 +1322,7 @@ export default {
         if (okCount > 0) {
           let res = await GetSearch(
             this.selectionData[remarkTb],
-            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
+            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1"
           );
           const { result, data, count, msg } = res.data;
           if (result) {
