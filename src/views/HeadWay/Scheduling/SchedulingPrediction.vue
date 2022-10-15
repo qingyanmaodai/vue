@@ -848,9 +848,6 @@
             
             return;
           }
-          console.log('DataList',DataList)
-          this.adminLoading = false;
-          return
           let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast");
           const { result, data, count, msg } = res.data;
           if (result) {
