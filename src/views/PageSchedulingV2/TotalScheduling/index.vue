@@ -470,7 +470,6 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
-            console.log('y',y)
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = y.BtnName||x.ButtonName;
@@ -732,7 +731,6 @@ export default {
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        console.log("this.tableColumns", _this.tableColumns);
         if (_this.tableColumns[_this.tagRemark].length) {
           _this.tableColumns[_this.tagRemark].map((item, index) => {
             if (item.name === "FormRate" && args.col === index) {
@@ -1236,7 +1234,6 @@ export default {
 
     // 保存
     async dataSave(data1, index) {
-      console.log("触发总排期保存");
       if (this.tableData[this.tagRemark].length) {
         this.adminLoading = true;
         let res = await SaveData(this.tableData[this.tagRemark]);
@@ -1261,7 +1258,6 @@ export default {
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
-      console.log('params',params)
       this.getSelectionData();
       // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
       //   this.$message.error("请选择生产线再转入日计划！");
@@ -1270,11 +1266,9 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
-        console.log(this.selectionData[remarkTb])
         this.selectionData[remarkTb].forEach((element) => {
           if (!element.Capacity1&&element.OrderNo) {
             isNoCapacity1 = false;
-            console.log(element.OrderNo)
           }
         });
         // if (!isNoCapacity1) {
