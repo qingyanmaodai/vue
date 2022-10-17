@@ -1,4 +1,4 @@
-<!-- 易事特送货规则 -->
+<!-- 公共excel表格 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -22,8 +22,14 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <span>新增行数：</span>
-                  <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"></el-input-number>
+              <!-- <span>新增行数：</span>
+              <el-input-number
+                v-model.trim="addNum"
+                :min="1"
+                :max="100"
+                :step="10"
+                placeholder="请输入"
+              ></el-input-number> -->
               <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
@@ -47,25 +53,35 @@
             </span>
           </div>
           <div class="flex">
-            <span>共{{tablePagination[tagRemark].pageTotal}}条</span>
-            <!-- <el-pagination
-              background
-              @size-change="(val) => pageSize(val, 0)"
-              :current-page="tablePagination[tagRemark].pageIndex"
-              :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
-              :page-size="tablePagination[tagRemark].pageSize"
-              :total="tablePagination[tagRemark].pageTotal"
-              @current-change="(val) => pageChange(val, 0)"
-              layout="total, sizes, prev, pager, next,jumper"
-            >
-            </el-pagination> -->
+            <div class="flex">
+              <el-pagination
+                background
+                @size-change="val=>pageSize(val,0)"
+                :current-page="tablePagination[tagRemark].pageIndex"
+                :page-sizes="[
+                200,
+                500,
+                1000,
+                2000,
+                3000,
+                5000,
+                10000
+                ]"
+                :page-size="tablePagination[tagRemark].pageSize"
+                :total="tablePagination[tagRemark].pageTotal"
+                @current-change="val=>pageChange(val,0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
+              </el-pagination>
+            </div>
+            <!-- <span>共{{ tablePagination[tagRemark].pageTotal }}条</span> -->
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script>
+  <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -74,17 +90,17 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, SaveData,GetSearch } from "@/api/Common";
 import { mapState } from "vuex";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
-  name: "DeliveryRules",
+  name: "BalanceSheet",
   components: {
     ComSearch,
   },
   data() {
     return {
-      addNum:1,
+      addNum: 1,
       depList: [],
       title: this.$route.meta.title, //表名
       height: "740px",
@@ -101,15 +117,15 @@ export default {
           Icon: "",
           Size: "small",
         },
-        {
-          ButtonCode: "save",
-          BtnName: "新增",
-          isLoading: false,
-          Methods: "addRow",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-        },
+        // {
+        //   ButtonCode: "addRow",
+        //   BtnName: "增行",
+        //   isLoading: false,
+        //   Methods: "addRow",
+        //   Type: "success",
+        //   Icon: "",
+        //   Size: "small",
+        // },
         {
           ButtonCode: "delete",
           BtnName: "删除",
@@ -119,12 +135,22 @@ export default {
           Icon: "",
           Size: "small",
         },
+        {
+          ButtonCode: "syncBalance",
+          BtnName: "同步供需平衡表",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncBalance",
+          Icon: "",
+        },
       ],
       formSearchs: [
         //不同标签页面的查询条件
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
       ],
       tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
@@ -133,16 +159,15 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 8992 }],
+      sysID: [{ ID: 7968 }],
       spread: null, //excel初始
       checkBoxCellTypeRuleType: "",
       checkBoxCellTypeSuplier: "",
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       headerList: [],
       selectionData: [[]],
-      dataSourceDate: {},
     };
   },
   activated() {
@@ -152,6 +177,8 @@ export default {
   },
   created() {
     _this = this;
+    // let routeBtn = _this.$route;
+    // _this.sysID[_this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
     _this.judgeBtn();
     _this.getTableHeader();
   },
@@ -223,12 +250,8 @@ export default {
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
           m.forEach((y) => {
-            // 获取表头需要下拉配置的项
-            if (y.ControlType == "combobox" && y.isEdit && y.DataSourceID) {
-              this.dataSourceDate = {
-                ...this.dataSourceDate,
-                ...{ [y.prop]: [] },
-              };
+            if (y.Required) {
+              this.formSearchs[this.tagRemark].required.push(y);
             }
           });
         });
@@ -240,18 +263,6 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
               this.$set(this.formSearchs[z].datas, [y.prop], "");
-            }
-            // 通过表头对应获取数据源
-            for (let obj in this.dataSourceDate) {
-              if (obj === y.prop) {
-                y.options.map((ele) => {
-                  ele.text = ele.label;
-                });
-                this.dataSourceDate = {
-                  ...this.dataSourceDate,
-                  ...{ [obj]: y.options },
-                };
-              }
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
@@ -304,21 +315,21 @@ export default {
             cellType.editorValueType(
               GC.Spread.Sheets.CellTypes.EditorValueType.value
             );
-            cellType.items(this.dataSourceDate[x.prop]);
+            cellType.items(x.items);
             cellType.editable(true);
-            
+
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               cellType: cellType,
               size: parseInt(x.width),
             });
-          }else if(x.DataType=="varchar"||x.DataType=='nvarchar'){
+          } else if (x.DataType == "varchar" || x.DataType == "nvarchar") {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
-              formatter: '@'//类型为字符串时转为字符串，以免数字开头为0被清情况
+              formatter: "@", //类型为字符串时转为字符串，以免数字开头为0被清情况
             });
           } else {
             colInfos.push({
@@ -338,7 +349,7 @@ export default {
           cellrange
         );
         sheet.rowFilter(hideRowFilter);
-        
+
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -372,7 +383,6 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-        
 
         sheet.setCellType(
           0,
@@ -384,7 +394,7 @@ export default {
           name: "isChecked",
           displayName: "选择",
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 100,
+          size: 80,
         };
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
@@ -473,7 +483,7 @@ export default {
         this.headerList = colInfos;
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         //一定要放在渲染完后
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
@@ -522,20 +532,43 @@ export default {
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 保存
-    async dataSave() {
+    async dataSave(remarkTb) {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
-        newData.forEach((x) => {
-          if (x.item.SuplierCode) {
-            x.item["dicID"] = 8992;
-            submitData.push(x.item);
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          for (let i = 0; i < this.tableData[remarkTb].length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[remarkTb].required.length;
+              x++
+            ) {
+              console.log(
+                "this.formSearchs[remarkTb].required",
+                this.formSearchs[remarkTb].required
+              );
+              if (
+                !this.tableData[remarkTb][i][
+                  this.formSearchs[remarkTb].required[x]["prop"]
+                ]
+              ) {
+                this.$message.error(
+                  `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请维护`
+                );
+                return;
+              }
+            }
           }
+        }
+        newData.forEach((x) => {
+          x.item["dicID"] = this.sysID[this.tagRemark].ID;
+          submitData.push(x.item);
         });
       }
       if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据或供应商代码为空！");
+        this.$message.error("没修改过任何数据或数据为空！");
         return;
       }
       this.adminLoading = true;
@@ -560,33 +593,33 @@ export default {
     },
     // 行新增
     addRow() {
-      if(!this.addNum){
-            this.$message.error('请输入需要添加的行数!')
-            return
-        }
-        
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+
       let spread = this.spread;
       let sheet = spread.getActiveSheet();
       if (sheet) {
         this.adminLoading = true;
-        for(let x=0;x<this.addNum;x++){
+        for (let x = 0; x < this.addNum; x++) {
           let list = [
             {
               rowNum: _.uniqueId("rowNum_"), //随机生成数
             },
           ];
           this.tableData[this.tagRemark] = [
-          ...list,...this.tableData[this.tagRemark],
+            ...list,
+            ...this.tableData[this.tagRemark],
           ];
         }
-        
-        
+
         // this.setData();
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
-        sheet.bindColumns(this.headerList); 
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        sheet.bindColumns(this.headerList);
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         this.adminLoading = false;
       }
     },
@@ -626,8 +659,8 @@ export default {
                       //渲染数据源
                       sheet.setDataSource(this.tableData[this.tagRemark]);
                       //渲染列
-                      sheet.bindColumns(this.headerList); 
-                      this.spread.options.tabStripVisible = false;//是否显示表单标签
+                      sheet.bindColumns(this.headerList);
+                      this.spread.options.tabStripVisible = false; //是否显示表单标签
                     } else {
                       //接口返回的数据删除需要调接口删除
                       isHasID = true;
@@ -673,6 +706,29 @@ export default {
             this.selectionData[this.tagRemark].push(x);
           }
         });
+      }
+    },
+    // 同步供需平衡表
+    async syncBalance() {
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/GetZAPSF001");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
       }
     },
   },

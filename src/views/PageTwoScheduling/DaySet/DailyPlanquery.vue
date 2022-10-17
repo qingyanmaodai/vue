@@ -327,7 +327,8 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.getLineData(this.userInfo.WorkFlowInstanceID);
+        this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
+        // this.getLineData(this.userInfo.WorkFlowInstanceID);
       }
     },
     // 验证数据
@@ -347,7 +348,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["ControlID"] = this.userInfo.WorkFlowInstanceID;
+      // form["ControlID"] = this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
 
       const { result, data, count, msg } = res.data;
@@ -376,10 +377,16 @@ export default {
       })
       this.tableColumns[this.tagRemark].forEach((x,colIndex) => {
         if (x.prop == "LineID") {
+          let checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+        checkBoxCellTypeLine.editorValueType(
+          GC.Spread.Sheets.CellTypes.EditorValueType.value
+        );
+        checkBoxCellTypeLine.items(x.items);
+        checkBoxCellTypeLine.itemHeight(24);
           colInfos.push({
             name: x.prop,
             displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
+            cellType: checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
         } else {
@@ -509,7 +516,7 @@ export default {
         );
         this.checkBoxCellTypeLine.items(newData);
         this.checkBoxCellTypeLine.itemHeight(24);
-        this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
+        
       } else {
         this.adminLoading = false;
         this.$message({

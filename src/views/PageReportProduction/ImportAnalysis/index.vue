@@ -132,6 +132,7 @@
         @closeDialog="colDialogVisible = false"
         :searchForm="dialogSearchForm"
         :isToolbar="false"
+        :cellStyle="cellStyle"
       ></DialogTable>
   </div>
 </template>
@@ -223,6 +224,15 @@ export default {
           Type: "danger",
           Icon: "",
           Size: "small",
+        },
+        {
+          ButtonCode: "syncBalance",
+          BtnName: "同步供需平衡表",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncBalance",
+          Icon: "",
         },
       ],
       // 表头添加动态按钮
@@ -455,15 +465,15 @@ export default {
         colHeaderStyle.font(
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
         );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
 
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
@@ -497,6 +507,8 @@ export default {
           if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
             sheet.getCell(index, -1).backColor("red");
           }
+          
+          
         })
         this.spread.resumePaint();
 
@@ -507,6 +519,17 @@ export default {
       }
       this.spread.refresh(); //重新定位宽高度
       this.spread.options.tabStripVisible = false;//是否显示表单标签
+    },
+     // 单元格样式控制
+     cellStyle({ row, column }) {
+      //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
+      if (row['DBResult']&&row["DBResult"] == "错误") {
+        if(column.property === "Remark1" || column.property === 'AvailableQty'){
+          return {  
+          color: "red",
+        };
+        }
+      }
     },
     // 查询
     dataSearch(remarkTb) {
@@ -586,6 +609,29 @@ export default {
     async syncSave() {
       this.adminLoading = true;
       let res = await GetSearch("", "/APSAPI/PushDeliveryData");
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
+    },
+    // 同步供需平衡表
+    async syncBalance() {
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/GetZAPSF001");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
@@ -689,10 +735,11 @@ export default {
         let DataList = [];
         let isDate = false;
         this.colAdd = [];
-        var obj = {};
-        let errorDate = false
+        let obj = {};
         let rowNo = 0// excel行号
         let propName = ''
+        let split = []//存储需求到料日期过期信息
+        let groupList = []
         importData[0].sheet.forEach((m,y) => {
           for (let key in m) {
             // 判断是否和配置里的取名一致，一致才可导入
@@ -701,19 +748,32 @@ export default {
               if (item.label === key) {
                 if (item.DataType === "datetime") {
                   if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
-                    errorDate = true
                     propName = key
                     rowNo =Number(m.__rowNum__)+1
+                    // 异常提示
+                    split.push(`第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`)
                   }else{
                     obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
                     : "";
                   }
                   // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
-                } else {
+                  // 判断需求到料日期是否大于今天
+                if(item.prop==='DemandToDay'&&obj[item.prop]<formatDates.formatTodayDate()){
+                    propName = key
+                    rowNo =Number(m.__rowNum__)+1
+                    // 异常提示
+                    split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
+                }
+                } else if(item.prop==='OweQty') {
+                  if(m[key]>0){//导入欠料数大于0才导入
+                    obj[item.prop] = m[key];
+                  }else{
+                    return
+                  }
+                }else{
                   obj[item.prop] = m[key];
                 }
-                
               }
                else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
                 // 列为日期的格式
@@ -721,37 +781,55 @@ export default {
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
                 obj['OweQty'] = m[key]
                 obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                // obj["StartDate"] = _this.machineCycle.length
-                //     ? _this.machineCycle[0]
-                //     : "",
-                // obj["EndDate"] = _this.machineCycle.length
-                //       ? _this.machineCycle[1]
-                //       : "";
                 obj["Account"] = _this.$store.getters.userInfo.Account;
                 obj["row"] = m.__rowNum__;
+                if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+                  obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+                  obj["Sum"] = 0
+            }
                 // 需要使用...obj 不然值回写有问题
                 DataList.push({...obj});
                 break
               }
             }
-            
           }
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            // (obj["StartDate"] = _this.machineCycle.length
-            //   ? _this.machineCycle[0]
-            //   : ""),
-             obj["EndDate"] =_this.machineCycle;
+            obj["EndDate"] =_this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
-            DataList.push(obj);
+            obj["row"] = m.__rowNum__;
+            if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+              obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+              obj["Sum"] = 0
+            }
+            // 需要使用...obj 不然值回写有问题
+            DataList.push({...obj});
           }
+         
         });
-        if(errorDate){
-          this.adminLoading = false;
-              this.$message.error(`第${rowNo}行,【${propName}】格式存在错误，请检查！`);
-                return;
-        }
+        // 过滤掉组合出来空的数据
+          let list = _.filter(DataList,(params) =>{
+            if(params.groupBy){
+              return params
+            }
+          })
+          groupList = _.groupBy(list,'groupBy')
+        //  组合后的数据数量对比资源可用量
+          for(let key in groupList){
+            if(groupList[key].length){
+              let total = 0
+              let AvailableQty =0
+              groupList[key].map((element,x)=>{
+                total += element.OweQty
+                AvailableQty = element.AvailableQty||0
+                if(total>AvailableQty){//同个资源单号+行号+物料编码的欠料数>可用资源抛出异常
+                // 异常提示
+                split.push(`第${Number(element.row)+1}行,物料【${element.ItemCode}】欠数超量，导入失败，请检查！`)
+              }
+              })
+            }
+          }
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
@@ -771,16 +849,26 @@ export default {
                 ]===''
               ) {
                 rowNo = Number(DataList[i]['row'])+1
-                this.$message.error(
-                  `第${rowNo}行,【${
-                    this.formSearchs[this.tagRemark].required[x]["label"]
-                  }】不能为空，请填写`
-                );
+                // 异常提示
+                split.push(`第${rowNo}行,【${this.formSearchs[this.tagRemark].required[x]["label"]}】不能为空，导入失败，请填写`)
                 this.adminLoading = false;
-                return;
               }
             }
           }
+        }
+        if(split.length){//异常集合
+          this.adminLoading = false;
+          let txt = ''
+          split.map((value) => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
+          })
+          this.$alert(txt,  {
+            dangerouslyUseHTMLString: true,
+            title:'导入异常信息!',
+            customClass: 'message-width'
+          });
+          
+          return;
         }
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
@@ -912,3 +1000,14 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+  .message-width{
+    width:500px ;
+    height: 90%;
+    .el-message-box__content{
+      height: 93% ;
+      overflow-y: scroll ;
+    }
+}
+
+</style>

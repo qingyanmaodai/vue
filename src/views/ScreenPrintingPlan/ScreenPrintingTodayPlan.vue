@@ -27,7 +27,7 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor">SysID:6734
+              <span @click="toPageSetting" class="primaryColor cursor">SysID:7945
               </span>
             </div>
             <div class="flex">
@@ -176,7 +176,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: 6734,
+          sysID: 7945,
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -537,7 +537,7 @@
         // 获取表头数据
         async getTableHeader() {
           let IDs = [{
-            ID: 6734
+            ID: 7945
           }];
           let res = await GetHeader(IDs);
           const {
@@ -592,7 +592,7 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 6734;
+          form["dicID"] = 7945;
           let res = await GetSearchData(form);
   
           const {
@@ -709,7 +709,7 @@
           sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
           // 冻结第一列
   
-          sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
+          sheet.frozenColumnCount(this.tableColumns[this.tagRemark][0].FixCount);
   
           sheet.setDataSource(this.tableData[0]);
           sheet.bindColumns(colInfos);
@@ -749,6 +749,20 @@
           });
   
   
+          // 行样式
+        this.tableData[0].forEach((row, index) => {
+          var rowSheet = sheet.getRange(
+            index,
+            0,
+            1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          // 合计和负荷行设置背景色
+          if (row["Code"] == null) {
+            rowSheet.backColor("#A0CFFF");
+          }
+        })
   
   
   

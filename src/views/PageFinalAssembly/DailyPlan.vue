@@ -709,7 +709,7 @@
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
         // 冻结第一列
 
-        sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 
         sheet.setDataSource(this.tableData[0]);
         sheet.bindColumns(colInfos);
@@ -748,8 +748,21 @@
           cellIndex++;
         });
 
-
-
+        // 行样式
+        this.tableData[0].forEach((row, index) => {
+          var rowSheet = sheet.getRange(
+            index,
+            0,
+            1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          // 合计和负荷行设置背景色
+          if (row["Code"] == null) {
+            rowSheet.backColor("#A0CFFF");
+          }
+        })
+  
 
 
       var insertRowsCopyStyle = {

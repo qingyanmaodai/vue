@@ -22,7 +22,7 @@
             <el-col :span="12"
               >
               <span class="title" style="margin-right:10px">{{ title }}</span>
-              <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
+              <!-- <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span> -->
               </el-col
             >
             <el-col :span="12" class="flex_flex_end">
@@ -326,7 +326,18 @@ export default {
           Size: "small",
           signName: 1,
           Methods: "setPlan",
-          Params: { ProcessID: "P2208290001" },
+          Params: { },
+          Icon: "",
+        },
+        {
+          ButtonCode: "to_days_plan",
+          BtnName: "带数量转入日计划",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          signName: 1,
+          Methods: "setPlan",
+          Params: { isQty: 1 },
           Icon: "",
         },
 
@@ -461,7 +472,7 @@ export default {
           let newData = this.parmsBtn.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = x.ButtonName;
+              y.BtnName = y.BtnName||x.ButtonName;
               y.Methods = y.Methods||x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
@@ -577,8 +588,7 @@ export default {
         GC.Spread.Sheets.LineStyle.min
       );
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-      // 冻结列,配置表返回固定列不对
-      // sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
+      sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 
       sheet.setDataSource(this.tableData[1]);
       sheet.bindColumns(colInfos);
@@ -721,7 +731,6 @@ export default {
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-        console.log("this.tableColumns", _this.tableColumns);
         if (_this.tableColumns[_this.tagRemark].length) {
           _this.tableColumns[_this.tagRemark].map((item, index) => {
             if (item.name === "FormRate" && args.col === index) {
@@ -1225,7 +1234,6 @@ export default {
 
     // 保存
     async dataSave(data1, index) {
-      console.log("触发总排期保存");
       if (this.tableData[this.tagRemark].length) {
         this.adminLoading = true;
         let res = await SaveData(this.tableData[this.tagRemark]);
@@ -1258,11 +1266,9 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
-        console.log(this.selectionData[remarkTb])
         this.selectionData[remarkTb].forEach((element) => {
           if (!element.Capacity1&&element.OrderNo) {
             isNoCapacity1 = false;
-            console.log(element.OrderNo)
           }
         });
         // if (!isNoCapacity1) {
@@ -1321,9 +1327,11 @@ export default {
           });
         }
         if (okCount > 0) {
+          // 如果接收到参数isQty传入地址栏
+          let url = params&&params.isQty===1?'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1':'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1'
           let res = await GetSearch(
             this.selectionData[remarkTb],
-            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
+            url
           );
           const { result, data, count, msg } = res.data;
           if (result) {
