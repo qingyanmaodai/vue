@@ -526,9 +526,15 @@ export default {
       if (row['DBResult']&&row["DBResult"] == "错误") {
         if(column.property === "Remark1" || column.property === 'AvailableQty'){
           return {  
+            color: "red",
+          };
+        }
+      }
+      // 分配后剩余数量<0字体红色
+      if(column.property === 'AvailableQty'&&Number(row['AvailableQty'])<0){
+        return {  
           color: "red",
         };
-        }
       }
     },
     // 查询
