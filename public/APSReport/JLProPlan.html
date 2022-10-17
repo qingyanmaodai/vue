@@ -539,29 +539,29 @@
         // 滚动日生产计划
         getWeeksPlanData(OrganizeIDs,ProcessIDs){
           // axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,StartDate:[formatDate.formatTodayDate(),formatDate.formatTodayDate()],rows:0 })
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,StartDate:[formatDate.formatTodayDate(),formatDate.formatAddSevenDate()],rows:0 })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,rows:0 })
 					.then(function (res) {
             _this.weeksList = []
 						if (res.result) {
-              _this.weeksDay = []
+              // _this.weeksDay = []
               if(res.data.length){
                 _this.weeksList = res.data.filter(x=>{return x.Code})
-              let num = 0
-              if(_this.weeksList.length){
-                for(let key in _this.weeksList[0]){
-                  // 获取七日日期
-                  if(key.indexOf('-')>-1&&key.indexOf('dy')==-1){
-                    num++
-                    _this.weeksDay.push({
-                      dayName:key.slice(-2),
-                      key:key
-                    })
-                    if(num===7){
-                      return
-                    }
-                  }
-                }
-              }
+              // let num = 0
+              // if(_this.weeksList.length){
+              //   for(let key in _this.weeksList[0]){
+              //     // 获取七日日期
+              //     if(key.indexOf('-')>-1&&key.indexOf('dy')==-1){
+              //       num++
+              //       _this.weeksDay.push({
+              //         dayName:key.slice(-2),
+              //         key:key
+              //       })
+              //       if(num===7){
+              //         return
+              //       }
+              //     }
+              //   }
+              // }
               }
               
 						}
@@ -583,7 +583,7 @@
         },
         // 周计划电机欠料明细
         getOweMatPlanData(OrganizeIDs,ProcessIDs){
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,rows:0,OweQty: "0", })
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 6736, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,rows:0,OweQty: "0", })
 					.then(function (res) {
             _this.OweMatList = []
 						if (res.result) {

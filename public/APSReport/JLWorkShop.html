@@ -46,8 +46,8 @@
                   </div>
                 </div>
                 <div class="group9 flex-row justify-center">
-                  <span class="info4">{{list[0].ProductionQty}}</span>
-                  <span class="word2">{{list[0].unProductionQty}}</span>
+                  <span class="info4">{{list[0].ProductionQty||0}}</span>
+                  <span class="word2">{{list[0].unProductionQty||0}}</span>
                 </div>
                 <div class="group10 flex-row">
                   <div class="layer2 flex-col">
@@ -58,8 +58,8 @@
                   </div>
                 </div>
                 <div class="group11 flex-row justify-center">
-                  <span class="info4">{{list[0].ruzhi}}</span>
-                  <span class="info4">{{list[0].lizhi}}</span>
+                  <span class="info4">{{list[0].ruzhi||0}}</span>
+                  <span class="info4">{{list[0].lizhi||0}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
@@ -73,11 +73,11 @@
             </div>
             <div class="main43 flex-col justify-between">
               <div class="outer26 flex-row">
-                <span class="info34">昨日人均产能</span>
+                <span class="info34">超期异常原因</span>
               </div>
               <div class="content2">
                 <div class="flex-row justify-between">
-                  <span class="txt4">（单位：台）</span>
+                  <!-- <span class="txt4">（单位：台）</span> -->
                   <!-- <span class="info7">组装线</span> -->
                 </div>
                 <div class="navboxall_time" id="PerHourCapOption"></div>
@@ -89,36 +89,36 @@
               </div>
               <div class="content  flex-col justify-between align-center">
                 <div class="group7 flex-row justify-center">
-                  <span class="word1">{{list[2].weikaigong}}</span>
-                  <span class="info3">{{list[2].yikaigong}}</span>
+                  <span class="word1">{{list[2].Qty||0}}</span>
+                  <span class="info3">{{list[2].yikaigong||0}}</span>
                 </div>
                 <div class="group8 flex-row ">
                   <div class="main1 flex-col">
-                    <span class="word5">未开工</span>
+                    <span class="word5">生产订单数</span>
                   </div>
                   <div class="main2 flex-col">
-                    <span class="txt1">已开工</span>
+                    <span class="txt1">超期异常</span>
                   </div>
                 </div>
                 <div class="group9 flex-row justify-center">
-                  <span class="word1">{{list[2].lingliao}}</span>
-                  <span class="info3">{{list[2].bufenlingliao}}</span>
+                  <span class="word1">{{list[2].lingliao||0}}</span>
+                  <span class="info3">{{list[2].bufenlingliao||0}}</span>
                 </div>
                 <div class="group10 flex-row">
                   <div class="layer2 flex-col">
-                    <span class="info5">全部领料</span>
+                    <span class="info5">APS排产中</span>
                   </div>
                   <div class="layer3 flex-col">
-                    <span class="txt2">部分领料</span>
+                    <span class="txt2">异常未排产</span>
                   </div>
                 </div>
                 <div class="group11 flex-row justify-center">
-                  <span class="info50">{{list[2].weilingliao}}</span>
-                  <span class="word3">{{list[2].wancheng}}</span>
+                  <span class="info50">{{list[2].PlanQty}}</span>
+                  <span class="word3">{{list[2].HasQty}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
-                    <span class="word4">未领料</span>
+                    <span class="word4">日计划订单数</span>
                   </div>
                   <div class="mod3 flex-col">
                     <span class="info6">已完成</span>
@@ -129,20 +129,20 @@
 
             <div class="main45 flex-col">
               <div class="bd34 flex-row justify-start">
-                <span class="word76">周生产计划</span>
+                <span class="word76">超期订单明细</span>
               </div>
               <div class="main3 flex-row  justify-between">
-                <span class="word tableWidthRatio8">组装线别</span>
+                <span class="word tableWidthRatio8">类型</span>
                 <span class="word tableWidthRatio10">订单号</span>
                 <span class="word tableWidthRatio26">产品编码</span>
-                <span class="word tableWidthRatio7">计划数</span>
-                <span class="word tableWidthRatio7">T1</span>
-                <span class="word tableWidthRatio7">T2</span>
-                <span class="word tableWidthRatio7">T3</span>
-                <span class="word tableWidthRatio7">T4</span>
-                <span class="word tableWidthRatio7">T5</span>
-                <span class="word tableWidthRatio7">T6</span>
-                <span class="word tableWidthRatio7">T7</span>
+                <span class="word tableWidthRatio7">型号</span>
+                <span class="word tableWidthRatio7">数量</span>
+                <span class="word tableWidthRatio7">来源单号</span>
+                <span class="word tableWidthRatio7">计划交期</span>
+                <span class="word tableWidthRatio7">超期天数</span>
+                <span class="word tableWidthRatio7">超期原因</span>
+                <!-- <span class="word tableWidthRatio7">T6</span>
+                <span class="word tableWidthRatio7">T7</span> -->
               </div>
               <div class="table1 wrap">
                 <div >
@@ -156,8 +156,8 @@
                     <span class="tableWidthRatio7 tableContent">{{item.day3}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.day4}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.day5}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day6}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day7}}</span>
+                    <!-- <span class="tableWidthRatio7 tableContent">{{item.day6}}</span>
+                    <span class="tableWidthRatio7 tableContent">{{item.day7}}</span> -->
                   </div>
                 </div>
               </div>
@@ -188,7 +188,7 @@
           <div class="group48 flex-row justify-between">
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周计划达成率</span>
+                <span class="info34">生产计划吻合度</span>
               </div>
               <div class="content flex-col justify-between">
                 <div class="navboxall3" id="weeksBadOption"></div>
@@ -1565,22 +1565,39 @@
               if (res.result) {
                   if(res.data.length){
                    await this.handleTree(res.data)
+                   await this.getWorkData()
                   //  console.log('res',arr)
                     console.log('OrganizeIDsList',this.OrganizeIDsList)
                   }
               }
             })
       },
+      getWorkData(){
+        let Ids = this.OrganizeIDsList.length?this.OrganizeIDsList.join(','):''
+        axiosPostRequst(`/APSAPI/APSData`, { OrganizeID: Ids,dicID:97,WorkingDate: [formatDate.formatTodayDate(), formatDate.formatTodayDate()],groupby:'OrganizeName' })
+            .then(async(res) =>{
+              if (res.result) {
+                  if(res.data.length){
+                    // Peoples
+                    console.log('res.data',res.data)
+                  }
+              }
+            })
+      },
       //树结构递归
     handleTree(data) {
+      let total = 0
       return data.filter((item, index) => {
         item.title = item.OrganizeName
         item.id = item.OrganizeID
         item.expanded = true
         if (item.children && item.children.length) {
           item.children = this.handleTree(item.children)
+        }else{
+          total +=Number(item.TotalPeoples)
         }
         this.OrganizeIDsList.push(item.OrganizeID)
+        console.log('total',total)
         return true
       })
     },
@@ -1659,11 +1676,11 @@
         myChart.clear();
         myChart.setOption(option)
         console.log('111')
-        // var timer = setInterval(function() {
-        //     clearInterval(timer);
-        //     // 下面处理业务
-        //     _this.barData(id,option)
-        // }, 1000*60*5)
+        var timer = setInterval(function() {
+            clearInterval(timer);
+            // 下面处理业务
+            _this.barData(id,option)
+        }, 1000*60*5)
       },
       //获取人员管理数据
       getPersonData(OrganizeID) {
@@ -1671,45 +1688,68 @@
         //   .then(function (res) {
 
         //   })
-        this.list[0] = {
-          TotalPeoples: 120,
-          ProductionQty: 100,
-          unProductionQty: 20,
-          lizhi:0,
-          ruzhi:0
-        }
+        // this.list[0] = {
+        //   TotalPeoples: 120,
+        //   ProductionQty: 100,
+        //   unProductionQty: 20,
+        //   lizhi:0,
+        //   ruzhi:0
+        // }
       },
-      // 获取某车间所有工序人均小时产能
+      // 获取超期异常原因
       getProcessCapData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[1] = [
-          {processName:'总装',Qty:1}
-        ]
-        if(this.list[1].length){
-          this.list[1].map(item=>{
-            this.PerHourCapOption.yAxis.data.push(item.processName)
-            this.PerHourCapOption.series[0].data.push(item.Qty)
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:7779,groupby:'AbnormalReason' })
+          .then(function (res) {
+          //   if(this.list[1].length){
+          // this.list[1].map(item=>{
+          //   this.PerHourCapOption.yAxis.data.push(item.processName)
+          //   this.PerHourCapOption.series[0].data.push(item.Qty)
+          // })
+        // }
+        // this.barData('PerHourCapOption', this.PerHourCapOption)
           })
+        
+        
+      },
+      timeFormat(date,num){
+        let y = date.getFullYear(); //年
+        let m = date.getMonth() + 1; //月
+        let d = date.getDate(); //日
+        if (num == 1){
+          d = date.getDate();
         }
-        this.barData('PerHourCapOption', this.PerHourCapOption)
+        m = m < 10 ? "0" + m :m;
+        d = d < 10 ? "0" + d : d;
+        return y + "-" + m + "-" + d;
       },
       // 获取本月工单状态
       getOrderData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[2] = {
-          weikaigong:23011,
-          yikaigong:30,
-          lingliao:340445,
-          bufenlingliao:0,
-          weilingliao:0,
-          wancheng:'100%',
-        }
+        var date = new Date();
+        var currentMonth = date.getMonth();
+        var nextMonth = ++currentMonth;
+        var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
+        var oneDay = 1000 * 60 * 60 * 24;
+        //获取当前月最后一天
+        let EndDate = this.timeFormat(new Date(nextMonthFirstDay -oneDay),1);
+        //设置一个月的某一天，数值（1 ~ 31）
+        date.setDate(1);
+        let StartDate = this.timeFormat(date, 0);
+        // 获取订单数
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156, StartDate:StartDate,EndDate:EndDate,fields:'SUM(Qty) as Qty'})
+          .then(function (res) {
+            if (res.result) {
+              _this.list[2].Qty = res.data&&res.data[0].Qty || 0
+            }
+          })
+          // 超期异常
+          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156, StartDate:StartDate,EndDate:EndDate,groupby:'Extend4',fields:'SUM(Qty) as Qty, Extend4'})
+          .then(function (res) {
+            if (res.result) {
+              // _this.list[2] = []
+              
+            }
+          })
+        
       },
       // 获取七日包装计划
       getProPlanData(OrganizeID){
@@ -1848,21 +1888,32 @@
         this.weeksBadOption.title.text =  `不良率\n${this.list[7].BadQty&&this.list[7].PlanQty ? parseFloat(((this.list[7].BadQty / this.list[7].PlanQty) * 100).toFixed(2)) : 0}%`
         this.barData('weeksBadOption', this.weeksBadOption)
       },
-      // 周计划达成率
+      // 日计划达成率
       getWeeksFinishData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[8] = {PlanQty:1000,HasQty:100}
-        this.weeksFinishOption.series[0].data[0].value = this.list[8].PlanQty
-        this.weeksFinishOption.series[0].data[1].value = this.list[8].HasQty
-        this.weeksFinishOption.series[0].data[2].value = this.list[8].PlanQty + this.list[8].HasQty
-        this.weeksFinishOption.series[1].data[0].value = this.list[8].PlanQty
-        this.weeksFinishOption.series[1].data[1].value = this.list[8].HasQty
-        this.weeksFinishOption.series[1].data[2].value = this.list[8].PlanQty + this.list[8].HasQty
-        this.weeksFinishOption.title.text =  `完成率\n${this.list[8].HasQty&&this.list[8].PlanQty ? parseFloat(((this.list[8].HasQty / this.list[8].PlanQty) * 100).toFixed(2)) : 0}%`
-        this.barData('weeksFinishOption', this.weeksFinishOption)
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:formatDate.formatTodayDate(),rows:1,sort:'PlanDay ASC',fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'PlanDay', })
+          .then(function (res) {
+            if(res.result){
+              _this.list[8] = []
+              _this.list[8].PlanQty = res.data&&res.data[0].PlanQty||0
+              _this.list[8].HasQty = res.data&&res.data[0].HasQty||0
+              _this.list[2].PlanQty = res.data&&res.data[0].PlanQty||0
+              _this.list[2].HasQty = res.data&&res.data[0].HasQty||0
+            // this.list[8] = {PlanQty:1000,HasQty:100}
+            _this.weeksFinishOption.series[0].data[0].value = _this.list[8].PlanQty
+            _this.weeksFinishOption.series[0].data[1].value = _this.list[8].HasQty
+            _this.weeksFinishOption.series[0].data[2].value = _this.list[8].PlanQty + _this.list[8].HasQty
+            _this.weeksFinishOption.series[1].data[0].value = _this.list[8].PlanQty
+            _this.weeksFinishOption.series[1].data[1].value = _this.list[8].HasQty
+            _this.weeksFinishOption.series[1].data[2].value = _this.list[8].PlanQty + _this.list[8].HasQty
+            _this.weeksFinishOption.title.text =  `完成率\n${_this.list[8].HasQty&&_this.list[8].PlanQty ? parseFloat(((_this.list[8].HasQty / _this.list[8].PlanQty) * 100).toFixed(2)) : 0}%`
+        setTimeout(()=>{
+          _this.barData('weeksFinishOption', _this.weeksFinishOption)
+        },100)
+        
+            }
+            
+          })
+        
       },
       // 周不良分布
       getWeeksBadQtyData(OrganizeID){
