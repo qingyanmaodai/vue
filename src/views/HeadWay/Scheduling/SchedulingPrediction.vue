@@ -179,15 +179,37 @@ export default {
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+      {
+          ButtonCode: "import",
+          BtnName: "1.导入",
+          Type: "danger",
           Ghost: true,
           Size: "small",
-          Methods: "dataSave",
+          Methods: "dataImport",
           Icon: "",
+          sort:1,
         },
+        {
+          ButtonCode: "sysData",
+          BtnName: "2.抓单分析",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "Analysis",
+          Icon: "",
+          sort:2,
+        },
+        {
+          ButtonCode: "to_weeks_plan",
+          BtnName: "3.转入周计划",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          Methods: "toWeeksPlan",
+          Icon: "",
+          sort:3,
+        },
+        
         // {
         //   ButtonCode: "save",
         //   BtnName: "同步",
@@ -197,42 +219,29 @@ export default {
         //   Methods: "syncSave",
         //   Icon: "",
         // },
-        {
-          ButtonCode: "import",
-          BtnName: "导入",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Icon: "",
-        },
-        {
-          ButtonCode: "sysData",
-          BtnName: "抓单分析",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "Analysis",
-          Icon: "",
-        },
+       
         {
           ButtonCode: "delete",
           BtnName: "删除",
           isLoading: false,
           Methods: "deleteRow",
           Type: "danger",
+          Ghost: true,
           Icon: "",
           Size: "small",
+          sort:4,
         },
         {
-          ButtonCode: "to_weeks_plan",
-          BtnName: "转入周计划",
-          Type: "primary",
+          ButtonCode: "save",
+          BtnName: "保存",
+          Type: "success",
           Ghost: true,
           Size: "small",
-          Methods: "toWeeksPlan",
+          Methods: "dataSave",
           Icon: "",
+          sort:5,
         },
+        
       ],
       // 表头添加动态按钮
       parmsBtn2: [
@@ -341,7 +350,8 @@ export default {
             btn2 = btn2.concat(newData2);
           }
         });
-      }
+      } 
+      newBtn = _.sortBy(newBtn,['sort'])
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "parmsBtn2", btn2);
     },
