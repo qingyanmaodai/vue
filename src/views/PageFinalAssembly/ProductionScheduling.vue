@@ -22,7 +22,7 @@
             <el-col :span="12"
               >
               <span class="title" style="margin-right:10px">{{ title }}</span>
-              <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
+              <span style="color: #ff9900;" v-if="tagRemark==1">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
               </el-col
             >
             <el-col :span="12" class="flex_flex_end">
@@ -165,7 +165,7 @@ import {
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "TotalScheduling",
+  name: "ProductionScheduling",
   components: {
     ComSearch,
     ComVxeTable,
