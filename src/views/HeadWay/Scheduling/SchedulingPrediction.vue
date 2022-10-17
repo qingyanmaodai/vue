@@ -647,12 +647,13 @@ export default {
             this.selectionData[this.tagRemark].push(x);
           }
         });
-      } else {
+      } 
+      if(this.selectionData[this.tagRemark].length==0) {
         this.$message.error("请选择需要转入的数据！");
         return;
       }
       this.adminLoading = true;
-      let res = await SaveData(this.selectionData[this.tagRemark]);
+      let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlan");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
