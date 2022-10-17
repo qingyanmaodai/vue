@@ -531,7 +531,7 @@ export default {
         }
       }
       // 分配后剩余数量<0字体红色
-      if(column.property === 'AvailableQty'&&Number(row['AvailableQty'])<0){
+      if(column.property === 'AvailableQty'&&row['AvailableQty']<0){
         return {  
           color: "red",
         };
