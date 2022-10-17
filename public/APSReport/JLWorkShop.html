@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>金羚APS总装看板</title>
+  <title>APS总装看板</title>
   <link rel="stylesheet" type="text/css" href="./css/common.css" />
   <link rel="stylesheet" type="text/css" href="./css/WorkShop.css" />
 </head>
@@ -1564,7 +1564,8 @@
             .then(async(res) =>{
               if (res.result) {
                   if(res.data.length){
-                    await this.handleTree(res.data)
+                   await this.handleTree(res.data)
+                  //  console.log('res',arr)
                     console.log('OrganizeIDsList',this.OrganizeIDsList)
                   }
               }
@@ -1572,14 +1573,15 @@
       },
       //树结构递归
     handleTree(data) {
-      // let list = []
       return data.filter((item, index) => {
-        this.OrganizeIDsList.push(item.OrganizeID)
-
-        if (item.children && item.children.length>0) {
+        item.title = item.OrganizeName
+        item.id = item.OrganizeID
+        item.expanded = true
+        if (item.children && item.children.length) {
           item.children = this.handleTree(item.children)
         }
-        return 
+        this.OrganizeIDsList.push(item.OrganizeID)
+        return true
       })
     },
       // 接收路由传参
