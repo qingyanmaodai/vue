@@ -171,7 +171,7 @@ export default {
         isEdit: true,
         adminLoading: false,
         sysID:[{ID:0}],
-        DataSourceList:{},
+        // DataSourceList:{},
         selectionData:[[]],
         selectionNoIdData:[[]],
         addNum:1,
@@ -334,20 +334,12 @@ export default {
             if(item.prop==='Status'){
                obj[item.prop]  = 1
             }
-            // for(let key in this.DataSourceList){
-            //     if(item.DataSourceName ===key){
-            //         obj[key] = this.DataSourceList[key]
-            //     }
-            // }
+            if(item.items&&item.items.length){
+              obj[item.DataSourceName] = item.items
+            }    
         })
-        
-        console.log('this.addNum',this.addNum)
-        
         this.tableData[remarkTb].unshift(obj)
         }
-            
-        
-        console.log('this.tableData[remarkTb]',this.tableData[remarkTb])
     },
     // 删行
     async deleteRow(remarkTb) {
@@ -399,7 +391,6 @@ export default {
             // 动态检验必填项
             for(let i=0;i<this.tableData[remarkTb].length;i++){
                 for(let x=0;x<this.formSearchs[remarkTb].required.length;x++){
-                    console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
                     if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]){
                     this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
                     return
@@ -407,9 +398,6 @@ export default {
             }
         }
         }
-        console.log('this.tableData[remarkTb]',this.tableData[remarkTb])
-        this.adminLoading = false
-        return
         this.adminLoading = true;
         let res = await SaveData(this.tableData[remarkTb]);
         const { datas, forms, result, msg } = res.data;
@@ -465,9 +453,9 @@ export default {
               });
             }
             //获取下拉数据源
-            // if(n.DataSourceID&&n.ControlType==='combobox'){
-            //     this.DataSourceList = {[n.DataSourceName]:[],...this.DataSourceList}
-            // }
+            if(n.DataSourceID&&n.ControlType==='combobox'){
+              n[n.DataSourceName] = n.items
+            }
             if(n.Required){
                 this.formSearchs[this.tagRemark].required.push(n)
             }
@@ -487,18 +475,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         await this.getTableData(this.formSearchs[0].datas, 0);
-        // 获取下拉的数据源
-        // this.$nextTick(()=>{
-        //     if(this.tableData[this.tagRemark].length){
-        //     for(let key in this.tableData[this.tagRemark][0]){
-        //         for(let obj in this.DataSourceList){
-        //         if(obj === key){
-        //             this.DataSourceList[obj] = this.tableData[this.tagRemark][0][key]
-        //         }
-        //     }
-        //     }
-        // }
-        // })
       }
       this.adminLoading = false;
     },
@@ -533,22 +509,6 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
       
-    },
-    // 获取数据源
-    async getDataSource(Props) {
-    let form = {}
-      form["DataSourceID"] = Props;
-      let res = await GetSearch(form, "/APSAPI/GetDataSource");
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        // this.DataSourceList
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     // 刷新页面
     refrshPage() {

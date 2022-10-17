@@ -31,21 +31,27 @@
           <div id="header">
             <div class="group_5 flex-col">
               <div class="section_1 flex-col"></div>
-              <span class="text_3">7日生产计划</span>
+              <span class="text_3">滚动日生产计划</span>
               <div class="text-wrapper_2 flex-row justify-between">
-                  <span class="tableWidthRatio7 tableTitle">生产线</span>
-                  <span class="tableWidthRatio10 tableTitle">生产订单</span>
-                  <span class="tableWidthRatio20 tableTitle">产品编码</span>
-                  <span class="tableWidthRatio10 tableTitle">工单数</span>
-                  <span class="tableWidthRatio7 tableTitle" v-for="(ele,x) in weeksDay" :key="x">{{ele.dayName}}</span>
+                  <span class="tableWidthRatio10 tableTitle">计划日期</span>
+                  <span class="tableWidthRatio15 tableTitle">生产班组</span>
+                  <span class="tableWidthRatio15 tableTitle">生产订单</span>
+                  <span class="tableWidthRatio30 tableTitle">产品型号</span>
+                  <span class="tableWidthRatio10 tableTitle">计划数量</span>
+                  <span class="tableWidthRatio10 tableTitle">生产数量</span>
+                  <span class="tableWidthRatio10 tableTitle">达成率</span>
+                  <!-- <span class="tableWidthRatio7 tableTitle" v-for="(ele,x) in weeksDay" :key="x">{{ele.dayName}}</span> -->
               </div>
               <div class="table1 wrap">
                 <div class="text-wrapper_13 flex-row justify-between" v-for="(item,index) in weeksList" :key="index" >
-                  <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
-                  <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
-                  <span class="tableWidthRatio20 tableContent">{{item.Code}}</span>
-                  <span class="tableWidthRatio10 tableContent color2">{{item.Qty}}</span> 
-                  <span class="tableWidthRatio7 tableContent color3" v-for="(ele,x) in weeksDay" :key="x">{{ele.key?item[ele.key]:''}}</span>
+                  <span class="tableWidthRatio10 tableContent">{{item.StartDate}}</span>
+                  <span class="tableWidthRatio15 tableContent">{{item.LineName}}</span>
+                  <span class="tableWidthRatio15 tableContent">{{item.OrderNo}}</span>
+                  <span class="tableWidthRatio30 tableContent">{{item.Spec}}</span>
+                  <span class="tableWidthRatio10 tableContent color3">{{item.Qty}}</span> 
+                  <span class="tableWidthRatio10 tableContent color4">{{item.HasQty}}</span> 
+                  <span class="tableWidthRatio10 tableContent color1">{{item.HasQty?parseFloat(((item.HasQty/item.Qty)*100).toFixed(2)):0}}%</span> 
+                  <!-- <span class="tableWidthRatio7 tableContent color3" v-for="(ele,x) in weeksDay" :key="x">{{ele.key?item[ele.key]:''}}</span> -->
                 </div>
               </div>
             </div>
@@ -53,22 +59,23 @@
           <div id="footer" class="footer justify-between">
             <div class="group_14 flex-col">
               <div class="group_15 flex-col"></div>
-              <span class="text_109">欠料明细</span>
+              <span class="text_109">周计划电机欠料明细</span>
               <div class="text-wrapper_12 flex-row">
                 <span class="tableWidthRatio15 tableTitle">需求日期</span>
-                <span class="tableWidthRatio25 tableTitle">产品编码</span>
-                <span class="tableWidthRatio25 tableTitle">产品名称</span>
+                <span class="tableWidthRatio40 tableTitle">产品型号</span>
+                <span class="tableWidthRatio15 tableTitle">需求数量</span>
                 <span class="tableWidthRatio15 tableTitle">欠料数量</span>
-                <span class="tableWidthRatio20 tableTitle">供应商</span>
+                <span class="tableWidthRatio15 tableTitle">库存</span>
               </div>
               <div class="wrap2 table2">
                 <div class="image-text_3 flex-col justify-between">
                   <div class="text-wrapper_13 flex-row" v-for="(ele,i) in OweMatList" :key="i">
                     <span class="tableWidthRatio15 tableContent color1">{{ele.DemandDate}}</span>
-                    <span class="tableWidthRatio25 tableContent">{{ele.ProductCode}}</span>
-                    <span class="tableWidthRatio25 tableContent clampEllipsis1">{{ele.ProductName}}</span>
+                    <span class="tableWidthRatio40 tableContent">{{ele.Spec}}</span>
+                    <span class="tableWidthRatio15 tableContent color3">{{ele.DemandQty}}</span>
                     <span class="tableWidthRatio15 tableContent color4">{{ele.OweQty}}</span>
-                    <span class="tableWidthRatio20 tableContent color3 clampEllipsis1" :title="ele.POSuplierName">{{ele.POSuplierName}}</span>
+                    <span class="tableWidthRatio15 tableContent color1">{{ele.StockQty}}</span>
+                    <!-- <span class="tableWidthRatio20 tableContent clampEllipsis1" :title="ele.POSuplierName">{{ele.POSuplierName}}</span> -->
                   </div>
                 </div>
               </div>
@@ -529,8 +536,9 @@
           let r = window.location.search.substr(1).match(reg);
           if (r != null) return decodeURIComponent(r[2]); return null;
         },
-        // 7日生产计划
+        // 滚动日生产计划
         getWeeksPlanData(OrganizeIDs,ProcessIDs){
+          // axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,StartDate:[formatDate.formatTodayDate(),formatDate.formatTodayDate()],rows:0 })
           axiosPostRequst(`/APSAPI/APSData`, { dicID: 6734, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,StartDate:[formatDate.formatTodayDate(),formatDate.formatAddSevenDate()],rows:0 })
 					.then(function (res) {
             _this.weeksList = []
@@ -573,7 +581,7 @@
               _this.getWeeksPlanData(OrganizeIDs,ProcessIDs)
           }, 1000*60*5)
         },
-        // 欠料明细
+        // 周计划电机欠料明细
         getOweMatPlanData(OrganizeIDs,ProcessIDs){
           axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594, OrganizeIDs:OrganizeIDs,ProcessIDs:ProcessIDs,rows:0,OweQty: "0", })
 					.then(function (res) {
