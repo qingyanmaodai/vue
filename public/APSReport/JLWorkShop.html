@@ -1546,9 +1546,10 @@
 
       this.$nextTick(async()=>{
           let OrganizeIDs = this.getQueryString('ID')
+          let ProcessIDs = this.getQueryString('ProcessIDs')
           // 看板车间名称
           if(OrganizeIDs){
-            await this.getOrgData(OrganizeIDs)
+            await this.getOrgData(OrganizeIDs,ProcessIDs)
           }else{
             OrganizeIDs = 162//没有传入ID默认的ID
             await this.getOrgData(OrganizeIDs)
@@ -1609,40 +1610,41 @@
           if (r != null) return decodeURIComponent(r[2]); return null;
         },
       // 获取组织名称
-      getOrgData(OrganizeIDs) {
-          axiosPostRequst(`/APSAPI/GetOrgData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+      getOrgData(OrganizeIDs,ProcessIDs) {
+          axiosPostRequst(`/APSAPI/GetOrgData`, { dicID: 3026, OrganizeID: OrganizeIDs ,ProcessIDs})
             .then(async(res) =>{
               if (res.result) {
                 if (res.data.length != 0) {
                   _this.form = res.data[0];
+                  _this.form.ProcessIDs = _this.form.ProcessIDs||ProcessIDs
                 }
                 if(_this.form.OrganizeID){
                   // 人员管理
-                  await this.getPersonData(_this.form.OrganizeID)
-                  // 人均小时产能
-                  await this.getProcessCapData(_this.form.OrganizeID)
+                  await this.getPersonData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 超期异常原因
+                  await this.getProcessCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 本月工单状态
-                  await this.getOrderData(_this.form.OrganizeID)
-                  // 七日包装计划
-                  await this.getProPlanData(_this.form.OrganizeID)
+                  await this.getOrderData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 超期订单明细
+                  await this.getProPlanData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 周配套率
-                  await this.getWeeksCapData(_this.form.OrganizeID)
+                  await this.getWeeksCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 15日实时产量
-                  await this.getRealTimeProData(_this.form.OrganizeID)
-                  // 各品类工单齐套率
-                  await this.getOrderCapData(_this.form.OrganizeID)
-                  // 周生产不良率
-                  await this.getWeeksBadData(_this.form.OrganizeID)
+                  await this.getRealTimeProData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 7日齐套率
+                  await this.getOrderCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 周计划达成率
-                  await this.getWeeksFinishData(_this.form.OrganizeID)
-                  // 周不良分布
-                  await this.getWeeksBadQtyData(_this.form.OrganizeID)
+                  await this.getWeeksBadData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 日计划达成率
+                  await this.getWeeksFinishData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 周不达成分布
-                  await this.getWeeksUnfinishData(_this.form.OrganizeID)
-                  // 欠料分布
-                  await this.getOweMatData(_this.form.OrganizeID)
+                  await this.getWeeksBadQtyData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 欠料类型分布
+                  await this.getWeeksUnfinishData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 欠料属性分布
+                  await this.getOweMatData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 欠料明细
-                  await this.getOweMatDetailsData(_this.form.OrganizeID)
+                  await this.getOweMatDetailsData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   await this.getOrgIDsData(_this.form.OrganizeID)
                   if(_this.gudtime){
                     clearTimeout(_this.gudtime)
@@ -1698,8 +1700,8 @@
         // }
       },
       // 获取超期异常原因
-      getProcessCapData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'AbnormalReason' })
+      getProcessCapData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,groupby:'AbnormalReason' })
           .then(function (res) {
           //   if(this.list[1].length){
           // this.list[1].map(item=>{
@@ -1724,7 +1726,7 @@
         return y + "-" + m + "-" + d;
       },
       // 获取本月工单状态
-      getOrderData(OrganizeID){
+      getOrderData(OrganizeIDs,ProcessIDs){
         var date = new Date();
         var currentMonth = date.getMonth();
         var nextMonth = ++currentMonth;
@@ -1736,34 +1738,44 @@
         date.setDate(1);
         let StartDate = this.timeFormat(date, 0);
         // 获取订单数
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:49, OrderDate:[StartDate,EndDate],fields:'SUM(Qty) as Qty'})
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:49,OrganizeIDs,ProcessIDs, OrderDate:[StartDate,EndDate],fields:'SUM(Qty) as Qty'})
           .then(function (res) {
             if (res.result) {
               _this.list[2].Qty = res.data&&res.data[0].Qty || 0
             }
           })
           // 超期异常:待排订单中超期判定结果为“超期异常”的数据
-          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'ProductionStatus',fields:'SUM(Qty) as Qty,ProductionStatus'})
+          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,groupby:'ProductionStatus',fields:'SUM(Qty) as Qty,ProductionStatus'})
           .then(function (res) {
             if (res.result) {
               // _this.list[2].Qty = res.data&&res.data[0].Qty || 0
               
             }
           })
+          // 五分钟刷新一次数据
+          var OrderTimer = setInterval(function() {
+              clearInterval(OrderTimer);
+              _this.getOrderData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
         
       },
       // 获取超期订单明细
-      getProPlanData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,DeliveryDate:['',formatDate.formatOldDate()],rows:0 })
+      getProPlanData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,DeliveryDate:['',formatDate.formatOldDate()],rows:0 })
           .then(function (res) {
             if(res.result){
               _this.list[3] = res.data
             }
           })
+          // 五分钟刷新一次数据
+          var ProPlanTimer = setInterval(function() {
+              clearInterval(ProPlanTimer);
+              _this.getProPlanData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
       },
       // 周配套率
-      getWeeksCapData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
+      getWeeksCapData(OrganizeIDs,ProcessIDs){
+        // axiosPostRequst(`/APSAPI/APSData`, { dicID:,OrganizeIDs,ProcessIDs, })
         //   .then(function (res) {
 
         //   })
@@ -1795,8 +1807,8 @@
       // }, 100);
       },
       // 15日实时产量
-      getRealTimeProData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:['',formatDate.formatOldDate()],rows:15,sort:'PlanDay DESC',fields:'SUM(ConfirmQty) as ConfirmQty,PlanDay',groupby:'PlanDay'})
+      getRealTimeProData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:['',formatDate.formatOldDate()],rows:15,sort:'PlanDay DESC',fields:'SUM(ConfirmQty) as ConfirmQty,PlanDay',groupby:'PlanDay'})
           .then(function (res) {
             if(res.result){
               _this.list[5] =res.data
@@ -1821,8 +1833,8 @@
           })
       },
       // 7日齐套率
-      getOrderCapData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5594,DemandDate:[formatDate.formatTodayDate(),''],rows:0,groupby:'DemandDate' })
+      getOrderCapData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5594,OrganizeIDs,ProcessIDs,DemandDate:[formatDate.formatTodayDate(),''],rows:0,groupby:'DemandDate' })
           .then(function (res) {
 
           })
@@ -1848,8 +1860,8 @@
         this.barData('OrderCapOption', this.OrderCapOption)
       },
       // 周生产计划达成率
-      getWeeksBadData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:6723 ,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+      getWeeksBadData(OrganizeIDs,ProcessIDs,){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:6723 ,OrganizeIDs,ProcessIDs,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
           .then(function (res) {
             if(res.result){
               _this.list[7] = res.data&&res.data[0]?res.data&&res.data[0]:[]
@@ -1868,8 +1880,8 @@
         
       },
       // 日计划达成率
-      getWeeksFinishData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:formatDate.formatTodayDate(),fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+      getWeeksFinishData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:formatDate.formatTodayDate(),fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
           .then(function (res) {
             if(res.result){
               _this.list[8] = []
@@ -1897,8 +1909,8 @@
         
       },
       // 周不达成分布
-      getWeeksBadQtyData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],groupby:'LineName'})
+      getWeeksBadQtyData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],groupby:'LineName'})
           .then(function (res) {
             if(res.result){
 
@@ -1958,8 +1970,8 @@
 
       },
       // 欠料类型分布
-      getWeeksUnfinishData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,groupby:'IssueType'})
+      getWeeksUnfinishData(OrganizeIDs,ProcessIDs,){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,groupby:'IssueType'})
           .then(function (res) {
             if(res.result){
 
@@ -2018,8 +2030,8 @@
         this.barData('WeeksUnfinishOption', this.WeeksUnfinishOption)
       },
       // 欠料属性分布
-      getOweMatData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594,rows:0,groupby:'MaterialProp'})
+      getOweMatData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594,OrganizeIDs,ProcessIDs,fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'MaterialProp'})
           .then(function (res) {
             if(res&&res.result){
               console.log('res')
@@ -2077,9 +2089,9 @@
         this.WeeksOweMatOption.series[0].data = formatData
         this.barData('WeeksOweMatOption', this.WeeksOweMatOption)
       },
-      // 欠料明细
-      getOweMatDetailsData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,rows:0 })
+      // 电机供需平衡
+      getOweMatDetailsData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,rows:0 })
           .then(function (res) {
             if(res.result){
               _this.list[12] = []
@@ -2098,6 +2110,11 @@
               console.log('_this.list[12]',_this.list[12])
             }
           })
+          // 五分钟刷新一次数据
+          var MatTimer = setInterval(function() {
+              clearInterval(MatTimer);
+              _this.getOweMatDetailsData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
         // this.list[12] = [
         //   { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 4000, Qty: 100 },
         //   { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 950, Qty: 100 },
