@@ -164,6 +164,53 @@ function getTodayTime() {
 	let todayDate = year + seperator1 + month + seperator2 + strDate + seperator3 + '  ' + str + ' ' + hour + seperator4 + minute + seperator4 + seconds;
 	return todayDate
 }
+/**
+     * 获取本、上、下周开始结束时间
+     * @description 得到本、上、下周的起始、结束日期
+     * @param {Number} n 不传或0代表本周，-1代表上周，1代表下周
+     * @param {Number} type  0 开始时间  1 结束时间
+     * @author Mt.flower
+	 * 
+	 * // 调用方式,例如
+	this.getWeek(-1, 0) // 获取上周开始日期
+	this.getWeek(-1, 1) // 获取上周结束日期
+	this.getWeek(0, 0) // 获取本周开始日期
+	this.getWeek(0, 1) // 获取本周结束日期
+	this.getWeek(1, 0) // 获取下周开始日期
+	this.getWeek(1, 1) // 获取下周结束日期
+     */
+ function getWeek(n, type) { // 周
+	let now = new Date()
+	let day = now.getDay() //返回星期几的某一天;
+	if (!type) {
+	  if (n == 1) {
+		let dayNumber = day == 0 ? 0 : 7 - day
+		now.setDate(now.getDate() + dayNumber + 1)
+	  } else if (n == -1) {
+		let dayNumber = day == 0 ? 6: day - 1
+		now.setDate(now.getDate() - dayNumber - 7)
+	  } else {
+		let dayNumber = day == 0 ? 6: day - 1
+		now.setDate(now.getDate() - dayNumber)
+	  }
+	} else {
+	  if (n == 1) {
+		let dayNumber = day == 0 ? 0 : 7 - day
+		now.setDate(now.getDate() + dayNumber + 1 + 6) // 在周开始的日期上+6天=周结束
+	  } else if (n == -1) {
+		let dayNumber = day == 0 ? 6: day - 1
+		now.setDate(now.getDate() - dayNumber - 7 + 6)
+	  } else {
+		let dayNumber = day == 0 ? 0: 7 - day
+		now.setDate(now.getDate() + dayNumber)
+	  }
+	}
+	let date = now.getDate()
+	let month = now.getMonth() + 1
+
+	let s = now.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date)
+	return s
+  }
 
 export default {
 	formatTodayDate,
@@ -178,5 +225,6 @@ export default {
 	formatLastMonthDate,
 	formatTommorowFiveDate,
 	getTodayTime,
-	formatAddSevenDate
+	formatAddSevenDate,
+	getWeek
 }

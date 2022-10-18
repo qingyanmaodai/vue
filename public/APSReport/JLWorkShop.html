@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>金羚APS总装看板</title>
+  <title>APS总装看板</title>
   <link rel="stylesheet" type="text/css" href="./css/common.css" />
   <link rel="stylesheet" type="text/css" href="./css/WorkShop.css" />
 </head>
@@ -46,8 +46,8 @@
                   </div>
                 </div>
                 <div class="group9 flex-row justify-center">
-                  <span class="info4">{{list[0].ProductionQty}}</span>
-                  <span class="word2">{{list[0].unProductionQty}}</span>
+                  <span class="info4">{{list[0].ProductionQty||0}}</span>
+                  <span class="word2">{{list[0].unProductionQty||0}}</span>
                 </div>
                 <div class="group10 flex-row">
                   <div class="layer2 flex-col">
@@ -58,8 +58,8 @@
                   </div>
                 </div>
                 <div class="group11 flex-row justify-center">
-                  <span class="info4">{{list[0].ruzhi}}</span>
-                  <span class="info4">{{list[0].lizhi}}</span>
+                  <span class="info4">{{list[0].ruzhi||0}}</span>
+                  <span class="info4">{{list[0].lizhi||0}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
@@ -73,11 +73,11 @@
             </div>
             <div class="main43 flex-col justify-between">
               <div class="outer26 flex-row">
-                <span class="info34">昨日人均产能</span>
+                <span class="info34">超期异常原因</span>
               </div>
               <div class="content2">
                 <div class="flex-row justify-between">
-                  <span class="txt4">（单位：台）</span>
+                  <!-- <span class="txt4">（单位：台）</span> -->
                   <!-- <span class="info7">组装线</span> -->
                 </div>
                 <div class="navboxall_time" id="PerHourCapOption"></div>
@@ -89,36 +89,36 @@
               </div>
               <div class="content  flex-col justify-between align-center">
                 <div class="group7 flex-row justify-center">
-                  <span class="word1">{{list[2].weikaigong}}</span>
-                  <span class="info3">{{list[2].yikaigong}}</span>
+                  <span class="word1">{{list[2].Qty||0}}</span>
+                  <span class="info3">{{list[2].yikaigong||0}}</span>
                 </div>
                 <div class="group8 flex-row ">
                   <div class="main1 flex-col">
-                    <span class="word5">未开工</span>
+                    <span class="word5">生产订单数</span>
                   </div>
                   <div class="main2 flex-col">
-                    <span class="txt1">已开工</span>
+                    <span class="txt1">超期异常</span>
                   </div>
                 </div>
                 <div class="group9 flex-row justify-center">
-                  <span class="word1">{{list[2].lingliao}}</span>
-                  <span class="info3">{{list[2].bufenlingliao}}</span>
+                  <span class="word1">{{list[2].lingliao||0}}</span>
+                  <span class="info3">{{list[2].bufenlingliao||0}}</span>
                 </div>
                 <div class="group10 flex-row">
                   <div class="layer2 flex-col">
-                    <span class="info5">全部领料</span>
+                    <span class="info5">APS排产中</span>
                   </div>
                   <div class="layer3 flex-col">
-                    <span class="txt2">部分领料</span>
+                    <span class="txt2">异常未排产</span>
                   </div>
                 </div>
                 <div class="group11 flex-row justify-center">
-                  <span class="info50">{{list[2].weilingliao}}</span>
-                  <span class="word3">{{list[2].wancheng}}</span>
+                  <span class="info50">{{list[2].PlanQty}}</span>
+                  <span class="word3">{{list[2].CompleteRate}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
-                    <span class="word4">未领料</span>
+                    <span class="word4">日计划订单数</span>
                   </div>
                   <div class="mod3 flex-col">
                     <span class="info6">已完成</span>
@@ -129,35 +129,35 @@
 
             <div class="main45 flex-col">
               <div class="bd34 flex-row justify-start">
-                <span class="word76">周生产计划</span>
+                <span class="word76">超期订单明细</span>
               </div>
               <div class="main3 flex-row  justify-between">
-                <span class="word tableWidthRatio8">组装线别</span>
+                <span class="word tableWidthRatio10">类型</span>
                 <span class="word tableWidthRatio10">订单号</span>
-                <span class="word tableWidthRatio26">产品编码</span>
-                <span class="word tableWidthRatio7">计划数</span>
-                <span class="word tableWidthRatio7">T1</span>
-                <span class="word tableWidthRatio7">T2</span>
-                <span class="word tableWidthRatio7">T3</span>
-                <span class="word tableWidthRatio7">T4</span>
-                <span class="word tableWidthRatio7">T5</span>
-                <span class="word tableWidthRatio7">T6</span>
-                <span class="word tableWidthRatio7">T7</span>
+                <span class="word tableWidthRatio15">产品编码</span>
+                <span class="word tableWidthRatio20">型号</span>
+                <span class="word tableWidthRatio5">数量</span>
+                <span class="word tableWidthRatio10">来源单号</span>
+                <span class="word tableWidthRatio10">计划交期</span>
+                <span class="word tableWidthRatio10">超期天数</span>
+                <span class="word tableWidthRatio10">超期原因</span>
+                <!-- <span class="word tableWidthRatio7">T6</span>
+                <span class="word tableWidthRatio7">T7</span> -->
               </div>
               <div class="table1 wrap">
                 <div >
                   <div  class=" text-wrapper flex-row justify-between" v-for="(item,index) in list[3]" :key="index"> 
-                    <span class="tableWidthRatio8 tableContent">{{item.LineName}}</span>
+                    <span class="tableWidthRatio10 tableContent"></span>
                     <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
-                    <span class="tableWidthRatio26 tableContent">{{item.Code}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.Qty}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day1}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day2}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day3}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day4}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day5}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day6}}</span>
-                    <span class="tableWidthRatio7 tableContent">{{item.day7}}</span>
+                    <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
+                    <span class="tableWidthRatio20 tableContent">{{item.Spec}}</span>
+                    <span class="tableWidthRatio5 tableContent">{{item.Qty}}</span>
+                    <span class="tableWidthRatio10 tableContent"></span>
+                    <span class="tableWidthRatio10 tableContent">{{item.DeliveryDate}}</span>
+                    <span class="tableWidthRatio10 tableContent"></span>
+                    <span class="tableWidthRatio10 tableContent clampEllipsis1" title=""></span>
+                    <!-- <span class="tableWidthRatio7 tableContent">{{item.day6}}</span>
+                    <span class="tableWidthRatio7 tableContent">{{item.day7}}</span> -->
                   </div>
                 </div>
               </div>
@@ -167,7 +167,7 @@
           <div class="group46 flex-row justify-between">
             <div class="outer27 flex-col">
               <div class=" flex-col">
-                <span class="word77">周计划达成</span>
+                <span class="word77">周配套率</span>
               </div>
               <div class="navboxall" id="WeeksRateOption"></div>
             </div>
@@ -179,7 +179,7 @@
             </div>
             <div class="outer29 flex-col">
               <div class="block58 flex-row">
-                <span class="txt44">周齐套率</span>
+                <span class="txt44">7日的齐套率</span>
               </div>
               <div class="navboxall" id="OrderCapOption"></div>
             </div>
@@ -188,25 +188,25 @@
           <div class="group48 flex-row justify-between">
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">周计划达成率</span>
+                <span class="info34">周计划吻合度</span>
               </div>
               <div class="content flex-col justify-between">
                 <div class="navboxall3" id="weeksBadOption"></div>
                 <div class="mod">
                   <div class="mod12 flex-row justify-between">
                     <span class="word62">{{list[7].PlanQty}}</span>
-                    <span class="word63">{{list[7].BadQty}}</span>
+                    <span class="word63">{{list[7].HasQty}}</span>
                   </div>
                   <div class="mod13 flex-row justify-between">
                     <span class="info26">计划数</span>
-                    <span class="word64">不良数</span>
+                    <span class="word64">完成数</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">日计划达成率</span>
+                <span class="info34">今日计划进度</span>
               </div>
               <div class="content flex-col justify-between">
                 <div class="navboxall3" id="weeksFinishOption"></div>
@@ -224,7 +224,7 @@
             </div>
             <div class="bd36 flex-col">
               <div class="outer26 flex-row">
-                <span class="info34">不达成原因分布</span>
+                <span class="info34">周不达成分布</span>
               </div>
               <div class="content1 flex-col justify-between">
                 <div class="navboxall2" id="WeeksBadQtyOption"></div>
@@ -256,12 +256,12 @@
                 <span class="word tableWidthRatio15">电机库存</span>
                 <!-- <span class="word tableWidthRatio15">欠料数</span> -->
               </div>
-              <div class="table1 wrap">
+              <div class="table1 wrap6">
                 <div>
                   <div class="text-wrapper flex-row justify-between" v-for="(item,index) in list[12]" :key="index">
                     <span class="tableWidthRatio20 tableContent">{{item.OrderNo}}</span>
-                    <span class="tableWidthRatio50 tableContent">{{item.Code}}</span>
-                    <span class="tableWidthRatio15 tableContent">{{item.PlanQty}}</span>
+                    <span class="tableWidthRatio50 tableContent">{{item.Extend16}}</span>
+                    <span class="tableWidthRatio15 tableContent">{{item.Extend17}}</span>
                     <!-- <span class="tableWidthRatio15 tableContent">{{item.Qty}}</span> -->
                   </div>
                 </div>
@@ -320,6 +320,7 @@
     },
     data() {
       return {
+        timer1:null,
         OrganizeIDsList:[],
         form:{},
         OrganizeIDs:'',
@@ -1564,22 +1565,41 @@
             .then(async(res) =>{
               if (res.result) {
                   if(res.data.length){
-                    await this.handleTree(res.data)
+                   await this.handleTree(res.data)
+                   await this.getWorkData()
+                  //  console.log('res',arr)
                     console.log('OrganizeIDsList',this.OrganizeIDsList)
+                  }
+              }
+            })
+      },
+      getWorkData(){
+        let Ids = this.OrganizeIDsList.length?this.OrganizeIDsList.join(','):''
+        axiosPostRequst(`/APSAPI/APSData`, { OrganizeID: Ids,dicID:97,WorkingDate: [formatDate.formatTodayDate(), formatDate.formatTodayDate()],groupby:'OrganizeName' })
+            .then(async(res) =>{
+              if (res.result) {
+                  if(res.data.length){
+                    // Peoples
+                    console.log('res.data',res.data)
                   }
               }
             })
       },
       //树结构递归
     handleTree(data) {
-      // let list = []
+      let total = 0
       return data.filter((item, index) => {
-        this.OrganizeIDsList.push(item.OrganizeID)
-
-        if (item.children && item.children.length>0) {
+        item.title = item.OrganizeName
+        item.id = item.OrganizeID
+        item.expanded = true
+        if (item.children && item.children.length) {
           item.children = this.handleTree(item.children)
+        }else{
+          total +=Number(item.TotalPeoples)
         }
-        return 
+        this.OrganizeIDsList.push(item.OrganizeID)
+        console.log('total',total)
+        return true
       })
     },
       // 接收路由传参
@@ -1657,11 +1677,11 @@
         myChart.clear();
         myChart.setOption(option)
         console.log('111')
-        // var timer = setInterval(function() {
-        //     clearInterval(timer);
-        //     // 下面处理业务
-        //     _this.barData(id,option)
-        // }, 1000*60*5)
+        var timer = setInterval(function() {
+            clearInterval(timer);
+            // 下面处理业务
+            _this.barData(id,option)
+        }, 1000*60*5)
       },
       //获取人员管理数据
       getPersonData(OrganizeID) {
@@ -1669,72 +1689,77 @@
         //   .then(function (res) {
 
         //   })
-        this.list[0] = {
-          TotalPeoples: 120,
-          ProductionQty: 100,
-          unProductionQty: 20,
-          lizhi:0,
-          ruzhi:0
-        }
+        // this.list[0] = {
+        //   TotalPeoples: 120,
+        //   ProductionQty: 100,
+        //   unProductionQty: 20,
+        //   lizhi:0,
+        //   ruzhi:0
+        // }
       },
-      // 获取某车间所有工序人均小时产能
+      // 获取超期异常原因
       getProcessCapData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[1] = [
-          {processName:'总装',Qty:1}
-        ]
-        if(this.list[1].length){
-          this.list[1].map(item=>{
-            this.PerHourCapOption.yAxis.data.push(item.processName)
-            this.PerHourCapOption.series[0].data.push(item.Qty)
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'AbnormalReason' })
+          .then(function (res) {
+          //   if(this.list[1].length){
+          // this.list[1].map(item=>{
+          //   this.PerHourCapOption.yAxis.data.push(item.processName)
+          //   this.PerHourCapOption.series[0].data.push(item.Qty)
+          // })
+        // }
+        // this.barData('PerHourCapOption', this.PerHourCapOption)
           })
+        
+        
+      },
+      timeFormat(date,num){
+        let y = date.getFullYear(); //年
+        let m = date.getMonth() + 1; //月
+        let d = date.getDate(); //日
+        if (num == 1){
+          d = date.getDate();
         }
-        this.barData('PerHourCapOption', this.PerHourCapOption)
+        m = m < 10 ? "0" + m :m;
+        d = d < 10 ? "0" + d : d;
+        return y + "-" + m + "-" + d;
       },
       // 获取本月工单状态
       getOrderData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[2] = {
-          weikaigong:23011,
-          yikaigong:30,
-          lingliao:340445,
-          bufenlingliao:0,
-          weilingliao:0,
-          wancheng:'100%',
-        }
+        var date = new Date();
+        var currentMonth = date.getMonth();
+        var nextMonth = ++currentMonth;
+        var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
+        var oneDay = 1000 * 60 * 60 * 24;
+        //获取当前月最后一天
+        let EndDate = this.timeFormat(new Date(nextMonthFirstDay -oneDay),1);
+        //设置一个月的某一天，数值（1 ~ 31）
+        date.setDate(1);
+        let StartDate = this.timeFormat(date, 0);
+        // 获取订单数
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:49, OrderDate:[StartDate,EndDate],fields:'SUM(Qty) as Qty'})
+          .then(function (res) {
+            if (res.result) {
+              _this.list[2].Qty = res.data&&res.data[0].Qty || 0
+            }
+          })
+          // 超期异常:待排订单中超期判定结果为“超期异常”的数据
+          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'ProductionStatus',fields:'SUM(Qty) as Qty,ProductionStatus'})
+          .then(function (res) {
+            if (res.result) {
+              // _this.list[2].Qty = res.data&&res.data[0].Qty || 0
+              
+            }
+          })
+        
       },
-      // 获取七日包装计划
+      // 获取超期订单明细
       getProPlanData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[3] =[
-        { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', Qty: 4000, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', Qty: 950, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7B', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', Qty: 815, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7A', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', Qty: 850, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7C', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', Qty: 2300, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 1500, day1: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', Qty: 300, day1: 10, day2: 20, day3: 30, day4: 40, day5: 50, day6: 60, day7: 70 },
-        ]
-        // this.$nextTick(()=>{
-        //   this.gundong()
-        // })
- 
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,DeliveryDate:['',formatDate.formatOldDate()],rows:0 })
+          .then(function (res) {
+            if(res.result){
+              _this.list[3] = res.data
+            }
+          })
       },
       // 周配套率
       getWeeksCapData(OrganizeID){
@@ -1771,44 +1796,36 @@
       },
       // 15日实时产量
       getRealTimeProData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[5] =[
-          {day:'day1',Qty1:200,Qty2:300,Qty3:400,Qty4:300},
-          {day:'day2',Qty1:400,Qty2:500,Qty3:600,Qty4:500},
-          {day:'day3',Qty1:500,Qty2:600,Qty3:700,Qty4:600},
-          {day:'day4',Qty1:400,Qty2:600,Qty3:700,Qty4:''},
-          {day:'day5',Qty1:'',Qty2:'',Qty3:'',Qty4:''},
-          {day:'day6',Qty1:'',Qty2:'',Qty3:'',Qty4:''},
-          {day:'day7',Qty1:'',Qty2:'',Qty3:'',Qty4:''},
-          {day:'day8',Qty1:'',Qty2:'',Qty3:'',Qty4:''},
-          {day:'day9',Qty1:'',Qty2:'',Qty3:'',Qty4:''},
-          {day:'day10',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-          {day:'day11',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-          {day:'day12',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-          {day:'day13',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-          {day:'day14',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-          {day:'day15',Qty1:'',Qty2:'',Qty3:'',Qty4:0},
-        ]
-        if(this.list[5].length){
-          this.list[5].map(item=>{
-            console.log('item',item)
-            this.RealTimeProOption.xAxis[0].data.push(item.day)
-            this.RealTimeProOption.series[0].data.push(item.Qty1)
-            this.RealTimeProOption.series[1].data.push(item.Qty2)
-            this.RealTimeProOption.series[2].data.push(item.Qty3)
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:['',formatDate.formatOldDate()],rows:15,sort:'PlanDay DESC',fields:'SUM(ConfirmQty) as ConfirmQty,PlanDay',groupby:'PlanDay'})
+          .then(function (res) {
+            if(res.result){
+              _this.list[5] =res.data
+        if(_this.list[5].length){
+          _this.list[5].map(item=>{
+            
+            let day = (item.PlanDay).slice(-5)
+            console.log('day',day)
+            _this.RealTimeProOption.xAxis[0].data.unshift(day)
+            _this.RealTimeProOption.series[0].name = '1'
+            _this.RealTimeProOption.series[1].name = '2'
+            _this.RealTimeProOption.series[2].name = '3'
+            _this.RealTimeProOption.series[0].data.unshift(item.Qty1)
+            _this.RealTimeProOption.series[1].data.unshift(item.Qty2)
+            _this.RealTimeProOption.series[2].data.unshift(item.Qty3)
           })
         }
-        this.barData('RealTimeProOption', this.RealTimeProOption)
+        _this.barData('RealTimeProOption', _this.RealTimeProOption)
+            }
+        
+        
+          })
       },
-      // 各品类工单齐套率
+      // 7日齐套率
       getOrderCapData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5594,DemandDate:[formatDate.formatTodayDate(),''],rows:0,groupby:'DemandDate' })
+          .then(function (res) {
 
-        //   })
+          })
         this.list[6] =[
         { LineName: '7A', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', Qty: 4000, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
           { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', Qty: 950, HasQty: 100, day2: 200, day3: 300, day4: 400, day5: 500, day6: 600, day7: 700 },
@@ -1830,44 +1847,63 @@
         
         this.barData('OrderCapOption', this.OrderCapOption)
       },
-      // 周生产不良率
+      // 周生产计划达成率
       getWeeksBadData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[7] = {PlanQty:1000,BadQty:100}
-        this.weeksBadOption.series[0].data[0].value = this.list[7].PlanQty
-        this.weeksBadOption.series[0].data[1].value = this.list[7].BadQty
-        this.weeksBadOption.series[0].data[2].value = this.list[7].PlanQty + this.list[7].BadQty
-        this.weeksBadOption.series[1].data[0].value = this.list[7].PlanQty
-        this.weeksBadOption.series[1].data[1].value = this.list[7].BadQty
-        this.weeksBadOption.series[1].data[2].value = this.list[7].PlanQty + this.list[7].BadQty
-        this.weeksBadOption.title.text =  `不良率\n${this.list[7].BadQty&&this.list[7].PlanQty ? parseFloat(((this.list[7].BadQty / this.list[7].PlanQty) * 100).toFixed(2)) : 0}%`
-        this.barData('weeksBadOption', this.weeksBadOption)
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:6723 ,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+          .then(function (res) {
+            if(res.result){
+              _this.list[7] = res.data&&res.data[0]?res.data&&res.data[0]:[]
+              _this.weeksBadOption.series[0].data[0].value = _this.list[7].PlanQty
+              _this.weeksBadOption.series[0].data[1].value = _this.list[7].HasQty
+              _this.weeksBadOption.series[0].data[2].value = _this.list[7].PlanQty + _this.list[7].HasQty
+              _this.weeksBadOption.series[1].data[0].value = _this.list[7].PlanQty
+              _this.weeksBadOption.series[1].data[1].value = _this.list[7].HasQty
+              _this.weeksBadOption.series[1].data[2].value = _this.list[7].PlanQty + _this.list[7].HasQty
+              _this.weeksBadOption.title.text =  `完成率\n${_this.list[7].HasQty&&_this.list[7].PlanQty ? parseFloat(((_this.list[7].HasQty / _this.list[7].PlanQty) * 100).toFixed(2)) : 0}%`
+              setTimeout(() => {
+                _this.barData('weeksBadOption', _this.weeksBadOption)
+              }, 100);
+            }
+          })
+        
       },
-      // 周计划达成率
+      // 日计划达成率
       getWeeksFinishData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:formatDate.formatTodayDate(),fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+          .then(function (res) {
+            if(res.result){
+              _this.list[8] = []
+              _this.list[8].PlanQty = res.data&&res.data[0].PlanQty||0
+              _this.list[8].HasQty = res.data&&res.data[0].HasQty||0
 
-        //   })
-        this.list[8] = {PlanQty:1000,HasQty:100}
-        this.weeksFinishOption.series[0].data[0].value = this.list[8].PlanQty
-        this.weeksFinishOption.series[0].data[1].value = this.list[8].HasQty
-        this.weeksFinishOption.series[0].data[2].value = this.list[8].PlanQty + this.list[8].HasQty
-        this.weeksFinishOption.series[1].data[0].value = this.list[8].PlanQty
-        this.weeksFinishOption.series[1].data[1].value = this.list[8].HasQty
-        this.weeksFinishOption.series[1].data[2].value = this.list[8].PlanQty + this.list[8].HasQty
-        this.weeksFinishOption.title.text =  `完成率\n${this.list[8].HasQty&&this.list[8].PlanQty ? parseFloat(((this.list[8].HasQty / this.list[8].PlanQty) * 100).toFixed(2)) : 0}%`
-        this.barData('weeksFinishOption', this.weeksFinishOption)
+              _this.list[2].PlanQty = res.data&&res.data[0].PlanQty||0
+              _this.list[2].HasQty = res.data&&res.data[0].HasQty||0
+              _this.list[2].CompleteRate = res.data&&res.data[0].HasQty?`${parseFloat(((res.data[0].HasQty / res.data[0].PlanQty) * 100).toFixed(2))}%`:'0%'
+            // this.list[8] = {PlanQty:1000,HasQty:100}
+            _this.weeksFinishOption.series[0].data[0].value = _this.list[8].PlanQty
+            _this.weeksFinishOption.series[0].data[1].value = _this.list[8].HasQty
+            _this.weeksFinishOption.series[0].data[2].value = _this.list[8].PlanQty + _this.list[8].HasQty
+            _this.weeksFinishOption.series[1].data[0].value = _this.list[8].PlanQty
+            _this.weeksFinishOption.series[1].data[1].value = _this.list[8].HasQty
+            _this.weeksFinishOption.series[1].data[2].value = _this.list[8].PlanQty + _this.list[8].HasQty
+            _this.weeksFinishOption.title.text =  `完成率\n${_this.list[8].HasQty&&_this.list[8].PlanQty ? parseFloat(((_this.list[8].HasQty / _this.list[8].PlanQty) * 100).toFixed(2)) : 0}%`
+        setTimeout(()=>{
+          _this.barData('weeksFinishOption', _this.weeksFinishOption)
+        },100)
+        
+            }
+            
+          })
+        
       },
-      // 周不良分布
+      // 周不达成分布
       getWeeksBadQtyData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],groupby:'LineName'})
+          .then(function (res) {
+            if(res.result){
 
-        //   })
+            }
+          })
         this.list[9] = [
           {
             name: "A类型",
@@ -1921,12 +1957,14 @@
         this.barData('WeeksBadQtyOption', this.WeeksBadQtyOption)
 
       },
-      // 周不达成分布
+      // 欠料类型分布
       getWeeksUnfinishData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,groupby:'IssueType'})
+          .then(function (res) {
+            if(res.result){
 
-        //   })
+            }
+          })
         this.list[10] = [
           {
             name: "A类型",
@@ -1979,12 +2017,14 @@
         this.WeeksUnfinishOption.series[0].data = formatData
         this.barData('WeeksUnfinishOption', this.WeeksUnfinishOption)
       },
-      // 欠料分布
+      // 欠料属性分布
       getOweMatData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594,rows:0,groupby:'MaterialProp'})
+          .then(function (res) {
+            if(res&&res.result){
+              console.log('res')
+            }
+          })
         this.list[11] = [
           {
             name: "A类型",
@@ -2039,25 +2079,48 @@
       },
       // 欠料明细
       getOweMatDetailsData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
-        //   .then(function (res) {
-
-        //   })
-        this.list[12] = [
-          { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 4000, Qty: 100 },
-          { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 950, Qty: 100 },
-          { LineName: '7B', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', PlanQty: 815, Qty: 100 },
-          { LineName: '7A', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', PlanQty: 850, Qty: 100 },
-          { LineName: '7C', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', PlanQty: 2300, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
-          { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 300, Qty: 10 },
-        ]
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,rows:0 })
+          .then(function (res) {
+            if(res.result){
+              _this.list[12] = []
+              if(res.data&&res.data.length){
+                _this.list[12] = res.data.filter((o)=>{
+                return o.Extend16
+              })
+              }
+              if(_this.timer1){
+                    clearTimeout(_this.timer1)
+                  }
+              _this.timer1 = setTimeout(() => {
+                _this.gundong2()
+                  }, 1000);
+              
+              console.log('_this.list[12]',_this.list[12])
+            }
+          })
+        // this.list[12] = [
+        //   { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 4000, Qty: 100 },
+        //   { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 950, Qty: 100 },
+        //   { LineName: '7B', OrderNo: 'MO036011', Code: '2.01.01.01.AHB10-0-2', PlanQty: 815, Qty: 100 },
+        //   { LineName: '7A', OrderNo: 'MO035173', Code: '2.01.01.01.AHB10-0-2', PlanQty: 850, Qty: 100 },
+        //   { LineName: '7C', OrderNo: 'MO034753', Code: '2.01.01.01.APB15-3-1A(5Y/NR)', PlanQty: 2300, Qty: 100 },
+        //   { LineName: '7D', OrderNo: 'MO037220', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
+        //   { LineName: '7D', OrderNo: 'MO037341', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 1500, Qty: 100 },
+        //   { LineName: '7D', OrderNo: 'MO036286', Code: '2.01.01.01.APB30-6-1A(5Y)', PlanQty: 300, Qty: 10 },
+        // ]
         
       },
       // 滚动数据
       gundong() {
          $('.wrap').liMarquee({
+            direction: 'up',//身上滚动 
+            runshort: false,//内容不足时不滚动
+            scrollamount: 20//速度
+          });
+         
+        },
+        gundong2() {
+         $('.wrap6').liMarquee({
             direction: 'up',//身上滚动 
             runshort: false,//内容不足时不滚动
             scrollamount: 20//速度
@@ -2098,7 +2161,11 @@
             }
           }
         },
-    }
+    },
+    beforeUnmount() {
+        if(this.gudtime) this.gudtime.destroy();
+        if(this.timer1) this.timer1.destroy();
+      },
   })
   const _this = app
 </script>

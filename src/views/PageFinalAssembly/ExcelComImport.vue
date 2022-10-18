@@ -131,7 +131,7 @@ import formatDates, {
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
 export default {
-  name: "ExcelComImport" + rand,
+  name: "ExcelComImport",
   components: {
     ComSearch,
   },

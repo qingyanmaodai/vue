@@ -25,7 +25,7 @@ function getCookie(name) {
 function axiosPostRequst(url, data) {
     let result = axios({
         method: 'post',
-        url: ''+ url,
+        url: 'http://jinlingfan.gicp.net:5999'+ url,
         data: data,
         headers: {
             'token': getCookie("token"),

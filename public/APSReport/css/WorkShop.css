@@ -3417,25 +3417,27 @@
   }
   
   .word62 {
-    width: 66px;
+    /* width: 66px; */
     /* height: 31px; */
     display: inline-block;
     color: rgba(26, 222, 151, 1);
     font-size: 26px;
     /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
+    text-align: center;
     /* line-height: 31px;
     text-align: right; */
   }
   
   .word63 {
-    width: 42px;
+    /* width: 42px; */
     /* height: 31px; */
     display: inline-block;
     color: rgba(235, 136, 136, 1);
     font-size: 26px;
     /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
+    text-align: center;
     /* line-height: 31px;
     text-align: right; */
   }
@@ -3447,7 +3449,7 @@
   }
   
   .info26 {
-    width: 75px;
+    /* width: 75px; */
     height: 18px;
     display: inline-block;
     color: rgba(255, 255, 255, 1);
@@ -3455,11 +3457,11 @@
     /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
-    text-align: right;
+    text-align: center;
   }
   
   .word64 {
-    width: 60px;
+    /* width: 60px; */
     height: 18px;
     display: inline-block;
     color: rgba(255, 255, 255, 1);
@@ -3467,7 +3469,7 @@
     /* font-family: PingFangSC-Regular; */
     white-space: nowrap;
     line-height: 18px;
-    text-align: right;
+    text-align: center;
   }
   
   .mod14 {
