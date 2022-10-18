@@ -317,7 +317,9 @@ export default {
     // 删行
     async deleteRow(remarkTb) {
         if(this.selectionData[remarkTb].length){
-            this.adminLoading = true;
+          this.$confirm("确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗？")
+        .then(async() => {
+          this.adminLoading = true;
             let res = await SaveData(this.selectionData[remarkTb]);
             const { datas, forms, result, msg } = res.data;
             if (result) {
@@ -336,6 +338,9 @@ export default {
                 dangerouslyUseHTMLString: true,
                 });
             }
+        })
+        .catch((_) => {});
+            
         }else{
             // 还未保存到数据库的数据删除前端逻辑删除
             if(this.selectionNoIdData[remarkTb].length){
