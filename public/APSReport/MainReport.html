@@ -166,26 +166,33 @@
           <div class="boxall" style="height:300px">
             <div class="alltitle">超期订单分布</div>
             <div class="navboxall overflowhidden">
-              <table class="table1 tableheight" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <thead>
-                  <tr class="flexjc">
-                    <th class="f1" scope="col">排名</th>
-                    <th class="f2" scope="col">控制者</th>
-                    <th class="f3" scope="col">在制订单</th>
-                    <th class="f3" scope="col">超期订单</th>
-                    <th class="f3" scope="col">超期占比</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  
-                  <tr v-for="(item3,index) in rightData_1" :key="index" class="flexjc">
-                    <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
-                    <td class="f2 veralign wordbreak">{{item3.N1}}</td>
-                    <td class="f3 veralign wordbreak">{{item3.C1}}<br></td>
-                    <td class="f3 veralign wordbreak">{{item3.C2}}<br></td>
-                    <td class="f3 veralign">{{item3.P1}}<br></td>
-                  </tr>
-                </tbody>
+              
+
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <thead>
+                    <tr>
+                      <th class="f1" scope="col">排名</th>
+                      <th class="f2" scope="col">控制者</th>
+                      <th class="f3" scope="col">在制订单</th>
+                      <th class="f3" scope="col">超期订单</th>
+                      <th class="f3" scope="col">超期占比</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div class="wrapcon">
+                  <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                    <tbody class="tablegun " >
+                      <tr v-for="(item3,index) in rightData_1" :key="index">
+                        <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
+                        <td class="f2 veralign wordbreak">{{item3.N1}}</td>
+                        <td class="f3 veralign wordbreak">{{item3.C1}}</td>
+                        <td class="f3 veralign wordbreak">{{item3.C2}}</td>
+                        <td class="f3 veralign">{{item3.P1}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </table>
             </div>
           </div>
@@ -881,7 +888,10 @@
         pageTotal: 0,
         pageIndex: 1
       },
-      CreatedOn: []
+      CreatedOn: [],
+      OrganizeList:[],
+      form:{},
+      indexNo:0,
     },
     created() {
       this.oldDayDate = [formatDate.formatOldDate(), formatDate.formatOldDate()];
@@ -909,10 +919,11 @@
         this.DeliveryPlanDate.push(obj2);
       }
 
-      this.getData_60();
+      // this.getData_60();
       // this.getData_30();
-      this.getData_2M();
-      this.getData_30M();
+      // this.getData_2M();
+      this.getOrgData()
+      
      // this.getChangeLabel();
     },
     mounted() {
@@ -921,6 +932,31 @@
       // }, 1000 * 60 * 5)
     },
     methods: {
+      // 获取组织名称
+      getOrgData() {
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, rows:0,ParentID:160})
+            .then( async(res) =>{
+              if (res.result) {
+                if (res.data.length != 0) {
+                  console.log('res.data',res.data)
+                  this.OrganizeList = res.data
+                  if(res.data&&res.data.length){
+                    this.form =res.data[0]
+                  }
+                }
+                this.getData_30M(this.form.OrganizeID);
+              }
+              else {
+                _this.$message({
+                  message: res.msg,
+                  type: 'error'
+                });
+              }
+            })
+            .catch(function (error) {
+
+            });
+        },
       zero(num) {
         if (Number(num) < 10) {
           return '0' + num
@@ -1136,8 +1172,8 @@
         return days
       },
       // 半小时后刷新
-      getData_30M() {
-      
+      getData_30M(OrganizeID) {
+        
         this.rightData_1 = [];
         this.rightData_2 = [];
         let currentHour = new Date().getHours();
@@ -1224,7 +1260,7 @@
 
           // 今日计划生产进度
           // axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: '', YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
-          axiosPostRequst(`/APSAPI/GetEASTReport`, { rows: 0, page: 1, dicID: 6720,  })
+          axiosPostRequst(`/APSAPI/GetEASTReport`, { rows: 0, page: 1, dicID: 6720,OrganizeID  })
             .then(function (res) {
               if (res.result) {
                 _this.leftOption_1.yAxis.data = [];
@@ -1309,8 +1345,8 @@
 
 
                   //库存需求分析
-let series1=[];
-let series2=[];
+                  let series1=[];
+                  let series2=[];
                   _this.DeliveryPlanDate2=[];
                   res.data.Table7.forEach((x, i) => {
                       let newIndex = 0;
@@ -1342,8 +1378,8 @@ let series2=[];
 //库存结余
                     _this.leftData_2 = res.data.Table9;
                     $(".loading").fadeOut()
-if(_this.judgeRight_1==false)
-{
+                  if(_this.judgeRight_1==false)
+                  {
                     _this.$nextTick(() => {
                  _this.gundong()
                  
@@ -1402,7 +1438,7 @@ if(_this.judgeRight_1==false)
           //   })
           //   .catch(function (error) {
           //   });
-          axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720,  OrganizeIDs: '', YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
+          axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720,  OrganizeID, YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
             .then(function (res) {
               if (res.result) {
                 _this.centerOption_4.xAxis[0].data = [];
@@ -1424,10 +1460,20 @@ if(_this.judgeRight_1==false)
             })
 
 
-      
+        
+        this.indexNo++
+        console.log('indexNo',this.indexNo)
         this.timeOut = setTimeout(() => {
-         window.location.href=window.location.href
-        }, 1000 * 60*5)
+          if(this.OrganizeList.length==this.indexNo){
+            this.indexNo = 0
+            this.form = this.OrganizeList[this.indexNo]
+          }else{
+            this.form = this.OrganizeList[this.indexNo]
+          }
+          
+          this.getData_30M(this.form.OrganizeID)
+        //  window.location.href=window.location.href
+        }, 1000 * 60 * 3)
       },
       // 渲染图标
       drawChart(id, option) {
@@ -1670,7 +1716,7 @@ if(_this.judgeRight_1==false)
 
   .logo {
    
-    height:80px;
+    height:60px;
     position: absolute;
     left: 20px;
     top: 1px;
