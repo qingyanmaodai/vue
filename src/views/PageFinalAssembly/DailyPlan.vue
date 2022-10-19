@@ -970,6 +970,7 @@
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {
+        
         let sheet = this.spread.getActiveSheet();
         let dataSource = sheet.getDataSource();
         if (val == null) {
@@ -977,6 +978,8 @@
         }else if(val==0){//输入0不触发自动计算
           return
         }
+        val = Number(val)
+       
         let currentRow = dataSource[rowIndex];
         if (currentRow.ID == -1) {
           return false;
