@@ -1412,8 +1412,8 @@ if(_this.judgeRight_1==false)
                //近15日计划完成情况对比
                res.data.Table7.forEach(x => {
                   
-                let date = formatDate.formatDates(x.N1)||''
-                    _this.centerOption_4.xAxis[0].data.push(date.slice(-5));
+                // let date = formatDate.formatDates(x.N1)||''
+                    _this.centerOption_4.xAxis[0].data.push(x.N1);
                     _this.centerOption_4.series[0].data.push(x.Q1)
                     _this.centerOption_4.series[1].data.push(x.Q2)
                     _this.centerOption_4.series[2].data.push(x.P1)
