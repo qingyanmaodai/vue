@@ -212,6 +212,15 @@ function getTodayTime() {
 	return s
   }
 
+  // 传入日期当天天，格式年月日
+  function formatDates(dates) {
+    let date = new Date(dates);
+    let year = date.getFullYear();
+    let month = zero(date.getMonth() + 1);
+    let day = zero(date.getDate());
+    return year + "-" + month + "-" + day;
+}
+
 export default {
 	formatTodayDate,
 	formatOldDate,
@@ -226,5 +235,6 @@ export default {
 	formatTommorowFiveDate,
 	getTodayTime,
 	formatAddSevenDate,
-	getWeek
+	getWeek,
+	formatDates
 }
