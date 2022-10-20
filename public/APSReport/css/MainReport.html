@@ -14,9 +14,7 @@
 
 <body>
   <div v-cloak id="app" style="background:#000d4a url(images/bg.jpg) center top;">
-    <div class="loading">
-      <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
-    </div>
+  
     <image @click="moreLarge" src="images/large.png"
       style="position: fixed;bottom:1.2rem;right:1.2rem;width:1.5rem;height: 1,5rem;cursor: pointer;z-index:999" />
     <div class="back"></div>
@@ -1248,7 +1246,11 @@
 
                   _this.rightData_3=res.data.Table1;
                   _this.leftData_3=res.data.Table2;
-                  
+                  if(_this.leftData_3.length){
+                    _this.leftData_3.map(item=>{
+                      item.N1 = formatDate.formatDates(item.N1)||''
+                    })
+                  }
 
                   _this.formData[0]=_this.formData[1]=res.data.Table3[0].S1;
                   _this.formData[2]=res.data.Table3[0].S2;
@@ -1302,7 +1304,7 @@
               //     _this.drawChart('echart4', _this.centerOption_4);
               //     _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
               
- 
+
 
                   //库存需求分析
 let series1=[];
@@ -1311,8 +1313,7 @@ let series2=[];
                   res.data.Table7.forEach((x, i) => {
                       let newIndex = 0;
                       let newIndex2 = 0;
-                      debugger;
-                      let date = x.N1;
+                      let date = formatDate.formatDates(x.N1)||''
                       _this.DeliveryPlanDate2.push(date.slice(-5));
                     
                         series1.push(x.S1);
@@ -1338,7 +1339,7 @@ let series2=[];
 
 //库存结余
                     _this.leftData_2 = res.data.Table9;
-                    $(".loading").fadeOut()
+                    
 if(_this.judgeRight_1==false)
 {
                     _this.$nextTick(() => {
