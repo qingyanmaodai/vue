@@ -19,7 +19,7 @@
               <span class="info1">{{todayDate}}</span>
             </div>
             <div class="header_title">
-              <span class="info2">{{form.OrganizeName}}综合看板</span>
+              <span class="info2">{{list[0].OrganizeName}}综合看板</span>
             </div>
             <div class="headRight">
               <span class="img"> <image @click="moreLarge" src="./images/large.png" class="fullScreen"/></span>
@@ -34,8 +34,8 @@
               </div>
               <div class="content  flex-col justify-between align-center">
                 <div class="group7 flex-row justify-center">
-                  <span class="word1">{{form.TotalPeoples||0}}</span>
-                  <span class="word2">{{list[0].unProductionQty?parseFloat(((list[0].unProductionQty/list[0].ProductionQty)*100).toFixed(2)):0}}%</span>
+                  <span class="word1">{{list[0].TotalPeoples||0}}</span>
+                  <span class="word2">{{list[0].AttendanceRate||0}}%</span>
                 </div>
                 <div class="group8 flex-row ">
                   <div class="main1 flex-col">
@@ -46,8 +46,8 @@
                   </div>
                 </div>
                 <div class="group9 flex-row justify-center">
-                  <span class="info4">{{list[0].ProductionQty||0}}</span>
-                  <span class="word2">{{list[0].unProductionQty||0}}</span>
+                  <span class="info4">{{list[0].Peoples||0}}</span>
+                  <span class="word2">{{list[0].NoSttendance||0}}</span>
                 </div>
                 <div class="group10 flex-row">
                   <div class="layer2 flex-col">
@@ -58,8 +58,8 @@
                   </div>
                 </div>
                 <div class="group11 flex-row justify-center">
-                  <span class="info4">{{list[0].ruzhi||0}}</span>
-                  <span class="info4">{{list[0].lizhi||0}}</span>
+                  <span class="info4">{{list[0].AssemblyLineLength||0}}</span>
+                  <span class="info4">{{list[0].ScrPrinLineLength||0}}</span>
                 </div>
                 <div class="group12 flex-row">
                   <div class="mod2 flex-col">
@@ -132,30 +132,30 @@
                 <span class="word76">超期订单明细</span>
               </div>
               <div class="main3 flex-row  justify-between">
-                <span class="word tableWidthRatio10">类型</span>
+                <span class="word tableWidthRatio5">类型</span>
                 <span class="word tableWidthRatio10">订单号</span>
-                <span class="word tableWidthRatio15">产品编码</span>
-                <span class="word tableWidthRatio20">型号</span>
+                <!-- <span class="word tableWidthRatio15">产品编码</span> -->
+                <span class="word tableWidthRatio35">型号</span>
                 <span class="word tableWidthRatio5">数量</span>
-                <span class="word tableWidthRatio10">来源单号</span>
+                <span class="word tableWidthRatio15">来源单号</span>
                 <span class="word tableWidthRatio10">计划交期</span>
-                <span class="word tableWidthRatio10">超期天数</span>
-                <span class="word tableWidthRatio10">超期原因</span>
+                <span class="word tableWidthRatio7">超期天数</span>
+                <span class="word tableWidthRatio13">超期原因</span>
                 <!-- <span class="word tableWidthRatio7">T6</span>
                 <span class="word tableWidthRatio7">T7</span> -->
               </div>
               <div class="table1 wrap">
                 <div >
                   <div  class=" text-wrapper flex-row justify-between" v-for="(item,index) in list[3]" :key="index"> 
-                    <span class="tableWidthRatio10 tableContent"></span>
+                    <span class="tableWidthRatio5 tableContent">{{item.OrderType}}</span>
                     <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
-                    <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
-                    <span class="tableWidthRatio20 tableContent">{{item.Spec}}</span>
+                    <!-- <span class="tableWidthRatio15 tableContent">{{item.Code}}</span> -->
+                    <span class="tableWidthRatio35 tableContent">{{item.Spec}}</span>
                     <span class="tableWidthRatio5 tableContent">{{item.Qty}}</span>
-                    <span class="tableWidthRatio10 tableContent"></span>
+                    <span class="tableWidthRatio15 tableContent">{{item.SalesOrderNo}}</span>
                     <span class="tableWidthRatio10 tableContent">{{item.DeliveryDate}}</span>
-                    <span class="tableWidthRatio10 tableContent"></span>
-                    <span class="tableWidthRatio10 tableContent clampEllipsis1" title=""></span>
+                    <span class="tableWidthRatio7 tableContent"></span>
+                    <span class="tableWidthRatio13 tableContent clampEllipsis1" :title="item.Extend2">{{item.Extend2}}</span>
                     <!-- <span class="tableWidthRatio7 tableContent">{{item.day6}}</span>
                     <span class="tableWidthRatio7 tableContent">{{item.day7}}</span> -->
                   </div>
@@ -256,7 +256,7 @@
                 <span class="word tableWidthRatio15">电机库存</span>
                 <!-- <span class="word tableWidthRatio15">欠料数</span> -->
               </div>
-              <div class="table1 wrap6">
+              <div class="table1 wrap">
                 <div>
                   <div class="text-wrapper flex-row justify-between" v-for="(item,index) in list[12]" :key="index">
                     <span class="tableWidthRatio20 tableContent">{{item.OrderNo}}</span>
@@ -320,6 +320,7 @@
     },
     data() {
       return {
+        OrganizeTotal:0,
         timer1:null,
         OrganizeIDsList:[],
         form:{},
@@ -907,36 +908,7 @@
               },
               data: []
             },
-            {
-              label: {
-                show: true,
-                position: 'top',
-              },
-              name: '工序2',
-              type: 'line',
-              emphasis: {
-                focus: 'series'
-              },
-              itemStyle: {
-                color: '#F5CC3F'
-              },
-              data: []
-            },
-            {
-              name: '工序3',
-              type: 'line',
-              label: {
-                show: true,
-                position: 'top'
-              },
-              emphasis: {
-                focus: 'series'
-              },
-              itemStyle: {
-                color: '#71C64C'
-              },
-              data: []
-            }
+            
           ]
         },
         OrderCapOption: {
@@ -1546,9 +1518,10 @@
 
       this.$nextTick(async()=>{
           let OrganizeIDs = this.getQueryString('ID')
+          let ProcessIDs = this.getQueryString('ProcessIDs')
           // 看板车间名称
           if(OrganizeIDs){
-            await this.getOrgData(OrganizeIDs)
+            await this.getOrgData(OrganizeIDs,ProcessIDs)
           }else{
             OrganizeIDs = 162//没有传入ID默认的ID
             await this.getOrgData(OrganizeIDs)
@@ -1560,10 +1533,12 @@
       
     },
     methods: {
-      getOrgIDsData(OrganizeIDs){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026,OrganizeIDs })
+      getOrgIDsData(OrganizeID,ProcessIDs){
+        axiosPostRequst(`/APSAPI/GetOrgData`, { dicID: 3026,OrganizeID,ProcessIDs,rows:0 })
             .then(async(res) =>{
               if (res.result) {
+                this.list[0].AssemblyLineLength = 0
+                this.list[0].ScrPrinLineLength = 0
                   if(res.data.length){
                    await this.handleTree(res.data)
                    await this.getWorkData()
@@ -1578,16 +1553,30 @@
         axiosPostRequst(`/APSAPI/APSData`, { OrganizeID: Ids,dicID:97,WorkingDate: [formatDate.formatTodayDate(), formatDate.formatTodayDate()],groupby:'OrganizeName' })
             .then(async(res) =>{
               if (res.result) {
+                this.list[0].Peoples =  0
+                this.list[0].NoSttendance = 0
+                this.list[0].AttendanceRate = 0
                   if(res.data.length){
-                    // Peoples
-                    console.log('res.data',res.data)
+                    
+                    res.data.map(item=>{
+                      this.list[0].Peoples+=item.Peoples
+                    })
+                    // 组织人数
+                    this.list[0].TotalPeoples = this.OrganizeTotal
+                    // 未出勤人数
+                    this.list[0].NoSttendance = this.list[0].TotalPeoples - this.list[0].Peoples
+                    // 出勤率
+                    this.list[0].AttendanceRate = this.list[0].Peoples/this.list[0].TotalPeoples*100
+                    // 总装线体
+                    // 丝印线体
+                    console.log('this.list[0]',this.list[0])
                   }
               }
             })
       },
       //树结构递归
     handleTree(data) {
-      let total = 0
+      // let total = 0
       return data.filter((item, index) => {
         item.title = item.OrganizeName
         item.id = item.OrganizeID
@@ -1595,10 +1584,18 @@
         if (item.children && item.children.length) {
           item.children = this.handleTree(item.children)
         }else{
-          total +=Number(item.TotalPeoples)
+          this.OrganizeTotal +=Number(item.TotalPeoples)
+          if(item.ProcessIDs==="P2208290001"){
+            // 总装线体
+            this.list[0].AssemblyLineLength++
+          }
+          if(item.ProcessIDs==='P2209290002'){
+            //丝印线体
+            this.list[0].ScrPrinLineLength++
+          }
         }
         this.OrganizeIDsList.push(item.OrganizeID)
-        console.log('total',total)
+        console.log('total',this.OrganizeTotal)
         return true
       })
     },
@@ -1609,48 +1606,53 @@
           if (r != null) return decodeURIComponent(r[2]); return null;
         },
       // 获取组织名称
-      getOrgData(OrganizeIDs) {
-          axiosPostRequst(`/APSAPI/GetOrgData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+      getOrgData(OrganizeIDs,ProcessIDs) {
+          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs ,ProcessIDs})
             .then(async(res) =>{
               if (res.result) {
                 if (res.data.length != 0) {
                   _this.form = res.data[0];
+                  _this.form.ProcessIDs = _this.form.ProcessIDs||ProcessIDs
                 }
                 if(_this.form.OrganizeID){
-                  // 人员管理
-                  await this.getPersonData(_this.form.OrganizeID)
-                  // 人均小时产能
-                  await this.getProcessCapData(_this.form.OrganizeID)
-                  // 本月工单状态
-                  await this.getOrderData(_this.form.OrganizeID)
-                  // 七日包装计划
-                  await this.getProPlanData(_this.form.OrganizeID)
-                  // 周配套率
-                  await this.getWeeksCapData(_this.form.OrganizeID)
-                  // 15日实时产量
-                  await this.getRealTimeProData(_this.form.OrganizeID)
-                  // 各品类工单齐套率
-                  await this.getOrderCapData(_this.form.OrganizeID)
-                  // 周生产不良率
-                  await this.getWeeksBadData(_this.form.OrganizeID)
-                  // 周计划达成率
-                  await this.getWeeksFinishData(_this.form.OrganizeID)
-                  // 周不良分布
-                  await this.getWeeksBadQtyData(_this.form.OrganizeID)
-                  // 周不达成分布
-                  await this.getWeeksUnfinishData(_this.form.OrganizeID)
-                  // 欠料分布
-                  await this.getOweMatData(_this.form.OrganizeID)
+                   // 超期订单明细
+                   await this.getProPlanData(_this.form.OrganizeID,_this.form.ProcessIDs)
                   // 欠料明细
-                  await this.getOweMatDetailsData(_this.form.OrganizeID)
-                  await this.getOrgIDsData(_this.form.OrganizeID)
-                  if(_this.gudtime){
+                  await this.getOweMatDetailsData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 人员管理
+                  await this.getPersonData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 超期异常原因
+                  await this.getProcessCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 本月工单状态
+                  await this.getOrderData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 周配套率
+                  await this.getWeeksCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 15日实时产量
+                  await this.getRealTimeProData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 7日齐套率
+                  await this.getOrderCapData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 周计划达成率
+                  await this.getWeeksBadData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 日计划达成率
+                  await this.getWeeksFinishData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 周不达成分布
+                  await this.getWeeksBadQtyData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 欠料类型分布
+                  await this.getWeeksUnfinishData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  // 欠料属性分布
+                  await this.getOweMatData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  
+                  await this.getOrgIDsData(_this.form.OrganizeID,_this.form.ProcessIDs)
+                  this.$nextTick(()=>{
+                    if(_this.gudtime){
                     clearTimeout(_this.gudtime)
                   }
                   _this.gudtime = setTimeout(() => {
                     _this.gundong()
                     $(".loading").fadeOut()
                   }, 1000);
+                  })
+                  
                 }
               }
               else {
@@ -1698,9 +1700,13 @@
         // }
       },
       // 获取超期异常原因
-      getProcessCapData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'AbnormalReason' })
+      getProcessCapData(OrganizeIDs,ProcessIDs){
+        // SQL：周计划待排订单的数据怎按“异常原因”分类统计条数
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,ERPDateStatus:'超期异常',groupby:'Extend2' })
           .then(function (res) {
+            if(res.result){
+
+            }
           //   if(this.list[1].length){
           // this.list[1].map(item=>{
           //   this.PerHourCapOption.yAxis.data.push(item.processName)
@@ -1724,7 +1730,7 @@
         return y + "-" + m + "-" + d;
       },
       // 获取本月工单状态
-      getOrderData(OrganizeID){
+      getOrderData(OrganizeIDs,ProcessIDs){
         var date = new Date();
         var currentMonth = date.getMonth();
         var nextMonth = ++currentMonth;
@@ -1736,37 +1742,142 @@
         date.setDate(1);
         let StartDate = this.timeFormat(date, 0);
         // 获取订单数
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:49, OrderDate:[StartDate,EndDate],fields:'SUM(Qty) as Qty'})
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:49,OrganizeIDs,ProcessIDs, OrderDate:[StartDate,EndDate],fields:'SUM(Qty) as Qty'})
           .then(function (res) {
             if (res.result) {
               _this.list[2].Qty = res.data&&res.data[0].Qty || 0
             }
           })
           // 超期异常:待排订单中超期判定结果为“超期异常”的数据
-          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,groupby:'ProductionStatus',fields:'SUM(Qty) as Qty,ProductionStatus'})
+          axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,ERPDateStatus:'超期异常',groupby:'ERPDateStatus'})
           .then(function (res) {
             if (res.result) {
               // _this.list[2].Qty = res.data&&res.data[0].Qty || 0
               
             }
           })
+          // 五分钟刷新一次数据
+          let  OrderTimer = setInterval(function() {
+              clearInterval(OrderTimer);
+              _this.getOrderData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
         
       },
       // 获取超期订单明细
-      getProPlanData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,DeliveryDate:['',formatDate.formatOldDate()],rows:0 })
+      getProPlanData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,DeliveryDate:['',formatDate.formatOldDate()],rows:0 ,ERPDateStatus:'超期异常',})
           .then(function (res) {
             if(res.result){
               _this.list[3] = res.data
             }
           })
+          // 五分钟刷新一次数据
+          let ProPlanTimer = setInterval(function() {
+              clearInterval(ProPlanTimer);
+              _this.getProPlanData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
       },
+      // 获取当前月份有几周及每周开始结束时间
+      getWeekData(year, month) { //传入  年  月  获取当月有几周 以及日期 
+            var new_year = year;    //取当前的年份
+            var new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）
+            if(new_month<10){ new_month = '0' + new_month }
+            var weekDay = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"];
+            if (new_month > 12) {
+                new_month -= 12;        //月份减
+                new_year++;            //年份增
+            }
+            var first_date = new Date(new_year, new_month, 1);                //取当年当月中的第一天-时间格式
+            var last_Data = (new Date(first_date.getTime() - 1000 * 60 * 60 * 24)).getDate() //获取当月最后一天日期
+            //当月第一天是周几
+            var firstzhouji = new Date(new_year + '/' + new_month + '/' + 1).getDay() == 0 ? '星期天' : weekDay[new Date(new_year + '/' + new_month + '/' + 1).getDay() - 1]
+            //当月最后一天是周几
+            var lastzhouji = new Date(new_year + '/' + new_month + '/' + last_Data).getDay() == 0 ? '星期天' : weekDay[new Date(new_year + '/' + new_month + '/' + last_Data).getDay() - 1]
+            var firsttime = '' //第一周有几天
+            if (firstzhouji == '星期一') { firsttime = 7 }
+            if (firstzhouji == '星期二') { firsttime = 6 }
+            if (firstzhouji == '星期三') { firsttime = 5 }
+            if (firstzhouji == '星期四') { firsttime = 4 }
+            if (firstzhouji == '星期五') { firsttime = 3 }
+            if (firstzhouji == '星期六') { firsttime = 2 }
+            if (firstzhouji == '星期天') { firsttime = 1 }
+         
+            var lasttime = '' //最后一周有几天
+            if (lastzhouji == '星期一') { lasttime = 1 }
+            if (lastzhouji == '星期二') { lasttime = 2 }
+            if (lastzhouji == '星期三') { lasttime = 3 }
+            if (lastzhouji == '星期四') { lasttime = 4 }
+            if (lastzhouji == '星期五') { lasttime = 5 }
+            if (lastzhouji == '星期六') { lasttime = 6 }
+            if (lastzhouji == '星期天') { lasttime = 7 }
+         
+            // 前后两周  加上 剩余周数  得出总周数
+            var contime = 2 + (last_Data - lasttime - firsttime) / 7
+         
+            //得出每周对应的日期
+            var zhouArry = []
+         
+            for (var i = 1; i <= contime; i++) {
+                var strTime = ''
+                var lastTime = ''
+                if (i == 1) {
+                    strTime = year + '-' + new_month + '-' + '01'
+                    let aa = 1 + firsttime - 1
+                    if(aa<10){
+                        aa='0'+aa
+                    }
+                    lastTime = year + '-' + new_month + '-' + aa
+                } else if (i == contime) {
+                    let bb = last_Data - lasttime + 1
+                    if(bb<10){
+                        bb='0'+bb
+                    }
+                    strTime = year + '-' + new_month + '-' + bb
+                    lastTime = year + '-' + new_month + '-' + (last_Data<10 ? ('0'+last_Data) : last_Data )
+                } else {
+                    strTime = addDate(zhouArry[zhouArry.length - 1].endTime, 1)
+                    lastTime = addDate(zhouArry[zhouArry.length - 1].endTime, 7)
+                }
+        
+                zhouArry.push({
+                    weeknum: i,
+                    beginTime: strTime,
+                    endTime: lastTime,
+                })
+         
+            //日期增加 接受两个参数， 传入的时间，传入时间增加的天数
+            function addDate(date, days) {
+                if (days == undefined || days == '') {
+                    days = 1;
+                }             
+                var date = new Date(date);
+                date.setDate(date.getDate() + days);
+                var month = date.getMonth() + 1;
+                if(month<10){ month = '0' + month;}
+                var day = date.getDate();    
+                if(day<10){ day = '0' + day;}        
+                return date.getFullYear() + '-' + month + '-' + day;
+            }      
+            }
+            return zhouArry
+         },
       // 周配套率
-      getWeeksCapData(OrganizeID){
-        // axiosPostRequst(`/APSAPI/APSData`, { dicID: })
+      getWeeksCapData(OrganizeIDs,ProcessIDs){
+        // axiosPostRequst(`/APSAPI/APSData`, { dicID:,OrganizeIDs,ProcessIDs, })
         //   .then(function (res) {
 
         //   })
+        // 当前日期获取年月
+        // let date = new Date();
+        // let newDate = date.setDate(date.getDate() - 1);
+        // newDate = new Date(newDate)
+        // let year = newDate.getFullYear();
+        // let month = newDate.getMonth() + 1;
+        // if (Number(month) < 10) {
+        //   month = '0' + month
+        // }
+        // let weekList =this.getWeekData(year,month)
+        // console.log('weekList',weekList)
         this.list[4] =[
           {week:'W1',PlanQty:815,HasQty:815,},
           {week:'W2',PlanQty:2300,HasQty:0},
@@ -1795,23 +1906,43 @@
       // }, 100);
       },
       // 15日实时产量
-      getRealTimeProData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:['',formatDate.formatOldDate()],rows:15,sort:'PlanDay DESC',fields:'SUM(ConfirmQty) as ConfirmQty,PlanDay',groupby:'PlanDay'})
+      getRealTimeProData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:['',formatDate.formatOldDate()],rows:15,sort:'PlanDay DESC',fields:'SUM(ConfirmQty) as ConfirmQty,PlanDay,ProcessName',groupby:'PlanDay'})
           .then(function (res) {
             if(res.result){
+              let colors = ['#F5CC3F','#71C64C','#1ADE97','#2290F6','#F6BB22','#EB8888',"#0CD2E6","#3751E6","#FFC722","#886EFF","#008DEC","#114C90","#00BFA5",]
               _this.list[5] =res.data
         if(_this.list[5].length){
-          _this.list[5].map(item=>{
+          _this.list[5].map((item,index)=>{
             
             let day = (item.PlanDay).slice(-5)
             console.log('day',day)
             _this.RealTimeProOption.xAxis[0].data.unshift(day)
-            _this.RealTimeProOption.series[0].name = '1'
-            _this.RealTimeProOption.series[1].name = '2'
-            _this.RealTimeProOption.series[2].name = '3'
+            _this.RealTimeProOption.series[0].name = item.ProcessName
+            // _this.RealTimeProOption.series[1].name = item.ProcessName
+            // _this.RealTimeProOption.series[2].name = item.ProcessName
             _this.RealTimeProOption.series[0].data.unshift(item.Qty1)
-            _this.RealTimeProOption.series[1].data.unshift(item.Qty2)
-            _this.RealTimeProOption.series[2].data.unshift(item.Qty3)
+            // _this.RealTimeProOption.series[1].data.unshift(item.Qty2)
+            // _this.RealTimeProOption.series[2].data.unshift(item.Qty3)
+            if(index!==0){
+              _this.RealTimeProOption.series.push(
+                {
+                label: {
+                  show: true,
+                  position: 'top',
+                },
+                name: item.ProcessName,
+                type: 'line',
+                emphasis: {
+                  focus: 'series'
+                },
+                itemStyle: {
+                  color: colors[index]
+                },
+                data: [item.Qty2]
+              }
+              )
+            }
           })
         }
         _this.barData('RealTimeProOption', _this.RealTimeProOption)
@@ -1821,8 +1952,8 @@
           })
       },
       // 7日齐套率
-      getOrderCapData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5594,DemandDate:[formatDate.formatTodayDate(),''],rows:0,groupby:'DemandDate' })
+      getOrderCapData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5594,OrganizeIDs,ProcessIDs,DemandDate:[formatDate.formatTodayDate(),''],rows:0,sort:'DemandDate ASC',fields:'SUM(PlanQty) AS PlanQty,SUM(FormQty) AS FormQty,SUM(FormQty)/SUM(PlanQty) PlanQtyP1',groupby:'DemandDate' })
           .then(function (res) {
 
           })
@@ -1848,8 +1979,8 @@
         this.barData('OrderCapOption', this.OrderCapOption)
       },
       // 周生产计划达成率
-      getWeeksBadData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:6723 ,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+      getWeeksBadData(OrganizeIDs,ProcessIDs,){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:6723 ,OrganizeIDs,ProcessIDs,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],fields:'SUM(HasQty)/SUM(PlanQty) AS PlanQtyP1,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
           .then(function (res) {
             if(res.result){
               _this.list[7] = res.data&&res.data[0]?res.data&&res.data[0]:[]
@@ -1859,7 +1990,7 @@
               _this.weeksBadOption.series[1].data[0].value = _this.list[7].PlanQty
               _this.weeksBadOption.series[1].data[1].value = _this.list[7].HasQty
               _this.weeksBadOption.series[1].data[2].value = _this.list[7].PlanQty + _this.list[7].HasQty
-              _this.weeksBadOption.title.text =  `完成率\n${_this.list[7].HasQty&&_this.list[7].PlanQty ? parseFloat(((_this.list[7].HasQty / _this.list[7].PlanQty) * 100).toFixed(2)) : 0}%`
+              _this.weeksBadOption.title.text =  `完成率\n${_this.list[7].PlanQtyP1 ? parseFloat((_this.list[7].PlanQtyP1 * 100).toFixed(2)) : 0}%`
               setTimeout(() => {
                 _this.barData('weeksBadOption', _this.weeksBadOption)
               }, 100);
@@ -1868,8 +1999,8 @@
         
       },
       // 日计划达成率
-      getWeeksFinishData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:formatDate.formatTodayDate(),fields:'SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
+      getWeeksFinishData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:formatDate.formatTodayDate(),fields:'SUM(HasQty)/SUM(PlanQty) AS PlanQtyP1,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty'})
           .then(function (res) {
             if(res.result){
               _this.list[8] = []
@@ -1878,7 +2009,7 @@
 
               _this.list[2].PlanQty = res.data&&res.data[0].PlanQty||0
               _this.list[2].HasQty = res.data&&res.data[0].HasQty||0
-              _this.list[2].CompleteRate = res.data&&res.data[0].HasQty?`${parseFloat(((res.data[0].HasQty / res.data[0].PlanQty) * 100).toFixed(2))}%`:'0%'
+              _this.list[2].CompleteRate = res.data&&res.data[0].PlanQtyP1?`${parseFloat((res.data[0].PlanQtyP1 * 100).toFixed(2))}%`:'0%'
             // this.list[8] = {PlanQty:1000,HasQty:100}
             _this.weeksFinishOption.series[0].data[0].value = _this.list[8].PlanQty
             _this.weeksFinishOption.series[0].data[1].value = _this.list[8].HasQty
@@ -1886,7 +2017,7 @@
             _this.weeksFinishOption.series[1].data[0].value = _this.list[8].PlanQty
             _this.weeksFinishOption.series[1].data[1].value = _this.list[8].HasQty
             _this.weeksFinishOption.series[1].data[2].value = _this.list[8].PlanQty + _this.list[8].HasQty
-            _this.weeksFinishOption.title.text =  `完成率\n${_this.list[8].HasQty&&_this.list[8].PlanQty ? parseFloat(((_this.list[8].HasQty / _this.list[8].PlanQty) * 100).toFixed(2)) : 0}%`
+            _this.weeksFinishOption.title.text =  `完成率\n${res.data[0].PlanQtyP1 ? parseFloat(((res.data[0].PlanQtyP1) * 100).toFixed(2)) : 0}%`
         setTimeout(()=>{
           _this.barData('weeksFinishOption', _this.weeksFinishOption)
         },100)
@@ -1897,8 +2028,8 @@
         
       },
       // 周不达成分布
-      getWeeksBadQtyData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],groupby:'LineName'})
+      getWeeksBadQtyData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,PlanDay:[formatDate.getWeek(0,0),formatDate.getWeek(0,1)],groupby:'LineName'})
           .then(function (res) {
             if(res.result){
 
@@ -1958,8 +2089,8 @@
 
       },
       // 欠料类型分布
-      getWeeksUnfinishData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,groupby:'IssueType'})
+      getWeeksUnfinishData(OrganizeIDs,ProcessIDs,){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 6723,OrganizeIDs,ProcessIDs,groupby:'IssueType',fields:'SUM(ProcessOweQty) AS ProcessOweQty,PlanQty'})
           .then(function (res) {
             if(res.result){
 
@@ -2018,8 +2149,8 @@
         this.barData('WeeksUnfinishOption', this.WeeksUnfinishOption)
       },
       // 欠料属性分布
-      getOweMatData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594,rows:0,groupby:'MaterialProp'})
+      getOweMatData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 5594,OrganizeIDs,ProcessIDs,fields:'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty',groupby:'MaterialProp'})
           .then(function (res) {
             if(res&&res.result){
               console.log('res')
@@ -2077,9 +2208,9 @@
         this.WeeksOweMatOption.series[0].data = formatData
         this.barData('WeeksOweMatOption', this.WeeksOweMatOption)
       },
-      // 欠料明细
-      getOweMatDetailsData(OrganizeID){
-        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,rows:0 })
+      // 电机供需平衡
+      getOweMatDetailsData(OrganizeIDs,ProcessIDs){
+        axiosPostRequst(`/APSAPI/APSData`, { dicID:5156,OrganizeIDs,ProcessIDs,rows:0 })
           .then(function (res) {
             if(res.result){
               _this.list[12] = []
@@ -2088,16 +2219,21 @@
                 return o.Extend16
               })
               }
-              if(_this.timer1){
-                    clearTimeout(_this.timer1)
-                  }
-              _this.timer1 = setTimeout(() => {
-                _this.gundong2()
-                  }, 1000);
+              // if(_this.timer1){
+              //       clearTimeout(_this.timer1)
+              //     }
+              // _this.timer1 = setTimeout(() => {
+              //   _this.gundong2()
+              //     }, 1000);
               
               console.log('_this.list[12]',_this.list[12])
             }
           })
+          // 五分钟刷新一次数据
+          var MatTimer = setInterval(function() {
+              clearInterval(MatTimer);
+              _this.getOweMatDetailsData(OrganizeIDs,ProcessIDs)
+          }, 1000*60*5)
         // this.list[12] = [
         //   { LineName: '7B', OrderNo: 'MO027177', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 4000, Qty: 100 },
         //   { LineName: '7B', OrderNo: 'MO025985', Code: '1.15.01.APC10-0-2H1-008', PlanQty: 950, Qty: 100 },
