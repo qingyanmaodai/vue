@@ -3579,6 +3579,7 @@
     overflow-wrap: break-word;
     color: rgba(255, 255, 255, 1);
     font-size: .16rem;
+
     /* white-space: nowrap; */
     /* line-height: .25rem; */
 }

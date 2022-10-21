@@ -11,9 +11,7 @@
 
 <body style="padding: 0; margin: 0 ;">
   <div v-cloak id="app" class="page flex-col">
-    <div class="loading">
-      <div class="loadbox"> <img src="./picture/loading.gif"> 页面加载中... </div>
-    </div>
+   
     <div class="group_1 flex-col">
       <div class="group_2 flex-row justify-between">
         <div class="headLeft">
@@ -38,15 +36,15 @@
             <div class="text-wrapper_2 flex-row justify-between">
               <span class="tableWidthRatio7 tableTitle">生产线</span>
               <span class="tableWidthRatio10 tableTitle">生产订单</span>
-              <span class="tableWidthRatio3 tableTitle">顺序</span>
-              <span class="tableWidthRatio10 tableTitle">产品编码</span>
-              <span class="tableWidthRatio31 tableTitle">物料描述</span>
+        
+              <span class="tableWidthRatio15 tableTitle">产品编码</span>
+              <span class="tableWidthRatio30 tableTitle">产品</span>
               <span class="tableWidthRatio4 tableTitle">数量</span>
               <span class="tableWidthRatio4 tableTitle">当日报工</span>
               <span class="tableWidthRatio4 tableTitle">欠数</span>
               <span class="tableWidthRatio4 tableTitle">完成率</span>
               <span class="tableWidthRatio7 tableTitle widthPadding">交期</span>
-              <span class="tableWidthRatio7 tableTitle widthPadding">上线时间</span>
+              <span class="tableWidthRatio10 tableTitle widthPadding">上线时间</span>
               <span class="tableWidthRatio7 tableTitle">备注</span>
 
               <!-- <span class="text_4">生产线</span>
@@ -66,15 +64,15 @@
               <div class="text-wrapper_3 flex-row justify-between" v-for="(item,index) in todayList" :key="index">
                 <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
                 <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
-                <span class="tableWidthRatio3 tableContent color1">{{item.ViewSort}}</span>
-                <span class="tableWidthRatio10 tableContent">{{item.Code}}</span>
-                <span class="tableWidthRatio31 tableContent">{{item.Spec}}</span>
+              
+                <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
+                <span class="tableWidthRatio30 tableContent">{{item.MaterialName}}</span>
                 <span class="tableWidthRatio4 tableContent color2">{{item.PlanQty}}</span>
                 <span class="tableWidthRatio4 tableContent color3">{{item.HasQty}}</span>
                 <span class="tableWidthRatio4 tableContent color4">{{item.OweQty}}</span>
-                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP1}}%</span>
-                <span class="tableWidthRatio7 tableContent widthPadding">{{item.EndDate}}</span>
-                <span class="tableWidthRatio7 tableContent widthPadding">{{item.StartDate}}</span>
+                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP}}</span>
+                <span class="tableWidthRatio7 tableContent widthPadding">{{item.DeliveryDate}}</span>
+                <span class="tableWidthRatio7 tableContent widthPadding">{{item.ProductionDate}}</span>
                 <span class="tableWidthRatio7 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span>
               </div>
             </div>
@@ -87,10 +85,10 @@
             <div class="text-wrapper_12 flex-row">
               <span class="tableWidthRatio15 tableTitle">生产线</span>
               <span class="tableWidthRatio20 tableTitle">生产订单</span>
-              <span class="tableWidthRatio5 tableTitle">顺序</span>
-              <span class="tableWidthRatio20 tableTitle">产品编码</span>
+          
+              <span class="tableWidthRatio30 tableTitle">产品编码</span>
               <span class="tableWidthRatio10 tableTitle">数量</span>
-              <span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>
+              <!--<span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>-->
               <span class="tableWidthRatio15 tableTitle">备注</span>
             </div>
             <div class="wrap2 table2">
@@ -98,10 +96,10 @@
                 <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
                   <span class="tableWidthRatio15 tableContent">{{ele.LineName}}</span>
                   <span class="tableWidthRatio20 tableContent">{{ele.OrderNo}}</span>
-                  <span class="tableWidthRatio5 tableContent color1">{{ele.ViewSort}}</span>
-                  <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
+                
+                  <span class="tableWidthRatio30 tableContent">{{ele.Code}}</span>
                   <span class="tableWidthRatio10 tableContent color2">{{ele.PlanQty}}</span>
-                  <span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span>
+                  <!--<span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span>-->
                   <span class="tableWidthRatio15 tableContent clampEllipsis1"
                     :title="ele.Remark1">{{ele.Remark1}}</span>
                 </div>
@@ -153,6 +151,76 @@
 
 </script>
 <script>
+    var showtime = function () {
+
+        var nowdate = new Date();
+
+        var year = nowdate.getFullYear(),
+
+            month = nowdate.getMonth() + 1,
+
+            date = nowdate.getDate(),
+
+            day = nowdate.getDay(),
+
+            week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+
+            h = nowdate.getHours(),
+
+            m = nowdate.getMinutes(),
+
+            s = nowdate.getSeconds(),
+
+            h = checkTime(h),
+
+            m = checkTime(m),
+
+            s = checkTime(s);
+
+        return year + "年" + month + "月" + date + "日" + week[day] + " " + h + ":" + m + ":" + s;
+
+    }
+    var showDate = function () {
+
+        var nowdate = new Date();
+
+        var year = nowdate.getFullYear(),
+
+            month = nowdate.getMonth() + 1,
+
+            date = nowdate.getDate(),
+
+            day = nowdate.getDay(),
+
+            week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+
+            h = nowdate.getHours(),
+
+            m = nowdate.getMinutes(),
+
+            s = nowdate.getSeconds(),
+
+            h = checkTime(h),
+
+            m = checkTime(m),
+
+            s = checkTime(s);
+
+        var s = year + "-" + month + "-" + date;
+        console.log(s);
+        return s;
+    }
+    var checkTime = function (i) {
+
+        if (i < 10) {
+
+            i = "0" + i;
+
+        }
+
+        return i;
+
+    }
   // 监听窗口大小改变
   let resizeTimer = null;
   let headHeight = ($('.group_2').css('height')).slice(0, -2)
@@ -174,10 +242,12 @@
       echarts.init(document.getElementById('dayEchart')).resize()
     }, 100)
   })
-
+let myChart=null;
+let chartDom1=null;
+let chartDom2=null;
 </script>
-<script type="module">
-  import formatDate from './js/newFormatDate.js'
+<script>
+  
     var app = new Vue({
         el: "#app",
         components: {
@@ -224,7 +294,7 @@
                         // width:'100%',
                         left: '0%',
                         right: '0%',
-                        // bottom: '6%',
+                         bottom: '1%',
                         top: '12%',
                         containLabel: true,//是否包含刻度标签
                         // height:'100%',
@@ -442,16 +512,16 @@
 
             // window.location.href = "pieceHome.html?OrganizeIDs=107"
             // 初始化时默认上线日期
-            // this.weekStartDate = formatDate.getWeek(0, 0) // 获取本周开始日期
-            // this.weekEndDate = formatDate.getWeek(0, 1) // 获取本周结束日期
-            // this.weekList =  formatDate.getAllDate(this.weekStartDate,this.weekEndDate)
+            // this.weekStartDate = fDate.getWeek(0, 0) // 获取本周开始日期
+            // this.weekEndDate = fDate.getWeek(0, 1) // 获取本周结束日期
+            // this.weekList =  fDate.getAllDate(this.weekStartDate,this.weekEndDate)
 
-            this.todayDate = formatDate.getTodayTime()
+            this.todayDate = showtime()
             if (this.time) {
                 clearInterval(this.time)
             }
             this.time = setInterval(() => {
-                this.todayDate = formatDate.getTodayTime()
+                this.todayDate = showtime()
             }, 1000)
 
             // this.$nextTick(async () => {
@@ -484,7 +554,7 @@
                 this.orgTime = setTimeout(() => {
                     ++this.tagID;
                     this.circleOrganzeIDs()
-                }, 1000 * 60 * 8)
+                }, 1000 * 60*3)
             },
             fontSize(res) {
                 let clientWidth =
@@ -517,7 +587,6 @@
                                     clearTimeout(_this.gudtime)
                                 }
                                 _this.gudtime = setTimeout(() => {
-                                    _this.gundong()
                                     $(".loading").fadeOut()
                                 }, 1000);
                             }
@@ -535,28 +604,16 @@
             },
             // 渲染echart图
             barData(id, option) {
-                let chartDom = document.getElementById(id);
-                let myChart = null
-                if (myChart) {
-                    echarts.dispose(myChart)
-                }
-                myChart = echarts.init(chartDom);
-                myChart.resize()
+               echarts.dispose(id)
+                myChart = echarts.init(id);
                 myChart.setOption(option)
-                myChart.clear();
-                myChart.setOption(option)
-                console.log('111')
-                var timer = setInterval(function () {
-                    clearInterval(timer);
-                    // 下面处理业务
-                    _this.barData(id, option)
-                }, 1000 * 60 * 5)
 
 
             },
             // 滚动数据
-            gundong() {
-                $('.wrap,.wrap2').liMarquee({
+            gundong(val) {
+                $(val).liMarquee("destroy")
+                $(val).liMarquee({
                     direction: 'up',//身上滚动 
                     runshort: false,//内容不足时不滚动
                     scrollamount: 20//速度
@@ -608,12 +665,15 @@
             },
             // 今日生产计划
             getToDayPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [formatDate.formatTodayDate()], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0 })
                     .then(function (res) {
                         _this.todayList = []
                         if (res.result) {
                             _this.todayList = res.data
-                            console.log('res.data222', res.data)
+                           // console.log('res.data222', res.data)
+                            _this.$nextTick(()=>{
+                                _this.gundong('.wrap')
+                            })
                         }
                         else {
                             _this.$message({
@@ -625,20 +685,24 @@
                     .catch(function (error) {
 
                     });
-                // 五分钟刷新一次数据
-                var todayTimer = setInterval(function () {
-                    clearInterval(todayTimer);
-                    _this.getToDayPlanData(OrganizeIDs)
-                }, 1000 * 60 * 5)
+                // // 五分钟刷新一次数据
+                // var todayTimer = setInterval(function () {
+                //     clearInterval(todayTimer);
+                //     _this.getToDayPlanData(OrganizeIDs)
+                // }, 1000 * 60 * 5)
             },
             // 明日生产计划
             getTomorrowPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [formatDate.formatTommorowDate()], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 0 })
                     .then(function (res) {
                         _this.tomorrowList = []
                         if (res.result) {
                             _this.tomorrowList = res.data
-                            console.log('res.data2', res.data)
+                           // console.log('res.data2', res.data)
+                            _this.$nextTick(()=>{
+                                _this.gundong('.wrap2')
+                            })
+                            
                         }
                         else {
                             _this.$message({
@@ -651,19 +715,24 @@
 
                     });
                 // 五分钟刷新一次数据
-                var tomorrowTimer = setInterval(function () {
-                    clearInterval(tomorrowTimer);
-                    _this.getTomorrowPlanData(OrganizeIDs)
-                }, 1000 * 60 * 5)
+                // var tomorrowTimer = setInterval(function () {
+                //     clearInterval(tomorrowTimer);
+                //     _this.getTomorrowPlanData(OrganizeIDs)
+                // }, 1000 * 60 * 5)
             },
             // 周计划达成率
             getWeekRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: ['', formatDate.formatOldDate()], rows: 7, sort: 'PlanDay DESC', fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: ['', showDate()], rows: 7, sort: 'PlanDay DESC', fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
                     .then(function (res) {
                         _this.weekOptionData = []
 
                         if (res.result) {
                             _this.weekOptionData = res.data
+                           
+                            _this.weekOption.series[0].data=[];
+                            _this.weekOption.series[1].data=[];
+                            _this.weekOption.series[2].data=[];
+                            _this.weekOption.xAxis[0].data=[];
                             _this.weekOptionData.map(item => {
                                 //截取日期的最后两位
                                 _this.weekOption.xAxis[0].data.unshift(item.PlanDay.slice(-2))
@@ -671,9 +740,14 @@
                                 _this.weekOption.series[1].data.unshift(item.HasQty ? parseFloat(item.HasQty.toFixed(2)) : 0)
                                 _this.weekOption.series[2].data.unshift(item.HasQty ? parseFloat(((item.HasQty / item.PlanQty) * 100).toFixed(2)) : 0)
                             })
+                           
                             // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
+                            if(chartDom1==null)
+                                {
+                                    chartDom1 = document.getElementById("weekEchart");
+                                }
                             _this.$nextTick(() => {
-                                _this.barData('weekEchart', _this.weekOption)
+                                _this.barData(chartDom1, _this.weekOption)
                             })
                         }
                         else {
@@ -690,7 +764,7 @@
             },
             // 日计划达成率
             getDayRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [formatDate.formatTodayDate()], rows: 1, fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 1, fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
                     .then(function (res) {
                         _this.todayOptionData = []
                         if (res.result) {
@@ -705,8 +779,13 @@
                             })
                             // }
                             // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
+                            if(chartDom2==null)
+                                {
+                                    chartDom2 = document.getElementById("dayEchart");
+                                }
+                                
                             _this.$nextTick(() => {
-                                _this.barData('dayEchart', _this.todayOption)
+                                _this.barData(chartDom2, _this.todayOption)
                             })
                         }
                         else {
@@ -732,24 +811,25 @@
 </script>
 
 </html>
-<style lang="scss" scoped>
-  [v-cloak] {
-    /*比较大的段落，防止闪烁，看到花括号*/
-    display: none;
+<style>
 
-  }
+    [v-cloak] {
+        /*比较大的段落，防止闪烁，看到花括号*/
+        display: none;
+    }
 
-  .navboxall {
-    height: calc(100% - .5rem);
-  }
+    .navboxall {
+        height: calc(100% - .5rem);
+    }
 
-  .navboxall canvas {
-    width: 100% !important;
-    height: 100% !important;
-  }
+        .navboxall canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
 
-  .navboxall2 {
-    height: calc(100% - 1rem);
-  }
+    .navboxall2 {
+        height: calc(100% - 1rem);
+    }
 
+  
 </style>
