@@ -782,6 +782,14 @@ export default {
                 }
               }
                else if (isNaN(key) && !isNaN(Date.parse(key))&&m[key]>0){//导入日期并且欠料数大于0才导入
+                // 判断需求到料日期是否大于今天
+                console.log('key',key)
+                if(key<formatDates.formatTodayDate()){
+                    propName = key
+                    rowNo =Number(m.__rowNum__)+1
+                    // 异常提示
+                    split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
+                }
                 // 列为日期的格式
                   isDate = true;
                 obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
@@ -876,6 +884,9 @@ export default {
           
           return;
         }
+        // console.log('DataList',DataList)
+        // this.adminLoading = false
+        // return
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {

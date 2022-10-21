@@ -1,4 +1,4 @@
-<!--菜单设置-->
+<!--一部SMT日计划-->
 <template>
   <div
     class="container"
@@ -102,7 +102,7 @@ import {
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 export default {
-  name: "DaySet1",
+  name: "DaySet11",
   components: {
     ComSearch,
     ComReportTable,
@@ -191,12 +191,10 @@ export default {
    this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
-
-      setInterval(()=>{
-        this.spread.refresh();//重新定位宽高度
-
-    },2000);
   },
+  activated() {
+      this.spread.refresh();
+    },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
@@ -667,6 +665,7 @@ if(!row["Code"])
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
+      this.spread.refresh(); //重新定位宽高度
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {

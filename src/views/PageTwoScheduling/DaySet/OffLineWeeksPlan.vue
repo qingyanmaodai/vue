@@ -256,7 +256,7 @@
   } from "@/api/PageTwoScheduling";
   import { template } from "xe-utils";
   export default {
-    name: "index1",
+    name: "OffLineWeeksPlan",
     components: {
       ComSearch,
       ComAsideTree,

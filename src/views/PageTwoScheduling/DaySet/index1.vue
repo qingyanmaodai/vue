@@ -78,7 +78,7 @@ import {
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 export default {
-  name: "pindex2",
+  name: "index1",
   components: {
     ComSearch,
     ComReportTable,

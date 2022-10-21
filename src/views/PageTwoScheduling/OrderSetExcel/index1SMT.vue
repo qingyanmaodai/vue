@@ -253,7 +253,7 @@ import {
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
-  name: "WeekManagement",
+  name: "index11",
   components: {
     ComSearch,
     ComAsideTree,
