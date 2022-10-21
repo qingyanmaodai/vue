@@ -620,6 +620,11 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.dataSearch(this.tagRemark);
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
         } else {
           this.adminLoading = false;
           this.$message({
@@ -643,6 +648,11 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.dataSearch(this.tagRemark);
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
         } else {
           this.adminLoading = false;
           this.$message({
@@ -670,6 +680,11 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.dataSearch(this.tagRemark);
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
         } else {
           this.adminLoading = false;
           this.$message({
@@ -884,9 +899,6 @@ export default {
           
           return;
         }
-        // console.log('DataList',DataList)
-        // this.adminLoading = false
-        // return
         let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
