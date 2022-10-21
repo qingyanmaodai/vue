@@ -276,6 +276,36 @@
 <script type="text/javascript" src="./js/jquery.limarquee.js"></script>
 <script type="text/javascript" src="./js/jquery.cxselect.min.js"></script>
 <script src="./js/DateJson.js"></script>
+<script>
+  var checkTime = function (i) {
+
+    if (i < 10) {
+
+        i = "0" + i;
+
+    }
+
+    return i;
+
+    }
+  // 日期带有时分秒，格式为年月日
+    var showDate = function (param) {
+
+    var nowdate = new Date(param);
+
+    var year = nowdate.getFullYear(),
+
+    month = nowdate.getMonth() + 1,
+
+    date = nowdate.getDate(),
+
+    date = checkTime(date)
+
+    var s = year + "-" + month + "-" + date;
+
+    return s;
+    }
+</script>
 <script type="module">
   import formatDate from './js/newFormatDate.js'
   var app = new Vue({
@@ -360,7 +390,7 @@
           },
         ],
         "grid": {
-          "top": "10%",
+          "top": "12%",
           "right": "40",
           "bottom": "40",
           "left": "50",
@@ -713,6 +743,7 @@
           //align: 'center',
           // right: '35%',
           top: '0',
+          // bottom:'10',
           textStyle: {
             color: "#fff"
           },
@@ -723,8 +754,8 @@
         grid: {
           left: '0',
           right: '20',
-          top: '25',
-          bottom: '20',
+          top: '45',
+          bottom: '10',
           containLabel: true
         },
         xAxis: [{
@@ -1284,7 +1315,11 @@
 
                   _this.rightData_3=res.data.Table1;
                   _this.leftData_3=res.data.Table2;
-                  
+                  if(_this.leftData_3.length){
+                    _this.leftData_3.forEach(item=>{
+                      item.N1 = item.N1?showDate(item.N1):''
+                    })
+                  }
 
                   _this.formData[0]=_this.formData[1]=res.data.Table3[0].S1;
                   _this.formData[2]=res.data.Table3[0].S2;
@@ -1347,9 +1382,10 @@
                   res.data.Table7.forEach((x, i) => {
                       let newIndex = 0;
                       let newIndex2 = 0;
-                      debugger;
-                      let date = x.N1;
-                      _this.DeliveryPlanDate2.push(date.slice(-5));
+                      // debugger;
+                      let date = x.N1?showDate(x.N1):'';
+                      
+                      _this.DeliveryPlanDate2.push(date?date.slice(-5):'');
                     
                         series1.push(x.S1);
                       

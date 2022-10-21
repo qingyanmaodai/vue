@@ -70,9 +70,9 @@
                 <span class="tableWidthRatio4 tableContent color2">{{item.PlanQty}}</span>
                 <span class="tableWidthRatio4 tableContent color3">{{item.HasQty}}</span>
                 <span class="tableWidthRatio4 tableContent color4">{{item.OweQty}}</span>
-                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP}}</span>
+                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP1?parseFloat((item.PlanQtyP1*100).toFixed(2)):0}}%</span>
                 <span class="tableWidthRatio7 tableContent widthPadding">{{item.DeliveryDate}}</span>
-                <span class="tableWidthRatio7 tableContent widthPadding">{{item.ProductionDate}}</span>
+                <span class="tableWidthRatio7 tableContent widthPadding">{{item.StartDate}}</span>
                 <span class="tableWidthRatio7 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span>
               </div>
             </div>
@@ -294,7 +294,7 @@ let chartDom2=null;
                         // width:'100%',
                         left: '0%',
                         right: '0%',
-                         bottom: '1%',
+                         bottom: '2%',
                         top: '12%',
                         containLabel: true,//是否包含刻度标签
                         // height:'100%',
@@ -670,7 +670,6 @@ let chartDom2=null;
                         _this.todayList = []
                         if (res.result) {
                             _this.todayList = res.data
-                           // console.log('res.data222', res.data)
                             _this.$nextTick(()=>{
                                 _this.gundong('.wrap')
                             })
