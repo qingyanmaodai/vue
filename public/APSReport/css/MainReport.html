@@ -14,9 +14,7 @@
 
 <body>
   <div v-cloak id="app" style="background:#000d4a url(images/bg.jpg) center top;">
-    <div class="loading">
-      <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
-    </div>
+  
     <image @click="moreLarge" src="images/large.png"
       style="position: fixed;bottom:1.2rem;right:1.2rem;width:1.5rem;height: 1,5rem;cursor: pointer;z-index:999" />
     <div class="back"></div>
@@ -166,33 +164,26 @@
           <div class="boxall" style="height:300px">
             <div class="alltitle">超期订单分布</div>
             <div class="navboxall overflowhidden">
-              
-
-              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <thead>
-                    <tr>
-                      <th class="f1" scope="col">排名</th>
-                      <th class="f2" scope="col">控制者</th>
-                      <th class="f3" scope="col">在制订单</th>
-                      <th class="f3" scope="col">超期订单</th>
-                      <th class="f3" scope="col">超期占比</th>
-                    </tr>
-                  </thead>
-                </table>
-                <div class="wrapcon">
-                  <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" >
-                    <tbody class="tablegun " >
-                      <tr v-for="(item3,index) in rightData_1" :key="index">
-                        <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
-                        <td class="f2 veralign wordbreak">{{item3.N1}}</td>
-                        <td class="f3 veralign wordbreak">{{item3.C1}}</td>
-                        <td class="f3 veralign wordbreak">{{item3.C2}}</td>
-                        <td class="f3 veralign">{{item3.P1}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+              <table class="table1 tableheight" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                  <tr class="flexjc">
+                    <th class="f1" scope="col">排名</th>
+                    <th class="f2" scope="col">控制者</th>
+                    <th class="f3" scope="col">在制订单</th>
+                    <th class="f3" scope="col">超期订单</th>
+                    <th class="f3" scope="col">超期占比</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr v-for="(item3,index) in rightData_1" :key="index" class="flexjc">
+                    <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
+                    <td class="f2 veralign wordbreak">{{item3.N1}}</td>
+                    <td class="f3 veralign wordbreak">{{item3.C1}}<br></td>
+                    <td class="f3 veralign wordbreak">{{item3.C2}}<br></td>
+                    <td class="f3 veralign">{{item3.P1}}<br></td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -888,10 +879,7 @@
         pageTotal: 0,
         pageIndex: 1
       },
-      CreatedOn: [],
-      OrganizeList:[],
-      form:{},
-      indexNo:0,
+      CreatedOn: []
     },
     created() {
       this.oldDayDate = [formatDate.formatOldDate(), formatDate.formatOldDate()];
@@ -919,11 +907,10 @@
         this.DeliveryPlanDate.push(obj2);
       }
 
-      // this.getData_60();
+      this.getData_60();
       // this.getData_30();
-      // this.getData_2M();
-      this.getOrgData()
-      
+      this.getData_2M();
+      this.getData_30M();
      // this.getChangeLabel();
     },
     mounted() {
@@ -932,31 +919,6 @@
       // }, 1000 * 60 * 5)
     },
     methods: {
-      // 获取组织名称
-      getOrgData() {
-          axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, rows:0,ParentID:160})
-            .then( async(res) =>{
-              if (res.result) {
-                if (res.data.length != 0) {
-                  console.log('res.data',res.data)
-                  this.OrganizeList = res.data
-                  if(res.data&&res.data.length){
-                    this.form =res.data[0]
-                  }
-                }
-                this.getData_30M(this.form.OrganizeID);
-              }
-              else {
-                _this.$message({
-                  message: res.msg,
-                  type: 'error'
-                });
-              }
-            })
-            .catch(function (error) {
-
-            });
-        },
       zero(num) {
         if (Number(num) < 10) {
           return '0' + num
@@ -1172,8 +1134,8 @@
         return days
       },
       // 半小时后刷新
-      getData_30M(OrganizeID) {
-        
+      getData_30M() {
+      
         this.rightData_1 = [];
         this.rightData_2 = [];
         let currentHour = new Date().getHours();
@@ -1260,7 +1222,7 @@
 
           // 今日计划生产进度
           // axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720, ProcessID: 'P202106171344021', OrganizeIDs: '', YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
-          axiosPostRequst(`/APSAPI/GetEASTReport`, { rows: 0, page: 1, dicID: 6720,OrganizeID  })
+          axiosPostRequst(`/APSAPI/GetEASTReport`, { rows: 0, page: 1, dicID: 6720,  })
             .then(function (res) {
               if (res.result) {
                 _this.leftOption_1.yAxis.data = [];
@@ -1284,7 +1246,11 @@
 
                   _this.rightData_3=res.data.Table1;
                   _this.leftData_3=res.data.Table2;
-                  
+                  if(_this.leftData_3.length){
+                    _this.leftData_3.map(item=>{
+                      item.N1 = formatDate.formatDates(item.N1)||''
+                    })
+                  }
 
                   _this.formData[0]=_this.formData[1]=res.data.Table3[0].S1;
                   _this.formData[2]=res.data.Table3[0].S2;
@@ -1338,17 +1304,16 @@
               //     _this.drawChart('echart4', _this.centerOption_4);
               //     _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
               
- 
+
 
                   //库存需求分析
-                  let series1=[];
-                  let series2=[];
+let series1=[];
+let series2=[];
                   _this.DeliveryPlanDate2=[];
                   res.data.Table7.forEach((x, i) => {
                       let newIndex = 0;
                       let newIndex2 = 0;
-                      debugger;
-                      let date = x.N1;
+                      let date = formatDate.formatDates(x.N1)||''
                       _this.DeliveryPlanDate2.push(date.slice(-5));
                     
                         series1.push(x.S1);
@@ -1374,9 +1339,9 @@
 
 //库存结余
                     _this.leftData_2 = res.data.Table9;
-                    $(".loading").fadeOut()
-                  if(_this.judgeRight_1==false)
-                  {
+                    
+if(_this.judgeRight_1==false)
+{
                     _this.$nextTick(() => {
                  _this.gundong()
                  
@@ -1435,7 +1400,7 @@
           //   })
           //   .catch(function (error) {
           //   });
-          axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720,  OrganizeID, YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
+          axiosPostRequst(`/APSAPI/GetReport1`, { rows: 0, page: 1, dicID: 6720,  OrganizeIDs: '', YearMonth: this.YearMonth, fields: "Extend9,ISNULL(sum(ConfirmQty),0)/sum(PlanQty) as PlanQtyP1", groupby: 'Extend9', sort: "PlanQtyP1 desc" })
             .then(function (res) {
               if (res.result) {
                 _this.centerOption_4.xAxis[0].data = [];
@@ -1457,20 +1422,10 @@
             })
 
 
-        
-        this.indexNo++
-        console.log('indexNo',this.indexNo)
+      
         this.timeOut = setTimeout(() => {
-          if(this.OrganizeList.length==this.indexNo){
-            this.indexNo = 0
-            this.form = this.OrganizeList[this.indexNo]
-          }else{
-            this.form = this.OrganizeList[this.indexNo]
-          }
-          
-          this.getData_30M(this.form.OrganizeID)
-        //  window.location.href=window.location.href
-        }, 1000 * 60 * 3)
+         window.location.href=window.location.href
+        }, 1000 * 60*5)
       },
       // 渲染图标
       drawChart(id, option) {
@@ -1713,7 +1668,7 @@
 
   .logo {
    
-    height:60px;
+    height:80px;
     position: absolute;
     left: 20px;
     top: 1px;
