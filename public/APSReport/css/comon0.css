@@ -69,6 +69,14 @@ a:hover{ color:#06c; text-decoration: none!important}
 .table1 tr:nth-child(2) span{ background: #ed405d}
 .table1 tr:nth-child(3) span{ background: #f78c44}
 .table1 tr:nth-child(4) span{ background: #49bcf7}
+
+.table2 th{border-bottom: 1px solid rgba(255,255,255,.2); font-size: 16px; color:rgba(255,255,255,.6); font-weight: normal; padding:0 0 10px 0;}
+.table2 td{ font-size: 16px; color:rgba(255,255,255,.4); padding: 15px 0 0 0; }
+.table2 span{ width: 24px; height: 24px; border-radius: 3px; display: block; background: #878787; color: #fff; line-height: 24px; text-align: center;}
+
+.table2 tr:nth-child(1) span{ background: #ed405d}
+.table2 tr:nth-child(2) span{ background: #f78c44}
+.table2 tr:nth-child(3) span{ background: #49bcf7}
 .iconchart li{height: 30px;}
 .iconchart label{ color: #fff; line-height: 30px; height: 30px; display: inline-block; opacity: .8;}
 .iconchart label img{ display: inline-block; vertical-align: middle; opacity: .4;}
