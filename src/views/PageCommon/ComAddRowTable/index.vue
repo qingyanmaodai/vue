@@ -390,7 +390,7 @@ export default {
             // 动态检验必填项
             for(let i=0;i<this.tableData[remarkTb].length;i++){
                 for(let x=0;x<this.formSearchs[remarkTb].required.length;x++){
-                    console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
+                    // console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
                     if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]){
                     this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
                     return
@@ -398,14 +398,16 @@ export default {
             }
         }
         }
-        const $table = this.$refs.ComVxeTable.$refs.vxeTable.value
+        
+        const $table = this.$refs.ComVxeTable.$refs.vxeTable
+        // 获取修改记录
         const updateRecords = $table.getUpdateRecords()
-              // VXETable.modal.alert(updateRecords.length)
-        console.log('修改过的表格数据',updateRecords)
-        this.adminLoading = false
-        return
+        if(updateRecords.length==0){
+          this.$message.error("当前数据没做修改，请先修改再保存！");
+          return
+        }
         this.adminLoading = true;
-        let res = await SaveData(this.tableData[remarkTb]);
+        let res = await SaveData(updateRecords);
         const { datas, forms, result, msg } = res.data;
         if (result) {
             this.$message({
