@@ -451,6 +451,7 @@ export default {
   },
   data() {
     return {
+      TwoLevelProceData:[],
       dialogPreson:false,
       multipleSelection:[],
       height1:'707px',
@@ -924,6 +925,7 @@ export default {
         }
         this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
         await this.getLevelTwoProcessData(row.ProcessID)
+        await this.getTwoLevelProceData(row.ID)
         this.currentRow[this.labelStatus1]["ModifiedByName"] = this.userInfo.Name;
         this.currentRow[this.labelStatus1]["ModifiedBy"] = this.userInfo.Account;
         this.$set(this.currentRow[this.labelStatus1], "UserPeople", row.Peoples);
@@ -1047,6 +1049,7 @@ export default {
           }
           return;
         }
+        console.log('index',index)
         _this.dataSearch(index);
         for (var name in this.currentRow[index]) {
           this.$set(this.currentRow[index], name, "");
@@ -1187,7 +1190,7 @@ export default {
         this.ruleForm.LineID = "";
       }
     },
-    //通过先别工序获取二级工序
+    //通过线别工序获取二级工序
     async getLevelTwoProcessData(ProcessID){
       this.LevelTwoProcessList = []
       let form = {};
@@ -1205,6 +1208,54 @@ export default {
             dangerouslyUseHTMLString: true,
           });
         }
+    },
+    // 更改报工工序查询
+    async getTwoLevelProceData(ID){
+        let form = {};
+        form["dicID"] = 6710;
+        form["ID"] = ID;
+        form["rows"] = 0;
+        let res = await GetSearchData(form);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          console.log('data',data)
+          this.TwoLevelProceData = data
+        }else{
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+    },
+    // 更改报工工序保存
+    async saveProceData(ProcessNames){
+        if(this.TwoLevelProceData.length){
+          this.TwoLevelProceData.forEach(item=>{
+            item.Remark2 = ProcessNames
+          })
+          let res = await SaveData(this.TwoLevelProceData);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          console.log('data',data)
+          if(data.length){
+            data.forEach(item=>{
+              item.Remark2 = ProcessNames
+            })
+          }
+          this.dataSearch(2)
+          for (var name in this.currentRow[2]) {
+          this.$set(this.currentRow[2], name, "");
+        }
+        }else{
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        }
+        
     },
     // 修改报工
     saveProduction(){
@@ -1268,7 +1319,7 @@ export default {
             
       if (this.multiple) {
         if (
-          !this.currentRow[0].UserPeople||this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
+          !this.currentRow[this.labelStatus1].UserPeople||this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
           parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
         ) {
           this.$message.error("请检查报工人员与报工数是否填写！");
@@ -1285,7 +1336,8 @@ export default {
       }
       this.$confirm("确定保存吗？")
         .then(() => {
-          _this.dataSave([_this.currentRow[this.labelStatus1]], 1);
+          _this.saveProceData(_this.currentRow[this.labelStatus1].LevelTwoProcessName)
+          _this.dataSave([_this.currentRow[this.labelStatus1]], 2);
         })
         .catch(() => {});
       
