@@ -1091,6 +1091,7 @@
               }
             }
           }
+          console.log('remainNum',remainNum)
           for (var j = 0; j < this.tableColumns[0].length; j++) {
             sheet.setArray(rowIndex, j, [list[j]]);
           }
