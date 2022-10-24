@@ -115,7 +115,7 @@
         colDialogVisible: false,
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
-          { ID: 6736, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 5158, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
         ],
         Status1: [
           
@@ -661,6 +661,7 @@
           });
           this.formSearchs[this.tagRemark].datas["productionstatus"] = [21, 22, 23, 24, 26];
           this.formSearchs[this.tagRemark].datas["ConfigStartWeek"] = "1";
+          this.formSearchs[this.tagRemark].datas["New5158"] = "true";
           this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
   
           this.adminLoading = false;

@@ -241,7 +241,17 @@ export default {
           Icon: "",
           sort:5,
         },
+        {
+          ButtonCode: "downLoadErpData",
+          BtnName: "下载ERP数据",
+          Type: "warning",
+          Ghost: true,
+          Size: "small",
         
+          Methods: "downERP",
+          Icon: "",
+          sort:6,
+        },
       ],
       // 表头添加动态按钮
       parmsBtn2: [
@@ -336,6 +346,7 @@ export default {
       let newBtn = [];
       let btn2 = [];
       if (routeBtn.length != 0) {
+        console.log(routeBtn);
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
@@ -580,6 +591,28 @@ export default {
     pageSize(val, remarkTb) {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
+    async downERP() {
+      this.adminLoading = true;
+      let res = await GetSearch(null, "/APSAPI/GetErpData");
+
+      const { result, data, count, msg } = res.data;
+
+      if (result) {
+        this.dataSearch(1);
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+      this.adminLoading = false;
     },
     // 保存
     async dataSave(remarkTb) {
