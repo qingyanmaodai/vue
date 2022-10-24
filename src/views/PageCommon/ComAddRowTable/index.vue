@@ -83,6 +83,7 @@
           </el-row>
         </div>
             <ComVxeTable
+            ref="ComVxeTable"
             :rowKey="'RowNumber'"
             :height="height"
             :tableData="tableData[tagRemark]"
@@ -98,6 +99,7 @@
             @pageSize="pageChange"
             @sortChange="sortChange"
             @selectfun="selectFun"
+            :keepSource="true"
           />
         </div>
     </div>
@@ -396,6 +398,12 @@ export default {
             }
         }
         }
+        const $table = this.$refs.ComVxeTable.$refs.vxeTable.value
+        const updateRecords = $table.getUpdateRecords()
+              // VXETable.modal.alert(updateRecords.length)
+        console.log('修改过的表格数据',updateRecords)
+        this.adminLoading = false
+        return
         this.adminLoading = true;
         let res = await SaveData(this.tableData[remarkTb]);
         const { datas, forms, result, msg } = res.data;

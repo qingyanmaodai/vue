@@ -42,6 +42,7 @@
       @cell-dblclick="handleRowdbClick"
       @sort-change="sortChange"
       @custom="toolbarCustomEvent"
+      :keep-source="keepSource"
     >
       <vxe-column
         :reserve-selection="true"
@@ -1110,6 +1111,11 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 懒加载
+    keepSource:{
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
