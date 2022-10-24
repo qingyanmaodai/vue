@@ -70,7 +70,7 @@
                 <span class="tableWidthRatio4 tableContent color2">{{item.PlanQty}}</span>
                 <span class="tableWidthRatio4 tableContent color3">{{item.HasQty}}</span>
                 <span class="tableWidthRatio4 tableContent color4">{{item.OweQty}}</span>
-                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP}}</span>
+                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP?parseFloat((item.PlanQtyP*100).toFixed(2)):0}}%</span>
                 <span class="tableWidthRatio7 tableContent widthPadding">{{item.DeliveryDate}}</span>
                 <span class="tableWidthRatio7 tableContent widthPadding">{{item.ProductionDate}}</span>
                 <span class="tableWidthRatio7 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span>
