@@ -1067,10 +1067,17 @@
             let label = this.tableColumns[0][j].prop + "dy";
             let obj = currentRow[label];
             remainNum = remainNum - parseInt(val);
-            let maxNum =
-              parseInt(Capacity) *
-              parseInt(obj.TotalHours) *
-              parseInt(obj.DayCapacity);
+            let maxNum = 0
+            // 如果产能为空会出现NaN情况的判断
+            if(Capacity){
+              maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+            }else{
+              maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+            }
+            // let maxNum =
+            //   parseInt(Capacity) *
+            //   parseInt(obj.TotalHours) *
+            //   parseInt(obj.DayCapacity);
             // parseInt(obj.StandardPeoples)
             if (remainNum <= 0) {
               list[j] = null;
