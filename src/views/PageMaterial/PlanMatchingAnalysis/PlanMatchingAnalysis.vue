@@ -25,6 +25,9 @@
                 </el-col
               >
               <el-col :span="12" class="flex_flex_end">
+                <el-checkbox-group v-model="checkList" @change="checkboxChange">
+                  <el-checkbox v-for="(item,index) in parmsBtn2" :key="index" :label="item.value" :value="item.value">{{item.label}}</el-checkbox>
+                </el-checkbox-group>
               </el-col>
             </el-row>
           </div>
@@ -50,18 +53,18 @@
               </div>
               <div class="flex">
                 <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
-                <span>共{{ tablePagination[tagRemark].pageTotal }}条</span>
-                <!-- <el-pagination
+                <!-- <span>共{{ tablePagination[tagRemark].pageTotal }}条</span> -->
+                <el-pagination
                   background
                   @size-change="(val) => pageSize(val, 1)"
-                  :current-page="tablePagination[1].pageIndex"
+                  :current-page="tablePagination[tagRemark].pageIndex"
                   :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                  :page-size="tablePagination[1].pageSize"
-                  :total="tablePagination[1].pageTotal"
+                  :page-size="tablePagination[tagRemark].pageSize"
+                  :total="tablePagination[tagRemark].pageTotal"
                   @current-change="(val) => pageChange(val, 1)"
                   layout="total, sizes, prev, pager, next,jumper"
                 >
-                </el-pagination> -->
+                </el-pagination>
               </div>
             </div>
           </div>
@@ -108,6 +111,11 @@
     },
     data() {
       return {
+        parmsBtn2:[
+          {label:'显示欠数',value:0},
+          {label:'显示配套率',value:1}
+        ],
+        checkList:[],
         ////////////////// Search /////////////////
         dialogSearchForm: {
           OrderID: "",
@@ -142,7 +150,7 @@
         tableLoading: [false],
         isClear: [false],
         tablePagination: [
-          { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         ],
         height: "707px",
         showPagination: true,
@@ -181,6 +189,9 @@
       }, 450);
     },
     methods: {
+      checkboxChange(val){
+        this.dataSearch(this.tagRemark);
+      },
       // 跳转至页面配置
       toPageSetting(id) {
         this.$router.push({
@@ -420,6 +431,15 @@
                 GC.Spread.Sheets.SheetArea.viewport
               );
               rowSheet3.backColor("#f0f9eb");
+            }
+            // 日期列包含负数字体红色
+            if(m.name.indexOf('-')>-1&&row[m.prop]&&row[m.prop].indexOf('-')>-1){
+              rowSheet3 = sheet.getCell(
+                index, //行
+                num, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.foreColor("red");
             }
           });
         });
@@ -662,6 +682,7 @@
           this.formSearchs[this.tagRemark].datas["productionstatus"] = [21, 22, 23, 24, 26];
           this.formSearchs[this.tagRemark].datas["ConfigStartWeek"] = "1";
           this.formSearchs[this.tagRemark].datas["New5158"] = "true";
+          this.formSearchs[this.tagRemark].datas["vt"] = "";
           this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
   
           this.adminLoading = false;
@@ -684,6 +705,8 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
+        // 欠数、配套率
+        form["vt"] = this.checkList&&this.checkList.length?this.checkList.join(','):'';
         if (remarkTb == 1) {
           form["StartWeek"] = 1;
         }
