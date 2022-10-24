@@ -25,9 +25,9 @@
                 </el-col
               >
               <el-col :span="12" class="flex_flex_end">
-                <el-checkbox-group v-model="checkList" @change="checkboxChange">
-                  <el-checkbox v-for="(item,index) in parmsBtn2" :key="index" :label="item.value" :value="item.value">{{item.label}}</el-checkbox>
-                </el-checkbox-group>
+                <el-radio-group v-model="radioValue" @change="radioChange">
+                  <el-radio v-for="(item,index) in parmsBtn2" :key="index" :label="item.value" :value="item.value">{{item.label}}</el-radio>
+                </el-radio-group>
               </el-col>
             </el-row>
           </div>
@@ -115,7 +115,7 @@
           {label:'显示欠数',value:0},
           {label:'显示配套率',value:1}
         ],
-        checkList:[],
+        radioValue:0,
         ////////////////// Search /////////////////
         dialogSearchForm: {
           OrderID: "",
@@ -189,7 +189,7 @@
       }, 450);
     },
     methods: {
-      checkboxChange(val){
+      radioChange(val){
         this.dataSearch(this.tagRemark);
       },
       // 跳转至页面配置
@@ -239,6 +239,8 @@
       setData() {
         this.spread.suspendPaint();
         let sheet = this.spread.getActiveSheet();
+        // 重置表单
+        sheet.reset();
         sheet.options.allowCellOverflow = true;
         sheet.defaults.rowHeight = 23;
         sheet.defaults.colWidth = 100;
@@ -706,7 +708,7 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         // 欠数、配套率
-        form["vt"] = this.checkList&&this.checkList.length?this.checkList.join(','):'';
+        form["vt"] = this.radioValue;
         if (remarkTb == 1) {
           form["StartWeek"] = 1;
         }
