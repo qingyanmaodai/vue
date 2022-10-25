@@ -275,8 +275,11 @@
               size: parseInt(x.width),
             });
           }
+          
           colHeader1.push(x.label);
         });
+        
+        
         sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
         colHeader1.forEach(function (value, index) {
           sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
@@ -337,6 +340,10 @@
             //   GC.Spread.Sheets.SheetArea.viewport
             // );
             // cell.foreColor("gray");
+          }
+          // 列宽自适应
+          if(m.name.indexOf('-')>-1){
+            sheet.autoFitColumn(cellIndex)
           }
   
           cellIndex++;
@@ -485,6 +492,7 @@
         sheet.options.isProtected = true; //锁定表格
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         this.spread.refresh();
+        this.spread.options.autoFitType = GC.Spread.Sheets.AutoFitType.cellWithHeader;
       },
       getSelectionData() {
         let sheet = this.spread.getActiveSheet();
