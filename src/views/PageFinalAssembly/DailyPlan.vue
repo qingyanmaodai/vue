@@ -1031,6 +1031,7 @@
           parseInt(currentRow[currentlabel].TotalHours) <= 0
         ) {
           this.$message.error("该天休息，上班时间为0");
+          sheet.setValue(rowIndex, colIndex, "");
           return;
         }
 
@@ -1067,12 +1068,15 @@
             let label = this.tableColumns[0][j].prop + "dy";
             let obj = currentRow[label];
             remainNum = remainNum - parseInt(val);
+            console.log('剩余remainNum',remainNum)
             let maxNum = 0
             // 如果产能为空会出现NaN情况的判断
             if(Capacity){
               maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              console.log('匹配数量1',maxNum)
             }else{
               maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              console.log('匹配数量2',maxNum)
             }
             // let maxNum =
             //   parseInt(Capacity) *
@@ -1085,13 +1089,23 @@
               if (remainNum <= maxNum) {
                 list[j] = remainNum;
                 break;
+              }else if(maxNum==0){
+                // list[j] = remainNum;
+                // break;
               } else {
                 list[j] = maxNum;
                 remainNum -= maxNum;
               }
             }
+            console.log('remainNum',remainNum)
+          console.log('val',val)
+          console.log('maxNum',maxNum)
+          console.log('Capacity',Capacity)
+          console.log('TotalHours',obj.TotalHours)
+          console.log('DayCapacity',obj.DayCapacity)
+          
           }
-          console.log('remainNum',remainNum)
+          
           for (var j = 0; j < this.tableColumns[0].length; j++) {
             sheet.setArray(rowIndex, j, [list[j]]);
           }
