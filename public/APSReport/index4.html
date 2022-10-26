@@ -35,17 +35,17 @@
             <span class="text_3">今日生产计划</span>
             <div class="text-wrapper_2 flex-row justify-between">
               <span class="tableWidthRatio7 tableTitle">生产线</span>
-              <span class="tableWidthRatio10 tableTitle">生产订单</span>
+              <span class="tableWidthRatio8 tableTitle">生产订单</span>
         
-              <span class="tableWidthRatio15 tableTitle">产品编码</span>
-              <span class="tableWidthRatio30 tableTitle">产品</span>
-              <span class="tableWidthRatio4 tableTitle">数量</span>
-              <span class="tableWidthRatio4 tableTitle">当日报工</span>
-              <span class="tableWidthRatio4 tableTitle">欠数</span>
-              <span class="tableWidthRatio4 tableTitle">完成率</span>
+              <span class="tableWidthRatio8 tableTitle">产品编码</span>
+              <span class="tableWidthRatio30 tableTitle">产品名称</span>
+              <span class="tableWidthRatio6 tableTitle">数量</span>
+              <span class="tableWidthRatio6 tableTitle">当日报工</span>
+              <span class="tableWidthRatio6 tableTitle">欠数</span>
+              <span class="tableWidthRatio5 tableTitle">完成率</span>
               <span class="tableWidthRatio7 tableTitle widthPadding">交期</span>
-              <span class="tableWidthRatio10 tableTitle widthPadding">上线时间</span>
-              <span class="tableWidthRatio7 tableTitle">备注</span>
+              <span class="tableWidthRatio7 tableTitle widthPadding">上线时间</span>
+              <span class="tableWidthRatio10 tableTitle">备注</span>
 
               <!-- <span class="text_4">生产线</span>
                   <span class="text_4">生产订单</span>
@@ -63,17 +63,17 @@
             <div class="table1 wrap">
               <div class="text-wrapper_3 flex-row justify-between" v-for="(item,index) in todayList" :key="index">
                 <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
-                <span class="tableWidthRatio10 tableContent">{{item.OrderNo}}</span>
+                <span class="tableWidthRatio8 tableContent">{{item.OrderNo}}</span>
               
-                <span class="tableWidthRatio15 tableContent">{{item.Code}}</span>
+                <span class="tableWidthRatio8 tableContent">{{item.Code}}</span>
                 <span class="tableWidthRatio30 tableContent">{{item.MaterialName}}</span>
-                <span class="tableWidthRatio4 tableContent color2">{{item.PlanQty}}</span>
-                <span class="tableWidthRatio4 tableContent color3">{{item.HasQty}}</span>
-                <span class="tableWidthRatio4 tableContent color4">{{item.OweQty}}</span>
-                <span class="tableWidthRatio4 tableContent">{{item.PlanQtyP}}</span>
+                <span class="tableWidthRatio6 tableContent color2">{{item.PlanQty}}</span>
+                <span class="tableWidthRatio6 tableContent color3">{{item.HasQty}}</span>
+                <span class="tableWidthRatio6 tableContent color4">{{item.OweQty}}</span>
+                <span class="tableWidthRatio5 tableContent">{{item.PlanQtyP}}</span>
                 <span class="tableWidthRatio7 tableContent widthPadding">{{item.DeliveryDate}}</span>
                 <span class="tableWidthRatio7 tableContent widthPadding">{{item.ProductionDate}}</span>
-                <span class="tableWidthRatio7 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span>
+                <span class="tableWidthRatio10 tableContent clampEllipsis" :title="item.Remark1">{{item.Remark1}}</span>
               </div>
             </div>
           </div>
@@ -84,24 +84,24 @@
             <span class="text_109">明日生产计划</span>
             <div class="text-wrapper_12 flex-row">
               <span class="tableWidthRatio15 tableTitle">生产线</span>
-              <span class="tableWidthRatio20 tableTitle">生产订单</span>
-          
-              <span class="tableWidthRatio30 tableTitle">产品编码</span>
+              <span class="tableWidthRatio15 tableTitle">生产订单</span>
+              <span class="tableWidthRatio20 tableTitle">产品编码</span>
+              <span class="tableWidthRatio40 tableTitle">产品名称</span>
               <span class="tableWidthRatio10 tableTitle">数量</span>
               <!--<span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>-->
-              <span class="tableWidthRatio15 tableTitle">备注</span>
+              <!-- <span class="tableWidthRatio15 tableTitle">备注</span> -->
             </div>
             <div class="wrap2 table2">
               <div class="image-text_3 flex-col justify-between">
                 <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
                   <span class="tableWidthRatio15 tableContent">{{ele.LineName}}</span>
-                  <span class="tableWidthRatio20 tableContent">{{ele.OrderNo}}</span>
-                
-                  <span class="tableWidthRatio30 tableContent">{{ele.Code}}</span>
+                  <span class="tableWidthRatio15 tableContent">{{ele.OrderNo}}</span>
+                  <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
+                  <span class="tableWidthRatio40 tableContent">{{ele.MaterialName}}</span>
                   <span class="tableWidthRatio10 tableContent color2">{{ele.PlanQty}}</span>
                   <!--<span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span>-->
-                  <span class="tableWidthRatio15 tableContent clampEllipsis1"
-                    :title="ele.Remark1">{{ele.Remark1}}</span>
+                  <!-- <span class="tableWidthRatio15 tableContent clampEllipsis1"
+                    :title="ele.Remark1">{{ele.Remark1}}</span> -->
                 </div>
               </div>
             </div>
@@ -207,7 +207,6 @@
             s = checkTime(s);
 
         var s = year + "-" + month + "-" + date;
-        console.log(s);
         return s;
     }
     var checkTime = function (i) {
@@ -415,7 +414,6 @@ let chartDom2=null;
                             tooltip: {
                                 trigger: 'axis',
                                 valueFormatter: function (value) {
-                                    console.log('格式化百分比', value)
                                     return value + '%';
                                 },
                             },
@@ -469,7 +467,7 @@ let chartDom2=null;
                                     formatter: function () {
                                         return _this.perComplete + '%'//饼图中间百分比
                                     },
-                                    fontSize: () => _this.fontSize(36),
+                                    // fontSize: () => _this.fontSize(36),
                                     fontFamily: 'YouSheBiaoTiHei',
                                     color: '#FFD43E',
                                 },
@@ -697,7 +695,6 @@ let chartDom2=null;
                         _this.tomorrowList = []
                         if (res.result) {
                             _this.tomorrowList = res.data
-                           // console.log('res.data2', res.data)
                             _this.$nextTick(()=>{
                                 _this.gundong('.wrap2')
                             })
@@ -767,7 +764,9 @@ let chartDom2=null;
                     .then(function (res) {
                         _this.todayOptionData = []
                         if (res.result) {
+                            
                             _this.todayOptionData = res.data
+                           
                             // if(_this.todayOptionData.length){
                             _this.perComplete = 0
                             _this.todayOptionData.map(item => {
@@ -775,6 +774,7 @@ let chartDom2=null;
                                 _this.todayOption.series[0].data[0] = { value: item.HasQty, name: '报工数' }
                                 _this.todayOption.series[0].data[1] = { value: item.PlanQty - item.HasQty, name: '未完成数' }
                                 _this.perComplete = parseFloat(((item.PlanQtyP1) * 100).toFixed(2))
+                                _this.todayOption.series[0].label.normal.fontSize =  _this.fontSize(36)||36
                             })
                             // }
                             // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
