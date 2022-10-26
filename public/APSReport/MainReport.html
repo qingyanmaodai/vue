@@ -181,7 +181,7 @@
                   </thead>
                 </table>
                 <div class="wrapcon">
-                  <table class="table2" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                  <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0" >
                     <tbody class="tablegun " >
                       <tr v-for="(item3,index) in rightData_1" :key="index">
                         <td class="f1 veralign wordbreak"><span>{{index+1}}</span></td>
@@ -205,21 +205,21 @@
                 <thead>
                   <tr>
                     <th class="f1" scope="col">排序</th>
-                    <th class="f35" scope="col">物控</th>
-                    <th class="f3" scope="col" style="text-align:center;">欠料数</th>
-                    <th class="f15" scope="col" style="text-align:center;">已回货</th>
-                    <th class="f15" scope="col" style="text-align:center;">达成率</th> 
+                    <th class="f40" scope="col">物控</th>
+                    <th class="f15" scope="col" style="text-align:center;">欠料数</th>
+                    <th class="f15" scope="col" style="text-align:center;">累计收货</th>
+                    <!-- <th class="f15" scope="col" style="text-align:center;">达成率</th>  -->
                   </tr>
                 </thead>
               </table>
-              <table class="table2 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
+              <table class="table1 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody class="tablegun" >
                   <tr v-for="(item3,index) in leftData_2 " :key="index">
                     <td class="f1 veralign"><span>{{index+1}}</span></td>
-                    <td class="f35 veralign wordbreak">{{item3.N1}}</td>
-                    <td class="f3 veralign wordbreak"  style="text-align:center;">{{item3.C1}}</td>
+                    <td class="f40 veralign wordbreak">{{item3.N1}}</td>
+                    <td class="f15 veralign wordbreak"  style="text-align:center;">{{item3.C1}}</td>
                     <td class="f15 veralign wordbreak" style="text-align:center;">{{item3.C2}}</td>
-                    <td class="f15 veralign wordbreak" style="text-align:center;">{{item3.P1}}<br></td> 
+                    <!-- <td class="f15 veralign wordbreak" style="text-align:center;">{{item3.P1}}<br></td>  -->
                   </tr>
                 </tbody>
               </table>
@@ -1709,31 +1709,6 @@
     width: 20%;
   }
   .table1 .f35 {
-    width: 35%;
-  }
-
-  .table2 .f1 {
-    width: 13%;
-  }
-
-  .table2 .f2 {
-    width: 25%;
-  }
-
-  .table2 .f3 {
-    width: 22%;
-  }
-
-  .table2 .f4 {
-    width: 25%;
-  }
-  .table2 .f15 {
-    width: 15%;
-  }
-  .table2 .f20 {
-    width: 20%;
-  }
-  .table2 .f35 {
     width: 35%;
   }
 

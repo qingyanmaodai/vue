@@ -1323,7 +1323,7 @@
           if (okCount > 0) {
             let res = await GetSearch(
               this.selectionData[remarkTb],
-              "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
+              "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isqty=1"
             );
             const { result, data, count, msg } = res.data;
             if (result) {
