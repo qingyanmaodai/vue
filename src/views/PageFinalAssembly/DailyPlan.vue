@@ -1089,10 +1089,7 @@
               if (remainNum <= maxNum) {
                 list[j] = remainNum;
                 break;
-              }else if(maxNum==0){
-                // list[j] = remainNum;
-                // break;
-              } else {
+              }else {
                 list[j] = maxNum;
                 remainNum -= maxNum;
               }
@@ -1105,7 +1102,6 @@
           console.log('DayCapacity',obj.DayCapacity)
           
           }
-          
           for (var j = 0; j < this.tableColumns[0].length; j++) {
             sheet.setArray(rowIndex, j, [list[j]]);
           }
