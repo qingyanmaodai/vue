@@ -260,9 +260,6 @@
             }
           });
         }
-        console.log('routeBtn',this.$route)
-        console.log('newBtn',newBtn)
-        console.log('permission',permission)
         this.$set(this, "btnForm", newBtn);
         this.$set(this, "isEdit", permission);
       },
@@ -616,7 +613,6 @@
       },
       // 渲染数据
       setData() {
-        console.log('item.Lines123')
         this.spread.suspendPaint();
         let sheet = this.spread.getActiveSheet();
         sheet.options.allowCellOverflow = true;
@@ -777,9 +773,6 @@
             sheet.suspendPaint();
             sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
             //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-              console.log(_this.sheetSelectRows);
-
-            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
             //删除旧行
             if (_this.sheetSelectObj.start > options.activeRow) {
               //说明从下面插入上面
@@ -872,7 +865,6 @@
             Commands.undoTransaction(context, options);
             return true;
           } else {
-            //  console.log(options);
             context.commandManager().execute(options);
             this.sheetSelectRows = sheet.getArray(
               options.selections[0].row,
@@ -905,7 +897,6 @@
         spread
       ) {
         itemsDataForShown.forEach(function (item, index) {
-          // console.log(item);
           if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
             item.command = "insertRowsCopyStyle";
           }
@@ -922,7 +913,6 @@
         GC.Spread.Sheets.Events.ClipboardChanged,
         function (sender, args) {
           let s = sheet.getSelections()[0];
-          console.log(sheet.getDataItem(s.row));
           _this.sheetSelectRows = sheet.getArray(
             s.row,
             0,
@@ -978,8 +968,9 @@
         }else if(val==0){//输入0不触发自动计算
           return
         }
-        val = Number(val)
-       
+        val = parseInt(val)
+        //当前输入的有小数，取整
+        sheet.setValue(rowIndex, colIndex, val);
         let currentRow = dataSource[rowIndex];
         if (currentRow.ID == -1) {
           return false;
@@ -1031,6 +1022,7 @@
           parseInt(currentRow[currentlabel].TotalHours) <= 0
         ) {
           this.$message.error("该天休息，上班时间为0");
+          sheet.setValue(rowIndex, colIndex, "");
           return;
         }
 
@@ -1066,28 +1058,29 @@
           for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
             let label = this.tableColumns[0][j].prop + "dy";
             let obj = currentRow[label];
-            remainNum = remainNum - parseInt(val);
             let maxNum = 0
+            if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
+              remainNum = remainNum
+            }else{
+              remainNum = remainNum - parseInt(val);
+            }
             // 如果产能为空会出现NaN情况的判断
             if(Capacity){
               maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
             }else{
               maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
             }
-            // let maxNum =
-            //   parseInt(Capacity) *
-            //   parseInt(obj.TotalHours) *
-            //   parseInt(obj.DayCapacity);
-            // parseInt(obj.StandardPeoples)
             if (remainNum <= 0) {
               list[j] = null;
             } else {
               if (remainNum <= maxNum) {
                 list[j] = remainNum;
+                val = remainNum
                 break;
-              } else {
+              }else {
                 list[j] = maxNum;
-                remainNum -= maxNum;
+                // remainNum -= maxNum;
+                val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
               }
             }
           }
@@ -1187,7 +1180,6 @@
               });
             });
           }
-          console.log('newData',newData)
          // this.lines = newData;
           // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
           // this.checkBoxCellTypeLine.editorValueType(
