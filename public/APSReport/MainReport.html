@@ -204,10 +204,10 @@
               <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <thead>
                   <tr>
-                    <th class="f1" scope="col">排序</th>
+                    <th class="f10" scope="col">排序</th>
                     <th class="f40" scope="col">物控</th>
-                    <th class="f15" scope="col" style="text-align:center;">欠料数</th>
-                    <th class="f15" scope="col" style="text-align:center;">累计收货</th>
+                    <th class="f30" scope="col" style="text-align:center;">欠料数</th>
+                    <th class="f20" scope="col" style="text-align:center;">累计收货</th>
                     <!-- <th class="f15" scope="col" style="text-align:center;">达成率</th>  -->
                   </tr>
                 </thead>
@@ -215,10 +215,10 @@
               <table class="table2 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tbody class="tablegun" >
                   <tr v-for="(item3,index) in leftData_2 " :key="index">
-                    <td class="f1 veralign"><span>{{index+1}}</span></td>
+                    <td class="f10 veralign"><span>{{index+1}}</span></td>
                     <td class="f40 veralign wordbreak">{{item3.N1}}</td>
-                    <td class="f15 veralign wordbreak"  style="text-align:center;">{{item3.C1}}</td>
-                    <td class="f15 veralign wordbreak" style="text-align:center;">{{item3.C2}}</td>
+                    <td class="f30 veralign wordbreak"  style="text-align:center;">{{item3.C1}}</td>
+                    <td class="f20 veralign wordbreak" style="text-align:center;">{{item3.C2}}</td>
                     <!-- <td class="f15 veralign wordbreak" style="text-align:center;">{{item3.P1}}<br></td>  -->
                   </tr>
                 </tbody>
@@ -233,22 +233,22 @@
             <!-- <div class="navboxall" id="echart2"></div> -->
             <div class="navboxall  overflowhidden wordbreak">
               <div class="wraptit flexjc">
-                <span style="width:40%">物料编码</span>
-                <span style="width:15%">数量</span> 
+                <span style="width:35%">物料编码</span>
+                <span style="width:25%">数量</span> 
                 <span style="width:20%">状态</span>
-                <span style="width:25%">到货时间</span> 
+                <span style="width:20%">到货时间</span> 
               </div>
               <div class="wrapcon">
                 <ul>
                   <li v-for="(item,i) in rightData_2" :key="i">
                     <p>
-                      <span style="width:40%" class="veralign wordbreak">{{item.N1}}</span>
+                      <span style="width:35%" class="veralign wordbreak">{{item.N1}}</span>
                       <span
-                        style="width:15%" class="veralign wordbreak">{{item.Q1}}</span>
+                        style="width:25%" class="veralign wordbreak">{{item.Q1}}</span>
                         <span
                         style="width:20%" class="veralign wordbreak">{{item.N2}}</span>
                         <span
-                        style="width:25%">{{item.T1}}</span>
+                        style="width:20%">{{item.T1}}</span>
                     </p>
                   </li>
                 </ul>
@@ -880,6 +880,9 @@
               label: {
                 show: true, //开启显示
                 position: 'bottom', //在上方显示
+                "formatter": function (value) {
+                    return value.data + '%'
+                  },
                 textStyle: { //数值样式
                   color: 'white',
                   fontSize: 13
@@ -1708,13 +1711,23 @@
   .table1 .f20 {
     width: 20%;
   }
+  .table1 .f30 {
+    width: 30%;
+  }
   .table1 .f35 {
     width: 35%;
   }
   .table1 .f40 {
     width: 40%;
   }
+  .table1 .f10 {
+    width: 10%;
+  }
+ 
 
+  .table2 .f10 {
+    width: 10%;
+  }
   .table2 .f1 {
     width: 13%;
   }
@@ -1735,6 +1748,9 @@
   }
   .table2 .f20 {
     width: 20%;
+  }
+  .table2 .f30 {
+    width: 30%;
   }
   .table2 .f35 {
     width: 35%;
