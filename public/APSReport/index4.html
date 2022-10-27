@@ -299,10 +299,10 @@
                     },
                     grid: {
                         // width:'100%',
-                        left: '1%',
-                        right: '1%',
+                        left: '-5%',
+                        right: '0%',
                         bottom: '2%',
-                        top: '17%',
+                        top: '20%',
                         containLabel: true,//是否包含刻度标签
                         // height:'100%',
                     },
@@ -470,6 +470,7 @@
                     series: [
                         {
                             // name: 'Access From',
+                            top:'12%',
                             type: 'pie',
                             radius: ['55%', '75%'],
                             // radius: ['45%', '65%'],
@@ -493,7 +494,6 @@
                                     show: true,
                                 },
                                 color: '#fff',
-                                fontSize: this.computedFontSize(14),
                             },
 
                             labelLine: {
@@ -853,6 +853,7 @@
 
 </html>
 <style>
+
     [v-cloak] {
         /*比较大的段落，防止闪烁，看到花括号*/
         display: none;
