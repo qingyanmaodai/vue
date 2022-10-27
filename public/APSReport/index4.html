@@ -291,10 +291,10 @@ let chartDom2=null;
                     },
                     grid: {
                         // width:'100%',
-                        left: '0%',
+                        left: '-5%',
                         right: '0%',
-                         bottom: '2%',
-                        top: '15%',
+                        bottom: '2%',
+                        top: '20%',
                         containLabel: true,//是否包含刻度标签
                         // height:'100%',
                     },
@@ -453,6 +453,7 @@ let chartDom2=null;
                     series: [
                         {
                             // name: 'Access From',
+                            top:'12%',
                             type: 'pie',
                             radius: ['55%', '75%'],
                             // radius: ['45%', '65%'],
@@ -474,7 +475,7 @@ let chartDom2=null;
                                 emphasis: {
                                     show: true,
                                 },
-                                color: '#fff'
+                                color: '#fff',
                             },
 
                             labelLine: {
@@ -810,7 +811,7 @@ let chartDom2=null;
 </script>
 
 </html>
-<style>
+<style lang="less" scoped>
 
     [v-cloak] {
         /*比较大的段落，防止闪烁，看到花括号*/
