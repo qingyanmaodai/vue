@@ -2854,7 +2854,7 @@
     width: 100%;
     margin: auto;
     position: relative;
-    bottom: .15rem;
+    bottom: .5rem;
 }
 
 .text_103 {
@@ -3669,7 +3669,9 @@
 .tableWidthRatio25 {
     width: 25%;
 }
-
+.tableWidthRatio35{
+    width: 35%;
+}
 .tableWidthRatio36 {
     width: 36%;
 }

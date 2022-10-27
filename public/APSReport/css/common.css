@@ -73,6 +73,12 @@ button:active {
   display: flex;
   align-items: flex-end;
 }
+.wordbreak{
+	word-break:break-all
+}
+.fontSize{
+  font-size: 0
+}
 .str_wrap {
 	overflow:hidden;
 	width:100%;
