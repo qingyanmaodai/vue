@@ -185,6 +185,11 @@
       clearInterval(this.time);
       next();
     },
+    activated() {
+      if(this.spread){
+        this.spread.refresh();
+      }
+    },
     watch: {},
     created() {
       _this = this;
@@ -193,7 +198,6 @@
       this.judgeBtn();
       this.getTableHeader();
 
-      this.timeOut();
     },
     computed: {
       ...mapState({
@@ -206,18 +210,6 @@
       }, 300);
     },
     methods: {
-      timeOut() {
-        if (this.time) {
-          clearTimeout(this.time);
-        }
-        if (this.spread) {
-          this.spread.refresh();
-        }
-        this.time = setTimeout(() => {
-          //重新定位宽高度
-          this.timeOut();
-        }, 2000);
-      },
       initSpread: function(spread) {
         this.spread = spread;
       },
@@ -865,6 +857,7 @@ var insertRowsCopyStyle = {
         this.adminLoading = false;
         this.tableLoading[0] = false;
         this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.refresh(); //重新定位宽高度
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {

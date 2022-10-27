@@ -454,18 +454,18 @@ export default {
         })
         .catch((_) => {});
     },
-    timeOut() {
-      if (this.time) {
-        clearTimeout(this.time);
-      }
-      if (this.spread) {
-        this.spread.refresh();
-      }
-      this.time = setTimeout(() => {
-        //重新定位宽高度
-        this.timeOut();
-      }, 2000);
-    },
+    // timeOut() {
+    //   if (this.time) {
+    //     clearTimeout(this.time);
+    //   }
+    //   // if (this.spread) {
+    //   //   this.spread.refresh();
+    //   // }
+    //   this.time = setTimeout(() => {
+    //     //重新定位宽高度
+    //     this.timeOut();
+    //   }, 2000);
+    // },
     initSpread: function (spread) {
       this.spread = spread;
     },

@@ -420,7 +420,9 @@ export default {
     this.getTableHeader();
   },
   activated() {
+    if (this.spread) {
     this.spread.refresh();
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -1557,12 +1559,13 @@ export default {
         );
         const { data, forms, result, msg } = res.data;
         if (result) {
+          this.dataSearch(0);
           this.$message({
             message: msg,
             type: "success",
             dangerouslyUseHTMLString: true,
           });
-          this.dataSearch(0);
+          
         } else {
           this.adminLoading = false;
           this.$message({
@@ -1621,6 +1624,7 @@ export default {
             type: "success",
             dangerouslyUseHTMLString: true,
           });
+          this.dataSearch(this.tagRemark)
         } else {
           this.adminLoading = false;
           this.$message({

@@ -185,17 +185,19 @@ export default {
       selectionData: [[]],
     };
   },
+  activated()
+  {
+    if(this.spread)
+    {
+      this.spread.refresh();
+    }
+  },
   watch: {},
   created() {
     _this = this;
    this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
-
-      setInterval(()=>{
-        this.spread.refresh();//重新定位宽高度
-
-    },2000);
   },
   computed: {
     ...mapState({
@@ -667,6 +669,7 @@ if(!row["Code"])
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
+      this.spread.refresh(); //重新定位宽高度
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {

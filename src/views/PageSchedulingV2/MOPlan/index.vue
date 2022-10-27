@@ -419,7 +419,7 @@ export default {
     setData() {
       this.spread.suspendPaint();
       let sheet = this.spread.getActiveSheet();
-      sheet.options.allowCellOverflow = true;
+      // sheet.options.allowCellOverflow = true;//报错注释
       sheet.defaults.rowHeight = 23;
       sheet.defaults.colHeaderRowHeight = 23;
       let colHeader1 = [""];

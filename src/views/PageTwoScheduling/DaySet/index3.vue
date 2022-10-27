@@ -203,11 +203,6 @@ export default {
     this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
-
-    //   setInterval(()=>{
-    //     this.spread.refresh();//重新定位宽高度
-
-    // },10000);
   },
   activated() {
     if(this.spread)
@@ -935,6 +930,7 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
+      this.spread.refresh(); //重新定位宽高度
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
