@@ -193,7 +193,9 @@ export default {
     this.getTableHeader();
   },
   activated() {
+    if(this.spread){
       this.spread.refresh();
+    }
     },
   computed: {
     ...mapState({

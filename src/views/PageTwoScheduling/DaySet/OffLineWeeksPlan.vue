@@ -423,7 +423,9 @@
       this.getTableHeader();
     },
     activated() {
-      this.spread.refresh();
+      if(this.spread){
+        this.spread.refresh();
+      }
     },
     mounted() {
       setTimeout(() => {
