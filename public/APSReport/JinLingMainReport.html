@@ -2,233 +2,232 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=1920,user-scalable=yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
-    <meta http-equiv="expires" content="0">
-    <title>金羚APS综合可视看板</title>
-    <link rel="stylesheet" href="css/comon0.css?ver=3">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920,user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+  <meta http-equiv="expires" content="0">
+  <title>金羚APS综合可视看板</title>
+  <link rel="stylesheet" href="css/comon0.css?ver=5">
 </head>
 
 <body>
-    <div v-cloak id="app" style="background:#000d4a url(images/bg.jpg) center top;overflow: hidden;height:100vh">
-        <div class="loading">
-            <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
-        </div>
-        <image @click="moreLarge" src="images/large.png"
-            style="position: fixed;bottom:.2rem;right:.2rem;width:.3rem;height: .3rem;cursor: pointer;z-index:999" />
-        <div class="back"></div>
-        <div class="head">
-            <img src="./images/logo.png" class="logo" />
-            <div class="weather"><span id="showTime"></span></div>
-            <h1 @click="reloadData">
-                金羚APS综合可视看板
-            </h1>
+  <div v-cloak id="app" style="background:#000d4a url(images/bg.jpg) center top;overflow: hidden;height: 100vh;">
 
-        </div>
-        <div class="mainbox">
-            <ul class="clearfix">
-                <li>
-                    <div class="boxall" style="height:2.5rem;">
-                        <div class="alltitle">月度计划累计达成</div>
-                        <div class="navboxall" id="echart5"></div>
-                    </div>
-                    <div class="boxall" style="height:3.5rem;">
-                        <div class="alltitle" v-show="label_1">超期订单预警</div>
-                        <!-- <div class="alltitle" v-show="label_1">APP审批超时预警</div>
-            <div class="alltitle" v-show="!label_1">不达成未维护预警</div> -->
-                        <div class="navboxall1" v-show="label_1">
-                            <div class="wraptit flexjc">
-                                <span style="width:30%">基地</span>
-                                <span style="width:35%">类型</span>
-                                <span style="width:15%">超期</span>
-                                <span style="width:20%">占比</span>
-                            </div>
-                            <div class="wrapcon ">
-                                <ul>
-                                    <li v-for="(item,i) in rightData_3" :key="i">
-                                        <p class="flexjc padding_t_15">
-                                            <span style="width:30%;" class="veralign wordbreak">{{item.N1}}</span>
-                                            <span style="width:35%;" class="veralign wordbreak">{{item.N2}}</span>
-                                            <span style="width:15%;" class="veralign wordbreak">{{item.C1}}</span>
-                                            <span style="width:20%;" class="veralign wordbreak">{{item.P1}}%</span>
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="boxall" style="height:3.2rem;">
-                        <div class="alltitle">超期订单原因分布</div>
-                        <!-- <div class="navboxall" id="echart1"></div> -->
-                        <div class="navboxall">
-                            <div class="wraptit flexjc">
-                                <span style="width:30%">车间</span>
-                                <span style="width:30%">异常原因</span>
-                                <span style="width:20%">数量</span>
-                                <span style="width:20%">占比</span>
-                            </div>
-                            <div class="wrapcon">
+    <image @click="moreLarge" src="images/large.png"
+      style="position: fixed;bottom:.2rem;right:.2rem;width:.3rem;height: .3rem;cursor: pointer;z-index:999" />
+    <div class="back"></div>
+    <div class="head">
+      <img src="./images/logo.png" class="logo" />
+      <div class="weather"><span id="showTime"></span></div>
+      <h1 @click="reloadData">
+        金羚APS综合可视看板
+      </h1>
 
-                                <ul>
-                                    <li v-for="(item,i) in leftData_3" :key="i">
-                                        <p class="flexjc padding_t_15">
-                                            <span style="width:30%" class="veralign wordbreak">{{item.N2}}</span>
-                                            <span style="width:30%" class="veralign wordbreak">{{item.N3}}</span>
-                                            <span style="width:20%;" class="veralign wordbreak">{{item.C1}}</span>
-                                            <span style="width:20%" class="veralign wordbreak">{{item.P1}}%</span>
-                                        </p>
-                                    </li>
-                                </ul>
+    </div>
+    <div class="mainbox">
+      <ul class="clearfix">
+        <li>
+          <div class="boxall" style="height:2.5rem;">
+            <div class="alltitle">月度计划累计达成</div>
+            <div class="navboxall" id="echart5"></div>
+          </div>
+          <div class="boxall" style="height:3.5rem;">
+            <div class="alltitle" v-show="label_1">超期订单预警</div>
+            <!-- <div class="alltitle" v-show="label_1">APP审批超时预警</div>
+            <div class="alltitle" v-show="!label_1">江门超期订单</div> -->
+            <div class="navboxall1" v-show="label_1">
+              <div class="wraptit flexjc">
 
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
+                <span style="width:70%">异常原因</span>
+                <span style="width:20%">数量</span>
+                <span style="width:10%">占比</span>
+              </div>
+              <div class="wrapcon ">
+                <ul>
+                  <li v-for="(item,i) in rightData_3" :key="i">
+                    <p class="flexjc padding_t_15">
+                      <span style="width:65%" class="veralign wordbreak">{{item.N3}}</span>
+                      <span style="width:20%;" class="veralign wordbreak">{{item.C1}}</span>
+                      <span style="width:15%" class="veralign wordbreak">{{item.P1}}</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="boxall" style="height:3.2rem;">
+            <div class="alltitle">恩平超期订单</div>
+            <!-- <div class="navboxall" id="echart1"></div> -->
+            <div class="navboxall">
+              <div class="wraptit flexjc">
+                <span style="width:50%">异常原因</span>
+                <span style="width:30%">数量</span>
+                <span style="width:20%">占比</span>
+              </div>
+              <div class="wrapcon">
 
-                    <div class="boxall" style="height:2.3rem">
-                        <div class="clearfix navboxall" style="height: 100%">
-                            <!-- <div class="pulll_left num">
+                <ul>
+                  <li v-for="(item,i) in leftData_3" :key="i">
+                    <p class="flexjc padding_t_15">
+
+                      <span style="width:65%" class="veralign wordbreak">{{item.N3}}</span>
+                      <span style="width:20%;" class="veralign wordbreak">{{item.C1}}</span>
+                      <span style="width:15%" class="veralign wordbreak">{{item.P1}}</span>
+                    </p>
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+
+          <div class="boxall" style="height:2.3rem">
+            <div class="clearfix navboxall" style="height: 100%">
+              <!-- <div class="pulll_left num">
                 <div class="numbt">今日总计划<span>(万个)</span></div>
                 <div class="numtxt">{{formData[0]}} </div>
               </div> -->
-                            <div class="pulll_left num">
-                                <div class="numbt">今日计划总量<span>(个)</span></div>
-                                <div class="numtxt" style="position: relative;">{{formData[1]}}</div>
-                                <!-- <div class="numbt" style="padding-top: 0;text-align: right;position: relative;top: -.15rem;">
+              <div class="pulll_left num" style="width:25% !important">
+                <div class="numbt">今日计划总量<span>(个)</span></div>
+                <div class="numtxt" style="position: relative;">{{formData[1]}}</div>
+                <!-- <div class="numbt" style="padding-top: 0;text-align: right;position: relative;top: -.15rem;">
                   {{`【已完成${formData[2]}, ${formData[3]}%】`}}</div> -->
 
-                            </div>
-                            <!-- <div class="pulll_left num3">
+              </div>
+              <!-- <div class="pulll_left num3">
                 <div class="numbt2">月目标销售额(万元)</div>
                 <div class="numtxt2">{{formData[0]}} </div>
               </div> -->
-                            <div class="pulll_right zhibiao">
-                                <div class="zb1"><span>投产达成率</span>
-                                    <div id="zb1"></div>
-                                </div>
-                                <div class="zb2"><span>计划完成率</span>
-                                    <div id="zb2"></div>
-                                </div>
-                                <div class="zb3"><span>超期订单占比</span>
-                                    <div id="zb3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="boxall" style="height:3.5rem">
-                        <div class="alltitle">江门总装车间计划达成(昨日)</div>
-                        <div class="navboxall" id="echart4"></div>
+              <div class="pulll_right zhibiao" style="width: 75% !important;display: flex;">
+                <div class="zb1"><span>江门投产达成率</span>
+                  <div id="zb1"></div>
+                </div>
+                <div class="zb2"><span>江门计划完成率</span>
+                  <div id="zb2"></div>
+                </div>
+                <div class="zb3"><span>恩平投产达成率</span>
+                  <div id="zb3"></div>
+                </div>
+                <div class="zb4"><span>江门计划完成率</span>
+                  <div id="zb4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="boxall" style="height:3.5rem">
+            <div class="alltitle">江门总装车间计划达成</div>
+            <div class="navboxall" id="echart4"></div>
 
-                    </div>
-                    <div class="boxall" style="height:3.4rem">
-                        <div class="alltitle">车间周计划投产与完成率</div>
-                        <div class="navboxall" id="echart3"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="boxall" style="height:3rem">
-                        <div class="alltitle">今日计划达成</div>
-                        <div class="navboxall overflowhidden">
+          </div>
+          <div class="boxall" style="height:3.4rem">
+            <div class="alltitle">车间周计划投产与完成率</div>
+            <div class="navboxall" id="echart3"></div>
+          </div>
+        </li>
+        <li>
+          <div class="boxall" style="height:3rem">
+            <div class="alltitle">今日计划达成</div>
+            <div class="navboxall overflowhidden">
 
 
-                            <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                    <thead>
-                                        <tr>
-                                            <th class="f1" scope="col">排名</th>
-                                            <th class="f26" scope="col">生产线</th>
-                                            <th class="f20" scope="col">计划</th>
-                                            <th class="f20" scope="col">完成</th>
-                                            <th class="f3" scope="col">达成率</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <div class="wrapcon">
-                                    <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                        <tbody class="tablegun ">
-                                            <tr v-for="(item3,index) in rightData_1" :key="index">
-                                                <td class="f1 veralign wordbreak"><span>{{item3.N1}}</span></td>
-                                                <td class="f26 veralign wordbreak">{{item3.N2}}</td>
-                                                <td class="f20 veralign wordbreak">{{item3.S1}}</td>
-                                                <td class="f20 veralign wordbreak">{{item3.S2}}</td>
-                                                <td class="f3 veralign">{{item3.P1.toFixed(0)}}%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="boxall" style="height: 3rem">
-                        <div class="alltitle">未来3日电机欠料</div>
-                        <div class="navboxall overflowhidden">
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <thead>
+                    <tr>
+                      <th class="f1" scope="col">排名</th>
+                      <th class="f28" scope="col">生产线</th>
+                      <th class="f20" scope="col">计划</th>
+                      <th class="f20" scope="col">完成</th>
+                      <th class="f3" scope="col">达成率</th>
+                    </tr>
+                  </thead>
+                </table>
+                <div class="wrapcon">
+                  <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tbody class="tablegun ">
+                      <tr v-for="(item3,index) in rightData_1" :key="index">
+                        <td class="f1 veralign wordbreak"><span>{{item3.N1}}</span></td>
+                        <td class="f28 veralign wordbreak">{{item3.N2}}</td>
+                        <td class="f20 veralign wordbreak">{{item3.S1}}</td>
+                        <td class="f20 veralign wordbreak">{{item3.S2}}</td>
+                        <td class="f3 veralign">{{item3.P1.toFixed(0)}}%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </table>
+            </div>
+          </div>
+          <div class="boxall" style="height: 3rem">
+            <div class="alltitle">未来3日电机欠料</div>
+            <div class="navboxall overflowhidden">
 
-                            <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                    <thead>
-                                        <tr>
-                                            <th class="f1" scope="col">紧急</th>
-                                            <th class="f25" scope="col" style="text-align:center;">日期</th>
-                                            <th class="f3" scope="col" style="text-align:center;">型号</th>
-                                            <th class="f20" scope="col" style="text-align:center;">缺口数</th>
-                                            <th class="f20" scope="col" style="text-align:center;">库存数</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <table class="table1 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
-                                    <tbody class="tablegun">
-                                        <tr v-for="(item3,index) in leftData_2 " :key="index">
-                                            <td class="f1 veralign"><span>{{item3.N1}}</span></td>
-                                            <td class="f25 veralign wordbreak" style="text-align:center;">{{item3.N2}}
-                                            </td>
-                                            <td class="f3 veralign wordbreak" style="text-align:center;">{{item3.N3}}
-                                            </td>
-                                            <td class="f20 veralign wordbreak" style="text-align:center;color: red;">
-                                                {{item3.S1}}</td>
-                                            <td class="f20 veralign wordbreak" style="text-align:center;">
-                                                {{item3.S2}}<br></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </table>
-                        </div>
+              <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <table class="table1" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <thead>
+                    <tr>
+                      <th class="f1" scope="col">紧急</th>
+                      <th class="f15" scope="col" style="text-align:center;">日期</th>
+                      <th class="f35" scope="col" style="text-align:center;">型号</th>
+                      <th class="f20" scope="col" style="text-align:center;">缺口数</th>
+                      <th class="f20" scope="col" style="text-align:center;">库存数</th>
+                    </tr>
+                  </thead>
+                </table>
+                <table class="table1 wrapcon" width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tbody class="tablegun">
+                    <tr v-for="(item3,index) in leftData_2 " :key="index">
+                      <td class="f1 veralign"><span>{{item3.N1}}</span></td>
+                      <td class="f15 veralign wordbreak" style="text-align:center;">
+                        {{item3.N2.replace('-','/')}}
+                      </td>
+                      <td class="f35 veralign wordbreak" style="text-align:center;">{{item3.N3}}
+                      </td>
+                      <td class="f20 veralign wordbreak" style="text-align:center;color: red;">
+                        {{item3.S1}}</td>
+                      <td class="f20 veralign wordbreak" style="text-align:center;">
+                        {{item3.S2}}<br></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </table>
+            </div>
 
-                    </div>
+          </div>
 
-                    <div class="boxall" style="height:3.2rem">
-                        <div class="alltitle">配套欠料最新收货情况</div>
-                        <!-- <div class="navboxall" id="echart2"></div> -->
-                        <div class="navboxall  overflowhidden wordbreak">
-                            <div class="wraptit flexjc">
-                                <span style="width:40%">物料</span>
-                                <span style="width:15%">欠数</span>
-                                <span style="width:20%">收货数</span>
-                                <span style="width:25%">收货时间</span>
-                            </div>
-                            <div class="wrapcon">
-                                <ul>
-                                    <li v-for="(item,i) in rightData_2" :key="i">
-                                        <p>
-                                            <span style="width:40%" class="veralign wordbreak">{{item.N1}}</span>
-                                            <span style="width:15%;color: red;"
-                                                class="veralign wordbreak">{{item.S1}}</span>
-                                            <span style="width:20%" class="veralign wordbreak">{{item.S2}}</span>
-                                            <span style="width:25%">{{item.N2.substring(5,10)}}</span>
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+          <div class="boxall" style="height:3.2rem">
+            <div class="alltitle">配套欠料最新收货情况</div>
+            <!-- <div class="navboxall" id="echart2"></div> -->
+            <div class="navboxall  overflowhidden wordbreak" style="font-size:.15rem !important">
+              <div class="wraptit flexjc">
+                <span style="width:45%">物料</span>
+                <span style="width:20%">欠数</span>
+                <span style="width:20%">收货数</span>
+                <span style="width:15%">时间</span>
+              </div>
+              <div class="wrapcon">
+                <ul>
+                  <li v-for="(item,i) in rightData_2" :key="i">
+                    <p>
+                      <span style="width:45%" class="veralign wordbreak">{{item.N1}}</span>
+                      <span style="width:20%;color: red;" class="veralign wordbreak">{{item.S1}}</span>
+                      <span style="width:20%" class="veralign wordbreak">{{item.S2}}</span>
+                      <span style="width:15%">{{item.N2.substring(5,10).replace('-','/')}}</span>
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
 
-        </div>
     </div>
+  </div>
 </body>
 <script src="./js/vue.js" type="text/javascript"></script>
 <script src="./js/axios.min.js" type="text/javascript"></script>
@@ -239,1150 +238,1281 @@
 <script type="text/javascript" src="./js/jquery.cxselect.min.js"></script>
 <script src="./js/DateJson.js"></script>
 <script type="text/javascript">
-    document.documentElement.style.fontSize = document.documentElement.clientWidth / 1920 * 100 + 'px';
+  document.documentElement.style.fontSize = document.documentElement.clientWidth / 1920 * 100 + 'px';
 </script>
 <script type="module">
-    var app = new Vue({
-        el: "#app",
-        components: {
+  var app = new Vue({
+    el: "#app",
+    components: {
+    },
+    data: {
+      label_1: true,
+      judgeRight_1: false,
+      judgeRight_2: false,
+      centerTime_1: null,
+      centerTime_2: null,
+      centerTime_3: null,
+      centerTime_4: null,
+      centerTime_5: null,
+      timeOut: null,
+      timeOut2: null,
+      timeOut3: null,
+      timeOut4: null,
+      timeOut5: null,
+      rightNum_1: 0,
+      rightData_1: [],
+      rightData_2: [],
+      rightData_3: [],
+      rightData_4: [],
+      centerOption_4: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            lineStyle: {
+              color: '#57617B'
+            }
+          }
         },
-        data: {
-            label_1: true,
-            judgeRight_1: false,
-            judgeRight_2: false,
-            centerTime_1: null,
-            centerTime_2: null,
-            centerTime_3: null,
-            centerTime_4: null,
-            centerTime_5: null,
-            timeOut: null,
-            timeOut2: null,
-            timeOut3: null,
-            timeOut4: null,
-            timeOut5: null,
-            rightNum_1: 0,
-            rightData_1: [],
-            rightData_2: [],
-            rightData_3: [],
-            rightData_4: [],
-            centerOption_4: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
-                    }
-                },
-                "legend": {
+        "legend": {
 
-                    "data": [
-                        { "name": "计划数" },
-                        { "name": "完成数" },
-                        { "name": "完成率" }
-                    ],
-                    "top": "0%",
-                    "textStyle": {
-                        "color": "rgba(255,255,255,0.9)"//图例文字
-                    }
-                },
-
-                "xAxis": [
-                    {
-                        "type": "category",
-                        data: [],
-                        axisLine: { lineStyle: { color: "rgba(255,255,255,.1)" } },
-                        axisLabel: {
-                            textStyle: { color: "rgba(255,255,255,.6)", fontSize: () => this.fontSize(14), padding: [16, 0, 0, 0] }, rotate: 0, interval: 0
-                        },
-
-                    },
-                ],
-                "yAxis": [
-                    {
-                        "type": "value",
-                        "name": "万个",
-                        "min": function (value) { return value.min; },
-                        "max": function (value) { return value.max; },
-                        "axisLabel": {
-                            "show": true,
-
-                        },
-                        axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//左线色
-
-                    },
-                    {
-                        "type": "value",
-                        "name": "完成率%",
-                        "show": true,
-                        "axisLabel": {
-                            "show": true
-                        },
-                        axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//右线色
-                        splitLine: { show: true, lineStyle: { color: "#001e94" } },//x轴线
-                    },
-                ],
-                "grid": {
-                    "top": "10%",
-                    "right": "40",
-                    "bottom": "40",
-                    "left": "50",
-                },
-                "series": [
-                    {
-                        "name": "计划数",
-
-                        "type": "bar",
-                        "data": [],
-                        "barWidth": "auto",
-                        "itemStyle": {
-                            "normal": {
-                                'label': {
-                                    show: true, //开启显示
-                                    position: 'bottom', //在上方显示
-                                    textStyle: { //数值样式
-                                        color: 'white',
-                                        fontSize: () => this.fontSize(13)
-                                    }
-                                },
-                                "color": {
-                                    "type": "linear",
-                                    "x": 0,
-                                    "y": 0,
-                                    "x2": 0,
-                                    "y2": 1,
-                                    "colorStops": [
-                                        {
-                                            "offset": 0,
-                                            "color": "#609db8"
-                                        },
-
-                                        {
-                                            "offset": 1,
-                                            "color": "#609db8"
-                                        }
-                                    ],
-                                    "globalCoord": false
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "完成数",
-                        "type": "bar",
-                        "data": [],
-                        "barWidth": "auto",
-
-                        "itemStyle": {
-                            "normal": {
-                                'label': {
-                                    show: true, //开启显示
-                                    position: 'top', //在上方显示
-                                    textStyle: { //数值样式
-                                        color: 'white',
-                                        fontSize: () => this.fontSize(13)
-                                    }
-                                },
-                                "color": {
-                                    "type": "linear",
-                                    "x": 0,
-                                    "y": 0,
-                                    "x2": 0,
-                                    "y2": 1,
-                                    "colorStops": [
-                                        {
-                                            "offset": 0,
-                                            "color": "#66b8a7"
-                                        },
-                                        {
-                                            "offset": 1,
-                                            "color": "#66b8a7"
-                                        }
-                                    ],
-                                    "globalCoord": false
-                                }
-                            }
-                        },
-                        "barGap": "0"
-                    },
-                    {
-                        "name": "完成率",
-                        "type": "line",
-                        "yAxisIndex": 1,
-
-                        "data": [],
-                        lineStyle: {
-                            normal: {
-                                width: 2
-                            },
-                        },
-                        "itemStyle": {
-                            "normal": {
-                                "color": "#cdba00",
-                                'label': {
-                                    show: true, //开启显示
-                                    position: 'top', //在上方显示
-                                    "formatter": function (value) {
-                                        return value.data + '%'
-                                    },
-                                    textStyle: { //数值样式
-                                        color: 'white',
-                                        fontSize: () => this.fontSize(13),
-                                    }
-                                }
-                            },
-                        },
-                        "smooth": true
-                    }
-                ]
-            },
-            leftOption_1: {
-                tooltip: {
-                    show: false
-                },
-                grid: {
-                    top: '0%',
-                    left: '85',
-                    right: '14%',
-                    bottom: '0%',
-                },
-                xAxis: {
-                    min: 0,
-                    max: 100,
-                    splitLine: {
-                        show: false
-                    },
-                    axisTick: {
-                        show: false
-                    },
-                    axisLine: {
-                        show: false
-                    },
-                    axisLabel: {
-                        show: false
-                    }
-                },
-                yAxis: {
-                    data: [],
-                    // offset: 10,
-                    axisTick: {
-                        show: false
-                    },
-                    axisLine: {
-                        show: false
-                    },
-                    axisLabel: {
-                        color: 'rgba(255,255,255,.6)',
-                        fontSize: () => this.fontSize(16)
-                    }
-                },
-                series: [
-                    {
-                        type: 'bar',
-                        barCategory: '2%',
-                        label: {
-                            show: true,
-                            zlevel: 10000,
-                            position: 'right',
-                            padding: 10,
-                            color: '#49bcf7',
-                            fontSize: () => this.fontSize(16),
-                            formatter: '{c}%'
-
-                        },
-                        itemStyle: {
-                            color: '#49bcf7'
-                        },
-                        barWidth: '11',
-                        data: [],
-                        z: 10
-                    },
-                    {
-                        type: 'bar',
-                        barCategory: '0%',
-                        barGap: '-100%',
-                        itemStyle: {
-                            color: '#fff',
-                            opacity: 0.1
-                        },
-                        barWidth: '11',
-                        data: [],
-                        z: 5
-                    }],
-            },
-            percent: 0,
-            percent2: 0,
-            percent3: 0,
-            centerOption_1: {
-                series: [{
-                    type: 'pie',
-                    radius: ['60%', '70%'],
-                    color: '#49bcf7',
-                    label: {
-                        normal: {
-                            position: 'center'
-                        }
-                    },
-                    data: [{
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return params.data.name + '\n'
-                                },
-                                textStyle: {
-                                    fontSize: () => this.fontSize(20),
-                                    color: '#fff',
-                                }
-                            }
-                        }
-                    }, {
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return '\n' + '\n' + '占比' + _this.percent + '%'
-                                },
-                                textStyle: {
-                                    color: '#aaa',
-                                    fontSize: () => this.fontSize(12)
-                                }
-                            }
-                        },
-                        itemStyle: {
-                            normal: {
-                                color: 'rgba(255,255,255,.2)'
-                            },
-                            emphasis: {
-                                color: '#fff'
-                            }
-                        },
-                    }]
-                }]
-            },
-            centerOption_2: {
-                series: [{
-                    type: 'pie',
-                    radius: ['60%', '70%'],
-                    color: '#cdba00',
-                    label: {
-                        normal: {
-                            position: 'center'
-                        }
-                    },
-                    data: [{
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return params.data.name + '\n'
-                                },
-                                textStyle: {
-                                    fontSize: () => this.fontSize(20),
-                                    color: '#fff',
-                                }
-                            }
-                        }
-                    }, {
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return '\n' + '\n' + '占比' + _this.percent2 + '%'
-                                },
-                                textStyle: {
-                                    color: '#aaa',
-                                    fontSize: () => this.fontSize(12)
-                                }
-                            }
-                        },
-                        itemStyle: {
-                            normal: {
-                                color: 'rgba(255,255,255,.2)'
-                            },
-                            emphasis: {
-                                color: '#fff'
-                            }
-                        },
-                    }]
-                }]
-            },
-            centerOption_3: {
-                series: [{
-                    type: 'pie',
-                    radius: ['60%', '70%'],
-                    color: '#62c98d',
-                    label: {
-                        normal: {
-                            position: 'center'
-                        }
-                    },
-                    data: [{
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return params.data.name + '\n'
-                                },
-                                textStyle: {
-                                    fontSize: () => this.fontSize(20),
-                                    color: '#fff',
-                                }
-                            }
-                        }
-                    }, {
-                        value: 0,
-                        name: '',
-                        label: {
-                            normal: {
-                                formatter: function (params) {
-                                    return '\n' + '\n' + '占比' + _this.percent3 + '%'
-                                },
-                                textStyle: {
-                                    color: '#aaa',
-                                    fontSize: () => this.fontSize(12)
-                                }
-                            }
-                        },
-                        itemStyle: {
-                            normal: {
-                                color: 'rgba(255,255,255,.2)'
-                            },
-                            emphasis: {
-                                color: '#fff'
-                            }
-                        },
-                    }]
-                }]
-            },
-            centerOption_5: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
-                    }
-                },
-                legend: {
-
-                    //icon: 'vertical',
-                    data: ['产出达成率', '计划达成率'],
-                    //align: 'center',
-                    // right: '35%',
-                    top: '0',
-                    textStyle: {
-                        color: "#fff"
-                    },
-                    // itemWidth: 15,
-                    // itemHeight: 15,
-                    itemGap: 20,
-                },
-                grid: {
-                    left: '20',
-                    right: '20',
-                    top: '25',
-                    bottom: '20',
-                    containLabel: true
-                },
-                xAxis: [{
-                    type: 'category',
-                    boundaryGap: false,
-                    axisLabel: {
-                        show: true,
-                        textStyle: {
-                            color: 'rgba(255,255,255,.6)'
-                        }
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: 'rgba(255,255,255,.1)'
-                        }
-                    },
-                    data: []
-                }, {
-                }],
-                yAxis: [
-                    {
-                        "type": "value",
-                        "name": "达成/完成率%",
-                        "show": false,
-                        "axisLabel": {
-                            "show": true
-                        },
-                        axisLabel: {
-                            show: true,
-                            textStyle: {
-                                color: 'rgba(255,255,255,.6)'
-                            }
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: 'rgba(255,255,255,.1)'
-                            }
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: 'rgba(255,255,255,.1)'
-                            }
-                        }
-                    },
-                    // {
-                    //     "type": "value",
-                    //     "name": "达成/完成率%",
-                    //     "show": true,
-                    //     "axisLabel": {
-                    //         "show": true
-                    //     },
-                    //     axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//右线色
-                    //     splitLine: { show: true, lineStyle: { color: "#001e94" } },//x轴线
-                    // },
-                ],
-                series: [{
-                    name: '产出达成率',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 5,
-                    showSymbol: true,
-                    lineStyle: {
-                        normal: {
-                            width: 2
-                        }
-                    },
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: 'rgba(24, 163, 64, 0.3)'
-                            }, {
-                                offset: 0.8,
-                                color: 'rgba(24, 163, 64, 0)'
-                            }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                            shadowBlur: 10,
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#cdba00',
-                            borderColor: 'rgba(137,189,2,0.27)',
-                            borderWidth: 12,
-                            label: {
-                                show: true, //开启显示
-                                position: 'top', //在上方显示
-                                textStyle: { //数值样式
-                                    color: 'white',
-                                    fontSize: () => this.fontSize(13)
-                                },
-                                formatter: function (params) {
-                                    return params.data + '%'
-                                },
-                            },
-                        }
-                    },
-                    data: []
-                }, {
-                    // "yAxisIndex": 1,
-                    name: '计划达成率',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 5,
-                    showSymbol: true,
-                    lineStyle: {
-                        normal: {
-                            width: 2
-                        }
-                    },
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: 'rgba(39, 122,206, 0.3)'
-                            }, {
-                                offset: 0.8,
-                                color: 'rgba(39, 122,206, 0)'
-                            }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                            shadowBlur: 10
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#277ace',
-                            borderColor: 'rgba(0,136,212,0.2)',
-                            borderWidth: 12,
-                            label: {
-                                show: true, //开启显示
-                                position: 'bottom', //在上方显示
-                                textStyle: { //数值样式
-                                    color: 'white',
-                                    fontSize: () => this.fontSize(13)
-                                },
-                                formatter: function (params) {
-                                    return params.data + '%'
-                                },
-                            },
-                        }
-                    },
-                    data: []
-                }]
-            },
-            judgeleft_1: false,
-            judgeleft_2: false,
-            judgeleft_3: false,
-            leftData_2: [],
-            leftData_3: [],
-            judgeCenter_1: false,
-            judgeCenter_2: false,
-            judgeCenter_3: false,
-            judgeCenter_4: false,
-            judgeCenter_5: false,
-            YearMonth: '',
-            YearMonth2: '',
-            toDay: [],
-            formData: [0, 0, 0, 0],
-            searchDay: [],
-            DeliveryPlanDate: [],
-            DeliveryPlanDate2: [],
-            DeliveryPlanDate3: [],
-            Days: 0,
-            Days2: 0,
-            large: true,
-            pagination: {
-                pageTotal: 0,
-                pageIndex: 1
-            },
-            pagination2: {
-                pageTotal: 0,
-                pageIndex: 1
-            },
-            CreatedOn: [],
-            OrganizeList: [],
-            form: {},
-            indexNo: 0,
+          "data": [
+            { "name": "计划数" },
+            { "name": "完成数" },
+            { "name": "完成率" }
+          ],
+          "top": "0%",
+          "textStyle": {
+            "color": "rgba(255,255,255,0.9)"//图例文字
+          }
         },
-        created() {
 
-            this.getOrgData()
+        "xAxis": [
+          {
+            "type": "category",
+            data: [],
+            axisLine: { lineStyle: { color: "rgba(255,255,255,.1)" } },
+            axisLabel: {
+              textStyle: { color: "rgba(255,255,255,.6)", fontSize: 14, padding: [16, 0, 0, 0] }, rotate: 0, interval: 0
+            },
+
+          },
+        ],
+        "yAxis": [
+          {
+            "type": "value",
+            "name": "万个",
+            "min": function (value) { return value.min; },
+            "max": function (value) { return value.max; },
+            "axisLabel": {
+              "show": true,
+
+            },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//左线色
+
+          },
+          {
+            "type": "value",
+            "name": "完成率%",
+            "show": true,
+            "axisLabel": {
+              "show": true
+            },
+            axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//右线色
+            splitLine: { show: true, lineStyle: { color: "#001e94" } },//x轴线
+          },
+        ],
+        "grid": {
+          "top": "10%",
+          "right": "40",
+          "bottom": "40",
+          "left": "50",
         },
-        mounted() {
+        "series": [
+          {
+            "name": "计划数",
+
+            "type": "bar",
+            "data": [],
+            "barWidth": 15,
+            "itemStyle": {
+              "normal": {
+                'label': {
+                  show: true, //开启显示
+                  position: 'bottom', //在上方显示
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13
+                  }
+                },
+                "color": {
+                  "type": "linear",
+                  "x": 0,
+                  "y": 0,
+                  "x2": 0,
+                  "y2": 1,
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#609db8"
+                    },
+
+                    {
+                      "offset": 1,
+                      "color": "#609db8"
+                    }
+                  ],
+                  "globalCoord": false
+                }
+              }
+            }
+          },
+          {
+            "name": "完成数",
+            "type": "bar",
+            "data": [],
+            "barWidth": 15,
+
+            "itemStyle": {
+              "normal": {
+                'label': {
+                  show: true, //开启显示
+                  position: 'top', //在上方显示
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13
+                  }
+                },
+                "color": {
+                  "type": "linear",
+                  "x": 0,
+                  "y": 0,
+                  "x2": 0,
+                  "y2": 1,
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#66b8a7"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#66b8a7"
+                    }
+                  ],
+                  "globalCoord": false
+                }
+              }
+            },
+            "barGap": "0"
+          },
+          {
+            "name": "完成率",
+            "type": "line",
+            "yAxisIndex": 1,
+
+            "data": [],
+            lineStyle: {
+              normal: {
+                width: 2
+              },
+            },
+            "itemStyle": {
+              "normal": {
+                "color": "#cdba00",
+                'label': {
+                  show: true, //开启显示
+                  position: 'top', //在上方显示
+                  "formatter": function (value) {
+                    return value.data + '%'
+                  },
+                  textStyle: { //数值样式
+                    color: 'white',
+                    fontSize: 13,
+                  }
+                }
+              },
+            },
+            "smooth": true
+          }
+        ]
+      },
+      leftOption_1: {
+        tooltip: {
+          show: false
         },
-        methods: {
-            fontSize(res) {
-                let clientWidth =
-                    window.innerWidth ||
-                    document.documentElement.clientWidth ||
-                    document.body.clientWidth;
-                if (!clientWidth) return;
-                let fontSize = clientWidth / 1920;
-                return res * fontSize;
-            },
-            // 获取组织名称
-            getOrgData() {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, rows: 0, ParentID: 160 })
-                    .then(async (res) => {
-                        if (res.result) {
-                            if (res.data.length != 0) {
-                                console.log('res.data', res.data)
-                                this.OrganizeList = res.data
-                                if (res.data && res.data.length) {
-                                    this.form = res.data[0]
-                                }
-                            }
-                            this.getData_30M(this.form.OrganizeID);
-                        }
-                        else {
-                            _this.$message({
-                                message: res.msg,
-                                type: 'error'
-                            });
-                        }
-                    })
-                    .catch(function (error) {
+        grid: {
+          top: '0%',
+          left: '85',
+          right: '14%',
+          bottom: '0%',
+        },
+        xAxis: {
+          min: 0,
+          max: 100,
+          splitLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          axisLabel: {
+            show: false
+          }
+        },
+        yAxis: {
+          data: [],
+          // offset: 10,
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          },
+          axisLabel: {
+            color: 'rgba(255,255,255,.6)',
+            fontSize: 16
+          }
+        },
+        series: [
+          {
+            type: 'bar',
+            barCategory: '2%',
+            label: {
+              show: true,
+              zlevel: 10000,
+              position: 'right',
+              padding: 10,
+              color: '#49bcf7',
+              fontSize: 16,
+              formatter: '{c}%'
 
-                    });
             },
-            zero(num) {
-                if (Number(num) < 10) {
-                    return '0' + num
-                } else {
-                    return num
+            itemStyle: {
+              color: '#49bcf7'
+            },
+            barWidth: 13,
+            data: [],
+            z: 10
+          },
+          {
+            type: 'bar',
+            barCategory: '0%',
+            barGap: '-100%',
+            itemStyle: {
+              color: '#fff',
+              opacity: 0.1
+            },
+            barWidth: 13,
+            data: [],
+            z: 5
+          }],
+      },
+      percent: 0,
+      percent2: 0,
+      percent3: 0,
+      percent4: 0,
+      centerOption_1: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#49bcf7',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.name + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
                 }
-            },
-            // 测试先注释，用完取消注释
-            gundong() {
-                $('.wrap,.adduser,.wrapcon').liMarquee({
-                    direction: 'up',//身上滚动 
-                    runshort: false,//内容不足时不滚动
-                    scrollamount: 20//速度
-                });
-
-
-            },
-            moreLarge() {
-                this.large = !this.large
-                if (!this.large) {
-                    // this.fullScreen()
-                    if (document.documentElement.requestFullscreen) {
-                        document.documentElement.requestFullscreen()
-                    }
-                    if (document.documentElement.mozRequestFullScreen) {
-                        document.documentElement.mozRequestFullScreen()
-
-                    }
-                    if (document.documentElement.webkitRequestFullScreen) {
-                        document.documentElement.webkitRequestFullScreen()
-                    }
-                    if (document.documentElement.msRequestFullscreen) {
-                        document.documentElement.msRequestFullscreen()
-                    }
-                } else {
-                    // this.exitFullScreen()
-                    if (document.webkitCancelFullScreen) {
-                        document.webkitCancelFullScreen()
-                    }
-                    if (document.mozCancelFullScreen) {
-                        document.mozCancelFullScreen()
-                    }
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen()
-                    }
-                    if (document.msExitFullscreen) {
-                        document.msExitFullscreen()
-                    }
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 16
                 }
+              }
             },
-            getMonthDay(year, month) {
-                let days = new Date(year, month, 0).getDate()
-                return days
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
             },
-            // 半小时后刷新
-            getData_30M(OrganizeID) {
-
-                this.rightData_1 = [];
-                this.rightData_2 = [];
-                let currentHour = new Date().getHours();
-                axiosPostRequst(`/APSAPI/getjlreport`, { rows: 0, page: 1, OrganizeID })
-                    .then(function (res) {
-                        if (res.result) {
-
-                            // 渲染超期订单预警
-                            if (res.data.Table1.length) {
-                                res.data.Table1.map(a => {
-                                    a.P1 = a.P1.toFixed(0);
-                                    a.N2 = a.N2.split('-')[1];
-                                    a.N1 = a.N1.substring(0, a.N1.length - 2)
-                                });
-
-                            }
-
-                            _this.leftOption_1.yAxis.data = [];
-                            _this.leftOption_1.series[0].data = [];
-                            _this.leftOption_1.series[1].data = [];
-                            if (res.data.Table.length != 0) {
-                                res.data.Table.forEach(x => {
-
-                                    _this.leftOption_1.yAxis.data.push(x.N1);
-                                    _this.leftOption_1.series[0].data.push(x.P1 ? parseFloat((x.P1).toFixed(2)) : 0);
-                                    _this.leftOption_1.series[1].data.push(100);
-
-                                })
-                                _this.drawChart('echart5', _this.leftOption_1);
-
-                            }
-                            _this.rightData_3 = res.data.Table1;
-                            _this.formData[1] = res.data.Table3[0].S1;
-                            _this.rightData_1 = res.data.Table9;
-                            _this.leftData_2 = res.data.Table10;
-                            _this.leftData_3 = res.data.Table2;
-                            _this.rightData_2 = res.data.Table11;
-
-
-                            _this.centerOption_1.series[0].data[0].value = res.data.Table4[0].C1;
-                            _this.centerOption_1.series[0].data[1].value = res.data.Table4[0].C2;
-                            _this.$set(_this.centerOption_1.series[0].data[0], 'name', res.data.Table4[0].C1);
-                            _this.$set(_this, 'percent', res.data.Table4[0].P1 ? parseFloat((res.data.Table4[0].P1).toFixed(2)) : 0);
-                            _this.drawChart('zb1', _this.centerOption_1);
-
-
-
-                            _this.$set(_this.centerOption_2.series[0].data[0], 'value', res.data.Table5[0].S1);
-                            _this.$set(_this.centerOption_2.series[0].data[1], 'value', res.data.Table5[0].S2);
-                            _this.$set(_this.centerOption_2.series[0].data[0], 'name', res.data.Table5[0].S1);
-                            _this.$set(_this, 'percent2', res.data.Table5[0].P1 ? parseFloat((res.data.Table5[0].P1).toFixed(2)) : 0);
-                            _this.drawChart('zb2', _this.centerOption_2);
-
-
-
-
-                            _this.$set(_this.centerOption_3.series[0].data[0], 'value', parseInt(res.data.Table6[0].C2));
-                            _this.$set(_this.centerOption_3.series[0].data[1], 'value', res.data.Table6[0].C1);
-                            _this.$set(_this.centerOption_3.series[0].data[0], 'name', res.data.Table6[0].C1);
-                            _this.$set(_this, 'percent3', res.data.Table6[0].P1 ? parseFloat((res.data.Table6[0].P1).toFixed(2)) : 0);
-                            _this.drawChart('zb3', _this.centerOption_3);
-
-
-                            _this.centerOption_4.xAxis[0].data = [];
-                            _this.centerOption_4.series[0].data = [];
-                            _this.centerOption_4.series[1].data = [];
-                            _this.centerOption_4.series[2].data = [];
-                            //近15日计划完成情况对比
-                            if (res.data.Table7.length) {
-                                res.data.Table7.forEach(x => {
-                                    _this.centerOption_4.xAxis[0].data.push(x.N1);
-                                    _this.centerOption_4.series[0].data.push(x.S1)
-                                    _this.centerOption_4.series[1].data.push(x.S2)
-                                    _this.centerOption_4.series[2].data.push(x.P1)
-                                })
-                                _this.drawChart('echart4', _this.centerOption_4);
-                                _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
-                            }
-
-                            //车间周计划投产 
-                            _this.centerOption_5.xAxis[0].data = [];
-                            _this.centerOption_5.series[0].data = [];
-                            _this.centerOption_5.series[1].data = [];
-                            if (res.data.Table8.length) {
-                                res.data.Table8.forEach((x, i) => {
-                                    _this.centerOption_5.xAxis[0].data.push(x.N1);
-                                    _this.centerOption_5.series[0].data.push(x.P1)
-                                    _this.centerOption_5.series[1].data.push(x.P2)
-
-                                })
-                                _this.drawChart('echart3', _this.centerOption_5);
-                                _this.refreshBar('centerTime_5', 'echart3', _this.centerOption_5, 'xAxis');
-                                if (_this.judgeRight_1 == false) {
-                                    _this.$nextTick(() => {
-                                        _this.gundong()
-                                        _this.judgeRight_1 = true;
-                                    })
-                                }
-                            }
-
-                            $(".loading").fadeOut()
-                        } else {
-                            $(".loading").fadeOut()
-                            _this.$message.error(res.msg)
-                        }
-                    })
-                    .catch(function (error) {
-                    });
-
-
-
-                this.indexNo++
-                console.log('indexNo', this.indexNo)
-                this.timeOut = setTimeout(() => {
-                    if (this.OrganizeList.length == this.indexNo) {
-                        this.indexNo = 0
-                        this.form = this.OrganizeList[this.indexNo]
-                    } else {
-                        this.form = this.OrganizeList[this.indexNo]
-                    }
-
-                    this.getData_30M(this.form.OrganizeID)
-                    //  window.location.href=window.location.href
-                }, 1000 * 60 * 3)
-            },
-            // 渲染图标
-            drawChart(id, option) {
-                let myChart = echarts.init(document.getElementById(id))
-                myChart.clear();
-                myChart.setOption(option, true);
-                let chart = document.getElementById(id)
-                echarts.init(chart).resize()
-            },
-            // 刷新 饼图
-            refreshPie(mTime, id, option) {
-                if (this[mTime]) {
-                    clearInterval(this[mTime])
+          }]
+        }]
+      },
+      centerOption_2: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#cdba00',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.name + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
                 }
-                var index = 0;
-                // 用定时器控制饼图高亮      
-                let myChart = echarts.init(document.getElementById(id));
-                let dataLength = option.series[0].data.length;  // 当前饼图有多少个扇形
-                this[mTime] = setInterval(() => {
-                    // 清除之前的高亮
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    index = (index + 1) % dataLength
-                    // 当前下标高亮
-                    myChart.dispatchAction({
-                        type: 'highlight',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    if (index > dataLength) {
-                        index = 0
-                    }
-                }, 2000)
-                // 鼠标划入
-                myChart.on('mouseover', () => {
-                    // 停止定时器，清除之前的高亮
-                    clearInterval(this[mTime])
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                })
-            },
-            refreshPieOther(mTime, id, option) {
-                var index = 0;
-                // 用定时器控制饼图高亮
-                if (this[mTime]) {
-                    clearInterval(this[mTime])
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent2 + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 16
                 }
-                let myChart = echarts.init(document.getElementById(id));
-                let dataLength = option.series.data.length;  // 当前饼图有多少个扇形
-                this[mTime] = setInterval(() => {
-                    // 清除之前的高亮
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    index = (index + 1) % dataLength
-                    // 当前下标高亮
-                    myChart.dispatchAction({
-                        type: 'highlight',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    if (index > dataLength) {
-                        index = 0
-                    }
-                }, 2000)
-                // 鼠标划入
-                myChart.on('mouseover', () => {
-                    // 停止定时器，清除之前的高亮
-                    clearInterval(this[mTime])
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                })
+              }
             },
-            // 高亮柱状图
-            refreshBar(mTime, id, option, xy) {
-                var index = 0;
-                if (this[mTime]) {
-                    clearInterval(this[mTime]);
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
+            },
+          }]
+        }]
+      },
+      centerOption_3: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#62c98d',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.name + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
                 }
-                let myChart = echarts.init(document.getElementById(id));
-                let dataLength = option[xy][0].data.length;
-                this[mTime] = setInterval(() => {
-                    // 清除之前的高亮
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    index = (index + 1) % dataLength
-                    // 当前下标高亮
-                    myChart.dispatchAction({
-                        type: 'showTip',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                    if (index > dataLength) {
-                        index = 0
-                    }
-                }, 2000)
-                // 鼠标划入
-                myChart.on('mouseover', () => {
-                    // 停止定时器，清除之前的高亮
-                    clearInterval(this[mTime])
-                    myChart.dispatchAction({
-                        type: 'downplay',
-                        seriesIndex: 0,
-                        dataIndex: index
-                    })
-                })
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent3 + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 16
+                }
+              }
             },
-            // 重新加载整个页面
-            reloadData() {
-                location.reload();
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
             },
+          }]
+        }]
+      },
+      centerOption_6: {
+        series: [{
+          type: 'pie',
+          radius: ['60%', '70%'],
+          color: '#62c98d',
+          label: {
+            normal: {
+              position: 'center'
+            }
+          },
+          data: [{
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return params.data.name + '\n'
+                },
+                textStyle: {
+                  fontSize: 20,
+                  color: '#fff',
+                }
+              }
+            }
+          }, {
+            value: 0,
+            name: '',
+            label: {
+              normal: {
+                formatter: function (params) {
+                  return '\n' + '\n' + '占比' + _this.percent3 + '%'
+                },
+                textStyle: {
+                  color: '#aaa',
+                  fontSize: 16
+                }
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'rgba(255,255,255,.2)'
+              },
+              emphasis: {
+                color: '#fff'
+              }
+            },
+          }]
+        }]
+      },
+      centerOption_5: {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            lineStyle: {
+              color: '#57617B'
+            }
+          }
+        },
+        legend: {
+
+          //icon: 'vertical',
+          data: ['产出达成率', '计划达成率'],
+          //align: 'center',
+          // right: '35%',
+          top: '0',
+          textStyle: {
+            color: "#fff"
+          },
+          // itemWidth: 15,
+          // itemHeight: 15,
+          itemGap: 20,
+        },
+        grid: {
+          left: '20',
+          right: '20',
+          top: '25',
+          bottom: '20',
+          containLabel: true
+        },
+        xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: 'rgba(255,255,255,.6)'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(255,255,255,.1)'
+            }
+          },
+          data: []
+        }, {
+        }],
+        yAxis: [
+          {
+            "type": "value",
+            "name": "达成/完成率%",
+            "show": false,
+            "axisLabel": {
+              "show": true
+            },
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: 'rgba(255,255,255,.6)'
+              }
+            },
+            axisLine: {
+              lineStyle: {
+                color: 'rgba(255,255,255,.1)'
+              }
+            },
+            splitLine: {
+              lineStyle: {
+                color: 'rgba(255,255,255,.1)'
+              }
+            }
+          },
+          // {
+          //     "type": "value",
+          //     "name": "达成/完成率%",
+          //     "show": true,
+          //     "axisLabel": {
+          //         "show": true
+          //     },
+          //     axisLine: { lineStyle: { color: 'rgba(255,255,255,.4)' } },//右线色
+          //     splitLine: { show: true, lineStyle: { color: "#001e94" } },//x轴线
+          // },
+        ],
+        series: [{
+          name: '产出达成率',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: true,
+          lineStyle: {
+            normal: {
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(24, 163, 64, 0.3)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(24, 163, 64, 0)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10,
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#cdba00',
+              borderColor: 'rgba(137,189,2,0.27)',
+              borderWidth: 12,
+              label: {
+                show: true, //开启显示
+                position: 'top', //在上方显示
+                textStyle: { //数值样式
+                  color: 'white',
+                  fontSize: 13
+                },
+                formatter: function (params) {
+                  return params.data + '%'
+                },
+              },
+            }
+          },
+          data: []
+        }, {
+          // "yAxisIndex": 1,
+          name: '计划达成率',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: true,
+          lineStyle: {
+            normal: {
+              width: 2
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(39, 122,206, 0.3)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(39, 122,206, 0)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#277ace',
+              borderColor: 'rgba(0,136,212,0.2)',
+              borderWidth: 12,
+              label: {
+                show: true, //开启显示
+                position: 'bottom', //在上方显示
+                textStyle: { //数值样式
+                  color: 'white',
+                  fontSize: 13
+                },
+                formatter: function (params) {
+                  return params.data + '%'
+                },
+              },
+            }
+          },
+          data: []
+        }]
+      },
+      judgeleft_1: false,
+      judgeleft_2: false,
+      judgeleft_3: false,
+      leftData_2: [],
+      leftData_3: [],
+      judgeCenter_1: false,
+      judgeCenter_2: false,
+      judgeCenter_3: false,
+      judgeCenter_4: false,
+      judgeCenter_5: false,
+      YearMonth: '',
+      YearMonth2: '',
+      toDay: [],
+      formData: [0, 0, 0, 0],
+      searchDay: [],
+      DeliveryPlanDate: [],
+      DeliveryPlanDate2: [],
+      DeliveryPlanDate3: [],
+      Days: 0,
+      Days2: 0,
+      large: true,
+      pagination: {
+        pageTotal: 0,
+        pageIndex: 1
+      },
+      pagination2: {
+        pageTotal: 0,
+        pageIndex: 1
+      },
+      CreatedOn: [],
+      OrganizeList: [],
+      form: {},
+      indexNo: 0,
+    },
+    created() {
+      this.getOrgData()
+    },
+    mounted() {
+    },
+    methods: {
+      computedFontSize(res) {
+        let clientWidth =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        if (!clientWidth) return;
+        let fontSize = clientWidth / 1920;
+        return res * fontSize;
+      },
+      // 获取组织名称
+      getOrgData() {
+        axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, rows: 0, ParentID: 160 })
+          .then(async (res) => {
+            if (res.result) {
+              if (res.data.length != 0) {
+                console.log('res.data', res.data)
+                this.OrganizeList = res.data
+                if (res.data && res.data.length) {
+                  this.form = res.data[0]
+                }
+              }
+              this.getData_30M(this.form.OrganizeID);
+            }
+            else {
+              _this.$message({
+                message: res.msg,
+                type: 'error'
+              });
+            }
+          })
+          .catch(function (error) {
+
+          });
+      },
+      zero(num) {
+        if (Number(num) < 10) {
+          return '0' + num
+        } else {
+          return num
         }
-    })
-    const _this = app;
-</script>
-<script>
-    $(window).load(function () {
-        // $(".loading").fadeOut()
-        // setTimeout(() => {
-        //   $(".loading").fadeOut()
-        // }, 1000 * 3)
-    })
-    $(function () {
-        // $('.wrap,.adduser').liMarquee({
-        //   direction: 'up',//身上滚动 
-        //   runshort: false,//内容不足时不滚动
-        //   scrollamount: 20//速度
-        // });
-    });
-</script>
-<script>
-    var t = null;
-    t = setTimeout(time, 1000);//開始运行
-    function time() {
-        clearTimeout(t);//清除定时器
-        dt = new Date();
-        var y = dt.getFullYear();
-        var mt = dt.getMonth() + 1;
-        var day = dt.getDate();
-        var h = dt.getHours();//获取时
-        var m = dt.getMinutes();//获取分
-        var s = dt.getSeconds();//获取秒
-        document.getElementById("showTime").innerHTML = y + "年" + mt + "月" + day + "日" + h + "时" + m + "分" + s + "秒";
-        t = setTimeout(time, 1000); //设定定时器，循环运行     
+      },
+      // 测试先注释，用完取消注释
+      gundong() {
+        $('.wrap,.adduser,.wrapcon').liMarquee({
+          direction: 'up',//身上滚动 
+          runshort: false,//内容不足时不滚动
+          scrollamount: 20//速度
+        });
+
+
+      },
+      moreLarge() {
+        this.large = !this.large
+        if (!this.large) {
+          // this.fullScreen()
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen()
+          }
+          if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen()
+
+          }
+          if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen()
+          }
+          if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen()
+          }
+        } else {
+          // this.exitFullScreen()
+          if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen()
+          }
+          if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen()
+          }
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          }
+          if (document.msExitFullscreen) {
+            document.msExitFullscreen()
+          }
+        }
+      },
+      getMonthDay(year, month) {
+        let days = new Date(year, month, 0).getDate()
+        return days
+      },
+      // 半小时后刷新
+      getData_30M(OrganizeID) {
+
+        this.rightData_1 = [];
+        this.rightData_2 = [];
+        let currentHour = new Date().getHours();
+        axiosPostRequst(`/APSAPI/getjlreport`, { rows: 0, page: 1, OrganizeID })
+          .then(function (res) {
+            if (res.result) {
+              _this.leftOption_1.yAxis.data = [];
+              _this.leftOption_1.series[0].data = [];
+              _this.leftOption_1.series[1].data = [];
+              if (res.data.Table.length != 0) {
+                res.data.Table.forEach(x => {
+
+                  _this.leftOption_1.yAxis.data.push(x.N1);
+                  _this.leftOption_1.series[0].data.push(x.P1 ? parseFloat((x.P1).toFixed(2)) : 0);
+                  _this.leftOption_1.series[1].data.push(100);
+
+                })
+                _this.drawChart('echart5', _this.leftOption_1);
+
+              }
+              _this.rightData_3 = res.data.Table1;
+              _this.formData[1] = res.data.Table3[0].S1;
+              _this.rightData_1 = res.data.Table9;
+              _this.leftData_2 = res.data.Table10;
+              _this.leftData_3 = res.data.Table2;
+              _this.rightData_2 = res.data.Table11;
+
+              _this.centerOption_1.series[0].data[0].value = 0;
+              _this.centerOption_1.series[0].data[1].value = 0;
+              _this.centerOption_1.series[0].data[0].name = '';
+              _this.percent1 = '';
+              let num1_1 = 0;
+              let num1_2 = 0;
+              let num1_total = 0;
+              if (res.data.Table4) {
+                num1_1 = parseFloat(res.data.Table4[0].C1);
+                num1_2 = parseFloat(res.data.Table4[0].C2);
+                num1_total = num1_2 - num1_1;
+                if (num1_total <= 0) {
+                  _this.$set(_this.centerOption_1.series[0].data[1], 'value', 0);
+                } else {
+                  _this.$set(_this.centerOption_1.series[0].data[1], 'value', num1_total);
+
+                }
+                _this.$set(_this.centerOption_1.series[0].data[0], 'value', num1_1);
+              }
+              _this.$set(_this.centerOption_1.series[0].data[0], 'name', res.data.Table4[0].C1);
+              _this.$set(_this, 'percent', res.data.Table4[0].P1 ? parseFloat((res.data.Table4[0].P1).toFixed(2)) : 0);
+              _this.drawChart('zb1', _this.centerOption_1);
+
+
+
+              _this.centerOption_2.series[0].data[0].value = 0;
+              _this.centerOption_2.series[0].data[1].value = 0;
+              _this.centerOption_2.series[0].data[0].name = '';
+              _this.percent2 = '';
+              let num2_1 = 0;
+              let num2_2 = 0;
+              let num2_total = 0;
+              if (res.data.Table5) {
+                num2_1 = parseFloat(res.data.Table5[0].S1);
+                num2_2 = parseFloat(res.data.Table5[0].S2);
+                num2_total = num2_2 - num2_1;
+                if (num2_total <= 0) {
+                  _this.$set(_this.centerOption_2.series[0].data[1], 'value', 0);
+                } else {
+                  _this.$set(_this.centerOption_2.series[0].data[1], 'value', num2_total);
+
+                }
+                _this.$set(_this.centerOption_2.series[0].data[0], 'value', num2_1);
+              }
+              _this.$set(_this.centerOption_2.series[0].data[0], 'name', res.data.Table5[0].S1);
+              _this.$set(_this, 'percent2', res.data.Table5[0].P1 ? parseFloat((res.data.Table5[0].P1).toFixed(2)) : 0);
+              _this.drawChart('zb2', _this.centerOption_2);
+
+
+
+              _this.percent3 = '';
+              let num3_1 = 0;
+              let num3_2 = 0;
+              let num3_total = 0;
+              _this.centerOption_3.series[0].data[0].value = 0;
+              _this.centerOption_3.series[0].data[1].value = 0;
+              _this.centerOption_3.series[0].data[0].name = '';
+              if (res.data.Table6) {
+                num3_1 = parseFloat(res.data.Table6[0].C1);
+                num3_2 = parseFloat(res.data.Table6[0].C2);
+                num3_total = num3_2 - num3_1;
+                if (num3_total <= 0) {
+                  _this.$set(_this.centerOption_3.series[0].data[1], 'value', 0);
+                } else {
+                  _this.$set(_this.centerOption_3.series[0].data[1], 'value', num3_total);
+
+                }
+                _this.$set(_this.centerOption_3.series[0].data[0], 'value', num3_1);
+              }
+              _this.$set(_this.centerOption_3.series[0].data[0], 'name', res.data.Table6[0].C1);
+              _this.$set(_this, 'percent3', res.data.Table6[0].P1 ? parseFloat((res.data.Table6[0].P1).toFixed(2)) : 0);
+              _this.drawChart('zb3', _this.centerOption_3);
+
+
+
+
+
+              let num4_1 = 0;
+              let num4_2 = 0;
+              let num4_total = 0;
+              _this.centerOption_6.series[0].data[0].value = 0;
+              _this.centerOption_6.series[0].data[1].value = 0;
+              _this.centerOption_6.series[0].data[0].name = '';
+              _this.percent4 = '';
+              if (res.data.Table12) {
+                num4_1 = res.data.Table12[0].C1 || 0;
+                num4_2 = res.data.Table12[0].C2 || 0;
+                num4_total = num4_2 - num4_1;
+                debugger
+                if (num4_total <= 0) {
+                  _this.$set(_this.centerOption_6.series[0].data[1], 'value', 0);
+                } else {
+                  _this.$set(_this.centerOption_6.series[0].data[1], 'value', num4_total);
+
+                }
+                _this.$set(_this.centerOption_6.series[0].data[0], 'value', num4_1);
+              }
+              _this.$set(_this.centerOption_6.series[0].data[0], 'name', res.data.Table12[0].C1);
+              _this.$set(_this, 'percent4', res.data.Table12[0].P1 ? parseFloat((res.data.Table12[0].P1).toFixed(2)) : 0);
+              _this.drawChart('zb4', _this.centerOption_6);
+
+
+
+
+              _this.centerOption_4.xAxis[0].data = [];
+              _this.centerOption_4.series[0].data = [];
+              _this.centerOption_4.series[1].data = [];
+              _this.centerOption_4.series[2].data = [];
+              //近15日计划完成情况对比
+              if (res.data.Table7.length) {
+                res.data.Table7.forEach(x => {
+                  _this.centerOption_4.xAxis[0].data.push(x.N1);
+                  _this.centerOption_4.series[0].data.push(x.S1)
+                  _this.centerOption_4.series[1].data.push(x.S2)
+                  _this.centerOption_4.series[2].data.push(x.P1)
+                })
+                _this.drawChart('echart4', _this.centerOption_4);
+                _this.refreshBar('centerTime_4', 'echart4', _this.centerOption_4, 'xAxis');
+              }
+
+              //车间周计划投产 
+              _this.centerOption_5.xAxis[0].data = [];
+              _this.centerOption_5.series[0].data = [];
+              _this.centerOption_5.series[1].data = [];
+              if (res.data.Table8.length) {
+                res.data.Table8.forEach((x, i) => {
+                  _this.centerOption_5.xAxis[0].data.push(x.N1);
+                  _this.centerOption_5.series[0].data.push(x.P1)
+                  _this.centerOption_5.series[1].data.push(x.P2)
+
+                })
+                _this.drawChart('echart3', _this.centerOption_5);
+                _this.refreshBar('centerTime_5', 'echart3', _this.centerOption_5, 'xAxis');
+                if (_this.judgeRight_1 == false) {
+                  _this.$nextTick(() => {
+                    _this.gundong()
+                    _this.judgeRight_1 = true;
+                  })
+                }
+              }
+
+              $(".loading").fadeOut()
+            } else {
+              $(".loading").fadeOut()
+              _this.$message.error(res.msg)
+            }
+          })
+          .catch(function (error) {
+          });
+
+
+
+        this.indexNo++
+        console.log('indexNo', this.indexNo)
+        this.timeOut = setTimeout(() => {
+          if (this.OrganizeList.length == this.indexNo) {
+            this.indexNo = 0
+            this.form = this.OrganizeList[this.indexNo]
+          } else {
+            this.form = this.OrganizeList[this.indexNo]
+          }
+
+          this.getData_30M(this.form.OrganizeID)
+          //  window.location.href=window.location.href
+        }, 1000 * 60 * 3)
+      },
+      // 渲染图标
+      drawChart(id, option) {
+        let myChart = echarts.init(document.getElementById(id))
+        myChart.clear();
+        myChart.setOption(option, true);
+        let chart = document.getElementById(id)
+        echarts.init(chart).resize()
+      },
+      // 刷新 饼图
+      refreshPie(mTime, id, option) {
+        if (this[mTime]) {
+          clearInterval(this[mTime])
+        }
+        var index = 0;
+        // 用定时器控制饼图高亮      
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option.series[0].data.length;  // 当前饼图有多少个扇形
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      refreshPieOther(mTime, id, option) {
+        var index = 0;
+        // 用定时器控制饼图高亮
+        if (this[mTime]) {
+          clearInterval(this[mTime])
+        }
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option.series.data.length;  // 当前饼图有多少个扇形
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      // 高亮柱状图
+      refreshBar(mTime, id, option, xy) {
+        var index = 0;
+        if (this[mTime]) {
+          clearInterval(this[mTime]);
+        }
+        let myChart = echarts.init(document.getElementById(id));
+        let dataLength = option[xy][0].data.length;
+        this[mTime] = setInterval(() => {
+          // 清除之前的高亮
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          index = (index + 1) % dataLength
+          // 当前下标高亮
+          myChart.dispatchAction({
+            type: 'showTip',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+          if (index > dataLength) {
+            index = 0
+          }
+        }, 2000)
+        // 鼠标划入
+        myChart.on('mouseover', () => {
+          // 停止定时器，清除之前的高亮
+          clearInterval(this[mTime])
+          myChart.dispatchAction({
+            type: 'downplay',
+            seriesIndex: 0,
+            dataIndex: index
+          })
+        })
+      },
+      // 重新加载整个页面
+      reloadData() {
+        location.reload();
+      },
     }
+  })
+  const _this = app;
+</script>
+<script>
+  $(window).load(function () {
+    // $(".loading").fadeOut()
+    // setTimeout(() => {
+    //   $(".loading").fadeOut()
+    // }, 1000 * 3)
+  })
+  $(function () {
+    // $('.wrap,.adduser').liMarquee({
+    //   direction: 'up',//身上滚动 
+    //   runshort: false,//内容不足时不滚动
+    //   scrollamount: 20//速度
+    // });
+  });
+</script>
+<script>
+  var t = null;
+  t = setTimeout(time, 1000);//開始运行
+  function time() {
+    clearTimeout(t);//清除定时器
+    dt = new Date();
+    var y = dt.getFullYear();
+    var mt = dt.getMonth() + 1;
+    var day = dt.getDate();
+    var h = dt.getHours();//获取时
+    var m = dt.getMinutes();//获取分
+    var s = dt.getSeconds();//获取秒
+    document.getElementById("showTime").innerHTML = y + "年" + mt + "月" + day + "日" + h + "时" + m + "分" + s + "秒";
+    t = setTimeout(time, 1000); //设定定时器，循环运行     
+  }
 </script>
 
 </html>
 <style>
-    .table1 .f1 {
-        width: 12%;
+  .table1 .f1 {
+    width: 10%;
+  }
+
+  .table .f24 {
+    width: 24%;
+  }
+
+  .table1 .f2 {
+    width: 25%;
+  }
+
+  .table1 .f3 {
+    width: 22%;
+  }
+
+  .table1 .f4 {
+    width: 25%;
+  }
+
+  .table1 .f15 {
+    width: 15%;
+  }
+
+  .table1 .f20 {
+    width: 20%;
+  }
+
+  .table1 .f27 {
+    width: 27%;
+  }
+
+  .table1 .f25 {
+    width: 25%;
+  }
+
+  .table1 .f35 {
+    width: 35%;
+  }
+
+  .table1 .f26 {
+    width: 26%;
+  }
+
+  .table1 .f28 {
+    width: 28%;
+  }
+
+  @keyframes gundong {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
 
-    .table .f24 {
-        width: 24%;
+    100% {
+      -webkit-transform: translate3d(0, -30vh, 0);
+      transform: translate3d(0, -30vh, 0);
     }
+  }
 
-    .table1 .f2 {
-        width: 25%;
-    }
+  .num2 {
+    width: 35%;
+  }
 
-    .table1 .f3 {
-        width: 22%;
-    }
+  .num3 {
+    width: 15%;
+    font-size: .16rem;
+    padding-top: .2rem;
+  }
 
-    .table1 .f4 {
-        width: 25%;
-    }
+  .numbt2 {
+    color: #ffffff;
+  }
 
-    .table1 .f15 {
-        width: 15%;
-    }
-
-    .table1 .f20 {
-        width: 20%;
-    }
-
-    .table1 .f25 {
-        width: 25%;
-    }
-
-    .table1 .f35 {
-        width: 35%;
-    }
-
-    .table1 .f26 {
-        width: 26%;
-    }
-
-    .table1 .f28 {
-        width: 28%;
-    }
-
-    @keyframes gundong {
-        0% {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-        }
-
-        100% {
-            -webkit-transform: translate3d(0, -30vh, 0);
-            transform: translate3d(0, -30vh, 0);
-        }
-    }
-
-    .num2 {
-        width: 35%;
-    }
-
-    .num3 {
-        width: 15%;
-        font-size: .16rem;
-        padding-top: .2rem;
-    }
-
-    .numbt2 {
-        color: #ffffff;
-    }
-
-    .numtxt2 {
-        color: #fef000;
-        font-size: .2rem;
-        /* position: absolute;
+  .numtxt2 {
+    color: #fef000;
+    font-size: .2rem;
+    /* position: absolute;
     right: 0;
     bottom: 20px; */
-    }
+  }
 
-    .logo {
+  .logo {
 
-        height: .6rem;
-        position: absolute;
-        left: .2rem;
-        top: 1px;
-    }
+    height: .6rem;
+    position: absolute;
+    left: .2rem;
+    top: 1px;
+  }
 
-    .tableheight {
-        height: 90%;
-        overflow: hidden;
-        word-break: break-all;
-    }
+  .tableheight {
+    height: 90%;
+    overflow: hidden;
+    word-break: break-all;
+  }
 
-    .navboxall1 {
-        height: calc(100% - .6rem);
-    }
+  .navboxall1 {
+    height: calc(100% - .6rem);
+  }
 
-    .overflowhidden {
-        overflow: hidden;
-    }
+  .overflowhidden {
+    overflow: hidden;
+  }
 
-    .veralign {
-        vertical-align: top;
-    }
+  .veralign {
+    vertical-align: top;
+  }
 
-    .mainbox {
-        padding: 0 !important;
-    }
+  .mainbox {
+    padding: 0 !important;
+  }
 
-    html {
-        overflow: hidden;
-    }
+  html {
+    overflow: hidden;
+  }
 
-    .mainbox>ul>li {
-        width: 3.6rem;
-    }
+  .mainbox>ul>li {
+    width: 4rem;
+  }
 
-    .mainbox>ul>li:nth-child(1) {
-        padding: 0 .1rem 0 .4rem !important;
-    }
 
-    .mainbox>ul>li:nth-child(3) {
-        padding: 0 .4rem 0 .1rem !important;
-    }
+  .mainbox>ul>li:nth-child(1) {
+    padding: 0 .1rem 0 .4rem !important;
+  }
 
-    .mainbox>ul>li:nth-child(2) {
-        width: calc(100% - 7.2rem) !important;
-        padding: 0 !important;
-    }
+  .mainbox>ul>li:nth-child(3) {
+    padding: 0 .4rem 0 .1rem !important;
+    width: 5rem !important;
+  }
 
-    .padding_t_15 {
-        padding-top: .15rem;
-    }
+  .mainbox>ul>li:nth-child(2) {
+    width: calc(100% - 9rem) !important;
+    padding: 0 !important;
+  }
+
+  .padding_t_15 {
+    padding-top: .15rem;
+  }
+
+  .table1 td {
+    font-size: .15rem !important;
+  }
+
+  .pulll_right>div {
+    width: 25% !important;
+  }
 </style>
