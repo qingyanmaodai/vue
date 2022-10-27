@@ -545,7 +545,7 @@ let chartDom2=null;
                 if(this.orgTime){
                     clearTimeout(this.orgTime)
                 }
-                if (this.tagID > this.organizeIDsData.length) {
+                if (this.tagID >= this.organizeIDsData.length) {
                     this.tagID = 0
                 }
                 await this.getOrgData(this.organizeIDsData[this.tagID])
