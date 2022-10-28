@@ -405,16 +405,25 @@
       }, 450);
     },
     methods: {
+      // 退回
       backData() {
         this.getSelectionData();
         if (this.selectionData[this.tagRemark].length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
-          this.adminLoading = true;
+          this.$confirm("确定退回吗？")
+          .then(() => {
+            // 确定
+            this.adminLoading = true;
           this.selectionData[this.tagRemark].forEach((a) => {
             a["ElementDeleteFlag"] = 1;
           });
           this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+          })
+          .catch(() => {
+            // 取消
+          });
+          
         }
       },
       async dataBackSave(data1, index) {
@@ -606,6 +615,9 @@
   
           cellIndex++;
         });
+
+        
+
         var colindexs = [1, 2, 3, 4, 5];
         this.tableData[1].forEach((row, index) => {
           let cellIndex = 0;
@@ -1265,14 +1277,25 @@
               console.log(element.OrderNo)
             }
           });
-          // if (!isNoCapacity1) {
-          //   this.$message.error(
-          //     "转入日计划的数据存在产能空，请进行排期计算或维护产品产能！"
-          //   );
-          //   return;
-          // }
-          // let ProcessID = "";
-          this.adminLoading = true;
+          if (!isNoCapacity1) {
+            this.$confirm('请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.saveTodayPlan(remarkTb)
+            }).catch(() => {
+              
+            });
+          }else{
+            this.saveTodayPlan(remarkTb)
+          }
+        }
+        // }
+      },
+      async saveTodayPlan(remarkTb){
+        // let ProcessID = "";
+        this.adminLoading = true;
           // if (remarkTb == 1) {
           //   ProcessID = "P202009092233201";
           // } else if (remarkTb == 3) {
@@ -1340,8 +1363,6 @@
           } else {
             this.adminLoading = false;
           }
-        }
-        // }
       },
       // 选线获取剩余工时
       setFooterLabel(val) {

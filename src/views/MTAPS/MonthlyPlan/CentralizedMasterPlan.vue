@@ -463,30 +463,38 @@ export default {
     async sendBack(){
         this.getSelectionData()
         if(this.selectionData[this.tagRemark].length){
-          this.adminLoading = true
-          this.selectionData[this.tagRemark].forEach(item=>{
-            item['ProductionStatus'] = 26
-          })
-          let res = await GetSearch(this.selectionData[this.tagRemark], "/APSAPI/SaveData")
-          try {
-            const { result, data, count, msg } = res.data;
-          if(result){
-            this.dataSearch(this.tagRemark)
-            this.adminLoading = false
-          }else {
-            this.adminLoading = false
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-        }
-        
-        } catch (error) {
-          if(error){
-            this.adminLoading = false
+          this.$confirm("确定退回吗？")
+          .then(async() => {
+            // 确定
+            this.adminLoading = true
+            this.selectionData[this.tagRemark].forEach(item=>{
+              item['ProductionStatus'] = 26
+            })
+            let res = await GetSearch(this.selectionData[this.tagRemark], "/APSAPI/SaveData")
+            try {
+              const { result, data, count, msg } = res.data;
+            if(result){
+              this.dataSearch(this.tagRemark)
+              this.adminLoading = false
+            }else {
+              this.adminLoading = false
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
           }
-        }
+          
+          } catch (error) {
+            if(error){
+              this.adminLoading = false
+            }
+          }
+          })
+          .catch(() => {
+            // 取消
+          });
+          
         }else{
           this.$message.error("请选择需要操作的数据！")
         }

@@ -421,11 +421,19 @@ export default {
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.adminLoading = true;
-        this.selectionData[this.tagRemark].forEach((a) => {
-          a["ElementDeleteFlag"] = 1;
-        });
-        this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+        this.$confirm("确定退回吗？")
+          .then(() => {
+            // 确定
+            this.adminLoading = true;
+            this.selectionData[this.tagRemark].forEach((a) => {
+              a["ElementDeleteFlag"] = 1;
+            });
+            this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+          })
+          .catch(() => {
+            // 取消
+          });
+        
       }
     },
     async dataBackSave(data1, index) {

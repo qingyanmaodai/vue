@@ -377,6 +377,9 @@
           >SysID:{{ sysID }}
 
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">
+           {{Prompt}}
+          </span>
         </div>
         <div class="flex">
           <el-pagination
@@ -418,6 +421,7 @@
             class="primaryColor cursor"
           >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
         </div>
         <div>
           <span>共{{ pagination.pageTotal }}条数据</span>
@@ -429,6 +433,7 @@
 <script>
 import { setTimeout } from "timers";
 import XEUtils from "xe-utils";
+import { GetSearchData } from "@/api/Common";
 export default {
   props: {
     // 传行内样式
@@ -588,6 +593,7 @@ export default {
   },
   data() {
     return {
+      Prompt:'',
       ControlTypeList:['textbox','textarea','el-input','el-input-number','el-autocomplete'],//允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
@@ -915,6 +921,18 @@ export default {
       // this.remark 操作的表格下标
       this.$emit('filterChange',val,property,this.remark)
     },
+    async getFooterRemark(){
+      let form = {}
+      form['dicID'] = 33
+      form['page'] = 1
+      form['rows'] = 0
+      form['DictionaryID'] = this.sysID
+      let res = await GetSearchData(form)
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.Prompt = data&&data[0].Remark1
+      }
+    }
   },
   mounted() {
     // this.$refs.vxeTable.doLayout(); //解决表格错位
@@ -944,7 +962,9 @@ export default {
     },
   },
   computed: {},
-  created() {},
+  created() {
+    this.getFooterRemark()
+  },
 };
 </script>
 <style lang="scss" scoped>

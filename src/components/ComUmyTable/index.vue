@@ -740,6 +740,7 @@
             class="primaryColor cursor"
           >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
         </div>
         <div class="flex">
           <div
@@ -787,6 +788,7 @@
             class="primaryColor cursor"
           >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
         </div>
         <div>
           <span>共{{ pagination.pageTotal }}条数据</span>
@@ -796,6 +798,7 @@
   </div>
 </template>
 <script>
+import { GetSearchData } from "@/api/Common";
 export default {
   props: {
     IsIndex: {
@@ -954,6 +957,7 @@ export default {
   },
   data() {
     return {
+      Prompt:'',
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -1284,6 +1288,18 @@ export default {
         return false;
       }
     },
+    async getFooterRemark(){
+      let form = {}
+      form['dicID'] = 33
+      form['page'] = 1
+      form['rows'] = 0
+      form['DictionaryID'] = this.sysID
+      let res = await GetSearchData(form)
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.Prompt = data&&data[0].Remark1
+      }
+    }
   },
   mounted() {
     this.$refs.plxTable.doLayout(); //解决表格错位
@@ -1324,6 +1340,8 @@ export default {
     },
   },
   computed: {},
-  created() {},
+  created() {
+    this.getFooterRemark()
+  },
 };
 </script>
