@@ -153,6 +153,7 @@
   import GC from "@grapecity/spread-sheets";
   import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
   import "@grapecity/spread-sheets/js/zh.js";
+  GC.Spread.Common.CultureManager.culture("zh-cn");
   import ComSearch from "@/components/ComSearch";
   import ComVxeTable from "@/components/ComVxeTable";
   import { HeaderCheckBoxCellType } from "@/static/data.js";
@@ -522,6 +523,10 @@
               size: parseInt(x.width),
             });
           } else {
+            // 配置表没有日期列宽需要设置
+            if(x.name.indexOf('-')>-1){
+              x.width = 80
+            }
             colInfos.push({
               name: x.prop,
               displayName: x.label,
@@ -546,7 +551,7 @@
           name: "isChecked",
           displayName: "isChecked",
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
+          size: 80,
         };
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
@@ -616,7 +621,13 @@
           cellIndex++;
         });
 
-        
+        // 列筛选
+        // 参数2 开始列
+        // 参数3 
+        // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter)  
 
         var colindexs = [1, 2, 3, 4, 5];
         this.tableData[1].forEach((row, index) => {
@@ -751,7 +762,7 @@
         this.adminLoading = false;
         this.tableLoading[1] = false;
         sheet.options.protectionOptions.allowResizeColumns = true; //禁用改变行高
-        sheet.options.isProtected = true; //锁定表格
+        // sheet.options.isProtected = true; //锁定表格
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         this.spread.refresh();
       },
