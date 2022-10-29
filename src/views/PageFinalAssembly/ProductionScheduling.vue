@@ -153,6 +153,7 @@ import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
+GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
@@ -405,16 +406,21 @@ export default {
     }, 450);
   },
   methods: {
+    // 退回
     backData() {
       this.getSelectionData();
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.adminLoading = true;
-        this.selectionData[this.tagRemark].forEach((a) => {
-          a["ElementDeleteFlag"] = 1;
-        });
-        this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+        this.$confirm("确定退回吗？")
+        .then(() => {
+          this.adminLoading = true;
+          this.selectionData[this.tagRemark].forEach((a) => {
+            a["ElementDeleteFlag"] = 1;
+          });
+          this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+        })
+        .catch(() => {});
       }
     },
     async dataBackSave(data1, index) {
@@ -513,11 +519,16 @@ export default {
             size: parseInt(x.width),
           });
         } else {
+          // 配置表没有日期列宽需要设置
+          if(x.name.indexOf('-')>-1){
+            x.width = 80
+          }
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
+          
         }
         colHeader1.push(x.label);
       });
@@ -537,7 +548,7 @@ export default {
         name: "isChecked",
         displayName: "isChecked",
         cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60,
+        size: 80,
       };
       for (var name in checkbox) {
         colInfos[0][name] = checkbox[name];
@@ -602,9 +613,18 @@ export default {
           // );
           // cell.foreColor("gray");
         }
-
+        
         cellIndex++;
       });
+
+      // 列筛选
+      // 参数2 开始列
+      // 参数3 
+      // 参数4 结束列
+      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter)      
+
       var colindexs = [1, 2, 3, 4, 5];
       this.tableData[1].forEach((row, index) => {
         let cellIndex = 0;
@@ -738,7 +758,7 @@ export default {
       this.adminLoading = false;
       this.tableLoading[1] = false;
       sheet.options.protectionOptions.allowResizeColumns = true; //禁用改变行高
-      sheet.options.isProtected = true; //锁定表格
+      // sheet.options.isProtected = true; //锁定表格 //锁定表格筛选不能用，注释
       this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.refresh();
     },
@@ -1257,6 +1277,7 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
+        let isTodayPlan = true
         console.log(this.selectionData[remarkTb])
         this.selectionData[remarkTb].forEach((element) => {
           if (!element.Capacity1&&element.OrderNo) {
@@ -1264,14 +1285,25 @@ export default {
             console.log(element.OrderNo)
           }
         });
-        // if (!isNoCapacity1) {
-        //   this.$message.error(
-        //     "转入日计划的数据存在产能空，请进行排期计算或维护产品产能！"
-        //   );
-        //   return;
-        // }
-        // let ProcessID = "";
-        this.adminLoading = true;
+        if (!isNoCapacity1) {
+            this.$confirm('请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.saveTodayPlan(remarkTb)
+            }).catch(() => {
+              
+            });
+        }else{
+          this.saveTodayPlan(remarkTb)
+        }
+      }
+    },
+    // 
+    async saveTodayPlan(remarkTb){
+      // let ProcessID = "";
+      this.adminLoading = true;
         // if (remarkTb == 1) {
         //   ProcessID = "P202009092233201";
         // } else if (remarkTb == 3) {
@@ -1339,8 +1371,6 @@ export default {
         } else {
           this.adminLoading = false;
         }
-      }
-      // }
     },
     // 选线获取剩余工时
     setFooterLabel(val) {

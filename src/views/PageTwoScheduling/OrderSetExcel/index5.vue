@@ -1402,11 +1402,19 @@ export default {
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.adminLoading = true;
+        this.$confirm("确定退回吗？")
+          .then(() => {
+            // 确定
+            this.adminLoading = true;
         this.selectionData[1].forEach((a) => {
           a["ElementDeleteFlag"] = 1;
         });
         this.dataSave(this.selectionData[1], 1);
+          })
+          .catch(() => {
+            // 取消
+          });
+        
       }
     },
        save4() {//在分线列表处保存

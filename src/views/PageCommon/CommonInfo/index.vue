@@ -228,6 +228,7 @@ export default {
     },
   },
   created() {
+    console.log('this.$route',this.$route)
     _this = this;
     this.judgeBtn();
     let routeBtn = this.$route;

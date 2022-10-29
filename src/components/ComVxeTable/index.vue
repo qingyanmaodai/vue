@@ -857,6 +857,7 @@
             class="primaryColor cursor"
           >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
         </div>
         <div class="flex">
           <div
@@ -912,6 +913,7 @@
             class="primaryColor cursor"
           >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
         </div>
         <div>
           <span>共{{ pagination.pageTotal }}条数据</span>
@@ -922,6 +924,7 @@
 </template>
 <script>
 import XEUtils from "xe-utils";
+import { GetSearchData } from "@/api/Common";
 export default {
   props: {
     // 是否显示底部合计
@@ -1119,6 +1122,7 @@ export default {
   },
   data() {
     return {
+      Prompt:'',
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -1499,6 +1503,18 @@ export default {
       ];
       return footerData;
     },
+    async getFooterRemark(){
+      let form = {}
+      form['dicID'] = 33
+      form['page'] = 1
+      form['rows'] = 0
+      form['DictionaryID'] = this.sysID
+      let res = await GetSearchData(form)
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.Prompt = data&&data[0].Remark1
+      }
+    }
   },
   mounted() {
     if (this.$refs.vxeTable) {
@@ -1569,6 +1585,7 @@ export default {
     // });
   },
   created() {
+    this.getFooterRemark()
     this.$nextTick(() => {
       // 手动将表格和工具栏进行关联
       this.$refs.vxeTable.connect(this.$refs.xToolbar1);
