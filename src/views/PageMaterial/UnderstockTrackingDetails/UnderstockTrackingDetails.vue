@@ -25,9 +25,7 @@
                 </el-col
               >
               <el-col :span="12" class="flex_flex_end">
-                <el-radio-group v-model="radioValue" @change="radioChange">
-                  <el-radio v-for="(item,index) in parmsBtn2" :key="index" :label="item.value" :value="item.value">{{item.label}}</el-radio>
-                </el-radio-group>
+
               </el-col>
             </el-row>
           </div>
@@ -69,17 +67,6 @@
             </div>
           </div>
         </div>
-  
-        <!-- 点击齐套率弹框-->
-        <DialogTable
-          title="欠料明细"
-          :tableDialog="colDialogVisible"
-          :sysID="5594"
-          width="80%"
-          @closeDialog="colDialogVisible = false"
-          :searchForm="dialogSearchForm"
-          :isToolbar="false"
-        ></DialogTable>
       </div>
     </div>
   </template>
@@ -101,29 +88,18 @@
     SaveData,
     GetSearch,
   } from "@/api/Common";
-  import DialogTable from "@/components/Dialog/dialogTable";
   export default {
-    name: "PlanMatchingAnalysis",
+    name: "UnderstockTrackingDetails",
     components: {
       ComSearch,
       ComVxeTable,
-      DialogTable,
     },
     data() {
       return {
-        parmsBtn2:[
-          {label:'显示欠数',value:0},
-          {label:'显示配套率',value:1}
-        ],
-        radioValue:0,
         ////////////////// Search /////////////////
-        dialogSearchForm: {
-          OrderID: "",
-        },
-        colDialogVisible: false,
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
-          { ID: 5158, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 9006, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
         ],
         Status1: [
           
@@ -170,16 +146,15 @@
         checkBoxCellTypeLine: "",
       };
     },
-    watch: {},
     created() {
       _this = this;
-      this.adminLoading = true;
-      this.getTableHeader();
+    this.getTableHeader();
       // 获取所有按钮
       this.judgeBtn();
     },
     activated() {
       if (this.spread) {
+        console.log('1111')
         this.spread.refresh();
       }
     },
@@ -189,9 +164,6 @@
       }, 450);
     },
     methods: {
-      radioChange(val){
-        this.dataSearch(this.tagRemark);
-      },
       // 跳转至页面配置
       toPageSetting(id) {
         this.$router.push({
@@ -470,21 +442,6 @@
           // 自动计算数量
         });
   
-        // 表格单击齐套率弹框事件
-        this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if (_this.tableColumns[_this.tagRemark].length) {
-            _this.tableColumns[_this.tagRemark].map((item, index) => {
-              if (item.name.indexOf('-')>-1 && args.col === index&&_this.radioValue===0) {
-                // 显示ERP供需平衡表
-                _this.colDialogVisible = true;
-                _this.dialogSearchForm.MaterialID =
-                _this.tableData[_this.tagRemark][args.row].MaterialID;
-                _this.dialogSearchForm.OweQty = 0;
-              }
-            });
-          }
-        });
-  
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[this.tagRemark] = false;
@@ -692,10 +649,11 @@
           this.formSearchs[this.tagRemark].datas["productionstatus"] = [21, 22, 23, 24, 26];
           this.formSearchs[this.tagRemark].datas["ConfigStartWeek"] = "1";
           this.formSearchs[this.tagRemark].datas["New5158"] = "true";
-          this.formSearchs[this.tagRemark].datas["vt"] = "";
           this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
   
           this.adminLoading = false;
+        }else{
+            this.adminLoading = false
         }
       },
       // 验证数据
@@ -715,8 +673,6 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        // 欠数、配套率
-        form["vt"] = this.radioValue;
         if (remarkTb == 1) {
           form["StartWeek"] = 1;
         }
