@@ -676,17 +676,23 @@ if(!row["Code"])
       if(val==null)
       {
         val=0;
+      }else if(val==0){//输入0不触发自动计算
+        return
       }
+      val = parseInt(val)
+      //当前输入的有小数，取整
+      sheet.setValue(rowIndex, colIndex, val);
       let currentRow = dataSource[rowIndex];
       if(currentRow.ID==-1)
       {
         return false;
       }
-      let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
+      // SMT有白夜班，特殊处理prop，截取日期部分
+      let currentlabel = this.tableColumns[0][colIndex].prop.substring(0,5) + "dy";
            if (false&&!currentRow[currentlabel]) {
    
         //不是天日的数量
-           currentlabel = this.tableColumns[0][colIndex].prop ;
+           currentlabel = this.tableColumns[0][colIndex].prop.substring(0,5) ;
           if(currentlabel=='ViewSort')
           {
             val=currentRow[currentlabel];
@@ -754,6 +760,7 @@ if(!row["Code"])
         parseInt(currentRow[currentlabel].TotalHours) <= 0
       ) {
         this.$message.error("该天休息，上班时间为0");
+        sheet.setValue(rowIndex, colIndex, "");
         return;
       }
      
@@ -788,29 +795,39 @@ if(!row["Code"])
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          let label = this.tableColumns[0][j].prop + "dy";
+          // SMT有白夜班，特殊处理prop，截取日期部分
+          let label = this.tableColumns[0][j].prop.substring(0,5) + "dy";
           let obj = currentRow[label];
+          let maxNum = 0
           remainNum = remainNum - parseInt(val);
-          let maxNum =
-            parseInt(Capacity) *
-            parseInt(obj.TotalHours) *
-            parseInt(obj.DayCapacity);
-          // parseInt(obj.StandardPeoples)
+          // let maxNum =
+          //   parseInt(Capacity) *
+          //   parseInt(obj.TotalHours) *
+          //   parseInt(obj.DayCapacity);
+          // 如果产能为空会出现NaN情况的判断
+          if(Capacity){
+            maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+          }else{
+            maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+          }
           if (remainNum <= 0) {
             list[j] = null;
           } else {
             if (remainNum <= maxNum) {
               list[j] = remainNum;
+              val = remainNum
               break;
             } else {
               list[j] = maxNum;
-              remainNum -= maxNum;
+              // remainNum -= maxNum;
+              val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
             }
           }
         }
         for (var j = 0; j < this.tableColumns[0].length; j++) {
           sheet.setArray(rowIndex, j, [list[j]]);
         }
+        console.log('currentRow',currentRow)
       }
     },
     // 刷新页面
