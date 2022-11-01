@@ -51,7 +51,7 @@
               <span
                 @click="toPageSetting"
                 class="primaryColor cursor"
-              >SysID:sysID[0].ID
+              >SysID:{{sysID[0].ID}}
               </span>
             </div>
             <div class="flex">
@@ -70,6 +70,9 @@
           </div>
         </div>
       </div>
+
+      <!-- 弹框-->
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -101,15 +104,21 @@ import {
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "DaySet7",
   components: {
     ComSearch,
     ComReportTable,
     ComAsideTree,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        OrderID:'',
+      },
+      colDialogVisible:false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -998,6 +1007,20 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         //   sheet.setArray(args.row, i, [2021]);
         // }
       });
+
+      // 表格单击单元格弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+          if(_this.tableColumns[0].length){
+            _this.tableColumns[0].map((item,index)=>{
+              if(item.name ==="Q1"&&args.col===index){
+                // 显示ERP供需平衡表
+                _this.colDialogVisible =true
+                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
+              }
+            })
+          }
+      });
+
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;

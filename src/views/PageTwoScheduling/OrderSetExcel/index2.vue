@@ -196,7 +196,7 @@
     </div>
 
     <!-- 点击齐套率弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -862,9 +862,11 @@ export default {
           if(_this.tableColumns[0].length){
             _this.tableColumns[0].map((item,index)=>{
               if(item.name ==="K1"&&args.col===index){
+                console.log('OrderID',_this.tableData[_this.tagRemark])
                 // 显示ERP供需平衡表
                 _this.colDialogVisible =true
-                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
+                _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
+                _this.dialogSearchForm.ZQLS = 0
               }
             })
           }

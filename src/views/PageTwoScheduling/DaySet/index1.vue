@@ -46,6 +46,9 @@
         </div>
       </div>
     </div>
+
+    <!-- 弹框-->
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -61,6 +64,7 @@ import { mapState } from "vuex";
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
+import DialogTable from "@/components/Dialog/dialogTable";
 import {
   HighlightColumnItemsCellType,
   TopItemsCellType,
@@ -83,9 +87,14 @@ export default {
     ComSearch,
     ComReportTable,
     ComAsideTree,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        OrderID:'',
+      },
+      colDialogVisible:false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -954,6 +963,19 @@ this.spread.refresh();
         //   sheet.setArray(args.row, i, [2021]);
         // }
       });
+      // 表格单击单元格弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+          if(_this.tableColumns[0].length){
+            _this.tableColumns[0].map((item,index)=>{
+              if(item.name ==="Q1"&&args.col===index){
+                // 显示ERP供需平衡表
+                _this.colDialogVisible =true
+                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
+              }
+            })
+          }
+      });
+
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
