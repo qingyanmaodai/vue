@@ -158,12 +158,12 @@ import formatDates, {
   formatDate,
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
-import DialogTable from "@/components/Dialog/dialogTable";
+// import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "SchedulingPrediction",
   components: {
     ComSearch,
-    DialogTable,
+    // DialogTable,
   },
   data() {
     return {
@@ -316,6 +316,7 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
+      console.log('查询')
       if (parms) {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
