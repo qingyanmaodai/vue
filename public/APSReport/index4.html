@@ -706,13 +706,6 @@
                         $("#text-wrapper_3").empty();
                         if (res.result) {
                             _this.todayList = res.data
-<<<<<<< HEAD
-                          
-                                _this.$nextTick(() => {
-                                    _this.gundong('.wrap')
-                                })
-                     
-=======
                             if(res.data&&res.data.length){
                                 $.each(res.data,function(i,item){
                                 _this.innerHTML+=`
@@ -751,7 +744,6 @@
                            
                             _this.gundongTag_1 = true;
                             //  })
->>>>>>> 9a8a78805e27b69e6782780025bc6808cd54f1fa
 
                         }
                         else {
@@ -795,14 +787,6 @@
                             $('#text-wrapper_13').html(innerHTML)
                             }
 
-<<<<<<< HEAD
-                            
-                                _this.$nextTick(() => {
-                                    _this.gundong('.wrap2')
-                                })
-                        
-
-=======
                             if (_this.time2) {
                                 clearTimeout(_this.time2)
                             }
@@ -817,7 +801,6 @@
                             
                             _this.gundongTag_2 = true;
                             })
->>>>>>> 9a8a78805e27b69e6782780025bc6808cd54f1fa
 
 
                         }
