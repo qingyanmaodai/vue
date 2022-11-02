@@ -187,11 +187,12 @@
     }
     var showDate = function (day) {
         let dates = new Date()
+        var nowdate = dates
         // 当前日期加几天
         if(day>0){
             nowdate = dates.setDate(dates.getDate() + day);
         }
-        var nowdate = dates
+        nowdate = new Date(nowdate)
 
         var year = nowdate.getFullYear(),
 
@@ -703,7 +704,7 @@
             },
             // 今日生产计划
             getToDayPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0,OweQty:0})
                     .then(function (res) {
                         _this.todayList = []
                         _this.innerHTML = ''
@@ -768,7 +769,7 @@
             },
             // 明日生产计划
             getTomorrowPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1)], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1),showDate(1)], rows: 0 })
                     .then(function (res) {
                         _this.tomorrowList = []
                         let  innerHTML = ''
