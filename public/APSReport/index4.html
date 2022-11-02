@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>生产计划看板</title>
     <link rel="stylesheet" type="text/css" href="./css/common.css?V=5" />
@@ -60,8 +64,8 @@
                   <span class="text_13">上线时间</span>
                   <span class="text_14">备注</span> -->
                         </div>
-                        <div class="table1 wrap fontSize">
-                            <div class="text-wrapper_3 flex-row justify-between fontSize"
+                        <div class="table1 wrap fontSize" id="text-wrapper_3">
+                            <!-- <div class="text-wrapper_3 flex-row justify-between fontSize"
                                 v-for="(item,index) in todayList" :key="index">
                                 <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
                                 <span class="tableWidthRatio8 tableContent">{{item.OrderNo}}</span>
@@ -76,7 +80,7 @@
                                 <span class="tableWidthRatio8 tableContent widthPadding">{{item.ProductionDate}}</span>
                                 <span class="tableWidthRatio8 tableContent clampEllipsis"
                                     :title="item.Remark1">{{item.Remark1}}</span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -94,17 +98,14 @@
                             <!-- <span class="tableWidthRatio15 tableTitle">备注</span> -->
                         </div>
                         <div class="wrap2 table2 fontSize">
-                            <div class="image-text_3 flex-col justify-between fontSize">
-                                <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
+                            <div class="image-text_3 flex-col justify-between fontSize" id="text-wrapper_13">
+                                <!-- <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
                                     <span class="tableWidthRatio15 tableContent">{{ele.LineName}}</span>
                                     <span class="tableWidthRatio20 tableContent">{{ele.OrderNo}}</span>
                                     <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
                                     <span class="tableWidthRatio35 tableContent">{{ele.MaterialName}}</span>
                                     <span class="tableWidthRatio10 tableContent color2">{{ele.PlanQty}}</span>
-                                    <!--<span class="tableWidthRatio15 tableContent widthPadding2">{{ele.EndDate}}</span>-->
-                                    <!-- <span class="tableWidthRatio15 tableContent clampEllipsis1"
-                    :title="ele.Remark1">{{ele.Remark1}}</span> -->
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -257,6 +258,7 @@
         },
         data() {
             return {
+                innerHTML:'',
                 gudtime: null,
                 time2: null,
                 large: true,
@@ -700,13 +702,56 @@
                 axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0 })
                     .then(function (res) {
                         _this.todayList = []
+                        _this.innerHTML = ''
+                        $("#text-wrapper_3").empty();
                         if (res.result) {
                             _this.todayList = res.data
+<<<<<<< HEAD
                           
                                 _this.$nextTick(() => {
                                     _this.gundong('.wrap')
                                 })
                      
+=======
+                            if(res.data&&res.data.length){
+                                $.each(res.data,function(i,item){
+                                _this.innerHTML+=`
+                                <div class="text-wrapper_3 flex-row justify-between fontSize"
+                                >
+                                <span class="tableWidthRatio7 tableContent">${item.LineName}</span>
+                                <span class="tableWidthRatio8 tableContent">${item.OrderNo}</span>
+                                <span class="tableWidthRatio8 tableContent">${item.Code}</span>
+                                <span class="tableWidthRatio30 tableContent">${item.MaterialName}</span>
+                                <span class="tableWidthRatio6 tableContent color2">${item.PlanQty}</span>
+                                <span class="tableWidthRatio6 tableContent color3">${item.HasQty}</span>
+                                <span class="tableWidthRatio6 tableContent color4">${item.OweQty}</span>
+                                <span class="tableWidthRatio5 tableContent">${item.PlanQtyP}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">${item.DeliveryDate}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">${item.ProductionDate}</span>
+                                <span class="tableWidthRatio8 tableContent clampEllipsis"
+                                    :title="item.Remark1">${item.Remark1?item.Remark1:''}</span>
+                                </div>`
+                            }
+                            )
+                            $('#text-wrapper_3').html(_this.innerHTML)
+                            }
+                            
+                            
+                            if (_this.time1) {
+                                clearTimeout(_this.time1)
+                            }
+                            // _this.$nextTick(() => {
+                            _this.time1 = setTimeout(() => {
+                                // if (!_this.gundongTag_1) {
+                                
+                                    _this.gundong('.wrap')
+                               
+                            // }
+                            }, 1000);
+                           
+                            _this.gundongTag_1 = true;
+                            //  })
+>>>>>>> 9a8a78805e27b69e6782780025bc6808cd54f1fa
 
                         }
                         else {
@@ -730,15 +775,49 @@
                 axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 0 })
                     .then(function (res) {
                         _this.tomorrowList = []
+                        let  innerHTML = ''
+                        $("#text-wrapper_13").empty();
                         if (res.result) {
                             _this.tomorrowList = res.data
+                            if(res.data&&res.data.length){
+                                $.each(res.data,function(i,ele){
+                                innerHTML+=`
+                                <div class="text-wrapper_13 flex-row">
+                                    <span class="tableWidthRatio15 tableContent">${ele.LineName}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.OrderNo}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.Code}</span>
+                                    <span class="tableWidthRatio35 tableContent">${ele.MaterialName}</span>
+                                    <span class="tableWidthRatio10 tableContent color2">${ele.PlanQty}</span>
+                                </div>
+                                `
+                            }
+                            )
+                            $('#text-wrapper_13').html(innerHTML)
+                            }
 
+<<<<<<< HEAD
                             
                                 _this.$nextTick(() => {
                                     _this.gundong('.wrap2')
                                 })
                         
 
+=======
+                            if (_this.time2) {
+                                clearTimeout(_this.time2)
+                            }
+                            // _this.$nextTick(() => {
+                            _this.time2 = setTimeout(() => {
+                                // if (!_this.gundongTag_2) {
+                                
+                                    _this.gundong('.wrap2')
+                                
+                                // }
+                            // }, 1000);
+                            
+                            _this.gundongTag_2 = true;
+                            })
+>>>>>>> 9a8a78805e27b69e6782780025bc6808cd54f1fa
 
 
                         }
@@ -813,7 +892,7 @@
                             _this.todayOptionData.map(item => {
 
                                 _this.todayOption.series[0].data[0] = { value: item.HasQty, name: '报工数' }
-                                _this.todayOption.series[0].data[1] = { value: item.PlanQty - item.HasQty, name: '未完成数' }
+                                _this.todayOption.series[0].data[1] = { value: item.HasQty>item.PlanQty?0:item.PlanQty - item.HasQty, name: '未完成数' }
                                 _this.perComplete = parseFloat(((item.PlanQtyP1) * 100).toFixed(2))
                                 _this.todayOption.series[0].label.normal.fontSize = _this.fontSize(36) || 36
                             })

@@ -1700,7 +1700,7 @@ export default {
         m["dicID"] = 7960;
       });
       this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlanAll");
+      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlanAll?isMultiLine=1&wid=W2207120001");
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(this.tagRemark);
