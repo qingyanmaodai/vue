@@ -657,9 +657,10 @@ if(!row["Code"])
     
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
-        // 自动计算数量
-        
-        _this.computedNum(args.row, args.col, args.editingText);
+        // 自动计算数量,触发日期才触发计算方法
+        if(_this.tableColumns[0][args.col].prop.indexOf('-')>-1){
+          _this.computedNum(args.row, args.col, args.editingText);
+        }
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
         // }
