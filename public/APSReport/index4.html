@@ -709,15 +709,17 @@
                             if (_this.time1) {
                                 clearTimeout(_this.time1)
                             }
+                            _this.$nextTick(() => {
                             _this.time1 = setTimeout(() => {
                                 if (!_this.gundongTag_1) {
-                                // _this.$nextTick(() => {
+                                
                                     _this.gundong('.wrap')
-                                // })
+                               
                             }
                             }, 1000);
                            
                             _this.gundongTag_1 = true;
+                             })
 
                         }
                         else {
@@ -747,16 +749,17 @@
                             if (_this.time2) {
                                 clearTimeout(_this.time2)
                             }
+                            _this.$nextTick(() => {
                             _this.time2 = setTimeout(() => {
-                                // if (!_this.gundongTag_2) {
-                                // _this.$nextTick(() => {
+                                if (!_this.gundongTag_2) {
+                                
                                     _this.gundong('.wrap2')
-                                // })
-                                // }
+                                
+                                }
                             }, 1000);
                             
                             _this.gundongTag_2 = true;
-
+                            })
 
 
                         }
