@@ -184,9 +184,13 @@
         return year + "年" + month + "月" + date + "日" + week[day] + " " + h + ":" + m + ":" + s;
 
     }
-    var showDate = function () {
-
-        var nowdate = new Date();
+    var showDate = function (day) {
+        let dates = new Date()
+        // 当前日期加几天
+        if(day>0){
+            nowdate = dates.setDate(dates.getDate() + day);
+        }
+        var nowdate = dates
 
         var year = nowdate.getFullYear(),
 
@@ -258,6 +262,7 @@
         data() {
             return {
                 gudtime: null,
+                time1: null,
                 time2: null,
                 large: true,
                 form: {},
@@ -635,7 +640,6 @@
             },
             // 渲染echart图
             barData(id, option) {
-                debugger
                 echarts.dispose(id)
                 myChart = echarts.init(id);
                 myChart.setOption(option)
@@ -702,11 +706,17 @@
                         _this.todayList = []
                         if (res.result) {
                             _this.todayList = res.data
-                            if (!_this.gundongTag_1) {
-                                _this.$nextTick(() => {
-                                    _this.gundong('.wrap')
-                                })
+                            if (_this.time1) {
+                                clearTimeout(_this.time1)
                             }
+                            _this.time1 = setTimeout(() => {
+                                // if (!_this.gundongTag_1) {
+                                // _this.$nextTick(() => {
+                                    _this.gundong('.wrap')
+                                // })
+                            // }
+                            }, 1000);
+                           
                             _this.gundongTag_1 = true;
 
                         }
@@ -728,17 +738,23 @@
             },
             // 明日生产计划
             getTomorrowPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1)], rows: 0 })
                     .then(function (res) {
                         _this.tomorrowList = []
                         if (res.result) {
                             _this.tomorrowList = res.data
 
-                            if (!_this.gundongTag_2) {
-                                _this.$nextTick(() => {
-                                    _this.gundong('.wrap2')
-                                })
+                            if (_this.time2) {
+                                clearTimeout(_this.time2)
                             }
+                            _this.time2 = setTimeout(() => {
+                                // if (!_this.gundongTag_2) {
+                                // _this.$nextTick(() => {
+                                    _this.gundong('.wrap2')
+                                // })
+                                // }
+                            }, 1000);
+                            
                             _this.gundongTag_2 = true;
 
 
@@ -843,6 +859,7 @@
         },
         beforeUnmount() {
             if (this.time) this.time.destroy();
+            if (this.time1) this.time1.destroy();
             if (this.time2) this.time2.destroy();
             if (this.gudtime) this.gudtime.destroy();
         },
