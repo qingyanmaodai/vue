@@ -25,7 +25,19 @@
                 </el-col
               >
               <el-col :span="12" class="flex_flex_end">
-
+                <div style="margin-right: 10px">
+                <span>日期范围</span>
+                <el-date-picker
+                  v-model="machineCycle"
+                  type="daterange"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                  placeholder="请选择"
+                  :clearable="false"
+                  :editable="false"
+                >
+                </el-date-picker>
+              </div>
               </el-col>
             </el-row>
           </div>
@@ -88,6 +100,7 @@
     SaveData,
     GetSearch,
   } from "@/api/Common";
+  import formatDates from "@/utils/formatDate";
   export default {
     name: "ArrearsTracking",
     components: {
@@ -96,10 +109,11 @@
     },
     data() {
       return {
+        machineCycle: "",
         ////////////////// Search /////////////////
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
-          { ID: 9007, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 9007 }, //一些扩展的参数，这里表示是周一
         ],
         Status1: [
           
@@ -151,6 +165,11 @@
     this.getTableHeader();
       // 获取所有按钮
       this.judgeBtn();
+      // 计算周期默认时间：今天~1.5月
+    _this.machineCycle = [
+      formatDates.formatTodayDate(),
+      formatDates.formatOneMonthDate(),
+    ];
     },
     activated() {
       if (this.spread) {
@@ -305,14 +324,7 @@
               GC.Spread.Sheets.SheetArea.viewport
             );
             cell.foreColor("#2a06ecd9");
-          } else {
-            // var cell = sheet.getCell(
-            //   -1,
-            //   cellIndex,
-            //   GC.Spread.Sheets.SheetArea.viewport
-            // );
-            // cell.foreColor("gray");
-          }
+          } 
           // 列宽自适应
           if(m.name.indexOf('-')>-1){
             sheet.autoFitColumn(cellIndex)
@@ -451,18 +463,6 @@
         this.spread.refresh();
         this.spread.options.autoFitType = GC.Spread.Sheets.AutoFitType.cellWithHeader;
       },
-      getSelectionData() {
-        let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDataSource();
-        this.selectionData[this.tagRemark] = [];
-        if (newData.length != 0) {
-          newData.forEach((x) => {
-            if (x.isChecked) {
-              this.selectionData[this.tagRemark].push(x);
-            }
-          });
-        }
-      },
       // 高度控制
       setHeight() {
         let headHeight = this.$refs.headRef.offsetHeight;
@@ -473,21 +473,6 @@
           this.$store.getters.reduceHeight;
         let newHeight = rem + "px";
         this.$set(this, "height", newHeight);
-      },
-      // 编辑行
-      editRow(row) {
-        this.$set(row, "update", true);
-      },
-      // 删除行
-      delRow(row) {
-        this.$confirm("确定要删除该菜单嘛？")
-          .then((_) => {})
-          .catch((_) => {});
-      },
-      // 单击行
-      handleRowClick(row, remarkTb) {
-        this.delData[remarkTb] = [];
-        this.delData[remarkTb].push(row);
       },
       // 第几页
       pageChange(val, remarkTb, filtertb) {
@@ -559,24 +544,6 @@
           }
         }
       },
-      // 行内样式
-      cellStyle0({ row, column }) {
-        if (column.property == "IsCompleteInspect") {
-          if (row.IsCompleteInspect == "未开始") {
-            return {
-              backgroundColor: "#ff7b7b",
-            };
-          } else if (row.IsCompleteInspect == "进行中") {
-            return {
-              backgroundColor: "#fdfd8f",
-            };
-          } else if (row.IsCompleteInspect == "已完成") {
-            return {
-              backgroundColor: "#9fff9f",
-            };
-          }
-        }
-      },
       // 导出
       async dataExport(remarkTb) {
         this.adminLoading = true;
@@ -586,76 +553,44 @@
         this.adminLoading = false;
         this.$store.dispatch("user/exportData", res.data);
       },
-      // 通用直接保存
-      async generalSaveData(newData, remarkTb, index) {
-        let res = await SaveData(newData);
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.dataSearch(remarkTb);
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      },
-      // 保存返回结果自己处理事件
-      async returnResultData(newData) {
-        let res = await SaveData(newData);
-        return res;
-      },
       // 获取表头数据
       async getTableHeader() {
-        let IDs = this.sysID;
-        let res = await GetHeader(IDs);
-        const { datas, forms, result, msg } = res.data;
-        if (result) {
-          // 获取每个表头
-          datas.some((m, i) => {
-            m.forEach((n) => {
-              // 进行验证
-              if (n.prop == "MenuCode" || n.prop == "MenuName") {
-                this.$set(n, "treeNode", true);
-              }
-              this.verifyDta(n);
-              if (n.childrens && n.children.length != 0) {
-                n.childrens.forEach((x) => {
-                  this.verifyDta(x);
-                });
-              }
-            });
-            this.$set(this.tableColumns, i, m);
+      let IDs = this.sysID;
+      let res = await GetHeader(IDs);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        // 获取每个表头
+        datas.some((m, i) => {
+          this.$set(this.tableColumns, i, m);
+          m.forEach((n, index) => {
+            if (n.Required) {
+              this.formSearchs[this.tagRemark].required.push(n);
+            }
           });
-          // 获取查询的初始化字段 组件 按钮
-          forms.some((x, z) => {
-            this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-            x.forEach((y) => {
-              if (y.prop && y.value) {
-                this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-              } else {
-                this.$set(this.formSearchs[z].datas, [y.prop], "");
-              }
-            });
-            this.$set(this.formSearchs[z], "forms", x);
+        });
+        // 获取查询的初始化字段 组件 按钮
+        forms.some((x, z) => {
+          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          x.forEach((y) => {
+            if (y.prop && y.value) {
+              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+            } else {
+              this.$set(this.formSearchs[z].datas, [y.prop], "");
+            }
           });
-          this.formSearchs[this.tagRemark].datas["productionstatus"] = [21, 22, 23, 24, 26];
-          this.formSearchs[this.tagRemark].datas["ConfigStartWeek"] = "1";
-          this.formSearchs[this.tagRemark].datas["New5158"] = "true";
-          this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
-  
-          this.adminLoading = false;
-        }else{
-            this.adminLoading = false
-        }
-      },
+          this.$set(this.formSearchs[z], "forms", x);
+          this.getTableData(this.formSearchs[z].datas, z);
+        });
+        this.adminLoading = false;
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
       // 验证数据
       verifyDta(n) {
         for (let name in n) {
@@ -669,22 +604,22 @@
         }
       },
       // 获取表格数据
-      async getTableData(form, remarkTb) {
-        this.$set(this.tableLoading, remarkTb, true);
-        form["rows"] = this.tablePagination[remarkTb].pageSize;
-        form["page"] = this.tablePagination[remarkTb].pageIndex;
-        if (remarkTb == 1) {
-          form["StartWeek"] = 1;
-        }
-  
-        let res = await GetSearchData(form);
-        const { result, data, count, msg } = res.data;
-        
+      async getTableData(params, index) {
+        this.$set(this.tableLoading, index, true);
+        params["SDate"] = this.machineCycle.length ? this.machineCycle[0] : "";
+        params["Edate"] = this.machineCycle.length ? this.machineCycle[1] : "";
+        params["rows"] = this.tablePagination[index].pageSize;
+        params["page"] = this.tablePagination[index].pageIndex;
+        let res = await GetSearchData(params);
+        const { result, data, count, msg, Columns } = res.data;
         if (result) {
-          this.$set(this.tableData, remarkTb, data);
+          this.$set(this.tableData, index, data);
+          this.$set(this.tablePagination[index], "pageTotal", count);
+          // 查询时重新获取列渲染
+          if (Columns.length) {
+            this.tableColumns[index] = Columns[0];
+          }
           this.setData();
-          this.$set(this.tableLoading, remarkTb, false)
-          this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         } else {
           this.$message({
             message: msg,
@@ -692,110 +627,7 @@
             dangerouslyUseHTMLString: true,
           });
         }
-      },
-      // 填写行号自动排好序
-      editSort(row, val, prop, index) {
-        if (this.tagRemark != 0) {
-          return;
-        }
-        let newData = [];
-        let newData_1 = [];
-        let newData_2 = [];
-        let newData_3 = [];
-        let newData_4 = [];
-        if (val < row.RowNumber) {
-          // 改成比之前更小的行号 row.RowNumber为目标行数
-          newData_1 = this.tableData[1].filter(
-            (a) => parseInt(a.ViewSort) < parseInt(val)
-          ); //把最终行号的前面的数取出来
-          newData_2 = this.tableData[1].filter((b) => {
-            return (
-              parseInt(b.RowNumber) >= parseInt(val) &&
-              parseInt(b.RowNumber) != parseInt(row.RowNumber)
-            );
-          }); //把前面的数过滤掉且过滤掉自身
-          newData_3 = [row];
-          newData = newData_1.concat(newData_3).concat(newData_2);
-        } else {
-          // 改成比原来大的数
-          newData_1 = this.tableData[1].filter(
-            (a) => parseInt(a.ViewSort) < parseInt(row.RowNumber)
-          ); //把最终行号的前面的数取出来
-          newData_2 = this.tableData[1].filter((b) => {
-            return (
-              parseInt(b.RowNumber) > parseInt(row.RowNumber) &&
-              parseInt(b.RowNumber) <= parseInt(val)
-            );
-          }); //把介于两数之间，大于原来的数，小于目标数的数拿出来
-          newData_3 = [row];
-          newData_4 = this.tableData[1].filter((b) => {
-            return parseInt(b.RowNumber) > parseInt(val);
-          });
-          newData = newData_1
-            .concat(newData_2)
-            .concat(newData_3)
-            .concat(newData_4);
-        }
-  
-        let realyData = JSON.parse(JSON.stringify(newData));
-        realyData.forEach((c, i) => {
-          c.ViewSort = i + 1;
-          c.RowNumber = i + 1;
-        });
-        this.$set(this.tableData, 0, realyData);
-      },
-      // 选择数据
-      selectFun(data, remarkTb, row) {
-        this.selectionData[remarkTb] = data;
-      },
-      // 改变状态
-      changeStatus(x, index) {
-        this.labelStatus1 = index;
-        this.dataSearch(index);
-      },
-  
-      // 保存排序
-      async saveSort() {
-        let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDirtyRows();
-        let submitData = [];
-        if (newData.length != 0) {
-          newData.forEach((x) => {
-            submitData.push(x.item);
-          });
-        }
-        if (submitData.length == 0) {
-          this.$message.error("没修改过任何数据！");
-          return;
-        }
-        this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/SaveWeekPlan");
-  
-        const { result, data, count, msg } = res.data;
-  
-        if (result) {
-          this.dataSearch(1);
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-        this.adminLoading = false;
-      },
-      // 清空排期
-      clearPlan(remarkTb) {
-        if (this.selectionData[remarkTb].length != 0) {
-          this.selectionData[remarkTb].forEach((a) => {
-            a.StartDate = "";
-          });
-        }
+        this.$set(this.tableLoading, index, false);
       },
     },
   };
