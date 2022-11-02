@@ -710,11 +710,11 @@
                                 clearTimeout(_this.time1)
                             }
                             _this.time1 = setTimeout(() => {
-                                // if (!_this.gundongTag_1) {
+                                if (!_this.gundongTag_1) {
                                 // _this.$nextTick(() => {
                                     _this.gundong('.wrap')
                                 // })
-                            // }
+                            }
                             }, 1000);
                            
                             _this.gundongTag_1 = true;
@@ -831,7 +831,7 @@
                             _this.todayOptionData.map(item => {
 
                                 _this.todayOption.series[0].data[0] = { value: item.HasQty, name: '报工数' }
-                                _this.todayOption.series[0].data[1] = { value: item.PlanQty - item.HasQty, name: '未完成数' }
+                                _this.todayOption.series[0].data[1] = { value: item.HasQty>item.PlanQty?0:item.PlanQty - item.HasQty, name: '未完成数' }
                                 _this.perComplete = parseFloat(((item.PlanQtyP1) * 100).toFixed(2))
                                 _this.todayOption.series[0].label.normal.fontSize = _this.fontSize(36) || 36
                             })
