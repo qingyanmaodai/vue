@@ -761,8 +761,13 @@ export default {
         let propName = ''
         let split = []//存储需求到料日期过期信息
         let groupList = []
+        let rowNoOweQty  =  true
+        let firstDate = 0
         importData[0].sheet.forEach((m,y) => {
+          rowNoOweQty  =  true
+          firstDate = 0
           for (let key in m) {
+            
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
@@ -772,7 +777,7 @@ export default {
                     propName = key
                     rowNo =Number(m.__rowNum__)+1
                     // 异常提示
-                    split.push(`第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`)
+                    split.push(`第${rowNo}行,【${propName}】【${m[key]}】格式存在错误，导入失败，请检查！`)
                   }else{
                     obj[item.prop] = m[key]
                     ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
@@ -799,33 +804,41 @@ export default {
                else if (isNaN(key) && !isNaN(Date.parse(key))){
                 // 列为日期的格式
                 isDate = true;
-                if(Number(m[key])>0){//导入日期并且欠料数大于0才导入
-                  // 判断需求到料日期是否大于今天
-                if(formatDate(key)<formatDates.formatTodayDate()){
-                    propName = formatDate(key)
-                    rowNo =Number(m.__rowNum__)+1
-                    // 异常提示
-                    split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
-                }
                 
-                obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-                obj['OweQty'] = m[key]
-                obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                obj["Account"] = _this.$store.getters.userInfo.Account;
-                obj["row"] = m.__rowNum__;
-                if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-                  obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
-                  obj["Sum"] = 0
+                if(Number(m[key])>0){//导入日期并且欠料数大于0才导入
+                  rowNoOweQty = false//行存在欠料的判断
+                  // 判断需求到料日期是否大于今天
+                  if(formatDate(key)<formatDates.formatTodayDate()){
+                      propName = formatDate(key)
+                      rowNo =Number(m.__rowNum__)+1
+                      // 异常提示
+                      split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
+                  }
+                  obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
+                  obj['OweQty'] = m[key]
+                  obj["dicID"] = _this.sysID[_this.tagRemark].ID;
+                  obj["Account"] = _this.$store.getters.userInfo.Account;
+                  obj["row"] = m.__rowNum__;
+                  if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+                    obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+                    obj["Sum"] = 0
+                  }
+                  // 需要使用...obj 不然值回写有问题
+                  if(isDate){
+                    DataList.push({...obj});
+                    break
+                  }
                 }
-                // 需要使用...obj 不然值回写有问题
-                if(isDate){
-                  DataList.push({...obj});
-                  break
-                }
+                // 行欠料都空取第一个日期插入一条数据，给后端用于异常提示
+                firstDate ++
+                if(firstDate===1){
+                  obj['DemandToDay'] = formatDate(key)
                 }
               }
             }
+           
           }
+          
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
@@ -833,21 +846,33 @@ export default {
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
             if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-              obj["groupBy"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+              obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
               obj["Sum"] = 0
             }
             // 需要使用...obj 不然值回写有问题
             DataList.push({...obj});
           }
+          // 日期为列时，行欠料都空插入一条记录
+          if(isDate&&rowNoOweQty){
+            obj['OweQty'] = 0
+            obj["dicID"] = _this.sysID[_this.tagRemark].ID;
+            obj["Account"] = _this.$store.getters.userInfo.Account;
+            obj["row"] = m.__rowNum__;
+            if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
+              obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
+              obj["Sum"] = 0
+            }
+            DataList.push({...obj})
+          }
          
         });
         // 过滤掉组合出来空的数据
           let list = _.filter(DataList,(params) =>{
-            if(params.groupBy){
+            if(params.groupName){
               return params
             }
           })
-          groupList = _.groupBy(list,'groupBy')
+          groupList = _.groupBy(list,'groupName')
         //  组合后的数据数量对比资源可用量
           for(let key in groupList){
             if(groupList[key].length){
