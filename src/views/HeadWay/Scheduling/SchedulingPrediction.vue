@@ -181,13 +181,25 @@ export default {
       parmsBtn: [
       {
           ButtonCode: "import",
-          BtnName: "1.导入",
+          BtnName: "1.删除并导入",
           Type: "danger",
           Ghost: true,
           Size: "small",
           Methods: "dataImport",
           Icon: "",
           sort:1,
+          Params:{isDel:1}
+        },
+        {
+          ButtonCode: "import",
+          BtnName: "1.增量导入",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataImport",
+          Icon: "",
+          sort:1,
+          Params:{isDel:0}
         },
         {
           ButtonCode: "sysData",
@@ -286,6 +298,7 @@ export default {
       fileList: [],
       file: [],
       selectionData: [[]],
+      ImportParams:'',
     };
   },
   activated() {
@@ -750,10 +763,11 @@ export default {
       }
     },
     // 导入并分析模板
-    dataImport() {
+    dataImport(remarkTb, index, params) {
       this.dialogImport = true;
       this.fileList = [];
       this.file = [];
+      this.ImportParams = params.isDel
     },
     // 确认导入
     sureImport() {
@@ -943,7 +957,9 @@ export default {
 
           return;
         }
-        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast");
+        // =1表示要删记录（删除并导入）
+        // =0表示不删除（增量导入）
+        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
