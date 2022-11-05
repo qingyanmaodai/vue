@@ -39,9 +39,9 @@
                         <span class="text_3" >滚动5日计划欠料明细</span>
                         <div class="text-wrapper_2 flex-row justify-between">
                             <span class="tableTitle" style="width: 5%;">需求日期</span>
-                            <span class="tableTitle" style="width: 17%;">物料编码</span>
-
-                            <span class="tableTitle" style="width: 17%;">物料名称</span>
+                            <span class="tableTitle" style="width: 10%;">物料编码</span>
+                            <span class="tableTitle" style="width: 10%;">物料名称</span>
+                            <span class="tableTitle" style="width: 14%;">规格</span>
                             <span class="tableTitle" style="width: 8%;">5日需求</span>
                             <span class="tableTitle" style="width: 5%;">库存</span>
                             <span class="tableTitle" style="width: 8%;">欠数</span>
@@ -680,8 +680,9 @@
                                 <div class="text-wrapper_3 flex-row justify-between fontSize"
                                 >
                                 <span class="tableContent" style="width: 5%;">${item.DemandDate?item.DemandDate:''}</span>
-                                <span class="tableContent" style="width: 17%;">${item.Code?item.Code:''}</span>
-                                <span class="tableContent" style="width: 17%;">${item.MaterialName?item.MaterialName:''}</span>
+                                <span class="tableContent" style="width: 10%;">${item.Code?item.Code:''}</span>
+                                <span class="tableContent" style="width: 10%;">${item.MaterialName?item.MaterialName:''}</span>
+                                <span class="tableContent" style="width: 14%;">${item.Spec?item.Spec:''}</span>
                                 <span class="tableContent" style="width: 8%;">${item.DemandQty5?item.DemandQty5:''}</span>
                                 <span class="tableContent color2" style="width: 5%;">${item.StockQty?item.StockQty:''}</span>
                                 <span class="tableContent color3" style="width: 8%;">${item.OweQty?item.OweQty:''}</span>
