@@ -477,8 +477,8 @@
               if (item.name.indexOf('-')>-1 && args.col === index&&_this.radioValue===0) {
                 // 显示ERP供需平衡表
                 _this.colDialogVisible = true;
-                _this.dialogSearchForm.MaterialID =
-                _this.tableData[_this.tagRemark][args.row].MaterialID;
+                _this.dialogSearchForm.ProductCode =
+                _this.tableData[_this.tagRemark][args.row].ProductCode;
                 _this.dialogSearchForm.OweQty = 0;
               }
             });
