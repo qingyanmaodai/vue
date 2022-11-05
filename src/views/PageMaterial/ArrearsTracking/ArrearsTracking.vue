@@ -63,8 +63,8 @@
               </div>
               <div class="flex">
                 <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
-                <!-- <span>共{{ tablePagination[tagRemark].pageTotal }}条</span> -->
-                <el-pagination
+                <span>共{{ tablePagination[tagRemark].pageTotal }}条</span>
+                <!-- <el-pagination
                   background
                   @size-change="(val) => pageSize(val, 1)"
                   :current-page="tablePagination[tagRemark].pageIndex"
@@ -74,7 +74,7 @@
                   @current-change="(val) => pageChange(val, 1)"
                   layout="total, sizes, prev, pager, next,jumper"
                 >
-                </el-pagination>
+                </el-pagination> -->
               </div>
             </div>
           </div>
@@ -259,7 +259,7 @@
               cellType: combobox,
               size: parseInt(x.width),
             });
-          } else {
+          }else {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
@@ -326,12 +326,21 @@
             cell.foreColor("#2a06ecd9");
           } 
           // 列宽自适应
-          if(m.name.indexOf('-')>-1){
-            sheet.autoFitColumn(cellIndex)
-          }
+          // if(m.name.indexOf('-')>-1){
+          //   sheet.autoFitColumn(cellIndex)
+          // }
   
           cellIndex++;
         });
+        // 列筛选
+        // 参数2 开始列
+        // 参数3
+        // 参数4 结束列
+        // var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        // var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+        //   cellrange
+        // );
+        // sheet.rowFilter(hideRowFilter);
         var colindexs = [1, 2, 3, 4, 5];
         this.tableData[this.tagRemark].forEach((row, index) => {
           let cellIndex = 0;
@@ -579,6 +588,7 @@
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
+          this.formSearchs[this.tagRemark].datas["OweQty"] = 0;
           this.getTableData(this.formSearchs[z].datas, z);
         });
         this.adminLoading = false;
