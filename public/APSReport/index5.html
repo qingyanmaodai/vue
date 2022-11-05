@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>未来5日欠料追踪看板</title>
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+    <link rel="stylesheet" type="text/css" href="./css/proPlan.css" />
+</head>
+
+<body style="padding: 0; margin: 0 ;">
+    <div v-cloak id="app" class="page flex-col">
+
+        <div class="group_1 flex-col">
+            <div class="group_2 flex-row justify-between">
+                <div class="headLeft">
+                    <div class="group_3 flex-col"></div>
+                </div>
+
+                <div class="headCenter">
+                    <span class="text_2" @click="reloadData">未来5日欠料追踪看板</span>
+                </div>
+                <div class="headRight">
+                    <span class="text_1">{{todayDate}}</span>
+                    <span class="img">
+                        <image @click="moreLarge" src="./images/large.png" class="fullScreen" />
+                    </span>
+                </div>
+            </div>
+            <div class="group_4 flex-col">
+                <div id="header">
+                    <div class="group_5 flex-col">
+                        <div class="section_1 flex-col"></div>
+                        <span class="text_3">今日生产计划</span>
+                        <div class="text-wrapper_2 flex-row justify-between">
+                            <span class="tableWidthRatio7 tableTitle">生产线</span>
+                            <span class="tableWidthRatio8 tableTitle">生产订单</span>
+
+                            <span class="tableWidthRatio8 tableTitle">产品编码</span>
+                            <span class="tableWidthRatio30 tableTitle">产品名称</span>
+                            <span class="tableWidthRatio6 tableTitle">数量</span>
+                            <span class="tableWidthRatio6 tableTitle">当日报工</span>
+                            <span class="tableWidthRatio6 tableTitle">欠数</span>
+                            <span class="tableWidthRatio5 tableTitle">完成率</span>
+                            <span class="tableWidthRatio8 tableTitle widthPadding">交期</span>
+                            <span class="tableWidthRatio8 tableTitle widthPadding">上线时间</span>
+                            <span class="tableWidthRatio8 tableTitle">备注</span>
+
+                            <!-- <span class="text_4">生产线</span>
+                  <span class="text_4">生产订单</span>
+                  <span class="text_5">顺序</span>
+                  <span class="text_6">产品编码</span>
+                  <span class="text_7">物料描述</span>
+                  <span class="text_8">数量</span>
+                  <span class="text_9">当日报工</span>
+                  <span class="text_10">欠数</span>
+                  <span class="text_11">完成率</span>
+                  <span class="text_12">交期</span>
+                  <span class="text_13">上线时间</span>
+                  <span class="text_14">备注</span> -->
+                        </div>
+                        <div class="table1 wrap fontSize" id="text-wrapper_3">
+                            <!-- <div class="text-wrapper_3 flex-row justify-between fontSize"
+                                v-for="(item,index) in todayList" :key="index">
+                                <span class="tableWidthRatio7 tableContent">{{item.LineName}}</span>
+                                <span class="tableWidthRatio8 tableContent">{{item.OrderNo}}</span>
+
+                                <span class="tableWidthRatio8 tableContent">{{item.Code}}</span>
+                                <span class="tableWidthRatio30 tableContent">{{item.MaterialName}}</span>
+                                <span class="tableWidthRatio6 tableContent color2">{{item.PlanQty}}</span>
+                                <span class="tableWidthRatio6 tableContent color3">{{item.HasQty}}</span>
+                                <span class="tableWidthRatio6 tableContent color4">{{item.OweQty}}</span>
+                                <span class="tableWidthRatio5 tableContent">{{item.PlanQtyP}}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">{{item.DeliveryDate}}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">{{item.ProductionDate}}</span>
+                                <span class="tableWidthRatio8 tableContent clampEllipsis"
+                                    :title="item.Remark1">{{item.Remark1}}</span>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div id="footer" class="footer justify-between">
+                    <div class="group_14 flex-col">
+                        <div class="group_15 flex-col"></div>
+                        <span class="text_109">明日生产计划</span>
+                        <div class="text-wrapper_12 flex-row">
+                            <span class="tableWidthRatio15 tableTitle">生产线</span>
+                            <span class="tableWidthRatio20 tableTitle">生产订单</span>
+                            <span class="tableWidthRatio20 tableTitle">产品编码</span>
+                            <span class="tableWidthRatio35 tableTitle">产品名称</span>
+                            <span class="tableWidthRatio10 tableTitle">数量</span>
+                            <!--<span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>-->
+                            <!-- <span class="tableWidthRatio15 tableTitle">备注</span> -->
+                        </div>
+                        <div class="wrap2 table2 fontSize">
+                            <div class="image-text_3 flex-col justify-between fontSize" id="text-wrapper_13">
+                                <!-- <div class="text-wrapper_13 flex-row" v-for="(ele,i) in tomorrowList" :key="i">
+                                    <span class="tableWidthRatio15 tableContent">{{ele.LineName}}</span>
+                                    <span class="tableWidthRatio20 tableContent">{{ele.OrderNo}}</span>
+                                    <span class="tableWidthRatio20 tableContent">{{ele.Code}}</span>
+                                    <span class="tableWidthRatio35 tableContent">{{ele.MaterialName}}</span>
+                                    <span class="tableWidthRatio10 tableContent color2">{{ele.PlanQty}}</span>
+                                </div> -->
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="group_6 flex-col">
+                        <div class="group_7 flex-col"></div>
+                        <div class="group_8 flex-row">
+                            <span class="text_69"
+                                style="position: absolute;margin-left: 0.15rem;margin-top: 0.5rem">（单位：台）</span>
+                            <span class="text_70">7日计划达成率</span>
+                        </div>
+                        <div class="navboxall" id="weekEchart"></div>
+                    </div>
+                    <div class="group_12 flex-col">
+                        <div class="group_13 flex-col"></div>
+                        <div class="text-wrapper_10 flex-row justify-between">
+                            <span class="text_101">（单位：台）</span>
+                            <span class="text_102">日计划达成率</span>
+                        </div>
+                        <div class="navboxall2" id="dayEchart"></div>
+                        <div class="image-text_2 flex-col justify-around">
+                            <div class="flex-row  justify-around">
+                                <div class="flex-col justify-between">
+                                    <span
+                                        class="text_105">{{todayOptionData.length?todayOptionData[0].PlanQty:0}}</span>
+                                    <span class="text_108">计划数</span>
+                                </div>
+                                <div class="flex-col justify-between">
+                                    <span class="text_107">{{todayOptionData.length?todayOptionData[0].HasQty:0}}</span>
+                                    <span class="text_108">报工数</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./js/vue.js" type="text/javascript"></script>
+<script src="./js/axios.min.js" type="text/javascript"></script>
+<script src="./js/token.js?ver=5" type="text/javascript"></script>
+<script src="./js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="./js/jquery.limarquee.js"></script>
+<script type="text/javascript" src="./js/echarts.min.js"></script>
+<script type="text/javascript">
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 1920 * 100 + 'px';
+
+</script>
+<script>
+    var showtime = function () {
+
+        var nowdate = new Date();
+
+        var year = nowdate.getFullYear(),
+
+            month = nowdate.getMonth() + 1,
+
+            date = nowdate.getDate(),
+
+            day = nowdate.getDay(),
+
+            week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+
+            h = nowdate.getHours(),
+
+            m = nowdate.getMinutes(),
+
+            s = nowdate.getSeconds(),
+
+            h = checkTime(h),
+
+            m = checkTime(m),
+
+            s = checkTime(s);
+
+        return year + "年" + month + "月" + date + "日" + week[day] + " " + h + ":" + m + ":" + s;
+
+    }
+    var showDate = function (day) {
+        let dates = new Date()
+        var nowdate = dates
+        // 当前日期加几天
+        if(day>0){
+            nowdate = dates.setDate(dates.getDate() + day);
+        }
+        nowdate = new Date(nowdate)
+
+        var year = nowdate.getFullYear(),
+
+            month = nowdate.getMonth() + 1,
+
+            date = nowdate.getDate(),
+
+            day = nowdate.getDay(),
+
+            week = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+
+            h = nowdate.getHours(),
+
+            m = nowdate.getMinutes(),
+
+            s = nowdate.getSeconds(),
+
+            h = checkTime(h),
+
+            m = checkTime(m),
+
+            s = checkTime(s);
+
+        var s = year + "-" + month + "-" + date;
+        return s;
+    }
+    var checkTime = function (i) {
+
+        if (i < 10) {
+
+            i = "0" + i;
+
+        }
+
+        return i;
+
+    }
+    // 监听窗口大小改变
+    let resizeTimer = null;
+    let headHeight = ($('.group_2').css('height')).slice(0, -2)
+    let htmlHeight = ($('html').css('height')).slice(0, -2)
+    let contentHeight = ''
+
+    $('.group_1').height(htmlHeight)
+    $('.group_4').height(htmlHeight - headHeight)
+
+    $(window).resize(function () {
+        if (resizeTimer) {
+            clearTimeout(resizeTimer);
+        }
+        resizeTimer = setTimeout(function () {
+            htmlHeight = ($('html').css('height')).slice(0, -2)
+            $('.group_1').height(htmlHeight)
+            $('.group_4').height(htmlHeight - headHeight)
+            echarts.init(document.getElementById('weekEchart')).resize()
+            echarts.init(document.getElementById('dayEchart')).resize()
+        }, 100)
+    })
+    let myChart = null;
+    let chartDom1 = null;
+    let chartDom2 = null;
+</script>
+<script>
+
+    var app = new Vue({
+        el: "#app",
+        components: {
+        },
+        data() {
+            return {
+                innerHTML:'',
+                gudtime: null,
+                time1: null,
+                time2: null,
+                large: true,
+                form: {},
+                OrganizeIDs: '',
+                time: null,
+                todayDate: '',
+                todayList: [],
+                tomorrowList: [],
+                weekOption: {
+                    // 提示框
+                    tooltip: {
+                        trigger: 'axis',//坐标轴触发
+                        axisPointer: {//坐标轴指示器配置项
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999',
+                            },
+                            // 坐标轴指示器的文本标签样式
+                            label: {
+                                backgroundColor: '#999'
+                            }
+                        },
+                    },
+                    // 工具栏
+                    toolbox: {
+                        feature: {
+                        }
+                    },
+                    //图例组件
+                    legend: {
+                        data: ['计划数', '报工数', '完成率'],
+                        itemWidth: this.computedFontSize(25),
+                        itemHeight: this.computedFontSize(15),
+                        textStyle: {
+                            color: '#fff',//图例文本颜色
+                            fontSize: this.computedFontSize(13)
+
+                        },
+                    },
+                    grid: {
+                        // width:'100%',
+                        left: '-5%',
+                        right: '0%',
+                        bottom: '2%',
+                        top: '20%',
+                        containLabel: true,//是否包含刻度标签
+                        // height:'100%',
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: [],
+                            axisPointer: {
+                                type: 'shadow'
+                            },
+                            axisLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#fff',//x轴线颜色
+                                }
+                            },
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            // nameLocation:'end',
+                            show: false,
+                            type: 'value',
+                            name: '（单位：台）',
+                            // axisLabel: {
+                            //   formatter: '{value}'
+                            // },
+                            axisLine: {
+                                show: false,
+                                lineStyle: {
+                                    color: '#fff',//y轴线颜色
+                                }
+                            }
+                        },
+                        {
+                            // nameLocation:'middle',
+                            // alignTicks:true,
+                            show: false,
+                            type: 'value',
+                            // name: 'Temperature',
+                            min: 0,
+                            // max: 100,
+                            // interval: 10,
+                            // axisLabel: {
+                            //   formatter: '{value} %'
+                            // },
+                            axisLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#fff',
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            label: {
+                                show: true,
+                                position: 'top',
+                                color: '#fff',
+                                fontSize: this.computedFontSize(14),
+                            },
+                            name: '计划数',
+                            type: 'bar',
+                            barWidth: this.computedFontSize(20),
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#7BF6F9' },
+                                    { offset: 1, color: '#0386FF' }
+                                ]),
+
+                            },
+                            tooltip: {
+                                valueFormatter: function (value) {
+                                    return value;
+                                }
+                            },
+                            data: []
+                        },
+                        {
+                            label: {
+                                show: true,
+                                position: 'top',
+                                color: '#fff',
+                                fontSize: this.computedFontSize(14),
+                            },
+                            name: '报工数',
+                            type: 'bar',
+                            barWidth: '25%',
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                    { offset: 0, color: '#FFD680' },
+                                    { offset: 1, color: '#FF8368' }
+                                ]),
+
+                            },
+                            tooltip: {
+                                valueFormatter: function (value) {
+                                    return value;
+                                }
+                            },
+                            data: []
+                        },
+                        {
+                            label: {
+                                show: true,
+                                position: 'top',
+                                color: '#28FFFF',
+                                fontSize: this.computedFontSize(14),
+                                formatter: function (value) {
+
+                                    return value.value + '%';
+                                },
+
+                            },
+
+                            name: '完成率',
+                            type: 'line',
+                            yAxisIndex: 1,
+
+                            tooltip: {
+                                trigger: 'axis',
+                                valueFormatter: function (value) {
+                                    return value + '%';
+                                },
+                            },
+
+
+                            itemStyle: {
+                                color: '#28FFFF',
+
+                            },
+                            data: []
+                        }
+                    ]
+                },
+                todayOption: {
+                    title: {
+                        // text: 'Customized Pie',
+                        // left: 'center',
+                        // top: 20,
+                        // textStyle: {
+                        //   color: '#ccc'
+                        // }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        show: true,
+                    },
+                    legend: {
+                        top: 0,
+                        // left: '0%',
+                        // bottom:0,
+                        // right:'20%',
+                        orient: 'vertical',//图例布局方向
+                        itemWidth: this.computedFontSize(20),
+                        itemHeight: this.computedFontSize(10),
+                        right: 10,
+                        textStyle: {
+                            color: '#fff',// 图例文字颜色
+                            fontSize: this.computedFontSize(12)
+
+                        }
+                    },
+                    series: [
+                        {
+                            // name: 'Access From',
+                            top:'12%',
+                            type: 'pie',
+                            radius: ['55%', '75%'],
+                            // radius: ['45%', '65%'],
+                            // center:['50%','50%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: false,
+                                position: 'center',
+                                normal: {
+                                    show: true,
+                                    position: 'center',
+                                    formatter: function () {
+                                        return _this.perComplete + '%'//饼图中间百分比
+                                    },
+                                    // fontSize: () => _this.fontSize(36),
+                                    fontFamily: 'YouSheBiaoTiHei',
+                                    color: '#FFD43E',
+                                    fontSize: this.computedFontSize(14),
+                                },
+                                emphasis: {
+                                    show: true,
+                                },
+                                color: '#fff',
+                            },
+
+                            labelLine: {
+                                show: false
+                            },
+                            data: [
+                                // { value: 200, name: '报工数' },
+                                // { value: 50, name: '未完成数' },
+                            ],
+                            color: [new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: "#FFE49C" },
+                                { offset: 1, color: "#56E2FF" }
+                            ]),
+                            new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: "#295B92" },
+                                { offset: 1, color: "#295B92" }
+                            ]),
+                            ],
+                        }
+                    ]
+                },
+                todayOptionData: [],
+                weekOptionData: [],
+                weekList: [],
+                perComplete: 0,
+                tableHeader: [],
+                organizeIDsData: [179, 180, 181, 182, 183],
+                tagID: 0,
+                orgTime: null,
+                gundongTag_1:false,
+                gundongTag_2:false,
+            }
+        },
+        created() {
+
+            // window.location.href = "pieceHome.html?OrganizeIDs=107"
+            // 初始化时默认上线日期
+            // this.weekStartDate = fDate.getWeek(0, 0) // 获取本周开始日期
+            // this.weekEndDate = fDate.getWeek(0, 1) // 获取本周结束日期
+            // this.weekList =  fDate.getAllDate(this.weekStartDate,this.weekEndDate)
+
+            this.todayDate = showtime()
+            if (this.time) {
+                clearInterval(this.time)
+            }
+            this.time = setInterval(() => {
+                this.todayDate = showtime()
+            }, 1000)
+
+            // this.$nextTick(async () => {
+            //     let OrganizeIDs = this.getQueryString('ID')
+            //     // 看板车间名称
+            //     if (OrganizeIDs) {
+            //         // 179 制一部;180 制二部;181 制三部;182 制四部;183 制五部
+            //         await this.getOrgData(OrganizeIDs)
+            //     } else {
+            //         OrganizeIDs = 179
+            //         await this.getOrgData(OrganizeIDs)
+            //     }
+            // })
+
+            ///循环渲染不同组织的数据
+            this.circleOrganzeIDs()
+
+        },
+        mounted() {
+            let _this = this;
+        
+
+        },
+        methods: {
+            computedFontSize(res) {
+                let clientWidth =
+                    window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    document.body.clientWidth;
+                if (!clientWidth) return;
+                let fontSize = clientWidth / 1920;
+                return res * fontSize;
+            },
+            async circleOrganzeIDs() {
+                if (this.orgTime) {
+                    clearTimeout(this.orgTime)
+                }
+                if (this.tagID >= this.organizeIDsData.length) {
+                    this.tagID = 0
+                }
+                await this.getOrgData(this.organizeIDsData[this.tagID])
+                this.orgTime = setTimeout(() => {
+                    ++this.tagID;
+                    this.circleOrganzeIDs()
+                }, 1000 * 60 * 3)
+            },
+            fontSize(res) {
+                let clientWidth =
+                    window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    document.body.clientWidth;
+                if (!clientWidth) return;
+                let fontSize = clientWidth / 1920;
+                return res * fontSize;
+            },
+            // 重新加载整个页面
+            reloadData() {
+                location.reload();
+            },
+            // 获取组织名称
+            getOrgData(OrganizeIDs) {
+
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
+                    .then(function (res) {
+                        if (res.result) {
+                            if (res.data.length != 0) {
+                                _this.form = res.data[0];
+                            }
+                            if (_this.form.OrganizeID) {
+                                _this.getToDayPlanData(_this.form.OrganizeID)
+                                _this.getTomorrowPlanData(_this.form.OrganizeID)
+                                _this.getWeekRateData(_this.form.OrganizeID)
+                                _this.getDayRateData(_this.form.OrganizeID)
+                                if (_this.gudtime) {
+                                    clearTimeout(_this.gudtime)
+                                }
+                                _this.gudtime = setTimeout(() => {
+                                    $(".loading").fadeOut()
+                                }, 1000);
+                            }
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+            },
+            // 渲染echart图
+            barData(id, option) {
+                echarts.dispose(id)
+                myChart = echarts.init(id);
+                myChart.setOption(option)
+
+
+            },
+            // 滚动数据
+            gundong(val) {
+                $(val).liMarquee("destroy")
+                $(val).liMarquee({
+                    direction: 'up',//身上滚动 
+                    runshort: false,//内容不足时不滚动
+                    scrollamount: 10//速度
+                });
+
+            },
+            moreLarge() {
+
+                this.large = !this.large
+                if (!this.large) {
+                    // this.fullScreen()
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen()
+                    }
+                    if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen()
+
+                    }
+                    if (document.documentElement.webkitRequestFullScreen) {
+                        document.documentElement.webkitRequestFullScreen()
+                    }
+                    if (document.documentElement.msRequestFullscreen) {
+                        document.documentElement.msRequestFullscreen()
+                    }
+                } else {
+                    // this.exitFullScreen()
+                    if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen()
+                    }
+                    if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen()
+                    }
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen()
+                    }
+                    if (document.msExitFullscreen) {
+                        document.msExitFullscreen()
+                    }
+                }
+                this.$nextTick(() => {
+
+                })
+            },
+            // 接收路由传参
+            getQueryString(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) return decodeURIComponent(r[2]); return null;
+            },
+            // 今日生产计划
+            getToDayPlanData(OrganizeIDs) {
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0,OweQty:0})
+                    .then(function (res) {
+                        _this.todayList = []
+                        _this.innerHTML = ''
+                        $("#text-wrapper_3").empty();
+                        if (res.result) {
+                            _this.todayList = res.data
+                            if(res.data&&res.data.length){
+                                $.each(res.data,function(i,item){
+                                _this.innerHTML+=`
+                                <div class="text-wrapper_3 flex-row justify-between fontSize"
+                                >
+                                <span class="tableWidthRatio7 tableContent">${item.LineName}</span>
+                                <span class="tableWidthRatio8 tableContent">${item.OrderNo}</span>
+                                <span class="tableWidthRatio8 tableContent">${item.Code}</span>
+                                <span class="tableWidthRatio30 tableContent">${item.MaterialName}</span>
+                                <span class="tableWidthRatio6 tableContent color2">${item.PlanQty}</span>
+                                <span class="tableWidthRatio6 tableContent color3">${item.HasQty}</span>
+                                <span class="tableWidthRatio6 tableContent color4">${item.OweQty}</span>
+                                <span class="tableWidthRatio5 tableContent">${item.PlanQtyP}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">${item.DeliveryDate}</span>
+                                <span class="tableWidthRatio8 tableContent widthPadding">${item.ProductionDate}</span>
+                                <span class="tableWidthRatio8 tableContent clampEllipsis"
+                                    :title="item.Remark1">${item.Remark1?item.Remark1:''}</span>
+                                </div>`
+                            }
+                            )
+                            $('#text-wrapper_3').html(_this.innerHTML)
+                            }
+                            
+                            
+                            if (_this.time1) {
+                                clearTimeout(_this.time1)
+                            }
+                            // _this.$nextTick(() => {
+                            _this.time1 = setTimeout(() => {
+                                // if (!_this.gundongTag_1) {
+                                
+                                    _this.gundong('.wrap')
+                               
+                            // }
+                            }, 1000);
+                           
+                            _this.gundongTag_1 = true;
+                            //  })
+
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+                // // 五分钟刷新一次数据
+                // var todayTimer = setInterval(function () {
+                //     clearInterval(todayTimer);
+                //     _this.getToDayPlanData(OrganizeIDs)
+                // }, 1000 * 60 * 5)
+            },
+            // 明日生产计划
+            getTomorrowPlanData(OrganizeIDs) {
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1),showDate(1)], rows: 0 })
+                    .then(function (res) {
+                        _this.tomorrowList = []
+                        let  innerHTML = ''
+                        $("#text-wrapper_13").empty();
+                        if (res.result) {
+                            _this.tomorrowList = res.data
+                            if(res.data&&res.data.length){
+                                $.each(res.data,function(i,ele){
+                                innerHTML+=`
+                                <div class="text-wrapper_13 flex-row">
+                                    <span class="tableWidthRatio15 tableContent">${ele.LineName}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.OrderNo}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.Code}</span>
+                                    <span class="tableWidthRatio35 tableContent">${ele.MaterialName}</span>
+                                    <span class="tableWidthRatio10 tableContent color2">${ele.PlanQty}</span>
+                                </div>
+                                `
+                            }
+                            )
+                            $('#text-wrapper_13').html(innerHTML)
+                            }
+
+                            if (_this.time2) {
+                                clearTimeout(_this.time2)
+                            }
+                            // _this.$nextTick(() => {
+                            _this.time2 = setTimeout(() => {
+                                // if (!_this.gundongTag_2) {
+                                
+                                    _this.gundong('.wrap2')
+                                
+                                // }
+                            // }, 1000);
+                            
+                            _this.gundongTag_2 = true;
+                            })
+
+
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+                // 五分钟刷新一次数据
+                // var tomorrowTimer = setInterval(function () {
+                //     clearInterval(tomorrowTimer);
+                //     _this.getTomorrowPlanData(OrganizeIDs)
+                // }, 1000 * 60 * 5)
+            },
+            // 周计划达成率
+            getWeekRateData(OrganizeIDs) {
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: ['', showDate()], rows: 7, sort: 'PlanDay DESC', fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                    .then(function (res) {
+                        _this.weekOptionData = []
+
+                        if (res.result) {
+                            _this.weekOptionData = res.data
+
+                            _this.weekOption.series[0].data = [];
+                            _this.weekOption.series[1].data = [];
+                            _this.weekOption.series[2].data = [];
+                            _this.weekOption.xAxis[0].data = [];
+                            _this.weekOptionData.map(item => {
+                                //截取日期的最后两位
+                                _this.weekOption.xAxis[0].data.unshift(item.PlanDay.slice(-2))
+                                _this.weekOption.series[0].data.unshift(item.PlanQty ? parseFloat(item.PlanQty.toFixed(2)) : 0)
+                                _this.weekOption.series[1].data.unshift(item.HasQty ? parseFloat(item.HasQty.toFixed(2)) : 0)
+                                _this.weekOption.series[2].data.unshift(item.HasQty ? parseFloat(((item.HasQty / item.PlanQty) * 100).toFixed(2)) : 0)
+                            })
+
+                            // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
+                            if (chartDom1 == null) {
+                                chartDom1 = document.getElementById("weekEchart");
+                            }
+                            _this.$nextTick(() => {
+                                _this.barData(chartDom1, _this.weekOption)
+                            })
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+
+            },
+            // 日计划达成率
+            getDayRateData(OrganizeIDs) {
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 1, fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                    .then(function (res) {
+                        _this.todayOptionData = []
+                        if (res.result) {
+
+                            _this.todayOptionData = res.data
+
+                            // if(_this.todayOptionData.length){
+                            _this.perComplete = 0
+                            _this.todayOptionData.map(item => {
+
+                                _this.todayOption.series[0].data[0] = { value: item.HasQty, name: '报工数' }
+                                _this.todayOption.series[0].data[1] = { value: item.HasQty>item.PlanQty?0:item.PlanQty - item.HasQty, name: '未完成数' }
+                                _this.perComplete = parseFloat(((item.PlanQtyP1) * 100).toFixed(2))
+                                _this.todayOption.series[0].label.normal.fontSize = _this.fontSize(36) || 36
+                            })
+                            // }
+                            // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
+                            if (chartDom2 == null) {
+                                chartDom2 = document.getElementById("dayEchart");
+                            }
+
+                            _this.$nextTick(() => {
+                                _this.barData(chartDom2, _this.todayOption)
+                            })
+                        }
+                        else {
+                            _this.$message({
+                                message: res.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+            },
+        },
+        beforeUnmount() {
+            if (this.time) this.time.destroy();
+            if (this.time1) this.time1.destroy();
+            if (this.time2) this.time2.destroy();
+            if (this.gudtime) this.gudtime.destroy();
+        },
+
+    })
+    const _this = app
+</script>
+
+</html>
+<style>
+
+    [v-cloak] {
+        /*比较大的段落，防止闪烁，看到花括号*/
+        display: none;
+    }
+
+    .navboxall {
+        height: calc(100% - .5rem);
+    }
+
+    .navboxall canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .navboxall>div {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .navboxall2 {
+        height: calc(100% - .7rem);
+    }
+
+    .tableWidthRatio35 {
+        width: 35%;
+    }
+</style>
