@@ -1213,7 +1213,7 @@ export default {
       });
       let res = await GetSearch(
         this.selectionData[this.tagRemark],
-        "/APSAPI/MOPlanStep1CalculationV2"
+        "/APSAPI/APSOrderPlanMaterialForm"
       );
       const { result, data, count, msg } = res.data;
 
