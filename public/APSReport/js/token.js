@@ -25,7 +25,7 @@ function getCookie(name) {
 function axiosPostRequst(url, data) {
     let result = axios({
         method: 'post',
-        url: ''+ url,
+        url: 'http://121.9.64.70:9998'+ url,
         data: data,
         headers: {
             'token': getCookie("token"),

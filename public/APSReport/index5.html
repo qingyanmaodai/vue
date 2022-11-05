@@ -36,20 +36,16 @@
                 <div id="header">
                     <div class="group_5 flex-col">
                         <div class="section_1 flex-col"></div>
-                        <span class="text_3">今日生产计划</span>
+                        <span class="text_3" >滚动5日计划欠料明细</span>
                         <div class="text-wrapper_2 flex-row justify-between">
-                            <span class="tableWidthRatio7 tableTitle">生产线</span>
-                            <span class="tableWidthRatio8 tableTitle">生产订单</span>
+                            <span class="tableTitle" style="width: 5%;">需求日期</span>
+                            <span class="tableTitle" style="width: 17%;">物料编码</span>
 
-                            <span class="tableWidthRatio8 tableTitle">产品编码</span>
-                            <span class="tableWidthRatio30 tableTitle">产品名称</span>
-                            <span class="tableWidthRatio6 tableTitle">数量</span>
-                            <span class="tableWidthRatio6 tableTitle">当日报工</span>
-                            <span class="tableWidthRatio6 tableTitle">欠数</span>
-                            <span class="tableWidthRatio5 tableTitle">完成率</span>
-                            <span class="tableWidthRatio8 tableTitle widthPadding">交期</span>
-                            <span class="tableWidthRatio8 tableTitle widthPadding">上线时间</span>
-                            <span class="tableWidthRatio8 tableTitle">备注</span>
+                            <span class="tableTitle" style="width: 17%;">物料名称</span>
+                            <span class="tableTitle" style="width: 8%;">5日需求</span>
+                            <span class="tableTitle" style="width: 5%;">库存</span>
+                            <span class="tableTitle" style="width: 8%;">欠数</span>
+                            <span class="tableTitle"  style="width: 8%;" v-for="(ele,x) in weeksDay" :key="x">{{ele.dayName}}</span>
 
                             <!-- <span class="text_4">生产线</span>
                   <span class="text_4">生产订单</span>
@@ -87,13 +83,13 @@
                 <div id="footer" class="footer justify-between">
                     <div class="group_14 flex-col">
                         <div class="group_15 flex-col"></div>
-                        <span class="text_109">明日生产计划</span>
+                        <span class="text_109">最新收货情况</span>
                         <div class="text-wrapper_12 flex-row">
-                            <span class="tableWidthRatio15 tableTitle">生产线</span>
-                            <span class="tableWidthRatio20 tableTitle">生产订单</span>
-                            <span class="tableWidthRatio20 tableTitle">产品编码</span>
-                            <span class="tableWidthRatio35 tableTitle">产品名称</span>
-                            <span class="tableWidthRatio10 tableTitle">数量</span>
+                            <span class="tableWidthRatio15 tableTitle">物料编码</span>
+                            <span class="tableWidthRatio20 tableTitle">物料名称</span>
+                            <span class="tableWidthRatio20 tableTitle">5日欠料数</span>
+                            <span class="tableWidthRatio30 tableTitle">收货数</span>
+                            <span class="tableWidthRatio15 tableTitle">收货时间</span>
                             <!--<span class="tableWidthRatio15 tableTitle widthPadding2">交期</span>-->
                             <!-- <span class="tableWidthRatio15 tableTitle">备注</span> -->
                         </div>
@@ -115,7 +111,7 @@
                         <div class="group_8 flex-row">
                             <span class="text_69"
                                 style="position: absolute;margin-left: 0.15rem;margin-top: 0.5rem">（单位：台）</span>
-                            <span class="text_70">7日计划达成率</span>
+                            <span class="text_70">7日计划配套率</span>
                         </div>
                         <div class="navboxall" id="weekEchart"></div>
                     </div>
@@ -123,19 +119,19 @@
                         <div class="group_13 flex-col"></div>
                         <div class="text-wrapper_10 flex-row justify-between">
                             <span class="text_101">（单位：台）</span>
-                            <span class="text_102">日计划达成率</span>
+                            <span class="text_102">欠料复期分布图</span>
                         </div>
                         <div class="navboxall2" id="dayEchart"></div>
                         <div class="image-text_2 flex-col justify-around">
                             <div class="flex-row  justify-around">
                                 <div class="flex-col justify-between">
                                     <span
-                                        class="text_105">{{todayOptionData.length?todayOptionData[0].PlanQty:0}}</span>
-                                    <span class="text_108">计划数</span>
+                                        class="text_105">{{todayOptionData.length?todayOptionData[0].C1:0}}</span>
+                                    <span class="text_108">复期数</span>
                                 </div>
                                 <div class="flex-col justify-between">
-                                    <span class="text_107">{{todayOptionData.length?todayOptionData[0].HasQty:0}}</span>
-                                    <span class="text_108">报工数</span>
+                                    <span class="text_107">{{todayOptionData.length?todayOptionData[0].S1:0}}</span>
+                                    <span class="text_108">未复期数</span>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +292,7 @@
                     },
                     //图例组件
                     legend: {
-                        data: ['计划数', '报工数', '完成率'],
+                        data: ['需求数', '配套数', '配套率'],
                         itemWidth: this.computedFontSize(25),
                         itemHeight: this.computedFontSize(15),
                         textStyle: {
@@ -373,7 +369,7 @@
                                 color: '#fff',
                                 fontSize: this.computedFontSize(14),
                             },
-                            name: '计划数',
+                            name: '需求数',
                             type: 'bar',
                             barWidth: this.computedFontSize(20),
                             itemStyle: {
@@ -397,7 +393,7 @@
                                 color: '#fff',
                                 fontSize: this.computedFontSize(14),
                             },
-                            name: '报工数',
+                            name: '配套数',
                             type: 'bar',
                             barWidth: '25%',
                             itemStyle: {
@@ -427,7 +423,7 @@
 
                             },
 
-                            name: '完成率',
+                            name: '配套率',
                             type: 'line',
                             yAxisIndex: 1,
 
@@ -533,26 +529,9 @@
                 orgTime: null,
                 gundongTag_1:false,
                 gundongTag_2:false,
-                TVconfig:{
-                    '滚动5日计划欠料明细':[
-                        {label:'需求日期',name:'DataType',prop:'DataType',width:'7%'}
-                    ],
-                    '最新收货情况':[],
-                    '7日计划配套率':[],
-                    '欠料复期分布图':[]
-                    // <span class="tableWidthRatio7 tableTitle">生产线</span>
-                    //         <span class="tableWidthRatio8 tableTitle">生产订单</span>
-
-                    //         <span class="tableWidthRatio8 tableTitle">产品编码</span>
-                    //         <span class="tableWidthRatio30 tableTitle">产品名称</span>
-                    //         <span class="tableWidthRatio6 tableTitle">数量</span>
-                    //         <span class="tableWidthRatio6 tableTitle">当日报工</span>
-                    //         <span class="tableWidthRatio6 tableTitle">欠数</span>
-                    //         <span class="tableWidthRatio5 tableTitle">完成率</span>
-                    //         <span class="tableWidthRatio8 tableTitle widthPadding">交期</span>
-                    //         <span class="tableWidthRatio8 tableTitle widthPadding">上线时间</span>
-                    //         <span class="tableWidthRatio8 tableTitle">备注</span>
-                }
+                TVColumns:{},
+                weeksDay:[],
+                weeksList:[]
             }
         },
         created() {
@@ -585,7 +564,38 @@
 
             ///循环渲染不同组织的数据
             this.circleOrganzeIDs()
-
+            this.TVColumns = 
+                {
+                    '滚动5日计划欠料明细':[
+                        {label:'需求日期',name:'DataType',prop:'DataType',width:'7%'},
+                        {label:'物料编码',name:'Code',prop:'Code',width:'7%'},
+                        {label:'物料名称',name:'MaterialName',prop:'MaterialName',width:'7%'},
+                        {label:'5日需求',name:'DemandQty',prop:'DemandQty',width:'7%'},
+                        {label:'库存',name:'StockQty',prop:'StockQty',width:'7%'},
+                        {label:'欠数',name:'OweQty',prop:'OweQty',width:'7%'},
+                        {label:'11-05',name:'11-05',prop:'11-05',width:'7%'},
+                        {label:'11-06',name:'11-06',prop:'11-06',width:'7%'},
+                        {label:'11-07',name:'11-07',prop:'11-07',width:'7%'},
+                        {label:'11-08',name:'11-08',prop:'11-08',width:'7%'},
+                        {label:'11-09',name:'11-09',prop:'11-09',width:'7%'},
+                    ],
+                    '最新收货情况':[
+                        {label:'物料编码',name:'Code',prop:'Code',width:'20%'},
+                        {label:'物料名称',name:'MaterialName',prop:'MaterialName',width:'30%'},
+                        {label:'5日欠料数',name:'OweQty',prop:'OweQty',width:'20%'},
+                        {label:'收货数',name:'Qty',prop:'Qty',width:'10%'},
+                        {label:'收货时间',name:'DeliveryDate',prop:'DeliveryDate',width:'20%'},
+                    ],
+                    '7日计划配套率':[
+                        {legend:['计划数', '报工数', '完成率']},
+                        {yAxis:'(单位：台)'},
+                    ],
+                    '欠料复期分布图':[
+                        {legend:['复期', '未复期']},
+                        {yAxis:'(单位：台)'},
+                        {bottom:['复期','未复期']}
+                    ]
+                }
         },
         mounted() {
             let _this = this;
@@ -722,37 +732,53 @@
                 let r = window.location.search.substr(1).match(reg);
                 if (r != null) return decodeURIComponent(r[2]); return null;
             },
-            // 今日生产计划
+            // 滚动五日计划欠料明细
             getToDayPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(), showDate()], rows: 0,OweQty:0})
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 9006,SDate:showDate(),Edate:showDate(5), rows: 0,OweQty:0})
                     .then(function (res) {
                         _this.todayList = []
                         _this.innerHTML = ''
                         $("#text-wrapper_3").empty();
+                        
+                        _this.weeksDay = []
+              
                         if (res.result) {
                             _this.todayList = res.data
+                            _this.weeksList = _this.todayList[0]
+                            if(_this.weeksList){
+                                console.log('_this.weeksList',_this.weeksList)
+                                for(let key in _this.weeksList){
+                                // 获取七日日期
+                                if(key.indexOf('-')>-1){
+                                    _this.weeksDay.push({
+                                    dayName:key,
+                                    key:key
+                                    })
+                                }
+                                }
+                            }
                             if(res.data&&res.data.length){
                                 $.each(res.data,function(i,item){
+                                    let htmls = ''
+                                $.each(_this.weeksDay,function(x,ele){
+                                    htmls +=`<span class="tableContent"  style="width: 8%;">${ele.key&&item[ele.key]?item[ele.key]:''}</span>`
+                                })
                                 _this.innerHTML+=`
                                 <div class="text-wrapper_3 flex-row justify-between fontSize"
                                 >
-                                <span class="tableWidthRatio7 tableContent">${item.LineName}</span>
-                                <span class="tableWidthRatio8 tableContent">${item.OrderNo}</span>
-                                <span class="tableWidthRatio8 tableContent">${item.Code}</span>
-                                <span class="tableWidthRatio30 tableContent">${item.MaterialName}</span>
-                                <span class="tableWidthRatio6 tableContent color2">${item.PlanQty}</span>
-                                <span class="tableWidthRatio6 tableContent color3">${item.HasQty}</span>
-                                <span class="tableWidthRatio6 tableContent color4">${item.OweQty}</span>
-                                <span class="tableWidthRatio5 tableContent">${item.PlanQtyP}</span>
-                                <span class="tableWidthRatio8 tableContent widthPadding">${item.DeliveryDate}</span>
-                                <span class="tableWidthRatio8 tableContent widthPadding">${item.ProductionDate}</span>
-                                <span class="tableWidthRatio8 tableContent clampEllipsis"
-                                    :title="item.Remark1">${item.Remark1?item.Remark1:''}</span>
+                                <span class="tableContent" style="width: 5%;">${item.DemandDate?item.DemandDate:''}</span>
+                                <span class="tableContent" style="width: 17%;">${item.Code?item.Code:''}</span>
+                                <span class="tableContent" style="width: 17%;">${item.MaterialName?item.MaterialName:''}</span>
+                                <span class="tableContent" style="width: 8%;">${item.DemandQty5?item.DemandQty5:''}</span>
+                                <span class="tableContent color2" style="width: 5%;">${item.StockQty?item.StockQty:''}</span>
+                                <span class="tableContent color3" style="width: 8%;">${item.OweQty?item.OweQty:''}</span>
+                                ${htmls}
                                 </div>`
-                            }
-                            )
+                            })
                             $('#text-wrapper_3').html(_this.innerHTML)
                             }
+
+                            
                             
                             
                             if (_this.time1) {
@@ -787,9 +813,9 @@
                 //     _this.getToDayPlanData(OrganizeIDs)
                 // }, 1000 * 60 * 5)
             },
-            // 明日生产计划
+            // 最新收获情况
             getTomorrowPlanData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1),showDate(1)], rows: 0 })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 1204,  rows: 0 ,sort:'CreatedOn DESC'})
                     .then(function (res) {
                         _this.tomorrowList = []
                         let  innerHTML = ''
@@ -800,11 +826,11 @@
                                 $.each(res.data,function(i,ele){
                                 innerHTML+=`
                                 <div class="text-wrapper_13 flex-row">
-                                    <span class="tableWidthRatio15 tableContent">${ele.LineName}</span>
-                                    <span class="tableWidthRatio20 tableContent">${ele.OrderNo}</span>
-                                    <span class="tableWidthRatio20 tableContent">${ele.Code}</span>
-                                    <span class="tableWidthRatio35 tableContent">${ele.MaterialName}</span>
-                                    <span class="tableWidthRatio10 tableContent color2">${ele.PlanQty}</span>
+                                    <span class="tableWidthRatio15 tableContent">${ele.Code}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.MaterialName}</span>
+                                    <span class="tableWidthRatio20 tableContent">${ele.StockQty}</span>
+                                    <span class="tableWidthRatio30 tableContent">${ele.ReceiptQty}</span>
+                                    <span class="tableWidthRatio15 tableContent color2">${ele.ReceiptDate}</span>
                                 </div>
                                 `
                             }
@@ -845,9 +871,9 @@
                 //     _this.getTomorrowPlanData(OrganizeIDs)
                 // }, 1000 * 60 * 5)
             },
-            // 周计划达成率
+            // 7日计划配套率
             getWeekRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: ['', showDate()], rows: 7, sort: 'PlanDay DESC', fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5157, DemandDate: [showDate(), showDate(6)], rows: 7, fields:"FORMAT(DemandDate,'MM-dd') AS N1,sum(DemandQty) as S1,sum(DemandQty+OweQty)   as S2,sum(DemandQty+OweQty)/sum(DemandQty)",groupby:'DemandDate',sort:'DemandDate' })
                     .then(function (res) {
                         _this.weekOptionData = []
 
@@ -860,10 +886,10 @@
                             _this.weekOption.xAxis[0].data = [];
                             _this.weekOptionData.map(item => {
                                 //截取日期的最后两位
-                                _this.weekOption.xAxis[0].data.unshift(item.PlanDay.slice(-2))
-                                _this.weekOption.series[0].data.unshift(item.PlanQty ? parseFloat(item.PlanQty.toFixed(2)) : 0)
-                                _this.weekOption.series[1].data.unshift(item.HasQty ? parseFloat(item.HasQty.toFixed(2)) : 0)
-                                _this.weekOption.series[2].data.unshift(item.HasQty ? parseFloat(((item.HasQty / item.PlanQty) * 100).toFixed(2)) : 0)
+                                _this.weekOption.xAxis[0].data.push(item.N1)
+                                _this.weekOption.series[0].data.push(item.S1)
+                                _this.weekOption.series[1].data.push(item.S2)
+                                _this.weekOption.series[2].data.push(item.Column1 ? parseFloat(((item.Column1) * 100).toFixed(2)) : 0)
                             })
 
                             // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
@@ -886,9 +912,9 @@
                     });
 
             },
-            // 日计划达成率
+            // 复期
             getDayRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 1, fields: 'SUM(HasQty)/Sum(PlanQty) PlanQtyP1,PlanDay,SUM(PlanQty) AS PlanQty,SUM(HasQty) as HasQty', groupby: 'PlanDay', })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 7840,   fields:"SUM(CASE WHEN Remark1<>'' THEN 1 ELSE 0 END) AS S1,COUNT(1) AS C1" ,FOweQty:0})
                     .then(function (res) {
                         _this.todayOptionData = []
                         if (res.result) {
@@ -899,9 +925,9 @@
                             _this.perComplete = 0
                             _this.todayOptionData.map(item => {
 
-                                _this.todayOption.series[0].data[0] = { value: item.HasQty, name: '报工数' }
-                                _this.todayOption.series[0].data[1] = { value: item.HasQty>item.PlanQty?0:item.PlanQty - item.HasQty, name: '未完成数' }
-                                _this.perComplete = parseFloat(((item.PlanQtyP1) * 100).toFixed(2))
+                                _this.todayOption.series[0].data[0] = { value: item.C1, name: '复期数' }
+                                _this.todayOption.series[0].data[1] = { value: item.S1, name: '未复期数' }
+                                _this.perComplete = parseFloat(((item.C1/(item.S1+item.C1)) * 100).toFixed(2))
                                 _this.todayOption.series[0].label.normal.fontSize = _this.fontSize(36) || 36
                             })
                             // }
