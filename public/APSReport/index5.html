@@ -127,11 +127,11 @@
                                 <div class="flex-col justify-between">
                                     <span
                                         class="text_105">{{todayOptionData.length?todayOptionData[0].C1:0}}</span>
-                                    <span class="text_108">复期数</span>
+                                    <span class="text_108">复期总数</span>
                                 </div>
                                 <div class="flex-col justify-between">
                                     <span class="text_107">{{todayOptionData.length?todayOptionData[0].S1:0}}</span>
-                                    <span class="text_108">未复期数</span>
+                                    <span class="text_108">已复期数</span>
                                 </div>
                             </div>
                         </div>
@@ -535,13 +535,6 @@
             }
         },
         created() {
-
-            // window.location.href = "pieceHome.html?OrganizeIDs=107"
-            // 初始化时默认上线日期
-            // this.weekStartDate = fDate.getWeek(0, 0) // 获取本周开始日期
-            // this.weekEndDate = fDate.getWeek(0, 1) // 获取本周结束日期
-            // this.weekList =  fDate.getAllDate(this.weekStartDate,this.weekEndDate)
-
             this.todayDate = showtime()
             if (this.time) {
                 clearInterval(this.time)
@@ -549,25 +542,13 @@
             this.time = setInterval(() => {
                 this.todayDate = showtime()
             }, 1000)
-
-            // this.$nextTick(async () => {
-            //     let OrganizeIDs = this.getQueryString('ID')
-            //     // 看板车间名称
-            //     if (OrganizeIDs) {
-            //         // 179 制一部;180 制二部;181 制三部;182 制四部;183 制五部
-            //         await this.getOrgData(OrganizeIDs)
-            //     } else {
-            //         OrganizeIDs = 179
-            //         await this.getOrgData(OrganizeIDs)
-            //     }
-            // })
-
-            ///循环渲染不同组织的数据
-            this.circleOrganzeIDs()
+            this.getData()
         },
         mounted() {
             let _this = this;
-        
+            setTimeout(() => {
+                window.location.href = "http://121.9.64.70:9999/WJReport/index.html";
+            }, 1000 * 60 * 3)
 
         },
         methods: {
@@ -579,19 +560,6 @@
                 if (!clientWidth) return;
                 let fontSize = clientWidth / 1920;
                 return res * fontSize;
-            },
-            async circleOrganzeIDs() {
-                if (this.orgTime) {
-                    clearTimeout(this.orgTime)
-                }
-                if (this.tagID >= this.organizeIDsData.length) {
-                    this.tagID = 0
-                }
-                await this.getOrgData(this.organizeIDsData[this.tagID])
-                this.orgTime = setTimeout(() => {
-                    ++this.tagID;
-                    this.circleOrganzeIDs()
-                }, 1000 * 60 * 3)
             },
             fontSize(res) {
                 let clientWidth =
@@ -606,46 +574,23 @@
             reloadData() {
                 location.reload();
             },
-            // 获取组织名称
-            getOrgData(OrganizeIDs) {
-
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 3026, OrganizeID: OrganizeIDs })
-                    .then(function (res) {
-                        if (res.result) {
-                            if (res.data.length != 0) {
-                                _this.form = res.data[0];
-                            }
-                            if (_this.form.OrganizeID) {
-                                _this.getToDayPlanData(_this.form.OrganizeID)
-                                _this.getTomorrowPlanData(_this.form.OrganizeID)
-                                _this.getWeekRateData(_this.form.OrganizeID)
-                                _this.getDayRateData(_this.form.OrganizeID)
-                                if (_this.gudtime) {
-                                    clearTimeout(_this.gudtime)
-                                }
-                                _this.gudtime = setTimeout(() => {
-                                    $(".loading").fadeOut()
-                                }, 1000);
-                            }
-                        }
-                        else {
-                            _this.$message({
-                                message: res.msg,
-                                type: 'error'
-                            });
-                        }
-                    })
-                    .catch(function (error) {
-
-                    });
+            getData(){
+                this.getToDayPlanData()
+                this.getTomorrowPlanData()
+                this.getWeekRateData()
+                this.getDayRateData()
+                if (this.gudtime) {
+                    clearTimeout(this.gudtime)
+                }
+                this.gudtime = setTimeout(() => {
+                    $(".loading").fadeOut()
+                }, 1000);
             },
             // 渲染echart图
             barData(id, option) {
                 echarts.dispose(id)
                 myChart = echarts.init(id);
                 myChart.setOption(option)
-
-
             },
             // 滚动数据
             gundong(val) {
@@ -775,11 +720,6 @@
                     .catch(function (error) {
 
                     });
-                // // 五分钟刷新一次数据
-                // var todayTimer = setInterval(function () {
-                //     clearInterval(todayTimer);
-                //     _this.getToDayPlanData(OrganizeIDs)
-                // }, 1000 * 60 * 5)
             },
             // 最新收获情况
             getTomorrowPlanData(OrganizeIDs) {
@@ -833,11 +773,6 @@
                     .catch(function (error) {
 
                     });
-                // 五分钟刷新一次数据
-                // var tomorrowTimer = setInterval(function () {
-                //     clearInterval(tomorrowTimer);
-                //     _this.getTomorrowPlanData(OrganizeIDs)
-                // }, 1000 * 60 * 5)
             },
             // 7日计划配套率
             getWeekRateData(OrganizeIDs) {
@@ -893,9 +828,9 @@
                             _this.perComplete = 0
                             _this.todayOptionData.map(item => {
 
-                                _this.todayOption.series[0].data[0] = { value: item.C1, name: '复期数' }
-                                _this.todayOption.series[0].data[1] = { value: item.S1, name: '未复期数' }
-                                _this.perComplete = parseFloat(((item.C1/(item.S1+item.C1)) * 100).toFixed(2))
+                                _this.todayOption.series[0].data[0] = { value: item.S1, name: '已复期数' }
+                                _this.todayOption.series[0].data[1] = { value: item.S2, name: '未复期数' }
+                                _this.perComplete = parseFloat(((item.P1||0) * 100).toFixed(2))
                                 _this.todayOption.series[0].label.normal.fontSize = _this.fontSize(36) || 36
                             })
                             // }
