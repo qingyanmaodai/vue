@@ -259,13 +259,7 @@
               cellType: combobox,
               size: parseInt(x.width),
             });
-          }else if(x.prop.indexOf('-')>-1){
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: 100,
-            });
-          } else {
+          }else {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
