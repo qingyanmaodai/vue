@@ -564,38 +564,6 @@
 
             ///循环渲染不同组织的数据
             this.circleOrganzeIDs()
-            this.TVColumns = 
-                {
-                    '滚动5日计划欠料明细':[
-                        {label:'需求日期',name:'DataType',prop:'DataType',width:'7%'},
-                        {label:'物料编码',name:'Code',prop:'Code',width:'7%'},
-                        {label:'物料名称',name:'MaterialName',prop:'MaterialName',width:'7%'},
-                        {label:'5日需求',name:'DemandQty',prop:'DemandQty',width:'7%'},
-                        {label:'库存',name:'StockQty',prop:'StockQty',width:'7%'},
-                        {label:'欠数',name:'OweQty',prop:'OweQty',width:'7%'},
-                        {label:'11-05',name:'11-05',prop:'11-05',width:'7%'},
-                        {label:'11-06',name:'11-06',prop:'11-06',width:'7%'},
-                        {label:'11-07',name:'11-07',prop:'11-07',width:'7%'},
-                        {label:'11-08',name:'11-08',prop:'11-08',width:'7%'},
-                        {label:'11-09',name:'11-09',prop:'11-09',width:'7%'},
-                    ],
-                    '最新收货情况':[
-                        {label:'物料编码',name:'Code',prop:'Code',width:'20%'},
-                        {label:'物料名称',name:'MaterialName',prop:'MaterialName',width:'30%'},
-                        {label:'5日欠料数',name:'OweQty',prop:'OweQty',width:'20%'},
-                        {label:'收货数',name:'Qty',prop:'Qty',width:'10%'},
-                        {label:'收货时间',name:'DeliveryDate',prop:'DeliveryDate',width:'20%'},
-                    ],
-                    '7日计划配套率':[
-                        {legend:['计划数', '报工数', '完成率']},
-                        {yAxis:'(单位：台)'},
-                    ],
-                    '欠料复期分布图':[
-                        {legend:['复期', '未复期']},
-                        {yAxis:'(单位：台)'},
-                        {bottom:['复期','未复期']}
-                    ]
-                }
         },
         mounted() {
             let _this = this;
