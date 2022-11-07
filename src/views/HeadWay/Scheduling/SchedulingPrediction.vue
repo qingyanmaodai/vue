@@ -181,13 +181,25 @@ export default {
       parmsBtn: [
       {
           ButtonCode: "import",
-          BtnName: "1.导入",
+          BtnName: "1.删除并导入",
           Type: "danger",
           Ghost: true,
           Size: "small",
           Methods: "dataImport",
           Icon: "",
           sort:1,
+          Params:{isDel:1}
+        },
+        {
+          ButtonCode: "import",
+          BtnName: "1.增量导入",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataImport",
+          Icon: "",
+          sort:1,
+          Params:{isDel:0}
         },
         {
           ButtonCode: "sysData",
@@ -286,6 +298,7 @@ export default {
       fileList: [],
       file: [],
       selectionData: [[]],
+      ImportParams:'',
     };
   },
   activated() {
@@ -750,10 +763,11 @@ export default {
       }
     },
     // 导入并分析模板
-    dataImport() {
+    dataImport(remarkTb, index, params) {
       this.dialogImport = true;
       this.fileList = [];
       this.file = [];
+      this.ImportParams = params.isDel
     },
     // 确认导入
     sureImport() {
@@ -841,7 +855,7 @@ export default {
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                     // 判断需求到料日期是否大于今天
                     if (
-                      item.prop === "PlanDay" &&
+                      item.prop === "PlanDay" &&obj[item.prop]&&
                       obj[item.prop] < formatDates.formatTodayDate()
                     ) {
                       propName = key;
@@ -863,20 +877,21 @@ export default {
                   }
                 } else if (
                   isNaN(key) &&
-                  !isNaN(Date.parse(key)) &&
-                  m[key] > 0
+                  !isNaN(Date.parse(key)) 
                 ) {
                   //导入日期并且数大于0才导入
                   // 列为日期的格式
                   isDate = true;
-                  obj["PlanDay"] = this.$moment(key).format("YYYY-MM-DD");
-                  obj["PlanQty"] = m[key];
-                  obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                  obj["Account"] = _this.$store.getters.userInfo.Account;
-                  obj["row"] = m.__rowNum__;
-                  // 需要使用...obj 不然值回写有问题
-                  DataList.push({ ...obj });
-                  break;
+                  if(Number(m[key])>0){
+                    obj["PlanDay"] = this.$moment(key).format("YYYY-MM-DD");
+                    obj["PlanQty"] = m[key];
+                    obj["dicID"] = _this.sysID[_this.tagRemark].ID;
+                    obj["Account"] = _this.$store.getters.userInfo.Account;
+                    obj["row"] = m.__rowNum__;
+                    // 需要使用...obj 不然值回写有问题
+                    DataList.push({ ...obj });
+                    break;
+                  }
                 }
               }
             }
@@ -943,7 +958,12 @@ export default {
 
           return;
         }
-        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast");
+        // =1表示要删记录（删除并导入）
+        // =0表示不删除（增量导入）
+        this.adminLoading = false
+        console.log('DataList',DataList)
+        return
+        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;

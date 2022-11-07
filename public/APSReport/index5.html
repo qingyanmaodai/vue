@@ -127,7 +127,7 @@
                                 <div class="flex-col justify-between">
                                     <span
                                         class="text_105">{{todayOptionData.length?todayOptionData[0].C1:0}}</span>
-                                    <span class="text_108">复期总数</span>
+                                    <span class="text_108">应复期数</span>
                                 </div>
                                 <div class="flex-col justify-between">
                                     <span class="text_107">{{todayOptionData.length?todayOptionData[0].S1:0}}</span>
@@ -364,6 +364,7 @@
                     series: [
                         {
                             label: {
+                                rotate : 30,
                                 show: true,
                                 position: 'top',
                                 color: '#fff',
@@ -388,6 +389,7 @@
                         },
                         {
                             label: {
+                                rotate : 30,
                                 show: true,
                                 position: 'top',
                                 color: '#fff',
@@ -791,8 +793,8 @@
                             _this.weekOptionData.map(item => {
                                 //截取日期的最后两位
                                 _this.weekOption.xAxis[0].data.push(item.N1)
-                                _this.weekOption.series[0].data.push(item.S1)
-                                _this.weekOption.series[1].data.push(item.S2)
+                                _this.weekOption.series[0].data.push(parseInt(item.S1))
+                                _this.weekOption.series[1].data.push(parseInt(item.S2))
                                 _this.weekOption.series[2].data.push(item.Column1 ? parseFloat(((item.Column1) * 100).toFixed(2)) : 0)
                             })
 
@@ -818,7 +820,7 @@
             },
             // 复期
             getDayRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 7840,   fields:"SUM(CASE WHEN Remark1<>'' THEN 1 ELSE 0 END) AS S1,COUNT(1) AS C1" ,FOweQty:0})
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 7840,   fields:"SUM(CASE WHEN Remark1<>'' THEN 1 ELSE 0 END) AS S1,COUNT(1) AS C1,SUM(CASE WHEN Remark1<>'' THEN 1 ELSE 0 END) AS S1,COUNT(1) AS C1,SUM(CASE WHEN Remark1<>'' THEN 0 ELSE 1 END) AS S2,SUM(CASE WHEN Remark1<>'' THEN 1.0 ELSE 0.0 END)/COUNT(1.0) as P1" ,FOweQty:0})
                     .then(function (res) {
                         _this.todayOptionData = []
                         if (res.result) {
