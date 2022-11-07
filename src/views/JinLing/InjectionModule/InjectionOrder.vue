@@ -35,8 +35,7 @@
                         <SPAN>抓单日期范围：</SPAN>
                     <el-date-picker 
                     v-model="ReplyDate" type="daterange"
-              
-                    
+                    :editable="false"
                     size="small"
                     value-format="yyyy-MM-dd"
                     placeholder="选择开始时间"

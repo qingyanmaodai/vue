@@ -1,4 +1,4 @@
-<!--预测需求-->
+<!--注塑日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -67,7 +67,7 @@
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "InjectionMolReq",
+      name: "InjectionDailyPlan",
       components: {
         ComSearch,
         ComReportTable,
@@ -112,7 +112,7 @@
               Size: "small",
             },
                {
-              ButtonCode: "save",
+              ButtonCode: "returnOrder",
               BtnName: "退回",
               isLoading: false,
               Methods: "dataDel",
@@ -167,7 +167,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: [{ID:6734}],
+          sysID: [{ID:7956}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
