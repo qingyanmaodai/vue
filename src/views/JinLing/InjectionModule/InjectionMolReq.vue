@@ -704,6 +704,14 @@
   
             cellIndex++;
           });
+          // 列筛选
+          // 参数2 开始列
+          // 参数3 
+          // 参数4 结束列
+          var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+          
+          var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+          sheet.rowFilter(hideRowFilter)
   
           // 行样式
           this.tableData[0].forEach((row, index) => {
@@ -932,7 +940,7 @@
           this.adminLoading = false;
           this.tableLoading[0] = false;
           this.spread.refresh()
-          // this.spread.options.tabStripVisible = false;//是否显示表单标签
+          this.spread.options.tabStripVisible = false;//是否显示表单标签
         },
         // 自动计算数量
         computedNum(rowIndex, colIndex, val) {

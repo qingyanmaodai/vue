@@ -730,7 +730,7 @@
           if (cellType instanceof GCsheets.CellTypes.HyperLink) {
           }
         });
-         // 列筛选
+        // 列筛选
         // 参数2 开始列
         // 参数3 
         // 参数4 结束列
