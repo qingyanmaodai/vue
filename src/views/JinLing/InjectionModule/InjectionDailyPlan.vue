@@ -1,4 +1,4 @@
-<!--预测需求-->
+<!--注塑日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -67,7 +67,7 @@
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "InjectionMolReq",
+      name: "InjectionDailyPlan",
       components: {
         ComSearch,
         ComReportTable,
@@ -112,7 +112,7 @@
               Size: "small",
             },
                {
-              ButtonCode: "save",
+              ButtonCode: "returnOrder",
               BtnName: "退回",
               isLoading: false,
               Methods: "dataDel",
@@ -167,7 +167,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: [{ID:6734}],
+          sysID: [{ID:7956}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -704,6 +704,14 @@
   
             cellIndex++;
           });
+          // 列筛选
+          // 参数2 开始列
+          // 参数3 
+          // 参数4 结束列
+          var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+          
+          var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+          sheet.rowFilter(hideRowFilter)
   
           // 行样式
           this.tableData[0].forEach((row, index) => {
@@ -1083,7 +1091,7 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID[this.tagRemark].ID
+              ID: this.sysID
             },
           });
         },
