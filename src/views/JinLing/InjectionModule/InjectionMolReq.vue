@@ -913,6 +913,21 @@
             //   sheet.setArray(args.row, i, [2021]);
             // }
           });
+          sheet.options.isProtected = true;
+          sheet.options.protectionOptions.allowResizeColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowSelectLockedCells = true;
+          sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowDeleteColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowInsertColumns = true;
+          sheet.options.protectionOptions.allowDargInsertRows = true;
+          sheet.options.protectionOptions.allowDragInsertColumns = true;
+          sheet.options.protectionOptions.allowSort = true
+          sheet.options.protectionOptions.allowFilter = true
+          sheet.options.allowUserDragDrop = true;
           this.spread.resumePaint();
           this.adminLoading = false;
           this.tableLoading[0] = false;
@@ -1068,7 +1083,7 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID
+              ID: this.sysID[this.tagRemark].ID
             },
           });
         },

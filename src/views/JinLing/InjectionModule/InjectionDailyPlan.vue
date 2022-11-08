@@ -704,6 +704,14 @@
   
             cellIndex++;
           });
+          // 列筛选
+          // 参数2 开始列
+          // 参数3 
+          // 参数4 结束列
+          var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+          
+          var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+          sheet.rowFilter(hideRowFilter)
   
           // 行样式
           this.tableData[0].forEach((row, index) => {
@@ -913,6 +921,21 @@
             //   sheet.setArray(args.row, i, [2021]);
             // }
           });
+          sheet.options.isProtected = true;
+          sheet.options.protectionOptions.allowResizeColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowSelectLockedCells = true;
+          sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowDeleteColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowInsertColumns = true;
+          sheet.options.protectionOptions.allowDargInsertRows = true;
+          sheet.options.protectionOptions.allowDragInsertColumns = true;
+          sheet.options.protectionOptions.allowSort = true
+          sheet.options.protectionOptions.allowFilter = true
+          sheet.options.allowUserDragDrop = true;
           this.spread.resumePaint();
           this.adminLoading = false;
           this.tableLoading[0] = false;
