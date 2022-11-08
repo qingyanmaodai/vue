@@ -40,6 +40,8 @@
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="选择开始时间"
+                  :clearable="false"
+                  :editable="false"
                 >
                   </el-date-picker>
                 <el-divider direction="vertical"></el-divider>

@@ -35,8 +35,7 @@
                         <SPAN>抓单日期范围：</SPAN>
                     <el-date-picker 
                     v-model="ReplyDate" type="daterange"
-              
-                    
+                    :editable="false"
                     size="small"
                     value-format="yyyy-MM-dd"
                     placeholder="选择开始时间"
@@ -655,10 +654,10 @@
           }
           else {
             // row.backColor();
-            rowSheet.foreColor("black");
-            rowSheet.backColor("");
-            rowSheet.foreColor("black");
-            rowSheet2.backColor("");
+            // rowSheet.foreColor("black");
+            // rowSheet.backColor("");
+            // rowSheet.foreColor("black");
+            // rowSheet2.backColor("");
           }
           let cellIndex = 0;
           this.tableColumns[0].forEach((m) => {
@@ -706,31 +705,20 @@
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            //cell.foreColor("#2a06ecd9");
+            cell.foreColor("#2a06ecd9");
           } else {
             var cell = sheet.getCell(
               -1,
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            cell.foreColor("gray");
+            cell.foreColor("black");
           }
   
           cellIndex++;
         });
-        //  sheet.options.isProtected = true;
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowSelectLockedCells = true;
-        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowDeleteColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowInsertColumns = true;
-        sheet.options.protectionOptions.allowDargInsertRows = true;
-        sheet.options.protectionOptions.allowDragInsertColumns = true;
-        sheet.options.allowUserDragDrop = true;
+        
+        
         /////////////////表格事件/////////////
         this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
           const { sheet, row, col } = args;
@@ -742,7 +730,7 @@
           if (cellType instanceof GCsheets.CellTypes.HyperLink) {
           }
         });
-         // 列筛选
+        // 列筛选
         // 参数2 开始列
         // 参数3 
         // 参数4 结束列
@@ -911,6 +899,21 @@
           //   sheet.setArray(args.row, i, [2021]);
           // }
         });
+        sheet.options.isProtected = true;
+        sheet.options.protectionOptions.allowResizeColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowSelectLockedCells = true;
+        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowDeleteColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowInsertColumns = true;
+        sheet.options.protectionOptions.allowDargInsertRows = true;
+        sheet.options.protectionOptions.allowDragInsertColumns = true;
+        sheet.options.protectionOptions.allowSort = true
+        sheet.options.protectionOptions.allowFilter = true
+        sheet.options.allowUserDragDrop = true;
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[0] = false;

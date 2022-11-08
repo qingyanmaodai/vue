@@ -1,4 +1,4 @@
-<!--丝印日计划-->
+<!--注塑日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -11,10 +11,6 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
-                <!-- <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
-                  <span @click="changeStatus(item, y)">{{ item.OrganizeName }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                </div> -->
               </el-col>
             </el-row>
           </div>
@@ -27,7 +23,7 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor">SysID:7945
+              <span @click="toPageSetting" class="primaryColor cursor">SysID:{{sysID[0].ID}}
               </span>
             </div>
             <div class="flex">
@@ -58,11 +54,7 @@
     import ComReportTable from "@/components/ComReportTable";
     import ComAsideTree from "@/components/ComAsideTree";
     import {
-      HighlightColumnItemsCellType,
-      TopItemsCellType,
       HeaderCheckBoxCellType,
-      SortHyperlinkCellType,
-      HighlightRowItemsCellType,
     } from "@/static/data.js";
     import {
       GetHeader,
@@ -70,13 +62,12 @@
       ExportData,
       SaveData,
       GetSearch,
-      GetOrgData,
     } from "@/api/Common";
     import {
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "ScreenPrintingTodayPlan",
+      name: "InjectionDailyPlan",
       components: {
         ComSearch,
         ComReportTable,
@@ -121,7 +112,7 @@
               Size: "small",
             },
                {
-              ButtonCode: "save",
+              ButtonCode: "returnOrder",
               BtnName: "退回",
               isLoading: false,
               Methods: "dataDel",
@@ -176,7 +167,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: 7945,
+          sysID: [{ID:7956}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -199,12 +190,10 @@
       watch: {},
       created() {
         _this = this;
-        this.getLabelLineData();
+        // this.getLabelLineData();
         this.adminLoading = true;
         this.judgeBtn();
         this.getTableHeader();
-  
-        // this.timeOut();
       },
       computed: {
         ...mapState({
@@ -212,7 +201,6 @@
         }),
       },
       beforeRouteEnter(to, form, next) {
-      //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
           next();
       },
       activated() {
@@ -227,18 +215,6 @@
         }, 300);
       },
       methods: {
-        // timeOut() {
-        //   if (this.time) {
-        //     clearTimeout(this.time);
-        //   }
-        //   if (this.spread) {
-        //     this.spread.refresh();
-        //   }
-        //   this.time = setTimeout(() => {
-        //     //重新定位宽高度
-        //     this.timeOut();
-        //   }, 2000);
-        // },
         initSpread: function(spread) {
           this.spread = spread;
         },
@@ -338,59 +314,54 @@
         dataReset(remarkTb) {
           for (let name in this.formSearchs[remarkTb].datas) {
             if (name != "dicID") {
-              this.formSearchs[remarkTb].datas[name] = null;
+                if(this.formSearchs[remarkTb].forms.length){
+                // 判断是否是页面显示的查询条件，是的字段才清空
+                this.formSearchs[remarkTb].forms.forEach((element)=>{
+                    if(element.prop===name){
+                    this.formSearchs[remarkTb].datas[name] = null;
+                    }
+                })
+                }
             }
-          }
+            }
         },
-         async setPlan(remarkTb, index, params) {
-        let arr = this.getSelectionData();
-   
-       
-          if (this.selectionData[remarkTb].length == 0) {
-            this.$message.error("请选择需要转入日计划的数据！");
-          } else {
-            let ProcessID = "";
-            this.adminLoading = true;
-            // if (remarkTb == 1) {
-            //   ProcessID = "P202009092233201";
-            // } else if (remarkTb == 3) {
-            //   ProcessID = "P202009092233413";
-            // }
-  
-            let errMsg = "";
-            // let okCount = 0;
-            let okCount = this.selectionData[remarkTb].length;
-         
-            if (errMsg != "") {
-              this.$message({
-                message: errMsg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-            if (okCount > 0) {
-              let res = await GetSearch(
-                this.selectionData[remarkTb],
-                "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=2"
-              );
-              const { result, data, count, msg } = res.data;
-              if (result) {
-                this.adminLoading = false;
-                this.dataSearch(remarkTb);
-              } else {
-                this.adminLoading = false;
-                this.$message({
-                  message: msg,
-                  type: "error",
-                  dangerouslyUseHTMLString: true,
-                });
-              }
-            } else {
-               this.adminLoading = false;
-            }
-          }
+    //      async setPlan(remarkTb, index, params) {
+    //       if (this.selectionData[remarkTb].length == 0) {
+    //         this.$message.error("请选择需要转入日计划的数据！");
+    //       } else {
+    //         this.adminLoading = true;
+    //         let errMsg = "";
+    //         let okCount = this.selectionData[remarkTb].length;
+    //         if (errMsg != "") {
+    //           this.$message({
+    //             message: errMsg,
+    //             type: "error",
+    //             dangerouslyUseHTMLString: true,
+    //           });
+    //         }
+    //         if (okCount > 0) {
+    //           let res = await GetSearch(
+    //             this.selectionData[remarkTb],
+    //             "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=2"
+    //           );
+    //           const { result, data, count, msg } = res.data;
+    //           if (result) {
+    //             this.adminLoading = false;
+    //             this.dataSearch(remarkTb);
+    //           } else {
+    //             this.adminLoading = false;
+    //             this.$message({
+    //               message: msg,
+    //               type: "error",
+    //               dangerouslyUseHTMLString: true,
+    //             });
+    //           }
+    //         } else {
+    //            this.adminLoading = false;
+    //         }
+    //       }
         
-      },
+    //   },
         // 导出
         async dataExport(remarkTb) {
           this.adminLoading = true;
@@ -497,10 +468,10 @@
           }
         },
         // 单击行
-        handleRowClick(row, remarkTb) {
-          this.delData[remarkTb] = [];
-          this.delData[remarkTb].push(row);
-        },
+        // handleRowClick(row, remarkTb) {
+        //   this.delData[remarkTb] = [];
+        //   this.delData[remarkTb].push(row);
+        // },
         // 保存
         async dataSave(remarkTb, index, parms, newData) {
           let res = null;
@@ -533,9 +504,7 @@
         },
         // 获取表头数据
         async getTableHeader() {
-          let IDs = [{
-            ID: 7945
-          }];
+          let IDs = this.sysID
           let res = await GetHeader(IDs);
           const {
             datas,
@@ -560,12 +529,6 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
-            // this.getOrgData();
-            //   this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
-             this.formSearchs.forEach(a=>{
-              // a.datas["ProcessID"] = 'P202009092233201';
-            })
-            // this.dataSearch(0);
             this.getTableData(this.formSearchs[0].datas, 0);
             this.adminLoading = false
           }else{
@@ -589,7 +552,7 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 7945;
+          form["dicID"] = 6734;
           let res = await GetSearchData(form);
   
           const {
@@ -669,8 +632,6 @@
           for (var name in checkbox) {
             colInfos[0][name] = checkbox[name];
           }
-  
-          //  colInfos.unshift(checkbox);
           var row = sheet.getRange(
             0,
             -1,
@@ -705,7 +666,7 @@
           sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
           // 冻结第一列
   
-          sheet.frozenColumnCount(this.tableColumns[this.tagRemark][0].FixCount);
+          sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
   
           sheet.setDataSource(this.tableData[0]);
           sheet.bindColumns(colInfos);
@@ -752,22 +713,21 @@
           var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
           sheet.rowFilter(hideRowFilter)
   
-  
           // 行样式
-        this.tableData[0].forEach((row, index) => {
-          var rowSheet = sheet.getRange(
-            index,
-            0,
-            1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          // 合计和负荷行设置背景色
-          if (row["Code"] == null) {
-            rowSheet.backColor("#A0CFFF");
-          }
-        })
-  
+          this.tableData[0].forEach((row, index) => {
+            var rowSheet = sheet.getRange(
+              index,
+              0,
+              1,
+              cellIndex,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            // 合计和负荷行设置背景色
+            if (row["Code"] == null) {
+              rowSheet.backColor("#A0CFFF");
+            }
+          })
+    
   
   
         var insertRowsCopyStyle = {
@@ -980,10 +940,11 @@
           this.adminLoading = false;
           this.tableLoading[0] = false;
           this.spread.refresh()
-          this.spread.options.tabStripVisible = false;//是否显示表单标签
+          // this.spread.options.tabStripVisible = false;//是否显示表单标签
         },
         // 自动计算数量
         computedNum(rowIndex, colIndex, val) {
+          
           let sheet = this.spread.getActiveSheet();
           let dataSource = sheet.getDataSource();
           if (val == null) {
@@ -992,8 +953,8 @@
             return
           }
           val = parseInt(val)
-        //当前输入的有小数，取整
-        sheet.setValue(rowIndex, colIndex, val);
+          //当前输入的有小数，取整
+          sheet.setValue(rowIndex, colIndex, val);
           let currentRow = dataSource[rowIndex];
           if (currentRow.ID == -1) {
             return false;
@@ -1082,22 +1043,17 @@
               let label = this.tableColumns[0][j].prop + "dy";
               let obj = currentRow[label];
               let maxNum = 0
-            if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
-              remainNum = remainNum
-            }else{
-              remainNum = remainNum - parseInt(val);
-            }
-            // 如果产能为空会出现NaN情况的判断
-            if(Capacity){
-              maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-            }else{
-              maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-            }
-              // let maxNum =
-              //   parseInt(Capacity) *
-              //   parseInt(obj.TotalHours) *
-              //   parseInt(obj.DayCapacity);
-              // parseInt(obj.StandardPeoples)
+              if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
+                remainNum = remainNum
+              }else{
+                remainNum = remainNum - parseInt(val);
+              }
+              // 如果产能为空会出现NaN情况的判断
+              if(Capacity){
+                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              }else{
+                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              }
               if (remainNum <= 0) {
                 list[j] = null;
               } else {
@@ -1105,7 +1061,7 @@
                   list[j] = remainNum;
                   val = remainNum
                   break;
-                } else {
+                }else {
                   list[j] = maxNum;
                   // remainNum -= maxNum;
                   val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
@@ -1140,145 +1096,145 @@
           });
         },
         //////////////////////////////
-        async getOrgData() {
-          this.getLineData(this.userInfo.CenterID);
-          return;
-          this.treeListTmp = [];
-          this.treeData = [];
-          let form = {
-            OrganizeIDs: this.userInfo.CenterID,
-            OrganizeTypeID: 5,
-            dicID: 3026,
-            Status: 1,
-          };
-          let res = await GetSearchData(form);
-          const {
-            result,
-            data,
-            count,
-            msg
-          } = res.data;
-          if (result) {
-            this.treeData = JSON.parse(JSON.stringify(data));
-            this.treeListTmp = this.treeData;
-            if (data.length != 0) {
-              this.$nextTick(function() {
-                _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
-              });
-              this.$set(
-                this.formSearchs[0].datas,
-                "ControlID",
-                data[0].ERPOrderCode
-              );
-              this.getLineData(this.userInfo.CenterID);
-            }
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        },
+        // async getOrgData() {
+        //   this.getLineData(this.userInfo.CenterID);
+        //   return;
+        //   this.treeListTmp = [];
+        //   this.treeData = [];
+        //   let form = {
+        //     OrganizeIDs: this.userInfo.CenterID,
+        //     OrganizeTypeID: 5,
+        //     dicID: 3026,
+        //     Status: 1,
+        //   };
+        //   let res = await GetSearchData(form);
+        //   const {
+        //     result,
+        //     data,
+        //     count,
+        //     msg
+        //   } = res.data;
+        //   if (result) {
+        //     this.treeData = JSON.parse(JSON.stringify(data));
+        //     this.treeListTmp = this.treeData;
+        //     if (data.length != 0) {
+        //       this.$nextTick(function() {
+        //         _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
+        //       });
+        //       this.$set(
+        //         this.formSearchs[0].datas,
+        //         "ControlID",
+        //         data[0].ERPOrderCode
+        //       );
+        //       this.getLineData(this.userInfo.CenterID);
+        //     }
+        //   } else {
+        //     this.adminLoading = false;
+        //     this.$message({
+        //       message: msg,
+        //       type: "error",
+        //       dangerouslyUseHTMLString: true,
+        //     });
+        //   }
+        // },
         // 获取线别数据
-        async getLineData(OrganizeIDs) {
-          this.lines = [];
-          let res = await GetSearchData({
-            dicID: 5144,
-            ParentID:'183,184',
-            OrganizeIDs: OrganizeIDs,
-          });
-          const {
-            data,
-            forms,
-            result,
-            msg
-          } = res.data;
-          if (result) {
-            let newData = [];
-            this.treeData2 = data;
-            this.treeListTmp2 = data;
-            this.adminLoading = false;
-            if (data.length != 0) {
-              data.forEach((x) => {
-                newData.push({
-                  text: x.OrganizeName,
-                  value: x.OrganizeID
-                });
-              });
-            }
-           // this.lines = newData;
-            // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-            // this.checkBoxCellTypeLine.editorValueType(
-            //   GC.Spread.Sheets.CellTypes.EditorValueType.value
-            // );
-            // this.checkBoxCellTypeLine.items(newData);
-            // this.checkBoxCellTypeLine.itemHeight(24);
-            this.formSearchs[0].datas.ControlID = this.userInfo.WorkFlowInstanceID
-            this.getTableData(this.formSearchs[0].datas, 0);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        },
-        searchTree(msg, dataName, dataName2, valueName) {
-          this[dataName] = [];
-          let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-          let tmp = msg ?
-            this.rebuildData(msg, treeListTmp, valueName) :
-            JSON.parse(JSON.stringify(treeListTmp));
-          this[dataName].push(...tmp);
-        },
-        rebuildData(value, arr, valueName) {
-          if (!arr) {
-            return [];
-          }
-          let newarr = [];
-          if (Object.prototype.toString.call(arr) === "[object Array]") {
-            arr.forEach((element) => {
-              if (element[valueName].indexOf(value) > -1) {
-                // const ab = this.rebuildData(value, element.children);
-                const obj = {
-                  ...element,
-                  children: element.children,
-                };
-                newarr.push(obj);
-              } else {
-                if (element.children && element.children.length > 0) {
-                  const ab = this.rebuildData(value, element.children, valueName);
-                  const obj = {
-                    ...element,
-                    children: ab,
-                  };
-                  if (ab && ab.length > 0) {
-                    newarr.push(obj);
-                  }
-                }
-              }
-            });
-          }
-          return newarr;
-        },
+        // async getLineData(OrganizeIDs) {
+        //   this.lines = [];
+        //   let res = await GetSearchData({
+        //     dicID: 5144,
+        //     ParentID:'183,184',
+        //     OrganizeIDs: OrganizeIDs,
+        //   });
+        //   const {
+        //     data,
+        //     forms,
+        //     result,
+        //     msg
+        //   } = res.data;
+        //   if (result) {
+        //     let newData = [];
+        //     this.treeData2 = data;
+        //     this.treeListTmp2 = data;
+        //     this.adminLoading = false;
+        //     if (data.length != 0) {
+        //       data.forEach((x) => {
+        //         newData.push({
+        //           text: x.OrganizeName,
+        //           value: x.OrganizeID
+        //         });
+        //       });
+        //     }
+        //    // this.lines = newData;
+        //     // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+        //     // this.checkBoxCellTypeLine.editorValueType(
+        //     //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+        //     // );
+        //     // this.checkBoxCellTypeLine.items(newData);
+        //     // this.checkBoxCellTypeLine.itemHeight(24);
+        //     this.formSearchs[0].datas.ControlID = this.userInfo.WorkFlowInstanceID
+        //     this.getTableData(this.formSearchs[0].datas, 0);
+        //   } else {
+        //     this.adminLoading = false;
+        //     this.$message({
+        //       message: msg,
+        //       type: "error",
+        //       dangerouslyUseHTMLString: true,
+        //     });
+        //   }
+        // },
+        // searchTree(msg, dataName, dataName2, valueName) {
+        //   this[dataName] = [];
+        //   let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
+        //   let tmp = msg ?
+        //     this.rebuildData(msg, treeListTmp, valueName) :
+        //     JSON.parse(JSON.stringify(treeListTmp));
+        //   this[dataName].push(...tmp);
+        // },
+        // rebuildData(value, arr, valueName) {
+        //   if (!arr) {
+        //     return [];
+        //   }
+        //   let newarr = [];
+        //   if (Object.prototype.toString.call(arr) === "[object Array]") {
+        //     arr.forEach((element) => {
+        //       if (element[valueName].indexOf(value) > -1) {
+        //         // const ab = this.rebuildData(value, element.children);
+        //         const obj = {
+        //           ...element,
+        //           children: element.children,
+        //         };
+        //         newarr.push(obj);
+        //       } else {
+        //         if (element.children && element.children.length > 0) {
+        //           const ab = this.rebuildData(value, element.children, valueName);
+        //           const obj = {
+        //             ...element,
+        //             children: ab,
+        //           };
+        //           if (ab && ab.length > 0) {
+        //             newarr.push(obj);
+        //           }
+        //         }
+        //       }
+        //     });
+        //   }
+        //   return newarr;
+        // },
         // 单击出来组织人员
-        handleNodeClick(data, node) {
-          this.clickData = data;
-          this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-          //this.dataSearch(0);
-          this.getLineData(data.OrganizeID);
-        },
+        // handleNodeClick(data, node) {
+        //   this.clickData = data;
+        //   this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+        //   //this.dataSearch(0);
+        //   this.getLineData(data.OrganizeID);
+        // },
         // 单击出来线别
-        handleNodeClick2(data, node) {
-          this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-          this.dataSearch(0);
-        },
-        changeStatus(item, index) {
-          this.labelStatus1 = index;
-        },
+        // handleNodeClick2(data, node) {
+        //   this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
+        //   this.dataSearch(0);
+        // },
+        // changeStatus(item, index) {
+        //   this.labelStatus1 = index;
+        // },
         // 保存日计划
         async dataSaveDay() {
           let sheet = this.spread.getActiveSheet();
@@ -1320,64 +1276,64 @@
           }
         },
         // 下拉选择事件
-        handleCommand(val) {
-          if (val == 1 && !this.isOpen) {
-            this.isOpen = true;
-            this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-          } else if (val == 2 && this.isOpen) {
-            // 改变每个节点的状态
-            this.isOpen = false;
-            this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-          }
-        },
+        // handleCommand(val) {
+        //   if (val == 1 && !this.isOpen) {
+        //     this.isOpen = true;
+        //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
+        //   } else if (val == 2 && this.isOpen) {
+        //     // 改变每个节点的状态
+        //     this.isOpen = false;
+        //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
+        //   }
+        // },
         // 改变节点状态
-        changeTreeNodeStatus(node) {
-          node.expanded = this.isOpen;
-          for (let i = 0; i < node.childNodes.length; i++) {
-            // 改变节点的自身expanded状态
-            node.childNodes[i].expanded = this.isOpen;
-            // 遍历子节点
-            if (node.childNodes[i].childNodes.length > 0) {
-              this.changeTreeNodeStatus(node.childNodes[i]);
-            }
-          }
-        },
+        // changeTreeNodeStatus(node) {
+        //   node.expanded = this.isOpen;
+        //   for (let i = 0; i < node.childNodes.length; i++) {
+        //     // 改变节点的自身expanded状态
+        //     node.childNodes[i].expanded = this.isOpen;
+        //     // 遍历子节点
+        //     if (node.childNodes[i].childNodes.length > 0) {
+        //       this.changeTreeNodeStatus(node.childNodes[i]);
+        //     }
+        //   }
+        // },
         // 改变状态
-        changeStatus(item, index) {
-          this.labelStatus1 = index;
-          this.formSearchs[0].datas["LineID"] = item.OrganizeID;
-          this.dataSearch(0)
-        },
+        // changeStatus(item, index) {
+        //   this.labelStatus1 = index;
+        //   this.formSearchs[0].datas["LineID"] = item.OrganizeID;
+        //   this.dataSearch(0)
+        // },
         // 获取smt线的数据
-        async getLabelLineData() {
-          let newData = [{
-            OrganizeName: '全部',
-            OrganizeID: ''
-          }, {
-            OrganizeName: '未分线',
-            OrganizeID: ''
-          }]
-          this.Status1 = [];
-          let form = {};
-          form["dicID"] = '5144';
-          // form["ProcessID"] = 'P202009092233201';
-          let res = await GetSearchData(form);
-          const {
-            result,
-            data,
-            count,
-            msg
-          } = res.data;
-          if (result) {
-            this.Status1 = newData.concat(data);
-          } else {
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        }
+        // async getLabelLineData() {
+        //   let newData = [{
+        //     OrganizeName: '全部',
+        //     OrganizeID: ''
+        //   }, {
+        //     OrganizeName: '未分线',
+        //     OrganizeID: ''
+        //   }]
+        //   this.Status1 = [];
+        //   let form = {};
+        //   form["dicID"] = '5144';
+        //   // form["ProcessID"] = 'P202009092233201';
+        //   let res = await GetSearchData(form);
+        //   const {
+        //     result,
+        //     data,
+        //     count,
+        //     msg
+        //   } = res.data;
+        //   if (result) {
+        //     this.Status1 = newData.concat(data);
+        //   } else {
+        //     this.$message({
+        //       message: msg,
+        //       type: "error",
+        //       dangerouslyUseHTMLString: true,
+        //     });
+        //   }
+        // }
       },
     };
   </script>
