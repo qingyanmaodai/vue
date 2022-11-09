@@ -12,16 +12,6 @@
             :signName="tagRemark"
             @btnClick="btnClick"
           />
-        <!-- //   <ComSearch
-        //     v-show="labelStatus1 == 4"
-        //     ref="searchRef"
-        //     :searchData="formSearchs[1].datas"
-        //     :searchForm="formSearchs[1].forms"
-        //     :remark="1"
-        //     :btnForm="btnForm"
-        //     :signName="labelStatus1"
-        //     @btnClick="btnClick"
-        //   /> -->
         </div>
         <div>
           <div class="admin_content">
@@ -43,16 +33,6 @@
                     </el-date-picker>
                     <el-divider direction="vertical"></el-divider>
                     </div>
-                
-                  
-                  <!-- <el-button
-                    type="primary"
-                    size="mini"
-                    v-show="labelStatus1 ==-1"
-                    @click="MOPlanStep1CalculationPre(0)"
-                  >
-                    预排运算
-                  </el-button> -->
                   <div v-show="labelStatus1 == 0">
                     <el-button
                     type="warning"
@@ -70,14 +50,6 @@
                   </el-button>
                   <el-divider direction="vertical"></el-divider>
                   </div>
-                  <!-- <el-button
-                    v-show="labelStatus1 == 0"
-                    type="warning"
-                    size="mini"
-                    @click="subSAP"
-                  >
-                    提交同步申请
-                  </el-button> -->
                   <div v-show="labelStatus1 == 1">
                     <el-button
                     type="primary"
@@ -151,31 +123,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <ComVxeTable
-                ref="tableRefTwo"
-                v-show="labelStatus1 == 1"
-                :rowKey="'RowNumber'"
-                :height="height"
-                :hasSelect="true"
-                :tableData="tableData[2]"
-                :tableHeader="tableColumns[2]"
-                :tableLoading="tableLoading[2]"
-                :remark="2"
-                :sysID="sysID[2].ID"
-                :isEdit="isEdit"
-                :showFooter="true"
-                :includeFields="includeFields"
-        
-              
-                :isClear="isClear[2]"
-                :showPagination="false"
-                :pagination="tablePagination[2]"
-                @pageChange="pageChange"
-                @pageSize="pageSize"
-                @selectfun="selectFun"
-                @changeline="changeline"
-                @sortChange="sortChange"
-              /> -->
               <ComVxeTable
                 ref="tableRefTwo"
                 v-show="labelStatus1 == 1"
@@ -225,11 +172,7 @@
   import ComVxeTable from "@/components/ComVxeTable";
   import DialogTable from "@/components/Dialog/dialogTable";
   import {
-    HighlightColumnItemsCellType,
-    TopItemsCellType,
     HeaderCheckBoxCellType,
-    SortHyperlinkCellType,
-    HighlightRowItemsCellType,
   } from "@/views/PageTwoScheduling/OrderSetExcel/data.js";
   import {
     GetHeader,
@@ -240,11 +183,9 @@
     GetOrgData,
   } from "@/api/Common";
   import ComFormDialog from "@/components/ComFormDialog";
-  import { MOPlanStep1, MOPlanStep1Calculation } from "@/api/wjApi";
+  import { MOPlanStep1 } from "@/api/wjApi";
   
   import {
-    SaveMOPlanStep4,
-    SaveMOPlanStep2,
     OrderPlanMaterialForm,
   } from "@/api/PageTwoScheduling";
   import { template } from "xe-utils";
@@ -267,10 +208,7 @@
         includeFields: ["Qty"], // 包含合计的字段
         labelStatus1: 0,
         Status1: [
-        //   { label: "全部", value: "" },
           { label: "待排产", value: 0 },
-        //   { label: "已排产", value: 1 },
-        //   { label: "暂停", value: 2 },
           { label: "分线列表", value: 1 },
         ],
         title: this.$route.meta.title,
@@ -285,42 +223,9 @@
             datas: {},
             forms: [],
           },
-        //   {
-        //     datas: {},
-        //     forms: [],
-        //   },
         ],
         parmsBtn: [
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "计算排期",
-          //   Type: "primary",
-          //   Ghost: true,
-          //   Size: "small",
-          //   signName: [0, 1, 2, 3],
-          //   Methods: "computedScheduling",
-          //   Icon: "",
-          // },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "下发周计划",
-          //   Type: "primary",
-          //   Ghost: true,
-          //   signName: [0, 1, 2, 3],
-          //   Size: "small",
-          //   Methods: "setWeekData",
-          //   Icon: "",
-          // },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "暂停",
-          //   Type: "danger",
-          //   Ghost: true,
-          //   signName: [0, 1, 2, 3],
-          //   Size: "small",
-          //   Methods: "parseData",
-          //   Icon: "",
-          // },
+          
           {
             ButtonCode: "save",
             BtnName: "保存",
@@ -341,17 +246,6 @@
             signName:1,
             Size: "small",
           },
-        //   {
-        //     ButtonCode: "save",
-        //     BtnName: "恢复",
-        //     isLoading: false,
-        //     Methods: "recovery",
-        //     Type: "success",
-        //     signName: 3,
-        //     Icon: "",
-        //     Size: "small",
-        //     Params: { dataName: "selectionData",remarkTb:2 },
-        //   },
           {
             ButtonCode: "returnOrder",
             BtnName: "退回",
@@ -362,16 +256,6 @@
             Methods: "backData",
             Icon: "",
           },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "返回",
-          //   Type: "success",
-          //   Ghost: true,
-          //   Size: "small",
-          //   signName: [0, 1, 2, 3],
-          //   Methods: "reData",
-          //   Icon: "",
-          // },
         ],
         selectionData: [[], []],
         btnForm: [],
@@ -382,7 +266,6 @@
         tablePagination: [
           { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        //   { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         ],
         height: "707px",
         treeHeight: "765px",
@@ -426,62 +309,6 @@
       }, 500);
     },
     methods: {
-    //    handleClick(tab, event) {
-    //     console.log(tab.name, event);
-    //     if(tab.name==='first'){
-    //       this.formSearchs[this.tagRemark].datas["Extend26"] = 1
-    //     }else if(tab.name==='second'){
-    //       this.formSearchs[this.tagRemark].datas["Extend26"] = 0
-    //     }else{
-    //       this.formSearchs[this.tagRemark].datas["Extend26"] = ''
-    //     }
-    //     this.dataSearch(this.tagRemark)
-    //   },
-    //   async subSAP() {
-    //     this.getSelectionData(1);
-    //     this.adminLoading = true;
-    //     let newData = this.selectionData[0];
-    //     let pushData = [];
-    //     newData.forEach((m) => {
-    //       m["dicID"] = 7967;
-    //       // if (m["Extend8"] == "待同步") {
-    //       //   this.$message.error(m["OrderNo"] + "已经待同步了");
-    //       // } else {
-    //       //   if (m["Extend8"] != "已同步") {
-    //       //     m["Extend8"] = "待同步";
-    //       //   }
-    //          pushData.push(m);
-    //       // }
-    //     });
-  
-  
-    //     if (pushData.length > 0) {
-    //       let res = await GetSearch(pushData,'/APSAPI/UpdateOrderStartDate');
-    //       const { result, data, count, msg } = res.data;
-    //               this.adminLoading = false;
-    //       if (result) {
-    //         this.dataSearch(0);
-    
-    //         this.$message({
-    //           message: msg,
-    //           type: "success",
-    //           dangerouslyUseHTMLString: true,
-    //         });
-    //       } else {
-    //         this.$message({
-    //           message: msg,
-    //           type: "error",
-    //           dangerouslyUseHTMLString: true,
-    //         });
-    //       }
-    //     } else {
-    //       this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
-    //               this.adminLoading = false;
-    //     }
-    //   },
-    //   schedulingPre() {
-    //     this.getSelectionData();
-    //   },
       setData() {
         //sheet获取
         this.spread.suspendPaint();
@@ -968,11 +795,6 @@
       initSpread: function (spread) {
         this.spread = spread;
       },
-    //   changenoworkhours(item, value, prop, index, a, b) {
-    //     if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
-    //       this.NoWorkHour.push(item);
-    //     }
-    //   },
       changeline(item, value, prop, index, a, b) {
         item.拉线.forEach((m) => {
           if (item.LineID === m.OrganizeID) {
@@ -996,44 +818,6 @@
           }
         });
       },
-    //   searchTree(msg) {
-    //     this.treeData = [];
-    //     let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
-    //     let tmp = msg
-    //       ? this.rebuildData(msg, treeListTmp)
-    //       : JSON.parse(JSON.stringify(treeListTmp));
-    //     this.treeData.push(...tmp);
-    //   },
-    //   rebuildData(value, arr) {
-    //     if (!arr) {
-    //       return [];
-    //     }
-    //     let newarr = [];
-    //     if (Object.prototype.toString.call(arr) === "[object Array]") {
-    //       arr.forEach((element) => {
-    //         if (element.SupplierName.indexOf(value) > -1) {
-    //           // const ab = this.rebuildData(value, element.children);
-    //           const obj = {
-    //             ...element,
-    //             children: element.children,
-    //           };
-    //           newarr.push(obj);
-    //         } else {
-    //           if (element.children && element.children.length > 0) {
-    //             const ab = this.rebuildData(value, element.children);
-    //             const obj = {
-    //               ...element,
-    //               children: ab,
-    //             };
-    //             if (ab && ab.length > 0) {
-    //               newarr.push(obj);
-    //             }
-    //           }
-    //         }
-    //       });
-    //     }
-    //     return newarr;
-    //   },
       // 导出
       async dataExport(remarkTb) {
         this.adminLoading = true;
@@ -1043,32 +827,6 @@
         this.adminLoading = false;
         this.$store.dispatch("user/exportData", res.data);
       },
-    //   handleChanged(file, fileList) {
-    //     var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-    //     const extension = ext === "xlsx" || ext === "xls";
-    //     if (!extension) {
-    //       this.$message.error("上传文件格式只能为xlsx/xls");
-    //       // 取消时在文件列表中删除该文件
-    //       this.$refs.upload.handleRemove(file);
-    //       return false;
-    //     }
-    //     const isLt2M = file.size / 1024 / 1024 < 50;
-    //     if (!isLt2M) {
-    //       this.$message.error("上传文件大小不能超过 50MB!");
-    //       // 取消时在文件列表中删除该文件
-    //       this.$refs.upload.handleRemove(file);
-    //       return false;
-    //     } else {
-    //       this.file = file;
-    //       this.fileList = fileList;
-    //     }
-    //   },
-    //   handleRemove(file) {
-    //     this.fileList.splice(
-    //       this.fileList.findIndex((item) => item.url === file.url),
-    //       1
-    //     );
-    //   },
       // 判断按钮权限
       judgeBtn() {
         let routeBtn = this.$route.meta.btns;
@@ -1178,28 +936,6 @@
           }
         }
       },
-      // 通用直接保存
-    //   async generalSaveData(newData, remarkTb, index) {
-    //     this.adminLoading = true;
-    //     let res = await SaveData(newData);
-    //     const { result, data, count, msg } = res.data;
-    //     if (result) {
-    //       this.dataSearch(remarkTb);
-    //       this.adminLoading = false;
-    //       this.$message({
-    //         message: msg,
-    //         type: "success",
-    //         dangerouslyUseHTMLString: true,
-    //       });
-    //     } else {
-    //       this.adminLoading = false;
-    //       this.$message({
-    //         message: msg,
-    //         type: "error",
-    //         dangerouslyUseHTMLString: true,
-    //       });
-    //     }
-    //   },
       // 获取表头数据
       async getTableHeader() {
         let IDs = this.sysID;
@@ -1307,28 +1043,6 @@
       // 改变状态
       changeStatus(x, index) {
         this.labelStatus1 = index;
-        // if (index == 4) {
-        //   if (this.tableData[1].length == 0) {
-        //     this.dataSearch(1);
-        //   }
-        //   return;
-        // }
-        // let s = [];
-        // this.formSearchs[0].datas["Extend11"] = "";
-        // if (index === 0) {
-        //   s = [];
-        // } else if (index === 1) {
-        //   // this.formSearchs[0].datas["Extend11"] = "CRTD";
-        //   s = [26];
-        // } else if (index === 2) {
-        //   s = [21, 22, 23];
-        // } else if (index === 3) {
-        //   s = [24];
-        //   this.formSearchs[2].datas["ProductionStatus"] = s;
-        //   this.dataSearch(2);
-        //   return
-        // }
-        // this.formSearchs[0].datas["ProductionStatus"] = s;
         this.dataSearch(index);
       },
       // 计算排期与匹配拉线
@@ -1363,30 +1077,6 @@
           });
         }
       },
-      // getSelectionData(tag) {
-      //   let newData = this.selectionData[tag];
-  
-      //   let resultTag = false;
-      //   if (newData.length != 0) {
-      //     if (tag == 0) {
-      //       newData.forEach((x, y) => {
-      //         x.isChecked = true;
-  
-      //         if (!x.ProcessGroupID) {
-      //           resultTag = true;
-      //           this.$message.error(y + 1 + "工艺不能为空");
-      //         } else {
-      //         }
-      //       });
-      //     } else {
-      //       newData.forEach((x) => {
-      //         if (x.isChecked) {
-      //         }
-      //       });
-      //     }
-      //   }
-      //   return resultTag;
-      // },
       // 下发周计划
       async setWeekData(index) {
         let resultTag = this.getSelectionData(0);
@@ -1428,13 +1118,6 @@
           });
         }
       },
-      // 暂停计划
-    //   async parseData() {
-    //     this.SetData(24);
-    //   },
-    //   async reData() {
-    //     this.SetData(26);
-    //   },
       // 退回
       backData() {
         if (this.selectionData[1].length == 0) {
@@ -1488,20 +1171,6 @@
           this.dataSave(submitData, remarkTb);
         }
       },
-      //恢复计划
-    //   async recovery(remarkTb) {
-    //     remarkTb = 2
-    //     if (this.selectionData[remarkTb].length == 0) {
-    //       this.$message.error("请选择需要操作的数据！");
-    //     } else {
-          
-    //       this.selectionData[remarkTb].forEach(m=>{
-    //         m["ProductionStatus"]=23;
-  
-    //       });
-    //      this.dataSave(this.selectionData[remarkTb],remarkTb);
-    //     }
-    //   },
       async dataSave(newData, remarkTb) {
         let res = await GetSearch(newData, "/APSAPI/SaveData");
         const { result, data, count, msg } = res.data;
@@ -1525,36 +1194,6 @@
           });
         }
       },
-    //   async SetData(status) {
-    //     let submitData = this.selectionData[0];
-    //     if (submitData.length == 0) {
-    //       this.$message.error("请选择数据！");
-    //       return;
-    //     }
-    //     submitData.forEach((m) => {
-    //       m.ProductionStatus = status;
-    //     });
-  
-    //     this.adminLoading = true;
-    //     let res = await GetSearch(submitData, "/APSAPI/SaveData");
-    //     const { result, data, count, msg } = res.data;
-    //     this.adminLoading = false;
-    //     if (result) {
-    //       this.dataSearch(0);
-  
-    //       this.$message({
-    //         message: msg,
-    //         type: "success",
-    //         dangerouslyUseHTMLString: true,
-    //       });
-    //     } else {
-    //       this.$message({
-    //         message: msg,
-    //         type: "error",
-    //         dangerouslyUseHTMLString: true,
-    //       });
-    //     }
-    //   },
       // 进入分线列表
       insertList() {
         this.getSelectionData(this.tagRemark);
@@ -1566,49 +1205,6 @@
           this.setWeekData(1);
         }
       },
-      //正排倒排计算，匹配拉线
-    //   async MOPlanStep1CalculationPre() {
-    //     // if (this.selectionData[1].length == 0) {
-    //     //   this.$message.error("请选择需要批量填写开始日期的数据！");
-    //     //   return;
-    //     // }
-  
-    //     let submitData = [];
-    //     this.getSelectionData();
-    //     this.selectionData[0].forEach((x) => {
-    //       x["Type"] = 0;
-    //       x["dicID"] = 7960;
-    //       x["isChecked"] = true;
-    //       x["AutoDays2"] = this.AutoDays2;
-    //       submitData.push(x);
-    //     });
-  
-    //     if (submitData.length == 0) {
-    //       this.$message.error("请选择需要计算的数据！");
-    //     } else {
-    //       this.adminLoading = true;
-    //       let res = await GetSearch(
-    //         submitData,
-    //         "/APSAPI/MOPlanStep1CalculationV1"
-    //       );
-    //       const { data, forms, result, msg } = res.data;
-    //       if (result) {
-    //         this.$message({
-    //           message: msg,
-    //           type: "success",
-    //           dangerouslyUseHTMLString: true,
-    //         });
-    //         this.dataSearch(0);
-    //       } else {
-    //         this.adminLoading = false;
-    //         this.$message({
-    //           message: msg,
-    //           type: "error",
-    //           dangerouslyUseHTMLString: true,
-    //         });
-    //       }
-    //     }
-    //   },
       async getOrder()
       {
      let submitData = [];

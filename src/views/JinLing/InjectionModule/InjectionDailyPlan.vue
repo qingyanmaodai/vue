@@ -123,18 +123,6 @@
                 dataName: "selectionData"
               },
             },
-            //        {
-            //   ButtonCode: "save",
-            //   BtnName: "下推",
-            //   isLoading: false,
-            //   Methods: "setPlan",
-            //   Type: "danger",
-            //   Icon: "",
-            //   Size: "small",
-            //   Params: {
-            //     dataName: "selectionData"
-            //   },
-            // },
             {
               ButtonCode: "reset",
               BtnName: "重排",
@@ -325,43 +313,6 @@
             }
             }
         },
-    //      async setPlan(remarkTb, index, params) {
-    //       if (this.selectionData[remarkTb].length == 0) {
-    //         this.$message.error("请选择需要转入日计划的数据！");
-    //       } else {
-    //         this.adminLoading = true;
-    //         let errMsg = "";
-    //         let okCount = this.selectionData[remarkTb].length;
-    //         if (errMsg != "") {
-    //           this.$message({
-    //             message: errMsg,
-    //             type: "error",
-    //             dangerouslyUseHTMLString: true,
-    //           });
-    //         }
-    //         if (okCount > 0) {
-    //           let res = await GetSearch(
-    //             this.selectionData[remarkTb],
-    //             "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=2"
-    //           );
-    //           const { result, data, count, msg } = res.data;
-    //           if (result) {
-    //             this.adminLoading = false;
-    //             this.dataSearch(remarkTb);
-    //           } else {
-    //             this.adminLoading = false;
-    //             this.$message({
-    //               message: msg,
-    //               type: "error",
-    //               dangerouslyUseHTMLString: true,
-    //             });
-    //           }
-    //         } else {
-    //            this.adminLoading = false;
-    //         }
-    //       }
-        
-    //   },
         // 导出
         async dataExport(remarkTb) {
           this.adminLoading = true;
@@ -467,11 +418,6 @@
             });
           }
         },
-        // 单击行
-        // handleRowClick(row, remarkTb) {
-        //   this.delData[remarkTb] = [];
-        //   this.delData[remarkTb].push(row);
-        // },
         // 保存
         async dataSave(remarkTb, index, parms, newData) {
           let res = null;
@@ -1095,146 +1041,6 @@
             },
           });
         },
-        //////////////////////////////
-        // async getOrgData() {
-        //   this.getLineData(this.userInfo.CenterID);
-        //   return;
-        //   this.treeListTmp = [];
-        //   this.treeData = [];
-        //   let form = {
-        //     OrganizeIDs: this.userInfo.CenterID,
-        //     OrganizeTypeID: 5,
-        //     dicID: 3026,
-        //     Status: 1,
-        //   };
-        //   let res = await GetSearchData(form);
-        //   const {
-        //     result,
-        //     data,
-        //     count,
-        //     msg
-        //   } = res.data;
-        //   if (result) {
-        //     this.treeData = JSON.parse(JSON.stringify(data));
-        //     this.treeListTmp = this.treeData;
-        //     if (data.length != 0) {
-        //       this.$nextTick(function() {
-        //         _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
-        //       });
-        //       this.$set(
-        //         this.formSearchs[0].datas,
-        //         "ControlID",
-        //         data[0].ERPOrderCode
-        //       );
-        //       this.getLineData(this.userInfo.CenterID);
-        //     }
-        //   } else {
-        //     this.adminLoading = false;
-        //     this.$message({
-        //       message: msg,
-        //       type: "error",
-        //       dangerouslyUseHTMLString: true,
-        //     });
-        //   }
-        // },
-        // 获取线别数据
-        // async getLineData(OrganizeIDs) {
-        //   this.lines = [];
-        //   let res = await GetSearchData({
-        //     dicID: 5144,
-        //     ParentID:'183,184',
-        //     OrganizeIDs: OrganizeIDs,
-        //   });
-        //   const {
-        //     data,
-        //     forms,
-        //     result,
-        //     msg
-        //   } = res.data;
-        //   if (result) {
-        //     let newData = [];
-        //     this.treeData2 = data;
-        //     this.treeListTmp2 = data;
-        //     this.adminLoading = false;
-        //     if (data.length != 0) {
-        //       data.forEach((x) => {
-        //         newData.push({
-        //           text: x.OrganizeName,
-        //           value: x.OrganizeID
-        //         });
-        //       });
-        //     }
-        //    // this.lines = newData;
-        //     // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        //     // this.checkBoxCellTypeLine.editorValueType(
-        //     //   GC.Spread.Sheets.CellTypes.EditorValueType.value
-        //     // );
-        //     // this.checkBoxCellTypeLine.items(newData);
-        //     // this.checkBoxCellTypeLine.itemHeight(24);
-        //     this.formSearchs[0].datas.ControlID = this.userInfo.WorkFlowInstanceID
-        //     this.getTableData(this.formSearchs[0].datas, 0);
-        //   } else {
-        //     this.adminLoading = false;
-        //     this.$message({
-        //       message: msg,
-        //       type: "error",
-        //       dangerouslyUseHTMLString: true,
-        //     });
-        //   }
-        // },
-        // searchTree(msg, dataName, dataName2, valueName) {
-        //   this[dataName] = [];
-        //   let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-        //   let tmp = msg ?
-        //     this.rebuildData(msg, treeListTmp, valueName) :
-        //     JSON.parse(JSON.stringify(treeListTmp));
-        //   this[dataName].push(...tmp);
-        // },
-        // rebuildData(value, arr, valueName) {
-        //   if (!arr) {
-        //     return [];
-        //   }
-        //   let newarr = [];
-        //   if (Object.prototype.toString.call(arr) === "[object Array]") {
-        //     arr.forEach((element) => {
-        //       if (element[valueName].indexOf(value) > -1) {
-        //         // const ab = this.rebuildData(value, element.children);
-        //         const obj = {
-        //           ...element,
-        //           children: element.children,
-        //         };
-        //         newarr.push(obj);
-        //       } else {
-        //         if (element.children && element.children.length > 0) {
-        //           const ab = this.rebuildData(value, element.children, valueName);
-        //           const obj = {
-        //             ...element,
-        //             children: ab,
-        //           };
-        //           if (ab && ab.length > 0) {
-        //             newarr.push(obj);
-        //           }
-        //         }
-        //       }
-        //     });
-        //   }
-        //   return newarr;
-        // },
-        // 单击出来组织人员
-        // handleNodeClick(data, node) {
-        //   this.clickData = data;
-        //   this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-        //   //this.dataSearch(0);
-        //   this.getLineData(data.OrganizeID);
-        // },
-        // 单击出来线别
-        // handleNodeClick2(data, node) {
-        //   this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-        //   this.dataSearch(0);
-        // },
-        // changeStatus(item, index) {
-        //   this.labelStatus1 = index;
-        // },
         // 保存日计划
         async dataSaveDay() {
           let sheet = this.spread.getActiveSheet();
@@ -1275,65 +1081,6 @@
             });
           }
         },
-        // 下拉选择事件
-        // handleCommand(val) {
-        //   if (val == 1 && !this.isOpen) {
-        //     this.isOpen = true;
-        //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-        //   } else if (val == 2 && this.isOpen) {
-        //     // 改变每个节点的状态
-        //     this.isOpen = false;
-        //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-        //   }
-        // },
-        // 改变节点状态
-        // changeTreeNodeStatus(node) {
-        //   node.expanded = this.isOpen;
-        //   for (let i = 0; i < node.childNodes.length; i++) {
-        //     // 改变节点的自身expanded状态
-        //     node.childNodes[i].expanded = this.isOpen;
-        //     // 遍历子节点
-        //     if (node.childNodes[i].childNodes.length > 0) {
-        //       this.changeTreeNodeStatus(node.childNodes[i]);
-        //     }
-        //   }
-        // },
-        // 改变状态
-        // changeStatus(item, index) {
-        //   this.labelStatus1 = index;
-        //   this.formSearchs[0].datas["LineID"] = item.OrganizeID;
-        //   this.dataSearch(0)
-        // },
-        // 获取smt线的数据
-        // async getLabelLineData() {
-        //   let newData = [{
-        //     OrganizeName: '全部',
-        //     OrganizeID: ''
-        //   }, {
-        //     OrganizeName: '未分线',
-        //     OrganizeID: ''
-        //   }]
-        //   this.Status1 = [];
-        //   let form = {};
-        //   form["dicID"] = '5144';
-        //   // form["ProcessID"] = 'P202009092233201';
-        //   let res = await GetSearchData(form);
-        //   const {
-        //     result,
-        //     data,
-        //     count,
-        //     msg
-        //   } = res.data;
-        //   if (result) {
-        //     this.Status1 = newData.concat(data);
-        //   } else {
-        //     this.$message({
-        //       message: msg,
-        //       type: "error",
-        //       dangerouslyUseHTMLString: true,
-        //     });
-        //   }
-        // }
       },
     };
   </script>
