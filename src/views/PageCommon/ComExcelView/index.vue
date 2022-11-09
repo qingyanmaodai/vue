@@ -352,23 +352,23 @@
           colHeader1.forEach(function(value, index) {
             sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
           });
-          sheet.setCellType(
-            0,
-            0,
-            new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
-          );
+          // sheet.setCellType(
+          //   0,
+          //   0,
+          //   new HeaderCheckBoxCellType(),
+          //   GCsheets.SheetArea.colHeader
+          // );
   
           // 选框
-          let checkbox = {
-            name: "isChecked",
-            displayName: "isChecked",
-            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60,
-          };
-          for (var name in checkbox) {
-            colInfos[0][name] = checkbox[name];
-          }
+          // let checkbox = {
+          //   name: "isChecked",
+          //   displayName: "isChecked",
+          //   cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+          //   size: 60,
+          // };
+          // for (var name in checkbox) {
+          //   colInfos[0][name] = checkbox[name];
+          // }
           var row = sheet.getRange(
             0,
             -1,

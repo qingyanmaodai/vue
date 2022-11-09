@@ -12,7 +12,7 @@
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
                 <div style="margin-right: 10px">
-                  <span>日期范围</span>
+                  <!-- <span>日期范围</span>
                   <el-date-picker
                     v-model="machineCycle"
                     type="daterange"
@@ -22,7 +22,7 @@
                     :clearable="false"
                     :editable="false"
                   >
-                  </el-date-picker>
+                  </el-date-picker> -->
                 </div>
               </el-col>
             </el-row>
@@ -119,16 +119,6 @@
           btnForm: [],
           parmsBtn: [
             {
-              ButtonCode: "sysData",
-              BtnName: "抓单",
-              Type: "danger",
-              Ghost: true,
-              Size: "small",
-              Methods: "Analysis",
-              Icon: "",
-              sort:2,
-            },
-            {
               ButtonCode: "to_weeks_plan",
               BtnName: "转入周计划",
               Type: "primary",
@@ -136,7 +126,17 @@
               Size: "small",
               Methods: "toWeeksPlan",
               Icon: "",
-              sort:3,
+              sort:1,
+            },
+            {
+              ButtonCode: "downLoadErpData",
+              BtnName: "下载ERP数据",
+              Type: "warning",
+              Ghost: true,
+              Size: "small",
+              Methods: "downERP",
+              Icon: "",
+              sort:2,
             },
           ],
           tableData: [
@@ -158,7 +158,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: [{ID:6734}],
+          sysID: [{ID:9008}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -181,15 +181,14 @@
       watch: {},
       created() {
         _this = this;
-        // this.getLabelLineData();
         this.adminLoading = true;
         this.judgeBtn();
         this.getTableHeader();
         // 计算周期默认时间：今天~1.5月
-        _this.machineCycle = [
-          formatDates.formatTodayDate(),
-          formatDates.formatOneMonthDate(),
-        ];
+        // _this.machineCycle = [
+        //   formatDates.formatTodayDate(),
+        //   formatDates.formatOneMonthDate(),
+        // ];
       },
       computed: {
         ...mapState({
@@ -550,9 +549,9 @@
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            // 合计和负荷行设置背景色
-            if (row["Code"] == null) {
-              rowSheet.backColor("#A0CFFF");
+            // 设置背景色
+            if(row['DBResult']!='正确'){
+              rowSheet.backColor("red");
             }
           })
     
@@ -834,39 +833,27 @@
             }
           }
         },
-        // 分析
-        async Analysis() {
-          let form = {
-            // StartDate:null,
-            // EndDate: _this.machineCycle
-            SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-            Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
-          };
+        async downERP() {
           this.adminLoading = true;
-          let res = await GetSearch(form, "/APSAPI/AnalyseManualForecast");
+          let res = await GetSearch(null, "/APSAPI/GetErpData");
+
           const { result, data, count, msg } = res.data;
-          try {
-            if (result) {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-              this.dataSearch(this.tagRemark);
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } catch (error) {
-            if (error) {
-              this.adminLoading = false;
-            }
+
+          if (result) {
+            this.dataSearch(this.tagRemark);
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
           }
+          this.adminLoading = false;
         },
       },
     };
