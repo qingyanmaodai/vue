@@ -1,9 +1,9 @@
-<!--注塑日计划-->
+<!--通用excel表，只做查看-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
         <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-          :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
+          :isLoading="tableLoading[0]" :btnForm="btnForm" @btnClick="btnClick" />
       </div>
       <div>
         <div class="admin_content">
@@ -11,6 +11,9 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
+                <div style="margin-right: 10px">
+                  
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -46,13 +49,8 @@
     import GC from "@grapecity/spread-sheets";
     import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
     import "@grapecity/spread-sheets/js/zh.js";
-    import {
-      mapState
-    } from "vuex";
     GC.Spread.Common.CultureManager.culture("zh-cn");
     import ComSearch from "@/components/ComSearch";
-    import ComReportTable from "@/components/ComReportTable";
-    import ComAsideTree from "@/components/ComAsideTree";
     import {
       HeaderCheckBoxCellType,
     } from "@/static/data.js";
@@ -60,81 +58,24 @@
       GetHeader,
       GetSearchData,
       ExportData,
-      SaveData,
       GetSearch,
     } from "@/api/Common";
-    import {
-      SaveMOPlanStep4
-    } from "@/api/PageTwoScheduling";
     export default {
-      name: "InjectionDailyPlan",
+      name: "ComExcelView",
       components: {
         ComSearch,
-        ComReportTable,
-        ComAsideTree,
       },
       data() {
         return {
-          labelStatus1: 0,
-          Status1: [],
-          //////////////左侧树节点//////////////
-          LineName: "",
-          OrganizeName: "",
-          clickData: {},
-          AutoDays2: 30,
-          treeProps: {
-            label: "OrganizeName",
-            children: "children",
-          },
-          treeListTmp: [],
-          treeListTmp2: [],
-          treeData: [],
-          treeData2: [],
-          autoGenerateColumns: true,
           ////////////////// Search /////////////////
           title: this.$route.meta.title,
-          drawer: false,
-          delData: [
-            []
-          ],
           formSearchs: [{
             datas: {},
             forms: [],
           }, ],
           btnForm: [],
-          parmsBtn: [{
-              ButtonCode: "save",
-              BtnName: "保存",
-              isLoading: false,
-              Methods: "dataSaveDay",
-              Type: "success",
-              Icon: "",
-              Size: "small",
-            },
-               {
-              ButtonCode: "returnOrder",
-              BtnName: "退回",
-              isLoading: false,
-              Methods: "dataDel",
-              Type: "danger",
-              Icon: "",
-              Size: "small",
-              Params: {
-                dataName: "selectionData"
-              },
-            },
-            {
-              ButtonCode: "reset",
-              BtnName: "重排",
-              isLoading: false,
-              Methods: "resetScheduling",
-              Type: "danger",
-              Icon: "",
-              Size: "small",
-              Params: {
-                dataName: "resetScheduling"
-              },
-            },
+          parmsBtn: [
+            
           ],
           tableData: [
             []
@@ -150,46 +91,26 @@
             pageTotal: 0
           }],
           height: "707px",
-          treeHeight: "765px",
-          showPagination: true,
           tagRemark: 0,
-          isLoading: false,
           isEdit: false,
-          sysID: [{ID:7956}],
+          sysID: [{ID:6734}],
           spread: null,
           adminLoading: false,
-          checkBoxCellTypeLine: "",
-          isOpen: true,
-          time: null,
-          selectionData: [
-            []
-          ],
-          NoWorkHour: [],
-        LineViewSort: [],
-        spread: null,
-        sheetSelectRows: [],
-        sheetSelectObj: { start: 0, end: 0, count: 0 },
+          sheetSelectRows: [],
+          sheetSelectObj: { start: 0, end: 0, count: 0 },
         };
-      },
-      beforeRouteLeave(to, form, next) {
-        clearInterval(this.time);
-        next();
       },
       watch: {},
       created() {
         _this = this;
-        // this.getLabelLineData();
         this.adminLoading = true;
+        let routeBtn = this.$route;
+        this.sysID[this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
         this.judgeBtn();
         this.getTableHeader();
       },
       computed: {
-        ...mapState({
-          userInfo: (state) => state.user.userInfo,
-        }),
-      },
-      beforeRouteEnter(to, form, next) {
-          next();
+
       },
       activated() {
         if(this.spread)
@@ -224,12 +145,12 @@
               }
             });
           }
+          newBtn = _.sortBy(newBtn,['sort'])
           this.$set(this, "btnForm", newBtn);
           this.$set(this, "isEdit", permission);
         },
         // 高度控制
         setHeight() {
-          this.treeHeight = document.documentElement.clientHeight - 150 + "px";
           let headHeight = this.$refs.headRef.offsetHeight;
           let newHeight = "";
           let rem =
@@ -322,132 +243,6 @@
           this.adminLoading = false;
           this.$store.dispatch("user/exportData", res.data);
         },
-      // 删除
-      async dataDel(remarkTb, index, parms) {
-        let res = null;
-        this.getSelectionData();
-        let newData = [];
-  
-        this.$confirm(
-          "确定要退回的【" +
-            this[parms.dataName][remarkTb].length +
-            "】数据吗，如果已经报工则无法退回？"
-        )
-          .then((_) => {
-            if (parms && parms.dataName) {
-              if (this[parms.dataName][remarkTb].length == 0) {
-                this.$message.error("请单击需要操作的数据！");
-                return;
-              } else {
-                this[parms.dataName][remarkTb].forEach((x) => {
-                  let obj = x;
-                  obj["Status"] = -1;
-                  newData.push(obj);
-                });
-              }
-            } else {
-              this.tableData[remarkTb].forEach((y) => {
-                let obj2 = y;
-                obj2["Status"] = -1;
-                newData.push(obj2);
-              });
-            }
-            this.adminLoading = true;
-            _this.dataSave(remarkTb, index, null, newData);
-          })
-          .catch((_) => {});
-      },
-        resetScheduling() {
-          this.$confirm("确定要重排全部数据吗？")
-            .then(async (_) => {
-              this.adminLoading = true;
-  
-              let sheet = this.spread.getActiveSheet();
-              let submitData = sheet.getDataSource();
-              submitData.forEach((m) => {
-                m["isChecked"] = true;
-              });
-              if (submitData.length >= 0) {
-                this.adminLoading = true;
-                let res = await GetSearch(
-                  submitData,
-                  "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
-                );
-                const {
-                  result,
-                  data,
-                  count,
-                  msg
-                } = res.data;
-                if (result) {
-                  this.dataSearch(0);
-                  this.adminLoading = false;
-                  this.$message({
-                    message: msg,
-                    type: "success",
-                    dangerouslyUseHTMLString: true,
-                  });
-                } else {
-                  this.adminLoading = false;
-                  this.$message({
-                    message: msg,
-                    type: "error",
-                    dangerouslyUseHTMLString: true,
-                  });
-                }
-              } else {
-                this.$message({
-                  message: "未有数据",
-                  type: "error",
-                  dangerouslyUseHTMLString: true,
-                });
-              }
-            })
-            .catch((_) => {});
-        },
-        // 获取选中的数据
-        getSelectionData() {
-          let sheet = this.spread.getActiveSheet();
-          let newData = sheet.getDataSource();
-          this.selectionData[0] = [];
-          if (newData.length != 0) {
-            newData.forEach((x) => {
-              if (x.isChecked) {
-                this.selectionData[0].push(x);
-              }
-            });
-          }
-        },
-        // 保存
-        async dataSave(remarkTb, index, parms, newData) {
-          let res = null;
-  
-          if (newData && newData.length != 0) {
-            res = await SaveData(newData);
-          } else {
-            res = await SaveData(this.tableData[remarkTb]);
-          }
-          const {
-            datas,
-            forms,
-            result,
-            msg
-          } = res.data;
-          if (result) {
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-            this.dataSearch(remarkTb);
-          } else {
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        },
         // 获取表头数据
         async getTableHeader() {
           let IDs = this.sysID
@@ -498,9 +293,7 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 6734;
           let res = await GetSearchData(form);
-  
           const {
             result,
             data,
@@ -531,8 +324,6 @@
           sheet.defaults.rowHeaderColWidth = 60;
           let colHeader1 = [];
           let colInfos = [];
-          let newData = [];
-          let list = []
           this.tableColumns[0].forEach((x,i) => {
             if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
               let ComboBox = null
@@ -561,23 +352,23 @@
           colHeader1.forEach(function(value, index) {
             sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
           });
-          sheet.setCellType(
-            0,
-            0,
-            new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
-          );
+          // sheet.setCellType(
+          //   0,
+          //   0,
+          //   new HeaderCheckBoxCellType(),
+          //   GCsheets.SheetArea.colHeader
+          // );
   
           // 选框
-          let checkbox = {
-            name: "isChecked",
-            displayName: "isChecked",
-            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60,
-          };
-          for (var name in checkbox) {
-            colInfos[0][name] = checkbox[name];
-          }
+          // let checkbox = {
+          //   name: "isChecked",
+          //   displayName: "isChecked",
+          //   cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+          //   size: 60,
+          // };
+          // for (var name in checkbox) {
+          //   colInfos[0][name] = checkbox[name];
+          // }
           var row = sheet.getRange(
             0,
             -1,
@@ -673,9 +464,6 @@
               rowSheet.backColor("#A0CFFF");
             }
           })
-    
-  
-  
         var insertRowsCopyStyle = {
           canUndo: true,
           name: "insertRowsCopyStyle",
@@ -840,10 +628,6 @@
           
           }
         );
-  
-  
-  
-  
           /////////////////表格事件/////////////
           this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
             const {
@@ -860,12 +644,6 @@
   
           this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
           this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
-            // 自动计算数量
-  
-            _this.computedNum(args.row, args.col, args.editingText);
-            // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-            //   sheet.setArray(args.row, i, [2021]);
-            // }
           });
           sheet.options.isProtected = true;
           sheet.options.protectionOptions.allowResizeColumns = true;
@@ -888,137 +666,6 @@
           this.spread.refresh()
           this.spread.options.tabStripVisible = false;//是否显示表单标签
         },
-        // 自动计算数量
-        computedNum(rowIndex, colIndex, val) {
-          
-          let sheet = this.spread.getActiveSheet();
-          let dataSource = sheet.getDataSource();
-          if (val == null) {
-            val = 0;
-          }else if(val==0){//输入0不触发自动计算
-            return
-          }
-          val = parseInt(val)
-          //当前输入的有小数，取整
-          sheet.setValue(rowIndex, colIndex, val);
-          let currentRow = dataSource[rowIndex];
-          if (currentRow.ID == -1) {
-            return false;
-          }
-          let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
-          if (!currentRow[currentlabel]) {
-            //不是天日的数量
-            currentlabel = this.tableColumns[0][colIndex].prop;
-            if (currentlabel == "ViewSort") {
-              val = currentRow[currentlabel];
-              if (val) {
-                let newRowindex = 1;
-                let flag = false;
-                let lineID = currentRow["LineID"];
-                //循环上面
-                for (var r = 0; r < dataSource.length - 1; r++) {
-                  let row = dataSource[r];
-                  let thisValue = newRowindex; //row[currentlabel];
-                  if (lineID != row["LineID"]) {
-                    continue;
-                  }
-                  if (r < rowIndex) {
-                    if (thisValue >= val && flag === false) {
-                      newRowindex = val + 1;
-                      flag = true;
-                    }
-  
-                    thisValue = newRowindex;
-                    newRowindex++;
-                  } else if (r > rowIndex) {
-                    if (newRowindex == val) {
-                      newRowindex++;
-                    }
-  
-                    thisValue = newRowindex;
-                    newRowindex++;
-                  } else {
-                    thisValue = val;
-                  }
-                  sheet.setValue(r, colIndex, thisValue);
-                }
-              }
-            } else {}
-  
-            return;
-          }
-          if (
-            !currentRow[currentlabel].TotalHours ||
-            parseInt(currentRow[currentlabel].TotalHours) <= 0
-          ) {
-            this.$message.error("该天休息，上班时间为0");
-            sheet.setValue(rowIndex, colIndex, "");
-            return;
-          }
-  
-          let Qty = parseInt(currentRow.OweQty);
-          let Capacity = parseInt(currentRow.Capacity);
-          let list = [];
-          let editNum = 0;
-          let remainNum = 0;
-          // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
-          this.tableColumns[0].some((x, i) => {
-            if (i <= colIndex) {
-              list.push(currentRow[x.prop]);
-              if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-                editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
-              }
-            } else {
-              list.push("");
-            }
-          });
-          remainNum = Qty - editNum;
-  
-          if (parseInt(val) > remainNum) {
-            this.$message.error(
-              "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
-            );
-            list[colIndex] = "";
-            for (var j = 0; j < this.tableColumns[0].length; j++) {
-              sheet.setArray(rowIndex, j, [list[j]]);
-            }
-            return;
-          } else {
-            // 接着计算下面每一个空格该有的数
-            for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-              let label = this.tableColumns[0][j].prop + "dy";
-              let obj = currentRow[label];
-              let maxNum = 0
-              if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
-                remainNum = remainNum
-              }else{
-                remainNum = remainNum - parseInt(val);
-              }
-              // 如果产能为空会出现NaN情况的判断
-              if(Capacity){
-                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-              }else{
-                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-              }
-              if (remainNum <= 0) {
-                list[j] = null;
-              } else {
-                if (remainNum <= maxNum) {
-                  list[j] = remainNum;
-                  val = remainNum
-                  break;
-                }else {
-                  list[j] = maxNum;
-                  // remainNum -= maxNum;
-                  val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
-                }
-              }
-            }
-            for (var j = 0; j < this.tableColumns[0].length; j++) {
-              sheet.setArray(rowIndex, j, [list[j]]);
-            }
-          }
-        },
         // 刷新页面
         refrshPage() {
           this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
@@ -1037,49 +684,9 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID
+              ID: this.sysID[this.tagRemark].ID
             },
           });
-        },
-        // 保存日计划
-        async dataSaveDay() {
-          let sheet = this.spread.getActiveSheet();
-          let newData = sheet.getDirtyRows();
-          let submitData = [];
-          if (newData.length != 0) {
-            newData.forEach((x) => {
-              submitData.push(x.item);
-            });
-          }
-          if (submitData.length == 0) {
-            this.$message.error("没修改过任何数据！");
-            return;
-          }
-  
-          this.adminLoading = true;
-          let res = await SaveMOPlanStep4(submitData);
-          const {
-            result,
-            data,
-            count,
-            msg
-          } = res.data;
-          if (result) {
-            this.dataSearch(0);
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
         },
       },
     };
