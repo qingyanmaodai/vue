@@ -107,31 +107,31 @@ export default {
       title: this.$route.meta.title,
       formSearchs: [
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
         {
-          datas: {},
+          datas: {DIsVisibleApp:1},
           forms: [],
         },
       ],

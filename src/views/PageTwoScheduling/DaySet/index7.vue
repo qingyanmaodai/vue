@@ -72,7 +72,7 @@
       </div>
 
       <!-- 弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5594" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -628,6 +628,13 @@ keyDown() {
             displayName: "线别",
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
+          });
+        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            size: parseInt(x.width),
+            formatter: '@'//字符串格式
           });
         } else {
           colInfos.push({
