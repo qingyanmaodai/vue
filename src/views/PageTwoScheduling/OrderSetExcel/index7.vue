@@ -475,6 +475,13 @@ export default {
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
+        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            size: parseInt(x.width),
+            formatter: '@'//转为日期格式
+          });
         } else {
           colInfos.push({
             name: x.prop,

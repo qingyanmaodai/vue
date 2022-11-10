@@ -530,7 +530,7 @@ export default {
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//转为日期格式
+            formatter: '@'//字符串格式
           });
         }  else {
           colInfos.push({
