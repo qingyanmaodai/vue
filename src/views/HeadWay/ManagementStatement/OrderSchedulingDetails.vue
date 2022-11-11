@@ -134,9 +134,9 @@
                   @click="toPageSetting"
                   class="primaryColor cursor"
                 >SysID:{{ sysID[1].ID }}</span>
-                <span class="cx_margin_left1">
+                <!-- <span class="cx_margin_left1">
                   分析人:{{sysForm.UserName}} 分析时间：{{sysForm.Time}}
-                </span>
+                </span> -->
               </div>
               <div class="flex">
                 <el-pagination
