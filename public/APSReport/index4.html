@@ -9,8 +9,8 @@
     <meta http-equiv="Cache" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>生产计划看板</title>
-    <link rel="stylesheet" type="text/css" href="./css/common.css" />
-    <link rel="stylesheet" type="text/css" href="./css/proPlan.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css?V=5" />
+    <link rel="stylesheet" type="text/css" href="./css/proPlan.css?v=5" />
 </head>
 
 <body style="padding: 0; margin: 0 ;">
@@ -185,6 +185,11 @@
         return year + "年" + month + "月" + date + "日" + week[day] + " " + h + ":" + m + ":" + s;
 
     }
+<<<<<<< HEAD
+    var showDate = function () {
+
+        var nowdate = new Date();
+=======
     var showDate = function (day) {
         let dates = new Date()
         var nowdate = dates
@@ -193,6 +198,7 @@
             nowdate = dates.setDate(dates.getDate() + day);
         }
         nowdate = new Date(nowdate)
+>>>>>>> 1b3ee0bf82fe4d2828fa5ee6e4b303266b0e6927
 
         var year = nowdate.getFullYear(),
 
@@ -265,7 +271,6 @@
             return {
                 innerHTML:'',
                 gudtime: null,
-                time1: null,
                 time2: null,
                 large: true,
                 form: {},
@@ -643,6 +648,7 @@
             },
             // 渲染echart图
             barData(id, option) {
+                debugger
                 echarts.dispose(id)
                 myChart = echarts.init(id);
                 myChart.setOption(option)
@@ -769,7 +775,11 @@
             },
             // 明日生产计划
             getTomorrowPlanData(OrganizeIDs) {
+<<<<<<< HEAD
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate()], rows: 0 })
+=======
                 axiosPostRequst(`/APSAPI/APSData`, { dicID: 5170, OrganizeIDs: OrganizeIDs, PlanDay: [showDate(1),showDate(1)], rows: 0 })
+>>>>>>> 1b3ee0bf82fe4d2828fa5ee6e4b303266b0e6927
                     .then(function (res) {
                         _this.tomorrowList = []
                         let  innerHTML = ''
@@ -908,7 +918,6 @@
         },
         beforeUnmount() {
             if (this.time) this.time.destroy();
-            if (this.time1) this.time1.destroy();
             if (this.time2) this.time2.destroy();
             if (this.gudtime) this.gudtime.destroy();
         },

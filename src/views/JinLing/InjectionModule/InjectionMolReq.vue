@@ -810,7 +810,7 @@
             return;
           }
           this.adminLoading = true;
-          let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlan");
+          let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlanForOrder");
           const { result, data, count, msg } = res.data;
           try {
             if (result) {
