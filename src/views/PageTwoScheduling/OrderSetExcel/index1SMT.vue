@@ -32,14 +32,14 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-                <el-input-number
+                <!-- <el-input-number
                   v-model="AutoDays2"
                   type="number"
                   v-show="labelStatus1 != 4"
                   size="small"
                   placeholder="请选择周期"
                 >
-                </el-input-number>
+                </el-input-number> -->
                 <el-divider direction="vertical"></el-divider>
                 <!-- <el-button
                   type="primary"
@@ -398,12 +398,12 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7944, AutoDays2: this.AutoDays2 }],
+      sysID: [{ ID: 7944 }],
       //sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
-      AutoDays2: 30,
+      // AutoDays2: 30,
       NoWorkHour: [],
       LineViewSort: [],
       spread: null,
@@ -1231,7 +1231,7 @@ export default {
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
       if (remarkTb == 0) {
-        form["AutoDays2"] = this.AutoDays2;
+        // form["AutoDays2"] = this.AutoDays2;
       }
 
       form["rows"] = this.tablePagination[remarkTb].pageSize;
@@ -1561,7 +1561,7 @@ export default {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
-        x["AutoDays2"] = this.AutoDays2;
+        // x["AutoDays2"] = this.AutoDays2;
         submitData.push(x);
       });
 
@@ -1605,7 +1605,7 @@ export default {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
-        x["AutoDays2"] = this.AutoDays2;
+        // x["AutoDays2"] = this.AutoDays2;
         submitData.push(x);
       });
    

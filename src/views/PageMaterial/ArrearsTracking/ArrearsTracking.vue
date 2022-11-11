@@ -133,6 +133,15 @@
         ],
         btnForm: [],
         parmsBtn: [
+          {
+            ButtonCode: "save",
+            BtnName: "保存",
+            Type: "success",
+            Ghost: true,
+            Size: "small",
+            Methods: "dataSave",
+            Icon: "",
+          },
         ],
         tableData: [[]],
         delData: [[]],
@@ -258,6 +267,13 @@
               displayName: x.label,
               cellType: combobox,
               size: parseInt(x.width),
+            });
+          }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+            colInfos.push({
+              name: x.prop,
+              displayName: x.label,
+              size: parseInt(x.width),
+              formatter: '@'//字符串格式
             });
           }else {
             colInfos.push({
@@ -638,6 +654,38 @@
           });
         }
         this.$set(this.tableLoading, index, false);
+      },
+      // 保存
+      async dataSave(remarkTb) {
+        let sheet = this.spread.getActiveSheet();
+        let newData = sheet.getDirtyRows(); //获取修改过的数据
+        let submitData = [];
+        if (newData.length != 0) {
+          newData.forEach((x) => {
+            submitData.push(x.item);
+          });
+          this.adminLoading = true;
+          let res = await SaveData(submitData);
+          const { datas, forms, result, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        } else {
+          this.$message.error("当前数据没做修改，请先修改再保存！");
+        }
       },
     },
   };
