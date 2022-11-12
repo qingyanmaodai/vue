@@ -326,9 +326,12 @@ export default {
           cell.foreColor("#2a06ecd9");
         } 
         // 列宽自适应
-        // if(m.name.indexOf('-')>-1){
-        //   sheet.autoFitColumn(cellIndex)
-        // }
+        if(m.name.indexOf('-')>-1){
+          sheet.autoFitColumn(cellIndex)
+          if(sheet.getColumnWidth(cellIndex)<=60){
+            sheet.setColumnWidth(cellIndex, parseInt(m.width))
+          }
+        }
 
         cellIndex++;
       });
