@@ -282,6 +282,7 @@
           ref="ruleForm"
           label-width="100px"
           class="demo-ruleForm"
+          @submit.native.prevent
         >
           <el-form-item label="报工日期：" prop="ProducedDate">
             <el-date-picker

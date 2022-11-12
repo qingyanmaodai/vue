@@ -15,6 +15,7 @@
         :rules="formRules"
         label-width="100px"
         class="dialogForm"
+        @submit.native.prevent
       >
         <el-form-item
           v-for="(newItem, index) in formController"

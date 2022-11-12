@@ -7,6 +7,7 @@
       class="demo-form-inline"
       inline
       style="padding:0 5px;"
+      @submit.native.prevent
     >
       <el-form-item
         v-for="(item) in searchForm"

@@ -11,6 +11,7 @@
           inline
           label-width=""
           label-position="left"
+          @submit.native.prevent
         >
           <el-row :gutter="20">
             <el-col :span="6">

@@ -8,6 +8,7 @@
       label-width="95px"
       class="dialogForm"
       inline
+      @submit.native.prevent
     >
       <el-form-item
         v-for="(newItem, index) in formController"
