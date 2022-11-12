@@ -9,6 +9,7 @@
       inline
       label-width=""
       label-position="left"
+      @submit.native.prevent
     >
       <template v-if="row == 0">
         <el-row>

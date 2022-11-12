@@ -960,9 +960,6 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        this.adminLoading = false
-        console.log('DataList',DataList)
-        return
         let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
         const { result, data, count, msg } = res.data;
         if (result) {
