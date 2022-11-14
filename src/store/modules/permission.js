@@ -39,7 +39,7 @@ function GetMenuList(data, ParentCode) {
                 alwaysShow: true,
                 name: item.Name,
                 hidden: item.Hidden,
-                meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: o }
+                meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: o,IsOpenWindow:item.IsOpenWindow }
             }
             var child = []
             var childlist = []
@@ -59,7 +59,7 @@ function GetMenuList(data, ParentCode) {
                     },
                     hidden: item.Hidden,
                     name: item.Name,
-                    meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: -1 }
+                    meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: -1 ,IsOpenWindow:item.IsOpenWindow}
                 }
             }
             menus.push(childmodel)
