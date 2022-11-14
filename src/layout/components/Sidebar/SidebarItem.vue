@@ -5,6 +5,8 @@
         v-if="onlyOneChild.meta"
         :to="resolvePath(onlyOneChild.path)"
         :dicID="onlyOneChild.meta.dicID"
+        :target="onlyOneChild.meta.IsOpenWindow?'_blank':''" 
+        :tag="onlyOneChild.meta.IsOpenWindow?'a':'span'"
       >
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
