@@ -1,4 +1,4 @@
-<!-- SMT周计划 -->
+<!-- 一部SMT周计划 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
@@ -637,14 +637,20 @@ export default {
             rowSheet3.foreColor("red");
           }
         } 
-         else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
-          // row.backColor();
-          rowSheet.backColor("#C2E7B0");
-          rowSheet.foreColor("red");
+        // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
+        //   rowSheet.backColor("#C2E7B0");
+        //   rowSheet.foreColor("red");
+        //   if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+        //     rowSheet3.foreColor("red");
+        //   }
+        // } 
+        else if (row["DBResult"]&&row["DBResult"].indexOf('错误')>-1) {
+          rowSheet.backColor("red");
+          rowSheet.foreColor("black");
           if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-            rowSheet3.foreColor("red");
+            rowSheet3.foreColor("#A0CFFF");
           }
-        } 
+        }
         else if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
           rowSheet.foreColor("black");
           rowSheet2.foreColor("balck");

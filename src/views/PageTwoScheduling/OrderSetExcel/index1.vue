@@ -655,7 +655,7 @@ export default {
             rowSheet3.foreColor("red");
           }
         } 
-        else if (row["DBResult"] == '错误') {
+        else if (row["DBResult"]&&row["DBResult"].indexOf('错误')>-1) {
         // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
           // row.backColor();
           // rowSheet.backColor("#C2E7B0");
@@ -1318,7 +1318,14 @@ export default {
       return className;
     },
     // 行内列样式
-    cellStyle({ row, column }) {},
+    cellStyle({ row, column }) {
+      //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
+      if (row["DBResult"] && row["DBResult"].indexOf("错误")>-1 ) {
+        return {
+          background: "red",
+        };
+      }
+    },
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
