@@ -644,7 +644,7 @@ export default {
         //     rowSheet3.foreColor("red");
         //   }
         // } 
-        else if (row["DBResult"]&&row["DBResult"].indexOf('错误')>-1) {
+        else if (row["DbResult"]&&row["DbResult"].indexOf('错误')>-1) {
           rowSheet.backColor("red");
           rowSheet.foreColor("black");
           if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
