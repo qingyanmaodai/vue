@@ -655,12 +655,15 @@ export default {
             rowSheet3.foreColor("red");
           }
         } 
-         else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
+        else if (row["DBResult"] == '错误') {
+        // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
           // row.backColor();
-          rowSheet.backColor("#C2E7B0");
-          rowSheet.foreColor("red");
+          // rowSheet.backColor("#C2E7B0");
+          // rowSheet.foreColor("red");
+          rowSheet.backColor("red");
+          rowSheet.foreColor("black");
           if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-            rowSheet3.foreColor("red");
+            rowSheet3.foreColor("#A0CFFF");
           }
         } 
         else if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
