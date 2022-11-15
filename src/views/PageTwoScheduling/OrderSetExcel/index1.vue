@@ -268,6 +268,8 @@ export default {
   },
   data() {
     return {
+      // 是否匹配拉线
+      hasLineStatus:false,
       activeName: 'all',
       dialogSearchForm:{
         OrderID:'',
@@ -1328,6 +1330,7 @@ export default {
     },
     // 改变状态
     changeStatus(x, index) {
+      this.hasLineStatus = false
       this.labelStatus1 = index;
       if (index == 4) {
         if (this.tableData[1].length == 0) {
@@ -1707,6 +1710,8 @@ export default {
             type: "success",
             dangerouslyUseHTMLString: true,
           });
+          // 已进行匹配拉线
+          this.hasLineStatus = true
         } else {
           this.adminLoading = false;
           this.$message({
@@ -1765,6 +1770,11 @@ export default {
         this.$message.error("请选择需要更新的计划！");
         return;
       }
+      // 先判断是否已匹配拉线
+      if(!this.hasLineStatus){
+        this.$message.error("请先匹配拉线！");
+        return;
+      }
       let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
       submitData.forEach((m) => {
         m["MOSchedulingType"] = 1;
@@ -1781,6 +1791,8 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
+        this.hasLineStatus = false
+        this.$set(this.selectionData, 1, []);
       } else {
         this.adminLoading = false;
         this.$message({
