@@ -1312,7 +1312,7 @@ export default {
   
     tableRowClassName({ row, rowIndex }) {
       let className = "";
-      if (row.DbResult != "" && row.DbResult != "计算成功") {
+      if (row["DbResult"] && row["DbResult"].indexOf("错误")>-1) {
         className += "bgRedColor";
       }
       return className;
@@ -1320,11 +1320,11 @@ export default {
     // 行内列样式
     cellStyle({ row, column }) {
       //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
-      if (row["DBResult"] && row["DBResult"].indexOf("错误")>-1 ) {
-        return {
-          background: "red",
-        };
-      }
+      // if (row["DbResult"] && row["DbResult"].indexOf("错误")>-1 ) {
+      //   return {
+      //     background: "red",
+      //   };
+      // }
     },
     // 改变状态
     changeStatus(x, index) {
