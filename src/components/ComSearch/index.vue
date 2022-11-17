@@ -1056,3 +1056,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .el-select__input {
+    vertical-align: baseline;
+  }
+</style>

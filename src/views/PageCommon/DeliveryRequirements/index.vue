@@ -128,7 +128,7 @@ export default {
         },
         {
           ButtonCode: "save",
-          BtnName: "同步",
+          BtnName: "同步SRM",
           Type: "danger",
           Ghost: true,
           Size: "small",
