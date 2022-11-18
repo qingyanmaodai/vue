@@ -4,7 +4,7 @@
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch
-          v-show="labelStatus1 != 4"
+          v-if="labelStatus1 == 0||labelStatus1 == 1||labelStatus1 == 2||labelStatus1 == 3"
           ref="searchRef"
           :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[0].forms"
@@ -23,6 +23,16 @@
           :signName="labelStatus1"
           @btnClick="btnClick"
         />
+        <ComSearch
+          v-show="labelStatus1 == 5"
+          ref="searchRef"
+          :searchData="formSearchs[3].datas"
+          :searchForm="formSearchs[3].forms"
+          :remark="3"
+          :btnForm="btnForm"
+          :signName="labelStatus1"
+          @btnClick="btnClick"
+        />
       </div>
       <div>
         <div class="admin_content">
@@ -32,7 +42,8 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-              <SPAN>抓单日期范围：</SPAN>
+                <div v-show="labelStatus1 == 1">
+                  <SPAN  >抓单日期范围：</SPAN>
                   <el-date-picker 
                   v-model="ReplyDate" type="daterange"
             
@@ -45,6 +56,8 @@
                 >
                   </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
+              </div>
+              
                 <el-button
                   type="primary"
                   size="mini"
@@ -125,10 +138,12 @@
                 <el-tab-pane label="辅需求" name="second">
                 </el-tab-pane>
               </el-tabs>
-              <div v-show="activeName">
+              
+            </div>
+            <div v-if="activeName&&labelStatus1 <=2||labelStatus1===5">
                  <div class="admin_content">
                   <div class="flex_column" :style="{ height: height }">
-                    <div class="spreadContainer" v-loading="tableLoading[0]">
+                    <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
                       <gc-spread-sheets
                         class="sample-spreadsheets"
                         @workbookInitialized="initSpread"
@@ -140,17 +155,17 @@
                   <div class="flex_row_spaceBtn pagination">
                     <div>
                       <span @click="toPageSetting" class="primaryColor cursor"
-                        >SysID:7942
+                        >SysID:{{sysID[tagRemark].ID}}
                       </span>
                     </div>
                     <div class="flex">
                       <el-pagination
                         background
                         @size-change="(val) => pageSize(val, 0)"
-                        :current-page="tablePagination[0].pageIndex"
+                        :current-page="tablePagination[tagRemark].pageIndex"
                         :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                        :page-size="tablePagination[0].pageSize"
-                        :total="tablePagination[0].pageTotal"
+                        :page-size="tablePagination[tagRemark].pageSize"
+                        :total="tablePagination[tagRemark].pageTotal"
                         @current-change="(val) => pageChange(val, 0)"
                         layout="total, sizes, prev, pager, next,jumper"
                       >
@@ -159,7 +174,40 @@
                   </div>
                 </div>
               </div>
-            </div>
+            <!-- <div v-if="labelStatus1===5">
+                 <div class="admin_content">
+                  <div class="flex_column" :style="{ height: height }">
+                    <div class="spreadContainer" v-loading="tableLoading[3]">
+                      <gc-spread-sheets
+                        class="sample-spreadsheets"
+                        @workbookInitialized="initSpread2"
+                      >
+                        <gc-worksheet></gc-worksheet>
+                      </gc-spread-sheets>
+                    </div>
+                  </div>
+                  <div class="flex_row_spaceBtn pagination">
+                    <div>
+                      <span @click="toPageSetting" class="primaryColor cursor"
+                        >SysID:{{sysID[3].ID}}
+                      </span>
+                    </div>
+                    <div class="flex">
+                      <el-pagination
+                        background
+                        @size-change="(val) => pageSize(val, 0)"
+                        :current-page="tablePagination[3].pageIndex"
+                        :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                        :page-size="tablePagination[3].pageSize"
+                        :total="tablePagination[3].pageTotal"
+                        @current-change="(val) => pageChange(val, 0)"
+                        layout="total, sizes, prev, pager, next,jumper"
+                      >
+                      </el-pagination>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
             <ComVxeTable
               ref="tableRefTwo"
               v-show="labelStatus1 == 3"
@@ -283,11 +331,16 @@ export default {
         { label: "已排产", value: 1 },
         { label: "暂停", value: 2 },
         { label: "分线列表", value: 4 },
+        { label: "抓单分析明细", value: 5 },
       ],
       title: this.$route.meta.title,
       resultMsg: "",
       delData: [[]],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -384,16 +437,17 @@ export default {
         //   Icon: "",
         // },
       ],
-      selectionData: [[], [],[]],
+      selectionData: [[], [],[],[]],
       btnForm: [],
-      tableData: [[], [],[]],
-      tableColumns: [[], [],[]],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
+      tableData: [[], [],[],[]],
+      tableColumns: [[], [],[],[]],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -406,7 +460,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 }],
+      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 },{ ID: 7921 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: [],
@@ -414,6 +468,7 @@ export default {
       NoWorkHour: [],
       LineViewSort: [],
       spread: null,
+      spread2:null,
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
@@ -505,7 +560,7 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
 
-      this.tableColumns[0].forEach((x) => {
+      this.tableColumns[this.tagRemark].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
             name: x.prop,
@@ -579,9 +634,9 @@ export default {
 
       // 冻结第一列
 
-      sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
+      sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 
-      sheet.setDataSource(this.tableData[0]);
+      sheet.setDataSource(this.tableData[this.tagRemark]);
       sheet.bindColumns(colInfos);
       this.spread.options.tabStripVisible = false;//是否显示表单标签
 
@@ -602,7 +657,7 @@ export default {
         colindex++;
       }
 
-      this.tableData[0].forEach((row, index) => {
+      this.tableData[this.tagRemark].forEach((row, index) => {
         var rowSheet = sheet.getRange(
           index,
           0,
@@ -619,9 +674,9 @@ export default {
         );
         // 齐套列
         var rowSheet3  = ''
-        if(_this.tableColumns[0].length){
-          for(let i=0;i<_this.tableColumns[0].length;i++){
-            let item = _this.tableColumns[0][i]
+        if(_this.tableColumns[this.tagRemark].length){
+          for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
+            let item = _this.tableColumns[this.tagRemark][i]
             if(item.name ==="K1"){
                  rowSheet3 = sheet.getCell(
                   index,//行
@@ -681,7 +736,7 @@ export default {
           rowSheet2.backColor("");
         }
         let cellIndex = 0;
-        this.tableColumns[0].forEach((m) => {
+        this.tableColumns[this.tagRemark].forEach((m) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -717,7 +772,7 @@ export default {
       });
 
       let cellIndex = 0;
-      this.tableColumns[0].forEach((m) => {
+      this.tableColumns[this.tagRemark].forEach((m) => {
         //行，start,end
         if (m.isEdit) {
           sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -933,7 +988,7 @@ export default {
       });
       this.spread.resumePaint();
       this.adminLoading = false;
-      this.tableLoading[0] = false;
+      this.tableLoading[this.tagRemark] = false;
       this.spread.refresh(); //重新定位宽高度
     },
     // 监听键盘
@@ -1286,7 +1341,12 @@ export default {
           this.tableColumns[0] = res.data.Columns[0];
           this.setData();
           this.$set(this.tablePagination[0], "pageTotal", count);
+        }else if(remarkTb == 3){
+          this.setData();
+          this.$set(this.tablePagination[3], "pageTotal", count);
         }
+          
+        
       } else {
         this.$message({
           message: msg,
@@ -1351,6 +1411,9 @@ export default {
         s = [24];
         this.formSearchs[2].datas["ProductionStatus"] = s;
         this.dataSearch(2);
+        return
+      }else if(index===5){
+        this.dataSearch(3);
         return
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
