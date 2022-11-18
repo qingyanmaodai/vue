@@ -447,7 +447,7 @@ export default {
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
