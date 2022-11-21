@@ -588,14 +588,17 @@ export default {
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
-      sheet.setCellType(
+      
+
+      // 选框
+      if(this.tagRemark!=3){
+        sheet.setCellType(
         0,
         0,
         new HeaderCheckBoxCellType(),
         GCsheets.SheetArea.colHeader
       );
-
-      // 选框
+      
       let checkbox = {
         name: "isChecked",
         displayName: "isChecked",
@@ -605,6 +608,7 @@ export default {
       for (var name in checkbox) {
         colInfos[0][name] = checkbox[name];
       }
+    }
 
       //  colInfos.unshift(checkbox);
       var defaultStyle = new GC.Spread.Sheets.Style();
@@ -1034,7 +1038,7 @@ export default {
     toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: this.sysID[0].ID },
+        params: { ID: this.sysID[this.tagRemark].ID },
       });
     },
     initSpread: function (spread) {
