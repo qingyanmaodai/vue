@@ -557,6 +557,8 @@ export default {
       sheet.defaults.colWidth = 100;
       sheet.defaults.colHeaderRowHeight = 23;
       sheet.defaults.rowHeaderColWidth = 60;
+      // 重置表单
+      sheet.reset();
       let colHeader1 = [];
       let colInfos = [];
 
@@ -591,7 +593,7 @@ export default {
       
 
       // 选框
-      if(this.tagRemark!=3){
+      if(colInfos.length&&colInfos[0]['name']==='isChecked'){
         sheet.setCellType(
         0,
         0,
