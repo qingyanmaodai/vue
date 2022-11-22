@@ -594,8 +594,10 @@ this.spread.refresh();
       sheet.defaults.colWidth = 100;
       sheet.defaults.colHeaderRowHeight = 23;
       sheet.defaults.rowHeaderColWidth = 60;
+      sheet.reset()
       let colHeader1 = [];
       let colInfos = [];
+      let  cellIndex3 = 0
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -619,6 +621,7 @@ this.spread.refresh();
           });
         }
         colHeader1.push(x.label);
+        cellIndex3++
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -708,6 +711,13 @@ this.spread.refresh();
           colInfos.length - colindex,
           GC.Spread.Sheets.SheetArea.viewport
         );
+        var rowSheet3 = sheet.getRange(
+            index,
+          0,
+          1,
+          cellIndex3,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
         if (row["Code"] == null) {
           rowSheet.backColor("#A0CFFF");
           rowSheet.foreColor("balck");
@@ -724,6 +734,12 @@ this.spread.refresh();
           rowSheet.backColor("");
           rowSheet.foreColor("black");
           rowSheet2.backColor("");
+        }
+        // 发料率小于100整行红色
+        if(row["Q1"]&&row["Q1"]!="100.00%"){
+         
+          rowSheet2.foreColor("black");
+          rowSheet3.backColor("red");
         }
         let cellIndex = 0;
         this.tableColumns[0].forEach((m) => {
