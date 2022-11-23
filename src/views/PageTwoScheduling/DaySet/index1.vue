@@ -735,11 +735,10 @@ this.spread.refresh();
           rowSheet.foreColor("black");
           rowSheet2.backColor("");
         }
-        // 发料率小于100整行红色
+        // 发料率小于100整行字体红色
         if(row["Q1"]&&row["Q1"]!="100.00%"){
          
-          rowSheet2.foreColor("black");
-          rowSheet3.backColor("red");
+          rowSheet3.foreColor("red");
         }
         let cellIndex = 0;
         this.tableColumns[0].forEach((m) => {
