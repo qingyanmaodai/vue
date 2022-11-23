@@ -597,7 +597,6 @@ this.spread.refresh();
       sheet.reset()
       let colHeader1 = [];
       let colInfos = [];
-      let  cellIndex3 = 0
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -621,7 +620,6 @@ this.spread.refresh();
           });
         }
         colHeader1.push(x.label);
-        cellIndex3++
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -693,6 +691,7 @@ this.spread.refresh();
           rowSheet.foreColor("red");
           break;
         }
+        
         colindex++;
       }
 
@@ -711,13 +710,21 @@ this.spread.refresh();
           colInfos.length - colindex,
           GC.Spread.Sheets.SheetArea.viewport
         );
-        var rowSheet3 = sheet.getRange(
-            index,
-          0,
-          1,
-          cellIndex3,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
+        var rowSheet3 = ''
+        if(_this.tableColumns[this.tagRemark].length){
+          for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
+            let item = _this.tableColumns[this.tagRemark][i]
+            if(item.name ==="Q1"){
+                 rowSheet3 = sheet.getCell(
+                  index,//行
+                  i,//列
+                  GC.Spread.Sheets.SheetArea.viewport
+                );
+                break
+              }
+          }
+        }
+        
         if (row["Code"] == null) {
           rowSheet.backColor("#A0CFFF");
           rowSheet.foreColor("balck");
@@ -736,7 +743,7 @@ this.spread.refresh();
           rowSheet2.backColor("");
         }
         // 发料率小于100整行字体红色
-        if(row["Q1"]&&row["Q1"]!="100.00%"){
+        if(rowSheet3&&row["Q1"]&&row["Q1"]!="100.00%"){
          
           rowSheet3.foreColor("red");
         }
@@ -789,6 +796,7 @@ this.spread.refresh();
           );
           cell.foreColor("gray");
         }
+        
 
         cellIndex++;
       });
