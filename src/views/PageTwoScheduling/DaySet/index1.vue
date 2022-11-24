@@ -451,7 +451,7 @@ this.spread.refresh();
             this.adminLoading = true;
             let res = await GetSearch(
               submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+              `/APSAPI/MOPlanSaveToDayPlan?isPlan=1&ControlID=${this.userInfo.WorkFlowInstanceID}`
             );
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -711,19 +711,8 @@ this.spread.refresh();
           GC.Spread.Sheets.SheetArea.viewport
         );
         var rowSheet3 = ''
-        if(_this.tableColumns[this.tagRemark].length){
-          for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
-            let item = _this.tableColumns[this.tagRemark][i]
-            if(item.name ==="Q1"){
-                 rowSheet3 = sheet.getCell(
-                  index,//行
-                  i,//列
-                  GC.Spread.Sheets.SheetArea.viewport
-                );
-                break
-              }
-          }
-        }
+        var rowSheet4 = ''
+        
         
         if (row["Code"] == null) {
           rowSheet.backColor("#A0CFFF");
@@ -742,10 +731,27 @@ this.spread.refresh();
           rowSheet.foreColor("black");
           rowSheet2.backColor("");
         }
-        // 发料率小于100整行字体红色
-        if(rowSheet3&&row["Q1"]&&row["Q1"]!="100.00%"){
-         
-          rowSheet3.foreColor("red");
+        if(_this.tableColumns[this.tagRemark].length){
+          for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
+            let item = _this.tableColumns[this.tagRemark][i]
+             // 发料率小于100整行字体红色
+            if(item.name ==="Q1"&&row["Q1"]&&row["Q1"]!="100.00%"){
+                rowSheet3 = sheet.getCell(
+                index,//行
+                i,//列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.foreColor("red");
+            }
+            if(item.name ==="Code"&&row['WorkOrderTypeID']==='ZP02'){
+              rowSheet4 = sheet.getCell(
+                index,//行
+                i,//列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet4.foreColor("blue");
+            }
+          }
         }
         let cellIndex = 0;
         this.tableColumns[0].forEach((m) => {
