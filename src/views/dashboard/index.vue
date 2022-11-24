@@ -1077,6 +1077,7 @@ export default {
 .container {
   margin: 10px 10px 0 10px;
   overflow: auto;
+  width: 100%;
 }
 .home /deep/ .box-card {
   display: flex;
