@@ -1261,8 +1261,8 @@ export default {
     // 修改报工
     saveProduction(){
       var date = new Date();
-      //获取3天前的日期
-      var time1 = new Date(date.getTime() - 3*24*60*60*1000);
+      //获取1天前的日期
+      var time1 = new Date(date.getTime() - 24*60*60*1000);
       var year1 = time1.getFullYear();
       var month1 = time1.getMonth() + 1;
       if( month1 <10){
@@ -1287,8 +1287,8 @@ export default {
       }
       var date2 = year2 + "-" + month2 + "-" + day2;
 
-      //获取1天前的日期
-      var time3 = new Date(date.getTime() - 24*60*60*1000);
+      //获取3天前的日期
+      var time3 = new Date(date.getTime() - 3*24*60*60*1000);
       var year3 = time3.getFullYear();
       var month3 = time3.getMonth() + 1;
       if( month3 <10){
@@ -1300,6 +1300,58 @@ export default {
       }
       var date3 = year3 + "-" + month3 + "-" + day3;
 
+      //获取4天前的日期
+      var time4 = new Date(date.getTime() - 4*24*60*60*1000);
+      var year4 = time4.getFullYear();
+      var month4 = time4.getMonth() + 1;
+      if( month4 <10){
+          month4 = '0' + month4;
+      }
+      var day4 = time4.getDate();
+      if( day4 < 10){
+          day4 = '0' + day4;
+      }
+      var date4 = year4 + "-" + month4 + "-" + day4;
+
+      //获取5天前的日期
+      var time5 = new Date(date.getTime() - 5*24*60*60*1000);
+      var year5 = time5.getFullYear();
+      var month5 = time5.getMonth() + 1;
+      if( month5 <10){
+          month5 = '0' + month5;
+      }
+      var day5 = time5.getDate();
+      if( day5 < 10){
+          day5 = '0' + day5;
+      }
+      var date5 = year5 + "-" + month5 + "-" + day5;
+      
+      //获取6天前的日期
+      var time6 = new Date(date.getTime() - 6*24*60*60*1000);
+      var year6 = time6.getFullYear();
+      var month6 = time6.getMonth() + 1;
+      if( month6 <10){
+          month6 = '0' + month6;
+      }
+      var day6 = time6.getDate();
+      if( day6 < 10){
+          day6 = '0' + day6;
+      }
+      var date6 = year6 + "-" + month6 + "-" + day6;
+
+      //获取7天前的日期
+      var time7 = new Date(date.getTime() - 7*24*60*60*1000);
+      var year7 = time7.getFullYear();
+      var month7 = time7.getMonth() + 1;
+      if( month7 <10){
+          month7 = '0' + month7;
+      }
+      var day7 = time7.getDate();
+      if( day7 < 10){
+          day7 = '0' + day7;
+      }
+      var date7 = year7 + "-" + month7 + "-" + day7;
+
       //获取当天的日期
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -1310,11 +1362,14 @@ export default {
       if( day < 10){
           day = '0' + day;
       }
-      var date4 = year + "-" + month + "-" + day;
-      //只能修改当前+往前3天的报工数据
-      let list = [date1,date2,date3,date4]
+      var date0 = year + "-" + month + "-" + day;
+      var date5 = year5 + "-" + month5 + "-" + day5;
+      var date6 = year6 + "-" + month6 + "-" + day6;
+      var date7 = year7 + "-" + month7 + "-" + day7;
+      //只能修改T-7天的报工数据
+      let list = [date6,date5,date4,date3,date2,date1,date0]
       if(!list.includes(this.currentRow[this.labelStatus1]['ProducedDate'])){
-        this.$message.error("只能修改日期范围为"+date1+" ~ "+date4+"的报工数据！");
+        this.$message.error("只能修改日期范围为"+date6+" ~ "+date0+"的报工数据！");
         return
       }
             
