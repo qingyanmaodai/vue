@@ -11,6 +11,12 @@
           <el-row>
             <el-col :span="4"><span class="title">{{ title }}</span></el-col>
             <el-col :span="20" class="flex_flex_end">
+              <el-button
+                type="warning"
+                size="mini"
+                @click="ResetSorting"
+              >重置排序</el-button>
+              <el-divider direction="vertical"></el-divider>
               <!-- <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
                 <span @click="changeStatus(item, y)">{{ item.OrganizeName }}</span>
                 <el-divider direction="vertical"></el-divider>
@@ -971,7 +977,7 @@
         this.adminLoading = false;
         this.tableLoading[0] = false;
         this.spread.refresh(); //重新定位宽高度
-        // this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false;//是否显示表单标签
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {
@@ -1353,6 +1359,44 @@
             dangerouslyUseHTMLString: true,
           });
         }
+      },
+       // 重置排序
+       async ResetSorting(){
+        this.getSelectionData()
+        let res = null
+        if (this.selectionData[this.tagRemark].length== 0) {
+          this.$message.error("请选择需要操作的数据！");
+          return
+        } else {
+          this.$confirm("确定重置排序吗？")
+          .then(async(_) => {
+            res = await GetSearch(_this.selectionData[_this.tagRemark], "/APSAPI/ResetEKViewSort");
+            const {
+            datas,
+            forms,
+            result,
+            msg
+          } = res.data;
+          if (result) {
+            _this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            _this.dataSearch(_this.tagRemark);
+          } else {
+            _this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          })
+          .catch((_) => {});
+            
+          }
+        
+
       }
     },
   };
