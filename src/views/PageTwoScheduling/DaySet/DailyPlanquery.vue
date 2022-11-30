@@ -68,6 +68,9 @@
         </div>
       </div>
     </div>
+
+    <!-- 弹框-->
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
   
@@ -86,13 +89,19 @@ import {
   GetSearchData,
   ExportData,
 } from "@/api/Common";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "DailyPlanquery",
   components: {
     ComSearch,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        OrderID:'',
+      },
+      colDialogVisible:false,
       labelStatus1:0,
       Status1: [
         { label: "一部插件", value: 0 },
@@ -463,6 +472,20 @@ export default {
           }
           cellIndex++;
         });
+      });
+
+      // 表格单击单元格弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+          if(_this.tableColumns[_this.tagRemark].length){
+            _this.tableColumns[_this.tagRemark].map((item,index)=>{
+              if(item.name ==="Q1"&&args.col===index){
+                // 显示ERP供需平衡表
+                _this.colDialogVisible =true
+                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
+                _this.dialogSearchForm.UnIssuedQty = 0 
+              }
+            })
+          }
       });
 
       sheet.setDataSource(this.tableData[this.tagRemark]);
