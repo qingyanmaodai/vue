@@ -210,13 +210,17 @@ export default {
       height1: "360px",
       labelStatus1: 0,
       Status1: [
+        // { label: "全部", value: "" },
+        // { label: "待复期", value: 0 },
+        // { label: "复期超时", value: 5 },
+        // { label: "三天内即将到期", value: 4 },
+        // { label: "已复期", value: [1, 2, 3, 4, 5] },
+        // { label: "复期异常", value: 2 },
+        // { label: "复期变更", value: 3 },
         { label: "全部", value: "" },
-        { label: "待复期", value: 0 },
-        { label: "复期超时", value: 5 },
-        { label: "三天内即将到期", value: 4 },
-        { label: "已复期", value: [1, 2, 3, 4, 5] },
-        { label: "复期异常", value: 2 },
-        { label: "复期变更", value: 3 },
+        { label: "未复期", value: 1 },
+        { label: "复期不满足", value: 2 },
+        { label: "逾期未交", value: 3 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -941,10 +945,12 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["Remark6"] = x.label+"，";
+      // this.formSearchs[0].datas["Remark6"] = x.label+"，";
+      this.formSearchs[0].datas["ReplyStatus"] = x.label;
       if(x.label=="全部")
       {
-              this.formSearchs[0].datas["Remark6"] = "";
+              // this.formSearchs[0].datas["Remark6"] = "";
+          this.formSearchs[0].datas["ReplyStatus"] = "";
       }
       this.dataSearch(0);
     },
