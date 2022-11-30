@@ -81,6 +81,7 @@ import {
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
+import formatDates from "@/utils/formatDate";
 export default {
   name: "index1",
   components: {
@@ -712,7 +713,7 @@ this.spread.refresh();
         );
         var rowSheet3 = ''
         var rowSheet4 = ''
-        
+        var rowSheet5 = ''
         
         if (row["Code"] == null) {
           rowSheet.backColor("#A0CFFF");
@@ -750,6 +751,15 @@ this.spread.refresh();
                 GC.Spread.Sheets.SheetArea.viewport
               );
               rowSheet4.foreColor("blue");
+            }
+            // 需求上线日期小于等于今天，字体红色
+            if(item.name ==="APSDemandDate"&&row["APSDemandDate"]&&row["APSDemandDate"]<=formatDates.formatTodayDate()){
+              rowSheet5 = sheet.getCell(
+                index,//行
+                i,//列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet5.foreColor("red");
             }
           }
         }

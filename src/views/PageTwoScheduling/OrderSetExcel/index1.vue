@@ -1234,8 +1234,10 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.formSearchs[remarkTb].datas["ControlID"] =
+      if(remarkTb!=3){
+        this.formSearchs[remarkTb].datas["ControlID"] =
         this.userInfo.WorkFlowInstanceID;
+      }
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
@@ -1419,6 +1421,7 @@ export default {
         this.dataSearch(2);
         return
       }else if(index===5){
+        this.formSearchs[3].datas["ControlID"] = ''
         this.dataSearch(3);
         return
       }
