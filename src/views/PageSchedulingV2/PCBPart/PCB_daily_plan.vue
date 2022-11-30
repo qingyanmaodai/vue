@@ -957,6 +957,45 @@
           //   sheet.setArray(args.row, i, [2021]);
           // }
         });
+        this.spread.bind(GCsheets.Events.ClipboardPasting, function(s, e) {
+          // 自动计算数量
+          // var args = e.cellRange;
+          // var pasteData = e.pasteData?e.pasteData.split('\t')[0]:e.pasteData;
+          console.log('pasteData',e.pasteData)
+           // 本次粘贴操作的实际区域
+           var cellRange = e.cellRange;
+
+var sheet = e.sheet;
+// 本次粘贴操作的选中区域
+var ranges = sheet.getSelections();
+if(ranges && ranges.length>0){
+    var range = ranges[0];
+    var pasteRowCount = cellRange.rowCount;
+    var pasteColCount = cellRange.colCount;
+    var targetRowCount = range.rowCount;
+    var targetColCount = range.colCount;
+
+    if(pasteRowCount > targetRowCount){
+        cellRange.rowCount = targetRowCount;
+        e.cancel = true;
+    }
+    if(pasteColCount > targetColCount){
+        cellRange.colCount = targetColCount;
+        e.cancel = true;
+    }
+
+    // 获取到粘贴的数据，手动把数据写入目标区域
+    var pasteData = e.pasteData;
+}
+          // _this.computedNum(args.row, args.col, pasteData);
+          // console.log('ranges',ranges)
+          // console.log('cellRange',cellRange)
+          // console.log('pasteData',pasteData)
+          // console.log('pasteRowCount',pasteRowCount)
+          // console.log('pasteColCount',pasteColCount)
+          // console.log('targetRowCount',targetRowCount)
+          // console.log('targetColCount',targetColCount)
+        });
 
         // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
@@ -1039,6 +1078,7 @@
           parseInt(currentRow[currentlabel].TotalHours) <= 0
         ) {
           this.$message.error("该天休息，上班时间为0");
+          sheet.setValue(rowIndex, colIndex, "");
           return;
         }
 
