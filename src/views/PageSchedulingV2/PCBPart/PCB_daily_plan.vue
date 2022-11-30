@@ -1362,15 +1362,10 @@
       },
        // 重置排序
        async ResetSorting(){
-        this.getSelectionData()
         let res = null
-        if (this.selectionData[this.tagRemark].length== 0) {
-          this.$message.error("请选择需要操作的数据！");
-          return
-        } else {
           this.$confirm("确定重置排序吗？")
           .then(async(_) => {
-            res = await GetSearch(_this.selectionData[_this.tagRemark], "/APSAPI/ResetEKViewSort");
+            res = await GetSearch(_this.tableData[this.tagRemark], "/APSAPI/ResetEKViewSort");
             const {
             datas,
             forms,
@@ -1393,10 +1388,6 @@
           }
           })
           .catch((_) => {});
-            
-          }
-        
-
       }
     },
   };
