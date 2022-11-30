@@ -979,7 +979,7 @@
                 // 显示ERP供需平衡表
                 _this.colDialogVisible =true
                 _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
-                _this.dialogSearchForm.UnIssuedQty = 0 
+                _this.dialogSearchForm.OweQty = 0 
               }
             })
           }
