@@ -27,7 +27,7 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor">SysID:6734
+              <span @click="toPageSetting" class="primaryColor cursor">SysID:{{sysID[0].ID}}
               </span>
             </div>
             <div class="flex">
@@ -176,7 +176,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: 6734,
+          sysID: [{ ID: 7956}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -338,7 +338,14 @@
         dataReset(remarkTb) {
           for (let name in this.formSearchs[remarkTb].datas) {
             if (name != "dicID") {
-              this.formSearchs[remarkTb].datas[name] = null;
+              if (this.formSearchs[remarkTb].forms.length) {
+                // 判断是否是页面显示的查询条件，是的字段才清空
+                this.formSearchs[remarkTb].forms.forEach((element) => {
+                  if (element.prop === name) {
+                    this.formSearchs[remarkTb].datas[name] = null;
+                  }
+                });
+              }
             }
           }
         },
@@ -533,9 +540,7 @@
         },
         // 获取表头数据
         async getTableHeader() {
-          let IDs = [{
-            ID: 6734
-          }];
+          let IDs = this.sysID
           let res = await GetHeader(IDs);
           const {
             datas,
@@ -589,7 +594,6 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 6734;
           let res = await GetSearchData(form);
   
           const {
@@ -1130,7 +1134,7 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID
+              ID: this.sysID[this.tagRemark].ID
             },
           });
         },
