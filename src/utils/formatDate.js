@@ -102,7 +102,7 @@ export const formatNextMonthDate=()=> {
     if (month == 13) {
         //12月的下月是下年的1月
         year = parseInt(year) + 1;
-        month = 1;
+        month = zero(1);
     }
     return year + "-" + month + "-" + day;
 }
@@ -117,7 +117,7 @@ function formatOneMonthDate() {
     if (month == 13) {
         //12月的下月是下年的1月
         year = parseInt(year) + 1;
-        month = 1;
+        month = zero(1);
     }
     return year + "-" + month + "-" + day;
 }
