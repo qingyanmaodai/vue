@@ -960,6 +960,37 @@
           //   sheet.setArray(args.row, i, [2021]);
           // }
         });
+        // 粘贴事件
+        // this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+        //     // 日期列才触发
+        //     if(_this.tableColumns[0][e.cellRange.col].prop.indexOf('-')>-1){
+        //       // 正则分割剪切单元格的所有值
+        //       let cellValList = e.pasteData.text.split(/\t|\r\n/)
+        //       if(cellValList&&cellValList.length){
+        //         // 获取剪切
+        //         let rowIndex  = e.cellRange.rowCount
+        //         let colIndex = e.cellRange.colCount
+        //         let row = e.cellRange.row
+        //         // 循环次数初始化
+        //         let num = 0
+        //         for(let r=0;r<rowIndex;r++){
+        //           let col = e.cellRange.col
+        //           for(let c=0;c<colIndex;c++){
+        //             // 自动计算数量
+        //             // /^[0-9]+.?[0-9]*$/ 验证字符串是否是数字
+        //             _this.computedNum(row, col, /^[0-9]+.?[0-9]*$/.test(cellValList[num])?parseInt(cellValList[num]):0);
+        //             // 复制的列累加
+        //             col ++
+        //             // 循环的次数累加
+        //             num ++
+        //           }
+        //           // 复制的函数累加
+        //           row ++
+        //         }
+        //       }
+        //     }
+        //   });     
+
         sheet.options.isProtected = true;
         sheet.options.protectionOptions.allowResizeColumns = true;
         sheet.options.protectionOptions.allowInsertRows = true;
@@ -989,6 +1020,7 @@
         if (val == null) {
           val = 0;
         }else if(val==0){//输入0不触发自动计算
+          sheet.setValue(rowIndex, colIndex, "");
           return
         }
         val = parseInt(val)

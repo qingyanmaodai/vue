@@ -957,45 +957,36 @@
           //   sheet.setArray(args.row, i, [2021]);
           // }
         });
-        this.spread.bind(GCsheets.Events.ClipboardPasting, function(s, e) {
-          // 自动计算数量
-          // var args = e.cellRange;
-          // var pasteData = e.pasteData?e.pasteData.split('\t')[0]:e.pasteData;
-          console.log('pasteData',e.pasteData)
-           // 本次粘贴操作的实际区域
-           var cellRange = e.cellRange;
-
-var sheet = e.sheet;
-// 本次粘贴操作的选中区域
-var ranges = sheet.getSelections();
-if(ranges && ranges.length>0){
-    var range = ranges[0];
-    var pasteRowCount = cellRange.rowCount;
-    var pasteColCount = cellRange.colCount;
-    var targetRowCount = range.rowCount;
-    var targetColCount = range.colCount;
-
-    if(pasteRowCount > targetRowCount){
-        cellRange.rowCount = targetRowCount;
-        e.cancel = true;
-    }
-    if(pasteColCount > targetColCount){
-        cellRange.colCount = targetColCount;
-        e.cancel = true;
-    }
-
-    // 获取到粘贴的数据，手动把数据写入目标区域
-    var pasteData = e.pasteData;
-}
-          // _this.computedNum(args.row, args.col, pasteData);
-          // console.log('ranges',ranges)
-          // console.log('cellRange',cellRange)
-          // console.log('pasteData',pasteData)
-          // console.log('pasteRowCount',pasteRowCount)
-          // console.log('pasteColCount',pasteColCount)
-          // console.log('targetRowCount',targetRowCount)
-          // console.log('targetColCount',targetColCount)
-        });
+        // 粘贴事件
+        this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+            // 日期列才触发
+            if(_this.tableColumns[_this.tagRemark][e.cellRange.col].prop.indexOf('-')>-1){
+              // 正则分割剪切单元格的所有值
+              let cellValList = e.pasteData.text.split(/\t|\r\n/)
+              if(cellValList&&cellValList.length){
+                // 获取剪切
+                let rowIndex  = e.cellRange.rowCount
+                let colIndex = e.cellRange.colCount
+                let row = e.cellRange.row
+                // 循环次数初始化
+                let num = 0
+                for(let r=0;r<rowIndex;r++){
+                  let col = e.cellRange.col
+                  for(let c=0;c<colIndex;c++){
+                    // 自动计算数量
+                    // /^[0-9]+.?[0-9]*$/ 验证字符串是否是数字
+                    _this.computedNum(row, col, /^[0-9]+.?[0-9]*$/.test(cellValList[num])?parseInt(cellValList[num]):0);
+                    // 复制的列累加
+                    col ++
+                    // 循环的次数累加
+                    num ++
+                  }
+                  // 复制的函数累加
+                  row ++
+                }
+              }
+            }
+          });
 
         // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
@@ -1025,6 +1016,7 @@ if(ranges && ranges.length>0){
         if (val == null) {
           val = 0;
         }else if(val==0){//输入0不触发自动计算
+          sheet.setValue(rowIndex, colIndex, "");
           return
         }
         let currentRow = dataSource[rowIndex];
