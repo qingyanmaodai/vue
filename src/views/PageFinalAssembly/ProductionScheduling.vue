@@ -1,4 +1,4 @@
-<!--总排期-->
+<!--江门总装-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -205,7 +205,7 @@ export default {
       height: "707px",
       formSearchs: [
         {
-          datas: {},
+          datas: {MFGOrganizeID:162},
           forms: [],
         },
         {
@@ -213,23 +213,23 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: {MFGOrganizeID:162},
           forms: [],
         },
         {
-          datas: { IsSetPrepare: "未生成" },
+          datas: { IsSetPrepare: "未生成",MFGOrganizeID:162 },
           forms: [],
         },
         {
-          datas: { IsSetPrepare: "已生成" },
+          datas: { IsSetPrepare: "已生成",MFGOrganizeID:162 },
           forms: [],
         },
         {
-          datas: {},
+          datas: {MFGOrganizeID:162},
           forms: [],
         },
         {
-          datas: {},
+          datas: {MFGOrganizeID:162},
           forms: [],
         },
       ],

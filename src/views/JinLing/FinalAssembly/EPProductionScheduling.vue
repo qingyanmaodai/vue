@@ -182,7 +182,7 @@
         footerLabel: ["", "", "", "", "", "", ""],
         sysID: [
           { ID: 5156 },
-          { ID: 6736, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 7961, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
           { ID: 5156 },
           { ID: 5156 },
           { ID: 5156 },
@@ -205,7 +205,7 @@
         height: "707px",
         formSearchs: [
           {
-            datas: {},
+            datas: {MFGOrganizeID:1222},
             forms: [],
           },
           {
@@ -213,23 +213,23 @@
             forms: [],
           },
           {
-            datas: {},
+            datas: {MFGOrganizeID:1222},
             forms: [],
           },
           {
-            datas: { IsSetPrepare: "未生成" },
+            datas: { IsSetPrepare: "未生成",MFGOrganizeID:1222 },
             forms: [],
           },
           {
-            datas: { IsSetPrepare: "已生成" },
+            datas: { IsSetPrepare: "已生成",MFGOrganizeID:1222 },
             forms: [],
           },
           {
-            datas: {},
+            datas: {MFGOrganizeID:1222},
             forms: [],
           },
           {
-            datas: {},
+            datas: {MFGOrganizeID:1222},
             forms: [],
           },
         ],

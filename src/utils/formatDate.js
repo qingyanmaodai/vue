@@ -99,6 +99,11 @@ export const formatNextMonthDate=()=> {
     let year = newDate.getFullYear();
     let month = zero(newDate.getMonth() + 2);
     let day = zero(newDate.getDate());
+    if (month == 13) {
+        //12月的下月是下年的1月
+        year = parseInt(year) + 1;
+        month = zero(1);
+    }
     return year + "-" + month + "-" + day;
 }
 // 当前时间+30
@@ -109,6 +114,11 @@ function formatOneMonthDate() {
     let year = newDate.getFullYear();
     let month = zero(newDate.getMonth() + 2);
     let day = zero(newDate.getDate());
+    if (month == 13) {
+        //12月的下月是下年的1月
+        year = parseInt(year) + 1;
+        month = zero(1);
+    }
     return year + "-" + month + "-" + day;
 }
 
