@@ -1019,6 +1019,9 @@
           sheet.setValue(rowIndex, colIndex, "");
           return
         }
+        val = parseInt(val)
+        //当前输入的有小数，取整
+        sheet.setValue(rowIndex, colIndex, val);
         let currentRow = dataSource[rowIndex];
         if (currentRow.ID == -1) {
           return false;
@@ -1106,7 +1109,12 @@
           for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
             let label = this.tableColumns[0][j].prop + "dy";
             let obj = currentRow[label];
-            remainNum = remainNum - parseInt(val);
+            // remainNum = remainNum - parseInt(val);
+            if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
+              remainNum = remainNum
+            }else{
+              remainNum = remainNum - parseInt(val);
+            }
             let maxNum =
               parseInt(Capacity) *
               parseInt(obj.TotalHours) *
@@ -1117,10 +1125,12 @@
             } else {
               if (remainNum <= maxNum) {
                 list[j] = remainNum;
+                val = remainNum
                 break;
               } else {
                 list[j] = maxNum;
-                remainNum -= maxNum;
+                // remainNum -= maxNum;
+                val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
               }
             }
           }
