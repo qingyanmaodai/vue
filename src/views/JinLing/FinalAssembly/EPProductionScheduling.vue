@@ -587,6 +587,7 @@
           "1px solid transparent",
           GC.Spread.Sheets.LineStyle.min
         );
+        defaultStyle.showEllipsis = true;
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
         sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
   
@@ -753,6 +754,21 @@
             });
           }
         });
+        sheet.options.isProtected = true;
+          sheet.options.protectionOptions.allowResizeColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowSelectLockedCells = true;
+          sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowDeleteColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowInsertColumns = true;
+          sheet.options.protectionOptions.allowDargInsertRows = true;
+          sheet.options.protectionOptions.allowDragInsertColumns = true;
+          sheet.options.protectionOptions.allowSort = true
+          sheet.options.protectionOptions.allowFilter = true
+          sheet.options.allowUserDragDrop = true;
   
         this.spread.resumePaint();
         this.adminLoading = false;

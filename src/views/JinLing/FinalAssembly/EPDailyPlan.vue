@@ -706,6 +706,7 @@
             "1px solid transparent",
             GC.Spread.Sheets.LineStyle.min
           );
+          defaultStyle.showEllipsis = true;
           sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
           // 冻结第一列
   
@@ -1000,9 +1001,7 @@
           sheet.options.protectionOptions.allowDeleteRows = true;
           sheet.options.protectionOptions.allowSelectLockedCells = true;
           sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-          sheet.options.protectionOptions.allowDeleteRows = true;
           sheet.options.protectionOptions.allowDeleteColumns = true;
-          sheet.options.protectionOptions.allowInsertRows = true;
           sheet.options.protectionOptions.allowInsertColumns = true;
           sheet.options.protectionOptions.allowDargInsertRows = true;
           sheet.options.protectionOptions.allowDragInsertColumns = true;
