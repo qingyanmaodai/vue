@@ -779,11 +779,16 @@ export default {
                     // 异常提示
                     split.push(`第${rowNo}行,【${propName}】【${m[key]}】格式存在错误，导入失败，请检查！`)
                   }else{
-                    obj[item.prop] = m[key]
-                    ? this.$moment(m[key]).add(1, "days").format("YYYY-MM-DD")
-                    : "";
+                    if(this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")){
+                      let getDate  = new Date(m[key])
+                      // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
+                      var  date = new Date(getDate.setSeconds(getDate.getSeconds()+43));
+                      obj[item.prop] = m[key]
+                      ? this.$moment(date).format("YYYY-MM-DD")
+                      : "";
+                    }
                   }
-                  // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                  
                   // 判断需求到料日期是否大于今天
                 if(item.prop==='DemandToDay'&&obj[item.prop]&&obj[item.prop]<formatDates.formatTodayDate()){
                     propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
@@ -929,7 +934,9 @@ export default {
           
           return;
         }
-        let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
+        console.log('DataList',DataList)
+        if(DataList.length){
+          let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
@@ -948,6 +955,9 @@ export default {
             type: "error",
             dangerouslyUseHTMLString: true,
           });
+        }
+        }else{
+          this.$message.error("未接收到数据，请检查！");
         }
       }
     },
