@@ -678,6 +678,7 @@ defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sh
 defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
 defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
 defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
+defaultStyle.showEllipsis = true;
 sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
 

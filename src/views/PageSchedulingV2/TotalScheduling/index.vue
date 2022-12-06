@@ -595,6 +595,7 @@ export default {
         "1px solid transparent",
         GC.Spread.Sheets.LineStyle.min
       );
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 

@@ -315,6 +315,7 @@ export default {
         defaultStyle.font = "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.showEllipsis = true;
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
         
         sheet.setDataSource(this.tableData[this.currentIndex]);

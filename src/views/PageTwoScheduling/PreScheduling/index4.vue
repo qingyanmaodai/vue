@@ -619,6 +619,7 @@ export default {
         "#CCCCCC",
         GC.Spread.Sheets.LineStyle.min
       );
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 设置整个列头的背景色和前景色。

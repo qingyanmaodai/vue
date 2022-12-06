@@ -625,6 +625,7 @@ export default {
         "1px solid transparent",
         GC.Spread.Sheets.LineStyle.min
       );
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
