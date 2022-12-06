@@ -580,6 +580,7 @@ export default {
         "1px solid transparent",
         GC.Spread.Sheets.LineStyle.min
       );
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       // 冻结第一列
 

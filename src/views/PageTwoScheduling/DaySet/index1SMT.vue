@@ -183,6 +183,8 @@ export default {
       checkBoxCellTypeLine: "",
       isOpen: true,
       selectionData: [[]],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   watch: {},
@@ -541,20 +543,26 @@ export default {
             size: parseInt(x.width),
           });
         }
+        
         colHeader1.push(x.label);
       });
+      // 去重，因为有两个选择项
+      colInfos = _.uniqBy(colInfos,'name')
+      colHeader1 = _.uniq(colHeader1)
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
-      sheet.setCellType(
+      // 选框
+      if(colInfos.length&&colInfos[0]['name']==='isChecked'){
+        
+        sheet.setCellType(
         0,
         0,
         new HeaderCheckBoxCellType(),
         GCsheets.SheetArea.colHeader
       );
-
-      // 选框
+      
       let checkbox = {
         name: "isChecked",
         displayName: "isChecked",
@@ -564,8 +572,7 @@ export default {
       for (var name in checkbox) {
         colInfos[0][name] = checkbox[name];
       }
-
-      //  colInfos.unshift(checkbox);
+    }
       var row = sheet.getRange(
         0,
         -1,
@@ -597,6 +604,7 @@ export default {
         "1px solid transparent",
         GC.Spread.Sheets.LineStyle.min
       );
+      defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       // 冻结第一列
     
@@ -650,6 +658,155 @@ if(!row["Code"])
 
         cellIndex++;
       });
+
+      // var insertRowsCopyStyle = {
+      //     canUndo: true,
+      //     name: "insertRowsCopyStyle",
+      //     execute: function (context, options, isUndo) {
+      //       var Commands = GC.Spread.Sheets.Commands;
+      //       if (isUndo) {
+      //         Commands.undoTransaction(context, options);
+      //         return true;
+      //       } else {
+      //         sheet.suspendPaint();
+      //         sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+      //         //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+      //         // console.log(_this.sheetSelectRows);
+  
+      //         // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+      //         //删除旧行
+      //         if (_this.sheetSelectObj.start > options.activeRow) {
+      //           //说明从下面插入上面
+      //           sheet.copyTo(
+      //             _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+      //             0,
+      //             options.activeRow,
+      //             0,
+      //             _this.sheetSelectRows.length,
+      //             sheet.getColumnCount(),
+      //             GC.Spread.Sheets.CopyToOptions.all
+      //           );
+             
+      //       //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+      //           sheet.deleteRows(
+      //             _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+      //             _this.sheetSelectObj.count
+      //           );
+      //           // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+      //         } else {
+      //           //从上面往下面插入
+      //           sheet.copyTo(
+      //             _this.sheetSelectObj.start,
+      //             0,
+      //             options.activeRow,
+      //             0,
+      //             _this.sheetSelectRows.length,
+      //             sheet.getColumnCount(),
+      //             GC.Spread.Sheets.CopyToOptions.all
+      //           );
+      //         //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+      //           sheet.deleteRows(
+      //             _this.sheetSelectObj.start,
+      //             _this.sheetSelectObj.count
+      //           );
+                
+      //         }
+      //         let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+   
+      //         let lineID=_this.sheetSelectRows[0][lineIDIndex]
+      //         let isFind=false;
+      //         let viewSort=1;
+     
+  
+      //         for(var i=0;i<count;i++ )
+      //         {
+   
+      //           if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
+      //           {
+      //               isFind=true;      
+                  
+      //           }
+      // if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+      //           {
+                 
+      //             break;
+      //           }
+      //           if(isFind)
+      //           {
+      //             sheet.setValue(i,viewSortIndex,viewSort);
+      //             viewSort++;
+      //           }
+               
+                  
+      //         }
+        
+      //         // Commands.startTransaction(context, options);
+  
+      //         // sheet.suspendPaint();
+  
+      //         // var beforeRowCount = 0;
+  
+      //         //  sheet.suspendPaint();
+  
+      //         // Commands.endTransaction(context, options);
+      //         sheet.resumePaint();
+  
+      //         return true;
+      //       }
+      //     },
+      //   };
+  
+  
+  
+      //   this.spread
+      //     .commandManager()
+      //     .register("insertRowsCopyStyle", insertRowsCopyStyle);
+    
+  
+      //   function MyContextMenu() {}
+      //   MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+      //     this.spread
+      //   );
+      //   MyContextMenu.prototype.onOpenMenu = function (
+      //     menuData,
+      //     itemsDataForShown,
+      //     hitInfo,
+      //     spread
+      //   ) {
+      //     itemsDataForShown.forEach(function (item, index) {
+      //       // console.log(item);
+      //       if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
+      //         item.command = "insertRowsCopyStyle";
+      //       }
+      //       //  else if (item && item.name === "gc.spread.cut") {
+  
+      //       //     item.command = "insertRowsCut";
+      //       //   }
+      //     });
+      //   };
+      //   var contextMenu = new MyContextMenu();
+      //   this.spread.contextMenu = contextMenu;
+      //   // 剪贴板事件绑定
+      //   sheet.bind(
+      //     GC.Spread.Sheets.Events.ClipboardChanged,
+      //     function (sender, args) {
+      //       let s = sheet.getSelections()[0];
+      //       console.log(sheet.getDataItem(s.row));
+      //       _this.sheetSelectRows = sheet.getArray(
+      //         s.row,
+      //         0,
+      //         s.rowCount,
+      //         _this.tableColumns[0].length
+      //       );
+      //       _this.sheetSelectObj.start = s.row;
+  
+      //       _this.sheetSelectObj.count = s.rowCount;
+      //     }
+      //   );
+    
+
+
+
 
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
