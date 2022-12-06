@@ -957,6 +957,7 @@ export default {
           });
         }
         }else{
+          this.adminLoading = false;
           this.$message.error("未接收到数据，请检查！");
         }
       }
