@@ -1,4 +1,4 @@
-<!--恩平丝印生产报工-->
+<!--恩平总装生产报工-->
 <template>
     <div
       class="container"
@@ -79,7 +79,7 @@
   import ComVxeTable from "@/components/ComVxeTable";
   import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
   export default {
-    name: "EPProReportedMinistry",
+    name: "EPFinalAssemblyReport",
     components: {
       ComSearch,
       ComVxeTable,
@@ -110,21 +110,21 @@
           {
             datas: {
               MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+              ProcessID: ["P2208290001"]//总装报工默认总装工序
             },
             forms: [],
           },
           {
             datas: {
-              MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+                MFGOrganizeID: 1222,//恩平
+              ProcessID: ["P2208290001"]//总装报工默认总装工序
             },
             forms: [],
           },
           {
             datas: {
-              MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+                MFGOrganizeID: 1222,//恩平
+              ProcessID: ["P2208290001"]//总装报工默认总装工序
             },
             forms: [],
           },
