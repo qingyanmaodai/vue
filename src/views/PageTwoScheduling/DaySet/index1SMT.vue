@@ -656,24 +656,51 @@ export default {
     
         if(m.name=="Capacity")
         {
-            var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
-        
-            row.foreColor("red");
-            return;
-                }
-                colindex++;
+          var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+      
+          row.foreColor("red");
+          return;
+        }
+        colindex++;
 
-              });
-        this.tableData[0].forEach((row,index)=>{
-        
+      });
+      this.tableData[0].forEach((row,index)=>{
         if(!row["Code"])
         {
-              var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
-
+            var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
             row.backColor("#019fde");
             row.foreColor("white");
         }
+
+        // 单元格动态添加多选框
+        let cellIndex = 0;
+        this.tableColumns[this.tagRemark].forEach((m) => {
+          //行，start,end
+          if (m.DataType == "bit" && m.isEdit) {
+            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+            cellType.caption("");
+            cellType.textTrue("");
+            cellType.textFalse("");
+            cellType.textIndeterminate("");
+            cellType.textAlign(
+              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            );
+            cellType.isThreeState(false);
+            sheet.getCell(index, cellIndex).cellType(cellType);
+          }
+          if (m.ControlType == "combobox" && m.isEdit) {
+            var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
+            cellType.editorValueType(
+              GC.Spread.Sheets.CellTypes.EditorValueType.value
+            );
+            cellType.items(row[m.DataSourceName]);
+            sheet.getCell(index, cellIndex).cellType(cellType);
+          }
+          cellIndex++;
         });
+      });
+
+        
       let cellIndex = 0;
       let viewSortIndex=0;//排序的索引
       let lineIDIndex=0
