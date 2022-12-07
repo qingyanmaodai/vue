@@ -831,7 +831,6 @@ export default {
         this.spread
           .commandManager()
           .register("insertRowsCopyStyle", insertRowsCopyStyle);
-    
   
         function MyContextMenu() {}
         MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
@@ -1266,6 +1265,9 @@ export default {
     // 保存日计划
     async dataSaveDay() {
       let sheet = this.spread.getActiveSheet();
+      if (sheet.isEditing()) {
+        sheet.endEdit();
+      }
       let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
@@ -1273,11 +1275,18 @@ export default {
           submitData.push(x.item);
         });
       }
+      // 插入的行
+      newData =sheet.getInsertRows();
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          x.item["dicID"]=this.sysID;
+          submitData.push(x.item);
+        });
+      }
       if (submitData.length == 0) {
         this.$message.error("没修改过任何数据！");
         return;
       }
-       
       this.adminLoading = true;
       let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;
