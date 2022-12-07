@@ -70,6 +70,17 @@
           </div>
         </div>
       </div>
+
+      <!-- 点击齐套率弹框-->
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="7916"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
   </div>
 </template>
 
@@ -101,15 +112,20 @@ import {
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "DaySet11",
   components: {
     ComSearch,
     ComReportTable,
     ComAsideTree,
+    DialogTable
   },
   data() {
     return {
+      dialogSearchForm:{
+        },
+        colDialogVisible:false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -155,6 +171,18 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData" },
         },
+        {
+            ButtonCode: "releasedOrder",
+            BtnName: "下推",
+            isLoading: false,
+            Methods: "setPlan",
+            Type: "danger",
+            Icon: "",
+            Size: "small",
+            Params: {
+              dataName: "selectionData"
+            },
+          },
           {
           ButtonCode: "save",
           BtnName: "重排",
@@ -164,6 +192,16 @@ export default {
           Icon: "",
           Size: "small",
           Params: { dataName: "resetScheduling" },
+        },
+        {
+          ButtonCode: "resetSort",
+          BtnName: "重置排序",
+          isLoading: false,
+          Methods: "ResetSorting",
+          Type: "warning",
+          Icon: "",
+          Size: "small",
+          Params: { },
         },
       ],
       tableData: [[]],
@@ -521,6 +559,8 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
       console.log(this.checkBoxCellTypeLine)
+       // 去重，因为有两个选择项
+       this.tableColumns[0] = _.uniqBy(this.tableColumns[0],'name')
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -546,9 +586,7 @@ export default {
         
         colHeader1.push(x.label);
       });
-      // 去重，因为有两个选择项
-      colInfos = _.uniqBy(colInfos,'name')
-      colHeader1 = _.uniq(colHeader1)
+     
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
@@ -618,191 +656,196 @@ export default {
     
         if(m.name=="Capacity")
         {
-     var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
- 
-    row.foreColor("red");
-    return;
+            var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+        
+            row.foreColor("red");
+            return;
+                }
+                colindex++;
+
+              });
+        this.tableData[0].forEach((row,index)=>{
+        
+        if(!row["Code"])
+        {
+              var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+
+            row.backColor("#019fde");
+            row.foreColor("white");
         }
-        colindex++;
-
-      });
-this.tableData[0].forEach((row,index)=>{
- 
-if(!row["Code"])
-{
-       var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
-
-    row.backColor("#019fde");
-     row.foreColor("white");
-}
-});
+        });
       let cellIndex = 0;
+      let viewSortIndex=0;//排序的索引
+      let lineIDIndex=0
+
       this.tableColumns[0].forEach((m) => {
-        //行，start,end
-        if (m.isEdit) {
-          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          //cell.foreColor("#2a06ecd9");
-        } else {
-          // var cell = sheet.getCell(
-          //   -1,
-          //   cellIndex,
-          //   GC.Spread.Sheets.SheetArea.viewport
-          // );
-          // cell.foreColor("gray");
-        }
+          //行，start,end
+          if(m.prop=="ViewSort")
+          {
+            viewSortIndex=cellIndex;
+          }
+          if(m.prop=="LineID")
+          {
+            lineIDIndex=cellIndex;
+          }
+          //行，start,end
+          if (m.isEdit) {
+            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            var cell = sheet.getCell(
+              -1,
+              cellIndex,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            cell.foreColor("#2a06ecd9");
+          } else {
+          }
+          cellIndex++;
+        });
 
-        cellIndex++;
-      });
-
-      // var insertRowsCopyStyle = {
-      //     canUndo: true,
-      //     name: "insertRowsCopyStyle",
-      //     execute: function (context, options, isUndo) {
-      //       var Commands = GC.Spread.Sheets.Commands;
-      //       if (isUndo) {
-      //         Commands.undoTransaction(context, options);
-      //         return true;
-      //       } else {
-      //         sheet.suspendPaint();
-      //         sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-      //         //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-      //         // console.log(_this.sheetSelectRows);
+      var insertRowsCopyStyle = {
+          canUndo: true,
+          name: "insertRowsCopyStyle",
+          execute: function (context, options, isUndo) {
+            var Commands = GC.Spread.Sheets.Commands;
+            if (isUndo) {
+              Commands.undoTransaction(context, options);
+              return true;
+            } else {
+              sheet.suspendPaint();
+              sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+              //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+              // console.log(_this.sheetSelectRows);
   
-      //         // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
-      //         //删除旧行
-      //         if (_this.sheetSelectObj.start > options.activeRow) {
-      //           //说明从下面插入上面
-      //           sheet.copyTo(
-      //             _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-      //             0,
-      //             options.activeRow,
-      //             0,
-      //             _this.sheetSelectRows.length,
-      //             sheet.getColumnCount(),
-      //             GC.Spread.Sheets.CopyToOptions.all
-      //           );
+              // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+              //删除旧行
+              if (_this.sheetSelectObj.start > options.activeRow) {
+                //说明从下面插入上面
+                sheet.copyTo(
+                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                  0,
+                  options.activeRow,
+                  0,
+                  _this.sheetSelectRows.length,
+                  sheet.getColumnCount(),
+                  GC.Spread.Sheets.CopyToOptions.all
+                );
              
-      //       //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-      //           sheet.deleteRows(
-      //             _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-      //             _this.sheetSelectObj.count
-      //           );
-      //           // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
-      //         } else {
-      //           //从上面往下面插入
-      //           sheet.copyTo(
-      //             _this.sheetSelectObj.start,
-      //             0,
-      //             options.activeRow,
-      //             0,
-      //             _this.sheetSelectRows.length,
-      //             sheet.getColumnCount(),
-      //             GC.Spread.Sheets.CopyToOptions.all
-      //           );
-      //         //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-      //           sheet.deleteRows(
-      //             _this.sheetSelectObj.start,
-      //             _this.sheetSelectObj.count
-      //           );
+            //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+                sheet.deleteRows(
+                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                  _this.sheetSelectObj.count
+                );
+                // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+              } else {
+                //从上面往下面插入
+                sheet.copyTo(
+                  _this.sheetSelectObj.start,
+                  0,
+                  options.activeRow,
+                  0,
+                  _this.sheetSelectRows.length,
+                  sheet.getColumnCount(),
+                  GC.Spread.Sheets.CopyToOptions.all
+                );
+              //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+                sheet.deleteRows(
+                  _this.sheetSelectObj.start,
+                  _this.sheetSelectObj.count
+                );
                 
-      //         }
-      //         let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+              }
+              let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
    
-      //         let lineID=_this.sheetSelectRows[0][lineIDIndex]
-      //         let isFind=false;
-      //         let viewSort=1;
+              let lineID=_this.sheetSelectRows[0][lineIDIndex]
+              let isFind=false;
+              let viewSort=1;
      
   
-      //         for(var i=0;i<count;i++ )
-      //         {
+              for(var i=0;i<count;i++ )
+              {
    
-      //           if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
-      //           {
-      //               isFind=true;      
+                if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
+                {
+                    isFind=true;      
                   
-      //           }
-      // if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
-      //           {
+                }
+      if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
+                {
                  
-      //             break;
-      //           }
-      //           if(isFind)
-      //           {
-      //             sheet.setValue(i,viewSortIndex,viewSort);
-      //             viewSort++;
-      //           }
+                  break;
+                }
+                if(isFind)
+                {
+                  sheet.setValue(i,viewSortIndex,viewSort);
+                  viewSort++;
+                }
                
                   
-      //         }
+              }
         
-      //         // Commands.startTransaction(context, options);
+              // Commands.startTransaction(context, options);
   
-      //         // sheet.suspendPaint();
+              // sheet.suspendPaint();
   
-      //         // var beforeRowCount = 0;
+              // var beforeRowCount = 0;
   
-      //         //  sheet.suspendPaint();
+              //  sheet.suspendPaint();
   
-      //         // Commands.endTransaction(context, options);
-      //         sheet.resumePaint();
+              // Commands.endTransaction(context, options);
+              sheet.resumePaint();
   
-      //         return true;
-      //       }
-      //     },
-      //   };
+              return true;
+            }
+          },
+        };
   
   
   
-      //   this.spread
-      //     .commandManager()
-      //     .register("insertRowsCopyStyle", insertRowsCopyStyle);
+        this.spread
+          .commandManager()
+          .register("insertRowsCopyStyle", insertRowsCopyStyle);
     
   
-      //   function MyContextMenu() {}
-      //   MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-      //     this.spread
-      //   );
-      //   MyContextMenu.prototype.onOpenMenu = function (
-      //     menuData,
-      //     itemsDataForShown,
-      //     hitInfo,
-      //     spread
-      //   ) {
-      //     itemsDataForShown.forEach(function (item, index) {
-      //       // console.log(item);
-      //       if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
-      //         item.command = "insertRowsCopyStyle";
-      //       }
-      //       //  else if (item && item.name === "gc.spread.cut") {
+        function MyContextMenu() {}
+        MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+          this.spread
+        );
+        MyContextMenu.prototype.onOpenMenu = function (
+          menuData,
+          itemsDataForShown,
+          hitInfo,
+          spread
+        ) {
+          itemsDataForShown.forEach(function (item, index) {
+            // console.log(item);
+            if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
+              item.command = "insertRowsCopyStyle";
+            }
+            //  else if (item && item.name === "gc.spread.cut") {
   
-      //       //     item.command = "insertRowsCut";
-      //       //   }
-      //     });
-      //   };
-      //   var contextMenu = new MyContextMenu();
-      //   this.spread.contextMenu = contextMenu;
-      //   // 剪贴板事件绑定
-      //   sheet.bind(
-      //     GC.Spread.Sheets.Events.ClipboardChanged,
-      //     function (sender, args) {
-      //       let s = sheet.getSelections()[0];
-      //       console.log(sheet.getDataItem(s.row));
-      //       _this.sheetSelectRows = sheet.getArray(
-      //         s.row,
-      //         0,
-      //         s.rowCount,
-      //         _this.tableColumns[0].length
-      //       );
-      //       _this.sheetSelectObj.start = s.row;
+            //     item.command = "insertRowsCut";
+            //   }
+          });
+        };
+        var contextMenu = new MyContextMenu();
+        this.spread.contextMenu = contextMenu;
+        // 剪贴板事件绑定
+        sheet.bind(
+          GC.Spread.Sheets.Events.ClipboardChanged,
+          function (sender, args) {
+            let s = sheet.getSelections()[0];
+            console.log(sheet.getDataItem(s.row));
+            _this.sheetSelectRows = sheet.getArray(
+              s.row,
+              0,
+              s.rowCount,
+              _this.tableColumns[0].length
+            );
+            _this.sheetSelectObj.start = s.row;
   
-      //       _this.sheetSelectObj.count = s.rowCount;
-      //     }
-      //   );
+            _this.sheetSelectObj.count = s.rowCount;
+          }
+        );
     
 
 
@@ -830,6 +873,51 @@ if(!row["Code"])
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
         // }
+      });
+      // 粘贴事件
+      this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+            // 日期列才触发
+            if(_this.tableColumns[_this.tagRemark][e.cellRange.col].prop.indexOf('-')>-1){
+              // 正则分割剪切单元格的所有值
+              let cellValList = e.pasteData.text.split(/\t|\r\n/)
+              if(cellValList&&cellValList.length){
+                // 获取剪切
+                let rowIndex  = e.cellRange.rowCount
+                let colIndex = e.cellRange.colCount
+                let row = e.cellRange.row
+                // 循环次数初始化
+                let num = 0
+                for(let r=0;r<rowIndex;r++){
+                  let col = e.cellRange.col
+                  for(let c=0;c<colIndex;c++){
+                    // 自动计算数量
+                    // /^[0-9]+.?[0-9]*$/ 验证字符串是否是数字
+                    _this.computedNum(row, col, /^[0-9]+.?[0-9]*$/.test(cellValList[num])?parseInt(cellValList[num]):0);
+                    // 复制的列累加
+                    col ++
+                    // 循环的次数累加
+                    num ++
+                  }
+                  // 复制的函数累加
+                  row ++
+                }
+              }
+            }
+          });
+
+        // 表格单击齐套率弹框事件
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (item.name === "FormRate" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderNo =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
       });
       this.spread.resumePaint();
       this.adminLoading = false;
@@ -966,7 +1054,12 @@ if(!row["Code"])
           let label = this.tableColumns[0][j].prop.substring(0,5) + "dy";
           let obj = currentRow[label];
           let maxNum = 0
-          remainNum = remainNum - parseInt(val);
+          if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
+              remainNum = remainNum
+            }else{
+              remainNum = remainNum - parseInt(val);
+            }
+          // remainNum = remainNum - parseInt(val);
           // let maxNum =
           //   parseInt(Capacity) *
           //   parseInt(obj.TotalHours) *
@@ -1201,6 +1294,85 @@ if(!row["Code"])
         }
       }
     },
+    // 下推
+    async setPlan(remarkTb, index, params) {
+      let arr = this.getSelectionData();
+ 
+     
+        if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("请选择需要转入日计划的数据！");
+        } else {
+          let ProcessID = "";
+          this.adminLoading = true;
+          // if (remarkTb == 1) {
+          //   ProcessID = "P202009092233201";
+          // } else if (remarkTb == 3) {
+          //   ProcessID = "P202009092233413";
+          // }
+
+          let errMsg = "";
+          // let okCount = 0;
+          let okCount = this.selectionData[remarkTb].length;
+       
+          if (errMsg != "") {
+            this.$message({
+              message: errMsg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          if (okCount > 0) {
+            let res = await GetSearch(
+              this.selectionData[remarkTb],
+              "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=2"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+             this.adminLoading = false;
+          }
+        }
+      
+    },
+    // 重置排序
+    async ResetSorting(){
+        let res = null
+          this.$confirm("确定重置排序吗？")
+          .then(async(_) => {
+            res = await GetSearch(_this.tableData[this.tagRemark], "/APSAPI/ResetEKViewSort");
+            const {
+            datas,
+            forms,
+            result,
+            msg
+          } = res.data;
+          if (result) {
+            _this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            _this.dataSearch(_this.tagRemark);
+          } else {
+            _this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          })
+          .catch((_) => {});
+      }
   },
 };
 </script>
