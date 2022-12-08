@@ -638,7 +638,7 @@ export default {
       this.treeData = [];
       let form = {
         OrganizeIDs: this.userInfo.CenterID,
-        OrganizeID: this.userInfo.OrganizeID,
+        // OrganizeID: this.userInfo.OrganizeID, 熠日这边发现树结构不显示，所以注释此代码
         dicID: 3026,
         Status: 1,
       };
