@@ -83,10 +83,10 @@ function setTippyContent(element, data) {
   if (!gstc) return;
   if ((!data || !data.item) && element._tippy) return element._tippy.destroy();
   const itemData = gstc.api.getItemData(data.item.id);
-  if (!itemData) return element._tippy.destroy();
-  if (itemData.detached && element._tippy) return element._tippy.destroy();
+  if (!itemData&&element._tippy) return element._tippy.destroy();
+  if (itemData&&itemData.detached && element._tippy) return element._tippy.destroy();
   // @ts-ignore
-  if (!itemData.detached && !element._tippy) tippy(element, { trigger: 'mouseenter click',allowHTML: true });
+  if (itemData&&!itemData.detached && !element._tippy) tippy(element, { trigger: 'mouseenter click',allowHTML: true });
   if (!element._tippy) return;
     const tooltipContent =`
       <p>资源名称：${data.item.LineName ? data.item.LineName : ""}</p>
@@ -101,6 +101,7 @@ function setTippyContent(element, data) {
       `
   element._tippy.setContent(tooltipContent);
 }
+
 // 鼠标移上去显示事件
 function itemTippy(element, data) {
   setTippyContent(element, data);
@@ -483,8 +484,8 @@ export default {
           config.chart.item.height = this.customHightSize
           return config;
         });
-        if (this.num == 0) {
-          // 刷新
+        if (this.num == 0) {// 初始化刷新即可
+          // 配置加载完刷新
           gstc.reload();
           this.num++;
         }
@@ -564,7 +565,7 @@ export default {
                     let children = list[i].OrderNoList
                     
                     for(let x=0;x<children.length;x++){
-                      num  = i.toString() + x
+                      num++
                       // 取随机色
                       let color = self.getRandomColor();
                       children[x].bgCodor = color;
@@ -885,7 +886,7 @@ export default {
             let children = list[i].OrderNoList
             
             for(let x=0;x<children.length;x++){
-              num  = i.toString() + x
+              num++
               console.log('children[x]',children[x])
               let itemsObj = {
                 [num]: {
