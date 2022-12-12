@@ -109,18 +109,21 @@ export default {
       formSearchs: [
         {
           datas: {
+            MFGOrganizeID:162,
             ProcessID: ["P2209290002"]//丝印报工默认丝印工序
           },
           forms: [],
         },
         {
           datas: {
+            MFGOrganizeID:162,
             ProcessID: ["P2209290002"]//丝印报工默认丝印工序
           },
           forms: [],
         },
         {
           datas: {
+            MFGOrganizeID:162,
             ProcessID: ["P2209290002"]//丝印报工默认丝印工序
           },
           forms: [],
