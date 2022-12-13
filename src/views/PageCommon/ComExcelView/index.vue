@@ -439,6 +439,13 @@
               // );
               // cell.foreColor("gray");
             }
+            // 列宽自适应
+            if(m.name.indexOf('-')>-1){
+              sheet.autoFitColumn(cellIndex)
+              if(sheet.getColumnWidth(cellIndex)<=60){
+                sheet.setColumnWidth(cellIndex, parseInt(80))
+              }
+            }
   
             cellIndex++;
           });
