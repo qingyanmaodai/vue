@@ -1,4 +1,4 @@
-<!--恩平丝印周计划排程-->
+<!--恩平电机周计划排程-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -166,7 +166,7 @@
   } from "@/api/Common";
   import DialogTable from "@/components/Dialog/dialogTable";
   export default {
-    name: "EPScreenPrintingSchedule",
+    name: "EPMotorWeeklySchedule",
     components: {
       ComSearch,
       ComVxeTable,

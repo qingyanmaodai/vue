@@ -1,4 +1,4 @@
-<!--恩平丝印日计划-->
+<!--恩平电机日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -27,7 +27,7 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor">SysID:7945
+              <span @click="toPageSetting" class="primaryColor cursor">SysID:{{sysID[0].ID}}
               </span>
             </div>
             <div class="flex">
@@ -76,7 +76,7 @@
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "EPScreenPrintingTodayPlan",
+      name: "EPMotorDailyPlan",
       components: {
         ComSearch,
         ComReportTable,
@@ -176,7 +176,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: 7945,
+          sysID: [{ ID: 7956}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -338,7 +338,14 @@
         dataReset(remarkTb) {
           for (let name in this.formSearchs[remarkTb].datas) {
             if (name != "dicID") {
-              this.formSearchs[remarkTb].datas[name] = null;
+              if (this.formSearchs[remarkTb].forms.length) {
+                // 判断是否是页面显示的查询条件，是的字段才清空
+                this.formSearchs[remarkTb].forms.forEach((element) => {
+                  if (element.prop === name) {
+                    this.formSearchs[remarkTb].datas[name] = null;
+                  }
+                });
+              }
             }
           }
         },
@@ -533,9 +540,7 @@
         },
         // 获取表头数据
         async getTableHeader() {
-          let IDs = [{
-            ID: 7945
-          }];
+          let IDs = this.sysID
           let res = await GetHeader(IDs);
           const {
             datas,
@@ -589,7 +594,6 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 7945;
           let res = await GetSearchData(form);
   
           const {
@@ -706,7 +710,7 @@
           sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
           // 冻结第一列
   
-          sheet.frozenColumnCount(this.tableColumns[this.tagRemark][0].FixCount);
+          sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
   
           sheet.setDataSource(this.tableData[0]);
           sheet.bindColumns(colInfos);
@@ -753,22 +757,21 @@
           var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
           sheet.rowFilter(hideRowFilter)
   
-  
           // 行样式
-        this.tableData[0].forEach((row, index) => {
-          var rowSheet = sheet.getRange(
-            index,
-            0,
-            1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          // 合计和负荷行设置背景色
-          if (row["Code"] == null) {
-            rowSheet.backColor("#A0CFFF");
-          }
-        })
-  
+          this.tableData[0].forEach((row, index) => {
+            var rowSheet = sheet.getRange(
+              index,
+              0,
+              1,
+              cellIndex,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            // 合计和负荷行设置背景色
+            if (row["Code"] == null) {
+              rowSheet.backColor("#A0CFFF");
+            }
+          })
+    
   
   
         var insertRowsCopyStyle = {
@@ -962,39 +965,70 @@
             //   sheet.setArray(args.row, i, [2021]);
             // }
           });
+          // 粘贴事件
+          // this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+          //   // 日期列才触发
+          //   if(_this.tableColumns[0][e.cellRange.col].prop.indexOf('-')>-1){
+          //     // 正则分割剪切单元格的所有值
+          //     let cellValList = e.pasteData.text.split(/\t|\r\n/)
+          //     if(cellValList&&cellValList.length){
+          //       // 获取剪切
+          //       let rowIndex  = e.cellRange.rowCount
+          //       let colIndex = e.cellRange.colCount
+          //       let row = e.cellRange.row
+          //       // 循环次数初始化
+          //       let num = 0
+          //       for(let r=0;r<rowIndex;r++){
+          //         let col = e.cellRange.col
+          //         for(let c=0;c<colIndex;c++){
+          //           // 自动计算数量
+          //           // /^[0-9]+.?[0-9]*$/ 验证字符串是否是数字
+          //           _this.computedNum(row, col, /^[0-9]+.?[0-9]*$/.test(cellValList[num])?parseInt(cellValList[num]):0);
+          //           // 复制的列累加
+          //           col ++
+          //           // 循环的次数累加
+          //           num ++
+          //         }
+          //         // 复制的函数累加
+          //         row ++
+          //       }
+          //     }
+          //   }
+          // });
           sheet.options.isProtected = true;
           sheet.options.protectionOptions.allowResizeColumns = true;
           sheet.options.protectionOptions.allowInsertRows = true;
           sheet.options.protectionOptions.allowDeleteRows = true;
           sheet.options.protectionOptions.allowSelectLockedCells = true;
           sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-          sheet.options.protectionOptions.allowDeleteRows = true;
           sheet.options.protectionOptions.allowDeleteColumns = true;
-          sheet.options.protectionOptions.allowInsertRows = true;
           sheet.options.protectionOptions.allowInsertColumns = true;
           sheet.options.protectionOptions.allowDargInsertRows = true;
           sheet.options.protectionOptions.allowDragInsertColumns = true;
           sheet.options.protectionOptions.allowSort = true
           sheet.options.protectionOptions.allowFilter = true
           sheet.options.allowUserDragDrop = true;
+          this.spread.options.tabStripVisible = false; //是否显示表单标签
           this.spread.resumePaint();
           this.adminLoading = false;
           this.tableLoading[0] = false;
           this.spread.refresh()
-          this.spread.options.tabStripVisible = false;//是否显示表单标签
         },
         // 自动计算数量
         computedNum(rowIndex, colIndex, val) {
+          
           let sheet = this.spread.getActiveSheet();
           let dataSource = sheet.getDataSource();
           if (val == null) {
             val = 0;
           }else if(val==0){//输入0不触发自动计算
+            sheet.setValue(rowIndex, colIndex, "");
             return
           }
+          
           val = parseInt(val)
-        //当前输入的有小数，取整
-        sheet.setValue(rowIndex, colIndex, val);
+          //当前输入的有小数，取整
+          sheet.setValue(rowIndex, colIndex, val);
           let currentRow = dataSource[rowIndex];
           if (currentRow.ID == -1) {
             return false;
@@ -1083,22 +1117,17 @@
               let label = this.tableColumns[0][j].prop + "dy";
               let obj = currentRow[label];
               let maxNum = 0
-            if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
-              remainNum = remainNum
-            }else{
-              remainNum = remainNum - parseInt(val);
-            }
-            // 如果产能为空会出现NaN情况的判断
-            if(Capacity){
-              maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-            }else{
-              maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-            }
-              // let maxNum =
-              //   parseInt(Capacity) *
-              //   parseInt(obj.TotalHours) *
-              //   parseInt(obj.DayCapacity);
-              // parseInt(obj.StandardPeoples)
+              if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
+                remainNum = remainNum
+              }else{
+                remainNum = remainNum - parseInt(val);
+              }
+              // 如果产能为空会出现NaN情况的判断
+              if(Capacity){
+                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              }else{
+                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+              }
               if (remainNum <= 0) {
                 list[j] = null;
               } else {
@@ -1106,7 +1135,7 @@
                   list[j] = remainNum;
                   val = remainNum
                   break;
-                } else {
+                }else {
                   list[j] = maxNum;
                   // remainNum -= maxNum;
                   val = maxNum  //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
@@ -1136,7 +1165,7 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID
+              ID: this.sysID[this.tagRemark].ID
             },
           });
         },
@@ -1294,7 +1323,6 @@
             this.$message.error("没修改过任何数据！");
             return;
           }
-  
           this.adminLoading = true;
           let res = await SaveMOPlanStep4(submitData);
           const {
