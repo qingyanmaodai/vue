@@ -526,6 +526,8 @@
         setData() {
           this.spread.suspendPaint();
           let sheet = this.spread.getActiveSheet();
+          // 重置表单
+          sheet.reset();
           sheet.options.allowCellOverflow = true;
           sheet.defaults.rowHeight = 23;
           sheet.defaults.colWidth = 100;
