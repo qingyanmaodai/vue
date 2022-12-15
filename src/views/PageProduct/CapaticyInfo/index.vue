@@ -211,13 +211,15 @@ export default {
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[0], "pageIndex", val);
-      this.dataSearch(remarkTb);
+      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      // this.dataSearch(remarkTb);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[0], "pageSize", val);
-      this.dataSearch(remarkTb);
+      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      // this.dataSearch(remarkTb);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
     sortChange(order, prop, remarkTb, filtertb, row, index) {
