@@ -102,6 +102,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 import formatDate,{formatNextMonthDate} from "@/utils/formatDate"
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
   name: "DeliveryRequirements",
   components: {
@@ -135,6 +136,15 @@ export default {
           Methods: "syncSave",
           Icon: "",
         },
+        {
+          ButtonCode: "delete",
+          BtnName: "删除",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+        },
         
       ],
       // 表头添加动态按钮
@@ -166,6 +176,7 @@ export default {
       ],
       sysID: [{ ID: 8993 }],
       spread: null, //excel初始
+      selectionData:[[]]
     };
   },
   activated() {
@@ -313,13 +324,40 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = [];
+        let cellIndex = 0;
         this.tableColumns[this.tagRemark].forEach((x) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
+          cellIndex++;
         });
+        // 列筛选
+        // 参数2 开始列
+        // 参数3 
+        // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter) 
+        if (colInfos.length && colInfos[0].name === "isChecked") {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
+          let checkbox = {
+            name: "isChecked",
+            displayName: "选择",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 80,
+          };
+          for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
+          }
+        }
 
         // 设置整个列头的背景色和前景色。
         /**
@@ -494,7 +532,41 @@ export default {
           this.adminLoading = false;
         }
       }
-    }
+    },
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[0] = [];
+      if (newData.length != 0) {
+        newData.forEach((x) => {
+          if (x.isChecked) {
+            this.selectionData[0].push(x);
+          }
+        });
+      }
+    },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let newData = [];
+      this.getSelectionData()
+      if (this.selectionData[0].length == 0) {
+        this.$message.error("请选择需要删除的数据！");
+        return;
+      } else if(this.selectionData[0].length){
+        this.selectionData[0].forEach((y) => {
+          let obj = y;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
+        });
+        this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
+      }
+      
+    },
   },
 };
 </script>
