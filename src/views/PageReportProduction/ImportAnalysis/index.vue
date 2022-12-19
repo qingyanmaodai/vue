@@ -419,6 +419,7 @@ export default {
         // 重置表单
         sheet.reset();
         // 渲染列
+        let cellIndex = 0;
         let colInfos = [];
         this.tableColumns[this.tagRemark].forEach((x) => {
           colInfos.push({
@@ -426,23 +427,33 @@ export default {
             displayName: x.label,
             size: parseInt(x.width),
           });
+          cellIndex++;
         });
-        // 选框
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
+        // 列筛选
+        // 参数2 开始列
+        // 参数3 
+        // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter) 
+        if (colInfos.length && colInfos[0].name === "isChecked") {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
 
-        let checkbox = {
-          name: "isChecked",
-          displayName: "选择",
-          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
-        };
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
+          let checkbox = {
+            name: "isChecked",
+            displayName: "选择",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 80,
+          };
+          for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
+          }
         }
 
         // 设置整个列头的背景色和前景色。
