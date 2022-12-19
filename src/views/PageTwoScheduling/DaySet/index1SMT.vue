@@ -73,9 +73,9 @@
 
       <!-- 点击齐套率弹框-->
       <DialogTable
-        title="订单齐套分析"
+        title="全局欠料"
         :tableDialog="colDialogVisible"
-        :sysID="7916"
+        :sysID="5165"
         width="80%"
         @closeDialog="colDialogVisible = false"
         :searchForm="dialogSearchForm"
@@ -935,8 +935,8 @@ export default {
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.tableColumns[_this.tagRemark].length) {
           _this.tableColumns[_this.tagRemark].map((item, index) => {
-            if (item.name === "FormRate" && args.col === index) {
-              // 显示ERP供需平衡表
+            if (item.name === "Q1" && args.col === index) {
+              // 显示欠料
               _this.colDialogVisible = true;
               _this.dialogSearchForm.OrderNo =
                 _this.tableData[_this.tagRemark][args.row].OrderNo;

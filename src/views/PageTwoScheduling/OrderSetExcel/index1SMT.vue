@@ -211,7 +211,7 @@
       </div>
     </div>
     <!-- 点击齐套率弹框-->
-    <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
   </div>
 </template>
 
@@ -886,11 +886,12 @@ export default {
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
           if(_this.tableColumns[0].length){
             _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="K1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
-                _this.dialogSearchForm.ZQLS = 0
+              if(item.name ==="Q1"&&args.col===index){
+                // 显示欠料
+                _this.colDialogVisible = true;
+                _this.dialogSearchForm.OrderNo =
+                  _this.tableData[_this.tagRemark][args.row].OrderNo;
+                _this.dialogSearchForm.OweQty = 0;
               }
             })
           }
