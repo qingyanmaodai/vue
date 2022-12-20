@@ -179,17 +179,17 @@ export default {
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       parmsBtn: [
-      {
-          ButtonCode: "import",
-          BtnName: "1.删除并导入",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Icon: "",
-          sort:1,
-          Params:{isDel:1}
-        },
+      // {
+      //     ButtonCode: "import",
+      //     BtnName: "1.删除并导入",
+      //     Type: "danger",
+      //     Ghost: true,
+      //     Size: "small",
+      //     Methods: "dataImport",
+      //     Icon: "",
+      //     sort:1,
+      //     Params:{isDel:1}
+      //   },
         {
           ButtonCode: "import",
           BtnName: "1.增量导入",
@@ -329,7 +329,6 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      console.log('查询')
       if (parms) {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
@@ -360,7 +359,6 @@ export default {
       let newBtn = [];
       let btn2 = [];
       if (routeBtn.length != 0) {
-        console.log(routeBtn);
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
@@ -502,7 +500,7 @@ export default {
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-
+        
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
@@ -513,6 +511,7 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
+        defaultStyle.showEllipsis = true;
 
         // 表格单击齐套率弹框事件
         // this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
@@ -638,7 +637,8 @@ export default {
           submitData.push(x.item);
         });
         this.adminLoading = true;
-        let res = await SaveData(submitData);
+        // let res = await SaveData(submitData);
+        let res = await GetSearch(submitData,"/APSAPI/SaveManualForecast");//金羚此特殊接口，没使用通用保存
         const { datas, forms, result, msg } = res.data;
         if (result) {
           this.adminLoading = false;
@@ -960,25 +960,31 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
-        const { result, data, count, msg } = res.data;
-        if (result) {
+        if(DataList.length){
+          let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            // this.dataSearch(this.tagRemark);
+            // 导入可能存在表头格式不一样，需要更新
+            this.getTableHeader();
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        }
+        else{
           this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
-          // 导入可能存在表头格式不一样，需要更新
-          this.getTableHeader();
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
+          this.$message.error("未接收到数据，请检查！");
         }
       }
     },
