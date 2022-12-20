@@ -176,7 +176,10 @@ export default {
       ],
       sysID: [{ ID: 8993 }],
       spread: null, //excel初始
-      selectionData:[[]]
+      selectionData:[[]],
+      filterParams:{
+        col:-1
+      },
     };
   },
   activated() {
@@ -392,6 +395,10 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
+
+        
+        
+
          // 冻结列
          sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
@@ -399,6 +406,22 @@ export default {
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false;//是否显示表单标签
+        // 事件
+        let self = this
+        // 当前有排序规则进行排序
+        if(self.filterParams&&self.filterParams.col>-1){
+          // 参数1
+          // 参数2
+          // 参数3--排序行数
+          // 参数4--排序列数量
+          sheet.sortRange(-1, -1, -1, -1, true, [
+              { index: self.filterParams.col, ascending: self.filterParams.ascending}, 
+          ]);
+        }
+        // 排序事件
+        sheet.bind(GC.Spread.Sheets.Events.RangeSorting, function (e, info) {
+          self.filterParams = info
+        });
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
