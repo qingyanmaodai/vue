@@ -634,6 +634,8 @@ export default {
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
+          x.item['SDate'] = this.machineCycle.length ? this.machineCycle[0] : "",
+          x.item['Edate'] = this.machineCycle.length ? this.machineCycle[1] : "",
           submitData.push(x.item);
         });
         this.adminLoading = true;
