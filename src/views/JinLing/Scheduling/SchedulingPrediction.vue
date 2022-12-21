@@ -280,7 +280,10 @@ export default {
       formSearchs: [
         //不同标签页面的查询条件
         {
-          datas: {}, //查询入参
+          datas: {
+            MFGOrganizeID: 1222,//恩平
+            OrganizeID: 1222,  // 恩平组织ID,可能是上面字段，可能下面字段
+          }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
@@ -293,7 +296,7 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 9007 }],
+      sysID: [{ ID: 9005 }],
       spread: null, //excel初始
       fileList: [],
       file: [],
