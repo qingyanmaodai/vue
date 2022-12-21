@@ -1049,7 +1049,7 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         if (remarkTb == 1) {
-          form["AutoDays2"] = 20;
+          form["AutoDays2"] = 45;
           form["StartWeek"] = 1;
         }
   

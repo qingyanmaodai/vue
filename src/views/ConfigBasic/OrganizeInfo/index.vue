@@ -153,6 +153,27 @@ export default {
         },
       ],
       btnForm: [
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "保存",
+        //   isLoading: false,
+        //   Methods: "dataTreeSave",
+        //   Type: "success",
+        //   Icon: "",
+        //   Size: "small",
+        // },
+        // {
+        //   ButtonCode: "delete",
+        //   BtnName: "删除",
+        //   isLoading: false,
+        //   Methods: "dataDel",
+        //   Type: "danger",
+        //   Icon: "",
+        //   Params: { dataName: "delData" },
+        //   Size: "small",
+        // },
+      ],
+      parmsBtn:[
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -226,6 +247,7 @@ export default {
         ],
       },
       adminLoading: false,
+      isEdit: false,
     };
   },
   watch: {
@@ -244,6 +266,7 @@ export default {
   },
   created() {
     _this = this;
+    this.judgeBtn();
     this.getTableHeader();
   },
   mounted() {
@@ -253,6 +276,27 @@ export default {
     }, 350);
   },
   methods: {
+    // 判断按钮权限
+    judgeBtn() {
+        let routeBtn = this.$route.meta.btns;
+        let newBtn = [];
+        let permission = false;
+        if (routeBtn.length != 0) {
+          routeBtn.forEach((x) => {
+            if (x.ButtonCode == "edit") {
+              permission = true;
+            }
+            let newData = this.parmsBtn.filter((y) => {
+              return x.ButtonCode == y.ButtonCode;
+            });
+            if (newData.length != 0) {
+              newBtn = newBtn.concat(newData);
+            }
+          });
+        }
+        this.$set(this, "btnForm", newBtn);
+        this.$set(this, "isEdit", permission);
+      },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
