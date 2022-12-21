@@ -179,6 +179,16 @@ export default {
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       parmsBtn: [
+        {
+          ButtonCode: "syncSave",
+          BtnName: "同步预测",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "syncSave",
+          Icon: "",
+          sort:0,
+        },
       // {
       //     ButtonCode: "import",
       //     BtnName: "1.删除并导入",
@@ -193,7 +203,7 @@ export default {
         {
           ButtonCode: "import",
           BtnName: "1.增量导入",
-          Type: "danger",
+          Type: "primary",
           Ghost: true,
           Size: "small",
           Methods: "dataImport",
@@ -204,7 +214,7 @@ export default {
         {
           ButtonCode: "sysData",
           BtnName: "2.抓单分析",
-          Type: "danger",
+          Type: "primary",
           Ghost: true,
           Size: "small",
           Methods: "Analysis",
@@ -222,15 +232,7 @@ export default {
           sort:3,
         },
         
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "同步",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "syncSave",
-        //   Icon: "",
-        // },
+        
        
         {
           ButtonCode: "delete",
@@ -668,7 +670,7 @@ export default {
     // 同步
     async syncSave() {
       this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/PushDeliveryData");
+      let res = await GetSearch("", "/APSAPI/UpdateForecast");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
