@@ -237,13 +237,15 @@
         formSearchs: [
           {
             datas: {
-                MFGOrganizeID:162 // 江门组织ID
+                MFGOrganizeID:162, // 江门组织ID
+                OrganizeID: 162,  // 江门组织ID,可能是上面字段，可能下面字段
             },
             forms: [],
           },
           {
             datas: {
-                MFGOrganizeID:162 // 江门组织ID
+                MFGOrganizeID:162, // 江门组织ID
+                OrganizeID: 162,  // 江门组织ID,可能是上面字段，可能下面字段
             },
             forms: [],
           },

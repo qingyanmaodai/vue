@@ -117,7 +117,8 @@
         formSearchs: [
           {
             datas: {
-                MFGOrganizeID:1222 //恩平组织
+                MFGOrganizeID:1222, //恩平组织
+                OrganizeID: 1222,  // 恩平组织ID,可能是上面字段，可能下面字段
             },
             forms: [],
           },
