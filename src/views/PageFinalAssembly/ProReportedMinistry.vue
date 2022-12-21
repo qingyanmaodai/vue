@@ -318,44 +318,44 @@ export default {
     },
     // 保存
     async dataSave(remarkTb) {
-      if (this.tableData[remarkTb].length == 0) {
-        this.$message.error("暂无可保存的数据！");
-      } else {
-        let flag = []
-        this.tableData[remarkTb] = [...this.tableData[remarkTb]]
-        for(let i=0;i<this.tableData[remarkTb].length;i++){
-          let a = this.tableData[remarkTb][i]
-          if(!a.ProductionQty){
-            flag.push(a)
-          }else if(parseFloat(a.ProductionQty) == 0){
-            flag.push(a)
-          }
-        } // 判断必填报工数
-        this.$nextTick(async()=>{
-          if (flag.length == 0) {
-          for (let item of this.tableData[remarkTb].values()) {
-            item["dicID"] = 5586;
-            item["ProducedDate"] = item.PlanDay;
-          }
-          let res = await SaveData(this.tableData[remarkTb]);
-          const { result, data, count, msg } = res.data;
-          if (result) {
-            this.$set(this.tableData, remarkTb, data);
-            this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-            this.dataSearch(remarkTb)
-          } else {
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        }else{
-          this.$message.error(`报工数不能为空或0,请填写！`)
+      if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+        } else {
+          let flag = []
+          for(let i=0;i<this.selectionData[remarkTb].length;i++){
+            let a = this.selectionData[remarkTb][i]
+            if(!a.ProductionQty){
+              flag.push(a)
+            }else if(parseFloat(a.ProductionQty) == 0){
+              flag.push(a)
+            }
+          } // 判断必填报工数
+          this.$nextTick(async()=>{
+            // if (flag.length == 0) {
+            for (let item of this.selectionData[remarkTb].values()) {
+              item["dicID"] = 5586;
+              item["ProducedDate"] = item.PlanDay;
+            }
+            let res = await SaveData(this.selectionData[remarkTb]);
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.$set(this.tableData, remarkTb, data);
+              this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+              this.dataSearch(remarkTb)
+              this.selectionData[remarkTb] = []
+            } else {
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          // }else{
+          //   this.$message.error(`报工数不能为空或0,请填写！`)
+          // }
+          })
+          
         }
-        })
-        
-      }
     },
     // 获取表头数据
     async getTableHeader() {

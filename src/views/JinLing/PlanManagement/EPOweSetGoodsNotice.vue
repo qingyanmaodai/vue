@@ -1,4 +1,4 @@
-<!--恩平总装生产报工-->
+<!--送货通知单-->
 <template>
     <div
       class="container"
@@ -8,19 +8,15 @@
         class="admin_head"
         ref="headRef"
       >
-        <div
-          v-for="(item,i) in 3"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div>
           <ComSearch
             ref="searchRef"
-            :searchData="formSearchs[i].datas"
-            :searchForm="formSearchs[i].forms"
-            :remark="i"
-            :signName="labelStatus1"
+            :searchData="formSearchs[0].datas"
+            :searchForm="formSearchs[0].forms"
+            :remark="0"
             :isLoading="isLoading"
             :btnForm="btnForm"
+            :signName="labelStatus1"
             @btnClick="btnClick"
           />
         </div>
@@ -29,179 +25,147 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+              <el-col :span="4"><span class="title">{{title}}</span></el-col>
               <el-col
                 :span="20"
                 class="flex_flex_end"
               >
+                <div>
+                  <el-radio
+                    v-show="labelStatus1 == 0"
+                    v-model="Result"
+                    :label="0"
+                    @click.native.prevent="clickitem(1)"
+                  >显示有变化</el-radio>
+                  <el-divider direction="vertical"></el-divider>
+                </div>
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y)">{{ item.label }}（{{item.num}}）</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
             </el-row>
           </div>
-          <div
-            v-for="(x,y) in 3"
-            :key="y"
-            v-show="labelStatus1 == y"
-          >
+          <div>
             <ComVxeTable
               :rowKey="'RowNumber'"
               :height="height"
-              :tableData="tableData[y]"
-              :tableHeader="tableColumns[y]"
-              :hasSelect="hasSelect[y]"
-              :tableLoading="tableLoading[y]"
-              :remark="y"
-              :sysID="sysID[y].ID"
-              :isClear="isClear[y]"
-              :cellStyle="cellStyle0"
-              :pagination="tablePagination[y]"
-               @selectfun="selectFun"
+              :tableData="tableData[0]"
+              :tableHeader="tableColumns[0]"
+              :tableLoading="tableLoading[0]"
+              :isEdit="isEdit"
+              :hasSelect="true"
+              :cellStyle="cellStyle"
+              :checCheckboxkMethod="checCheckboxkMethod"
+              :remark="0"
+              :sysID="sysID[0].ID"
+              :isClear="isClear[0]"
+              :pagination="tablePagination[0]"
               @pageChange="pageChange"
               @pageSize="pageSize"
+              @selectfun="selectFun"
               @sortChange="sortChange"
             />
           </div>
-  
         </div>
       </div>
     </div>
   </template>
   
   <script>
+  var _this;
   import ComSearch from "@/components/ComSearch";
   import ComVxeTable from "@/components/ComVxeTable";
-  import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+  import ComReportTable from "@/components/ComReportTable";
+  import {
+    GetHeader,
+    GetSearchData,
+    ExportData,
+    SaveData,
+    GetSearch,
+    GetServerTime,
+  } from "@/api/Common";
   export default {
-    name: "EPFinalAssemblyReport",
+    name: "EPOweSetGoodsNotice",
     components: {
       ComSearch,
       ComVxeTable,
+      ComReportTable,
     },
     data() {
       return {
         ////////////////// Search /////////////////
-        labelStatus1: 0,
-        hasSelect: [true, true, false],
+        dialogShow: false,
+        footerLabel: ["", "", "", ""],
+        hasSelect: [false, true, true, false],
+        sysID: [{ ID: 7843 }],
         Status1: [
-          {
-            label: "日计划",
-            value: 0,
-          },
-          {
-            label: "报工记录",
-            value: 1,
-          },
-          {
-            label: "历史报工记录",
-            value: 2,
-          },
+          { label: "全部", value: "", num: 0 },
+          { label: "未通知", value: "未通知", num: 0 },
+          { label: "已通知", value: "已通知", num: 0 },
         ],
         title: this.$route.meta.title,
-        dialogVisible: false,
+        labelStatus1: 0,
+        DemandReplyDate: "",
+        adminLoading: false,
+        checkdBtnCodes: [],
         drawer: false,
         formSearchs: [
           {
             datas: {
-              MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2208290001"]//总装报工默认总装工序
-            },
-            forms: [],
-          },
-          {
-            datas: {
-                MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2208290001"]//总装报工默认总装工序
-            },
-            forms: [],
-          },
-          {
-            datas: {
-                MFGOrganizeID: 1222,//恩平
-              ProcessID: ["P2208290001"]//总装报工默认总装工序
+                MFGOrganizeID:1222 //恩平组织
             },
             forms: [],
           },
         ],
+        btnForm: [],
         parmsBtn: [
           {
             ButtonCode: "save",
-            BtnName: "提交报工",
+            BtnName: "更新为已通知",
             Type: "success",
             Ghost: true,
             Size: "small",
-            signName: 0,
-            Methods: "addData",
-            Icon: "",
-          },
-          {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
-            Ghost: true,
-            Size: "small",
-            signName: 1,
+            signName: "",
             Methods: "dataSave",
             Icon: "",
           },
         ],
-        btnForm: [],
-        tableData: [[], [], []],
-        tableColumns: [[], [], []],
-        tableLoading: [false, false, false],
-        isClear: [false, false, false],
+        tableData: [[], [], [], []],
+        delData: [[], [], [], []],
+        tableColumns: [[], [], [], []],
+        tableLoading: [false, false, false, false],
+        isClear: [false, false, false, false],
         tablePagination: [
-          {
-            pageIndex: 1,
-            pageSize: 200,
-            pageTotal: 0,
-          },
-          {
-            pageIndex: 1,
-            pageSize: 200,
-            pageTotal: 0,
-          },
-          {
-            pageIndex: 1,
-            pageSize: 200,
-            pageTotal: 0,
-          },
+          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         ],
         height: "707px",
         showPagination: true,
         tagRemark: 0,
         isLoading: false,
-        adminLoading: false,
-        parseForm: {},
-        parseSearch: false,
-        sysID: [
-          {
-            ID: 6688,
-          },
-          {
-              ID: 7907,
-            },
-            {
-              ID: 7909,
-            },
-        ],
-        selectionData: [[], [], []],
-        currentDay:
-          new Date().getFullYear() +
-          (new Date().getMonth() + 1) +
-          new Date().getDate(),
+        initialBtnData: [],
+        tagRremark: 1,
+        selectionData: [[], [], [], []],
+        isEdit: false,
+        Result: 1,
+        height1: "460px"
       };
     },
-    watch: {},
     created() {
+      _this = this;
+      this.adminLoading = true;
       this.getTableHeader();
+      // 获取所有按钮
       this.judgeBtn();
+      // 获取已通知未通知的合计
+      this.getTotalNum();
     },
     mounted() {
       setTimeout(() => {
@@ -214,10 +178,8 @@
         let routeBtn = this.$route.meta.btns;
         let newBtn = [];
         let permission = false;
-  
         if (routeBtn.length != 0) {
           routeBtn.forEach((x) => {
-            // alert(x.ButtonCode)
             if (x.ButtonCode == "edit") {
               permission = true;
             }
@@ -230,19 +192,32 @@
           });
         }
         this.$set(this, "btnForm", newBtn);
+        this.$set(this, "isEdit", permission);
       },
-      // 行内样式 红ff7b7b 黄fdfd8f 绿9fff9f
-      cellStyle0({ row, column }) {},
       // 高度控制
       setHeight() {
         let headHeight = this.$refs.headRef.offsetHeight;
-  
         let rem =
           document.documentElement.clientHeight -
           headHeight -
           this.$store.getters.reduceHeight;
         let newHeight = rem + "px";
         this.$set(this, "height", newHeight);
+      },
+      // 编辑行
+      editRow(row) {
+        this.$set(row, "update", true);
+      },
+      // 删除行
+      delRow(row) {
+        this.$confirm("确定要删除该菜单嘛？")
+          .then((_) => {})
+          .catch((_) => {});
+      },
+      // 单击行
+      handleRowClick(row, remarkTb) {
+        this.delData[remarkTb] = [];
+        this.delData[remarkTb].push(row);
       },
       // 第几页
       pageChange(val, remarkTb, filtertb) {
@@ -295,6 +270,7 @@
         this.$set(this.isClear, remarkTb, true);
         this.tablePagination[remarkTb].pageIndex = 1;
         this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        this.getTotalNum();
         setTimeout(() => {
           this.$set(this.isClear, remarkTb, false);
         });
@@ -307,6 +283,39 @@
           }
         }
       },
+      // 行内样式 #fdfd8f 黄色
+      cellStyle({ row, column }) {
+        if (column.property == "Result") {
+          if (row.Result == "未变化") {
+            return {
+              backgroundColor: "#9fff9f",
+            };
+          } else if (row.Result == "新增") {
+            return {
+              backgroundColor: "#f8b1b1",
+            };
+          } else if (row.Result == "") {
+            return {
+              backgroundColor: "",
+            };
+          } else {
+            return {
+              backgroundColor: "#ff7b7b",
+            };
+          }
+        }
+        if (column.property == "Notice") {
+          if (row.Notice == "已通知") {
+            return {
+              backgroundColor: "#9fff9f",
+            };
+          } else if (row.Notice == "未通知") {
+            return {
+              backgroundColor: "#ff7b7b",
+            };
+          }
+        }
+      },
       // 导出
       async dataExport(remarkTb) {
         this.adminLoading = true;
@@ -316,46 +325,31 @@
         this.adminLoading = false;
         this.$store.dispatch("user/exportData", res.data);
       },
-      // 保存
-      async dataSave(remarkTb) {
-        if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
+      // 通用直接保存
+      async generalSaveData(newData, remarkTb, index) {
+        let res = await SaveData(newData);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.dataSearch(remarkTb);
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
         } else {
-          let flag = []
-          for(let i=0;i<this.selectionData[remarkTb].length;i++){
-            let a = this.selectionData[remarkTb][i]
-            if(!a.ProductionQty){
-              flag.push(a)
-            }else if(parseFloat(a.ProductionQty) == 0){
-              flag.push(a)
-            }
-          } // 判断必填报工数
-          this.$nextTick(async()=>{
-            // if (flag.length == 0) {
-            for (let item of this.selectionData[remarkTb].values()) {
-              item["dicID"] = 5586;
-              item["ProducedDate"] = item.PlanDay;
-            }
-            let res = await SaveData(this.selectionData[remarkTb]);
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.$set(this.tableData, remarkTb, data);
-              this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-              this.dataSearch(remarkTb)
-              this.selectionData[remarkTb] = []
-            } else {
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          // }else{
-          //   this.$message.error(`报工数不能为空或0,请填写！`)
-          // }
-          })
-          
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
         }
+      },
+      // 保存返回结果自己处理事件
+      async returnResultData(newData) {
+        let res = await SaveData(newData);
+        return res;
       },
       // 获取表头数据
       async getTableHeader() {
@@ -367,6 +361,9 @@
           datas.some((m, i) => {
             m.forEach((n) => {
               // 进行验证
+              if (n.prop == "MenuCode" || n.prop == "MenuName") {
+                this.$set(n, "treeNode", true);
+              }
               this.verifyDta(n);
               if (n.childrens && n.children.length != 0) {
                 n.childrens.forEach((x) => {
@@ -388,8 +385,9 @@
             });
             this.$set(this.formSearchs[z], "forms", x);
           });
-        //   this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
-          this.dataSearch(0);
+  
+          this.getTableData(this.formSearchs[0].datas, 0);
+          this.adminLoading = false;
         }
       },
       // 验证数据
@@ -409,9 +407,9 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-          // form["ProcessID"]="P202009092233413";
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
+        this.$set(this.tableLoading, remarkTb, false);
         if (result) {
           this.$set(this.tableData, remarkTb, data);
           this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -422,100 +420,81 @@
             dangerouslyUseHTMLString: true,
           });
         }
-        this.$set(this.tableLoading, remarkTb, false);
-      },
-      // 刷新页面
-      refrshPage() {
-        this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
-          const { fullPath } = this.$route;
-          this.$nextTick(() => {
-            this.$router.replace({
-              path: "/redirect" + fullPath,
-            });
-          });
-        });
-      },
-      // 改变状态
-      changeStatus(item, index) {
-        this.labelStatus1 = index;
-        if (this.tableData[index].length == 0) {
-          this.dataSearch(index);
-        }
       },
       // 选择数据
       selectFun(data, remarkTb, row) {
-     
         this.selectionData[remarkTb] = data;
       },
-      async addData(val) {
-        if (this.selectionData[0].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
+      // 获取服务器时间
+      async getServerDate(remarkTb) {
+        let res = await GetServerTime();
+        const { result, data, msg } = res.data;
+        if (result) {
+          this.setOut(remarkTb, data);
         } else {
-          let newData = JSON.parse(JSON.stringify(this.selectionData[0]));
-          // this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
-          // this.selectionData[0] = [];
-          for(var a of newData)
-          {
-      if (a["ProductionQty"] > a["ProcessOweQty"]) {
-              this.$message.error("报工数不能大于欠数！");
-              return;
-            }
-            a["dicID"] = 5586;
-            a["ProducedDate"] = a.PlanDay;
-          }
-          
-          this.adminLoading = true;
-          let res = await SaveData(newData);
-          this.adminLoading = false;
-          if (res.data.result) {
-            this.dataSearch(0);
-            this.dataSearch(1);
-            this.selectionData[0] = []
-          } else {
-            this.$message.error(res.data.msg);
-          }
         }
       },
-      // 添加数据
-      // async addData(val) {
-      //   if (this.selectionData[1].length == 0) {
-      //     this.$message.error("请选择需要操作的数据！");
-      //   } else {
-  
-      //     let newData = JSON.parse(JSON.stringify(this.selectionData[1]));
-      //     this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
-      //     this.selectionData[1] = [];
-      //     newData.forEach((a) => {
-  
-      //       if (a["ProductionQty"] > a["ProcessOweQty"]) {
-      //         this.$message.error("报工数不能大于欠数！");
-      //         return;
-      //       }
-      //       a["dicID"] = 5586;
-      //       a["ProducedDate"] = a.PlanDay;
-      //       // if (
-      //       //   this.tableData[0].findIndex((b) => b.DayPlanID == a.DayPlanID) == -1
-      //       // ) {
-      //       //   a["update"] = true;
-      //       //  // a["ProductionQty"]=a["HasQty"]
-  
-      //       //   this.tableData[0].push(a);
-      //       // }
-      //     });
-      //     this.adminLoading = true;
-      //     let res = await SaveData(newData);
-      //     this.adminLoading = false;
-      //     if (res.data.result) {
-      //       this.dialogVisible = val;
-      //       this.dataSearch(1)
-      //       this.dataSearch(0)
-      //     } else {
-      //       this.$message.error(res.data.msg);
-      //     }
-  
-      //   }
-      // },
+      // 更新为已通知
+      dataSave(remarkTb) {
+        if (this.selectionData[0].length == 0) {
+          this.$message.error("请勾选已经通知过的数据！");
+        } else {
+          let submitData = [];
+          this.$confirm("确定要批量更新为已通知吗？")
+            .then((_) => {
+              _this.selectionData[0].forEach((a) => {
+                a.Notice = "已通知";
+              });
+              _this.generalSaveData(_this.selectionData[0], 0);
+            })
+            .catch((_) => {});
+        }
+      },
+      // 改变状态
+      changeStatus(x, index) {
+        this.labelStatus1 = index;
+        this.formSearchs[0].datas["Notice"] = x.value;
+        this.dataSearch(0);
+      },
+      // 控制选框是否能手动勾选
+      checCheckboxkMethod({ row }) {
+        if (row.Notice == "已通知") {
+          return false;
+        } else {
+          return true;
+        }
+      },
+      // 是否只显示没有下发的
+      clickitem(val) {
+        val == this.Result ? (this.Result = 0) : (this.Result = 1);
+        if (this.Result == 0) {
+          this.formSearchs[0].datas["Result"] = ["新增", "欠数增加", "欠数减少"];
+        } else {
+          this.formSearchs[0].datas["Result"] = "";
+        }
+        this.dataSearch(0);
+      },
+      async getTotalNum() {
+        let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
+        form["dicID"] = 7843;
+        form["Notice"] = "";
+        form["Result"] = "";
+        form["fields"] =
+          "sum(case when Notice = '未通知' then 1 else 0 end) as Count_1 ,sum(case when Notice = '已通知' then 1 else 0 end) as Count_2,count(1) as Count_3";
+        let res = await GetSearchData(form);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.$set(this.Status1[0], "num", data[0].Count_3);
+          this.$set(this.Status1[1], "num", data[0].Count_1);
+          this.$set(this.Status1[2], "num", data[0].Count_2);
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      },
     },
   };
   </script>
-  
