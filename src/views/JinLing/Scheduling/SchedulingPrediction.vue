@@ -617,7 +617,7 @@ export default {
       const { result, data, count, msg } = res.data;
 
       if (result) {
-        this.dataSearch(1);
+        this.dataSearch(this.tagRemark);
         this.$message({
           message: msg,
           type: "success",
