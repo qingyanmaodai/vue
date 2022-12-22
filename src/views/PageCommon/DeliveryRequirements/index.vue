@@ -509,6 +509,11 @@ export default {
       try {
         if (result) {
           this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
