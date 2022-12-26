@@ -17,10 +17,11 @@
           <div class="admin_content">
             <div class="ant-table-title">
               <el-row>
-                <el-col :span="4">
-                  <span class="title">{{ title }}</span>
+                <el-col :span="12">
+                  <span class="title" style="margin-right:10px">{{ title }}</span>
+                  <span style="color: #ff9900;" v-if="tagRemark==0">周计划日期显示规则：转入周计划时当周周一至昨日天数+45天。</span>
                 </el-col>
-                <el-col :span="20" class="flex_flex_end">
+                <el-col :span="12" class="flex_flex_end">
                     <div v-show="labelStatus1 ==0">
                         <SPAN>抓单日期范围：</SPAN>
                     <el-date-picker 
@@ -33,23 +34,23 @@
                     </el-date-picker>
                     <el-divider direction="vertical"></el-divider>
                     </div>
-                  <div v-show="labelStatus1 == 0">
-                    <el-button
+                  <!-- <div v-show="labelStatus1 == 0"> -->
+                    <!-- <el-button
                     type="warning"
                     size="mini"
-                    @click="insertList"
+                    @click="setTodayPlan"
                   >
-                    进入分线列表
-                  </el-button>
-                   <el-button
+                    转入日计划
+                  </el-button> -->
+                   <!-- <el-button
                     type="success"
                     size="mini"
                     @click="getOrder"
                   >
-                    抓单
-                  </el-button>
-                  <el-divider direction="vertical"></el-divider>
-                  </div>
+                    抓需求
+                  </el-button> -->
+                  <!-- <el-divider direction="vertical"></el-divider>
+                  </div> -->
                   <div v-show="labelStatus1 == 1">
                     <el-button
                     type="primary"
@@ -75,14 +76,14 @@
                   <el-divider direction="vertical"></el-divider>
                   </div>
                   
-                  <div
+                  <!-- <div
                     :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                     v-for="(item, y) in Status1"
                     :key="y"
                   >
                     <span @click="changeStatus(item, y)">{{ item.label }}</span>
                     <el-divider direction="vertical"></el-divider>
-                  </div>
+                  </div> -->
                 </el-col>
               </el-row>
             </div>
@@ -154,7 +155,7 @@
         </div>
       </div>
       <!-- 点击齐套率弹框-->
-      <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+      <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="5156" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
     </div>
   </template>
   
@@ -209,20 +210,21 @@
         labelStatus1: 0,
         Status1: [
           { label: "待排产", value: 0 },
-          { label: "分线列表", value: 1 },
         ],
         title: this.$route.meta.title,
         resultMsg: "",
         delData: [[]],
         formSearchs: [
           {
-            datas: {MFGOrganizeID:1222},
+            datas: {
+              MFGOrganizeID:1222
+            },
             forms: [],
           },
           {
             datas: {MFGOrganizeID:1222},
             forms: [],
-          },
+          }
         ],
         parmsBtn: [
           
@@ -235,25 +237,28 @@
             Icon: "",
             signName:0,
             Size: "small",
-          },
-                 {
-            ButtonCode: "save",
-            BtnName: "保存",
-            isLoading: false,
-            Methods: "save4",
-            Type: "success",
-            Icon: "",
-            signName:1,
-            Size: "small",
+            Params: { ProcessID: "P2211070001" },
           },
           {
-            ButtonCode: "returnOrder",
-            BtnName: "退回",
-            Type: "danger",
+            ButtonCode: "to_days_plan",
+            BtnName: "转入日计划",
+            Type: "warning",
             Ghost: true,
-            signName: 1,
             Size: "small",
-            Methods: "backData",
+            signName: 0,
+            Methods: "setTodayPlan",
+            Params: { ProcessID: "P2211070001" },
+            Icon: "",
+          },
+          {
+            ButtonCode: "sysData",
+            BtnName: "抓需求",
+            Type: "success",
+            Ghost: true,
+            Size: "small",
+            signName: 0,
+            Methods: "getOrder",
+            Params: { ProcessID: "P2211070001" },
             Icon: "",
           },
         ],
@@ -265,7 +270,7 @@
         isClear: [false, false],
         tablePagination: [
           { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         ],
         height: "707px",
         treeHeight: "765px",
@@ -278,11 +283,14 @@
         dialogImport: false,
         fileList: [],
         file: [],
-        sysID: [{ ID: 5150, AutoDays2: this.AutoDays2 }, { ID: 7943 }],
+        sysID: [
+          { ID: 9014, AutoDays2: this.AutoDays2 },
+          { ID: 5156 },
+        ],
         userInfo: {},
         IsPurchaseBoss: false,
         ReplyDate: [],
-        AutoDays2: 30,
+        AutoDays2: 45,
         NoWorkHour: [],
         LineViewSort: [],
         spread: null,
@@ -310,7 +318,6 @@
     },
     methods: {
       setData() {
-        //sheet获取
         this.spread.suspendPaint();
         let sheet = this.spread.getActiveSheet();
         sheet.options.allowCellOverflow = true;
@@ -322,19 +329,35 @@
         let colInfos = [];
   
         this.tableColumns[0].forEach((x) => {
-          if (x.prop == "LineID") {
+          if (
+            x.ControlType === "comboboxMultiple" ||
+            x.ControlType === "combobox"
+          ) {
+            let combobox = null;
+            combobox = new GCsheets.CellTypes.ComboBox();
+            combobox.editorValueType(
+              GC.Spread.Sheets.CellTypes.EditorValueType.value
+            );
+            combobox.items(x.items);
+            combobox.itemHeight(24);
+  
             colInfos.push({
               name: x.prop,
-              displayName: "线别",
-              cellType: this.checkBoxCellTypeLine,
+              displayName: x.label,
+              cellType: combobox,
               size: parseInt(x.width),
             });
           } else {
+            // 配置表没有日期列宽需要设置
+            if(x.name.indexOf('-')>-1){
+              x.width = 80
+            }
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
             });
+            
           }
           colHeader1.push(x.label);
         });
@@ -354,140 +377,88 @@
           name: "isChecked",
           displayName: "isChecked",
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
+          size: 80,
         };
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
         }
   
         //  colInfos.unshift(checkbox);
+  
+        var row = sheet.getRange(
+          0,
+          -1,
+          1,
+          -1,
+          GC.Spread.Sheets.SheetArea.colHeader
+        );
+        row.backColor("#f3f3f3");
+        row.foreColor("#000000d9");
+        row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-          "gray",
-          GC.Spread.Sheets.LineStyle.thin
+          "1px solid #CCCCCC",
+          GC.Spread.Sheets.LineStyle.min
         );
         defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-          "gray",
-          GC.Spread.Sheets.LineStyle.thin
+          "1px solid #CCCCCC",
+          GC.Spread.Sheets.LineStyle.min
         );
         defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-          "gray",
-          GC.Spread.Sheets.LineStyle.thin
+          "1px solid transparent",
+          GC.Spread.Sheets.LineStyle.min
         );
         defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-          "gray",
-          GC.Spread.Sheets.LineStyle.thin
+          "1px solid transparent",
+          GC.Spread.Sheets.LineStyle.min
         );
-  
         defaultStyle.showEllipsis = true;
         sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-  
-        // 冻结第一列
-  
-        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
   
         sheet.setDataSource(this.tableData[0]);
         sheet.bindColumns(colInfos);
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
   
-        let colindex = 0;
-        for (let m of colInfos) {
-          if (m.name == "Capacity") {
-            var rowSheet = sheet.getRange(
+        let cellIndex = 0;
+  
+        this.tableColumns[0].forEach((m) => {
+          //行，start,end
+          if (m.isEdit) {
+            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            var cell = sheet.getCell(
               -1,
-              colindex,
-              1,
-              1,
+              cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-            rowSheet.foreColor("red");
-            break;
+            cell.foreColor("#2a06ecd9");
+          } else {
+            // var cell = sheet.getCell(
+            //   -1,
+            //   cellIndex,
+            //   GC.Spread.Sheets.SheetArea.viewport
+            // );
+            // cell.foreColor("gray");
           }
-          colindex++;
-        }
+          
+          cellIndex++;
+        });
   
+        // 列筛选
+        // 参数2 开始列
+        // 参数3 
+        // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter)      
+  
+        var colindexs = [1, 2, 3, 4, 5];
         this.tableData[0].forEach((row, index) => {
-          var rowSheet = sheet.getRange(
-            index,
-            0,
-            1,
-            colindex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          var rowSheet2 = sheet.getRange(
-            index,
-            colindex,
-            1,
-            colInfos.length - colindex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          // 齐套列
-          var rowSheet3  = ''
-          if(_this.tableColumns[0].length){
-            for(let i=0;i<_this.tableColumns[0].length;i++){
-              let item = _this.tableColumns[0][i]
-              if(item.name ==="K1"){
-                   rowSheet3 = sheet.getCell(
-                    index,//行
-                    i,//列
-                    GC.Spread.Sheets.SheetArea.viewport
-                  );
-                  break
-                }
-            }
-          }
-  
-          if (row["Code"] == null) {
-            rowSheet.backColor("#A0CFFF");
-            rowSheet.foreColor("balck");
-            rowSheet2.backColor("#A0CFFF");
-            rowSheet2.foreColor("balck");
-            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-              rowSheet3.foreColor("red");
-            }
-          } else if (row["MFGOrganizeID"] === 162) {
-            // row.backColor();
-            rowSheet.backColor("#FFFF00");
-            rowSheet.foreColor("black");
-            rowSheet2.backColor("#FFFF00");
-            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-              rowSheet3.foreColor("red");
-            }
-          } else if (row["SchedulingResult"] === "超期") {
-            // row.backColor();
-            rowSheet.backColor("#C2E7B0");
-            rowSheet.foreColor("black");
-            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-              rowSheet3.foreColor("red");
-            }
-          } 
-           else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
-            // row.backColor();
-            rowSheet.backColor("#C2E7B0");
-            rowSheet.foreColor("red");
-            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-              rowSheet3.foreColor("red");
-            }
-          } 
-          else if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
-            rowSheet.foreColor("black");
-            rowSheet2.foreColor("balck");
-            rowSheet3.foreColor("red");
-          }
-          else {
-            // row.backColor();
-            // rowSheet.foreColor("black");
-            // rowSheet.backColor("");
-            // rowSheet.foreColor("black");
-            // rowSheet2.backColor("");
-          }
           let cellIndex = 0;
-          this.tableColumns[0].forEach((m) => {
+          this.tableColumns[0].forEach((m, num) => {
             //行，start,end
             if (m.DataType == "bit" && m.isEdit) {
               var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -501,51 +472,84 @@
               cellType.isThreeState(false);
               sheet.getCell(index, cellIndex).cellType(cellType);
             }
-            if (m.ControlType == "combobox" && m.isEdit) {
-              var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
-              cellType.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-  
-              //    let newData = [];
-              // if (row[m.DataSourceName].length != 0) {
-              //   row[m.DataSourceName].forEach((x) => {
-              //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-              //   });
-              // }
-  
-              cellType.items(row[m.DataSourceName]);
-  
-              sheet.getCell(index, cellIndex).cellType(cellType);
-            }
             cellIndex++;
+  
+            var rowSheet = sheet.getRange(
+              index,
+              num,
+              1,
+              1,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            // SMT已排、插件已排、补焊已排、测试已排、三防漆已排字段结尾1~5区分，单元格样式动态生成
+            for (let i = 0; i < colindexs.length; i++) {
+              if (
+                m.prop == "IsToPlanDay" + colindexs[i] &&
+                row["IsToPlanDay" + colindexs[i]] == "是"
+              ) {
+                rowSheet.backColor("#4CD964");
+                rowSheet.foreColor("balck");
+              } else if (
+                m.prop == "IsToPlanDay" + colindexs[i] &&
+                row["IsToPlanDay" + colindexs[i]] == "否"
+              ) {
+                rowSheet.backColor("#FFFF00");
+                rowSheet.foreColor("black");
+              } else if (
+                m.prop == "IsToPlanDay" + colindexs[i] &&
+                row["IsToPlanDay" + colindexs[i]] == "无补焊"
+              ) {
+                rowSheet.foreColor("black");
+                rowSheet.backColor("");
+              }
+            }
+  
+            rowSheet = sheet.getRange(
+              index,
+              num,
+              1,
+              1,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            let rowSheet3 = null;
+            if (row["FormRate"] == "100.00%" && m.name === "FormRate") {
+              //齐套时背景色为绿色
+              rowSheet3 = sheet.getCell(
+                index, //行
+                num, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.backColor("#67c23a");
+            }
+            // 齐套率字体蓝色
+            if (m.name === "FormRate") {
+              rowSheet3 = sheet.getCell(
+                -1, //行
+                num, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.foreColor("#2a06ecd9");
+            }
+            //成品库存单元格背景色
+            if(m.name ==='StockQty'){
+              rowSheet3 = sheet.getCell(
+                index, //行
+                num, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.backColor("#c2e7b0");
+            }
+            // 电机库存单元格背景色
+            if(m.name ==='Extend17'){
+              rowSheet3 = sheet.getCell(
+                index, //行
+                num, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              rowSheet3.backColor("#f0f9eb");
+            }
           });
         });
-  
-        let cellIndex = 0;
-        this.tableColumns[0].forEach((m) => {
-          //行，start,end
-          if (m.isEdit) {
-            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport
-            );
-            cell.foreColor("#2a06ecd9");
-          } else {
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport
-            );
-            cell.foreColor("black");
-          }
-  
-          cellIndex++;
-        });
-        
-        
         /////////////////表格事件/////////////
         this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
           const { sheet, row, col } = args;
@@ -557,194 +561,51 @@
           if (cellType instanceof GCsheets.CellTypes.HyperLink) {
           }
         });
-        // 列筛选
-        // 参数2 开始列
-        // 参数3 
-        // 参数4 结束列
-        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-        
-        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-        sheet.rowFilter(hideRowFilter)
-  
-  
-  
-  
-        var insertRowsCopyStyle = {
-          canUndo: true,
-          name: "insertRowsCopyStyle",
-          execute: function (context, options, isUndo) {
-            var Commands = GC.Spread.Sheets.Commands;
-            if (isUndo) {
-              Commands.undoTransaction(context, options);
-              return true;
-            } else {
-              sheet.suspendPaint();
-              sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-              //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-              //删除旧行
-              if (_this.sheetSelectObj.start > options.activeRow) {
-                //说明从下面插入上面
-                sheet.copyTo(
-                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                  0,
-                  options.activeRow,
-                  0,
-                  _this.sheetSelectRows.length,
-                  sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.style
-                );
-                sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-                sheet.deleteRows(
-                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                  _this.sheetSelectObj.count
-                );
-                // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
-              } else {
-                //从上面往下面插入
-                sheet.copyTo(
-                  _this.sheetSelectObj.start,
-                  0,
-                  options.activeRow,
-                  0,
-                  _this.sheetSelectRows.length,
-                  sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.all
-                );
-                sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-                sheet.deleteRows(
-                  _this.sheetSelectObj.start,
-                  _this.sheetSelectObj.count
-                );
-              }
-              // Commands.startTransaction(context, options);
-  
-              // sheet.suspendPaint();
-  
-              // var beforeRowCount = 0;
-  
-              //  sheet.suspendPaint();
-  
-              // Commands.endTransaction(context, options);
-              sheet.resumePaint();
-  
-              return true;
-            }
-          },
-        };
-  
-        //修改剪切,已经不用
-        var insertRowsCut = {
-          canUndo: true,
-          name: "insertRowsCut",
-          execute: function (context, options, isUndo) {
-            var Commands = GC.Spread.Sheets.Commands;
-            if (isUndo) {
-              Commands.undoTransaction(context, options);
-              return true;
-            } else {
-              context.commandManager().execute(options);
-              this.sheetSelectRows = sheet.getArray(
-                options.selections[0].row,
-                0,
-                options.selections[0].rowCount,
-                sheet.getColumnCount()
-              );
-              this.sheetSelectObj.start = options.selections[0].row;
-  
-              this.sheetSelectObj.count = options.selections[0].rowCount;
-              return true;
-            }
-          },
-        };
-  
-        this.spread
-          .commandManager()
-          .register("insertRowsCopyStyle", insertRowsCopyStyle);
-        //修改剪切
-        this.spread.commandManager().register("insertRowsCut", insertRowsCut);
-  
-        function MyContextMenu() {}
-        MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-          this.spread
-        );
-        MyContextMenu.prototype.onOpenMenu = function (
-          menuData,
-          itemsDataForShown,
-          hitInfo,
-          spread
-        ) {
-          itemsDataForShown.forEach(function (item, index) {
-            if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
-              item.command = "insertRowsCopyStyle";
-            }
-            //  else if (item && item.name === "gc.spread.cut") {
-  
-            //     item.command = "insertRowsCut";
-            //   }
-          });
-        };
-        var contextMenu = new MyContextMenu();
-        this.spread.contextMenu = contextMenu;
-        // 剪贴板事件绑定
-        sheet.bind(
-          GC.Spread.Sheets.Events.ClipboardChanged,
-          function (sender, args) {
-            let s = sheet.getSelections()[0];
-            _this.sheetSelectRows = sheet.getArray(
-              s.row,
-              0,
-              s.rowCount,
-              _this.tableColumns[0].length
-            );
-            _this.sheetSelectObj.start = s.row;
-  
-            _this.sheetSelectObj.count = s.rowCount;
-          }
-        );
-        
-        // 表格单击齐套率弹框事件
-        this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-            if(_this.tableColumns[0].length){
-              _this.tableColumns[0].map((item,index)=>{
-                if(item.name ==="K1"&&args.col===index){
-                  // 显示ERP供需平衡表
-                  _this.colDialogVisible =true
-                  _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
-                  _this.dialogSearchForm.ZQLS = 0
-                }
-              })
-            }
-        });
-  
         //表格编辑事件
   
         this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
         this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
           // 自动计算数量
-          // _this.computedNum(args.row, args.col, args.editingText);
-          // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-          //   sheet.setArray(args.row, i, [2021]);
-          // }
+        });
+  
+        // 表格单击齐套率弹框事件
+        this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+          console.log("this.tableColumns", _this.tableColumns);
+          if (_this.tableColumns[_this.tagRemark].length) {
+            _this.tableColumns[_this.tagRemark].map((item, index) => {
+              if (item.name === "FormRate" && args.col === index) {
+                // 显示ERP供需平衡表
+                _this.colDialogVisible = true;
+                _this.dialogSearchForm.OrderID =
+                  _this.tableData[_this.tagRemark][args.row].OrderID;
+                _this.dialogSearchForm.OweQty = 0;
+              }
+            });
+          }
         });
         sheet.options.isProtected = true;
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowSelectLockedCells = true;
-        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowDeleteColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowInsertColumns = true;
-        sheet.options.protectionOptions.allowDargInsertRows = true;
-        sheet.options.protectionOptions.allowDragInsertColumns = true;
-        sheet.options.protectionOptions.allowSort = true
-        sheet.options.protectionOptions.allowFilter = true
-        sheet.options.allowUserDragDrop = true;
+          sheet.options.protectionOptions.allowResizeColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowSelectLockedCells = true;
+          sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+          sheet.options.protectionOptions.allowDeleteRows = true;
+          sheet.options.protectionOptions.allowDeleteColumns = true;
+          sheet.options.protectionOptions.allowInsertRows = true;
+          sheet.options.protectionOptions.allowInsertColumns = true;
+          sheet.options.protectionOptions.allowDargInsertRows = true;
+          sheet.options.protectionOptions.allowDragInsertColumns = true;
+          sheet.options.protectionOptions.allowSort = true
+          sheet.options.protectionOptions.allowFilter = true
+          sheet.options.allowUserDragDrop = true;
+  
         this.spread.resumePaint();
         this.adminLoading = false;
         this.tableLoading[0] = false;
-        this.spread.refresh(); //重新定位宽高度
+        sheet.options.protectionOptions.allowResizeColumns = true; //禁用改变行高
+        // sheet.options.isProtected = true; //锁定表格 //锁定表格筛选不能用，注释
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
+        this.spread.refresh();
       },
       // 监听键盘
       keyDown() {
@@ -968,7 +829,7 @@
             this.$set(this.formSearchs[z], "forms", x);
           });
           //this.formSearchs[0].datas["Extend11"] = "CRTD";
-          this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
+          // this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
         //   this.formSearchs[1].datas["ProcessPartName"] =['PCB','加工']; //默认待排
           this.dataSearch(0);
         }
@@ -1194,16 +1055,87 @@
           });
         }
       },
-      // 进入分线列表
-      insertList() {
-        this.getSelectionData(this.tagRemark);
-        if (this.selectionData[this.tagRemark].length == 0) {
-          this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
+     // 转入日计划
+     async setTodayPlan(remarkTb, index, params) {
+        this.getSelectionData();
+        // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
+        //   this.$message.error("请选择生产线再转入日计划！");
+        // } else {
+        if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("请选择需要转入日计划的数据！");
         } else {
-          // 进入预排计划
-  
-          this.setWeekData(1);
+          let isNoCapacity1 = true;
+          let isTodayPlan = true
+          console.log(this.selectionData[remarkTb])
+          this.selectionData[remarkTb].forEach((element) => {
+            if (!element.Capacity1&&element.OrderNo) {
+              isNoCapacity1 = false;
+              console.log(element.OrderNo)
+            }
+          });
+          if (!isNoCapacity1) {
+              this.$confirm('请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.saveTodayPlan(remarkTb)
+              }).catch(() => {
+                
+              });
+          }else{
+            this.saveTodayPlan(remarkTb)
+          }
         }
+      },
+      async saveTodayPlan(remarkTb){
+        this.adminLoading = true;
+          let errMsg = "";
+          let okCount = this.selectionData[remarkTb].length;
+          this.selectionData[remarkTb].forEach((d) => {
+            let isOk = true;
+            if (isOk) {
+              d["LineID"] = d.SMTLineID;
+              d["StartDate"] = this.ReplyDate
+                ? this.$moment(this.ReplyDate[0]).format("YYYY-MM-DD")
+                : d["StartDate1"];
+              d["EndDate"] = this.ReplyDate
+                ? this.$moment(this.ReplyDate[1]).format("YYYY-MM-DD")
+                : d["StartDate1"];
+              d["ProcessID"] = d.ProcessID1;
+              okCount++;
+            } else {
+              errMsg += d["OrderNo"] + "已转入或者无此工序";
+            }
+          });
+  
+          if (errMsg != "") {
+            this.$message({
+              message: errMsg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          if (okCount > 0) {
+            let res = await GetSearch(
+              this.selectionData[remarkTb],
+              "/APSAPI/ToInjectionDayPlan"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+            this.adminLoading = false;
+          }
       },
       async getOrder()
       {
@@ -1216,7 +1148,7 @@
           this.adminLoading = true;
           let res = await GetSearch(
             {ReplyDate:this.ReplyDate},
-            "/APSAPI/GetSMTDemand"
+            "/APSAPI/GetInjectionDemand"
           );
           const { data, forms, result, msg } = res.data;
           if (result) {

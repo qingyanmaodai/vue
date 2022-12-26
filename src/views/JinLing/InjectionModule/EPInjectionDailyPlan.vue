@@ -155,7 +155,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: [{ID:7956}],
+          sysID: [{ID:9016}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -500,7 +500,6 @@
           this.$set(this.tableLoading, remarkTb, true);
           form["rows"] = this.tablePagination[remarkTb].pageSize;
           form["page"] = this.tablePagination[remarkTb].pageIndex;
-          form["dicID"] = 6734;
           let res = await GetSearchData(form);
   
           const {
@@ -1042,7 +1041,7 @@
           this.$router.push({
             name: "FieldInfo",
             params: {
-              ID: this.sysID
+              ID: this.sysID[this.tagRemark].ID
             },
           });
         },
