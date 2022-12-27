@@ -30,6 +30,7 @@
                     size="small"
                     value-format="yyyy-MM-dd"
                     placeholder="选择开始时间"
+                    :clearable="false"
                   >
                     </el-date-picker>
                     <el-divider direction="vertical"></el-divider>
@@ -190,6 +191,7 @@
     OrderPlanMaterialForm,
   } from "@/api/PageTwoScheduling";
   import { template } from "xe-utils";
+  import formatDates from "@/utils/formatDate";
   export default {
     name: "EPInjectionOrder",
     components: {
@@ -305,6 +307,11 @@
       this.userInfo = this.$store.getters.userInfo;
       this.judgeBtn();
       this.getTableHeader();
+      // 计算周期默认时间：今天~1.5月
+      this.ReplyDate = [
+      formatDates.formatTodayDate(),
+      formatDates.formatOneMonthDate(),
+    ];
     },
     activated() {
       if(this.spread){
@@ -853,6 +860,8 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         //form["ControlID"] = "205";
+        form["SDate"] = this.ReplyDate.length ? this.ReplyDate[0] : "";
+        form["Edate"] = this.ReplyDate.length ? this.ReplyDate[1] : "";
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         this.adminLoading = false;
