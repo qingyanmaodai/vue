@@ -284,7 +284,7 @@
         fileList: [],
         file: [],
         sysID: [
-          { ID: 9014, AutoDays2: this.AutoDays2 },
+          { ID: 9014 },
           { ID: 5156 },
         ],
         userInfo: {},
@@ -776,7 +776,7 @@
         this.$set(this.tableLoading, remarkTb, true);
         this.tablePagination[remarkTb].pageIndex = 1;
         this.formSearchs[remarkTb].datas["ControlID"] =
-          this.userInfo.WorkFlowInstanceID;
+        this.userInfo.WorkFlowInstanceID;
         this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
         setTimeout(() => {
           this.$set(this.isClear, remarkTb, false);
@@ -849,9 +849,6 @@
       // 获取表格数据
       async getTableData(form, remarkTb) {
         this.$set(this.tableLoading, remarkTb, true);
-        if (remarkTb == 0) {
-          form["AutoDays2"] = this.AutoDays2;
-        }
   
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
