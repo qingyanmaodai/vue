@@ -985,42 +985,6 @@
           });
         }
       },
-      // 退回
-      backData() {
-        if (this.selectionData[1].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-        } else {
-          this.$confirm("确定退回吗？")
-            .then(() => {
-              // 确定
-              this.adminLoading = true;
-              this.selectionData[1].forEach((a) => {
-                a["ElementDeleteFlag"] = 1;
-              });
-              this.dataSave(this.selectionData[1], 1);
-            })
-            .catch(() => {
-              // 取消
-            });
-          
-        }
-      },
-             save4() {//在分线列表处保存
-        if (this.selectionData[1].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-        } else {
-          this.adminLoading = true;
-          
-           let submitData = this.selectionData[1]
-      
-  
-        if (submitData.length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-        } else {
-          this.dataSave(submitData, 1);
-        }
-        }
-      },
       // 保存
       async save(remarkTb, index, parms) {
         let sheet = this.spread.getActiveSheet();
@@ -1039,7 +1003,7 @@
         }
       },
       async dataSave(newData, remarkTb) {
-        let res = await GetSearch(newData, "/APSAPI/SaveData");
+        let res = await GetSearch(newData, "/APSAPI/SaveInjectionWeekPlan");
         const { result, data, count, msg } = res.data;
         this.adminLoading = false;
         if (result) {
