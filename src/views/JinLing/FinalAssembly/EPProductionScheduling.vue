@@ -22,7 +22,7 @@
               <el-col :span="12"
                 >
                 <span class="title" style="margin-right:10px">{{ title }}</span>
-                <span style="color: #ff9900;" v-if="tagRemark==1">周计划日期显示规则：转入周计划时当周周一至昨日天数+45天。</span>
+                <span style="color: #ff9900;" v-if="tagRemark==1">周计划日期显示规则：转入周计划时当周周一至今日天数+44天。</span>
                 </el-col
               >
               <el-col :span="12" class="flex_flex_end">

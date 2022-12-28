@@ -19,7 +19,7 @@
               <el-row>
                 <el-col :span="12">
                   <span class="title" style="margin-right:10px">{{ title }}</span>
-                  <span style="color: #ff9900;" v-if="tagRemark==0">周计划日期显示规则：转入周计划时当周周一至昨日天数+45天。</span>
+                  <span style="color: #ff9900;" v-if="tagRemark==0">周计划日期显示规则：抓单日期范围。</span>
                 </el-col>
                 <el-col :span="12" class="flex_flex_end">
                     <div v-show="labelStatus1 ==0">
@@ -35,56 +35,6 @@
                     </el-date-picker>
                     <el-divider direction="vertical"></el-divider>
                     </div>
-                  <!-- <div v-show="labelStatus1 == 0"> -->
-                    <!-- <el-button
-                    type="warning"
-                    size="mini"
-                    @click="setTodayPlan"
-                  >
-                    转入日计划
-                  </el-button> -->
-                   <!-- <el-button
-                    type="success"
-                    size="mini"
-                    @click="getOrder"
-                  >
-                    抓需求
-                  </el-button> -->
-                  <!-- <el-divider direction="vertical"></el-divider>
-                  </div> -->
-                  <div v-show="labelStatus1 == 1">
-                    <el-button
-                    type="primary"
-                    size="mini"
-                    @click="MOPlanStep1Calculation"
-                  >
-                    1.匹配拉线
-                  </el-button>
-                  <el-button
-                    type="warning"
-                    size="mini"
-                    @click="dataComputedDate"
-                  >
-                    2.配套计算
-                  </el-button>
-                  <el-button
-                    type="success"
-                    size="mini"
-                    @click="MOPlanSaveToDayPlan"
-                  >
-                    3.更新计划
-                  </el-button>
-                  <el-divider direction="vertical"></el-divider>
-                  </div>
-                  
-                  <!-- <div
-                    :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                    v-for="(item, y) in Status1"
-                    :key="y"
-                  >
-                    <span @click="changeStatus(item, y)">{{ item.label }}</span>
-                    <el-divider direction="vertical"></el-divider>
-                  </div> -->
                 </el-col>
               </el-row>
             </div>
@@ -125,33 +75,6 @@
                   </div>
                 </div>
               </div>
-              <ComVxeTable
-                ref="tableRefTwo"
-                v-show="labelStatus1 == 1"
-                :rowKey="'RowNumber'"
-                :height="height"
-                :hasSelect="true"
-                :tableData="tableData[1]"
-                :tableHeader="tableColumns[1]"
-                :tableLoading="tableLoading[1]"
-                :remark="1"
-                :sysID="sysID[1].ID"
-                :isEdit="isEdit"
-                :showFooter="true"
-                :includeFields="includeFields"
-                :cellStyle="cellStyle"
-                :tableRowClassName="tableRowClassName"
-                :isClear="isClear[1]"
-                :showPagination="true"
-                :pagination="tablePagination[1]"
-                @pageChange="pageChange"
-                @pageSize="pageSize"
-                @selectfun="selectFun"
-                @changeline="changeline"
-                @sortChange="sortChange"
-              />
-              <div style="color: red; font-weight: bold">{{ resultMsg }}</div>
-            
           </div>
         </div>
       </div>
@@ -210,9 +133,6 @@
         colDialogVisible:false,
         includeFields: ["Qty"], // 包含合计的字段
         labelStatus1: 0,
-        Status1: [
-          { label: "待排产", value: 0 },
-        ],
         title: this.$route.meta.title,
         resultMsg: "",
         delData: [[]],
@@ -372,25 +292,26 @@
         colHeader1.forEach(function (value, index) {
           sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
         });
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
+        
   
         // 选框
-        let checkbox = {
-          name: "isChecked",
-          displayName: "isChecked",
-          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 80,
-        };
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
+        if(colInfos.length&&colInfos[0]['name']==='isChecked'){
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
+          let checkbox = {
+            name: "isChecked",
+            displayName: "isChecked",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 80,
+          };
+          for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
+          }
         }
-  
-        //  colInfos.unshift(checkbox);
   
         var row = sheet.getRange(
           0,
@@ -630,27 +551,40 @@
           }
         };
       },
-      // 获取选中的数据，type:0需要验证工艺，1不需要
-      getSelectionData(type) {
+      // // 获取选中的数据，type:0需要验证工艺，1不需要
+      // getSelectionData(type) {
+      //   let sheet = this.spread.getActiveSheet();
+      //   let newData = sheet.getDataSource();
+      //   let resultTag = false;
+      //   this.selectionData[0] = [];
+      //   if (newData.length != 0) {
+      //     newData.forEach((x, y) => {
+      //       if (x.isChecked&&x.OrderNo) {
+      //         if (!x.ProcessGroupID) {
+      //           resultTag = true;
+      //           this.$message.error("第" + (y + 1) + "行工艺不能为空");
+      //         } else {
+      //           this.selectionData[0].push(x);
+      //         }
+      //       }
+      //     });
+      //   }
+      //   if (resultTag && type === 0) {
+      //     //
+      //     this.selectionData[0] = [];
+      //   }
+      // },
+      // 获取选中的数据
+      getSelectionData() {
         let sheet = this.spread.getActiveSheet();
         let newData = sheet.getDataSource();
-        let resultTag = false;
-        this.selectionData[0] = [];
+        this.selectionData[this.tagRemark] = [];
         if (newData.length != 0) {
-          newData.forEach((x, y) => {
-            if (x.isChecked&&x.OrderNo) {
-              if (!x.ProcessGroupID) {
-                resultTag = true;
-                this.$message.error("第" + (y + 1) + "行工艺不能为空");
-              } else {
-                this.selectionData[0].push(x);
-              }
+          newData.forEach((x) => {
+            if (x.isChecked) {
+              this.selectionData[this.tagRemark].push(x);
             }
           });
-        }
-        if (resultTag && type === 0) {
-          //
-          this.selectionData[0] = [];
         }
       },
       // 跳转至页面配置
@@ -662,29 +596,6 @@
       },
       initSpread: function (spread) {
         this.spread = spread;
-      },
-      changeline(item, value, prop, index, a, b) {
-        item.拉线.forEach((m) => {
-          if (item.LineID === m.OrganizeID) {
-            let tmp = m;
-            if (
-              this.LineViewSort.findIndex(
-                (m2) => m2.OrganizeID === m.OrganizeID
-              ) == -1
-            ) {
-              this.LineViewSort.push(tmp);
-            } else {
-              tmp =
-                this.LineViewSort[
-                  this.LineViewSort.findIndex(
-                    (m2) => m2.OrganizeID === m.OrganizeID
-                  )
-                ];
-            }
-            item.ViewSort = tmp.ViewSort;
-            tmp.ViewSort = tmp.ViewSort + 1;
-          }
-        });
       },
       // 导出
       async dataExport(remarkTb) {
@@ -893,98 +804,6 @@
           });
         });
       },
-      // 选择数据
-      selectFun(data, remarkTb, row) {
-        this.selectionData[remarkTb] = data;
-      },
-    
-      tableRowClassName({ row, rowIndex }) {
-        let className = "";
-        if (row.DbResult != "" && row.DbResult != "计算成功") {
-          className += "bgRedColor";
-        }
-        return className;
-      },
-      // 行内列样式
-      cellStyle({ row, column }) {},
-      // 改变状态
-      changeStatus(x, index) {
-        this.labelStatus1 = index;
-        this.dataSearch(index);
-      },
-      // 计算排期与匹配拉线
-      async computedScheduling() {
-        let resultTag = this.getSelectionData(1);
-        if (resultTag) {
-          this.$message.error("工艺是否不为空！");
-          return;
-        }
-        let submitData = this.tableData[1]; //this.selectionData[0];
-        submitData.forEach((m) => {
-          m.ReplyDate = this.ReplyDate;
-          m["isChecked"] = true;
-        });
-        this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/SchedulingV3");
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.tableData[1] = data;
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      },
-      // 下发周计划
-      async setWeekData(index) {
-        let resultTag = this.getSelectionData(0);
-        if (resultTag) {
-          this.$message.error("工艺不能为空");
-          return;
-        }
-        let submitData = this.selectionData[0];
-        if (submitData.length == 0) {
-          this.$message.error("请选择需要下达的数据！");
-          return;
-        }
-  
-        submitData.forEach((m) => {
-          m["MOSchedulingType"] = 2;
-        });
-        this.adminLoading = true;
-        let res = await MOPlanStep1(submitData);
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          if (index == 1) {
-            this.labelStatus1 = 4;
-            this.dataSearch(1);
-          } else {
-            this.dataSearch(0);
-          }
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      },
       // 保存
       async save(remarkTb, index, parms) {
         let sheet = this.spread.getActiveSheet();
@@ -997,7 +816,7 @@
         }
   
         if (submitData.length == 0) {
-          this.$message.error("请选择需要操作的数据！");
+          this.$message.error("当前数据没做修改，请先修改再保存");
         } else {
           this.dataSave(submitData, remarkTb);
         }
@@ -1028,9 +847,6 @@
      // 转入日计划
      async setTodayPlan(remarkTb, index, params) {
         this.getSelectionData();
-        // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
-        //   this.$message.error("请选择生产线再转入日计划！");
-        // } else {
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要转入日计划的数据！");
         } else {
@@ -1094,6 +910,11 @@
             const { result, data, count, msg } = res.data;
             if (result) {
               this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "success",
+                dangerouslyUseHTMLString: true,
+              });
               this.dataSearch(remarkTb);
             } else {
               this.adminLoading = false;
@@ -1107,14 +928,7 @@
             this.adminLoading = false;
           }
       },
-      async getOrder()
-      {
-     let submitData = [];
-        
-  
-        if (false) {
-          
-        } else {
+      async getOrder(){
           this.adminLoading = true;
           let res = await GetSearch(
             {ReplyDate:this.ReplyDate},
@@ -1136,135 +950,6 @@
               dangerouslyUseHTMLString: true,
             });
           }
-        }
-      },
-        
-      //正排倒排计算，匹配拉线
-      async MOPlanStep1Calculation() {
-        // if (this.selectionData[1].length == 0) {
-        //   this.$message.error("请选择需要批量填写开始日期的数据！");
-        //   return;
-        // }
-        let submitData = [];
-        this.tableData[1].forEach((x) => {
-          x["Type"] = 0;
-          x["dicID"] = 7960;
-          x["isChecked"] = true;
-          submitData.push(x);
-        });
-        if (submitData.length == 0) {
-          this.$message.error("请选择需要计算的数据！");
-        } else {
-          this.adminLoading = true;
-          let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationPCB");
-          const { data, forms, result, msg } = res.data;
-          if (result) {
-            this.$set(this.tableData, 1, data);
-            // 清空选中的，把选中的数据重新绑定
-  
-            this.resultMsg = res.data.resultMsg;
-  
-            let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
-            this.$set(this.selectionData, 1, []);
-            let newData = this.tableData[1].filter((a) =>
-              templateData.some((b) => b.OrderID == a.OrderID)
-            );
-            if (newData.length != 0) {
-              newData.forEach((c) => {
-                this.$nextTick(() => {
-                  _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-                  _this.selectionData[1].push(c);
-                });
-              });
-            }
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        }
-      },
-  
-      // 齐套计算
-      async dataComputedDate() {
-        // if (this.selectionData[1].length == 0) {
-        //   this.$message.error("请选择需要批量填写开始日期的数据！");
-        //   return;
-        // }
-        this.adminLoading = true;
-        let res = await OrderPlanMaterialForm(this.tableData[1]);
-        const { data, forms, result, msg } = res.data;
-        if (result) {
-          this.adminLoading = false;
-          this.$set(this.tableData, 1, data);
-          let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
-          this.$set(this.selectionData, 1, []);
-          // 清空选中的，把选中的数据重新绑定
-          let newData = this.tableData[1].filter((a) =>
-            templateData.some((b) => b.OrderID == a.OrderID)
-          );
-          if (newData.length != 0) {
-            newData.forEach((c) => {
-              this.$nextTick(() => {
-                _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-                _this.selectionData[1].push(c);
-              });
-            });
-          }
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-        // }
-      },
-      // 下达
-      async MOPlanSaveToDayPlan() {
-        if (this.selectionData[1].length == 0) {
-          this.$message.error("请选择需要更新的计划！");
-          return;
-        }
-        let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
-        submitData.forEach((m) => {
-          m["MOSchedulingType"] = 1;
-          m["dicID"] = 7960;
-        });
-        this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.dataSearch(1);
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
       },
     },
   };
