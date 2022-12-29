@@ -963,8 +963,9 @@
           this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
           this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
             // 自动计算数量
-  
-            _this.computedNum(args.row, args.col, args.editingText);
+            if(_this.tableColumns[0][args.col].prop.indexOf('-')>-1){
+              _this.computedNum(args.row, args.col, args.editingText);
+            }
             // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
             //   sheet.setArray(args.row, i, [2021]);
             // }
@@ -1089,7 +1090,7 @@
           }
   
           let Qty = parseInt(currentRow.OweQty);
-          let Capacity = parseInt(currentRow.Capacity);
+          let Capacity = Number(currentRow.Capacity);
           let list = [];
           let editNum = 0;
           let remainNum = 0;
@@ -1128,10 +1129,13 @@
               }
               // 如果产能为空会出现NaN情况的判断
               if(Capacity){
-                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+                maxNum = Number(Capacity) * Number(obj.TotalHours);
+                
               }else{
-                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+                maxNum = Number(obj.TotalHours) * Number(obj.Peoples);
               }
+              //最大可排数量，有小数向上取整。
+              maxNum = Math.ceil(maxNum)
               if (remainNum <= 0) {
                 list[j] = null;
               } else {
