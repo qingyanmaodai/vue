@@ -538,19 +538,14 @@
           let list = []
           this.tableColumns[0].forEach((x,i) => {
             if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
-              let ComboBox = null
-              ComboBox= new GCsheets.CellTypes.ComboBox();
-              ComboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              ComboBox.items(x.items);
-              ComboBox.itemHeight(24);
               colInfos.push({
                 name: x.prop,
                 displayName:x.label,
-                cellType:ComboBox,
+                cellType:'',
                 size: parseInt(x.width),
               });
+              
+              
             } else {
               colInfos.push({
                 name: x.prop,
@@ -651,6 +646,22 @@
               // );
               // cell.foreColor("gray");
             }
+            this.tableData[0].map((item,index)=>{
+                if(m.DataSourceID&&m.DataSourceName){
+                  console.log('newData',newData)
+                  newData = item[m.DataSourceName]
+                  // 设置列表每行下拉菜单
+                  if(newData.length){
+                    list = new GCsheets.CellTypes.ComboBox();
+                    list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                    list.editable(true);
+                    list.items(newData);
+                    list.itemHeight(24);
+                    sheet.getCell(index, cellIndex, GCsheets.SheetArea.viewport).cellType(list)
+                  }
+                  
+                }  
+               })
   
             cellIndex++;
           });
@@ -865,8 +876,10 @@
           this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
           this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
             // 自动计算数量
-  
-            _this.computedNum(args.row, args.col, args.editingText);
+            if(_this.tableColumns[0][args.col].prop.indexOf('-')>-1){
+              _this.computedNum(args.row, args.col, args.editingText);
+            }
+            
             // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
             //   sheet.setArray(args.row, i, [2021]);
             // }
