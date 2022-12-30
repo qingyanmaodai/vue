@@ -496,13 +496,29 @@ export default {
       let colIndex = 0
 
       this.tableColumns[0].forEach((x) => {
-        if (x.prop == "LineID") {
+        if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
           colInfos.push({
             name: x.prop,
-            displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
+            displayName:x.label,
+            cellType: '',
             size: parseInt(x.width),
           });
+          let newData = [];
+          let list = null;
+          this.tableData[0].map((item,index)=>{
+            if(x.DataSourceID&&x.DataSourceName){
+              newData = item[x.DataSourceName]
+                  // 设置列表每行下拉菜单
+              if(newData.length){
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                list.editable(true);
+                list.items(newData);
+                list.itemHeight(24);
+                sheet.getCell(index, colIndex, GCsheets.SheetArea.viewport).cellType(list)
+              }
+            }  
+        })
         } else {
           colInfos.push({
             name: x.prop,
