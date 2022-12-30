@@ -922,10 +922,11 @@
           if (currentRow.ID == -1) {
             return false;
           }
-          let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
+          // 有白夜班，特殊处理prop，截取日期部分
+          let currentlabel = this.tableColumns[0][colIndex].prop.substring(0,5) + "dy";
           if (!currentRow[currentlabel]) {
             //不是天日的数量
-            currentlabel = this.tableColumns[0][colIndex].prop;
+            currentlabel = this.tableColumns[0][colIndex].prop.substring(0,5);
             if (currentlabel == "ViewSort") {
               val = currentRow[currentlabel];
               if (val) {
@@ -974,7 +975,7 @@
           }
   
           let Qty = parseInt(currentRow.OweQty);
-          let Capacity = parseInt(currentRow.Capacity);
+          let Capacity = Number(currentRow.Capacity);
           let list = [];
           let editNum = 0;
           let remainNum = 0;
@@ -1003,7 +1004,8 @@
           } else {
             // 接着计算下面每一个空格该有的数
             for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-              let label = this.tableColumns[0][j].prop + "dy";
+              // 有白夜班，特殊处理prop，截取日期部分
+              let label = this.tableColumns[0][j].prop.substring(0,5) + "dy";
               let obj = currentRow[label];
               let maxNum = 0
               if(parseInt(val) > remainNum){//到最后剩余数量直接赋值
@@ -1013,10 +1015,15 @@
               }
               // 如果产能为空会出现NaN情况的判断
               if(Capacity){
-                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+                // 最多可排产数量=产能/人/H*人数*每天上班小时
+                maxNum = Number(Capacity) * Number(obj.TotalHours);
+                // maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
               }else{
-                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+                maxNum = Number(obj.TotalHours) * Number(obj.Peoples);
+                // maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
               }
+              //最大可排数量，有小数向上取整。
+              maxNum = Math.ceil(maxNum)
               if (remainNum <= 0) {
                 list[j] = null;
               } else {
