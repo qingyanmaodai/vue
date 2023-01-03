@@ -153,7 +153,7 @@
         colDialogVisible: false,
         footerLabel: ["", ""],
         sysID: [
-          { ID: 7961, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
+          { ID: 9021, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
           { ID: 5156 },
         ],
         Status1: [
