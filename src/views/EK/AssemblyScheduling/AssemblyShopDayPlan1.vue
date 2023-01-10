@@ -176,10 +176,10 @@
         sheetSelectObj: { start: 0, end: 0, count: 0 },
         };
       },
-      beforeRouteLeave(to, form, next) {
-        clearInterval(this.time);
-        next();
-      },
+      // beforeRouteLeave(to, form, next) {
+      //   clearInterval(this.time);
+      //   next();
+      // },
       watch: {},
       created() {
         _this = this;
@@ -192,9 +192,9 @@
           userInfo: (state) => state.user.userInfo,
         }),
       },
-      beforeRouteEnter(to, form, next) {
-          next();
-      },
+      // beforeRouteEnter(to, form, next) {
+      //     next();
+      // },
       activated() {
         if(this.spread)
         {
@@ -1049,7 +1049,8 @@
           }
   
           let Qty = parseInt(currentRow.OweQty);
-          let Capacity = parseInt(currentRow.Capacity);
+          let Capacity = Number(currentRow.Capacity);
+          let Coefficient = Number(currentRow.Coefficient);
           let list = [];
           let editNum = 0;
           let remainNum = 0;
@@ -1088,9 +1089,7 @@
               }
               // 如果产能为空会出现NaN情况的判断
               if(Capacity){
-                maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-              }else{
-                maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+                maxNum = Number(Capacity) * Number(obj.TotalHours) * parseInt(obj.Peoples||obj.StandardPeoples)*(Coefficient||1);
               }
               if (remainNum <= 0) {
                 list[j] = null;
