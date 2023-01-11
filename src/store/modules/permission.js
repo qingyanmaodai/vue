@@ -32,14 +32,19 @@ function GetMenuList(data, ParentCode) {
                     allBtns.push(x)
                 }
             })
+	    // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+            // 只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
+            // 若你想不管路由下面的 children 声明的个数都显示你的根路由
+            // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
+            // 首页不需要显示根路由
             let childmodel = {
                 path: item.Url,
                 component: component,
                 redirect: item.Redirect,
-                alwaysShow: true,
+                alwaysShow: item.MenuName=='首页'?false:true,
                 name: item.Name,
                 hidden: item.Hidden,
-                meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: o,IsOpenWindow:item.IsOpenWindow }
+                meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: o,IsOpenWindow:item.IsOpenWindow,affix: item.MenuName=='首页'?true:false }
             }
             var child = []
             var childlist = []
@@ -59,7 +64,7 @@ function GetMenuList(data, ParentCode) {
                     },
                     hidden: item.Hidden,
                     name: item.Name,
-                    meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: -1 ,IsOpenWindow:item.IsOpenWindow}
+                    meta: { title: item.MenuName, icon: item.Ico, noCache: item.keepAlive, btns: allBtns, dicID: item.Remark2, index: -1 ,IsOpenWindow:item.IsOpenWindow,affix: item.MenuName=='首页'?true:false}
                 }
             }
             menus.push(childmodel)
@@ -176,6 +181,24 @@ const state = {
 }
 const mutations = {
     SET_ROUTERS: (state, routers) => {
+	// 登录成功或重新加载页面时，获取是动态配置首页渲染动态首页，否则取静态的
+        if(store.getters.menus.length){
+            let indexNum = -1
+            indexNum = _.findIndex(store.getters.menus, function(o) { 
+                if(o.ParentCode&&o.MenuName==='首页'){
+                    return o
+                }
+             })
+             if(indexNum>-1){
+                constantRoutes.forEach((x,i)=>{
+                    if(x.children&&x.children.length){
+                            if(x.children&&x.children[0].meta.title==='首页'&&x.children[0].path!=store.getters.menus[indexNum].Url){
+                                constantRoutes.splice(i,1)
+                            }
+                    }
+                })
+             }
+        }
         state.addRouters = routers
         state.routers = constantRoutes.concat(routers)
     }
@@ -186,12 +209,15 @@ const actions = {
         //管理员身份
         let asyncRouterMapNew = [];
         if (role.findIndex(r => { return (r.Account == 'admin' || r.Account == '378102') }) != -1) {
-            // console.log(asyncRouterMap)
+            
             asyncRouterMapNew = asyncRouterMapNew.concat(systemSetting);
         }
         // 菜单
         asyncRouterMapNew = asyncRouterMapNew.concat(GetMenuList(store.getters.menus, ''));
-        // console.log(asyncRouterMapNew)
+	// 把首页永远排在首位
+        asyncRouterMapNew = _.sortBy(asyncRouterMapNew, function(o) { 
+            return o.children&&o.children[0].meta.title=='首页'?0:1;
+         });
         commit('SET_ROUTERS', asyncRouterMapNew)
     }
 }

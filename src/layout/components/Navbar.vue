@@ -60,9 +60,9 @@
           slot="dropdown"
           class="user-dropdown"
         >
-          <router-link to="/">
-            <el-dropdown-item>回到首页</el-dropdown-item>
-          </router-link>
+          <!-- <router-link to="/"> -->
+            <el-dropdown-item  @click.native="jumpHome">回到首页</el-dropdown-item>
+          <!-- </router-link> -->
           <el-dropdown-item
             divided
             @click.native="editPwd"
@@ -170,6 +170,20 @@ export default {
     ...mapGetters(["sidebar", "avatar"]),
   },
   methods: {
+    // 跳转到首页
+    jumpHome(){
+      let indexNum = -1
+      indexNum = _.findIndex(this.$store.getters.routers, function(o) { 
+          if(o.children&&o.children[0].meta.title==='首页'){
+              return o
+          }
+        })
+        if(indexNum>-1){
+          this.$router.push({path:'/'+this.$store.getters.routers[indexNum].children[0].path} );
+        }else{
+          this.$router.push("/" );
+        }
+    },
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },

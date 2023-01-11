@@ -511,7 +511,6 @@ export default {
       let res = await GetWorkTimeData(obj);
       const { result, data, count, msg } = res.data;
       if (result) {
-        console.log(data);
         data.some((x, i) => {
           for (var name in x) {
             this.$set(this.calenderData[i], name, x[name]);
@@ -728,9 +727,6 @@ export default {
               x.YearMonth = YearMonth;
             });
             obj["submitData"] = _this.calenderData;
-            console.log(obj);
-            debugger;
-            return;
             let res = await SaveLineWorkingTimes(obj);
             const { result, data, count, msg } = res.data;
             if (result) {

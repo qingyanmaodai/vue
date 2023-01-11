@@ -1,18 +1,21 @@
 <template>
-  <div class="container" style="background: #f3f3f4">
+  <div
+    class="container"
+    style="background:#f3f3f4"
+  >
     <el-container class="home">
       <el-main>
         <div class="home_1">
-          <el-card v-for="(item, index) in head" :key="index" class="box-card">
-            <el-image :src="item.img" style="margin: 0 10% 0 5%" />
-            <div
-              style="
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-              "
-            >
+          <el-card
+            v-for="(item,index) in head"
+            :key="index"
+            class="box-card"
+          >
+            <el-image
+              :src="item.img"
+              style="margin:0 10% 0 5%;"
+            />
+            <div style="flex:1;display:flex;flex-direction: column;justify-content:space-between;">
               <div>
                 <span class="head">{{ item.label }}</span>
               </div>
@@ -23,26 +26,23 @@
         <div class="home_2">
           <div class="home_3">
             <span class="home_4">常用功能</span>
-            <i class="el-icon-edit" style="float: right" />
+            <i
+              class="el-icon-edit"
+              style="float:right"
+            />
           </div>
           <div class="bodyContent">
-            <div v-for="(item, index) in head2" :key="index" class="box-card2">
-              <i
-                :style="{
-                  backgroundImage: 'url(' + item.img + ')',
-                  display: 'block',
-                  float: 'left',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'cover',
-                  width: '36px',
-                  height: '36px',
-                }"
-              />
+            <div
+              v-for="(item,index) in head2"
+              :key="index"
+              class="box-card2"
+            >
+              <i :style="{backgroundImage:'url(' +item.img+ ')',display:'block',float:'left', backgroundRepeat:'no-repeat',backgroundSize: 'cover',width:'36px',height:'36px'}" />
               <span
-                @click="toPage(item.path, item.isUsing, item.url)"
-                style="margin: 10px 15px"
-                >{{ item.label }}</span
-              >
+                @click="toPage(item.path,item.isUsing)"
+                style="margin:10px 15px"
+              >{{ item.label }}</span>
+
             </div>
           </div>
         </div>
@@ -50,53 +50,60 @@
           <div class="home_6">
             <div class="home_7">
               <span class="home_8">计划详情</span>
-              <i
-                :style="{
-                  backgroundImage: 'url(' + img9 + ')',
-                  float: 'left',
-                  width: '19px',
-                  height: '19px',
-                  marginTop: '3px',
-                  marginLeft: '5px',
-                }"
-              />
+              <i :style="{backgroundImage:'url('+img9+')',float:'left',width:'19px',height:'19px',marginTop:'3px',marginLeft:'5px'}" />
             </div>
             <div class="home_9">
               <span class="home_10">今日计划</span>
               <span class="home_11"></span>
             </div>
             <div class="home_12">
-              <div style="float: left; width: 50%; text-align: center">
-                <el-image class="home_13" :src="img9" />
+              <div style="float:left;width:50%;text-align:center">
+                <el-image
+                  class="home_13"
+                  :src="img9"
+                />
               </div>
               <div class="home_14">
                 <div class="balance">
-                  <i class="home_dot" style="background: #ed5565" />
-                  <span>白管计划数</span>
-                  <span style="float: right">{{ pieForm.Q1 }}个</span>
+                  <i
+                    class="home_dot"
+                    style="background: #ed5565;"
+                  />
+                  <span>计划总产品数</span>
+                  <span style="float:right">{{ pieForm.Q0 }}个</span>
                 </div>
                 <div class="balance">
-                  <i class="home_dot" style="background: #5050d6" />
-                  <span>热水器计划数</span>
-                  <span style="float: right">{{ pieForm.Q2 }}个</span>
+                  <i
+                    class="home_dot"
+                    style="background: #5050d6;"
+                  />
+                  <span>已报工产品数</span>
+                  <span style="float:right">{{ pieForm.Q3 }}个</span>
                 </div>
                 <div class="balance">
-                  <i class="home_dot" style="background: #ba55d3" />
-                  <span>大烤箱计划数</span>
-                  <span style="float: right">{{ pieForm.Q3 }}个</span>
+                  <i
+                    class="home_dot"
+                    style="background: #ba55d3;"
+                  />
+                  <span>未报工产品数</span>
+                  <span style="float:right">{{ pieForm.Q4 }}个</span>
                 </div>
                 <div class="balance">
-                  <i class="home_dot" style="background: #1ab394" />
-                  <span>黑管计划数</span>
-                  <span style="float: right">{{ pieForm.Q4 }}个</span>
+                  <i
+                    class="home_dot"
+                    style="background: #1ab394;"
+                  />
+                  <span>今日达成</span>
+                  <span style="float:right">{{ pieForm.P1 }}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="home_15">
             <div class="home_21">
-              <span class="home_22">生产统计</span>
-              <!-- <el-button
+              <!-- <span class="home_22">生产统计</span> -->
+              <span class="home_22">生产达成趋势</span>
+              <el-button
                 class="trend"
                 size="mini"
                 :class="{default:show==2}"
@@ -109,172 +116,150 @@
                 :class="{default:show==1}"
                 style="border-right: 1px solid #8f8f8f;"
                 @click="queryMonth"
-              >本月</el-button> -->
+              >本月</el-button>
             </div>
-            <div id="lineChart2" class="home_18 echartOne" />
+            <div
+              id="lineChart2"
+              class="home_18 echartOne"
+            />
           </div>
         </div>
 
         <div class="home_19">
           <div class="home_20">
             <div class="home_21">
-              <span class="home_22">昨日不良分布</span>
+              <!-- <span class="home_22">今日工序达成占比</span> -->
+              <span class="home_22">订单齐套率</span>
             </div>
             <div class="home_23">
-              <div id="lineChart" class="home_24 echartOne" />
+              <div
+                id="lineChart"
+                class="home_24 echartOne"
+              />
             </div>
           </div>
           <div class="home_25">
             <div class="home_21">
-              <span class="home_22">出货达成</span>
+              <span class="home_22">送货需求计划</span>
+              <!-- <span class="home_22">出货达成</span> -->
+              <el-button
+                class="trend"
+                size="mini"
+                :class="{default:show==2}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryLastMonth"
+              >上月</el-button>
+              <el-button
+                size="mini"
+                class="trend"
+                :class="{default:show==1}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryMonth"
+              >本月</el-button>
             </div>
-            <div id="lineChart3" class="home_26 echartOne" />
+            <div
+              id="lineChart3"
+              class="home_26 echartOne"
+            />
           </div>
         </div>
       </el-main>
-      <el-aside class="home_27" width="300px">
+      <el-aside
+        class="home_27"
+        width="300px"
+      >
         <div class="home_28">
-          <span class="home_right_2"
-            ><a href="/#/PageCommon/BadAduit">待办事项</a></span
+          <span class="home_right_2">代办事项</span>
+          <div
+            class="asideOne"
+            @click="toPage('CategoryInfo',dotPage[0].isUsing)"
           >
-          <div class="asideOne" @click="toPage('BadAduit', dotPage[0].isUsing)">
-            <i class="home_dot" style="background: #ed5565; margin: 4px 8px" />
-            <!-- <span>产品缺失工艺</span> -->
-            <span>待提交单据</span>
-            <span class="asideRight">{{ toDo[0] }}</span>
-          </div>
-          <div class="asideOne" @click="toPage('BadAduit', dotPage[1].isUsing)">
-            <i class="home_dot" style="background: #1ab394; margin: 4px 8px" />
-            <!-- <span>工艺缺失</span> -->
-            <span>工艺待审单据</span>
-            <span class="asideRight">{{ toDo[1] }}</span>
-          </div>
-          <div class="asideOne" @click="toPage('BadAduit', dotPage[2].isUsing)">
-            <i class="home_dot" style="background: #5050d6; margin: 4px 8px" />
-            <!-- <span>产能缺失</span> -->
-            <span>巡检待审单据</span>
-            <span class="asideRight">{{ toDo[2] }}</span>
-          </div>
-          <div class="asideOne" @click="toPage('BadAduit', dotPage[3].isUsing)">
-            <i class="home_dot" style="background: #f859d5; margin: 4px 8px" />
-            <!-- <span>排班未配置</span> -->
-            <span>经理待审单据</span>
-            <span class="asideRight">{{ toDo[3] }}</span>
+            <i
+              class="home_dot"
+              style="background: #ed5565;margin: 4px 8px;"
+            />
+            <span>产品缺失工艺</span>
+            <span class="asideRight">{{ dotOne }}</span>
           </div>
           <div
             class="asideOne"
-            style="border-bottom: none"
-            @click="toPage('BadAduit', dotPage[3].isUsing)"
+            @click="toPage('ProcessInfo',dotPage[1].isUsing)"
           >
-            <i class="home_dot" style="background: #f8ac59; margin: 4px 8px" />
-            <!-- <span>库存预警</span> -->
-            <span>仓库待审单据</span>
-            <span class="asideRight">{{ toDo[4] }}</span>
+            <i
+              class="home_dot"
+              style="background: #1ab394;margin: 4px 8px;"
+            />
+            <span>工艺缺失</span>
+            <span class="asideRight">{{ dotTwo }}</span>
+          </div>
+          <div
+            class="asideOne"
+            @click="toPage('CapaticyInfo',dotPage[2].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #5050d6;margin: 4px 8px;"
+            />
+            <span>产能缺失</span>
+            <span class="asideRight">{{ dotThree }}</span>
+          </div>
+          <div
+            class="asideOne"
+            @click="toPage('ArrangeInfo',dotPage[3].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #f859d5;margin: 4px 8px;"
+            />
+            <span>排班未配置</span>
+            <span class="asideRight">{{ dotFour }}</span>
+          </div>
+          <div
+            class="asideOne"
+            style="border-bottom:none"
+          >
+            <i
+              class="home_dot"
+              style="background: #f8ac59;margin: 4px 8px;"
+            />
+            <span>库存预警</span>
+            <span class="asideRight">{{ dotFive }}</span>
           </div>
         </div>
         <div class="home_right_1">
           <span class="home_right_2">系统负责人</span>
           <div class="home_right_3">
-            <h3>陈威怡</h3>
+            <span></span>
           </div>
         </div>
         <div class="home_right_1">
-          <span class="home_right_2">联系电话</span>
+          <!-- <span class="home_right_2">联系电话</span> -->
+          <span class="home_right_2">欠料到货状态</span>
           <div class="home_right_3">
-            <h3>13692574572</h3>
+            <span></span>
           </div>
         </div>
         <div class="home_right_4">
-          <span class="home_right_2">最新欠料信息</span>
+          <span />
           <div class="home_right_5">
-            <div class="head list_gun_box">
-              <span class="f1">日期</span>
-              <span class="f2">物料编码</span>
-              <span class="f3">名称</span>
-              <span class="f4">欠料数</span>
-            </div>
-
-            <div class="content wrap">
-              <VueSeamlessScroll
-                :data="tableData"
-                class="seamless-warp"
-                :class-option="optionSetting"
-              >
-                <div class="list_gun_box" v-for="(m, n) in tableData" :key="n">
-                  <span class="f1">{{
-                    m.DemandDate ? m.DemandDate.substring(5, 10) : ""
-                  }}</span>
-                  <span class="f2">{{ m.Code }}</span>
-                  <span class="f3">{{ m.MaterialName }}</span>
-                  <span class="f4">{{ m.OweQty }}</span>
-                </div>
-              </VueSeamlessScroll>
-            </div>
-            <!-- <el-table
-              :data="tableData"
-              height="200px"
-              border
-              style="width: 100%"
-            >
-              <el-table-column prop="DemandDate" label="需求日期" width="85">
-              </el-table-column>
-              <el-table-column prop="Code" label="物料编码" width="85">
-              </el-table-column>
-              <el-table-column prop="MaterialName" label="名称" width="50">
-              </el-table-column>
-              <el-table-column prop="OweQty" label="欠料数"> </el-table-column>
-            </el-table> -->
+            <span />
           </div>
         </div>
       </el-aside>
     </el-container>
+
   </div>
 </template>
-<style scoped>
-#nav {
-  height: 40px;
-  border-top: #060 2px solid;
-  border-bottom: #060 2px solid;
-  background-color: #690;
-}
 
-#nav ul {
-  list-style: none;
-  margin-left: 50px;
-}
-
-#nav li {
-  display: inline;
-  line-height: 40px;
-  float: left;
-}
-
-#nav a {
-  color: #fff;
-  text-decoration: none;
-  padding: 20px 20px;
-}
-
-#nav a:hover {
-  background-color: #060;
-}
-</style>
 <script>
 import { GetSearchData } from "@/api/Common";
 import { wjBoardData_1 } from "@/api/Report";
 import echarts from "echarts";
 import { mapState } from "vuex";
-import formatDate from "@/utils/formatDate";
-import VueSeamlessScroll from "vue-seamless-scroll";
-
 export default {
-  name: "HeadWayIndex",
-  components: {
-    VueSeamlessScroll,
-  },
+  name: "EastIndex",
   data() {
     return {
-      tableData: [],
       pieForm: {
         Q1: 0,
         Q2: 0,
@@ -285,43 +270,43 @@ export default {
       img9: require("@/assets/imgs/img9.png"),
       head: [
         {
-          label: "昨日总计划数",
+          label: "今日总计划数",
           img: require("@/assets/imgs/img10.png"),
           number: "0",
         },
         {
-          label: "昨日总报工数",
+          label: "今日总报工数",
           img: require("@/assets/imgs/img11.png"),
           number: "0",
         },
         {
-          label: "昨日总确认数",
+          label: "今日总确认数",
           img: require("@/assets/imgs/img12.png"),
           number: "0",
         },
         {
-          label: "昨日总达成率",
+          label: "今日总达成率",
           img: require("@/assets/imgs/img13.png"),
           number: "0",
         },
       ],
       head2: [
         {
-          label: "需求计划预测",
+          label: "需求转换",
           img: require("@/assets/imgs/img1.png"),
-          path: "SchedulingPrediction",
+          path: "DemandTrans",
           isUsing: false,
         },
         {
-          label: "包装日计划",
+          label: "销售计划",
           img: require("@/assets/imgs/img2.png"),
-          path: "Daily_Plan",
+          path: "SaleScheduling",
           isUsing: false,
         },
         {
-          label: "填粉日计划",
+          label: "包装计划",
           img: require("@/assets/imgs/img3.png"),
-          path: "PinkPlan",
+          path: "PackPlan",
           isUsing: false,
         },
         {
@@ -331,32 +316,30 @@ export default {
           isUsing: false,
         },
         {
-          label: "欠料分析明细",
+          label: "欠料追踪",
           img: require("@/assets/imgs/img5.png"),
-          path: "UnderstockTrackingDetails",
+          path: "OweInfo",
           isUsing: false,
         },
         {
-          label: "采购回复欠料",
+          label: "排班配置",
           img: require("@/assets/imgs/img6.png"),
-          path: "ArrearsTracking",
+          path: "ArrangeInfo",
           isUsing: false,
         },
         {
-          label: "可视化看板",
+          label: "工艺配置",
           img: require("@/assets/imgs/img7.png"),
-          path: "http://121.9.64.70:9999/WJReport/index.html",
+          path: "CategoryInfo",
           isUsing: false,
-          url: "http://121.9.64.70:9999/WJReport/index.html",
         },
         {
-          label: "报工审批明细",
+          label: "产能配置",
           img: require("@/assets/imgs/img8.png"),
-          path: "AduitDetails",
+          path: "CapaticyInfo",
           isUsing: false,
         },
       ],
-      toDo: [],
       dotOne: 0,
       dotTwo: 0,
       dotThree: 0,
@@ -366,10 +349,6 @@ export default {
       show: 1,
       toDay: "",
       option1: {
-        tooltip: {
-          trigger: "item",
-          show: true,
-        },
         color: [
           "#23d4c9",
           "#7fe20d",
@@ -383,7 +362,7 @@ export default {
         grid: {
           left: 10,
           right: 40,
-          top: 10,
+          top: 0,
           bottom: 0,
           containLabel: true,
         },
@@ -400,12 +379,9 @@ export default {
                 fontSize: 14,
               },
             },
-            label: {
-              normal:{
-                formatter:'{b} {c}'
-              }
-            },
-            data: [{ name: "包装", value: 100 }],
+            data: [
+              {name:'包装',value:100}
+            ],
           },
         ],
       },
@@ -524,9 +500,6 @@ export default {
                   { offset: 0, color: "#b266ff" },
                   { offset: 1, color: "#121b87" },
                 ]),
-                label: {
-                  show: true,
-                },
               },
             },
             data: [],
@@ -540,9 +513,6 @@ export default {
                   { offset: 0, color: "#00f0ff" },
                   { offset: 1, color: "#032a72" },
                 ]),
-                label: {
-                  show: true,
-                },
               },
             },
             data: [],
@@ -604,38 +574,17 @@ export default {
   },
   mounted() {
     this.drawLine();
-    this.getWjBoardData_1();
-    this.getOweQtyData();
+    // this.getWjBoardData_1();
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       menus: (state) => state.user.menus,
     }),
-    optionSetting() {
-      return {
-        step: 0.2, // 数值越大速度滚动越快
-        limitMoveNum: 6, // 开始无缝滚动的数据量 this.dataList.length
-        hoverStop: true, // 是否开启鼠标悬停stop
-        direction: 1, // 0向下 1向上 2向左 3向右
-        openWatch: true, // 开启数据实时监控刷新dom
-        singleHeight: 0, // 单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
-        singleWidth: 0, // 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
-        waitTime: 1000, // 单步运动停止的时间(默认值1000ms)
-      };
-    },
   },
   methods: {
-    gundong() {
-      $(".wrap").liMarquee({
-        direction: "up", //身上滚动
-        runshort: true, //内容不足时不滚动
-        scrollamount: 20, //速度
-      });
-    },
     // 判断是否有菜单权限
     judgePage() {
-      document.getR;
       this.head2.forEach((x) => {
         if (
           this.menus.findIndex((y) => {
@@ -657,7 +606,7 @@ export default {
       });
     },
     // 跳转地址
-    toPage(val, tag, url) {
+    toPage(val, tag,url) {
       if (tag) {
         this.$router.push({
           name: val,
@@ -668,24 +617,15 @@ export default {
     },
     async getDataOne() {
       let form = {};
-      form["fields"] = "SUM(PlanQty) AS Q1,WorkShopName";
-      form["dicID"] = 6756;
-      form["ProcessID"] = "P202106171344021";
-      form["WorkShopName"] = ["白管", "热水器", "大烤箱", "黑管"];
-      form["groupby"] = "WorkShopName";
-      form["sort"] = "WorkShopName";
+      form["dicID"] = 6721;
       form["PlanDay"] = [this.toDay, this.toDay];
       form["OrganizeIDs"] = this.userInfo.CenterID;
-      form["rows"] = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
-          this.pieForm.Q1 = data[0].Q1;
-          this.pieForm.Q2 = data[3].Q1;
-          this.pieForm.Q3 = data[1].Q1;
-          this.pieForm.Q4 = data[2].Q1;
-          // this.pieForm.Q0 = this.pieForm.Q3 + this.pieForm.Q4;
+          this.pieForm = data[0];
+          this.pieForm.Q0 = this.pieForm.Q3 + this.pieForm.Q4;
         }
       } else {
         this.$message({
@@ -697,18 +637,16 @@ export default {
     },
     async getDataTwo() {
       let form = {};
-      form["dicID"] = 7810;
-      form["fields"] = "AbnormalStatus,count(1) as c2";
-      form["groupby"] = "AbnormalStatus";
-      form["sort"] = "AbnormalStatus";
-      form["AbnormalStatus"] = [0, 1, 2, 3, 4];
+      form["dicID"] = 1177;
+      this.dotOne = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-
       if (result) {
         if (data.length != 0) {
-          data.forEach((x, i) => {
-            this.toDo[i] = x.c2;
+          data.forEach((x) => {
+            if (!x.ProcessGroupName) {
+              this.dotOne++;
+            }
           });
         }
       } else {
@@ -721,9 +659,7 @@ export default {
     },
     async getDataThree() {
       let form = {};
-      form["dicID"] = 1180;
-      form["rows"] = 0;
-      form["ProcessCount"] = 0;
+      form["dicID"] = 1182;
       this.dotTwo = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -745,9 +681,7 @@ export default {
     },
     async getDataFour() {
       let form = {};
-      form["dicID"] = 1180;
-      form["CapacityCount"] = 0;
-      form["rows"] = 0;
+      form["dicID"] = 5126;
       this.dotThree = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -770,43 +704,22 @@ export default {
     // 获取数据
     async getWjBoardData_1() {
       let form = {};
-      form["OrganizeIDs"] = this.userInfo.CenterID;
-      form["PlanDay"] = [
-        formatDate.formatOldDate(),
-        formatDate.formatOldDate(),
-      ];
-      form["dicID"] = 6723;
-      form["ProcessID"] = "P202106171344021";
-      form["rows"] = 0;
-      form["fields"] =
-        "isNull(sum(PlanQty),0) as PlanQty,isNull(sum(ProducedNum),0) as ProducedNum,isNull(sum(ProducedQty),0) as ProducedQty,isNull(sum(ConfirmQty),0) as ConfirmQty, cast(isNull(sum(ConfirmQty),0)/isNull(sum(PlanQty),0)*100 as decimal(18,2)) as PlanQtyP,PlanDay";
-      form["groupby"] = "PlanDay";
-      let res = await GetSearchData(form);
-      // let res = await wjBoardData_1(form);
+      form["MFGOrganizeID"] = this.userInfo.CenterID;
+      let res = await wjBoardData_1(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        // if (data.Table1.length != 0) {
-        //   this.head[0].number = data.Table1[0].PlanQty;
-        //   this.head[1].number = data.Table1[0].ProducedQty;
-        //   this.head[2].number = data.Table1[0].ConfirmQty;
-        //   if (data.Table1[0].ConfirmQty == 0) {
-        //     this.head[3].number = "0%";
-        //   } else {
-        //     this.head[3].number =
-        //       (
-        //         (data.Table1[0].ConfirmQty / data.Table1[0].PlanQty) *
-        //         100
-        //       ).toFixed(2) + "%";
-        //   }
-        // }
-        if (data.length != 0) {
-          this.head[0].number = data[0].PlanQty;
-          this.head[1].number = data[0].ProducedQty;
-          this.head[2].number = data[0].ConfirmQty;
-          if (data[0].ConfirmQty == 0) {
+        if (data.Table1.length != 0) {
+          this.head[0].number = data.Table1[0].PlanQty;
+          this.head[1].number = data.Table1[0].ProducedQty;
+          this.head[2].number = data.Table1[0].ConfirmQty;
+          if (data.Table1[0].ConfirmQty == 0) {
             this.head[3].number = "0%";
           } else {
-            this.head[3].number = data[0].PlanQtyP + "%";
+            this.head[3].number =
+              (
+                (data.Table1[0].ConfirmQty / data.Table1[0].PlanQty) *
+                100
+              ).toFixed(2) + "%";
           }
         }
       } else {
@@ -827,7 +740,6 @@ export default {
         "isNull(sum(PlanQty),0) as PlanQty,isNull(sum(ConfirmQty),0) as ConfirmQty, cast(isNull(sum(ConfirmQty),0)/isNull(sum(PlanQty),0)*100 as decimal(18,2)) as PlanQtyP,PlanDay";
       form["groupby"] = "PlanDay";
       form["dicID"] = 6720;
-      form["sort"] = "PlanDay";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -843,13 +755,7 @@ export default {
             PlanDay.push(data[i].PlanDay);
             PlanQty.push(data[i].PlanQty);
             ConfirmQty.push(data[i].ConfirmQty);
-            PlanQtyP.push(
-              data[i].ConfirmQty
-                ? parseFloat(
-                    (data[i].ConfirmQty / data[i].PlanQty) * 100
-                  ).toFixed(2)
-                : 0
-            );
+            PlanQtyP.push(data[i].PlanQtyP);
           }
           this.option2.xAxis[0].data = PlanDay;
           this.option2.series[0].data = PlanQty;
@@ -869,20 +775,14 @@ export default {
     async getEchartTwoData() {
       let form = {};
       form["fields"] =
-        " TinyProcessName as name,isNull(sum(ProducedQty),0)  as PlanQty, isNull(sum(BadQty),0) as value ";
-      form["PlanDay"] = [
-        formatDate.formatOldDate(),
-        formatDate.formatOldDate(),
-      ];
-      form["groupby"] = " TinyProcessName";
-      form["dicID"] = 7816;
+        " ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value ";
+      form["PlanDay"] = [this.toDay, this.toDay];
+      form["groupby"] = " ProcessName";
+      form["dicID"] = 6720;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (data.length != 0) {
-          data.forEach((x) => {
-            x["value"] = x.PlanQty;
-          });
+        if(data.length != 0){
           this.option1.series[0].data = data;
         }
         this.drawChart("lineChart", this.option1);
@@ -916,9 +816,6 @@ export default {
       var echarts = require("echarts");
       const myCharts3 = echarts.init(document.getElementById("lineChart3"));
       var option3 = {
-        tooltip: {
-          trigger: "axis",
-        },
         legend: {
           data: ["已达成", "未达成"],
         },
@@ -957,7 +854,15 @@ export default {
               },
             },
             data: [
-              30000, 43000, 38670, 12320, 22560, 37670, 41356, 51622, 25260,
+              30000,
+              43000,
+              38670,
+              12320,
+              22560,
+              37670,
+              41356,
+              51622,
+              25260,
             ],
             markPoint: {
               data: [
@@ -995,32 +900,10 @@ export default {
       };
       myCharts3.setOption(option3);
     },
-    async getOweQtyData() {
-      let form = {};
-
-      form["OweQty"] = 0;
-      form["dicID"] = 5594;
-      form["rows"] = 1000;
-      form["sort"] = "DemandDate";
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        if (data.length != 0) {
-          this.tableData = data;
-          this.gundong();
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
   },
 };
 </script>
-<style lang="scss" scoped>
+<style scoped>
 .home_1 {
   height: 111px;
   display: flex;
@@ -1186,63 +1069,20 @@ export default {
   height: 260px;
   border-radius: 5px;
   margin: 10px 0;
-  padding: 10px 0;
-  box-sizing: border-box;
+  padding: 0 10px;
   background: #fff;
-  .home_right_2 {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-}
-::-webkit-scrollbar {
-  width: 1px;
-  height: 1px;
 }
 .home_right_5 {
-  padding: 0;
+  padding: 0 10px;
   font-size: 14px;
-  height: calc(100% - 17px);
-  width: 100%;
   color: rgb(153, 153, 153);
-  .content {
-    width: 100%;
-    height: calc(100% - 30px);
-    position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .head {
-    line-height: 30px;
-  }
-  .list_gun_box {
-    min-height: 30px;
-    display: flex;
-    border-bottom: 1px solid #f5f5f5;
-    span {
-      display: inline-block;
-      text-align: center;
-    }
-    .f1 {
-      width: 20%;
-    }
-    .f2 {
-      width: 40%;
-    }
-    .f3 {
-      width: 20%;
-    }
-    .f4 {
-      width: 20%;
-      color:rgb(250, 86, 86);
-    }
-  }
 }
 
 .container {
   margin: 10px 10px 0 10px;
   overflow: auto;
 }
-.home .box-card {
+.home /deep/ .box-card {
   display: flex;
   height: 100%;
   /*  float: left; */
@@ -1250,7 +1090,7 @@ export default {
   margin-right: 1%;
   /*padding-top: 15px; */
 }
-.home .box-card2 {
+.home /deep/ .box-card2 {
   height: 58px;
   width: 25%;
   /* float: left; */
@@ -1259,13 +1099,11 @@ export default {
   display: flex;
   justify-items: center;
 }
-::v-deep .home {
-  .el-card__body {
+.home /deep/ .el-card__body {
   width: 100%;
   display: flex;
 }
-}
-.bodyContent {
+.bodyContent{
   display: flex;
   flex-wrap: wrap;
 }
@@ -1289,7 +1127,7 @@ export default {
   border-radius: 5px;
   color: #999;
 }
-.box-card .el-image {
+.box-card /deep/ .el-image {
   width: 50px;
   height: 50px;
 }
@@ -1309,7 +1147,7 @@ export default {
   /* text-align: center; */
   color: #676a6c;
 }
-.home .el-main {
+.home /deep/ .el-main {
   padding: 0;
 }
 .default {
@@ -1337,7 +1175,7 @@ export default {
   border-radius: 0%;
   margin-top: -5px;
 }
-.home .el-aside {
+.home /deep/ .el-aside {
   padding: 0;
 }
 .asideOne {

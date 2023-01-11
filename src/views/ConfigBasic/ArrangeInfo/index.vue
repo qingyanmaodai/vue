@@ -1050,7 +1050,7 @@ export default {
               x.YearMonth = YearMonth;
             });
             obj["submitData"] = _this.calenderData;
-            return;
+            // return;
             let res = await SaveLineWorkingTimes(obj);
             const { result, data, count, msg } = res.data;
             if (result) {

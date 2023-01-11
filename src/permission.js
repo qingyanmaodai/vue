@@ -6,6 +6,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { constantRoutes } from '@/router'
 
 NProgress.configure({ showSpinner: false }) // 封装的进度条
 
@@ -40,7 +41,18 @@ router.beforeEach(async (to, from, next) => {
           }).catch(err => {
             router.addRoutes([]);
           })
-          next({ ...to, replace: true })
+	        // 登录成功或重新加载页面时，获取是动态配置首页渲染动态首页，否则取静态的
+          let indexNum = -1
+          indexNum = _.findIndex(store.getters.menus, function(o) { 
+            if(o.ParentCode&&o.MenuName==='首页'){
+                return o
+            }
+         })
+          if(indexNum>-1){
+            next({ path: store.getters.menus[indexNum].Url })
+          }else{
+            next({ ...to, replace: true })
+          }
 
         } catch (error) {
           // 如果出错了，把令牌去掉，并让用户重新去到登录页面

@@ -64,6 +64,8 @@ const actions = {
           localStorage.setItem('userInfo', JSON.stringify(obj));
           commit('SET_TOKEN', res.data.token);
           setToken(res.data.token)
+          //获取动态菜单，动态渲染首页
+          commit('SET_MENU', res.data.dev_Account.MenuVue);
         } else {
           Message.error(res.data.msg);
         }
@@ -138,8 +140,6 @@ const actions = {
   refreshToken({ commit, state }) {
     return new Promise((resolve, reject) => {
       refreshToken(state.token).then(response => {
-        console.log('刷新Token(以旧换新)')
-        // console.log(response)
         const { code, Result } = response;
         if (code == 20000) {
           commit('SET_TOKEN', Result.Token)

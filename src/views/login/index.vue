@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   name: "Login",
   components: {},
@@ -122,7 +123,18 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: "/" });
+              let indexNum = -1
+              indexNum = _.findIndex(store.getters.menus, function(o) { 
+                  if(o.ParentCode&&o.MenuName==='首页'){
+                      return o
+                  }
+              })
+              // 登录成功后动态渲染首页，如果配置了首页渲染配置的，否则渲染路由文件的静态路由
+              if(indexNum>-1){
+                this.$router.push({ path: store.getters.menus[indexNum].Url });
+              }else{
+                this.$router.push({ path: "/" });
+              }
               this.loading = false;
             })
             .catch((error) => {

@@ -31,7 +31,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
+export let constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
