@@ -1051,6 +1051,7 @@
           let Qty = parseInt(currentRow.OweQty);
           let Capacity = Number(currentRow.Capacity);
           let Coefficient = Number(currentRow.Coefficient);
+          let StandardPeoples = Number(currentRow.StandardPeoples)
           let list = [];
           let editNum = 0;
           let remainNum = 0;
@@ -1089,7 +1090,7 @@
               }
               // 如果产能为空会出现NaN情况的判断
               if(Capacity){
-                maxNum = Number(Capacity) * Number(obj.TotalHours) * parseInt(obj.Peoples||obj.StandardPeoples)*(Coefficient||1);
+                maxNum = Number(Capacity) * Number(obj.TotalHours) * Number(obj.Peoples/StandardPeoples)*(Coefficient||1);
               }
               if (remainNum <= 0) {
                 list[j] = null;
