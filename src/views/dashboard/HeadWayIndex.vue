@@ -1007,7 +1007,7 @@ export default {
       if (result) {
         if (data.length != 0) {
           this.tableData = data;
-          this.gundong();
+          // this.gundong();
         }
       } else {
         this.$message({
