@@ -27,20 +27,7 @@
               <div class="admin_content">
                 <div class="ant-table-title">
                   <el-row>
-                    <el-col :span="4">
-  
-                      <span class="title">
-                        <!-- <i
-                          class="el-icon-d-arrow-left"
-                          v-show="showAside"
-                          @click="showAside = !showAside"
-                        ></i> -->
-                        <i
-                          class="el-icon-d-arrow-right"
-                          v-show="!showAside"
-                          @click="showAside = !showAside"
-                        ></i>{{ title }}</span>
-                    </el-col>
+                    <el-col :span="4"><span class="title">{{ title }}</span></el-col>
                     <el-col
                       :span="20"
                       class="flex_flex_end"
@@ -50,8 +37,8 @@
                   </el-row>
                 </div>
                 <div>
-                    <el-row :gutter="10">
-                        <el-col :span="12">
+                    <el-row>
+                        <el-col :span="tableData[tagRemark].length?12:24">
                             <ComVxeTable
                             :rowKey="'RowNumber'"
                             :height="height"
@@ -69,9 +56,10 @@
                             @selectfun="selectFun"
                             @toPage="usingSearch"
                             @sortChange="sortChange"
+                            :showPagination="false"
                             />
                         </el-col>
-                        <el-col :span="12">
+                        <el-col :span="12" v-show="tableData[tagRemark].length">
                             <div id="option" style=" width: 100% !important;" :style="{height:height}"></div>
                         </el-col>
                     </el-row>
@@ -124,11 +112,11 @@
             },
             yAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                data: []
             },
             series: [
                 {
-                data: [120, 200, 150, 80, 70, 110, 130],
+                data: [],
                 type: 'bar'
                 }
             ]
@@ -176,7 +164,7 @@
         tableLoading: [false, false],
         isClear: [false, false],
         tablePagination: [
-          { pageIndex: 1, pageSize: 500, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 0, pageTotal: 0 },
           { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         ],
         height: "707px",
@@ -190,7 +178,7 @@
         dialogImport: false,
         fileList: [],
         file: [],
-        sysID: [{ ID: 7862 }, { ID: 6751 }],
+        sysID: [{ ID: 9024 }],
         userInfo: {},
         IsPurchaseBoss: false,
         footerLabel: [""],
@@ -201,11 +189,6 @@
       _this = this;
       this.getTableHeader();
       this.judgeBtn();
-    //   this.$nextTick(()=>{
-    //     setTimeout(()=>{
-            
-    //   },100)
-    //   })
     },
     mounted() {
       setTimeout(() => {
@@ -415,14 +398,25 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
+        form["sort"] = 'CreatedByName desc';
+        form["fields"] = 'SUM(IsFirstProofing)over(partition by CreatedByName) as IsFirstProofing,SUM(ProofingCount) over(partition by CreatedByName) as ProofingCount,SUM(ProofingCountByPeople)over(partition by CreatedByName) as ProofingCountByPeople,*';
+        // form["groupby"] = 'CreatedByName';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
             this.$set(this.tableData, remarkTb, data);
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-            setTimeout(()=>{
+              let xList = []
+              let yList = []
+              this.tableData[remarkTb].forEach((item)=>{
+                xList.push(item.CreatedByName)
+                yList.push(item.ProofingCount)
+              })
+              if(this.tableData[remarkTb].length){
+                this.option.yAxis.data = yList
+                this.option.series[0].data= xList
                 this.drawChart('option',this.option)
-            },100)
+              }
         } else {
             this.$message({
             message: msg,
@@ -459,4 +453,11 @@
     },
   };
   </script>
+  <style lang="scss" scoped>
+  ::v-deep .admin_content .toolbar .vxe-tools--operate{
+    position: absolute;
+    left: 10rem; 
+    top:-3rem;
+  }
+</style>
   
