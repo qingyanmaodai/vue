@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <el-row>
-                        <el-col :span="tableData[tagRemark].length?12:24">
+                        <el-col :span="list.length?12:24">
                             <ComVxeTable
                             :rowKey="'RowNumber'"
                             :height="height"
@@ -47,7 +47,6 @@
                             :tableLoading="tableLoading[0]"
                             :remark="0"
                             :sysID="sysID[0].ID"
-                            :hasSelect="true"
                             :isEdit="isEdit"
                             :isClear="isClear[0]"
                             :pagination="tablePagination[0]"
@@ -56,11 +55,10 @@
                             @selectfun="selectFun"
                             @toPage="usingSearch"
                             @sortChange="sortChange"
-                            :showPagination="false"
                             />
                         </el-col>
-                        <el-col :span="12" v-show="tableData[tagRemark].length">
-                            <div id="option" style=" width: 100% !important;" :style="{height:height}"></div>
+                        <el-col :span="12" v-show="list.length">
+                            <div id="option" style="width: 100% !important;" :style="{height:height}"></div>
                         </el-col>
                     </el-row>
                 </div>
@@ -104,7 +102,18 @@
     },
     data() {
       return {
+        list:[],
         option:{
+          title:{
+            text:'重复打样分析表',
+            left: "center",
+          },
+            grid: {
+            // top: '0%',
+            left: '85',
+            right: '0%',
+            // bottom: '0%',
+          },
             color:'#0960bd',
             xAxis: {
                 type: 'value'
@@ -164,7 +173,7 @@
         tableLoading: [false, false],
         isClear: [false, false],
         tablePagination: [
-          { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 500, pageTotal: 0 },
           { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         ],
         height: "707px",
@@ -326,6 +335,7 @@
         this.$set(this.tableLoading, remarkTb, true);
         this.tablePagination[remarkTb].pageIndex = 1;
         this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        this.getChartData(this.formSearchs[remarkTb].datas,remarkTb)
         setTimeout(() => {
           this.$set(this.isClear, remarkTb, false);
         });
@@ -377,9 +387,8 @@
             this.$set(this.formSearchs[z], "forms", x);
           });
           this.getTableData(this.formSearchs[0].datas, 0);
+          this.getChartData(this.formSearchs[0].datas,0)
         }
-        
-        console.log('this.tableColumns',this.tableColumns)
       },
       // 验证数据
       verifyData(n) {
@@ -398,25 +407,11 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        form["sort"] = 'CreatedByName desc';
-        form["fields"] = 'SUM(IsFirstProofing)over(partition by CreatedByName) as IsFirstProofing,SUM(ProofingCount) over(partition by CreatedByName) as ProofingCount,SUM(ProofingCountByPeople)over(partition by CreatedByName) as ProofingCountByPeople,*';
-        // form["groupby"] = 'CreatedByName';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
             this.$set(this.tableData, remarkTb, data);
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-              let xList = []
-              let yList = []
-              this.tableData[remarkTb].forEach((item)=>{
-                xList.push(item.CreatedByName)
-                yList.push(item.ProofingCount)
-              })
-              if(this.tableData[remarkTb].length){
-                this.option.yAxis.data = yList
-                this.option.series[0].data= xList
-                this.drawChart('option',this.option)
-              }
         } else {
             this.$message({
             message: msg,
@@ -425,8 +420,39 @@
             });
         }
         this.$set(this.tableLoading, remarkTb, false);
-        
-        
+        },
+        // 获取图表数据
+        async getChartData(form,remarkTb) {
+          let  forms = {...form}
+        this.$set(this.tableLoading, remarkTb, true);
+        forms["rows"] = 0;
+        forms["page"] = this.tablePagination[remarkTb].pageIndex;
+        forms["sort"] = 'CreatedByName desc';
+        forms["fields"] = 'CreatedByName,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
+        forms["groupby"] = 'CreatedByName';
+        let res = await GetSearchData(forms);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          let xList = []
+          let yList = []
+          this.list = data
+          data.forEach((item)=>{
+            xList.push(item.ProofingCount)
+            yList.push(item.CreatedByName||'无')
+          })
+            this.option.yAxis.data = yList
+            this.option.series[0].data= xList
+            this.$nextTick(()=>{
+              this.drawChart('option',this.option)
+            })
+        } else {
+            this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+            });
+        }
+        this.$set(this.tableLoading, remarkTb, false);
         },
       // 刷新页面
       refrshPage() {
