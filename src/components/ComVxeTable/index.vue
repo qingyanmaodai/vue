@@ -653,7 +653,7 @@
               <span v-else-if="x.component.type == 'date'">
                 <el-date-picker
                   size="mini"
-                  :disabled="scope.row[x.component.disabled]"
+                  :disabled="scope.row[x.component.disabled]||scope.row[x.component[x.prop]]?true:false"
                   @change="
                     operation(
                       x.component.methods,
