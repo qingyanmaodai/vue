@@ -407,6 +407,9 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
+        // form["sort"] = 'Code desc';
+        // form["fields"] = 'Code,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
+        // form["groupby"] = 'Code';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
