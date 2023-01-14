@@ -32,7 +32,9 @@
                       :span="20"
                       class="flex_flex_end"
                     >
-                      
+                    <el-radio-group v-model="radioValue" @change="radioChange">
+                      <el-radio v-for="(item,index) in parmsBtn2" :key="index" :label="item.value" :value="item.value">{{item.label}}</el-radio>
+                    </el-radio-group>
                     </el-col>
                   </el-row>
                 </div>
@@ -58,7 +60,9 @@
                             />
                         </el-col>
                         <el-col :span="12" v-show="list.length">
-                            <div id="option" style="width: 100% !important;" :style="{height:height}"></div>
+                          <div v-if="radioValue===0" id="NumberOption" style="width: 100% !important;" :style="{height:height}"></div>
+                          <div v-else id="ProportionOption" style="width: 100% !important;" :style="{height:height}"></div>
+                            
                         </el-col>
                     </el-row>
                 </div>
@@ -102,16 +106,60 @@
     },
     data() {
       return {
+        parmsBtn2:[
+          {label:'显示次数',value:0},
+          {label:'显示占比',value:1}
+        ],
+        radioValue:0,
         list:[],
-        option:{
+        ProportionOption:{
+          title:{
+            text:'重复打样分析表',
+            left: "center",
+          },
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left'
+          },
+          series: [
+            {
+              color:[],
+              name: '',
+              type: 'pie',
+              radius: '50%',
+              data: [],
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              label: {
+                  //echarts饼图内部显示百分比设置
+                  show: true,
+                  position: "inside", //outside 外部显示  inside 内部显示
+                  formatter: `{d}%`,
+                  color: "#ffffff", //颜色
+              },
+            }
+          ]
+        },
+        NumberOption:{
+          tooltip: {
+            trigger: 'item'
+          },
           title:{
             text:'重复打样分析表',
             left: "center",
           },
             grid: {
             // top: '0%',
-            left: '85',
-            right: '0%',
+            left: '80',
+            right: '10',
             // bottom: '0%',
           },
             color:'#0960bd',
@@ -126,7 +174,8 @@
             series: [
                 {
                 data: [],
-                type: 'bar'
+                type: 'bar',
+                barMaxWidth:"100",//设置每根柱条最大宽度为50
                 }
             ]
         },
@@ -205,6 +254,9 @@
       }, 500);
     },
     methods: {
+      radioChange(val){
+        this.getChartData(this.formSearchs[0].datas,0)
+      },
         // 研发重复打样图表
         drawChart(id, option){
             let myChart = echarts.init(document.getElementById(id))
@@ -408,7 +460,7 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         // form["sort"] = 'Code desc';
-        // form["fields"] = 'Code,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
+        // form["fields"] = 'CreatedOn,DocNo,CreatedByName,Code,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
         // form["groupby"] = 'Code';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
@@ -436,18 +488,32 @@
         let res = await GetSearchData(forms);
         const { result, data, count, msg } = res.data;
         if (result) {
-          let xList = []
-          let yList = []
-          this.list = data
-          data.forEach((item)=>{
-            xList.push(item.ProofingCount)
-            yList.push(item.CreatedByName||'无')
-          })
-            this.option.yAxis.data = yList
-            this.option.series[0].data= xList
-            this.$nextTick(()=>{
-              this.drawChart('option',this.option)
+          if(this.radioValue===0){
+            let xList = []
+            let yList = []
+            this.list = data
+            data.forEach((item)=>{
+              xList.push(item.ProofingCount)
+              yList.push(item.CreatedByName||'无')
             })
+            this.NumberOption.yAxis.data = yList
+            this.NumberOption.series[0].data= xList
+            this.$nextTick(()=>{
+              this.drawChart('NumberOption',this.NumberOption)
+            })
+        }else{
+          let list =[]
+          data.forEach((item)=>{
+            list.push({
+              value:item.ProofingCount,
+              name:item.CreatedByName||'无'
+            })
+          })
+          this.ProportionOption.series[0].data = list
+          this.$nextTick(()=>{
+          this.drawChart('ProportionOption',this.ProportionOption)
+          })
+        }
         } else {
             this.$message({
             message: msg,
