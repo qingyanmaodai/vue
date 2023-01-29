@@ -420,6 +420,13 @@
               }
               list.forEach(item=>{
                 if(n.prop === item){
+                  if(n.prop==='ProofingCount'){
+                    n.label = '重复打样总数'
+                    n.displayName = '重复打样总数'
+                  }else if(n.prop==='ProofingCountByPeople'){
+                    n.label = '重复打样次数'
+                    n.displayName = '重复打样次数'
+                  }
                   newList.push(n)
                 }
               })
