@@ -183,15 +183,6 @@
         EditDisabled: false,
         height1: "360px",
         labelStatus1: 0,
-        Status1: [
-          { label: "全部", value: "" },
-          { label: "待复期", value: 0 },
-          { label: "复期超时", value: 5 },
-          { label: "三天内即将到期", value: 4 },
-          { label: "已复期", value: [1, 2, 3, 4, 5] },
-          { label: "复期异常", value: 2 },
-          { label: "复期变更", value: 3 },
-        ],
         //////////////左侧树节点//////////////
         showAside: true,
         ReplyDate: "",
@@ -482,7 +473,7 @@
         this.$set(this.tableLoading, remarkTb, true);
         forms["rows"] = 0;
         forms["page"] = this.tablePagination[remarkTb].pageIndex;
-        forms["sort"] = 'CreatedByName desc';
+        forms["sort"] = 'CreatedByName desc';//ApplicatBy
         forms["fields"] = 'CreatedByName,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
         forms["groupby"] = 'CreatedByName';
         let res = await GetSearchData(forms);
