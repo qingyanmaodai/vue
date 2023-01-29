@@ -130,6 +130,7 @@
               name: '',
               type: 'pie',
               radius: '50%',
+              center: ['50%', '50%'],
               data: [],
               emphasis: {
                 itemStyle: {
@@ -139,11 +140,11 @@
                 }
               },
               label: {
-                  //echarts饼图内部显示百分比设置
-                  show: true,
-                  position: "inside", //outside 外部显示  inside 内部显示
-                  formatter: `{d}%`,
-                  color: "#ffffff", //颜色
+                //echarts饼图内部显示百分比设置
+                show: true,
+                position: "inner", //outside 外部显示  inside 内部显示
+                formatter: `{d}%`,
+                color: "#ffffff", //颜色
               },
             }
           ]
@@ -403,6 +404,9 @@
         let IDs = this.sysID;
         let res = await GetHeader(IDs);
         const { datas, forms, result, msg } = res.data;
+        //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死,还有总数和次数用同个字段，所以需要转化。
+        let list = ['Code','CreatedByName','ProofingCount','ProofingCountByPeople']
+        let newList = []
         if (result) {
           // 获取每个表头
           datas.some((m, i) => {
@@ -414,8 +418,14 @@
                   this.verifyData(x);
                 });
               }
+              list.forEach(item=>{
+                if(n.prop === item){
+                  newList.push(n)
+                }
+              })
             });
-            this.$set(this.tableColumns, i, m);
+            // this.$set(this.tableColumns, i, m);
+            this.$set(this.tableColumns, i, newList);
           });
           // 获取查询的初始化字段 组件 按钮
           forms.some((x, z) => {
@@ -450,12 +460,13 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        // form["sort"] = 'Code desc';
-        // form["fields"] = 'CreatedOn,DocNo,CreatedByName,Code,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
-        // form["groupby"] = 'Code';
+        form["sort"] = 'CreatedByName desc';//ApplicatBy
+        form["groupby"] = 'Code,CreatedByName';
+        form["fields"] = 'Code,CreatedByName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
+          
             this.$set(this.tableData, remarkTb, data);
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         } else {
