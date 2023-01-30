@@ -132,8 +132,8 @@
         labelStatus1: 0,
         Status1: [
           { label: "全部", value: "" },
-          { label: "待复期", value: 1 },
-          { label: "已复期", value: 2 },
+          { label: "待复期", value: '未复期' },
+          { label: "已复期", value: '已复期' },
           { label: "已取消", value: 3 },
           // { label: "全部", value: "" },
           // { label: "待复期", value: 0 },
@@ -252,7 +252,7 @@
       let RoleMapList  = this.$store.getters.userInfo.RoleMap
       if(RoleMapList.length){
         RoleMapList.forEach(item=>{
-          if(item.RoleID==='R2106240002'){
+          if(item.RoleID==='R2106240002'){//采购主管
             this.RoleMapStatus = true
             return
           }
@@ -651,7 +651,13 @@
       // 改变状态
       changeStatus(x, index) {
         this.labelStatus1 = index;
-        this.formSearchs[0].datas["Status"] = x.value;
+        this.formSearchs[0].datas["ReplyStatus"] = '';
+        this.formSearchs[0].datas["Status"] = '';
+        if(this.labelStatus1===3||this.labelStatus1===0){
+          this.formSearchs[0].datas["Status"] = x.value;
+        }else {
+          this.formSearchs[0].datas["ReplyStatus"] = x.value;
+        }
         this.dataSearch(0);
       },
       // 可用量查询
@@ -693,6 +699,7 @@
             _this.selectionData[remarkTb].map((item)=>{
                 // 取消修改状态
                 item['Status'] = 3
+                item['IsCancel'] = 1
             })
             let newData = _this.selectionData[remarkTb]
             _this.generalSaveData(newData, remarkTb)
