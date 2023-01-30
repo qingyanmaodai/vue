@@ -227,11 +227,11 @@
       this.userInfo = this.$store.getters.userInfo;
       this.judgeBtn();
       this.getTableHeader();
-      // 计算周期默认时间：今天~1.5月
+      // 计算周期默认时间：今天+1个月
       this.ReplyDate = [
-      formatDates.formatTodayDate(),
-      formatDates.formatOneMonthDate(),
-    ];
+        formatDates.formatTodayDate(),
+        formatDates.formatOneMonthDate(),
+      ];
     },
     activated() {
       if(this.spread){

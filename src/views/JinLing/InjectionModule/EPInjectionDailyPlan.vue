@@ -373,7 +373,7 @@
                 this.adminLoading = true;
                 let res = await GetSearch(
                   submitData,
-                  "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+                  "/APSAPI/ResetInjectionDayPlan?isPlan=1"
                 );
                 const {
                   result,
@@ -974,7 +974,7 @@
             return;
           }
   
-          let Qty = parseInt(currentRow.OweQty);
+          let Qty = parseInt(currentRow.PlanQty);
           let Capacity = Number(currentRow.Capacity);
           let list = [];
           let editNum = 0;

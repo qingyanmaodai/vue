@@ -165,7 +165,7 @@ export default {
   this.getTableHeader();
     // 获取所有按钮
     this.judgeBtn();
-    // 计算周期默认时间：今天~1.5月
+    // 计算周期默认时间：今天+1个月
   _this.machineCycle = [
     formatDates.formatTodayDate(),
     formatDates.formatOneMonthDate(),

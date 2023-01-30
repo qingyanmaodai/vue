@@ -98,7 +98,8 @@ export const formatNextMonthDate=()=> {
  	newDate = new Date(newDate)
     let year = newDate.getFullYear();
     let month = zero(newDate.getMonth() + 2);
-    let day = zero(newDate.getDate());
+    let newDays = new Date(year, month, 0);//获取下个月的日期
+    let day = zero(newDays.getDate());//获取当前月的天数
     if (month == 13) {
         //12月的下月是下年的1月
         year = parseInt(year) + 1;
@@ -112,8 +113,9 @@ function formatOneMonthDate() {
     let newDate = date.setDate(date.getDate());
  	newDate = new Date(newDate)
     let year = newDate.getFullYear();
-    let month = zero(newDate.getMonth() + 2);
-    let day = zero(newDate.getDate());
+    let month = zero(newDate.getMonth() + 2);//当前月+1
+    let newDays = new Date(year, month, 0);//获取下个月的日期
+    let day = zero(newDays.getDate());//获取当前月的天数
     if (month == 13) {
         //12月的下月是下年的1月
         year = parseInt(year) + 1;

@@ -184,7 +184,7 @@
         this.adminLoading = true;
         this.judgeBtn();
         this.getTableHeader();
-        // 计算周期默认时间：今天~1.5月
+        // 计算周期默认时间：今天+1个月
         // _this.machineCycle = [
         //   formatDates.formatTodayDate(),
         //   formatDates.formatOneMonthDate(),
