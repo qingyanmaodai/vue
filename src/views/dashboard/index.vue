@@ -771,9 +771,9 @@ export default {
     async getEchartTwoData() {
       let form = {};
       form["fields"] =
-        " ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value ";
+        " ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value,PlanDay ";
       form["PlanDay"] = [this.toDay, this.toDay];
-      form["groupby"] = " ProcessName";
+      form["groupby"] = " ProcessName,PlanDay";
       form["dicID"] = 6720;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;

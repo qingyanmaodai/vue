@@ -168,7 +168,11 @@
             },
             yAxis: {
                 type: 'category',
-                data: []
+                data: [],
+                axisLabel:{
+                  interval: 0
+                },
+                
             },
             series: [
                 {
