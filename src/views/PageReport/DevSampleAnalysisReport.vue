@@ -405,7 +405,7 @@
         //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
         let newList = [
           {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80},
-          {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "CreatedByName",prop: "CreatedByName",width: "60",size: 60},
+          {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "ApplicatName",prop: "ApplicatName",width: "60",size: 60},
           {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100},
           {ControlType: "textbox",displayName: "打样次数",label: "打样次数",name: "ProofingCountByPeople",prop: "ProofingCountByPeople",width: "100",size: 100},
         ]
@@ -457,8 +457,8 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         form["sort"] = 'ApplicatBy desc';//ApplicatBy
-        form["groupby"] = 'CodeNumber,ApplicatBy';
-        form["fields"] = 'CodeNumber,ApplicatBy,CreatedByName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
+        form["groupby"] = 'CodeNumber,ApplicatBy,ApplicatName';
+        form["fields"] = 'CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -480,9 +480,9 @@
         this.$set(this.tableLoading, remarkTb, true);
         forms["rows"] = 0;
         forms["page"] = this.tablePagination[remarkTb].pageIndex;
-        forms["sort"] = 'CreatedByName desc';//ApplicatBy
-        forms["fields"] = 'CreatedByName,SUM(IsFirstProofing) as IsFirstProofing,SUM(ProofingCount) as ProofingCount,SUM(ProofingCountByPeople) as ProofingCountByPeople';
-        forms["groupby"] = 'CreatedByName';
+        forms["sort"] = 'ApplicatBy desc';//ApplicatBy
+        forms["fields"] = 'ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,sum(ProofingCountByPeople) as ProofingCountByPeople';
+        forms["groupby"] = 'ApplicatBy,ApplicatName';
         let res = await GetSearchData(forms);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -492,7 +492,7 @@
             this.list = data
             data.forEach((item)=>{
               xList.push(item.ProofingCount)
-              yList.push(item.CreatedByName||'无')
+              yList.push(item.ApplicatName||'无')
             })
             this.NumberOption.yAxis.data = yList
             this.NumberOption.series[0].data= xList
@@ -504,7 +504,7 @@
           data.forEach((item)=>{
             list.push({
               value:item.ProofingCount,
-              name:item.CreatedByName||'无'
+              name:item.ApplicatName||'无'
             })
           })
           this.ProportionOption.series[0].data = list
