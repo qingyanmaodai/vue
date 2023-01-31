@@ -92,8 +92,6 @@
     UpdateOrderBomPOTracker,
   } from "@/api/Common";
   import ComFormDialog from "@/components/ComFormDialog";
-  import { mapState } from "vuex";
-  import { Handler } from "mockjs";
   import echarts from "echarts";
   export default {
     name: "DevSampleAnalysisReport",
@@ -404,9 +402,13 @@
         let IDs = this.sysID;
         let res = await GetHeader(IDs);
         const { datas, forms, result, msg } = res.data;
-        //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死,还有总数和次数用同个字段，所以需要转化。
-        let list = ['Code','CreatedByName','ProofingCount','ProofingCountByPeople']
-        let newList = []
+        //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
+        let newList = [
+          {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80},
+          {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "CreatedByName",prop: "CreatedByName",width: "60",size: 60},
+          {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100},
+          {ControlType: "textbox",displayName: "打样次数",label: "打样次数",name: "ProofingCountByPeople",prop: "ProofingCountByPeople",width: "100",size: 100},
+        ]
         if (result) {
           // 获取每个表头
           datas.some((m, i) => {
@@ -418,20 +420,7 @@
                   this.verifyData(x);
                 });
               }
-              list.forEach(item=>{
-                if(n.prop === item){
-                  if(n.prop==='ProofingCount'){
-                    n.label = '重复打样总数'
-                    n.displayName = '重复打样总数'
-                  }else if(n.prop==='ProofingCountByPeople'){
-                    n.label = '重复打样次数'
-                    n.displayName = '重复打样次数'
-                  }
-                  newList.push(n)
-                }
-              })
             });
-            // this.$set(this.tableColumns, i, m);
             this.$set(this.tableColumns, i, newList);
           });
           // 获取查询的初始化字段 组件 按钮
@@ -467,9 +456,9 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        form["sort"] = 'CreatedByName desc';//ApplicatBy
-        form["groupby"] = 'Code,CreatedByName';
-        form["fields"] = 'Code,CreatedByName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
+        form["sort"] = 'ApplicatBy desc';//ApplicatBy
+        form["groupby"] = 'CodeNumber,ApplicatBy';
+        form["fields"] = 'CodeNumber,ApplicatBy,CreatedByName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
