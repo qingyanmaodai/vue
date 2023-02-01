@@ -116,70 +116,72 @@
             left: "center",
           },
           tooltip: {
-            trigger: 'item'
+            trigger: 'item',
+            formatter:"{b}:{c} ({d}%)",
           },
           legend: {
             orient: 'vertical',
-            left: 'left'
+            left: 'left',
+            textStyle: {
+              fontSize: this.computedFontSize(12)
+            },
+            itemHeight: this.computedFontSize(14),
+            itemWidth: this.computedFontSize(14),
           },
           series: [
             {
+              
               color:[],
               name: '',
               type: 'pie',
               radius: '50%',
               center: ['50%', '50%'],
               data: [],
-              emphasis: {
-                itemStyle: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-              },
+              minAngle: 5,
               label: {
-                //echarts饼图内部显示百分比设置
-                show: true,
-                position: "inner", //outside 外部显示  inside 内部显示
-                formatter: `{d}%`,
-                color: "#ffffff", //颜色
+                formatter: '{b}:{c} ({d}%)',
+                textStyle: {
+                    margin: 40,
+                    fontSize: this.computedFontSize(14)
+                  },
               },
+              avoidLabelOverlap:true,
+              
             }
           ]
         },
         NumberOption:{
           tooltip: {
-            trigger: 'item'
+            trigger: 'item',
           },
           title:{
             text:'重复打样分析表',
             left: "center",
           },
-            grid: {
-            // top: '0%',
-            left: '80',
-            right: '10',
-            // bottom: '0%',
+          grid: {
+            top: '6%',
+            left: '10%',
+            right: '5%',
+            bottom: '5%',
           },
             color:'#0960bd',
             xAxis: {
-                type: 'value'
-               
+                type: 'log',
             },
             yAxis: {
                 type: 'category',
                 data: [],
                 axisLabel:{
-                  interval: 0
-                },
-                
+                  interval: 0,
+                  fontSize: this.computedFontSize(14)
+                },                
             },
             series: [
                 {
                 data: [],
                 type: 'bar',
                 barMaxWidth:"100",//设置每根柱条最大宽度为50
-                }
+                }               
             ]
         },
         dialogShow: false,
@@ -248,6 +250,15 @@
       }, 500);
     },
     methods: {
+      computedFontSize(res) {
+        let clientWidth =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        if (!clientWidth) return;
+        let fontSize = clientWidth / 1920;
+        return res * fontSize;
+      },
       radioChange(val){
         this.getChartData(this.formSearchs[0].datas,0)
       },
@@ -408,10 +419,10 @@
         const { datas, forms, result, msg } = res.data;
         //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
         let newList = [
-          {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80},
-          {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "ApplicatName",prop: "ApplicatName",width: "60",size: 60},
-          {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100},
-          {ControlType: "textbox",displayName: "打样次数",label: "打样次数",name: "ProofingCountByPeople",prop: "ProofingCountByPeople",width: "100",size: 100},
+          {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80,sortable: "custom"},
+          {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "ApplicatName",prop: "ApplicatName",width: "60",size: 60,sortable: "custom"},
+          {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100,sortable: "custom"},
+          {ControlType: "textbox",displayName: "打样次数",label: "打样次数",name: "ProofingCountByPeople",prop: "ProofingCountByPeople",width: "100",size: 100,sortable: "custom"},
         ]
         if (result) {
           // 获取每个表头
@@ -428,6 +439,7 @@
             this.$set(this.tableColumns, i, newList);
           });
           // 获取查询的初始化字段 组件 按钮
+          let formList = []//因为和明细共用9024表，查询条件列无展示和影响右边图形，所以只取所需。
           forms.some((x, z) => {
             this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
             x.forEach((y) => {
@@ -436,11 +448,16 @@
               } else {
                 this.$set(this.formSearchs[z].datas, [y.prop], "");
               }
+              if(y.prop==='ApplicatName'){
+                formList.push(y)
+              }
             });
-            this.$set(this.formSearchs[z], "forms", x);
+            this.$set(this.formSearchs[z], "forms", formList);
           });
           this.getTableData(this.formSearchs[0].datas, 0);
-          this.getChartData(this.formSearchs[0].datas,0)
+          this.$nextTick(()=>{
+            this.getChartData(this.formSearchs[0].datas,0)
+          })
         }
       },
       // 验证数据
@@ -457,12 +474,14 @@
       },
       // 获取表格数据
         async getTableData(form, remarkTb) {
+        // let 
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         form["sort"] = 'ApplicatBy desc';//ApplicatBy
         form["groupby"] = 'CodeNumber,ApplicatBy,ApplicatName';
         form["fields"] = 'CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
+        form["dicID"] = form['dicID'];
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -480,13 +499,15 @@
         },
         // 获取图表数据
         async getChartData(form,remarkTb) {
-          let  forms = {...form}
+          let  forms = {}
         this.$set(this.tableLoading, remarkTb, true);
         forms["rows"] = 0;
         forms["page"] = this.tablePagination[remarkTb].pageIndex;
         forms["sort"] = 'ApplicatBy desc';//ApplicatBy
-        forms["fields"] = 'ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,sum(ProofingCountByPeople) as ProofingCountByPeople';
+        forms["fields"] = 'ApplicatBy,ApplicatName,sum(ProofingCount) as ProofingCount';
         forms["groupby"] = 'ApplicatBy,ApplicatName';
+        forms["ApplicatName"] = form['ApplicatName'];
+        forms["dicID"] = form['dicID'];
         let res = await GetSearchData(forms);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -495,7 +516,7 @@
             let yList = []
             this.list = data
             data.forEach((item)=>{
-              xList.push(item.ProofingCount)
+              xList.push(item.ProofingCount||null)//因为差距大数值过小基本看不见，设置值为null并结合type: 'log',可解决此问题
               yList.push(item.ApplicatName||'无')
             })
             this.NumberOption.yAxis.data = yList
@@ -507,7 +528,7 @@
           let list =[]
           data.forEach((item)=>{
             list.push({
-              value:item.ProofingCount,
+              value:item.ProofingCount||null,
               name:item.ApplicatName||'无'
             })
           })
