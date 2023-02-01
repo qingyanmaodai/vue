@@ -558,7 +558,7 @@
                   else if(item['prop'] ==='ReplyDateM2'&&x.ReplyDateM2){
                     this.$set(x, "disabled1", true)
                     this.$set(x, "disabled2", true)
-                    this.$set(x, "disabled3", true)
+                    // this.$set(x, "disabled3", true)//最后一次修正一直可编辑不做限制，以为存在很多次修正，每次都找采购主管改比较麻烦
                   }else if(item['prop'] ==='ReplyDateM2'&&!x.ReplyDateM2){
                     if(!x.ReplyDate){
                       this.$set(x, "disabled3", true)
