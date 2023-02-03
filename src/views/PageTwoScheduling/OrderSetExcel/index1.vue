@@ -4,17 +4,17 @@
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch
-          v-if="labelStatus1 == 0||labelStatus1 == 1||labelStatus1 == 2||labelStatus1 == 3"
+          v-if="labelStatus1 == 0||labelStatus1 == 1||labelStatus1 == 2"
           ref="searchRef"
           :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[0].forms"
-          :remark="labelStatus1 == 3?2:0"
+          :remark="0"
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
         />
         <ComSearch
-          v-show="labelStatus1 == 4"
+          v-show="labelStatus1 == 3"
           ref="searchRef"
           :searchData="formSearchs[1].datas"
           :searchForm="formSearchs[1].forms"
@@ -24,11 +24,11 @@
           @btnClick="btnClick"
         />
         <ComSearch
-          v-show="labelStatus1 == 5"
+          v-show="labelStatus1 == 4"
           ref="searchRef"
-          :searchData="formSearchs[3].datas"
-          :searchForm="formSearchs[3].forms"
-          :remark="3"
+          :searchData="formSearchs[2].datas"
+          :searchForm="formSearchs[2].forms"
+          :remark="2"
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
@@ -91,7 +91,7 @@
                   提交同步申请
                 </el-button>
                 <el-button
-                  v-show="labelStatus1 == 4"
+                  v-show="labelStatus1 == 3"
                   type="primary"
                   size="mini"
                   @click="MOPlanStep1Calculation"
@@ -100,7 +100,7 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
-                  v-show="labelStatus1 == 4"
+                  v-show="labelStatus1 == 3"
                   type="warning"
                   size="mini"
                   @click="dataComputedDate"
@@ -109,7 +109,7 @@
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <el-button
-                  v-show="labelStatus1 == 4"
+                  v-show="labelStatus1 == 3"
                   type="success"
                   size="mini"
                   @click="MOPlanSaveToDayPlan"
@@ -140,7 +140,7 @@
               </el-tabs>
               
             </div>
-            <div v-if="activeName&&labelStatus1 <=2||labelStatus1===5">
+            <div v-if="activeName&&labelStatus1 <=2||labelStatus1===4">
                  <div class="admin_content">
                   <div class="flex_column" :style="{ height: height }">
                     <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
@@ -174,41 +174,7 @@
                   </div>
                 </div>
               </div>
-            <!-- <div v-if="labelStatus1===5">
-                 <div class="admin_content">
-                  <div class="flex_column" :style="{ height: height }">
-                    <div class="spreadContainer" v-loading="tableLoading[3]">
-                      <gc-spread-sheets
-                        class="sample-spreadsheets"
-                        @workbookInitialized="initSpread2"
-                      >
-                        <gc-worksheet></gc-worksheet>
-                      </gc-spread-sheets>
-                    </div>
-                  </div>
-                  <div class="flex_row_spaceBtn pagination">
-                    <div>
-                      <span @click="toPageSetting" class="primaryColor cursor"
-                        >SysID:{{sysID[3].ID}}
-                      </span>
-                    </div>
-                    <div class="flex">
-                      <el-pagination
-                        background
-                        @size-change="(val) => pageSize(val, 0)"
-                        :current-page="tablePagination[3].pageIndex"
-                        :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                        :page-size="tablePagination[3].pageSize"
-                        :total="tablePagination[3].pageTotal"
-                        @current-change="(val) => pageChange(val, 0)"
-                        layout="total, sizes, prev, pager, next,jumper"
-                      >
-                      </el-pagination>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-            <ComVxeTable
+            <!-- <ComVxeTable
               ref="tableRefTwo"
               v-show="labelStatus1 == 3"
               :rowKey="'RowNumber'"
@@ -232,10 +198,10 @@
               @selectfun="selectFun"
               @changeline="changeline"
               @sortChange="sortChange"
-            />
+            /> -->
             <ComVxeTable
               ref="tableRefTwo"
-              v-show="labelStatus1 == 4"
+              v-show="labelStatus1 == 3"
               :rowKey="'RowNumber'"
               :height="height"
               :hasSelect="true"
@@ -329,7 +295,7 @@ export default {
         { label: "全部", value: "" },
         { label: "待排产", value: 0 },
         { label: "已排产", value: 1 },
-        { label: "暂停", value: 2 },
+        // { label: "暂停", value: 2 },
         { label: "分线列表", value: 4 },
         { label: "抓单分析明细", value: 5 },
       ],
@@ -355,36 +321,6 @@ export default {
         },
       ],
       parmsBtn: [
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "计算排期",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: [0, 1, 2, 3],
-        //   Methods: "computedScheduling",
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "下发周计划",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   signName: [0, 1, 2, 3],
-        //   Size: "small",
-        //   Methods: "setWeekData",
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "暂停",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   signName: [0, 1, 2, 3],
-        //   Size: "small",
-        //   Methods: "parseData",
-        //   Icon: "",
-        // },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -402,26 +338,26 @@ export default {
           Methods: "save4",
           Type: "success",
           Icon: "",
-          signName:4,
+          signName:3,
           Size: "small",
         },
-        {
-          ButtonCode: "save",
-          BtnName: "恢复",
-          isLoading: false,
-          Methods: "recovery",
-          Type: "success",
-          signName: 3,
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData",remarkTb:2 },
-        },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "恢复",
+        //   isLoading: false,
+        //   Methods: "recovery",
+        //   Type: "success",
+        //   signName: 3,
+        //   Icon: "",
+        //   Size: "small",
+        //   Params: { dataName: "selectionData",remarkTb:2 },
+        // },
         {
           ButtonCode: "save",
           BtnName: "退回",
           Type: "danger",
           Ghost: true,
-          signName: 4,
+          signName: 3,
           Size: "small",
           Methods: "backData",
           Icon: "",
@@ -460,7 +396,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 5585 },{ ID: 7921 }],
+      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 7921 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: [],
@@ -1234,9 +1170,11 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      if(remarkTb!=3){
+      if(remarkTb!=2){
         this.formSearchs[remarkTb].datas["ControlID"] =
         this.userInfo.WorkFlowInstanceID;
+      }else if(remarkTb==2){
+        this.formSearchs[remarkTb].datas["ControlID"] ='201'//插件抓单明细固定查询条件
       }
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -1349,9 +1287,9 @@ export default {
           this.tableColumns[0] = res.data.Columns[0];
           this.setData();
           this.$set(this.tablePagination[0], "pageTotal", count);
-        }else if(remarkTb == 3){
+        }else if(remarkTb == 2){
           this.setData();
-          this.$set(this.tablePagination[3], "pageTotal", count);
+          this.$set(this.tablePagination[2], "pageTotal", count);
         }
           
         
@@ -1400,7 +1338,7 @@ export default {
     changeStatus(x, index) {
       this.hasLineStatus = false
       this.labelStatus1 = index;
-      if (index == 4) {
+      if (index == 3) {
         if (this.tableData[1].length == 0) {
           this.dataSearch(1);
         }
@@ -1415,14 +1353,8 @@ export default {
         s = [26];
       } else if (index === 2) {
         s = [21, 22, 23];
-      } else if (index === 3) {
-        s = [24];
-        this.formSearchs[2].datas["ProductionStatus"] = s;
+      }else if(index===4){
         this.dataSearch(2);
-        return
-      }else if(index===5){
-        this.formSearchs[3].datas["ControlID"] = ''
-        this.dataSearch(3);
         return
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
@@ -1505,7 +1437,7 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (index == 1) {
-          this.labelStatus1 = 4;
+          this.labelStatus1 = 3;  
           this.dataSearch(1);
         } else {
           this.dataSearch(0);

@@ -1049,7 +1049,7 @@
           }
   
           let Qty = parseInt(currentRow.OweQty);
-          let Capacity = Number(currentRow.Capacity);
+          let Capacity = Number(currentRow.Capacity||0);
           let Coefficient = Number(currentRow.Coefficient);
           let StandardPeoples = Number(currentRow.StandardPeoples)
           let list = [];
