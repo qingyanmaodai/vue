@@ -83,7 +83,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import formatDates from "@/utils/formatDate";
 export default {
-  name: "index1",
+  name: "OffLineToDayPlan",
   components: {
     ComSearch,
     ComReportTable,
