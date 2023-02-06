@@ -429,7 +429,7 @@
           }
           updateRecords.forEach((x) => {
             // 已复期
-            if (x.ReplyDate) {
+            if (x.SuplierReplyDate) {
                 x.Status = 2;
               }
               submitData.push(x);
@@ -530,7 +530,7 @@
         if (result) {
           if (data.length != 0) {
             data.forEach((x) => {
-              // if (!x.ReplyDateM1) {
+              // if (!x.ReplyDate) {
               //   this.$set(x, "tag_1", 1);
               // }
               // if (!x.ReplyDateM2&&!x.ReplyDateM2) {
@@ -538,37 +538,37 @@
               // }
               this.tableColumns[0].forEach((item)=>{
                 if (!this.RoleMapStatus) {
-                  if(item['prop'] ==='ReplyDate'||item['prop'] ==='ReplyDateM1'||item['prop'] ==='ReplyDateM2'){
-                    item['component']['ReplyDate'] = 'disabled1'
-                    item['component']['ReplyDateM1'] = 'disabled2'
+                  if(item['prop'] ==='SuplierReplyDate'||item['prop'] ==='ReplyDate'||item['prop'] ==='ReplyDateM2'){
+                    item['component']['SuplierReplyDate'] = 'disabled1'
+                    item['component']['ReplyDate'] = 'disabled2'
                     item['component']['ReplyDateM2'] = 'disabled3'
                   }
-                  if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
+                  if(item['prop'] ==='SuplierReplyDate'&&x.SuplierReplyDate){
                     this.$set(x, "disabled1", true)
-                    if(!x.ReplyDateM1){
+                    if(!x.ReplyDate){
                       this.$set(x, "disabled3", true)
                     }
-                  }else if(item['prop'] ==='ReplyDate'&&!x.ReplyDate){
+                  }else if(item['prop'] ==='SuplierReplyDate'&&!x.SuplierReplyDate){
                     this.$set(x, "disabled2", true)
                     this.$set(x, "disabled3", true)
-                  }else if(item['prop'] ==='ReplyDateM1'&&x.ReplyDateM1){
-                    this.$set(x, "disabled1", true)
+                  }else if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
+                    // this.$set(x, "disabled1", true)//目前还没对接SRM供方复期先放开手动维护
                     this.$set(x, "disabled2", true)
                   }
                   else if(item['prop'] ==='ReplyDateM2'&&x.ReplyDateM2){
-                    this.$set(x, "disabled1", true)
+                    // this.$set(x, "disabled1", true)//目前还没对接SRM供方复期先放开手动维护
                     this.$set(x, "disabled2", true)
                     // this.$set(x, "disabled3", true)//最后一次修正一直可编辑不做限制，以为存在很多次修正，每次都找采购主管改比较麻烦
                   }else if(item['prop'] ==='ReplyDateM2'&&!x.ReplyDateM2){
-                    if(!x.ReplyDate){
+                    if(!x.SuplierReplyDate){
                       this.$set(x, "disabled3", true)
-                    }else if(!x.ReplyDateM1){
+                    }else if(!x.ReplyDate){
                       this.$set(x, "disabled3", true)
                     }
                   }
                 }
                 //如果超期并维护了原因禁用
-                // if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
+                // if(item['prop'] ==='SuplierReplyDate'&&x.SuplierReplyDate){
                 //   item['component']['ReplyDateM2'] = 'disabled4'
                 //   this.$set(x, "disabled4", true)
                 // }
@@ -610,10 +610,10 @@
           this.selectionData[0].forEach((a) => {
               // 没禁用的才赋值
               if (!a.disabled1) {
-                a.ReplyDate = this.ReplyDate;
+                a.SuplierReplyDate = this.ReplyDate;
               }
               if (!a.disabled2) {
-                a.ReplyDateM1 = this.ReplyDate;
+                a.ReplyDate = this.ReplyDate;
               }
               if (!a.disabled3) {
                 a.ReplyDateM2 = this.ReplyDate;
@@ -623,7 +623,7 @@
           //   this.selectionData[0].forEach((a) => {
           //     // 没禁用的才赋值
           //     if (!a.disabled2) {
-          //       a.ReplyDateM1 = this.ReplyDate;
+          //       a.ReplyDate = this.ReplyDate;
           //     }
           //   });
           // } else {
