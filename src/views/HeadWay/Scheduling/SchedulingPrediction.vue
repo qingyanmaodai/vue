@@ -179,17 +179,17 @@ export default {
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       parmsBtn: [
-      {
-          ButtonCode: "import",
-          BtnName: "1.删除并导入",
-          Type: "danger",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Icon: "",
-          sort:1,
-          Params:{isDel:1}
-        },
+      // {
+      //     ButtonCode: "import",
+      //     BtnName: "1.删除并导入",
+      //     Type: "danger",
+      //     Ghost: true,
+      //     Size: "small",
+      //     Methods: "dataImport",
+      //     Icon: "",
+      //     sort:1,
+      //     Params:{isDel:1}
+      //   },
         {
           ButtonCode: "import",
           BtnName: "1.增量导入",
@@ -213,7 +213,7 @@ export default {
         },
         {
           ButtonCode: "to_weeks_plan",
-          BtnName: "3.转入周计划",
+          BtnName: "3.更新周计划",
           Type: "primary",
           Ghost: true,
           Size: "small",
