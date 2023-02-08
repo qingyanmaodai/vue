@@ -549,8 +549,8 @@
                       this.$set(x, "disabled3", true)
                     }
                   }else if(item['prop'] ==='SuplierReplyDate'&&!x.SuplierReplyDate){
-                    this.$set(x, "disabled2", true)
-                    this.$set(x, "disabled3", true)
+                    // this.$set(x, "disabled2", true)//采购只需要复期和二次复期
+                    // this.$set(x, "disabled3", true)//采购只需要复期和二次复期
                   }else if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
                     // this.$set(x, "disabled1", true)//目前还没对接SRM供方复期先放开手动维护
                     this.$set(x, "disabled2", true)
@@ -560,9 +560,7 @@
                     this.$set(x, "disabled2", true)
                     // this.$set(x, "disabled3", true)//最后一次修正一直可编辑不做限制，以为存在很多次修正，每次都找采购主管改比较麻烦
                   }else if(item['prop'] ==='ReplyDateM2'&&!x.ReplyDateM2){
-                    if(!x.SuplierReplyDate){
-                      this.$set(x, "disabled3", true)
-                    }else if(!x.ReplyDate){
+                    if(!x.ReplyDate){
                       this.$set(x, "disabled3", true)
                     }
                   }
