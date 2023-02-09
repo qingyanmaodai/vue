@@ -133,9 +133,9 @@
         labelStatus1: 1,
         Status1: [
           { label: "全部", value: "" },
-          { label: "待复期", value: '未复期' },
+          { label: "未复期", value: '未复期' },
           { label: "已复期", value: '已复期' },
-          { label: "结案", value: 1 },
+          { label: "已结案", value: '已结案' },
           // { label: "全部", value: "" },
           // { label: "待复期", value: 0 },
           // { label: "复期超时", value: 5 },
@@ -184,7 +184,7 @@
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
-            Params:{val:1},
+            Params:{val:'已结案'},
             signName:0,
           },
           {
@@ -195,7 +195,7 @@
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
-            Params:{val:1},
+            Params:{val:'已结案'},
             signName:1,
           },
           {
@@ -206,7 +206,7 @@
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
-            Params:{val:1},
+            Params:{val:'已结案'},
             signName:2,
           },
           {
@@ -217,7 +217,7 @@
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
-            Params:{val:0},
+            Params:{val:'未结案'},
             signName:0,
           },
           {
@@ -228,7 +228,7 @@
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
-            Params:{val:0},
+            Params:{val:'未结案'},
             signName:3,
           },
         ],
@@ -475,10 +475,6 @@
             return
           }
           updateRecords.forEach((x) => {
-            // 已复期
-            if (x.SuplierReplyDate) {
-                x.Status = 2;
-              }
               submitData.push(x);
           });
           _this.generalSaveData(submitData, 0);
@@ -695,18 +691,15 @@
       changeStatus(x, index) {
         this.labelStatus1 = index;
         this.formSearchs[0].datas["ReplyStatus"] = '';
-        this.formSearchs[0].datas["Status"] = '';
-        this.formSearchs[0].datas['IsCancel'] = ''
-        if(this.labelStatus1===0){
-          this.formSearchs[0].datas["Status"] = x.value;
-        }else if(this.labelStatus1===1){
-          this.formSearchs[0].datas['IsCancel']  = 0 //非结案
+        this.formSearchs[0].datas['CloseStatus'] = ''
+        if(this.labelStatus1===1){
+          this.formSearchs[0].datas['CloseStatus']  = '未结案' //未结案
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
         }else if(this.labelStatus1===2) {
-          this.formSearchs[0].datas['IsCancel']  = 0 //非结案
+          this.formSearchs[0].datas['CloseStatus']  = '未结案' //未结案
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
         }else if(this.labelStatus1===3) {
-          this.formSearchs[0].datas['IsCancel']  = 1 //结案
+          this.formSearchs[0].datas['CloseStatus']  = x.value //已结案
         }
         this.dataSearch(0);
       },
@@ -744,11 +737,11 @@
           this.$message.error("请选择需要操作的数据！");
           return;
         } else {
-            this.$confirm(`确定${parms.val==1?'结案':'取消结案'}吗？`)
+            this.$confirm(`确定${parms.val=='已结案'?'结案':'取消结案'}吗？`)
           .then(async(_) => {
             _this.selectionData[remarkTb].map((item)=>{
                 // 取消/取消结案修改状态
-                item['IsCancel']  = parms.val
+                item['CloseStatus']  = parms.val
             })
             let newData = _this.selectionData[remarkTb]
             _this.generalSaveData(newData, remarkTb)
