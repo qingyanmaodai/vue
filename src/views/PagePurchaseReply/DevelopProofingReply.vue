@@ -651,12 +651,10 @@
         this.labelStatus1 = index;
         this.formSearchs[0].datas["ReplyStatus"] = '';
         this.formSearchs[0].datas["Status"] = '';
-        this.formSearchs[0].datas["RemainreceiveQty"] = ''
         if(this.labelStatus1===3||this.labelStatus1===0){
           this.formSearchs[0].datas["Status"] = x.value;
         }else if(this.labelStatus1===1){
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
-          this.formSearchs[0].datas["RemainreceiveQty"] = 0;
         }else {
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
         }
