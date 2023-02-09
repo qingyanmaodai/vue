@@ -419,6 +419,7 @@
         const { datas, forms, result, msg } = res.data;
         //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
         let newList = [
+        {ControlType: "textbox",displayName: "产品名称",label: "产品名称",name: "ProductName",prop: "ProductName",width: "80",size: 80,sortable: "custom"},
           {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80,sortable: "custom"},
           {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "ApplicatName",prop: "ApplicatName",width: "60",size: 60,sortable: "custom"},
           {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100,sortable: "custom"},
@@ -479,8 +480,8 @@
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
         form["sort"] = 'ApplicatBy desc';//ApplicatBy
-        form["groupby"] = 'CodeNumber,ApplicatBy,ApplicatName';
-        form["fields"] = 'CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
+        form["groupby"] = 'ProductName,CodeNumber,ApplicatBy,ApplicatName';
+        form["fields"] = 'ProductName,CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
         form["dicID"] = form['dicID'];
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
