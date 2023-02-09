@@ -19,6 +19,7 @@
                 :searchData="formSearchs[0].datas"
                 :searchForm="formSearchs[0].forms"
                 :remark="0"
+                :signName="labelStatus1"
                 :btnForm="btnForm"
                 @btnClick="btnClick"
               />
@@ -184,6 +185,29 @@
             Methods: "cancelSave",
             Icon: "",
             Params:{val:1},
+            signName:0,
+          },
+          {
+            ButtonCode: "noPass",
+            BtnName: "结案",
+            Type: "danger",
+            Ghost: true,
+            Size: "small",
+            Methods: "cancelSave",
+            Icon: "",
+            Params:{val:1},
+            signName:1,
+          },
+          {
+            ButtonCode: "noPass",
+            BtnName: "结案",
+            Type: "danger",
+            Ghost: true,
+            Size: "small",
+            Methods: "cancelSave",
+            Icon: "",
+            Params:{val:1},
+            signName:2,
           },
           {
             ButtonCode: "noPass",
@@ -194,6 +218,18 @@
             Methods: "cancelSave",
             Icon: "",
             Params:{val:0},
+            signName:0,
+          },
+          {
+            ButtonCode: "noPass",
+            BtnName: "取消结案",
+            Type: "primary",
+            Ghost: true,
+            Size: "small",
+            Methods: "cancelSave",
+            Icon: "",
+            Params:{val:0},
+            signName:3,
           },
         ],
         parmsBtn2: [
@@ -660,6 +696,7 @@
         this.labelStatus1 = index;
         this.formSearchs[0].datas["ReplyStatus"] = '';
         this.formSearchs[0].datas["Status"] = '';
+        this.formSearchs[0].datas['IsCancel'] = ''
         if(this.labelStatus1===0){
           this.formSearchs[0].datas["Status"] = x.value;
         }else if(this.labelStatus1===1){
@@ -668,8 +705,8 @@
         }else if(this.labelStatus1===2) {
           this.formSearchs[0].datas['IsCancel']  = 0 //非结案
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
-        }else if(this.labelStatus1===2) {
-          this.formSearchs[0].datas['IsCancel']  = 1
+        }else if(this.labelStatus1===3) {
+          this.formSearchs[0].datas['IsCancel']  = 1 //结案
         }
         this.dataSearch(0);
       },
@@ -704,10 +741,10 @@
       // 取消
       async cancelSave(remarkTb, index, parms) {
         if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要取消的数据！");
+          this.$message.error("请选择需要操作的数据！");
           return;
         } else {
-            this.$confirm("确定要取消吗？")
+            this.$confirm(`确定${parms.val==1?'结案':'取消结案'}吗？`)
           .then(async(_) => {
             _this.selectionData[remarkTb].map((item)=>{
                 // 取消/取消结案修改状态
