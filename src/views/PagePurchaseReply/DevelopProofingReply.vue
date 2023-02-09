@@ -129,12 +129,12 @@
         dialogShow: false,
         EditDisabled: false,
         height1: "360px",
-        labelStatus1: 0,
+        labelStatus1: 1,
         Status1: [
           { label: "全部", value: "" },
           { label: "待复期", value: '未复期' },
           { label: "已复期", value: '已复期' },
-          { label: "已取消", value: 3 },
+          { label: "结案", value: 1 },
           // { label: "全部", value: "" },
           // { label: "待复期", value: 0 },
           // { label: "复期超时", value: 5 },
@@ -177,12 +177,23 @@
           },
           {
             ButtonCode: "noPass",
-            BtnName: "取消",
+            BtnName: "结案",
             Type: "danger",
             Ghost: true,
             Size: "small",
             Methods: "cancelSave",
             Icon: "",
+            Params:{val:1},
+          },
+          {
+            ButtonCode: "noPass",
+            BtnName: "取消结案",
+            Type: "primary",
+            Ghost: true,
+            Size: "small",
+            Methods: "cancelSave",
+            Icon: "",
+            Params:{val:0},
           },
         ],
         parmsBtn2: [
@@ -505,6 +516,7 @@
             });
             this.$set(this.formSearchs[z], "forms", x);
           });
+          this.formSearchs[0].datas["ReplyStatus"] = '未复期';
           this.getTableData(this.formSearchs[0].datas, 0);
         }
       },
@@ -607,13 +619,10 @@
         } else {
           this.selectionData[0].forEach((a) => {
               // 没禁用的才赋值
-              if (!a.disabled1) {
-                a.SuplierReplyDate = this.ReplyDate;
-              }
-              if (!a.disabled2) {
+              if (!a.disabled2&&!a.ReplyDate) {
                 a.ReplyDate = this.ReplyDate;
               }
-              if (!a.disabled3) {
+              if (!a.disabled3&&!a.ReplyDateM2) {
                 a.ReplyDateM2 = this.ReplyDate;
               }
           });
@@ -651,12 +660,16 @@
         this.labelStatus1 = index;
         this.formSearchs[0].datas["ReplyStatus"] = '';
         this.formSearchs[0].datas["Status"] = '';
-        if(this.labelStatus1===3||this.labelStatus1===0){
+        if(this.labelStatus1===0){
           this.formSearchs[0].datas["Status"] = x.value;
         }else if(this.labelStatus1===1){
+          this.formSearchs[0].datas['IsCancel']  = 0 //非结案
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
-        }else {
+        }else if(this.labelStatus1===2) {
+          this.formSearchs[0].datas['IsCancel']  = 0 //非结案
           this.formSearchs[0].datas["ReplyStatus"] = x.value;
+        }else if(this.labelStatus1===2) {
+          this.formSearchs[0].datas['IsCancel']  = 1
         }
         this.dataSearch(0);
       },
@@ -689,7 +702,7 @@
         }
       },
       // 取消
-      async cancelSave(remarkTb, index) {
+      async cancelSave(remarkTb, index, parms) {
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要取消的数据！");
           return;
@@ -697,9 +710,8 @@
             this.$confirm("确定要取消吗？")
           .then(async(_) => {
             _this.selectionData[remarkTb].map((item)=>{
-                // 取消修改状态
-                item['Status'] = 3
-                item['IsCancel'] = 1
+                // 取消/取消结案修改状态
+                item['IsCancel']  = parms.val
             })
             let newData = _this.selectionData[remarkTb]
             _this.generalSaveData(newData, remarkTb)
