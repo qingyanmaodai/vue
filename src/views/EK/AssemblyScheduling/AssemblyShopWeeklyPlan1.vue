@@ -351,7 +351,7 @@
           name: "isChecked",
           displayName: "isChecked",
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 80,
+          size: 60,
         };
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
@@ -894,7 +894,7 @@
       // 转入日计划
       async setPlan(remarkTb, index, params) {
         this.getSelectionData();
-        // if (this.ruleForm.LineIDs.length == 0 ||!this.ruleForm.LineIDs) {
+        // if (this.ruleForm.LineIDs.le ngth == 0 ||!this.ruleForm.LineIDs) {
         //   this.$message.error("请选择生产线再转入日计划！");
         // } else {
         if (this.selectionData[remarkTb].length == 0) {

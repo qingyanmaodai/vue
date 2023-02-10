@@ -11,6 +11,14 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
+                <div
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
+                  :key="y"
+                >
+                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -81,7 +89,10 @@
       data() {
         return {
           labelStatus1: 0,
-          Status1: [],
+          Status1: [
+          { label: "一车间", value: '一车间' },
+          { label: "二车间", value: '二车间' },
+          ],
           //////////////左侧树节点//////////////
           LineName: "",
           OrganizeName: "",
@@ -533,6 +544,7 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
+            this.formSearchs[this.tagRemark].datas['WorkShopName'] = '一车间'
             this.getTableData(this.formSearchs[0].datas, 0);
             this.adminLoading = false
           }else{
@@ -592,21 +604,38 @@
           let colInfos = [];
           let newData = [];
           let list = []
+          let colIndex = 0
           this.tableColumns[0].forEach((x,i) => {
             if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
-              let ComboBox = null
-              ComboBox= new GCsheets.CellTypes.ComboBox();
-              ComboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              ComboBox.items(x.items);
-              ComboBox.itemHeight(24);
+              // let ComboBox = null
+              // ComboBox= new GCsheets.CellTypes.ComboBox();
+              // ComboBox.editorValueType(
+              //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+              // );
+              // ComboBox.items(x.items);
+              // ComboBox.itemHeight(24);
               colInfos.push({
                 name: x.prop,
                 displayName:x.label,
-                cellType:ComboBox,
+                cellType:'',
                 size: parseInt(x.width),
               });
+              let newData = [];
+              let list = null;
+              this.tableData[0].map((item,index)=>{
+                if(x.DataSourceID&&x.DataSourceName){
+                  newData = item[x.DataSourceName]
+                      // 设置列表每行下拉菜单
+                  // if(newData.length){
+                    list = new GCsheets.CellTypes.ComboBox();
+                    list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                    list.editable(true);
+                    list.items(newData);
+                    list.itemHeight(24);
+                    sheet.getCell(index, colIndex, GCsheets.SheetArea.viewport).cellType(list)
+                  // }
+                }  
+            })
             } else {
               colInfos.push({
                 name: x.prop,
@@ -615,6 +644,7 @@
               });
             }
             colHeader1.push(x.label);
+            colIndex ++
           });
           sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
           colHeader1.forEach(function(value, index) {
@@ -1234,6 +1264,12 @@
               this.changeTreeNodeStatus(node.childNodes[i]);
             }
           }
+        },
+        // 改变状态
+        changeStatus(x, index) {
+          this.labelStatus1 = index;
+          this.formSearchs[this.tagRemark].datas['WorkShopName'] = x.value
+          this.dataSearch(0);
         },
       },
     };
