@@ -155,7 +155,7 @@
             trigger: 'item',
           },
           title:{
-            text:'重复打样分析表',
+            text:'重复打样分析图',
             left: "center",
           },
           grid: {
@@ -181,6 +181,20 @@
                 data: [],
                 type: 'bar',
                 barMaxWidth:"100",//设置每根柱条最大宽度为50
+                //显示数值
+                itemStyle: {
+                  normal: {
+                    label: {
+                      show: true, //开启显示
+                      position: 'right', //在上方显示
+                      textStyle: {
+                        //数值样式
+                        color: 'black',
+                        fontSize: this.computedFontSize(14)
+                      },
+                    },
+                  },
+                }, 
                 }               
             ]
         },
@@ -419,7 +433,7 @@
         const { datas, forms, result, msg } = res.data;
         //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
         let newList = [
-        {ControlType: "textbox",displayName: "产品名称",label: "产品名称",name: "ProductName",prop: "ProductName",width: "80",size: 80,sortable: "custom"},
+          {ControlType: "textbox",displayName: "成品料号机型",label: "成品料号机型",name: "ProductName",prop: "ProductName",width: "80",size: 80,sortable: "custom"},
           {ControlType: "textbox",displayName: "纯编码",label: "纯编码",name: "CodeNumber",prop: "CodeNumber",width: "80",size: 80,sortable: "custom"},
           {ControlType: "textbox",displayName: "申请人",label: "申请人",name: "ApplicatName",prop: "ApplicatName",width: "60",size: 60,sortable: "custom"},
           {ControlType: "textbox",displayName: "重复打样总数",label: "重复打样总数",name: "ProofingCount",prop: "ProofingCount",width: "100",size: 100,sortable: "custom"},
@@ -436,6 +450,13 @@
                   this.verifyData(x);
                 });
               }
+              newList.forEach((item)=>{
+                if(item.prop===n.prop){
+                  //列标题保持一致
+                  item.displayName = n.displayName
+                  item.label = n.label
+                }
+              })
             });
             this.$set(this.tableColumns, i, newList);
           });
