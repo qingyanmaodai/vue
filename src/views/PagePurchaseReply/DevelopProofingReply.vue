@@ -582,20 +582,21 @@
               // }
               this.tableColumns[0].forEach((item)=>{
                 if (!this.RoleMapStatus) {
-                  if(item['prop'] ==='SuplierReplyDate'||item['prop'] ==='ReplyDate'||item['prop'] ==='ReplyDateM2'){
-                    item['component']['SuplierReplyDate'] = 'disabled1'
+                  if(item['prop'] ==='ReplyDate'||item['prop'] ==='ReplyDateM2'){
+                    // item['component']['SuplierReplyDate'] = 'disabled1'
                     item['component']['ReplyDate'] = 'disabled2'
                     item['component']['ReplyDateM2'] = 'disabled3'
                   }
-                  if(item['prop'] ==='SuplierReplyDate'&&x.SuplierReplyDate){
-                    this.$set(x, "disabled1", true)
-                    if(!x.ReplyDate){
-                      this.$set(x, "disabled3", true)
-                    }
-                  }else if(item['prop'] ==='SuplierReplyDate'&&!x.SuplierReplyDate){
-                    // this.$set(x, "disabled2", true)//采购只需要复期和二次复期
-                    // this.$set(x, "disabled3", true)//采购只需要复期和二次复期
-                  }else if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
+                  // if(item['prop'] ==='SuplierReplyDate'&&x.SuplierReplyDate){
+                  //   this.$set(x, "disabled1", true)
+                  //   if(!x.ReplyDate){
+                  //     this.$set(x, "disabled3", true)
+                  //   }
+                  // }else if(item['prop'] ==='SuplierReplyDate'&&!x.SuplierReplyDate){
+                  //   // this.$set(x, "disabled2", true)//采购只需要复期和二次复期
+                  //   // this.$set(x, "disabled3", true)//采购只需要复期和二次复期
+                  // }else 
+                  if(item['prop'] ==='ReplyDate'&&x.ReplyDate){
                     // this.$set(x, "disabled1", true)//目前还没对接SRM供方复期先放开手动维护
                     this.$set(x, "disabled2", true)
                   }
