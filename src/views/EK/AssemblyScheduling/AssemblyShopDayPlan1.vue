@@ -11,14 +11,14 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
-                <!-- <div
+                <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
-                </div> -->
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -544,7 +544,7 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
-            // this.formSearchs[this.tagRemark].datas['WorkShopName'] = '一车间'
+            this.formSearchs[this.tagRemark].datas['WorkShopName'] = '一车间'
             this.getTableData(this.formSearchs[0].datas, 0);
             this.adminLoading = false
           }else{
