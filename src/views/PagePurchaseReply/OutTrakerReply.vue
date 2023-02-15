@@ -118,6 +118,7 @@
                 </el-row>
               </div>
               <ComVxeTable
+                ref="ComVxeTable"
                 :rowKey="'RowNumber'"
                 :height="height"
                 :tableData="tableData[0]"
@@ -137,6 +138,7 @@
                 :footerLabel="footerLabel[0]"
                 @toPage="usingSearch"
                 @sortChange="sortChange"
+                :keepSource="true"
               />
             </div>
           </div>
@@ -576,7 +578,14 @@ export default {
       const { result, data, msg } = res.data;
       if (result) {
         let submitData = [];
-        _this.tableData[0].forEach((x) => {
+        const $table = this.$refs.ComVxeTable.$refs.vxeTable
+          // 获取修改记录
+          const updateRecords = $table.getUpdateRecords()
+          if(updateRecords.length==0){
+            this.$message.error("当前数据没做修改，请先修改再保存！");
+            return
+          }
+          updateRecords.forEach((x) => {
           let MaterialFormID = x.MaterialFormID.split(",");
           MaterialFormID.forEach((b, i) => {
             let obj = JSON.parse(JSON.stringify(x));
