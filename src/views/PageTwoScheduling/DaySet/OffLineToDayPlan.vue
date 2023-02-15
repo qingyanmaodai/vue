@@ -454,7 +454,7 @@ this.spread.refresh();
             this.adminLoading = true;
             let res = await GetSearch(
               submitData,
-              `/APSAPI/MOPlanSaveToDayPlan?isPlan=1&ControlID=${this.userInfo.WorkFlowInstanceID}`
+              `/APSAPI/MOPlanSaveToDayPlan?isPlan=1&ControlID=${210}`
             );
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -549,8 +549,8 @@ this.spread.refresh();
           this.$set(this.formSearchs[z], "forms", x);
         });
         console.log("gettable");
-        this.getOrgData();
-        // this.dataSearch(0);
+        // this.getOrgData();
+        this.dataSearch(0);
       }
     },
     // 验证数据
@@ -600,14 +600,30 @@ this.spread.refresh();
       sheet.reset()
       let colHeader1 = [];
       let colInfos = [];
+      let colIndex = 0
       this.tableColumns[0].forEach((x) => {
-        if (x.prop == "LineID") {
-          colInfos.push({
-            name: x.prop,
-            displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
-            size: parseInt(x.width),
-          });
+        if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
+            colInfos.push({
+                name: x.prop,
+                displayName:x.label,
+                cellType:'',
+                size: parseInt(x.width),
+            });
+            let newData = [];
+            let list = null;
+            this.tableData[0].map((item,index)=>{
+              if(x.DataSourceID&&x.DataSourceName){
+                newData = item[x.DataSourceName]
+                console.log('newData',newData)
+                 // 设置列表每行下拉菜单
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                list.editable(true);
+                list.items(newData);
+                list.itemHeight(24);
+                sheet.getCell(index, colIndex, GCsheets.SheetArea.viewport).cellType(list)
+              }  
+            })
         }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
           colInfos.push({
             name: x.prop,
@@ -623,6 +639,7 @@ this.spread.refresh();
           });
         }
         colHeader1.push(x.label);
+        colIndex ++
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -1180,7 +1197,7 @@ this.spread.refresh();
     },
     //////////////////////////////
     async getOrgData() {
-      this.getLineData(this.userInfo.WorkFlowInstanceID);
+      this.getLineData(210);
       return;
       this.treeListTmp = [];
       this.treeData = [];

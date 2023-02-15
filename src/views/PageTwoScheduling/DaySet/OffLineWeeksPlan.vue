@@ -505,13 +505,13 @@ export default {
       sheet.reset();
       let colHeader1 = [];
       let colInfos = [];
-
+      let colIndex = 0
       this.tableColumns[this.tagRemark].forEach((x) => {
-        if (x.prop == "LineID") {
+        if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
           colInfos.push({
             name: x.prop,
-            displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
+            displayName:x.label,
+            cellType:'',
             size: parseInt(x.width),
           });
         }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
@@ -529,6 +529,7 @@ export default {
           });
         }
         colHeader1.push(x.label);
+        colIndex ++
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -700,7 +701,7 @@ export default {
             cellType.isThreeState(false);
             sheet.getCell(index, cellIndex).cellType(cellType);
           }
-          if (m.ControlType == "combobox" && m.isEdit) {
+          if (m.ControlType==='comboboxMultiple'||m.ControlType == "combobox" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
             cellType.editorValueType(
               GC.Spread.Sheets.CellTypes.EditorValueType.value
@@ -712,9 +713,7 @@ export default {
             //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
             //   });
             // }
-
             cellType.items(row[m.DataSourceName]);
-
             sheet.getCell(index, cellIndex).cellType(cellType);
           }
           cellIndex++;
