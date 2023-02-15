@@ -116,7 +116,9 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ControlID:210,
+          },
           forms: [],
         },
       ],
@@ -569,7 +571,7 @@ this.spread.refresh();
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = this.sysID;
-       form["ControlID"]=this.userInfo.WorkFlowInstanceID;
+      //  form["ControlID"]=this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
 
       const { result, data, count, msg } = res.data;

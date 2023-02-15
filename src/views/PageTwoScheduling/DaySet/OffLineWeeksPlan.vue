@@ -304,19 +304,27 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ControlID:210,
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            ControlID:210,
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            ControlID:210,
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            ControlID:210,
+          },
           forms: [],
         },
       ],
@@ -1170,12 +1178,12 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      if(remarkTb!=2){
-        this.formSearchs[remarkTb].datas["ControlID"] =
-        this.userInfo.WorkFlowInstanceID;
-      }else if(remarkTb==2){
-        this.formSearchs[remarkTb].datas["ControlID"] ='210'//下线抓单明细固定查询条件
-      }
+      // if(remarkTb!=2){
+      //   this.formSearchs[remarkTb].datas["ControlID"] =
+      //   this.userInfo.WorkFlowInstanceID;
+      // }else if(remarkTb==2){
+      //   this.formSearchs[remarkTb].datas["ControlID"] ='210'//下线抓单明细固定查询条件
+      // }
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
