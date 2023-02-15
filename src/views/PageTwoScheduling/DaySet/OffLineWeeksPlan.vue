@@ -628,7 +628,7 @@ export default {
         if(_this.tableColumns[this.tagRemark].length){
           for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
             let item = _this.tableColumns[this.tagRemark][i]
-            if(item.name ==="K1"){
+            if(item.name ==="Q1"){
                  rowSheet3 = sheet.getCell(
                   index,//行
                   i,//列
@@ -644,7 +644,7 @@ export default {
           rowSheet.foreColor("balck");
           rowSheet2.backColor("#A0CFFF");
           rowSheet2.foreColor("balck");
-          if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["MFGOrganizeID"] === 162) {
@@ -652,14 +652,14 @@ export default {
           rowSheet.backColor("#FFFF00");
           rowSheet.foreColor("black");
           rowSheet2.backColor("#FFFF00");
-          if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["SchedulingResult"] === "超期") {
           // row.backColor();
           rowSheet.backColor("#C2E7B0");
           rowSheet.foreColor("black");
-          if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } 
@@ -670,11 +670,11 @@ export default {
           // rowSheet.foreColor("red");
           rowSheet.backColor("red");
           rowSheet.foreColor("black");
-          if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
             rowSheet3.foreColor("#A0CFFF");
           }
         } 
-        else if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
+        else if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
           rowSheet.foreColor("black");
           rowSheet2.foreColor("balck");
           rowSheet3.foreColor("red");
@@ -915,7 +915,7 @@ export default {
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
           if(_this.tableColumns[0].length){
             _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="K1"&&args.col===index){
+              if(item.name ==="Q1"&&args.col===index){
                 // 显示ERP供需平衡表
                 _this.colDialogVisible =true
                 _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
