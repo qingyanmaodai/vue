@@ -312,7 +312,9 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            OrderControlID:201,
+          },
           forms: [],
         },
         {
@@ -1174,7 +1176,7 @@ export default {
         this.formSearchs[remarkTb].datas["ControlID"] =
         this.userInfo.WorkFlowInstanceID;
       }else if(remarkTb==2){
-        this.formSearchs[remarkTb].datas["ControlID"] ='201'//插件抓单明细固定查询条件
+        this.formSearchs[remarkTb].datas["OrderControlID"] ='201'//插件抓单明细固定查询条件
       }
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
