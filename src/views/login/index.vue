@@ -5,7 +5,7 @@
   >
     <div class="login_header">
       <div class="logoIcon"></div>
-      <div class="barCode"></div>
+      <div class="barCode" :style="{'--base_url': `url(${base_url})`}"></div>
     </div>
     <div class="login_content flex">
       <div class="content"></div>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import request from '@/utils/request'
 import store from '@/store'
 export default {
   name: "Login",
@@ -95,6 +96,7 @@ export default {
       loading: false,
       redirect: undefined,
       clickSign: 0,
+      base_url:localStorage.getItem('apsurl')+'/images/logo.png',//动态获取服务器对应的logo
     };
   },
   watch: {
@@ -105,7 +107,9 @@ export default {
       immediate: true,
     },
   },
-  created() {  
+  created() { 
+console.log('base_url',this.base_url)
+    
   },
   methods: {
     // 点击触发地址
@@ -167,7 +171,8 @@ export default {
 .barCode {
   width: 126px;
   height: 82px;
-  background: url(../../assets/icon/APP.png);
+  // background: url(http://10.50.18.130/assets/icon/APP.jpg);
+  background: var(--base_url);
   background-size: 100% 100%;
 }
 
