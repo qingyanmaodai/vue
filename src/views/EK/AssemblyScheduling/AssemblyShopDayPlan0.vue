@@ -1209,14 +1209,23 @@
           let sheet = this.spread.getActiveSheet();
           let newData = sheet.getDirtyRows();
           let submitData = [];
+          let noAttendance = false
           if (newData.length != 0) {
             newData.forEach((x) => {
+              if(x['Remark1']){
+                noAttendance = true
+              }
               submitData.push(x.item);
             });
           }
           if (submitData.length == 0) {
             this.$message.error("没修改过任何数据！");
             return;
+          }
+
+          if(noAttendance){
+            this.$message.error("同个产线的今日出勤人数需要一致，请修改！");
+            return 
           }
           this.adminLoading = true;
           let res = await SaveMOPlanStep4(submitData);
