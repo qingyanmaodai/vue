@@ -1,4 +1,4 @@
-<!--二车间周计划-->
+<!--一车间周计划-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -666,8 +666,8 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
-      this.formSearchs[0].datas["WorkShopName"] = '二车间'
-      this.formSearchs[1].datas["WorkShopName"] = '二车间'
+      this.formSearchs[0].datas["WorkShopName"] = '一车间'
+      this.formSearchs[1].datas["WorkShopName"] = '一车间'
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -757,9 +757,9 @@ export default {
         // this.formSearchs[1].datas["CompletionStatus"] = "1";
         // this.formSearchs[0].datas["productionstatus"] = [21, 22, 23, 24, 26];
         // this.formSearchs[0].datas["ConfigStartWeek"] = "1";
-        this.formSearchs[0].datas["WorkShopName"] = '二车间'
-        this.formSearchs[1].datas["WorkShopName"] = '二车间'
         
+        this.formSearchs[0].datas["WorkShopName"] = '一车间'
+        this.formSearchs[1].datas["WorkShopName"] = '一车间'
         this.getTableData(this.formSearchs[0].datas, 0);
 
         this.adminLoading = false;

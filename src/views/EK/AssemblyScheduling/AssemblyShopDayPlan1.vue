@@ -1,4 +1,4 @@
-<!--日计划-->
+<!--二车间日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -11,14 +11,14 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
-                <div
+                <!-- <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
-                </div>
+                </div> -->
               </el-col>
             </el-row>
           </div>
@@ -303,6 +303,7 @@
         },
         // 查询
         dataSearch(remarkTb) {
+          this.formSearchs[0].datas["WorkShopName"] = '二车间'
           this.tagRemark = remarkTb;
           this.tableData[remarkTb] = [];
           this.$set(this.tableLoading, remarkTb, true);
@@ -544,7 +545,7 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
-            this.formSearchs[this.tagRemark].datas['WorkShopName'] = '一车间'
+            this.formSearchs[0].datas["WorkShopName"] = '二车间'
             this.getTableData(this.formSearchs[0].datas, 0);
             this.adminLoading = false
           }else{

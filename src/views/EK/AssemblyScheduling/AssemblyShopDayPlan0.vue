@@ -1,4 +1,4 @@
-<!--三车间日计划-->
+<!--一车间日计划-->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -11,6 +11,14 @@
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
+                <!-- <div
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
+                  :key="y"
+                >
+                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                </div> -->
               </el-col>
             </el-row>
           </div>
@@ -72,7 +80,7 @@
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
     export default {
-      name: "AssemblyShopDayPlan2",
+      name: "AssemblyShopDayPlan1",
       components: {
         ComSearch,
         ComReportTable,
@@ -81,7 +89,10 @@
       data() {
         return {
           labelStatus1: 0,
-          Status1: [],
+          Status1: [
+          { label: "一车间", value: '一车间' },
+          { label: "二车间", value: '二车间' },
+          ],
           //////////////左侧树节点//////////////
           LineName: "",
           OrganizeName: "",
@@ -160,7 +171,7 @@
           tagRemark: 0,
           isLoading: false,
           isEdit: false,
-          sysID: [{ ID: 9020}],
+          sysID: [{ ID: 9019}],
           spread: null,
           adminLoading: false,
           checkBoxCellTypeLine: "",
@@ -292,6 +303,7 @@
         },
         // 查询
         dataSearch(remarkTb) {
+          this.formSearchs[0].datas["WorkShopName"] = '一车间'
           this.tagRemark = remarkTb;
           this.tableData[remarkTb] = [];
           this.$set(this.tableLoading, remarkTb, true);
@@ -533,6 +545,7 @@
               });
               this.$set(this.formSearchs[z], "forms", x);
             });
+            this.formSearchs[0].datas["WorkShopName"] = '一车间'
             this.getTableData(this.formSearchs[0].datas, 0);
             this.adminLoading = false
           }else{
@@ -592,21 +605,38 @@
           let colInfos = [];
           let newData = [];
           let list = []
+          let colIndex = 0
           this.tableColumns[0].forEach((x,i) => {
             if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
-              let ComboBox = null
-              ComboBox= new GCsheets.CellTypes.ComboBox();
-              ComboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              ComboBox.items(x.items);
-              ComboBox.itemHeight(24);
+              // let ComboBox = null
+              // ComboBox= new GCsheets.CellTypes.ComboBox();
+              // ComboBox.editorValueType(
+              //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+              // );
+              // ComboBox.items(x.items);
+              // ComboBox.itemHeight(24);
               colInfos.push({
                 name: x.prop,
                 displayName:x.label,
-                cellType:ComboBox,
+                cellType:'',
                 size: parseInt(x.width),
               });
+              let newData = [];
+              let list = null;
+              this.tableData[0].map((item,index)=>{
+                if(x.DataSourceID&&x.DataSourceName){
+                  newData = item[x.DataSourceName]
+                      // 设置列表每行下拉菜单
+                  // if(newData.length){
+                    list = new GCsheets.CellTypes.ComboBox();
+                    list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                    list.editable(true);
+                    list.items(newData);
+                    list.itemHeight(24);
+                    sheet.getCell(index, colIndex, GCsheets.SheetArea.viewport).cellType(list)
+                  // }
+                }  
+            })
             } else {
               colInfos.push({
                 name: x.prop,
@@ -615,6 +645,7 @@
               });
             }
             colHeader1.push(x.label);
+            colIndex ++
           });
           sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
           colHeader1.forEach(function(value, index) {
@@ -923,8 +954,10 @@
           this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
           this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
             // 自动计算数量
-  
-            _this.computedNum(args.row, args.col, args.editingText);
+            if(_this.tableColumns[0][args.col].prop.indexOf('-')>-1){
+              _this.computedNum(args.row, args.col, args.editingText);
+            }
+            
             // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
             //   sheet.setArray(args.row, i, [2021]);
             // }
@@ -1049,7 +1082,7 @@
           }
   
           let Qty = parseInt(currentRow.OweQty);
-          let Capacity = Number(currentRow.Capacity);
+          let Capacity = Number(currentRow.Capacity||0);
           let Coefficient = Number(currentRow.Coefficient);
           let StandardPeoples = Number(currentRow.StandardPeoples)
           let list = [];
@@ -1232,6 +1265,12 @@
               this.changeTreeNodeStatus(node.childNodes[i]);
             }
           }
+        },
+        // 改变状态
+        changeStatus(x, index) {
+          this.labelStatus1 = index;
+          this.formSearchs[this.tagRemark].datas['WorkShopName'] = x.value
+          this.dataSearch(0);
         },
       },
     };
