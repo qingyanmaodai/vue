@@ -548,6 +548,7 @@
             });
             this.$set(this.formSearchs[z], "forms", x);
           });
+          this.formSearchs[0].datas['CloseStatus']  = '未结案' //未结案
           this.formSearchs[0].datas["ReplyStatus"] = '未复期';
           this.getTableData(this.formSearchs[0].datas, 0);
         }
