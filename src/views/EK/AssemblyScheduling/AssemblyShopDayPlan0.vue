@@ -1212,10 +1212,13 @@
           let noAttendance = false
           if (newData.length != 0) {
             newData.forEach((x) => {
-              if(x['Remark1']){
-                noAttendance = true
-              }
               submitData.push(x.item);
+              newData.forEach((y)=>{
+                if(x.LineID===y.LineID&&x['Remark1']!=y['Remark1']){
+                  console.log('noAttendance',noAttendance)
+                  noAttendance = true
+                }
+              })
             });
           }
           if (submitData.length == 0) {
@@ -1224,6 +1227,7 @@
           }
 
           if(noAttendance){
+            
             this.$message.error("同个产线的今日出勤人数需要一致，请修改！");
             return 
           }
