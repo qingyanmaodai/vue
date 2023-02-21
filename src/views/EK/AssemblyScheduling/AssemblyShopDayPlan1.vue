@@ -44,6 +44,17 @@
           </div>
         </div>
       </div>
+
+      <!-- 点击齐套率弹框-->
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="5165"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
   </template>
   
@@ -79,15 +90,21 @@
     import {
       SaveMOPlanStep4
     } from "@/api/PageTwoScheduling";
+    import DialogTable from "@/components/Dialog/dialogTable";
     export default {
       name: "AssemblyShopDayPlan1",
       components: {
         ComSearch,
         ComReportTable,
         ComAsideTree,
+        DialogTable
       },
       data() {
         return {
+          dialogSearchForm: {
+            OrderID: "",
+          },
+          colDialogVisible: false,
           labelStatus1: 0,
           Status1: [
           { label: "一车间", value: '一车间' },
@@ -429,13 +446,17 @@
   
               let sheet = this.spread.getActiveSheet();
               let submitData = sheet.getDataSource();
+              let newData = []
               submitData.forEach((m) => {
-                m["isChecked"] = true;
+                if(!m['NoSchedulingWeek']){//过滤不排的数据
+                  m["isChecked"] = true;
+                  newData.push(m)
+                }
               });
-              if (submitData.length >= 0) {
+              if (newData.length >= 0) {
                 this.adminLoading = true;
                 let res = await GetSearch(
-                  submitData,
+                  newData,
                   "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
                 );
                 const {
@@ -765,6 +786,43 @@
             if (row["Code"] == null) {
               rowSheet.backColor("#A0CFFF");
             }
+            let colIndex2 =0 
+            this.tableColumns[0].forEach((m, num) => {
+              //行，start,end
+              if (m.DataType == "bit" && m.isEdit) {
+                var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+                cellType.caption("");
+                cellType.textTrue("");
+                cellType.textFalse("");
+                cellType.textIndeterminate("");
+                cellType.textAlign(
+                  GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+                );
+                cellType.isThreeState(false);
+                sheet.getCell(index, colIndex2).cellType(cellType);
+              }
+              colIndex2++
+
+              let rowSheet3 = null;
+              if (row["FormRate"] == "100.00%" && m.name === "FormRate") {
+                //齐套时背景色为绿色
+                rowSheet3 = sheet.getCell(
+                  index, //行
+                  num, //列
+                  GC.Spread.Sheets.SheetArea.viewport
+                );
+                rowSheet3.backColor("#67c23a");
+              }
+              // 齐套率字体蓝色
+              if (m.name === "FormRate") {
+                rowSheet3 = sheet.getCell(
+                  -1, //行
+                  num, //列
+                  GC.Spread.Sheets.SheetArea.viewport
+                );
+                rowSheet3.foreColor("#2a06ecd9");
+              }
+            })
           })
     
   
@@ -961,6 +1019,20 @@
             // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
             //   sheet.setArray(args.row, i, [2021]);
             // }
+          });
+          // 表格单击齐套率弹框事件
+          this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+            if (_this.tableColumns[_this.tagRemark].length) {
+              _this.tableColumns[_this.tagRemark].map((item, index) => {
+                if (item.name === "FormRate" && args.col === index) {
+                  // 显示ERP供需平衡表
+                  _this.colDialogVisible = true;
+                  _this.dialogSearchForm.OrderID =
+                    _this.tableData[_this.tagRemark][args.row].OrderID;
+                  _this.dialogSearchForm.OweQty = 0;
+                }
+              });
+            }
           });
           // 粘贴事件
           // this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
@@ -1209,14 +1281,25 @@
           let sheet = this.spread.getActiveSheet();
           let newData = sheet.getDirtyRows();
           let submitData = [];
+          let noAttendance = false
           if (newData.length != 0) {
             newData.forEach((x) => {
               submitData.push(x.item);
+              // 判断同个产线今日出勤人数是否一致
+              this.tableData[this.tagRemark].forEach((y)=>{
+                if(x.item['Code']&&y['Code']&&x.item['LineID']===y['LineID']&&x.item['Extend5']!=y['Extend5']){
+                  noAttendance = true
+                }
+              })
             });
           }
           if (submitData.length == 0) {
             this.$message.error("没修改过任何数据！");
             return;
+          }
+          if(noAttendance){
+            this.$message.error("同个产线的今日出勤人数需要一致，请修改！");
+            return 
           }
           this.adminLoading = true;
           let res = await SaveMOPlanStep4(submitData);
