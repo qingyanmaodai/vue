@@ -30,7 +30,7 @@
               <el-button
                 type="primary"
                 size="mini"
-                @click="addRow"
+                @click="addRow(0)"
                 v-show="isAdd"
               >新增</el-button>
               <el-divider direction="vertical"></el-divider>
@@ -108,30 +108,225 @@
             @handleRowClick="handleRowClick"
             @inputPar="inputPar"
             :keepSource="true"
+            :hasSelect="true"
           />
-        </div>
+        </div>    
+      </div>
 
-        <!-- 输入参数表弹框 -->
-        <DialogTable
-        title="输入参数表"
-        :tableDialog="colDialogVisible1"
-        :sysID="9031"
+      <!-- 输入参数表 -->
+      <el-dialog
+        :visible.sync="colDialogVisible1"
         width="80%"
         @closeDialog="colDialogVisible1 = false"
-        :searchForm="dialogSearchForm1"
-        :isToolbar="false"
-      ></DialogTable>
-      <!-- 接口输出表弹框 -->
-      <DialogTable
-        title="接口输出表"
-        :tableDialog="colDialogVisible2"
-        :sysID="9032"
+        :close-on-click-modal="false"
+      >
+       <div>
+        <div
+        class="admin_head"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[1].datas"
+          :searchForm="formSearchs[1].forms"
+          :remark="1"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"><span class="title">输入参数表</span></el-col>
+              <el-col
+                :span="20"
+                class="flex_flex_end"
+              >
+              <el-button
+                type="primary"
+                size="mini"
+                @click="addRow(1)"
+                v-show="isAdd"
+              >新增</el-button>
+              <el-divider direction="vertical"></el-divider>
+              </el-col>
+            </el-row>
+          </div>
+          <ComVxeTable
+            ref="ComVxeTable"
+            :rowKey="'RowNumber'"
+            height="650px"
+            :tableData="tableData[1]"
+            :tableHeader="tableColumns[1]"
+            :tableLoading="tableLoading[1]"
+            :remark="1"
+            :sysID="sysID[1].ID"
+            :isEdit="isEdit"
+            :isClear="isClear[1]"
+            :pagination="tablePagination[1]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @toPageSetting="colDialogVisible1=false"
+            :hasSelect="true"
+            @selectfun="selectFun"
+          />
+        </div>    
+      </div>
+       </div>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="colDialogVisible1 = false">取 消</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 接口输出表 -->
+      <el-dialog
+        :visible.sync="colDialogVisible2"
         width="80%"
         @closeDialog="colDialogVisible2 = false"
-        :searchForm="dialogSearchForm2"
-        :isToolbar="false"
-      ></DialogTable>
+        :close-on-click-modal="false"
+      >
+       <div>
+        <div
+        class="admin_head"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[2].datas"
+          :searchForm="formSearchs[2].forms"
+          :remark="2"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
       </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"><span class="title">接口输出表</span></el-col>
+              <el-col
+                :span="20"
+                class="flex_flex_end"
+              >
+              <el-button
+                type="primary"
+                size="mini"
+                @click="addRow(2)"
+                v-show="isAdd"
+              >新增</el-button>
+              <el-divider direction="vertical"></el-divider>
+              </el-col>
+            </el-row>
+          </div>
+          <ComVxeTable
+            ref="ComVxeTable"
+            :rowKey="'RowNumber'"
+            height="650px"
+            :tableData="tableData[2]"
+            :tableHeader="tableColumns[2]"
+            :tableLoading="tableLoading[2]"
+            :remark="2"
+            :sysID="sysID[2].ID"
+            :isEdit="isEdit"
+            :isClear="isClear[2]"
+            :pagination="tablePagination[2]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @toPageSetting="colDialogVisible2=false"
+            :hasSelect="true"
+            @selectfun="selectFun"
+            @outputField="outputField"
+          />
+        </div>    
+      </div>
+       </div>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="colDialogVisible2 = false">取 消</el-button>
+        </span>
+      </el-dialog>
+      
+      <!-- 输出字段表 -->
+      <el-dialog
+        :visible.sync="colDialogVisible3"
+        width="80%"
+        @closeDialog="colDialogVisible3 = false"
+        :close-on-click-modal="false"
+      >
+       <div>
+        <div
+        class="admin_head"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[3].datas"
+          :searchForm="formSearchs[3].forms"
+          :remark="3"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"><span class="title">输出字段表</span></el-col>
+              <el-col
+                :span="20"
+                class="flex_flex_end"
+              >
+              <el-button
+                type="primary"
+                size="mini"
+                @click="addRow(3)"
+                v-show="isAdd"
+              >新增</el-button>
+              <el-divider direction="vertical"></el-divider>
+              </el-col>
+            </el-row>
+          </div>
+          <ComVxeTable
+            ref="ComVxeTable"
+            :rowKey="'RowNumber'"
+            height="650px"
+            :tableData="tableData[3]"
+            :tableHeader="tableColumns[3]"
+            :tableLoading="tableLoading[3]"
+            :remark="3"
+            :sysID="sysID[3].ID"
+            :isEdit="isEdit"
+            :isClear="isClear[3]"
+            :pagination="tablePagination[3]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @toPageSetting="colDialogVisible3=false"
+            :hasSelect="true"
+            @selectfun="selectFun"
+            @outputField="outputField"
+          />
+        </div>    
+      </div>
+       </div>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="colDialogVisible3 = false">取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </template>
   
@@ -151,15 +346,11 @@
     data() {
       return {
         // 输入参数表
-        dialogSearchForm1:{
-
-        },
         colDialogVisible1:false,
         // 接口输出表
-        dialogSearchForm2:{
-            
-        },
         colDialogVisible2:false,
+        // 输出字段表
+        colDialogVisible3:false,
         adminLoading: false,
         ////////////////// Search /////////////////
         title: this.$route.meta.title,
@@ -168,6 +359,22 @@
           {
             datas: {},
             forms: [],
+            required: [], //获取必填项
+          },
+          {
+            datas: {},
+            forms: [],
+            required: [], //获取必填项
+          },
+          {
+            datas: {},
+            forms: [],
+            required: [], //获取必填项
+          },
+          {
+            datas: {},
+            forms: [],
+            required: [], //获取必填项
           },
         ],
         btnForm: [],
@@ -189,14 +396,19 @@
             Type: "danger",
             Icon: "",
             Size: "small",
-            Params: { dataName: "delData" },
+            Params: { },
           },
         ],
-        tableData: [[]],
-        tableColumns: [[]],
-        tableLoading: [false],
-        isClear: [false],
-        tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
+        tableData: [[],[],[],[]],
+        tableColumns: [[],[],[],[]],
+        tableLoading: [false,false,false,false],
+        isClear: [false,false,false,false],
+        tablePagination: [
+          { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        ],
         height: "707px",
         showPagination: true,
         tagRemark: 0,
@@ -204,9 +416,9 @@
         isEdit: true,
         isUpdate: true,
         isAdd: false,
-        sysID:[{ID:9030}],
-        selectionData: [[], [], [], []],
-        delData: [[]],
+        sysID:[{ID:9030},{ID:9031},{ID:9032},{ID:9033}],
+        selectionData: [[], [], [], [], []],
+        delData: [[],[],[], []],
       };
     },
     watch: {
@@ -346,6 +558,9 @@
                   this.verifyDta(x);
                 });
               }
+              if (n.Required) {
+                this.formSearchs[i].required.push(n);
+              }
             });
             this.$set(this.tableColumns, i, m);
           });
@@ -434,15 +649,21 @@
           });
         }
       } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
-          newData.push(obj2);
-        });
+        if(this.selectionData[remarkTb].length == 0){
+          this.$message.error("请勾选需要操作的数据！");
+          return;
+        }else{
+          this.selectionData[remarkTb].forEach((y) => {
+            let obj2 = y;
+            obj2["ElementDeleteFlag"] = 1;
+            newData.push(obj2);
+          });
+        }
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
+          this.selectionData[remarkTb] = []
         })
         .catch((_) => {});
     },
@@ -453,11 +674,44 @@
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
+      console.log('remarkTb',remarkTb)
+      console.log('this.tagRemark',this.tagRemark)
       let res = null;
       this.adminLoading = true;
       if (newData && newData.length != 0) {
         res = await SaveData(newData);
       } else {
+        // 必填校验
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          for (let i = 0; i < this.tableData[remarkTb].length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[remarkTb].required.length;
+              x++
+            ) {
+              if (
+                this.tableData[remarkTb][i][
+                  this.formSearchs[remarkTb].required[x]["prop"]
+                ] === undefined ||
+                this.tableData[remarkTb][i][
+                  this.formSearchs[remarkTb].required[x]["prop"]
+                ] === null ||
+                this.tableData[remarkTb][i][
+                  this.formSearchs[remarkTb].required[x]["prop"]
+                ] === ""
+              ) {
+                this.$message.error(
+                  `【${
+                    this.formSearchs[remarkTb].required[x]["label"]
+                  }】不能为空，请填写`
+                );
+                this.adminLoading = false;
+                return;
+              }
+            }
+          }
+        }
         res = await SaveData(this.tableData[remarkTb]);
       }
       const { datas, forms, result, msg } = res.data;
@@ -479,13 +733,13 @@
       }
     },
     // 新增
-    addRow() {
-      let obj = {};
-      obj["dicID"] = this.sysID[0].ID;
+    addRow(remarkTb) {
+      let obj = {...this.formSearchs[remarkTb].datas};
+      obj["dicID"] = this.sysID[remarkTb].ID;
       obj["update"] = true;
       // 先找表头有没有字段是下拉的性质 ,把数据源名称找出来
       let Props = [];
-      this.tableColumns[0].forEach((a) => {
+      this.tableColumns[remarkTb].forEach((a) => {
         if (a.ControlType == "combobox") {
           if (a.DataSourceID) {
             Props.push(a.DataSourceID);
@@ -497,21 +751,43 @@
         // this.getDataSource(Props)
       }
 
-      this.tableColumns[0].forEach((x) => {
+      this.tableColumns[remarkTb].forEach((x) => {
         obj[x.prop] = "";
       });
-      this.tableData[0].unshift(obj);
+      this.tableData[remarkTb].unshift(obj);
     },
     inputPar(row){
       console.log('输出参row',row)
-        
+      if(row.FID){
         this.colDialogVisible1 = true
-        this.dialogSearchForm1.FID =row.FID
+        this.formSearchs[1].datas.FID =row.FID
+        this.dataSearch(1)
+      }else{
+        this.$message.error("请先保存数据，再操作！");
+        return
+      }
+        
     },
     OutputInter(row){
       console.log('接口输出row',row)
-      this.colDialogVisible2 = true
-      this.dialogSearchForm2.FID =row.FID
+      if(row.FID){
+        this.colDialogVisible2 = true
+        this.formSearchs[2].datas.FID =row.FID
+        this.dataSearch(2)
+      }else{
+        this.$message.error("请先保存数据，再操作！");
+        return
+      }
+    },
+    outputField(row){
+      if(row.EID){
+          this.colDialogVisible3 = true
+          this.formSearchs[3].datas.EID =row.EID
+          this.dataSearch(3)
+        }else{
+          this.$message.error("请先保存数据，再操作！");
+          return
+        }
     },
     // 保存更新的内容
     // async dataSaveUpdate(remarkTb, index){
