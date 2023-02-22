@@ -558,7 +558,7 @@
                   this.verifyDta(x);
                 });
               }
-              if (n.Required) {
+              if (n.Required&&n.isEdit) {//必填项
                 this.formSearchs[i].required.push(n);
               }
             });

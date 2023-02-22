@@ -398,9 +398,9 @@ export default {
                 this.verifyDta(x);
               });
             }
-            if (n.Required) {
-                this.formSearchs[i].required.push(n);
-              }
+            if (n.Required&&n.isEdit) {//必填项
+              this.formSearchs[i].required.push(n);
+            }
           });
           this.$set(this.tableColumns, i, m);
         });
