@@ -92,7 +92,7 @@
     } from "@/api/PageTwoScheduling";
     import DialogTable from "@/components/Dialog/dialogTable";
     export default {
-      name: "AssemblyShopDayPlan1",
+      name: "AssemblyShopDayPlan0",
       components: {
         ComSearch,
         ComReportTable,

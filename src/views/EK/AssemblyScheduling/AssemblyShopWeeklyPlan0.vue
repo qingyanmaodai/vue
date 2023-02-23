@@ -138,7 +138,7 @@ import {
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "AssemblyShopWeeklyPlan1",
+  name: "AssemblyShopWeeklyPlan0",
   components: {
     ComSearch,
     ComVxeTable,
