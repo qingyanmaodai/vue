@@ -312,7 +312,7 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
-            @toPageSetting="colDialogVisible3=false"
+            @toPageSetting="colDialogVisible3=false,colDialogVisible2=false"
             :hasSelect="true"
             @selectfun="selectFun"
             @outputField="outputField"
