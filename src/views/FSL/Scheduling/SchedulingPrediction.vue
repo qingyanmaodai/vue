@@ -454,23 +454,34 @@ export default {
 
           cellIndex++;
         });
-        // 选框
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
+        // 列筛选
+        // 参数2 开始列
+        // 参数3 
+        // 参数4 结束列
+        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        
+        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+        sheet.rowFilter(hideRowFilter)
+        if (colInfos.length && colInfos[0].name === "isChecked") {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
 
-        let checkbox = {
-          name: "isChecked",
-          displayName: "选择",
-          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
-        };
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
+          let checkbox = {
+            name: "isChecked",
+            displayName: "选择",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 60,
+          };
+          for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
+          }
         }
+        
 
         // 设置整个列头的背景色和前景色。
         /**
@@ -505,6 +516,7 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
+        defaultStyle.showEllipsis = true;
 
         // 表格单击齐套率弹框事件
         this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
@@ -821,7 +833,7 @@ export default {
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                     // 判断需求到料日期是否大于今天
                     if (
-                      item.prop === "PlanDay" &&obj[item.prop]&&
+                      item.prop === "DeliveryDate" &&obj[item.prop]&&
                       obj[item.prop] < formatDates.formatTodayDate()
                     ) {
                       propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
@@ -831,7 +843,7 @@ export default {
                         `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
                       );
                     }
-                  } else if (item.prop === "PlanQty") {
+                  } else if (item.prop === "DemandQty") {
                     if (m[key] > 0) {
                       //导入欠料数大于0才导入
                       obj[item.prop] = m[key];
@@ -849,8 +861,8 @@ export default {
                   // 列为日期的格式
                   isDate = true;
                   if(Number(m[key])>0){
-                    obj["PlanDay"] = this.$moment(key).format("YYYY-MM-DD");
-                    obj["PlanQty"] = m[key];
+                    obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
+                    obj["DemandQty"] = m[key];
                     obj["dicID"] = _this.sysID[_this.tagRemark].ID;
                     obj["Account"] = _this.$store.getters.userInfo.Account;
                     obj["row"] = m.__rowNum__;

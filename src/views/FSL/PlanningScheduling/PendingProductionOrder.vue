@@ -587,23 +587,26 @@
         colHeader1.forEach(function (value, index) {
           sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
         });
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
-  
-        // 选框
-        let checkbox = {
-          name: "isChecked",
-          displayName: "isChecked",
-          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
-        };
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
+        if (colInfos.length && colInfos[0].name === "isChecked") {
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
+    
+          // 选框
+          let checkbox = {
+            name: "isChecked",
+            displayName: "选择",
+            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            size: 60,
+          };
+          for (var name in checkbox) {
+            colInfos[0][name] = checkbox[name];
+          }
         }
+        
   
         //  colInfos.unshift(checkbox);
         var defaultStyle = new GC.Spread.Sheets.Style();
