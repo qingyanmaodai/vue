@@ -216,7 +216,7 @@ import {
 import ComFormDialog from "@/components/ComFormDialog";
 import { mapState } from "vuex";
 export default {
-  name: "OrganizeInfo",
+  name: "UserInfo",
   components: {
     ComSearch,
     ComAsideTree,

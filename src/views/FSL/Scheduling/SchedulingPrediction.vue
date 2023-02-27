@@ -23,7 +23,7 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <div style="margin-right: 10px">
-                <span>日期范围</span>
+                <!-- <span>日期范围</span>
                 <el-date-picker
                   v-model="machineCycle"
                   type="daterange"
@@ -33,7 +33,7 @@
                   :clearable="false"
                   :editable="false"
                 >
-                </el-date-picker>
+                </el-date-picker> -->
               </div>
               <div>
                 <el-button
@@ -123,17 +123,16 @@
         </span>
       </el-dialog>
     </div>
-    <!-- 点击行弹框-->
-    <!-- <DialogTable
-      title="送货预测需求明细"
+   <!-- 点击齐套率弹框-->
+   <DialogTable
+      title="订单齐套分析"
       :tableDialog="colDialogVisible"
-      :sysID="8999"
+      :sysID="9037"
       width="80%"
       @closeDialog="colDialogVisible = false"
       :searchForm="dialogSearchForm"
       :isToolbar="false"
-      :cellStyle="cellStyle"
-    ></DialogTable> -->
+    ></DialogTable>
   </div>
 </template>
   <script>
@@ -158,12 +157,12 @@ import formatDates, {
   formatDate,
 } from "@/utils/formatDate";
 import XLSX from "xlsx";
-// import DialogTable from "@/components/Dialog/dialogTable";
+import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "SchedulingPrediction",
   components: {
     ComSearch,
-    // DialogTable,
+    DialogTable,
   },
   data() {
     return {
@@ -192,7 +191,7 @@ export default {
       //   },
         {
           ButtonCode: "import",
-          BtnName: "1.增量导入",
+          BtnName: "1.导入",
           Type: "danger",
           Ghost: true,
           Size: "small",
@@ -203,35 +202,23 @@ export default {
         },
         {
           ButtonCode: "sysData",
-          BtnName: "2.抓单分析",
-          Type: "danger",
+          BtnName: "2.需求运算",
+          Type: "primary",
           Ghost: true,
           Size: "small",
           Methods: "Analysis",
           Icon: "",
           sort:2,
         },
-        {
-          ButtonCode: "to_weeks_plan",
-          BtnName: "3.更新周计划",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          Methods: "toWeeksPlan",
-          Icon: "",
-          sort:3,
-        },
-        
         // {
-        //   ButtonCode: "save",
-        //   BtnName: "同步",
+        //   ButtonCode: "SyncSAP",
+        //   BtnName: "同步SAP",
         //   Type: "danger",
         //   Ghost: true,
         //   Size: "small",
         //   Methods: "syncSave",
         //   Icon: "",
         // },
-       
         {
           ButtonCode: "delete",
           BtnName: "删除",
@@ -253,29 +240,20 @@ export default {
           Icon: "",
           sort:5,
         },
-        {
-          ButtonCode: "downLoadErpData",
-          BtnName: "下载ERP数据",
-          Type: "warning",
-          Ghost: true,
-          Size: "small",
+        // {
+        //   ButtonCode: "downLoadErpData",
+        //   BtnName: "下载ERP数据",
+        //   Type: "warning",
+        //   Ghost: true,
+        //   Size: "small",
         
-          Methods: "downERP",
-          Icon: "",
-          sort:6,
-        },
+        //   Methods: "downERP",
+        //   Icon: "",
+        //   sort:6,
+        // },
       ],
       // 表头添加动态按钮
       parmsBtn2: [
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "计算",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "calculateSave",
-        //   Icon: "",
-        // },
       ],
       formSearchs: [
         //不同标签页面的查询条件
@@ -293,7 +271,7 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 9005 }],
+      sysID: [{ ID: 9036 }],
       spread: null, //excel初始
       fileList: [],
       file: [],
@@ -312,10 +290,10 @@ export default {
     _this.judgeBtn();
     _this.getTableHeader();
     // 计算周期默认时间：今天+1个月
-    _this.machineCycle = [
-      formatDates.formatTodayDate(),
-      formatDates.formatOneMonthDate(),
-    ];
+    // _this.machineCycle = [
+    //   formatDates.formatTodayDate(),
+    //   formatDates.formatOneMonthDate(),
+    // ];
   },
   mounted() {
     setTimeout(() => {
@@ -421,8 +399,8 @@ export default {
     // 获取表格数据
     async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
-      params["SDate"] = this.machineCycle.length ? this.machineCycle[0] : "";
-      params["Edate"] = this.machineCycle.length ? this.machineCycle[1] : "";
+      // params["SDate"] = this.machineCycle.length ? this.machineCycle[0] : "";
+      // params["Edate"] = this.machineCycle.length ? this.machineCycle[1] : "";
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
@@ -515,20 +493,20 @@ export default {
         );
 
         // 表格单击齐套率弹框事件
-        // this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
-        //   if (_this.tableColumns[_this.tagRemark].length) {
-        //     _this.tableColumns[_this.tagRemark].map((item, index) => {
-        //       if (args.col === index) {
-        //         // 显示表
-        //         _this.colDialogVisible = true;
-        //         _this.dialogSearchForm.ItemCode =
-        //           _this.tableData[_this.tagRemark][args.row].ItemCode;
-        //         _this.dialogSearchForm.Account =
-        //           _this.tableData[_this.tagRemark][args.row].Account;
-        //       }
-        //     });
-        //   }
-        // });
+        this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
+          if (_this.tableColumns[_this.tagRemark].length) {
+            _this.tableColumns[_this.tagRemark].map((item, index) => {
+              if (item.name === "FormRate" &&args.col === index) {
+                // 显示待排订单BOM表
+                _this.colDialogVisible = true;
+                _this.dialogSearchForm.ItemCode =
+                  _this.tableData[_this.tagRemark][args.row].ItemCode;
+                _this.dialogSearchForm.Account =
+                  _this.tableData[_this.tagRemark][args.row].Account;
+              }
+            });
+          }
+        });
 
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
@@ -695,49 +673,17 @@ export default {
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
         newData.forEach((x) => {
-          // if (x.isChecked) {
+          if (x.isChecked) {
             this.selectionData[this.tagRemark].push(x);
-          // }
+          }
         });
       } 
-      // if(this.selectionData[this.tagRemark].length==0) {
-      //   this.$message.error("请选择需要转入的数据！");
-      //   return;
-      // }
+      if(this.selectionData[this.tagRemark].length==0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
       this.adminLoading = true;
       let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlan");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    // 计算
-    async calculateSave() {
-      let form = {
-        SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
-      };
-      this.adminLoading = true;
-      let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
@@ -846,11 +792,14 @@ export default {
                         `第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`
                       );
                     } else {
+                     if(this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")){
+                      let getDate  = new Date(m[key])
+                      // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
+                      var  date = new Date(getDate.setSeconds(getDate.getSeconds()+43));
                       obj[item.prop] = m[key]
-                        ? this.$moment(m[key])
-                            .add(1, "days")
-                            .format("YYYY-MM-DD")
-                        : "";
+                      ? this.$moment(date).format("YYYY-MM-DD")
+                      : "";
+                    }
                     }
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                     // 判断需求到料日期是否大于今天
@@ -858,7 +807,7 @@ export default {
                       item.prop === "PlanDay" &&obj[item.prop]&&
                       obj[item.prop] < formatDates.formatTodayDate()
                     ) {
-                      propName = key;
+                      propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
                       rowNo = Number(m.__rowNum__) + 1;
                       // 异常提示
                       split.push(
@@ -899,12 +848,12 @@ export default {
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            (obj["SDate"] = _this.machineCycle.length
-              ? _this.machineCycle[0]
-              : ""),
-              (obj["Edate"] = _this.machineCycle.length
-                ? _this.machineCycle[1]
-                : ""),
+            // (obj["SDate"] = _this.machineCycle.length
+            //   ? _this.machineCycle[0]
+            //   : ""),
+            //   (obj["Edate"] = _this.machineCycle.length
+            //     ? _this.machineCycle[1]
+            //     : ""),
               (obj["Account"] = this.$store.getters.userInfo.Account);
             obj["row"] = m.__rowNum__;
             // 需要使用...obj 不然值回写有问题
@@ -960,25 +909,31 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
-        const { result, data, count, msg } = res.data;
-        if (result) {
+	      if(DataList.length){
+          console.log('DataList',DataList)
+          let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            // this.dataSearch(this.tagRemark);
+            // 导入可能存在表头格式不一样，需要更新
+            this.getTableHeader();
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        }else{
           this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
-          // 导入可能存在表头格式不一样，需要更新
-          this.getTableHeader();
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
+          this.$message.error("未接收到数据，请检查！");
         }
       }
     },
@@ -1010,14 +965,26 @@ export default {
     },
     // 分析
     async Analysis() {
-      let form = {
-        // StartDate:null,
-        // EndDate: _this.machineCycle
-        SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-        Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
-      };
+      // let form = {
+        // SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+        // Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+      // };
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData && newData.length != 0) {
+        newData.forEach((x) => {
+          if (x.isChecked) {
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
+      } 
+      if(this.selectionData[this.tagRemark].length==0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
       this.adminLoading = true;
-      let res = await GetSearch(form, "/APSAPI/AnalyseManualForecast");
+      let res = await GetSearch(this.selectionData[this.tagRemark], "/APSAPI/CalculateBOMDemand");
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
