@@ -14,6 +14,15 @@
       </div>
       <div>
         <div class="admin_content">
+          <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end">
+            </el-col>
+          </el-row>
+        </div>
           <div class="flex_column" :style="{ height: height }">
             <div class="spreadContainer" v-loading="tableLoading[0]">
               <gc-spread-sheets
@@ -26,8 +35,8 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting" class="primaryColor cursor"
-                >SysID:{{sysID}}
+              <span @click="toPageSetting(sysID[tagRemark].ID)" class="primaryColor cursor"
+                >SysID:{{sysID[tagRemark].ID}}
               </span>
             </div>
             <div class="flex">
@@ -147,13 +156,13 @@
         tableLoading: [false],
         isClear: [false],
         tablePagination: [{ pageIndex: 1, pageSize: 3000, pageTotal: 0 }],
-        height: "707px",
+        height: "740px",
         treeHeight: "765px",
         showPagination: true,
         tagRemark: 0,
         isLoading: false,
         isEdit: false,
-        sysID: 7945,
+        sysID:[{ID:9037}] ,
         spread: null,
         adminLoading: false,
         checkBoxCellTypeLine: "",
@@ -276,20 +285,14 @@
       },
       // 高度控制
       setHeight() {
-        this.treeHeight = document.documentElement.clientHeight - 150 + "px";
-        let headHeight = this.$refs.headRef.offsetHeight;
-        let newHeight = "";
-        let rem =
-          document.documentElement.clientHeight -
-          headHeight -
-          this.$store.getters.reduceHeight;
-        if (this.$store.getters.reduceHeight == 138) {
-          newHeight = rem + "px";
-        } else {
-          newHeight = rem + "px";
-        }
-        this.$set(this, "height", newHeight);
-      },
+      let headHeight = this.$refs.headRef.offsetHeight;
+      let rem =
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + 33 + "px";
+      this.$set(this, "height", newHeight);
+    },
       // 第几页
       pageChange(val, remarkTb, filtertb) {
         this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -485,7 +488,7 @@
       },
       // 获取表头数据
       async getTableHeader() {
-        let IDs = [{ ID: this.sysID }];
+        let IDs = this.sysID;
         let res = await GetHeader(IDs);
         const { datas, forms, result, msg } = res.data;
         if (result) {
@@ -527,7 +530,6 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
-        form["dicID"] = this.sysID;
          form["ControlID"]=this.userInfo.WorkFlowInstanceID;
         let res = await GetSearchData(form);
   
@@ -1129,10 +1131,10 @@
         });
       },
       // 跳转至页面配置
-      toPageSetting() {
+      toPageSetting(id) {
         this.$router.push({
           name: "FieldInfo",
-          params: { ID: this.sysID },
+          params: { ID: id },
         });
       },
       //////////////////////////////
@@ -1312,7 +1314,7 @@
            newData =sheet.getInsertRows();
             if (newData.length != 0) {
           newData.forEach((x) => {
-            x.item["dicID"]=this.sysID;
+            // x.item["dicID"]=this.sysID;
             submitData.push(x.item);
           });
         }

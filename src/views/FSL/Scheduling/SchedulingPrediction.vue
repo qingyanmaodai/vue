@@ -433,12 +433,26 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = [];
+        let cellIndex = 0;
         this.tableColumns[this.tagRemark].forEach((x) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
+
+          //行，start,end
+        if (x.isEdit) {
+          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+          var cell = sheet.getCell(
+            -1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          cell.foreColor("#2a06ecd9");
+        }
+
+          cellIndex++;
         });
         // 选框
         sheet.setCellType(
@@ -527,6 +541,7 @@ export default {
       }
       this.spread.refresh(); //重新定位宽高度
       this.spread.options.tabStripVisible = false; //是否显示表单标签
+      
     },
     // 单元格样式控制
     cellStyle({ row, column }) {
@@ -761,6 +776,7 @@ export default {
     },
     // 解析文件
     async dataSys(importData) {
+      console.log('importData[0]',importData)
       this.adminLoading = true;
       if (importData && importData.length > 0) {
         let DataList = [];
@@ -772,6 +788,7 @@ export default {
         let split = []; //存储需求到料日期过期信息
         let groupList = [];
         importData[0].sheet.forEach((m, y) => {
+          
           for (let key in m) {
             if (this.tableColumns[this.tagRemark].length) {
               // 判断是否和配置里的取名一致，一致才可导入
@@ -911,7 +928,8 @@ export default {
         // =0表示不删除（增量导入）
 	      if(DataList.length){
           console.log('DataList',DataList)
-          let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
+          let res = await SaveData(DataList);
+          // let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
