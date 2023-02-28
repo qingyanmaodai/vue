@@ -1,4 +1,4 @@
-<!-- 一部插件日计划 -->
+<!-- 待生产订单BOM -->
 <template>
     <div class="container" v-loading="adminLoading">
       <div class="admin_head" ref="headRef">
@@ -56,8 +56,6 @@
         </div>
       </div>
   
-      <!-- 弹框-->
-      <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
     </div>
   </template>
   
@@ -73,13 +71,8 @@
   import ComSearch from "@/components/ComSearch";
   import ComReportTable from "@/components/ComReportTable";
   import ComAsideTree from "@/components/ComAsideTree";
-  import DialogTable from "@/components/Dialog/dialogTable";
   import {
-    HighlightColumnItemsCellType,
-    TopItemsCellType,
     HeaderCheckBoxCellType,
-    SortHyperlinkCellType,
-    HighlightRowItemsCellType,
   } from "@/static/data.js";
   import {
     GetHeader,
@@ -87,7 +80,6 @@
     ExportData,
     SaveData,
     GetSearch,
-    GetOrgData,
   } from "@/api/Common";
   import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
   import formatDates from "@/utils/formatDate";
@@ -97,7 +89,6 @@
       ComSearch,
       ComReportTable,
       ComAsideTree,
-      DialogTable
     },
     data() {
       return {
@@ -186,7 +177,7 @@
     {
       if(this.spread)
       {
-  this.spread.refresh();
+        this.spread.refresh();
       }
   
     },
@@ -196,9 +187,6 @@
       }),
     },
     mounted() {
-      // setTimeout(() => {
-      //   this.setHeight();
-      // }, 300);
       this.keyDown();
     },
     methods: {
@@ -208,7 +196,6 @@
           //事件对象兼容
           let e1 =
             e || event || window.event || arguments.callee.caller.arguments[0];
-  
           if (e.ctrlKey && e.keyCode == 83) {
             e.preventDefault();
             e.returnValue = false;
@@ -258,6 +245,8 @@
           return;
         }
         this.adminLoading = true;
+        console.log('this.selectionData[remarkTb]',this.selectionData[remarkTb])
+        return //接口可以删除
         let res = await GetSearch(this.selectionData[remarkTb], "/APSAPI/CalculateBOMDemand");
         const { result, data, count, msg } = res.data;
         try {
@@ -400,49 +389,6 @@
           })
           .catch((_) => {});
       },
-      resetScheduling() {
-        this.$confirm("确定要重新排全部数据吗？")
-          .then(async (_) => {
-            this.adminLoading = true;
-  
-            let sheet = this.spread.getActiveSheet();
-            let submitData = sheet.getDataSource();
-            submitData.forEach((m) => {
-              m["isChecked"] = true;
-            });
-            if (submitData.length >= 0) {
-              this.adminLoading = true;
-              let res = await GetSearch(
-                submitData,
-                `/APSAPI/MOPlanSaveToDayPlan?isPlan=1&ControlID=${this.userInfo.WorkFlowInstanceID}`
-              );
-              const { result, data, count, msg } = res.data;
-              if (result) {
-                this.dataSearch(0);
-                this.adminLoading = false;
-                this.$message({
-                  message: msg,
-                  type: "success",
-                  dangerouslyUseHTMLString: true,
-                });
-              } else {
-                this.adminLoading = false;
-                this.$message({
-                  message: msg,
-                  type: "error",
-                  dangerouslyUseHTMLString: true,
-                });
-              }
-            } else {
-              this.$message({
-                message: "未有数据",
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          })
-          .catch((_) => {});
-      },
       // 获取选中的数据
       getSelectionData() {
         let sheet = this.spread.getActiveSheet();
@@ -508,9 +454,7 @@
             });
             this.$set(this.formSearchs[z], "forms", x);
           });
-          console.log("gettable");
-          this.getOrgData();
-          // this.dataSearch(0);
+          this.getTableData(this.formSearchs[0].datas, 0);
         }
       },
       // 验证数据
@@ -559,14 +503,29 @@
         sheet.reset()
         let colHeader1 = [];
         let colInfos = [];
+        let cellIndex2 = 0;
         this.tableColumns[0].forEach((x) => {
-          if (x.prop == "LineID") {
+          if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
             colInfos.push({
-              name: x.prop,
-              displayName: "线别",
-              cellType: this.checkBoxCellTypeLine,
-              size: parseInt(x.width),
+                name: x.prop,
+                displayName:x.label,
+                cellType:'',
+                size: parseInt(x.width),
             });
+            let newData = [];
+            let list = null;
+            this.tableData[this.tagRemark].map((item,index)=>{
+              if(x.DataSourceID&&x.DataSourceName){
+                newData = item[x.DataSourceName]
+                 // 设置列表每行下拉菜单
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                list.editable(true);
+                list.items(newData);
+                list.itemHeight(24);
+                sheet.getCell(index, cellIndex2, GCsheets.SheetArea.viewport).cellType(list)
+              }  
+            })
           }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
             colInfos.push({
               name: x.prop,
@@ -582,6 +541,7 @@
             });
           }
           colHeader1.push(x.label);
+          cellIndex2++;
         });
         sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
         colHeader1.forEach(function (value, index) {
@@ -606,9 +566,6 @@
             colInfos[0][name] = checkbox[name];
           }
         }
-        
-  
-        //  colInfos.unshift(checkbox);
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
@@ -691,10 +648,10 @@
             rowSheet2.backColor("#FFFF00");
           } else {
             // row.backColor();
-            rowSheet.foreColor("black");
-            rowSheet.backColor("");
-            rowSheet.foreColor("black");
-            rowSheet2.backColor("");
+            // rowSheet.foreColor("black");
+            // rowSheet.backColor("");
+            // rowSheet.foreColor("black");
+            // rowSheet2.backColor("");
           }
           if(_this.tableColumns[this.tagRemark].length){
             for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
@@ -767,21 +724,19 @@
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            //cell.foreColor("#2a06ecd9");
-          } else {
+            cell.foreColor("#2a06ecd9");
+          }else {
             var cell = sheet.getCell(
               -1,
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            cell.foreColor("gray");
+            cell.foreColor("black");
           }
           
   
           cellIndex++;
         });
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        //sheet.options.isProtected = true;
         // 列筛选
         // 参数2 开始列
         // 参数3 
@@ -965,162 +920,25 @@
           console.log('args',args)
         });
         this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
-          // 自动计算数量
-          console.log('argse',e)
-          console.log('args',args)
-          _this.computedNum(args.row, args.col, args.editingText);
-          // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-          //   sheet.setArray(args.row, i, [2021]);
-          // }
-        });
-        // 表格单击单元格弹框事件
-        this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-            if(_this.tableColumns[0].length){
-              _this.tableColumns[0].map((item,index)=>{
-                if(item.name ==="Q1"&&args.col===index){
-                  // 显示ERP供需平衡表
-                  _this.colDialogVisible =true
-                  _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
-                  _this.dialogSearchForm.OweQty = 0 
-                }
-              })
-            }
         });
   
         this.spread.resumePaint();
+        sheet.options.isProtected = true;
+        sheet.options.protectionOptions.allowResizeColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowSelectLockedCells = true;
+        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+        sheet.options.protectionOptions.allowDeleteColumns = true;
+        sheet.options.protectionOptions.allowInsertColumns = true;
+        sheet.options.protectionOptions.allowDargInsertRows = true;
+        sheet.options.protectionOptions.allowDragInsertColumns = true;
+        sheet.options.protectionOptions.allowSort = true
+        sheet.options.protectionOptions.allowFilter = true
+        sheet.options.allowUserDragDrop = true;
         this.adminLoading = false;
         this.tableLoading[0] = false;
         this.spread.refresh(); //重新定位宽高度
-      },
-      // 自动计算数量
-      computedNum(rowIndex, colIndex, val) {
-          console.log('val',val)
-        let sheet = this.spread.getActiveSheet();
-        //let dataSource = sheet.getDataSource();
-        if (val == null) {
-          val = 0;
-        }
-        else if(val==0){//输入0不触发自动计算
-          return
-        }
-        let currentRow =sheet.getDataItem(rowIndex)// dataSource[rowIndex];
-        if (currentRow.ID == -1) {
-          return false;
-        }
-  
-        let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
-        if (false && !currentRow[currentlabel]) {
-          //不是天日的数量
-          currentlabel = this.tableColumns[0][colIndex].prop;
-          if (currentlabel == "ViewSort") {
-            val = currentRow[currentlabel];
-            if (val) {
-              let newRowindex = 1;
-              let flag = false;
-              let lineID = currentRow["LineID"];
-              //循环上面
-              for (var r = 0; r < dataSource.length - 1; r++) {
-                let row = dataSource[r];
-                if (lineID != row["LineID"]) {
-                  continue;
-                }
-                let thisValue = newRowindex; //row[currentlabel];
-                if (row["Code"] == null || row["Code"] == "") {
-                  break;
-                }
-                if (r < rowIndex) {
-                  //当前循环的在当前操作行的上面
-                  if (thisValue >= val && flag === false) {
-                    newRowindex = val + 1;
-                    flag = true;
-                  }
-  
-                  thisValue = newRowindex;
-                  newRowindex++;
-                } else if (r > rowIndex) {
-                  //当前循环的在当前操作行的下面
-                  if (newRowindex == val) {
-                    newRowindex++;
-                  }
-  
-                  thisValue = newRowindex;
-                  newRowindex++;
-                } else {
-                  thisValue = val;
-                }
-                sheet.setValue(r, colIndex, thisValue);
-              }
-            }
-          } else {
-          }
-          sheet.setDataSource(this.tableData[0]);
-          return;
-        }
-        if (currentRow[currentlabel] == null) {
-          return;
-        }
-        if (
-          !currentRow[currentlabel].TotalHours ||
-          parseInt(currentRow[currentlabel].TotalHours) <= 0
-        ) {
-          this.$message.error("该天休息，上班时间为0");
-          return;
-        }
-  
-        let Qty = parseInt(currentRow.OweQty);
-        let Capacity = parseInt(currentRow.Capacity);
-        let list = [];
-        let editNum = 0;
-        let remainNum = 0;
-        // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
-        this.tableColumns[0].some((x, i) => {
-          if (i <= colIndex) {
-            list.push(currentRow[x.prop]);
-            if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-              editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
-            }
-          } else {
-            list.push("");
-          }
-        });
-        remainNum = Qty - editNum;
-  
-        if (parseInt(val) > remainNum) {
-          this.$message.error(
-            "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
-          );
-          list[colIndex] = "";
-          for (var j = 0; j < this.tableColumns[0].length; j++) {
-            sheet.setArray(rowIndex, j, [list[j]]);
-          }
-          return;
-        } else {
-          // 接着计算下面每一个空格该有的数
-          for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-            let label = this.tableColumns[0][j].prop + "dy";
-            let obj = currentRow[label];
-            remainNum = remainNum - parseInt(val);
-            let maxNum =
-              parseInt(Capacity) *
-              parseInt(obj.TotalHours) *
-              parseInt(obj.DayCapacity);
-            // parseInt(obj.StandardPeoples)
-            if (remainNum <= 0) {
-              list[j] = null;
-            } else {
-              if (remainNum <= maxNum) {
-                list[j] = remainNum;
-                break;
-              } else {
-                list[j] = maxNum;
-                remainNum -= maxNum;
-              }
-            }
-          }
-          for (var j = 0; j < this.tableColumns[0].length; j++) {
-            sheet.setArray(rowIndex, j, [list[j]]);
-          }
-        }
       },
       // 刷新页面
       refrshPage() {
@@ -1139,133 +957,6 @@
           name: "FieldInfo",
           params: { ID: id },
         });
-      },
-      //////////////////////////////
-      async getOrgData() {
-        this.getLineData(this.userInfo.WorkFlowInstanceID);
-        return;
-        this.treeListTmp = [];
-        this.treeData = [];
-        let form = {
-          ERPOrderCode: this.userInfo.WorkFlowInstanceID,
-          OrganizeTypeID: 5,
-          dicID: 3026,
-          Status: 1,
-        };
-        let res = await GetSearchData(form);
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.treeData = JSON.parse(JSON.stringify(data));
-          this.treeListTmp = this.treeData;
-          if (data.length != 0) {
-            this.$nextTick(function () {
-              _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
-            });
-            // this.$set(
-            //   this.formSearchs[0].datas,
-            //   "ControlID",
-            //   data[0].ERPOrderCode
-            // );
-            this.getLineData(this.userInfo.WorkFlowInstanceID);
-          }
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      },
-      // 获取线别数据
-      async getLineData(ERPOrderCode) {
-        this.lines = [];
-        let res = await GetSearchData({
-          dicID: 36,
-          OrganizeTypeID: 6,
-          ERPOrderCode: ERPOrderCode,
-        });
-        const { data, forms, result, msg } = res.data;
-        if (result) {
-          let newData = [];
-          this.treeData2 = data;
-          this.treeListTmp2 = data;
-          this.adminLoading = false;
-          if (data.length != 0) {
-            data.forEach((x) => {
-              newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-            });
-          }
-          this.lines = newData;
-          this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-          this.checkBoxCellTypeLine.editorValueType(
-            GC.Spread.Sheets.CellTypes.EditorValueType.value
-          );
-          this.checkBoxCellTypeLine.items(newData);
-          this.checkBoxCellTypeLine.itemHeight(24);
-          //this.formSearchs[0].datas.ControlID="201";
-          this.getTableData(this.formSearchs[0].datas, 0);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      },
-      searchTree(msg, dataName, dataName2, valueName) {
-        this[dataName] = [];
-        let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-        let tmp = msg
-          ? this.rebuildData(msg, treeListTmp, valueName)
-          : JSON.parse(JSON.stringify(treeListTmp));
-        this[dataName].push(...tmp);
-      },
-      rebuildData(value, arr, valueName) {
-        if (!arr) {
-          return [];
-        }
-        let newarr = [];
-        if (Object.prototype.toString.call(arr) === "[object Array]") {
-          arr.forEach((element) => {
-            if (element[valueName].indexOf(value) > -1) {
-              // const ab = this.rebuildData(value, element.children);
-              const obj = {
-                ...element,
-                children: element.children,
-              };
-              newarr.push(obj);
-            } else {
-              if (element.children && element.children.length > 0) {
-                const ab = this.rebuildData(value, element.children, valueName);
-                const obj = {
-                  ...element,
-                  children: ab,
-                };
-                if (ab && ab.length > 0) {
-                  newarr.push(obj);
-                }
-              }
-            }
-          });
-        }
-        return newarr;
-      },
-      // 单击出来组织人员
-      handleNodeClick(data, node) {
-        this.clickData = data;
-        // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-        //this.dataSearch(0);
-        this.getLineData(data.OrganizeID);
-      },
-      // 单击出来线别
-      handleNodeClick2(data, node) {
-        this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-        this.dataSearch(0);
-      },
-      changeStatus(item, index) {
-        this.labelStatus1 = index;
       },
       // 保存
       async dataSaveAll(remarkTb) {
@@ -1344,59 +1035,6 @@
             type: "error",
             dangerouslyUseHTMLString: true,
           });
-        }
-      },
-      async suspend(remarkTb, index, parms) {
-        let res = null;
-        this.getSelectionData();
-        let newData = [];
-  
-        this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
-          .then((_) => {
-          if (parms && parms.dataName) {
-          if (this[parms.dataName][remarkTb].length == 0) {
-            this.$message.error("请选择需要操作的数据！");
-            return;
-          } else {
-            this[parms.dataName][remarkTb].forEach((x) => {
-              let obj = x;
-              obj["ProductionStatus"] = 24
-              newData.push(obj);
-            });
-          }
-        } else {
-          this.tableData[remarkTb].forEach((y) => {
-            let obj2 = y;
-           obj["ProductionStatus"] = 24
-            newData.push(obj2);
-          });
-        }
-             this.adminLoading = true;
-            _this.dataSave(remarkTb, index, null, newData);
-          })
-          .catch((_) => {});
-      },
-      // 下拉选择事件
-      handleCommand(val) {
-        if (val == 1 && !this.isOpen) {
-          this.isOpen = true;
-          this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-        } else if (val == 2 && this.isOpen) {
-          // 改变每个节点的状态
-          this.isOpen = false;
-          this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-        }
-      },
-      // 改变节点状态
-      changeTreeNodeStatus(node) {
-        node.expanded = this.isOpen;
-        for (let i = 0; i < node.childNodes.length; i++) {
-          // 改变节点的自身expanded状态
-          node.childNodes[i].expanded = this.isOpen;
-          // 遍历子节点
-          if (node.childNodes[i].childNodes.length > 0) {
-            this.changeTreeNodeStatus(node.childNodes[i]);
-          }
         }
       },
     },

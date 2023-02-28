@@ -23,17 +23,6 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <div style="margin-right: 10px">
-                <!-- <span>日期范围</span>
-                <el-date-picker
-                  v-model="machineCycle"
-                  type="daterange"
-                  size="small"
-                  value-format="yyyy-MM-dd"
-                  placeholder="请选择"
-                  :clearable="false"
-                  :editable="false"
-                >
-                </el-date-picker> -->
               </div>
               <div>
                 <el-button
@@ -123,16 +112,6 @@
         </span>
       </el-dialog>
     </div>
-   <!-- 点击齐套率弹框-->
-   <DialogTable
-      title="订单齐套分析"
-      :tableDialog="colDialogVisible"
-      :sysID="9037"
-      width="80%"
-      @closeDialog="colDialogVisible = false"
-      :searchForm="dialogSearchForm"
-      :isToolbar="false"
-    ></DialogTable>
   </div>
 </template>
   <script>
@@ -152,17 +131,12 @@ import {
   GetSearch,
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
-import formatDates, {
-  formatNextMonthDate,
-  formatDate,
-} from "@/utils/formatDate";
+import formatDates from "@/utils/formatDate";
 import XLSX from "xlsx";
-import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "SchedulingPrediction",
   components: {
     ComSearch,
-    DialogTable,
   },
   data() {
     return {
@@ -210,15 +184,6 @@ export default {
           Icon: "",
           sort:2,
         },
-        // {
-        //   ButtonCode: "SyncSAP",
-        //   BtnName: "同步SAP",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "syncSave",
-        //   Icon: "",
-        // },
         {
           ButtonCode: "delete",
           BtnName: "删除",
@@ -240,17 +205,6 @@ export default {
           Icon: "",
           sort:5,
         },
-        // {
-        //   ButtonCode: "downLoadErpData",
-        //   BtnName: "下载ERP数据",
-        //   Type: "warning",
-        //   Ghost: true,
-        //   Size: "small",
-        
-        //   Methods: "downERP",
-        //   Icon: "",
-        //   sort:6,
-        // },
       ],
       // 表头添加动态按钮
       parmsBtn2: [
@@ -289,11 +243,6 @@ export default {
     _this.adminLoading = true;
     _this.judgeBtn();
     _this.getTableHeader();
-    // 计算周期默认时间：今天+1个月
-    // _this.machineCycle = [
-    //   formatDates.formatTodayDate(),
-    //   formatDates.formatOneMonthDate(),
-    // ];
   },
   mounted() {
     setTimeout(() => {
@@ -307,7 +256,6 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      console.log('查询')
       if (parms) {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
@@ -338,7 +286,6 @@ export default {
       let newBtn = [];
       let btn2 = [];
       if (routeBtn.length != 0) {
-        console.log(routeBtn);
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
@@ -399,8 +346,6 @@ export default {
     // 获取表格数据
     async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
-      // params["SDate"] = this.machineCycle.length ? this.machineCycle[0] : "";
-      // params["Edate"] = this.machineCycle.length ? this.machineCycle[1] : "";
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
@@ -427,30 +372,58 @@ export default {
       try {
         // 获取活动表单
         let sheet = this.spread.getActiveSheet();
-
-        // sheet.visible(false)
         // 重置表单
         sheet.reset();
         // 渲染列
         let colInfos = [];
         let cellIndex = 0;
         this.tableColumns[this.tagRemark].forEach((x) => {
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            size: parseInt(x.width),
-          });
+          if (x.ControlType==='comboboxMultiple'||x.ControlType==='combobox') {
+            colInfos.push({
+                name: x.prop,
+                displayName:x.label,
+                cellType:'',
+                size: parseInt(x.width),
+            });
+            let newData = [];
+            let list = null;
+            this.tableData[this.tagRemark].map((item,index)=>{
+              if(x.DataSourceID&&x.DataSourceName){
+                newData = item[x.DataSourceName]
+                 // 设置列表每行下拉菜单
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(GC.Spread.Sheets.CellTypes.EditorValueType.value);
+                list.editable(true);
+                list.items(newData);
+                list.itemHeight(24);
+                sheet.getCell(index, cellIndex, GCsheets.SheetArea.viewport).cellType(list)
+              }  
+            })
+          }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+            colInfos.push({
+              name: x.prop,
+              displayName: x.label,
+              size: parseInt(x.width),
+              formatter: '@'//字符串格式
+            });
+          }else {
+            colInfos.push({
+              name: x.prop,
+              displayName: x.label,
+              size: parseInt(x.width),
+            });
+          }
 
           //行，start,end
-        if (x.isEdit) {
-          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          cell.foreColor("#2a06ecd9");
-        }
+          if (x.isEdit) {
+            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            var cell = sheet.getCell(
+              -1,
+              cellIndex,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            cell.foreColor("#2a06ecd9");
+          }
 
           cellIndex++;
         });
@@ -518,22 +491,6 @@ export default {
         );
         defaultStyle.showEllipsis = true;
 
-        // 表格单击齐套率弹框事件
-        this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
-          if (_this.tableColumns[_this.tagRemark].length) {
-            _this.tableColumns[_this.tagRemark].map((item, index) => {
-              if (item.name === "FormRate" &&args.col === index) {
-                // 显示待排订单BOM表
-                _this.colDialogVisible = true;
-                _this.dialogSearchForm.ItemCode =
-                  _this.tableData[_this.tagRemark][args.row].ItemCode;
-                _this.dialogSearchForm.Account =
-                  _this.tableData[_this.tagRemark][args.row].Account;
-              }
-            });
-          }
-        });
-
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
@@ -548,6 +505,19 @@ export default {
           }
         });
         this.spread.resumePaint();
+        sheet.options.isProtected = true;
+        sheet.options.protectionOptions.allowResizeColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowSelectLockedCells = true;
+        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+        sheet.options.protectionOptions.allowDeleteColumns = true;
+        sheet.options.protectionOptions.allowInsertColumns = true;
+        sheet.options.protectionOptions.allowDargInsertRows = true;
+        sheet.options.protectionOptions.allowDragInsertColumns = true;
+        sheet.options.protectionOptions.allowSort = true
+        sheet.options.protectionOptions.allowFilter = true
+        sheet.options.allowUserDragDrop = true;
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
@@ -611,28 +581,6 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
-    async downERP() {
-      this.adminLoading = true;
-      let res = await GetSearch(null, "/APSAPI/GetErpData");
-
-      const { result, data, count, msg } = res.data;
-
-      if (result) {
-        this.dataSearch(1);
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-      this.adminLoading = false;
-    },
     // 保存
     async dataSave(remarkTb) {
       let sheet = this.spread.getActiveSheet();
@@ -663,76 +611,6 @@ export default {
         }
       } else {
         this.$message.error("当前数据没做修改，请先修改再保存！");
-      }
-    },
-    // 同步
-    async syncSave() {
-      this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/PushDeliveryData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    // 转入周计划
-    async toWeeksPlan() {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDataSource();
-      this.selectionData[this.tagRemark] = [];
-      if (newData && newData.length != 0) {
-        newData.forEach((x) => {
-          if (x.isChecked) {
-            this.selectionData[this.tagRemark].push(x);
-          }
-        });
-      } 
-      if(this.selectionData[this.tagRemark].length==0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlan");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
       }
     },
     // 导入并分析模板
@@ -788,7 +666,6 @@ export default {
     },
     // 解析文件
     async dataSys(importData) {
-      console.log('importData[0]',importData)
       this.adminLoading = true;
       if (importData && importData.length > 0) {
         let DataList = [];
@@ -800,7 +677,6 @@ export default {
         let split = []; //存储需求到料日期过期信息
         let groupList = [];
         importData[0].sheet.forEach((m, y) => {
-          
           for (let key in m) {
             if (this.tableColumns[this.tagRemark].length) {
               // 判断是否和配置里的取名一致，一致才可导入
@@ -877,12 +753,6 @@ export default {
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            // (obj["SDate"] = _this.machineCycle.length
-            //   ? _this.machineCycle[0]
-            //   : ""),
-            //   (obj["Edate"] = _this.machineCycle.length
-            //     ? _this.machineCycle[1]
-            //     : ""),
               (obj["Account"] = this.$store.getters.userInfo.Account);
             obj["row"] = m.__rowNum__;
             // 需要使用...obj 不然值回写有问题
@@ -939,9 +809,7 @@ export default {
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
 	      if(DataList.length){
-          console.log('DataList',DataList)
           let res = await SaveData(DataList);
-          // let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
