@@ -188,6 +188,9 @@
     },
     mounted() {
       this.keyDown();
+      setTimeout(() => {
+        this.setHeight();
+      }, 350);
     },
     methods: {
       // 监听键盘
@@ -279,7 +282,7 @@
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 33 + "px";
+      let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
       // 第几页

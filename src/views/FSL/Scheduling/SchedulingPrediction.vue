@@ -270,7 +270,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 33 + "px";
+      let newHeight = rem  + "px";
       this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置
