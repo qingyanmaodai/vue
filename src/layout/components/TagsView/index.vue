@@ -153,11 +153,6 @@ export default {
       });
     },
     closeSelectedTag(view) {
-      // if (view.meta.dicID) {
-      //   localStorage.setItem("dicIDForm" + view.meta.dicID, null);
-      //   localStorage.setItem("dicIDData" + view.meta.dicID, null);
-      // }
-
       this.$store
         .dispatch("tagsView/delView", view)
         .then(({ visitedViews }) => {
@@ -167,7 +162,11 @@ export default {
         });
     },
     closeOthersTags() {
-      this.$router.push(this.selectedTag);
+      if(this.selectedTag&&this.selectedTag.path.indexOf('dic')>-1){
+        this.$router.push(this.selectedTag.path+"?dicID="+ this.selectedTag.meta.dicID);
+      }else{
+        this.$router.push(this.selectedTag.path);
+      }
       this.$store
         .dispatch("tagsView/delOthersViews", this.selectedTag)
         .then(() => {
@@ -175,7 +174,7 @@ export default {
         });
     },
     closeAllTags(view) {
-      this.$store.dispatch("tagsView/delAllViews").then(({ visitedViews }) => {
+      this.$store.dispatch("tagsView/delAllViews",this.$route).then(({ visitedViews }) => {
         if (this.affixTags.some((tag) => tag.path === view.path)) {
           return;
         }
