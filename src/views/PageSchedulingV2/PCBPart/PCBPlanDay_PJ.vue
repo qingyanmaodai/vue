@@ -666,12 +666,21 @@ sheet.getCell(index, 1).cellType(cellType2);
               cellIndex,
               GC.Spread.Sheets.SheetArea.viewport
             );
-            cell.foreColor("gray");
+            cell.foreColor("balck");
           }
 
           cellIndex++;
         });
-sheet.options.isProtected = true;
+         // 列筛选
+        // 参数2 开始列
+        // 参数3
+        // 参数4 结束列
+        var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+          cellrange
+        );
+        sheet.rowFilter(hideRowFilter);
+
 
 
  var insertRowsCopyStyle = {
@@ -890,6 +899,8 @@ sheet.options.isProtected = true;
         this.tableLoading[0] = false;
         this.spread.options.tabStripVisible = false;//是否显示表单标签
         this.spread.refresh(); //重新定位宽高度
+        sheet.options.isProtected = true;
+        sheet.options.protectionOptions.allowFilter = true //锁定表格后支持筛选
       },
       // 自动计算数量
       computedNum(rowIndex, colIndex, val) {
