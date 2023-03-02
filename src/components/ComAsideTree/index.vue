@@ -57,6 +57,57 @@
       :expand-on-click-node="false"
       @node-click="handleNodeClick"
     ></el-tree>
+    <div>
+      <div
+        v-if="showPagination"
+        class="flex_row_spaceBtn pagination flex_column flex-start"
+      >
+        <div v-show="sysID > 0">
+          <span
+            @click="toPageSetting"
+            class="primaryColor cursor"
+          >SysID:{{ sysID }}
+          </span>
+          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
+        </div>
+        <div class="flex">
+          <!-- <div
+            class="footer_label"
+            v-show="multipleSelection.length != 0"
+          >
+            已选[<span style="color: red; font-weight: bold">{{
+              multipleSelection.length
+            }}</span>]
+          </div> -->
+          <el-pagination
+            background
+            @size-change="pageSize"
+            :current-page="pagination.pageIndex"
+            :page-sizes="[
+              32,
+              50,
+              100,
+              150,
+              200,
+              250,
+              300,
+              350,
+              400,
+              800,
+              1000,
+              1500,
+              2000,
+            ]"
+            :page-size="pagination.pageSize"
+            :total="pagination.pageTotal"
+            @current-change="pageChange"
+            :layout="layout"
+            :small="small"
+          >
+          </el-pagination>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -91,6 +142,48 @@ export default {
       type: String,
       default: "500px",
     },
+    // 是否显示分页
+    showPagination: {
+      type: Boolean,
+      default: false,
+    },
+    // 系统id
+    sysID: {
+      type: Number,
+      default: 0,
+    },
+    //条数
+    pagination: {
+      type: Object,
+      default() {
+        return {
+          pageIndex: 0,
+          pageSize: 30,
+          pageTotal: 0,
+        };
+      },
+    },
+    // 表格的下标
+    remark: {
+      type: Number,
+      required: false,
+    },
+    // 查询的时候需要过滤哪个表格的数据
+    filtertb: {
+      type: Number,
+      default: -1,
+      required: false,
+    },
+    // 分页组件布局
+    layout:{
+      type: String,
+      default: "total, sizes, prev, pager, next",
+    },
+    // 分页样式
+    small:{
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {
@@ -99,6 +192,8 @@ export default {
       dataTree: {},
       nodeTree: {},
       isOpen: true,
+      // multipleSelection: [],
+      Prompt:'',//底部文本
     };
   },
   computed: {},
@@ -171,6 +266,25 @@ export default {
     // 查找树
     searchTree() {
       this.$emit("searchTree", this.Value);
+    },
+    // 跳转至页面配置
+    toPageSetting() {
+      if (this.sysID == 35) {
+        this.$emit("oneselftSysID", 35);
+      } else {
+        this.$router.push({
+          name: "FieldInfo",
+          params: { ID: this.sysID },
+        });
+      }
+    },
+    // 选择一页显示多少数据
+    pageSize(val) {
+      this.$emit("pageSize", val, this.remark, this.filtertb);
+    },
+    // 分页导航
+    pageChange(val) {
+      this.$emit("pageChange", val, this.remark, this.filtertb);
     },
   },
 };
