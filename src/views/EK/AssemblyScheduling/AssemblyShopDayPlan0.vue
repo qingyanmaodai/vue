@@ -458,7 +458,7 @@
                 this.adminLoading = true;
                 let res = await GetSearch(
                   newData,
-                  "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+                  "/APSAPI/MOPlanSaveToDayPlanEK?isPlan=1"
                 );
                 const {
                   result,
