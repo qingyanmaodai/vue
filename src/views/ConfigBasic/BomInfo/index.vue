@@ -437,6 +437,7 @@ export default {
           Methods: "dataSave",
           Icon: "",
           sort:3,
+          Params: { dataName: "saveData" },
         },
         {
           ButtonCode: "delete",
@@ -470,6 +471,7 @@ export default {
           Methods: "dataSave",
           Icon: "",
           sort:2,
+          Params: { dataName: "saveData" },
         },
         {
           ButtonCode: "delete",
@@ -483,6 +485,7 @@ export default {
           sort:3,
         },
       ],
+      saveData: [[],[]],
       selectionData: [[],[]],
       btnForm: [],
       tableData: [[],[]],
@@ -886,43 +889,43 @@ export default {
       }
     },
     // 保存
-    async dataSave(remarkTb, index) {
-      console.log('remarkTb',remarkTb)
-      return
-      this.adminLoading = true;
-      let newData = [];
-      if (this.isUpdate) {
-        if (this.tableData[remarkTb].length != 0) {
-          this.tableData[remarkTb].forEach((x) => {
-            if (x.update) {
-              newData.push(x);
-            }
-          });
-        }
-      } else {
-        newData = this.tableData[remarkTb];
-      }
-      console.log(newData);
-      let res = await SaveData(newData);
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
+    // async dataSave(remarkTb, index) {
+    //   console.log('remarkTb',remarkTb)
+    //   return
+    //   this.adminLoading = true;
+    //   let newData = [];
+    //   if (this.isUpdate) {
+    //     if (this.tableData[remarkTb].length != 0) {
+    //       this.tableData[remarkTb].forEach((x) => {
+    //         if (x.update) {
+    //           newData.push(x);
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     newData = this.tableData[remarkTb];
+    //   }
+    //   console.log(newData);
+    //   let res = await SaveData(newData);
+    //   const { datas, forms, result, msg } = res.data;
+    //   if (result) {
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "success",
+    //       dangerouslyUseHTMLString: true,
+    //     });
 
-        this.dataSearch(remarkTb);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
+    //     this.dataSearch(remarkTb);
+    //   } else {
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "error",
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   }
+    // },
     // 单击行
     handleRowClick(row, remarkTb) {
       this.delData[remarkTb] = [];
@@ -1156,7 +1159,9 @@ export default {
       if(val){
         this.$refs['refParent'].$refs['formData'].validate((valid) => {
           if (valid) {
-            console.log('val',val);
+            this.saveData[0] = [this.formDataParent]
+            this.addDataSave(0,0,{ dataName: "saveData" })
+            this.dialogShowChild = false
           } else {
             console.log('error submit!!');
             return false;
@@ -1176,7 +1181,10 @@ export default {
       if(val){
         this.$refs['refChild'].$refs['formData'].validate((valid) => {
           if (valid) {
-            console.log('val',val);
+            // console.log('val',this.formDataChild);
+            this.saveData[1] = [this.formDataChild]
+            this.addDataSave(1,1,{ dataName: "saveData" })
+            this.dialogShowChild = false
           } else {
             console.log('error submit!!');
             return false;
@@ -1184,6 +1192,70 @@ export default {
         });
       }else{
         this.dialogShowChild = false
+      }
+    },
+    // 直接保存
+    async addDataSave(remarkTb, index, params) {
+      // let submitData = []
+      // if(newData){
+      //   submitData = newData
+      // }else{
+
+      // }
+      console.log('index',index)
+      console.log('remarkTb',remarkTb)
+      console.log('params',this[params.dataName][remarkTb])
+      return
+      this.adminLoading = true;
+      let res = await SaveData(newData);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.dataSearch(remarkTb);
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    // 直接保存
+    async dataSave(remarkTb, index, params) {
+      // let submitData = []
+      // if(newData){
+      //   submitData = newData
+      // }else{
+
+      // }
+      console.log('index',index)
+      console.log('remarkTb',remarkTb)
+      console.log('params',this[params.dataName][remarkTb])
+      return
+      this.adminLoading = true;
+      let res = await SaveData(newData);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.dataSearch(remarkTb);
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
   },
