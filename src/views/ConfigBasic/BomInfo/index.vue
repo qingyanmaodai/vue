@@ -121,6 +121,7 @@
             </el-row>
           </div>
           <ComUmyTable
+          ref="ComUmyTable"
             :rowKey="'RowNumber'"
             :height="height"
             :tableData="tableData[1]"
@@ -137,6 +138,7 @@
             @pageSize="pageSize"
             @selectfun="selectFun"
             @sortChange="sortChange"
+            :keepSource="true"
           />
         </div>
       </div>
@@ -1159,8 +1161,7 @@ export default {
       if(val){
         this.$refs['refParent'].$refs['formData'].validate((valid) => {
           if (valid) {
-            this.saveData[0] = [this.formDataParent]
-            this.addDataSave(0,0,{ dataName: "saveData" })
+            this.addDataSave([this.formDataParent],0)
             this.dialogShowChild = false
           } else {
             console.log('error submit!!');
@@ -1181,9 +1182,7 @@ export default {
       if(val){
         this.$refs['refChild'].$refs['formData'].validate((valid) => {
           if (valid) {
-            // console.log('val',this.formDataChild);
-            this.saveData[1] = [this.formDataChild]
-            this.addDataSave(1,1,{ dataName: "saveData" })
+            this.addDataSave([this.formDataChild],1)
             this.dialogShowChild = false
           } else {
             console.log('error submit!!');
@@ -1195,16 +1194,15 @@ export default {
       }
     },
     // 直接保存
-    async addDataSave(remarkTb, index, params) {
+    async addDataSave(newData, remarkTb) {
       // let submitData = []
       // if(newData){
       //   submitData = newData
       // }else{
 
       // }
-      console.log('index',index)
       console.log('remarkTb',remarkTb)
-      console.log('params',this[params.dataName][remarkTb])
+      console.log('newData',newData)
       return
       this.adminLoading = true;
       let res = await SaveData(newData);
@@ -1228,18 +1226,25 @@ export default {
     },
     // 直接保存
     async dataSave(remarkTb, index, params) {
-      // let submitData = []
-      // if(newData){
-      //   submitData = newData
-      // }else{
+      let submitData = []
+      if(remarkTb==0){
+        submitData = [this.formData]
+      }else if(remarkTb==1){
+        const $table = this.$refs.ComUmyTable.$refs.vxeTable
+        // 获取修改记录
+        submitData = $table.getUpdateRecords()
+        if(updateRecords.length==0){
+          this.$message.error("当前数据没做修改，请先修改再保存！");
+          return
+        }
+      }
 
-      // }
       console.log('index',index)
       console.log('remarkTb',remarkTb)
-      console.log('params',this[params.dataName][remarkTb])
+      console.log('params',submitData)
       return
       this.adminLoading = true;
-      let res = await SaveData(newData);
+      let res = await SaveData(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(remarkTb);
