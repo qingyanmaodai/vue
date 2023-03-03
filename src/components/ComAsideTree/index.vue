@@ -11,6 +11,7 @@
           suffix-icon="el-icon-search"
           class="w2/3 cx_margin_right1"
           @input="searchTree"
+          @keyup.enter.native="searchTreeEnter"
         ></el-input>
         <el-dropdown
           v-show="!isEdit"
@@ -266,6 +267,10 @@ export default {
     // 查找树
     searchTree() {
       this.$emit("searchTree", this.Value);
+    },
+    // 回车查询
+    searchTreeEnter(){
+      this.$emit("searchTreeEnter", this.Value);
     },
     // 跳转至页面配置
     toPageSetting() {

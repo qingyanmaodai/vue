@@ -8,34 +8,56 @@
       <ComAsideTree
         ref="asideRef"
         :treeData="treeData"
-        :title="'组织信息'"
+        :title="treeTitle"
         :treeHeight="treeHeight"
         :nodekey="'OrganizeID'"
         :treeProps="treeProps"
         :pagination="tablePagination[0]"
         :remark="0"
         :showPagination="true"
-        @searchTree="searchTree"
+        @searchTreeEnter="searchTreeEnter"
         @handleNodeClick="handleNodeClick"
         @pageChange="pageChange"
         @pageSize="pageSize"
+        :isEdit="isEdit"
       />
     </div>
     <div class="admin_container">
+      <div class="admin_head_3" ref="headRef">
+        <div style="text-align: right;;">
+          <el-button
+            plain
+            v-for="(item, i) in parmsBtn2"
+            :key="i"
+            :type="item.Type ? item.Type : 'primary'"
+            :icon="item.Icon"
+            size="small"
+            @click="btnClick(item.Methods, item.Params, i,0)"
+            v-show="Array.prototype.isPrototypeOf(item.signName) && item.signName.includes(signName)?true:item.signName || item.signName == 0 ? item.signName == signName: true"
+          >
+            {{ item.BtnName }}
+          </el-button>
+          
+        </div>
+        <ComForm
+          class="formStyle"
+          ref="ruleForm0"
+          :formData="formData"
+          :formController="formController"
+          :formRules="formRules"
+        ></ComForm>
+      </div>
       <div
-        class="admin_head"
-        ref="headRef"
+        class="admin_head_4"
       >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
+          :searchData="formSearchs[1].datas"
+          :searchForm="formSearchs[1].forms"
+          :remark="1"
           :btnForm="btnForm"
           @btnClick="btnClick"
         />
-      </div>
-      <div>
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
@@ -44,18 +66,6 @@
                 :span="20"
                 class="flex_flex_end"
               >
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="openDrawer"
-                >新增用户</el-button>
-                <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="warning"
-                  size="mini"
-                  @click="openDrawer2"
-                >批量修改</el-button>
-                <el-divider direction="vertical"></el-divider>
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -113,15 +123,15 @@
           <ComUmyTable
             :rowKey="'RowNumber'"
             :height="height"
-            :tableData="tableData[0]"
-            :tableHeader="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :sysID="3007"
+            :tableData="tableData[1]"
+            :tableHeader="tableColumns[1]"
+            :tableLoading="tableLoading[1]"
+            :remark="1"
+            :sysID="sysID[1].ID"
             :hasSelect="true"
             :isEdit="isEdit"
-            :isClear="isClear[0]"
-            :pagination="tablePagination[0]"
+            :isClear="isClear[1]"
+            :pagination="tablePagination[1]"
             @handleRowClick="handleRowClick"
             @pageChange="pageChange"
             @pageSize="pageSize"
@@ -132,31 +142,41 @@
       </div>
     </div>
 
-    <!-- 新增用户弹框 -->
+    <!-- 新增父件弹框 -->
     <ComFormDialog
-      ref="orgRef"
-      :title="'新增用户'"
-      :dialogShow="dialogShow"
-      :formData="formData"
-      :formRules="formRules"
-      :formController="formController"
+      ref="refParent"
+      :title="addParentTitle"
+      :dialogShow="dialogShowParent"
+      :formData="formDataParent"
+      :formRules="formRulesParent"
+      :formController="formControllerParent"
+      @dialogBtnClick="parentConfirm"
+    />
+    <!-- 新增子件弹框 -->
+    <ComFormDialog
+      ref="refChild"
+      :title="addChildTitle"
+      :dialogShow="dialogShowChild"
+      :formData="formDataChild"
+      :formRules="formRulesChild"
+      :formController="formControllerChild"
       @selectHandleNodeClick="selectHandleNodeClick"
-      @dialogBtnClick="dialogBtnClick"
+      @dialogBtnClick="childConfirm"
     />
 
     <!-- 批量修改 -->
-    <ComFormDialog
+    <!-- <ComFormDialog
       ref="orgRef2"
-      :title="'批量修改'"
+      :title="updateTitle"
       :dialogShow="dialogShow2"
       :formData="formData2"
       :formController="formController2"
       @selectHandleNodeClick="selectHandleNodeClick2"
       @dialogBtnClick="dialogBtnClick2"
-    />
+    /> -->
 
     <el-dialog
-      title="导入人员模板"
+      title="导入模板"
       :visible.sync="dialogImport"
       width="30%"
     >
@@ -220,6 +240,7 @@ import {
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 import { mapState } from "vuex";
+import ComForm from "@/components/ComForm";
 export default {
   name: "UserInfo",
   components: {
@@ -227,133 +248,186 @@ export default {
     ComAsideTree,
     ComUmyTable,
     ComFormDialog,
+    ComForm
   },
   data() {
     return {
       //////////////左侧树节点//////////////
+      
+      treeTitle:'BOM信息',
       treeProps: {
         label: "OrganizeName",
         children: "children",
       },
       ///////////////新增弹框//////////////
-      dialogShow: false,
-      dialogShow2: false,
+      addParentTitle:'新增父件',
+      addChildTitle:'新增子件',
+      updateTitle:'批量修改',
+      dialogShowParent: false,
+      dialogShowChild: false,
+      dialogShow2:false,
       formData: {
-        Account: "",
-        Pwd: "",
-        Name: "",
-        OrganizeName: "",
-        OrganizeID: "",
-        Sex: "",
-        UserType: "",
-        PositionID: "",
-        Tel: "",
-        dicID: 25,
+        ParentID:null,
+        ParentCode:null,
+        ParentMaterialName:null,
+        Denominator:null,
+        ParentUnit:null,
+        ItemClass:null,
+        LineNum:null,
+        Remark:null,
+        Status: 0,
       },
-      formData2: {
-        OrganizeName: "",
-        OrganizeID: "",
-        Sex: "",
-        Extend1: "",
-        UserType: "",
-        Status: 1,
-        dicID: 25,
+      formDataParent: {
+        ParentCode:null,
+        ParentMaterialName:null,
+        Denominator:null,
+        ParentUnit:null,
+        ItemClass:null,
+        LineNum:null,
+        Remark:null,
+        Status: 0,
+      },
+      formDataChild: {
+        Code:null,
+        MaterialName:null,
+        Molecule:null,
+        Unit:null,
+        Scrappage:null,
+        Remark:null,
+        Status: 0,
       },
       UserTypes: [],
       PositionIDs: [],
       treeData: [],
       treeListTmp: [],
       formController: [
-        { label: "账号", prop: "Account", type: "input" },
-        { label: "密码", prop: "Pwd", type: "input" },
-        { label: "姓名", prop: "Name", type: "input" },
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
         {
-          label: "组织",
-          prop: "OrganizeName",
-          type: "selectTree",
-          methods: "selectHandleNodeClick",
-          treeProps: { label: "OrganizeName", children: "children" },
-          treeData: [],
-        },
-        {
-          label: "性别",
-          prop: "Sex",
-          type: "select",
-          select: [
-            { label: "男", value: 1 },
-            { label: "女", value: 2 },
-          ],
-        },
-        { label: "电话", prop: "Tel", type: "input", inputType: "number" },
-        {
-          label: "人员属性",
-          prop: "UserType",
-          type: "select",
-          select: [],
-        },
-        {
-          label: "岗位",
-          prop: "PositionID",
-          type: "select",
-          select: [],
-        },
-      ],
-      formController2: [
-        {
-          label: "组织",
-          prop: "OrganizeName",
-          type: "selectTree",
-          methods: "selectHandleNodeClick2",
-          treeProps: { label: "OrganizeName", children: "children" },
-          treeData: [],
-        },
-        {
-          label: "性别",
-          prop: "Sex",
-          type: "select",
-          select: [
-            { label: "男", value: 1 },
-            { label: "女", value: 2 },
-          ],
-        },
-        {
-          label: "岗位",
-          prop: "Extend1",
-          type: "input",
-        },
-        {
-          label: "人员属性",
-          prop: "UserType",
-          type: "select",
-          select: [],
-        },
-        {
-          label: "状态",
-          prop: "Status",
+          label: "基本数量",
+          prop: "Denominator",
           type: "input",
           inputType: "number",
         },
+        { label: "单位", prop: "ParentUnit", type: "input" },
+        { label: "项目类别", prop: "ItemClass", type: "input" },
+        { label: "项目", prop: "LineNum", type: "input" },
+        { label: "备注", prop: "Remark", type: "textarea" },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+        },
       ],
       formRules: {
-        Account: [{ required: true, message: "账号为必填项", trigger: "blur" }],
-        Pwd: [{ required: true, message: "密码为必填项", trigger: "blur" }],
-        Name: [{ required: true, message: "姓名为必填项", trigger: "blur" }],
-        OrganizeName: [
-          { required: true, message: "组织为必填项", trigger: "change" },
-        ],
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
+        ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
+        LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
+      },
+      formControllerParent: [
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
+        {
+          label: "基本数量",
+          prop: "Denominator",
+          type: "input",
+          inputType: "number",
+        },
+        { label: "单位", prop: "ParentUnit", type: "input" },
+        { label: "项目类别", prop: "ItemClass", type: "input" },
+        { label: "项目", prop: "LineNum", type: "input" },
+        { label: "备注", prop: "Remark", type: "textarea" },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+        },
+      ],
+      formRulesParent: {
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
+        ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
+        LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
+      },
+      formControllerChild: [
+      { label: "子件物料号", prop: "Code", type: "input" },
+        { label: "子件描述", prop: "MaterialName", type: "textarea" },
+        {
+          label: "子件数量",
+          prop: "Molecule",
+          type: "input",
+          inputType: "number",
+        },
+        { label: "单位", prop: "Unit", type: "input" },
+        { label: "报废率", prop: "Scrappage", type: "input" },
+        { label: "备注", prop: "Remark", type: "textarea" },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+        },
+      ],
+      formRulesChild: {
+        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
+        Unit: [ { required: true, message: "必填项", trigger: "blur" }],
+        Scrappage: [{ required: true, message: "必填项", trigger: "blur" }],
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawerTitle: "新增人员",
+      // drawerTitle: "新增人员",
       drawer: false,
-      delData: [[]],
+      delData: [[],[]],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
         },
       ],
       parmsBtn: [
+        {
+          ButtonCode: "import",
+          BtnName: "导入",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataImport",
+          Params: "",
+          Icon: "",
+          sort:1,
+        },
+        {
+          ButtonCode: "addChildBom",
+          BtnName: "",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          Methods: "addChildBom",
+          Icon: "",
+          sort:2,
+        },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -362,6 +436,7 @@ export default {
           Size: "small",
           Methods: "dataSave",
           Icon: "",
+          sort:3,
         },
         {
           ButtonCode: "delete",
@@ -372,24 +447,48 @@ export default {
           Methods: "dataDel",
           Params: { dataName: "selectionData" },
           Icon: "",
+          sort:4,
         },
+      ],
+      parmsBtn2: [
         {
-          ButtonCode: "import",
-          BtnName: "导入",
+          ButtonCode: "addParentBom",
+          BtnName: "",
           Type: "primary",
           Ghost: true,
           Size: "small",
-          Methods: "dataImport",
-          Params: "",
+          Methods: "addParentBom",
           Icon: "",
+          sort:1,
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "保存",
+          Type: "success",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataSave",
+          Icon: "",
+          sort:2,
+        },
+        {
+          ButtonCode: "delete",
+          BtnName: "删除",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataDel",
+          Params: { dataName: "selectionData" },
+          Icon: "",
+          sort:3,
         },
       ],
-      selectionData: [[]],
+      selectionData: [[],[]],
       btnForm: [],
-      tableData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
+      tableData: [[],[]],
+      tableColumns: [[],[]],
+      tableLoading: [false,false],
+      isClear: [false,false],
       tablePagination: [
         { pageIndex: 1, pageSize: 30, pageTotal: 0 },
         { pageIndex: 1, pageSize: 30, pageTotal: 0 },
@@ -405,6 +504,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
+      sysID:[ {ID:3007}, {ID:3007},]
     };
   },
   computed: {
@@ -471,13 +571,16 @@ export default {
         });
       }
     },
-    searchTree(msg) {
-      this.treeData = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
-      let tmp = msg
-        ? this.rebuildData(msg, treeListTmp)
-        : JSON.parse(JSON.stringify(treeListTmp));
-      this.treeData.push(...tmp);
+    searchTreeEnter(msg) {
+      // this.treeData = [];
+      // let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
+      // let tmp = msg
+      //   ? this.rebuildData(msg, treeListTmp)
+      //   : JSON.parse(JSON.stringify(treeListTmp));
+      // this.treeData.push(...tmp);
+      // 树结构查询接口,需要传入BOM编码
+      console.log('msg',msg)
+      this.dataSearch(0)
     },
     rebuildData(value, arr) {
       if (!arr) {
@@ -662,6 +765,7 @@ export default {
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
+      let newBtn2 = [];
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
@@ -669,26 +773,49 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
+            // 如果页面定义了取页面的，否则取按钮权限配置中的
+            if (x.ButtonCode == y.ButtonCode) {
+              y.BtnName = y.BtnName||x.ButtonName;
+              y.Methods = y.Methods||x.OnClick;
+              y.Type = y.Type || x.ButtonType;
+              return y;
+            }
           });
           if (newData.length != 0) {
             newBtn = newBtn.concat(newData);
           }
+
+          let newData2 = this.parmsBtn2.filter((y) => {
+            // 如果页面定义了取页面的，否则取按钮权限配置中的
+            if (x.ButtonCode == y.ButtonCode) {
+              y.BtnName = y.BtnName||x.ButtonName;
+              y.Methods = y.Methods||x.OnClick;
+              y.Type = y.Type || x.ButtonType;
+              return y;
+            }
+          });
+          if (newData2.length != 0) {
+            newBtn2 = newBtn2.concat(newData2);
+          }
         });
       }
+      newBtn = _.sortBy(newBtn,['sort'])
+      newBtn2 = _.sortBy(newBtn2,['sort'])
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
+      this.$set(this, "parmsBtn2", newBtn2);
+      
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 200 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 180 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem - 40+"px";
       this.$set(this, "height", newHeight);
     },
     // 编辑行
@@ -760,6 +887,8 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
+      console.log('remarkTb',remarkTb)
+      return
       this.adminLoading = true;
       let newData = [];
       if (this.isUpdate) {
@@ -850,7 +979,7 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 3007 }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -1011,6 +1140,51 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
+    },
+    // 重置校验
+    resetForm(formName) {
+      console.log('this.$refs',this.$refs)
+        this.$refs[formName].$refs['formData'].resetFields();
+    },
+    // 新增父件
+    addParentBom(){
+      this.dialogShowParent = true
+      this.resetForm('refParent')
+    },
+    // 父件确认添加
+    parentConfirm(val){
+      if(val){
+        this.$refs['refParent'].$refs['formData'].validate((valid) => {
+          if (valid) {
+            console.log('val',val);
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }else{
+        this.dialogShowParent = false
+      }
+    },
+    // 新增子件
+    addChildBom(){
+      this.dialogShowChild = true
+      this.resetForm('refChild')
+    },
+    // 子件确认添加
+    childConfirm(val){
+      if(val){
+        this.$refs['refChild'].$refs['formData'].validate((valid) => {
+          if (valid) {
+            console.log('val',val);
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }else{
+        this.dialogShowChild = false
+      }
     },
   },
 };
