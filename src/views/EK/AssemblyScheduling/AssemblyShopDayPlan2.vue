@@ -758,7 +758,7 @@
             let colIndex2 =0 
             this.tableColumns[0].forEach((m, num) => {
               //行，start,end
-              if (m.DataType == "bit" && m.isEdit) {
+              if ((m.DataType == "bit"||m.ControlType == "checkbox") && m.isEdit) {
                 var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
                 cellType.caption("");
                 cellType.textTrue("");
