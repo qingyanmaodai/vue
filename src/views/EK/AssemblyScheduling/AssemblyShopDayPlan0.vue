@@ -448,10 +448,10 @@
               let submitData = sheet.getDataSource();
               let newData = []
               submitData.forEach((m) => {
-                if(!m['NoSchedulingWeek']){//过滤不排的数据
+                // if(!m['NoSchedulingWeek']){//过滤不排的数据
                   m["isChecked"] = true;
                   newData.push(m)
-                }
+                // }
                 
               });
               if (newData.length) {
@@ -1291,7 +1291,7 @@
               submitData.push(x.item);
               // 判断同个产线今日出勤人数是否一致
               this.tableData[this.tagRemark].forEach((y)=>{
-                if(x.item['Code']&&y['Code']&&x.item['LineID']===y['LineID']&&x.item['Extend5']!=y['Extend5']){
+                if(x.item['Code']&&y['Code']&&x.item['LineID']===y['LineID']&&x.item['TotalPeoples']!=y['TotalPeoples']){
                   noAttendance = true
                 }
               })
