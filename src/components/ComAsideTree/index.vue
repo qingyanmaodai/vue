@@ -104,6 +104,7 @@
             @current-change="pageChange"
             :layout="layout"
             :small="small"
+            :pager-count="pagerCount"
           >
           </el-pagination>
         </div>
@@ -184,6 +185,10 @@ export default {
     small:{
       type: Boolean,
       default: true,
+    },
+    pagerCount:{
+      type: Number,
+      default: 7,
     }
   },
   data() {

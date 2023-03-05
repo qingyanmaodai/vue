@@ -16,6 +16,7 @@
         iconClose: 'el-icon-arrow-right',
         expandAll:expandAll
       }"
+      :edit-config="{trigger: 'click', mode: 'row'}"
       @table-body-scroll="scroll"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
