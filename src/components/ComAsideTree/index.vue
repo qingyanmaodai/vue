@@ -188,7 +188,7 @@ export default {
     },
     pagerCount:{
       type: Number,
-      default: 7,
+      default: 7,//5~21之间的奇数
     }
   },
   data() {

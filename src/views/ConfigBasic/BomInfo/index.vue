@@ -20,7 +20,7 @@
         @pageChange="pageChange"
         @pageSize="pageSize"
         :isEdit="isEdit"
-        :pagerCount="3"
+        :pagerCount="5"
       />
     </div>
     <div class="admin_container">
@@ -265,7 +265,7 @@ export default {
       
       treeTitle:'BOM信息',
       treeProps: {
-        label: "Code",
+        label: "ParentCode",
         children: "children",
       },
       keyWords:'',
@@ -278,20 +278,20 @@ export default {
       dialogShow2:false,
       formData: {
         ParentID:null,
-        Code:null,
-        MaterialName:null,
+        ParentCode:null,
+        ParentMaterialName:null,
         Denominator:null,
-        Unit:null,
+        ParentUnit:null,
         ItemClass:null,
         LineNum:null,
         Remark:null,
         Status: 0,
       },
       formDataParent: {
-        Code:null,
-        MaterialName:null,
+        ParentCode:null,
+        ParentMaterialName:null,
         Denominator:null,
-        Unit:null,
+        ParentUnit:null,
         ItemClass:null,
         LineNum:null,
         Remark:null,
@@ -300,7 +300,7 @@ export default {
       formDataChild: {
         Code:null,
         MaterialName:null,
-        Denominator:null,
+        Molecule:null,
         Unit:null,
         Scrappage:null,
         Remark:null,
@@ -311,15 +311,15 @@ export default {
       treeData: [],
       treeListTmp: [],
       formController: [
-        { label: "父件物料号", prop: "Code", type: "input" },
-        { label: "父件描述", prop: "MaterialName", type: "textarea" },
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
           type: "input",
           inputType: "number",
         },
-        { label: "单位", prop: "Unit", type: "input" },
+        { label: "单位", prop: "ParentUnit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input" },
         { label: "备注", prop: "Remark", type: "textarea" },
@@ -334,23 +334,23 @@ export default {
         },
       ],
       formRules: {
-        Code: [{ required: true, message: "必填项", trigger: "blur" }],
-        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
-        Unit: [ { required: true, message: "必填项", trigger: "blur" }],
+        ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerParent: [
         { label: "父件物料号", prop: "ParentCode", type: "input" },
-        { label: "父件描述", prop: "MaterialName", type: "textarea" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
           type: "input",
           inputType: "number",
         },
-        { label: "单位", prop: "Unit", type: "input" },
+        { label: "单位", prop: "ParentUnit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input" },
         { label: "备注", prop: "Remark", type: "textarea" },
@@ -365,20 +365,20 @@ export default {
         },
       ],
       formRulesParent: {
-        Code: [{ required: true, message: "必填项", trigger: "blur" }],
-        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
-        Unit: [ { required: true, message: "必填项", trigger: "blur" }],
+        ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerChild: [
-      { label: "父件物料号", prop: "ParentCode",  },
+      { label: "父件物料号", prop: "ParentCode",type: "input",dispaly:true  },
       { label: "子件物料号", prop: "Code", type: "input" },
         { label: "子件描述", prop: "MaterialName", type: "textarea" },
         {
           label: "子件数量",
-          prop: "Denominator",
+          prop: "Molecule",
           type: "input",
           inputType: "number",
         },
@@ -399,7 +399,7 @@ export default {
         ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
-        Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
+        Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
         Unit: [ { required: true, message: "必填项", trigger: "blur" }],
         Scrappage: [{ required: true, message: "必填项", trigger: "blur" }],
       },
@@ -831,7 +831,7 @@ export default {
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 220 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 250 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
@@ -977,6 +977,8 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
+          console.log('newData',newData)
+          return
           _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {});
@@ -1098,37 +1100,37 @@ export default {
         //用于测试的数据，测试完删除
         this.tableData[remarkTb] =  [{
           id: 1,
-          Code: '一级 1',
+          ParentCode: '一级 1',
           children: [{
             id: 4,
-            Code: '二级 1-1',
+            ParentCode: '二级 1-1',
             children: [{
               id: 9,
-              Code: '三级 1-1-1'
+              ParentCode: '三级 1-1-1'
             }, {
               id: 10,
-              Code: '三级 1-1-2'
+              ParentCode: '三级 1-1-2'
             }]
           }]
         }, {
           id: 2,
-          Code: '一级 2',
+          ParentCode: '一级 2',
           children: [{
             id: 5,
-            Code: '二级 2-1'
+            ParentCode: '二级 2-1'
           }, {
             id: 6,
-            Code: '二级 2-2'
+            ParentCode: '二级 2-2'
           }]
         }, {
           id: 3,
-          Code: '一级 3',
+          ParentCode: '一级 3',
           children: [{
             id: 7,
-            Code: '二级 3-1'
+            ParentCode: '二级 3-1'
           }, {
             id: 8,
-            Code: '二级 3-2'
+            ParentCode: '二级 3-2'
           }]
         }]
       }
@@ -1415,7 +1417,7 @@ export default {
     // 树结构查询
     async getBomTree(remarkTb,keyWords){
       let form = this.formSearchs[remarkTb].datas
-      form['Code'] =  keyWords
+      form['ParentCode'] =  keyWords
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       console.log('form',form)
@@ -1426,13 +1428,12 @@ export default {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         //用于测试的数据，测试完删除
-        
         this.tableData[remarkTb] =  [{
           id: 1,//主键
-          Code: '一级 1',//bom编码
-          MaterialName:'物料名称',
+          ParentCode: '一级 1',//bom编码
+          ParentMaterialName:'物料名称',
           Denominator:'100',//基本用量
-          Unit:'基本计量单位',
+          ParentUnit:'基本计量单位',
           ItemClass:'项目类别',
           LineNum:'项目',
           Remark:'备注',
@@ -1440,10 +1441,10 @@ export default {
           children: [{
             parentId:1,//上级ID
             id: 4,
-            Code: '二级 1-1',
-            MaterialName:'物料名称',
+            ParentCode: '二级 1-1',
+            ParentMaterialName:'物料名称',
             Denominator:'100',
-            Unit:'基本计量单位',
+            ParentUnit:'基本计量单位',
             ItemClass:'项目类别',
             LineNum:'项目',
             Remark:'备注',
@@ -1451,10 +1452,10 @@ export default {
             children: [{
               parentId:4,
               id: 9,
-              Code: '三级 1-1-1',
-              MaterialName:'物料名称',
+              ParentCode: '三级 1-1-1',
+              ParentMaterialName:'物料名称',
               Denominator:'100',
-              Unit:'基本计量单位',
+              ParentUnit:'基本计量单位',
               ItemClass:'项目类别',
               LineNum:'项目',
               Remark:'备注',
@@ -1462,10 +1463,10 @@ export default {
             }, {
               parentId:4,
               id: 10,
-              Code: '三级 1-1-2',
-              MaterialName:'物料名称',
+              ParentCode: '三级 1-1-2',
+              ParentMaterialName:'物料名称',
               Denominator:'100',
-              Unit:'基本计量单位',
+              ParentUnit:'基本计量单位',
               ItemClass:'项目类别',
               LineNum:'项目',
               Remark:'备注',
@@ -1474,10 +1475,10 @@ export default {
           }]
         }, {
           id: 2,
-          Code: '一级 2',
-          MaterialName:'物料名称',
+          ParentCode: '一级 2',
+          ParentMaterialName:'物料名称',
           Denominator:'100',
-          Unit:'基本计量单位',
+          ParentUnit:'基本计量单位',
           ItemClass:'项目类别',
           LineNum:'项目',
           Remark:'备注',
@@ -1485,10 +1486,10 @@ export default {
           children: [{
             parentId:2,
             id: 5,
-            Code: '二级 2-1',
-            MaterialName:'物料名称',
+            ParentCode: '二级 2-1',
+            ParentMaterialName:'物料名称',
             Denominator:'100',
-            Unit:'基本计量单位',
+            ParentUnit:'基本计量单位',
             ItemClass:'项目类别',
             LineNum:'项目',
             Remark:'备注',
@@ -1496,10 +1497,10 @@ export default {
           }, {
             parentId:2,
             id: 6,
-            Code: '二级 2-2',
-            MaterialName:'物料名称',
+            ParentCode: '二级 2-2',
+            ParentMaterialName:'物料名称',
             Denominator:'100',
-            Unit:'基本计量单位',
+            ParentUnit:'基本计量单位',
             ItemClass:'项目类别',
             LineNum:'项目',
             Remark:'备注',
@@ -1507,10 +1508,10 @@ export default {
           }]
         }, {
           id: 3,
-          Code: '一级 3',
-          MaterialName:'物料名称',
+          ParentCode: '一级 3',
+          ParentMaterialName:'物料名称',
           Denominator:'100',
-          Unit:'基本计量单位',
+          ParentUnit:'基本计量单位',
           ItemClass:'项目类别',
           LineNum:'项目',
           Remark:'备注',
@@ -1518,10 +1519,10 @@ export default {
           children: [{
             parentId:3,
             id: 7,
-            Code: '二级 3-1',
-            MaterialName:'物料名称',
+            ParentCode: '二级 3-1',
+            ParentMaterialName:'物料名称',
             Denominator:'100',
-            Unit:'基本计量单位',
+            ParentUnit:'基本计量单位',
             ItemClass:'项目类别',
             LineNum:'项目',
             Remark:'备注',
@@ -1529,10 +1530,10 @@ export default {
           }, {
             parentId:3,
             id: 8,
-            Code: '二级 3-2',
-            MaterialName:'物料名称',
+            ParentCode: '二级 3-2',
+            ParentMaterialName:'物料名称',
             Denominator:'100',
-            Unit:'基本计量单位',
+            ParentUnit:'基本计量单位',
             ItemClass:'项目类别',
             LineNum:'项目',
             Remark:'备注',
