@@ -319,7 +319,17 @@ ul li .el-tree .el-tree-node__content {
     padding      : 4px 10px 4px 10px;
     border-radius: 4px;
   }
-
+  .admin_head_3 {
+    background   : #ffffff;
+    padding      : 4px 10px 4px 10px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+  }
+  .admin_head_4 {
+    background   : #ffffff;
+    padding      : 4px 10px 4px 10px;
+  }
+  .admin_head_4,
   .admin_head,
   .admin_head_2,
   .dialog_search {
@@ -424,6 +434,12 @@ ul li .el-tree .el-tree-node__content {
     padding      : 6px;
     position     : relative;
     transition   : .5s;
+  }
+
+  .el-pagination-tree{
+    .el-pagination{
+      white-space: normal;
+    }
   }
 
 }
@@ -1491,4 +1507,7 @@ label {
 }
 .tabs .el-tabs__item{
   font-weight: bolder
+}
+.flex-start{
+  align-items: flex-start;
 }
