@@ -653,10 +653,10 @@
         } else {
           this.selectionData[0].forEach((a) => {
               // 没禁用的才赋值
-              if (!a.disabled2&&!a.ReplyDate) {
+              if (!a.disabled2) {//复期
                 a.ReplyDate = this.ReplyDate;
               }
-              if (!a.disabled3&&!a.ReplyDateM2) {
+              if (!a.disabled3) {//二次复期
                 a.ReplyDateM2 = this.ReplyDate;
               }
           });
