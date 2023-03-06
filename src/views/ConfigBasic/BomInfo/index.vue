@@ -342,7 +342,7 @@ export default {
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerParent: [
-        { label: "父件物料号", prop: "Code", type: "input" },
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
         { label: "父件描述", prop: "MaterialName", type: "textarea" },
         {
           label: "基本数量",
@@ -373,6 +373,7 @@ export default {
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerChild: [
+      { label: "父件物料号", prop: "ParentCode",  },
       { label: "子件物料号", prop: "Code", type: "input" },
         { label: "子件描述", prop: "MaterialName", type: "textarea" },
         {
@@ -395,6 +396,7 @@ export default {
         },
       ],
       formRulesChild: {
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
@@ -492,7 +494,7 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataDel",
-          Params: { dataName: "selectionData" },
+          Params: { },
           Icon: "",
           sort:3,
         },
@@ -968,6 +970,10 @@ export default {
             newData.push(obj);
           });
         }
+      }else if(remarkTb==0){//删除父级
+        let obj = this.formData
+        obj["ElementDeleteFlag"] = 1;
+        newData = [obj]
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
@@ -1256,6 +1262,9 @@ export default {
       //   this.$message.error("未关联到父件，请检查！");
       //   return
       // }
+      if(this.formData&&this.formData.id){
+        this.formControllerChild['ParentCode'] = this.formData['ParentCode']
+      }
       this.dialogShowChild = true
       this.resetForm('refChild')
     },
