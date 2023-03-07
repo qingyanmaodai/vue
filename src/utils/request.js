@@ -14,10 +14,10 @@ let base_url;
 //http://192.168.30.23:9999       --美特
 //http://192.168.128.160          --金羚内网
 //http://jinlingfan.gicp.net:5999 --金羚外网
-//http://10.50.18.130/            --佛照内网
+//http://10.50.18.130             --佛照内网
 
  
-let apsUrl = 'http://10.50.18.130';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = '';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
  
 
 
