@@ -17,7 +17,7 @@
     <div class="admin_container">
       <div>
         <div class="admin_content">
-          <div class="ant-table-title">
+          <!-- <div class="ant-table-title">
             <el-row>
               <el-col :span="4"></el-col>
               <el-col :span="20" class="flex_flex_end">
@@ -33,8 +33,8 @@
                 </div>
               </el-col>
             </el-row>
-          </div>
-          <div v-show="labelStatus1 == 0" class="bgFFF">
+          </div> -->
+          <div class="bgFFF">
             <div class="admin_head flex_row_spaceBtn" ref="headRef">
               <div class="flex">
                 <div class="tree_text">排班配置</div>
@@ -256,7 +256,7 @@
                 >保存</el-button
               >
             </div>
-            <div class="margin_lr10">
+            <!-- <div class="margin_lr10">
               <el-calendar
                 class="arrange_calendar__body2"
                 v-model="calendarMonth2"
@@ -282,7 +282,7 @@
                   </div>
                 </template>
               </el-calendar>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
