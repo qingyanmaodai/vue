@@ -601,6 +601,14 @@
             msg
           } = res.data;
           if (result) {
+            data.forEach((item)=>{
+              // 是否转机字符串类型保存后会被转化导致显示不正常，优化下
+              if(item['Remark2']==='False'){
+                item['Remark2'] = false
+              }else if(item['Remark2']==='True'){
+                item['Remark2'] = true
+              }
+            })
             this.$set(this.tableData, remarkTb, data);
             this.setData();
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
