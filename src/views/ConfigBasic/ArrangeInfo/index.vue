@@ -10,31 +10,13 @@
         :nodekey="'OrganizeID'"
         :treeProps="treeProps"
         @searchTree="searchTree"
-        @handleNodeClick="handleNodeClick"
         @check="check"
       />
     </div>
     <div class="admin_container">
       <div>
         <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"></el-col>
-              <el-col :span="20" class="flex_flex_end">
-                <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status1"
-                  :key="y"
-                >
-                  <span @click="changeStatus(item, y, 1)">{{
-                    item.label
-                  }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-          <div v-show="labelStatus1 == 0" class="bgFFF">
+          <div class="bgFFF">
             <div class="admin_head flex_row_spaceBtn" ref="headRef">
               <div class="flex">
                 <div class="tree_text">排班配置</div>
@@ -216,12 +198,12 @@
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
-                          <el-col :span="12"> 上班时长： </el-col>
+                          <el-col :span="12"> 总时长： </el-col>
                           <el-col :span="12">
                             <el-input
                               size="mini"
                               type="number"
-                              v-model="item.WorkHour"
+                              v-model="item.TotalHours"
                               :disabled="item.ElementDeleteFlag === 1"
                             ></el-input>
                           </el-col>
@@ -242,46 +224,6 @@
                   </template>
                 </el-calendar>
               </div>
-            </div>
-          </div>
-          <div v-show="labelStatus1 == 1" class="bgFFF">
-            <div class="admin_head flex_between" ref="headRef">
-              <div class="notice">注意：切换月份前要先保存哦~</div>
-              <el-button
-                type="success"
-                plain
-                size="mini"
-                :disabled="!isEdit"
-                @click="saveOnlyWeekRest"
-                >保存</el-button
-              >
-            </div>
-            <div class="margin_lr10">
-              <el-calendar
-                class="arrange_calendar__body2"
-                v-model="calendarMonth2"
-              >
-                <template slot="dateCell" slot-scope="{ data }">
-                  <div :class="data.isSelected ? 'is-selected' : ''">
-                    <div class="flex_between">
-                      <span> {{ data.day.split("-").slice(1).join("-") }}</span>
-                    </div>
-                    <div class="flex_row_center">
-                      <el-checkbox
-                        size="medium "
-                        v-model="
-                          calenderData2[
-                            Number(data.day.split('-').slice(2).join('-')) - 1
-                          ]['IsRest']
-                        "
-                        class="largeCheckbox"
-                      >
-                        <span>休</span>
-                      </el-checkbox>
-                    </div>
-                  </div>
-                </template>
-              </el-calendar>
             </div>
           </div>
         </div>
@@ -319,11 +261,6 @@ export default {
   data() {
     return {
       adminLoading: false,
-      labelStatus1: 0,
-      Status1: [
-        { label: "上班", value: 0 },
-        { label: "休假", value: 1 },
-      ],
       pickerOptions: {
         shortcuts: [
           {
@@ -417,9 +354,7 @@ export default {
         { label: "周日", prop: "Week7" },
       ],
       calenderData: [],
-      calenderData2: [],
       calendarMonth: new Date(),
-      calendarMonth2: new Date(),
       selectionLines: [],
       //////////////左侧树节点//////////////
       treeData: [],
@@ -471,7 +406,6 @@ export default {
       clickData: {},
       currentMonth: this.zero(new Date().getMonth() + 1),
       currentYear: new Date().getFullYear(),
-      currentMonth2: new Date().getMonth() + 1,
       treeListTmp: [],
       treeHeight: "790px",
       lines: [],
@@ -496,14 +430,6 @@ export default {
             firstYearMonth,
             lastYearMonth,
           ];
-          // let YearMonth2 =
-          //   String(currentYear) + "-" + String(this.currentMonth) + "01";
-          // this.setCalender(
-          //   currentYear,
-          //   this.currentMonth,
-          //   YearMonth,
-          //   YearMonth2
-          // );
           if (
             new Date(newValue).getMonth() + 1 !==
             new Date(oldValue).getMonth() + 1
@@ -511,13 +437,6 @@ export default {
             this.getTableData(this.formSearchs[0].datas, 0);
           }
         }
-      },
-      deep: true,
-    },
-    calendarMonth2: {
-      handler(newValue, oldValue) {
-        this.currentMonth2 = new Date(newValue).getMonth() + 1;
-        // 切换数据
       },
       deep: true,
     },
@@ -592,7 +511,7 @@ export default {
       return newarr;
     },
     // 添加属性
-    setCalender(Year, Month, YearMonth, YearMonth2) {
+    setCalender(Year, Month) {
       this.days = this.getDays(Year, Month); // 判断当前月有多少天
       let WorkingTimesID = "";
       if (this.WorkingTimesIDs.length != 0) {
@@ -604,31 +523,6 @@ export default {
         firstYearMonth,
         lastYearMonth,
       ];
-      // for (var i = 1; i <= this.days; i++) {
-      //   const date = `${this.currentYear}-${this.currentMonth}-${this.zero(
-      //     i + 1
-      //   )}`;
-      //   let obj = {
-      //     WorkingDate: date,
-      //     dicID: 97,
-      //     OverTime: "",
-      //     Peoples: "",
-      //     WorkHour: "",
-      //     WorkingTimesID: "",
-      //     TotalHours: "",
-      //   };
-      //   this.calenderData.push(obj);
-      //   this.calenderData2.push(obj);
-      // }
-      // if (YearMonth) {
-      //   // 切换数据
-      //   this.searchWorkTime(
-      //     YearMonth,
-      //     YearMonth2,
-      //     this.lines[0].OrganizeID,
-      //     95
-      //   );
-      // }
     },
     // 获取组织
     async getOrgData() {
@@ -789,9 +683,8 @@ export default {
         });
       }
     },
-    // 单击出来组织人员
-    handleNodeClick(data, node) {},
-    check(data) {
+    // 复选框状态改变的时候进行
+    check() {
       this.lines = this.$refs.asideRef.$refs.asideTree
         .getCheckedNodes()
         .filter((x) => {
@@ -799,53 +692,17 @@ export default {
         });
       if (this.lines.length > 1 || this.lines.length == 0) {
         this.cicleName(0, true);
+        if (this.lines.length == 0) {
+          this.calenderData = [];
+        }
       } else if (this.lines.length == 1) {
         this.cicleName(this.lines[0].TotalPeoples, false);
       }
       if (this.lines.length == 1) {
-        this.formSearchs[0].datas["OrganizeID"] = data.OrganizeID;
+        this.formSearchs[0].datas["OrganizeID"] = this.lines[0].OrganizeID;
         this.getTableData(this.formSearchs[0].datas, 0);
-        // let YearMonth =
-        //   String(this.calendarMonth.getFullYear()) +
-        //   this.zero(this.calendarMonth.getMonth() + 1);
-        // let YearMonth2 =
-        //   this.calendarMonth.getFullYear() +
-        //   "-" +
-        //   (this.calendarMonth.getMonth() + 1) +
-        //   "-" +
-        //   "01";
-        // this.searchWorkTime(
-        //   YearMonth,
-        //   YearMonth2,
-        //   this.lines[0].OrganizeID,
-        //   95
-        // );
       }
     },
-    // // 查询线别排班
-    // async searchWorkTime(YearMonth, YearMonth2, OrganizeID, dicID) {
-    //   let obj = {
-    //     YearMonth: YearMonth,
-    //     YearMonth2: YearMonth2,
-    //     OrganizeID: OrganizeID,
-    //     dicID: dicID,
-    //   };
-    //   let res = await GetWorkTimeData(obj);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     data.some((x, i) => {
-    //       for (var name in x) {
-    //         this.$set(this.calenderData[i], name, x[name]);
-    //       }
-    //     });
-    //   } else {
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   }
-    // },
     zero(num) {
       if (Number(num) < 10) {
         return "0" + num;
@@ -867,10 +724,6 @@ export default {
       }
     },
     ////////////////////////////事件///////////////
-    // 切换状态
-    changeStatus(item, index) {
-      this.labelStatus1 = index;
-    },
     // 切换大小周
     changeRadio() {
       this.clearTable();
@@ -914,8 +767,18 @@ export default {
     },
     //批量设置单个日历班次
     changeWorkingTimesID2(val) {
+      if (this.lines == 0 || this.lines > 1) {
+        this.$message.error("请选择仅限一条班次！");
+        this.WorkingTimesID2 = null;
+        return;
+      }
+      const newData = this.WorkingTimesIDs.find(
+        (x) => x.WorkingTimesID === val
+      );
       this.calenderData.forEach((item) => {
         if (item.ElementDeleteFlag === 0) {
+          item.TotalHours = newData.TotalHour;
+          item.OverTime = newData.OverTimeHour;
           item.WorkingTimesID = val;
         }
       });
@@ -953,7 +816,6 @@ export default {
             });
           }
         }
-        console.log(this.calenderData, "calenderData");
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -1083,7 +945,6 @@ export default {
           .then(async (_) => {
             //对数据进行筛选
             const resultArr = this.calenderData.filter((item) => {
-              item.TotalHours = Number(item.WorkHour) + Number(item.OverTime);
               return item.ElementDeleteFlag === 0 || item.WorkingTimesDetailID;
             });
             let res = await SaveData(resultArr);
@@ -1108,17 +969,9 @@ export default {
           .catch((_) => {});
       }
     },
-    // 保存单条线的休假
-    saveOnlyWeekRest() {},
     // 点击是否循环大小周
     clickitem(val) {
       val == this.IsCicle ? (this.IsCicle = false) : (this.IsCicle = true);
-    },
-    // 计算累计工时
-    computedTime() {},
-    // 点击休息清空上班时间加班时间
-    clearInput(index) {
-      console.log(index, "index");
     },
   },
 };
