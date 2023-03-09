@@ -708,25 +708,27 @@ export default {
                     }
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                     // 判断需求到料日期是否大于今天
-                    if (
-                      item.prop === "DeliveryDate" &&obj[item.prop]&&
-                      obj[item.prop] < formatDates.formatTodayDate()
-                    ) {
-                      propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
-                      rowNo = Number(m.__rowNum__) + 1;
-                      // 异常提示
-                      split.push(
-                        `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
-                      );
-                    }
-                  } else if (item.prop === "DemandQty") {
-                    if (m[key] > 0) {
-                      //导入欠料数大于0才导入
-                      obj[item.prop] = m[key];
-                    } else {
-                      return;
-                    }
-                  } else {
+                    // if (
+                    //   item.prop === "DeliveryDate" &&obj[item.prop]&&
+                    //   obj[item.prop] < formatDates.formatTodayDate()
+                    // ) {
+                    //   propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
+                    //   rowNo = Number(m.__rowNum__) + 1;
+                    //   // 异常提示
+                    //   split.push(
+                    //     `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
+                    //   );
+                    // }
+                  } 
+                  // else if (item.prop === "DemandQty") {
+                  //   if (m[key] > 0) {
+                  //     //导入欠料数大于0才导入
+                  //     obj[item.prop] = m[key];
+                  //   } else {
+                  //     return;
+                  //   }
+                  // } 
+                  else {
                     obj[item.prop] = m[key];
                   }
                 } else if (
@@ -737,8 +739,8 @@ export default {
                   // 列为日期的格式
                   isDate = true;
                   if(Number(m[key])>0){
-                    obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
-                    obj["DemandQty"] = m[key];
+                    // obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
+                    // obj["DemandQty"] = m[key];
                     obj["dicID"] = _this.sysID[_this.tagRemark].ID;
                     obj["Account"] = _this.$store.getters.userInfo.Account;
                     obj["row"] = m.__rowNum__;
