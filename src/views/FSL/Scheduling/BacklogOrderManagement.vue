@@ -2,8 +2,11 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus1 == i">
+      <!-- <div v-for="(ele,i) in Status1" :key="i"> -->
         <ComSearch
+          v-for="(item,i) in Status1"
+          :key="i"
+          v-show="labelStatus1 == i"
           ref="searchRef"
           :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
@@ -13,7 +16,7 @@
           :signName="labelStatus1"
           @btnClick="btnClick"
         />
-      </div>
+      <!-- </div> -->
     </div>
     <div>
       <div class="admin_content">
@@ -23,15 +26,22 @@
               <span class="title">{{ title }}</span>
             </el-col>
             <el-col :span="20" class="flex_flex_end">
+              <!-- <div
+                    :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                    v-for="(item, y) in Status1"
+                    :key="y"
+                  >
+                    <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                    <el-divider direction="vertical"></el-divider>
+                  </div> -->
             </el-col>
           </el-row>
         </div>
         <div
           class="flex_column"
           :style="{ height: height }"
-          v-show="labelStatus1 == 0"
         >
-          <div class="spreadContainer" v-loading="tableLoading[0]">
+          <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
@@ -42,15 +52,15 @@
           <div class="flex_row_spaceBtn pagination">
             <div>
               <span
-                @click="toPageSetting(sysID[0].ID)"
+                @click="toPageSetting(sysID[tagRemark].ID)"
                 class="primaryColor cursor"
-                >SysID:{{ sysID[0].ID }}
+                >SysID:{{ sysID[tagRemark].ID }}
               </span>
             </div>
             <div class="flex">
               <el-pagination background @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex" :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize" :total="tablePagination[0].pageTotal"
+                :current-page="tablePagination[tagRemark].pageIndex" :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                :page-size="tablePagination[tagRemark].pageSize" :total="tablePagination[0].pageTotal"
                 @current-change="(val) => pageChange(val, 0)" layout="total, sizes, prev, pager, next,jumper">
               </el-pagination>
             </div>
@@ -108,10 +118,11 @@ export default {
       footerLabel: ["", ""],
       sysID: [
         { ID: 9053 },
+        // { ID: 9042 },
       ],
       Status1: [
-        { label: "待排周计划", value: 0 },
-        { label: "已完成", value: 1 },
+        { label: "待排订单", value: 0 },
+        { label: "已排订单", value: 1 },
       ],
       title: this.$route.meta.title,
       labelStatus1: 0,
@@ -121,6 +132,10 @@ export default {
       drawer: false,
       height: "707px",
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -149,13 +164,37 @@ export default {
           Params: { },
           Icon: "",
         },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "保存",
+        //   Type: "success",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 1,
+        //   Methods: "dataSave",
+        //   Icon: "",
+        // },
+        // {
+        //   ButtonCode: "noPass",
+        //   BtnName: "退回",
+        //   isLoading: false,
+        //   Methods: "dataDel",
+        //   Type: "danger",
+        //   Icon: "",
+        //   Size: "small",
+        //   signName: 1,
+        //   Params: {
+        //     dataName: "selectionData",
+        //   },
+        // },
       ],
-      tableData: [[]],
-      delData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
+      tableData: [[],[]],
+      delData: [[],[]],
+      tableColumns: [[],[]],
+      tableLoading: [false,false],
+      isClear: [false,false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
@@ -163,7 +202,7 @@ export default {
       tagRemark: 0,
       isLoading: false,
       initialBtnData: [],
-      selectionData: [[]],
+      selectionData: [[],[]],
       hasSelect: [true],
       isEdit: false,
       losePrepareDate: 1,
@@ -217,7 +256,7 @@ export default {
           let newData = this.parmsBtn.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = x.ButtonName;
+              y.BtnName = y.BtnName||x.ButtonName;
               y.Methods = y.Methods||x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
@@ -238,8 +277,10 @@ export default {
     },
 
     setData() {
+      
       this.spread.suspendPaint();
       let sheet = this.spread.getActiveSheet();
+      sheet.reset(); //重置表单
       sheet.options.allowCellOverflow = true;
       sheet.defaults.rowHeight = 23;
       sheet.defaults.colWidth = 100;
@@ -657,7 +698,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-
+      form["ProductionAccounts"] = this.$store.getters.userInfo.Account;//登录账号
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (remarkTb == 0) {

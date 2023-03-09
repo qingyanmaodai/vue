@@ -500,7 +500,7 @@ export default {
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         // 设置行颜色，最终判断有错误整行底色红色
         this.tableData[this.tagRemark].forEach((row, index) => {
-          if (row["DBResult"] && row["DBResult"].indexOf("错误") > -1) {
+          if (row["Result"] && row["Result"]!='正确') {
             sheet.getCell(index, -1).backColor("red");
           }
         });
@@ -811,6 +811,7 @@ export default {
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
 	      if(DataList.length){
+          console.log('DataList',DataList)
           let res = await SaveData(DataList);
           const { result, data, count, msg } = res.data;
           if (result) {

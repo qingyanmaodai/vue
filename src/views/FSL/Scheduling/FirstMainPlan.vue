@@ -6,9 +6,9 @@
           <ComSearch
             v-show="labelStatus1 != 4"
             ref="searchRef"
-            :searchData="formSearchs[tagRemark].datas"
-            :searchForm="formSearchs[tagRemark].forms"
-            :remark="tagRemark"
+            :searchData="formSearchs[0].datas"
+            :searchForm="formSearchs[0].forms"
+            :remark="labelStatus1 == 3?2:0"
             :btnForm="btnForm"
             :signName="labelStatus1"
             @btnClick="btnClick"
@@ -32,40 +32,24 @@
                   <span class="title">{{ title }}</span>
                 </el-col>
                 <el-col :span="20" class="flex_flex_end">
-                  <!-- <el-input-number
+                  <el-input-number
                     v-model="AutoDays2"
                     type="number"
                     v-show="labelStatus1 != 4"
                     size="small"
                     placeholder="请选择周期"
                   >
-                  </el-input-number> -->
+                  </el-input-number>
                   <el-divider direction="vertical"></el-divider>
-                  <!-- <el-button
+                  <el-button
                     type="primary"
                     size="mini"
                     v-show="labelStatus1 != 4"
-                    @click="MOPlanStep1Calculation(0)"
+                    @click="MOPlanStep1CalculationPre(0)"
                   >
                     预排运算
-                  </el-button> -->
-                  <el-button
-                    v-show="labelStatus1 == 1"
-                    type="primary"
-                    size="mini"
-                    @click="MOPlanStep1Calculation"
-                  >
-                   匹配拉线
                   </el-button>
                   <el-button
-                    v-show="labelStatus1 == 1"
-                    type="success"
-                    size="mini"
-                    @click="MOPlanSaveToDayPlan"
-                  >
-                    更新计划
-                  </el-button>
-                  <!-- <el-button
                     v-show="labelStatus1 == 1"
                     type="warning"
                     size="mini"
@@ -80,8 +64,8 @@
                     @click="subSAP"
                   >
                     提交同步申请
-                  </el-button> -->
-                  <!-- <el-button
+                  </el-button>
+                  <el-button
                     v-show="labelStatus1 == 4"
                     type="primary"
                     size="mini"
@@ -106,7 +90,7 @@
                     @click="MOPlanSaveToDayPlan"
                   >
                     3.更新计划
-                  </el-button> -->
+                  </el-button>
                   <el-divider direction="vertical"></el-divider>
                   <div
                     :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
@@ -120,11 +104,10 @@
               </el-row>
             </div>
   
-            <!-- <div v-show="labelStatus1 <=2"> -->
-        <div>
+            <div v-show="labelStatus1 <=2">
               <div class="admin_content">
                 <div class="flex_column" :style="{ height: height }">
-                  <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
+                  <div class="spreadContainer" v-loading="tableLoading[0]">
                     <gc-spread-sheets
                       class="sample-spreadsheets"
                       @workbookInitialized="initSpread"
@@ -136,17 +119,17 @@
                 <div class="flex_row_spaceBtn pagination">
                   <div>
                     <span @click="toPageSetting" class="primaryColor cursor"
-                      >SysID:{{sysID[tagRemark].ID}}
+                      >SysID:{{sysID[0].ID}}
                     </span>
                   </div>
                   <div class="flex">
                     <el-pagination
                       background
                       @size-change="(val) => pageSize(val, 0)"
-                      :current-page="tablePagination[tagRemark].pageIndex"
+                      :current-page="tablePagination[0].pageIndex"
                       :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                      :page-size="tablePagination[tagRemark].pageSize"
-                      :total="tablePagination[tagRemark].pageTotal"
+                      :page-size="tablePagination[0].pageSize"
+                      :total="tablePagination[0].pageTotal"
                       @current-change="(val) => pageChange(val, 0)"
                       layout="total, sizes, prev, pager, next,jumper"
                     >
@@ -155,7 +138,7 @@
                 </div>
               </div>
             </div>
-            <!--<ComVxeTable
+            <ComVxeTable
               ref="tableRefTwo"
               v-show="labelStatus1 == 3"
               :rowKey="'RowNumber'"
@@ -205,13 +188,13 @@
               @selectfun="selectFun"
               @changeline="changeline"
               @sortChange="sortChange"
-            />-->
+            />
             <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
           </div>
         </div>
       </div>
       <!-- 点击齐套率弹框-->
-      <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+      <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
     </div>
   </template>
   
@@ -247,11 +230,8 @@
   import { MOPlanStep1, MOPlanStep1Calculation } from "@/api/wjApi";
   
   import {
-    SaveMOPlanStep4,
-    SaveMOPlanStep2,
     OrderPlanMaterialForm,
   } from "@/api/PageTwoScheduling";
-  import { template } from "xe-utils";
   export default {
     name: "FirstMainPlan",
     components: {
@@ -274,7 +254,7 @@
           { label: "待排产", value: 0 },
           { label: "已排产", value: 1 },
           { label: "暂停", value: 2 },
-          // { label: "分线列表", value: 4 },
+          { label: "分线列表", value: 4 },
         ],
         title: this.$route.meta.title,
         resultMsg: "",
@@ -294,36 +274,6 @@
           },
         ],
         parmsBtn: [
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "计算排期",
-          //   Type: "primary",
-          //   Ghost: true,
-          //   Size: "small",
-          //   signName: [0, 1, 2, 3],
-          //   Methods: "computedScheduling",
-          //   Icon: "",
-          // },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "下发周计划",
-          //   Type: "primary",
-          //   Ghost: true,
-          //   signName: [0, 1, 2, 3],
-          //   Size: "small",
-          //   Methods: "setWeekData",
-          //   Icon: "",
-          // },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "暂停",
-          //   Type: "danger",
-          //   Ghost: true,
-          //   signName: [0, 1, 2, 3],
-          //   Size: "small",
-          //   Methods: "parseData",
-          //   Icon: "",
-          // },
           {
             ButtonCode: "save",
             BtnName: "保存",
@@ -334,16 +284,16 @@
             signName:1,
             Size: "small",
           },
-          //        {
-          //   ButtonCode: "save",
-          //   BtnName: "保存",
-          //   isLoading: false,
-          //   Methods: "save4",
-          //   Type: "success",
-          //   Icon: "",
-          //   signName:4,
-          //   Size: "small",
-          // },
+                 {
+            ButtonCode: "save",
+            BtnName: "保存",
+            isLoading: false,
+            Methods: "save4",
+            Type: "success",
+            Icon: "",
+            signName:4,
+            Size: "small",
+          },
           {
             ButtonCode: "save",
             BtnName: "恢复",
@@ -355,16 +305,16 @@
             Size: "small",
             Params: { dataName: "selectionData",remarkTb:2 },
           },
-          // {
-          //   ButtonCode: "save",
-          //   BtnName: "退回",
-          //   Type: "danger",
-          //   Ghost: true,
-          //   signName: 4,
-          //   Size: "small",
-          //   Methods: "backData",
-          //   Icon: "",
-          // },
+          {
+            ButtonCode: "noPass",
+            BtnName: "退回",
+            Type: "danger",
+            Ghost: true,
+            signName: 4,
+            Size: "small",
+            Methods: "backData",
+            Icon: "",
+          },
           // {
           //   ButtonCode: "save",
           //   BtnName: "返回",
@@ -383,9 +333,9 @@
         tableLoading: [false, false, false],
         isClear: [false, false, false],
         tablePagination: [
+          { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
           { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         ],
         height: "707px",
         treeHeight: "765px",
@@ -398,12 +348,11 @@
         dialogImport: false,
         fileList: [],
         file: [],
-        sysID: [{ ID: 7944 }],
-        //sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
+        sysID: [{ ID: 5149, AutoDays2: this.AutoDays2 }, { ID: 6735 },{ ID: 5585 }],
         userInfo: {},
         IsPurchaseBoss: false,
         ReplyDate: "",
-        // AutoDays2: 30,
+        AutoDays2: 30,
         NoWorkHour: [],
         LineViewSort: [],
         spread: null,
@@ -420,8 +369,9 @@
       this.getTableHeader();
     },
     activated() {
-      if (this.spread) {
-      this.spread.refresh();
+      if(this.spread)
+      {
+        this.spread.refresh();
       }
     },
     mounted() {
@@ -433,7 +383,7 @@
       async subSAP() {
         this.getSelectionData(1);
         this.adminLoading = true;
-        let newData = this.selectionData[this.tagRemark];
+        let newData = this.selectionData[0];
         let pushData = [];
         newData.forEach((m) => {
           m["dicID"] = 7967;
@@ -498,7 +448,7 @@
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
-              formatter: '@'//字符串格式
+              formatter: '@'//转为日期格式
             });
           } else {
             colInfos.push({
@@ -602,7 +552,7 @@
           if(_this.tableColumns[0].length){
             for(let i=0;i<_this.tableColumns[0].length;i++){
               let item = _this.tableColumns[0][i]
-              if(item.name ==="Q1"){
+              if(item.name ==="K1"){
                    rowSheet3 = sheet.getCell(
                     index,//行
                     i,//列
@@ -618,7 +568,7 @@
             rowSheet.foreColor("balck");
             rowSheet2.backColor("#A0CFFF");
             rowSheet2.foreColor("balck");
-            if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
               rowSheet3.foreColor("red");
             }
           } else if (row["MFGOrganizeID"] === 162) {
@@ -626,32 +576,26 @@
             rowSheet.backColor("#FFFF00");
             rowSheet.foreColor("black");
             rowSheet2.backColor("#FFFF00");
-            if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
               rowSheet3.foreColor("red");
             }
           } else if (row["SchedulingResult"] === "超期") {
             // row.backColor();
             rowSheet.backColor("#C2E7B0");
             rowSheet.foreColor("black");
-            if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+            if(rowSheet3&&row["K1"] !="100.00%"){//不齐套时字体为红色
               rowSheet3.foreColor("red");
             }
           } 
-          // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
-          //   rowSheet.backColor("#C2E7B0");
-          //   rowSheet.foreColor("red");
-          //   if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
-          //     rowSheet3.foreColor("red");
-          //   }
-          // } 
-          else if (row["DbResult"]&&row["DbResult"].indexOf('错误')>-1) {
-            rowSheet.backColor("red");
-            rowSheet.foreColor("black");
-            if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
-              rowSheet3.foreColor("#A0CFFF");
+           else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
+            // row.backColor();
+            rowSheet.backColor("#C2E7B0");
+            rowSheet.foreColor("red");
+            if(row["K1"] !="100.00%"){//不齐套时字体为红色
+              rowSheet3.foreColor("red");
             }
-          }
-          else if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+          } 
+          else if(row["K1"] !="100.00%"){//不齐套时字体为红色
             rowSheet.foreColor("black");
             rowSheet2.foreColor("balck");
             rowSheet3.foreColor("red");
@@ -886,12 +830,11 @@
         this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
             if(_this.tableColumns[0].length){
               _this.tableColumns[0].map((item,index)=>{
-                if(item.name ==="Q1"&&args.col===index){
-                  // 显示欠料
-                  _this.colDialogVisible = true;
-                  _this.dialogSearchForm.OrderNo =
-                    _this.tableData[_this.tagRemark][args.row].OrderNo;
-                  _this.dialogSearchForm.OweQty = 0;
+                if(item.name ==="K1"&&args.col===index){
+                  // 显示ERP供需平衡表
+                  _this.colDialogVisible =true
+                  _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
+                  _this.dialogSearchForm.ZQLS = 0
                 }
               })
             }
@@ -933,29 +876,29 @@
         let sheet = this.spread.getActiveSheet();
         let newData = sheet.getDataSource();
         let resultTag = false;
-        this.selectionData[this.tagRemark] = [];
+        this.selectionData[0] = [];
         if (newData.length != 0) {
           newData.forEach((x, y) => {
             if (x.isChecked) {
-              if (!x.ProcessGroupID&&x.OrderNo) {
+              if (!x.ProcessGroupID) {
                 resultTag = true;
                 this.$message.error("第" + (y + 1) + "行工艺不能为空");
               } else {
-                this.selectionData[this.tagRemark].push(x);
+                this.selectionData[0].push(x);
               }
             }
           });
         }
         if (resultTag && type === 0) {
           //
-          this.selectionData[this.tagRemark] = [];
+          this.selectionData[0] = [];
         }
       },
       // 跳转至页面配置
       toPageSetting() {
         this.$router.push({
           name: "FieldInfo",
-          params: { ID: this.sysID[this.tagRemark].ID },
+          params: { ID: this.sysID[0].ID },
         });
       },
       initSpread: function (spread) {
@@ -1218,7 +1161,7 @@
             this.$set(this.formSearchs[z], "forms", x);
           });
           //this.formSearchs[0].datas["Extend11"] = "CRTD";
-         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
+          this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
           this.dataSearch(0);
         }
       },
@@ -1238,7 +1181,7 @@
       async getTableData(form, remarkTb) {
         this.$set(this.tableLoading, remarkTb, true);
         if (remarkTb == 0) {
-          // form["AutoDays2"] = this.AutoDays2;
+          form["AutoDays2"] = this.AutoDays2;
         }
   
         form["rows"] = this.tablePagination[remarkTb].pageSize;
@@ -1281,10 +1224,10 @@
       },
       // 批量开始日期
       changeDate() {
-        if (this.selectionData[this.tagRemark].length == 0) {
+        if (this.selectionData[0].length == 0) {
           this.$message.error("请选择需要批量填写开始日期的数据！");
         } else {
-          this.selectionData[this.tagRemark].forEach((a) => {
+          this.selectionData[0].forEach((a) => {
             a.StartDate = this.ReplyDate;
           });
         }
@@ -1318,9 +1261,9 @@
           s = [21, 22, 23];
         } else if (index === 3) {
           s = [24];
-          // this.formSearchs[2].datas["ProductionStatus"] = s;
-          // this.dataSearch(2);
-          // return
+          this.formSearchs[2].datas["ProductionStatus"] = s;
+          this.dataSearch(2);
+          return
         }
         this.formSearchs[0].datas["ProductionStatus"] = s;
         this.dataSearch(0);
@@ -1332,7 +1275,7 @@
           this.$message.error("工艺是否不为空！");
           return;
         }
-        let submitData = this.tableData[this.tagRemark]; //this.selectionData[this.tagRemark];
+        let submitData = this.tableData[1]; //this.selectionData[0];
         submitData.forEach((m) => {
           m.ReplyDate = this.ReplyDate;
           m["isChecked"] = true;
@@ -1388,7 +1331,7 @@
           this.$message.error("工艺不能为空");
           return;
         }
-        let submitData = this.selectionData[this.tagRemark];
+        let submitData = this.selectionData[0];
         if (submitData.length == 0) {
           this.$message.error("请选择需要下达的数据！");
           return;
@@ -1431,31 +1374,30 @@
       },
       // 退回
       backData() {
-        if (this.selectionData[this.tagRemark].length == 0) {
+        if (this.selectionData[1].length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
           this.$confirm("确定退回吗？")
             .then(() => {
               // 确定
               this.adminLoading = true;
-              this.selectionData[this.tagRemark].forEach((a) => {
-                a["ElementDeleteFlag"] = 1;
-              });
-              this.dataSave(this.selectionData[this.tagRemark], this.tagRemark);
+          this.selectionData[1].forEach((a) => {
+            a["ElementDeleteFlag"] = 1;
+          });
+          this.dataSave(this.selectionData[1], 1);
             })
             .catch(() => {
               // 取消
             });
-          
         }
       },
              save4() {//在分线列表处保存
-        if (this.selectionData[this.tagRemark].length == 0) {
+        if (this.selectionData[1].length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
           this.adminLoading = true;
           
-           let submitData = this.selectionData[this.tagRemark]
+           let submitData = this.selectionData[1]
       
   
         if (submitData.length == 0) {
@@ -1468,7 +1410,7 @@
       // 保存
       async save(remarkTb, index, parms) {
         let sheet = this.spread.getActiveSheet();
-        let newData = sheet.getDirtyRows();//获取变更行
+        let newData = sheet.getDirtyRows();
         let submitData = [];
         if (newData.length != 0) {
           newData.forEach((x) => {
@@ -1484,7 +1426,7 @@
       },
       //恢复计划
       async recovery(remarkTb) {
-        // remarkTb = 2
+        remarkTb = 2
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
@@ -1520,7 +1462,7 @@
         }
       },
       async SetData(status) {
-        let submitData = this.selectionData[this.tagRemark];
+        let submitData = this.selectionData[0];
         if (submitData.length == 0) {
           this.$message.error("请选择数据！");
           return;
@@ -1551,8 +1493,8 @@
       },
       // 进入分线列表
       insertList() {
-        this.getSelectionData(this.tagRemark);
-        if (this.selectionData[this.tagRemark].length == 0) {
+        this.getSelectionData(0);
+        if (this.selectionData[0].length == 0) {
           this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
         } else {
           // 进入预排计划
@@ -1562,13 +1504,18 @@
       },
       //正排倒排计算，匹配拉线
       async MOPlanStep1CalculationPre() {
+        // if (this.selectionData[1].length == 0) {
+        //   this.$message.error("请选择需要批量填写开始日期的数据！");
+        //   return;
+        // }
+  
         let submitData = [];
         this.getSelectionData();
-        this.selectionData[this.tagRemark].forEach((x) => {
+        this.selectionData[0].forEach((x) => {
           x["Type"] = 0;
           x["dicID"] = 7960;
           x["isChecked"] = true;
-          // x["AutoDays2"] = this.AutoDays2;
+          x["AutoDays2"] = this.AutoDays2;
           submitData.push(x);
         });
   
@@ -1578,17 +1525,16 @@
           this.adminLoading = true;
           let res = await GetSearch(
             submitData,
-            "/APSAPI/MOPlanStep1CalculationSMT"
+            "/APSAPI/MOPlanStep1CalculationV1"
           );
           const { data, forms, result, msg } = res.data;
           if (result) {
-            this.dataSearch(0);
             this.$message({
               message: msg,
               type: "success",
               dangerouslyUseHTMLString: true,
             });
-            
+            this.dataSearch(0);
           } else {
             this.adminLoading = false;
             this.$message({
@@ -1600,27 +1546,23 @@
         }
       },
       //正排倒排计算，匹配拉线
-      //正排倒排计算，匹配拉线
       async MOPlanStep1Calculation() {
         // if (this.selectionData[1].length == 0) {
         //   this.$message.error("请选择需要批量填写开始日期的数据！");
         //   return;
         // }
-             let submitData = [];
-        this.getSelectionData();
-        this.selectionData[0].forEach((x) => {
+        let submitData = [];
+        this.tableData[1].forEach((x) => {
           x["Type"] = 0;
           x["dicID"] = 7960;
           x["isChecked"] = true;
-          // x["AutoDays2"] = this.AutoDays2;
           submitData.push(x);
         });
-     
         if (submitData.length == 0) {
           this.$message.error("请选择需要计算的数据！");
         } else {
           this.adminLoading = true;
-          let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationSMT");
+          let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
           const { data, forms, result, msg } = res.data;
           if (result) {
             this.$set(this.tableData, 1, data);
@@ -1647,7 +1589,6 @@
               type: "success",
               dangerouslyUseHTMLString: true,
             });
-            this.dataSearch(this.tagRemark)
           } else {
             this.adminLoading = false;
             this.$message({
@@ -1661,18 +1602,18 @@
   
       // 齐套计算
       async dataComputedDate() {
-        // if (this.selectionData[this.tagRemark].length == 0) {
+        // if (this.selectionData[1].length == 0) {
         //   this.$message.error("请选择需要批量填写开始日期的数据！");
         //   return;
         // }
         this.adminLoading = true;
-        let res = await OrderPlanMaterialForm(this.tableData[this.tagRemark]);
+        let res = await OrderPlanMaterialForm(this.tableData[1]);
         const { data, forms, result, msg } = res.data;
         if (result) {
           this.adminLoading = false;
           this.$set(this.tableData, 1, data);
-          let templateData = JSON.parse(JSON.stringify(this.selectionData[this.tagRemark]));
-          this.$set(this.selectionData, this.tagRemark, []);
+          let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
+          this.$set(this.selectionData, 1, []);
           // 清空选中的，把选中的数据重新绑定
           let newData = this.tableData[1].filter((a) =>
             templateData.some((b) => b.OrderID == a.OrderID)
@@ -1681,7 +1622,7 @@
             newData.forEach((c) => {
               this.$nextTick(() => {
                 _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-                _this.selectionData[this.tagRemark].push(c);
+                _this.selectionData[1].push(c);
               });
             });
           }
@@ -1700,24 +1641,22 @@
         }
         // }
       },
-      // 更新计划
+      // 下达
       async MOPlanSaveToDayPlan() {
-        // 匹配拉线由分线列表标签移到待排产中，表格不一样需要修改以下代码
-        this.getSelectionData();
-        if (this.selectionData[this.tagRemark].length == 0) {
+        if (this.selectionData[1].length == 0) {
           this.$message.error("请选择需要更新的计划！");
           return;
         }
-        let submitData = this.selectionData[this.tagRemark]; //this.selectionData[this.tagRemark];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
+        let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
         submitData.forEach((m) => {
           m["MOSchedulingType"] = 1;
           m["dicID"] = 7960;
         });
         this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlanAll?isMultiLine=1&wid=W2207120001");
+        let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
         const { result, data, count, msg } = res.data;
         if (result) {
-          this.dataSearch(this.tagRemark);
+          this.dataSearch(1);
           this.adminLoading = false;
           this.$message({
             message: msg,
