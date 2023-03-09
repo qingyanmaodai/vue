@@ -8,19 +8,21 @@
       <ComAsideTree
         ref="asideRef"
         :treeData="tableData[0]"
-        :title="treeTitle"
+        :title="title"
         :treeHeight="treeHeight"
-        :nodekey="'OrganizeID'"
+        :nodekey="'MaterialBomID'"
         :treeProps="treeProps"
         :pagination="tablePagination[0]"
         :remark="0"
         :showPagination="true"
+        @searchTree="searchTree"
         @searchTreeEnter="searchTreeEnter"
         @handleNodeClick="handleNodeClick"
         @pageChange="pageChange"
         @pageSize="pageSize"
-        :isEdit="isEdit"
         :pagerCount="5"
+        :pageSizes="[10,20,30]"
+        :expand="true"
       />
     </div>
     <div class="admin_container">
@@ -263,9 +265,9 @@ export default {
     return {
       //////////////左侧树节点//////////////
       
-      treeTitle:'BOM信息',
+      ChildTitle:'子件信息',
       treeProps: {
-        label: "ParentCode",
+        label: "Code",
         children: "children",
       },
       keyWords:'',
@@ -277,25 +279,28 @@ export default {
       dialogShowChild: false,
       dialogShow2:false,
       formData: {
-        ParentID:null,
-        ParentCode:null,
-        ParentMaterialName:null,
+        ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
         LineNum:null,
-        Remark:null,
+        Remark1:null,
         Status: 0,
+        Code:null,
+        MaterialName:null,
+        children:[]
       },
       formDataParent: {
-        ParentCode:null,
-        ParentMaterialName:null,
+        ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
         LineNum:null,
-        Remark:null,
+        Remark1:null,
         Status: 0,
+        Code:null,
+        MaterialName:null,
+        children:[]
       },
       formDataChild: {
         Code:null,
@@ -303,7 +308,7 @@ export default {
         Molecule:null,
         Unit:null,
         Scrappage:null,
-        Remark:null,
+        Remark1:null,
         Status: 0,
       },
       UserTypes: [],
@@ -311,8 +316,9 @@ export default {
       treeData: [],
       treeListTmp: [],
       formController: [
-        { label: "父件物料号", prop: "ParentCode", type: "input" },
-        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
+
+        { label: "父件物料号", prop: "Code", type: "input" },
+        { label: "父件描述", prop: "MaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
@@ -322,7 +328,7 @@ export default {
         { label: "单位", prop: "ParentUnit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input" },
-        { label: "备注", prop: "Remark", type: "textarea" },
+        // { label: "备注", prop: "Remark1", type: "textarea" },
         {
           label: "状态",
           prop: "Status",
@@ -334,16 +340,16 @@ export default {
         },
       ],
       formRules: {
-        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
-        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerParent: [
-        { label: "父件物料号", prop: "ParentCode", type: "input" },
-        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
+        { label: "父件物料号", prop: "Code", type: "input" },
+        { label: "父件描述", prop: "MaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
@@ -353,7 +359,7 @@ export default {
         { label: "单位", prop: "ParentUnit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input" },
-        { label: "备注", prop: "Remark", type: "textarea" },
+        // { label: "备注", prop: "Remark1", type: "textarea" },
         {
           label: "状态",
           prop: "Status",
@@ -365,15 +371,15 @@ export default {
         },
       ],
       formRulesParent: {
-        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
-        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerChild: [
-      { label: "父件物料号", prop: "ParentCode",type: "input",dispaly:true  },
+      { label: "父件物料号", prop: "ParentCode",type: "input",disabled:true  },
       { label: "子件物料号", prop: "Code", type: "input" },
         { label: "子件描述", prop: "MaterialName", type: "textarea" },
         {
@@ -384,7 +390,7 @@ export default {
         },
         { label: "单位", prop: "Unit", type: "input" },
         { label: "报废率", prop: "Scrappage", type: "input" },
-        { label: "备注", prop: "Remark", type: "textarea" },
+        { label: "备注", prop: "Remark1", type: "textarea" },
         {
           label: "状态",
           prop: "Status",
@@ -396,7 +402,6 @@ export default {
         },
       ],
       formRulesChild: {
-        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
@@ -507,8 +512,8 @@ export default {
       tableLoading: [false,false],
       isClear: [false,false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 30, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 30, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -521,11 +526,12 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID:[ {ID:9035}, {ID:9037},],
+      sysID:[ {ID:1185}, {ID:1185},],
       addNum:1,//新增行数
       childAddEdit:false,//新增状态
       DataSourceList:{},//数据源
       DataSourceIds:[],//数据源ID
+      keyWords:'',
     };
   },
   computed: {
@@ -589,13 +595,12 @@ export default {
         });
       }
     },
+    //输入框改变查询的值
+    async searchTree(msg) {
+      this.keyWords = msg
+    },
+    // 回车获取值
     searchTreeEnter(msg) {
-      // this.treeData = [];
-      // let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
-      // let tmp = msg
-      //   ? this.rebuildData(msg, treeListTmp)
-      //   : JSON.parse(JSON.stringify(treeListTmp));
-      // this.treeData.push(...tmp);
       // 树结构查询接口,需要传入BOM编码
       console.log('msg',msg)
       this.getBomTree(0,msg)
@@ -967,18 +972,18 @@ export default {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
             obj["ElementDeleteFlag"] = 1;
+            obj["dicID"] = this.sysID[remarkTb].ID;
             newData.push(obj);
           });
         }
       }else if(remarkTb==0){//删除父级
         let obj = this.formData
         obj["ElementDeleteFlag"] = 1;
+        obj["dicID"] = this.sysID[remarkTb].ID;
         newData = [obj]
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          console.log('newData',newData)
-          return
           _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {});
@@ -1048,24 +1053,24 @@ export default {
         });
         // 获取左侧树结构
         this.getBomTree(0)
-        this.tagRemark = 1
-        await this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
+        // this.tagRemark = 1
+        // await this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
         // 获取下拉的数据源
-        this.$nextTick(()=>{
-            // 有数据时直接取行数据源
-            if(this.tableData[this.tagRemark].length){
-                for(let key in this.tableData[this.tagRemark][0]){
-                    for(let obj in this.DataSourceList){
-                    if(obj === key){
-                        this.DataSourceList[obj] = this.tableData[this.tagRemark][0][key]
-                    }
-                }
-                }
-            }else{
-              let ids = this.DataSourceIds.join(',') ||''
-              this.getDataSource(ids)
-            }
-        })
+        // this.$nextTick(()=>{
+        //     // 有数据时直接取行数据源
+        //     if(this.tableData[this.tagRemark].length){
+        //         for(let key in this.tableData[this.tagRemark][0]){
+        //             for(let obj in this.DataSourceList){
+        //             if(obj === key){
+        //                 this.DataSourceList[obj] = this.tableData[this.tagRemark][0][key]
+        //             }
+        //         }
+        //         }
+        //     }else{
+        //       let ids = this.DataSourceIds.join(',') ||''
+        //       this.getDataSource(ids)
+        //     }
+        // })
       }
     },
     // 验证数据
@@ -1085,7 +1090,8 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearchData(form);
+      // let res = await GetSearchData(form);
+      let res = await GetSearch(form,'/APSAPI/GetBomData')
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
@@ -1096,43 +1102,6 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
-
-        //用于测试的数据，测试完删除
-        this.tableData[remarkTb] =  [{
-          id: 1,
-          ParentCode: '一级 1',
-          children: [{
-            id: 4,
-            ParentCode: '二级 1-1',
-            children: [{
-              id: 9,
-              ParentCode: '三级 1-1-1'
-            }, {
-              id: 10,
-              ParentCode: '三级 1-1-2'
-            }]
-          }]
-        }, {
-          id: 2,
-          ParentCode: '一级 2',
-          children: [{
-            id: 5,
-            ParentCode: '二级 2-1'
-          }, {
-            id: 6,
-            ParentCode: '二级 2-2'
-          }]
-        }, {
-          id: 3,
-          ParentCode: '一级 3',
-          children: [{
-            id: 7,
-            ParentCode: '二级 3-1'
-          }, {
-            id: 8,
-            ParentCode: '二级 3-2'
-          }]
-        }]
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
@@ -1194,15 +1163,23 @@ export default {
     },
     // 单击出来组织人员
     handleNodeClick(data, node) {
+      console.log('data',data)
+      console.log('node',node)
       this.clickData = data;
-      if (data.OrganizeID == "-1") {
-        this.$set(this.formSearchs[0].datas, "OrganizeID", data.OrganizeID);
-        this.$set(this.formSearchs[0].datas, "OrganizeIDs", "");
-      } else {
-        this.$set(this.formSearchs[0].datas, "OrganizeID", "");
-        this.$set(this.formSearchs[0].datas, "OrganizeIDs", data.OrganizeID);
-      }
-      this.dataSearch(0);
+      this.formData = data
+      // 通过父级ID查询下级子件
+      // this.formSearchs[1].datas['ParentID'] = data.BOMMasterID
+      let dataList = this.dataSearch(1)
+      console.log('dataList',dataList)
+      // if (data.OrganizeID == "-1") {
+      //   this.$set(this.formSearchs[0].datas, "OrganizeID", data.OrganizeID);
+      //   this.$set(this.formSearchs[0].datas, "OrganizeIDs", "");
+      // } else {
+      //   this.$set(this.formSearchs[0].datas, "OrganizeID", "");
+      //   this.$set(this.formSearchs[0].datas, "OrganizeIDs", data.OrganizeID);
+      // }
+      // this.dataSearch(0);
+      // this.getBomTree(0,this.keyWords)
     },
     // 选择菜单树形
     selectHandleNodeClick(data, node) {
@@ -1239,7 +1216,11 @@ export default {
     // 新增父件
     addParentBom(){
       this.dialogShowParent = true
-      this.resetForm('refParent')
+      this.formDataParent['dicID'] = this.sysID[this.tagRemark].ID
+      console.log('this.formDataParent',this.formDataParent)
+      this.$nextTick(()=>{
+        this.resetForm('refParent')
+      })
     },
     // 父件确认添加
     parentConfirm(val){
@@ -1247,10 +1228,7 @@ export default {
         this.$refs['refParent'].$refs['formData'].validate((valid) => {
           if (valid) {
             this.addDataSave([this.formDataParent],0)
-            this.dialogShowChild = false
-          } else {
-            console.log('error submit!!');
-            return false;
+            this.dialogShowParent = false
           }
         });
       }else{
@@ -1260,15 +1238,18 @@ export default {
     // 新增子件
     addChildBom(){
       // 对接好添加这个判断
-      // if(!this.formData.id){
-      //   this.$message.error("未关联到父件，请检查！");
-      //   return
-      // }
-      if(this.formData&&this.formData.id){
-        this.formControllerChild['ParentCode'] = this.formData['ParentCode']
+      if(!this.formData.MaterialBomID){
+        this.$message.error("未关联到父件，请检查！");
+        return
+      }
+      if(this.formData&&this.formData.MaterialBomID){
+        this.formDataChild['dicID'] = this.sysID[this.tagRemark].ID
+        this.formDataChild['ParentCode'] = this.formData['Code']
       }
       this.dialogShowChild = true
-      this.resetForm('refChild')
+      this.$nextTick(()=>{
+        this.resetForm('refChild')
+      })
     },
     // 子件确认添加
     childConfirm(val){
@@ -1277,10 +1258,7 @@ export default {
           if (valid) {
             this.addDataSave([this.formDataChild],1)
             this.dialogShowChild = false
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
+          } 
         });
       }else{
         this.dialogShowChild = false
@@ -1288,20 +1266,14 @@ export default {
     },
     // 新增保存
     async addDataSave(newData, remarkTb) {
-      // let submitData = []
-      // if(newData){
-      //   submitData = newData
-      // }else{
-
-      // }
       console.log('remarkTb',remarkTb)
       console.log('newData',newData)
-      return
       this.adminLoading = true;
       let res = await SaveData(newData);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.dataSearch(remarkTb);
+        this.formData = this.formDataParent
+        this.getBomTree(0,this.keyWords)
         this.adminLoading = false;
         this.$message({
           message: msg,
@@ -1323,6 +1295,7 @@ export default {
       if(remarkTb==0){
         this.$refs['ruleForm0'].$refs['formData'].validate((valid) => {
           if (valid) {
+            this.formData['dicID'] = this.sysID[this.tagRemark].ID
             submitData = [this.formData]
           } else {
             console.log('error submit!!');
@@ -1367,7 +1340,6 @@ export default {
       console.log('index',index)
       console.log('remarkTb',remarkTb)
       console.log('params',submitData)
-      return
       this.adminLoading = true;
       let res = await SaveData(submitData);
       const { result, data, count, msg } = res.data;
@@ -1417,129 +1389,16 @@ export default {
     // 树结构查询
     async getBomTree(remarkTb,keyWords){
       let form = this.formSearchs[remarkTb].datas
-      form['ParentCode'] =  keyWords
+      form['Code'] =  keyWords
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       console.log('form',form)
       this.$set(this.tableLoading, remarkTb, true);
-      let res = await GetSearchData(form);
+      let res = await GetSearch(form,'/APSAPI/GetBomData');
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        //用于测试的数据，测试完删除
-        this.tableData[remarkTb] =  [{
-          id: 1,//主键
-          ParentCode: '一级 1',//bom编码
-          ParentMaterialName:'物料名称',
-          Denominator:'100',//基本用量
-          ParentUnit:'基本计量单位',
-          ItemClass:'项目类别',
-          LineNum:'项目',
-          Remark:'备注',
-          Status: 0,
-          children: [{
-            parentId:1,//上级ID
-            id: 4,
-            ParentCode: '二级 1-1',
-            ParentMaterialName:'物料名称',
-            Denominator:'100',
-            ParentUnit:'基本计量单位',
-            ItemClass:'项目类别',
-            LineNum:'项目',
-            Remark:'备注',
-            Status: 0,
-            children: [{
-              parentId:4,
-              id: 9,
-              ParentCode: '三级 1-1-1',
-              ParentMaterialName:'物料名称',
-              Denominator:'100',
-              ParentUnit:'基本计量单位',
-              ItemClass:'项目类别',
-              LineNum:'项目',
-              Remark:'备注',
-              Status: 0,
-            }, {
-              parentId:4,
-              id: 10,
-              ParentCode: '三级 1-1-2',
-              ParentMaterialName:'物料名称',
-              Denominator:'100',
-              ParentUnit:'基本计量单位',
-              ItemClass:'项目类别',
-              LineNum:'项目',
-              Remark:'备注',
-              Status: 0,
-            }]
-          }]
-        }, {
-          id: 2,
-          ParentCode: '一级 2',
-          ParentMaterialName:'物料名称',
-          Denominator:'100',
-          ParentUnit:'基本计量单位',
-          ItemClass:'项目类别',
-          LineNum:'项目',
-          Remark:'备注',
-          Status: 0,
-          children: [{
-            parentId:2,
-            id: 5,
-            ParentCode: '二级 2-1',
-            ParentMaterialName:'物料名称',
-            Denominator:'100',
-            ParentUnit:'基本计量单位',
-            ItemClass:'项目类别',
-            LineNum:'项目',
-            Remark:'备注',
-            Status: 0,
-          }, {
-            parentId:2,
-            id: 6,
-            ParentCode: '二级 2-2',
-            ParentMaterialName:'物料名称',
-            Denominator:'100',
-            ParentUnit:'基本计量单位',
-            ItemClass:'项目类别',
-            LineNum:'项目',
-            Remark:'备注',
-            Status: 0,
-          }]
-        }, {
-          id: 3,
-          ParentCode: '一级 3',
-          ParentMaterialName:'物料名称',
-          Denominator:'100',
-          ParentUnit:'基本计量单位',
-          ItemClass:'项目类别',
-          LineNum:'项目',
-          Remark:'备注',
-          Status: 0,
-          children: [{
-            parentId:3,
-            id: 7,
-            ParentCode: '二级 3-1',
-            ParentMaterialName:'物料名称',
-            Denominator:'100',
-            ParentUnit:'基本计量单位',
-            ItemClass:'项目类别',
-            LineNum:'项目',
-            Remark:'备注',
-            Status: 0,
-          }, {
-            parentId:3,
-            id: 8,
-            ParentCode: '二级 3-2',
-            ParentMaterialName:'物料名称',
-            Denominator:'100',
-            ParentUnit:'基本计量单位',
-            ItemClass:'项目类别',
-            LineNum:'项目',
-            Remark:'备注',
-            Status: 0,
-          }]
-        }]
       } else {
         this.$message({
           message: msg,
