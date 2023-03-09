@@ -49,7 +49,7 @@
       :indent="0"
       ref="asideTree"
       :node-key="nodekey"
-      :default-expand-all="isOpen"
+      :default-expand-all="expand?isOpen:expand"
       :data="treeData"
       :props="treeProps"
       :load="loadNode"
@@ -84,21 +84,7 @@
             background
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
-            :page-sizes="[
-              32,
-              50,
-              100,
-              150,
-              200,
-              250,
-              300,
-              350,
-              400,
-              800,
-              1000,
-              1500,
-              2000,
-            ]"
+            :page-sizes="pageSizes"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"
             @current-change="pageChange"
@@ -189,6 +175,16 @@ export default {
     pagerCount:{
       type: Number,
       default: 7,//5~21之间的奇数
+    },
+    pageSizes:{
+      type: Array,
+      default: function () {
+        return [32,50,100,150,200,250,300,350,400,800,1000,1500,2000,];
+      },
+    },
+    expand:{
+      type: Boolean,
+      default: true,
     }
   },
   data() {
