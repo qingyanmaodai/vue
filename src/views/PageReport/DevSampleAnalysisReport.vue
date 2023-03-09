@@ -86,10 +86,7 @@
     GetHeader,
     GetSearchData,
     ExportData,
-    SaveData,
-    GetServerTime,
-    GetOrgData,
-    UpdateOrderBomPOTracker,
+    GetSearch
   } from "@/api/Common";
   import ComFormDialog from "@/components/ComFormDialog";
   import echarts from "echarts";
@@ -525,12 +522,12 @@
         this.$set(this.tableLoading, remarkTb, true);
         forms["rows"] = 0;
         forms["page"] = this.tablePagination[remarkTb].pageIndex;
-        forms["sort"] = 'ApplicatBy desc';//ApplicatBy
-        forms["fields"] = 'ApplicatBy,ApplicatName,sum(ProofingCount) as ProofingCount';
-        forms["groupby"] = 'ApplicatBy,ApplicatName';
+        // forms["sort"] = 'ApplicatBy desc';//ApplicatBy
+        // forms["fields"] = 'ApplicatBy,ApplicatName,sum(ProofingCount) as ProofingCount';
+        // forms["groupby"] = 'ApplicatBy,ApplicatName';
         forms["ApplicatName"] = form['ApplicatName'];
         forms["dicID"] = form['dicID'];
-        let res = await GetSearchData(forms);
+        let res = await GetSearch(forms,'/APSAPI/DevSampleAnalysis');
         const { result, data, count, msg } = res.data;
         if (result) {
           if(this.radioValue===0){
@@ -539,7 +536,7 @@
             this.list = data
             data.forEach((item)=>{
               xList.push(item.ProofingCount||null)//因为差距大数值过小基本看不见，设置值为null并结合type: 'log',可解决此问题
-              yList.push(item.ApplicatName||'无')
+              yList.push(item.ProofingCountByPeople||'无')
             })
             this.NumberOption.yAxis.data = yList
             this.NumberOption.series[0].data= xList
@@ -551,7 +548,7 @@
           data.forEach((item)=>{
             list.push({
               value:item.ProofingCount||null,
-              name:item.ApplicatName||'无'
+              name:item.ProofingCountByPeople ||'无'
             })
           })
           this.ProportionOption.series[0].data = list
