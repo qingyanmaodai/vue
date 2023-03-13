@@ -1047,7 +1047,13 @@
             }
           });
           // 粘贴事件
-          // this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+          this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+            // 粘贴插入
+            console.log('s',s)
+            console.log('e',e)
+            // if(){
+
+            // }
           //   // 日期列才触发
           //   if(_this.tableColumns[0][e.cellRange.col].prop.indexOf('-')>-1){
           //     // 正则分割剪切单元格的所有值
@@ -1075,8 +1081,8 @@
           //       }
           //     }
           //   }
-          // });
-          sheet.options.isProtected = true;
+          });
+          // sheet.options.isProtected = true;
           sheet.options.protectionOptions.allowResizeColumns = true;
           sheet.options.protectionOptions.allowInsertRows = true;
           sheet.options.protectionOptions.allowDeleteRows = true;
@@ -1291,6 +1297,9 @@
         // 保存日计划
         async dataSaveDay() {
           let sheet = this.spread.getActiveSheet();
+          if (sheet.isEditing()) {
+            sheet.endEdit();
+          }
           let newData = sheet.getDirtyRows();
           let submitData = [];
           let noAttendance = false
@@ -1305,6 +1314,14 @@
               })
             });
           }
+         let newData2 =sheet.getInsertRows();
+          if (newData2.length != 0) {
+            newData2.forEach((x) => {
+              x.item["LineID"]= '';//插入行的产线清空
+              x.item["dicID"]=this.sysID;
+              submitData.push(x.item);
+          });
+        }
           if (submitData.length == 0) {
             this.$message.error("没修改过任何数据！");
             return;
@@ -1314,6 +1331,8 @@
             this.$message.error("同个产线的今日出勤人数需要一致，请修改！");
             return 
           }
+          console.log('submitData',submitData)
+          return
           this.adminLoading = true;
           let res = await SaveMOPlanStep4(submitData);
           const {
