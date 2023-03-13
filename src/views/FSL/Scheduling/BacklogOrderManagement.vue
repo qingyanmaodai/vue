@@ -771,7 +771,7 @@ export default {
       if (newData && newData.length != 0) {
         newData.forEach((x) => {
           if (x.isChecked) {
-            x['dicID'] = 5149//下达到主计划表
+            x['dicID'] = 9053//下达到主计划表
             this.selectionData[this.tagRemark].push(x);
           }
         });
