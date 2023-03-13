@@ -1088,8 +1088,8 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      // let res = await GetSearchData(form);
-      let res = await GetSearch(form,'/APSAPI/GetBomData')
+      let res = await GetSearchData(form);
+      // let res = await GetSearch(form,'/APSAPI/GetBomData')
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
@@ -1243,6 +1243,7 @@ export default {
       }
       if(this.formData&&this.formData.MaterialBomID){
         this.formDataChild['dicID'] = this.sysID[this.tagRemark].ID
+        this.formDataChild['ParentID'] = this.formData['BOMMasterID']
         this.formDataChild['ParentCode'] = this.formData['Code']
       }
       this.dialogShowChild = true
@@ -1324,8 +1325,9 @@ export default {
         let updateRecords =$table.getUpdateRecords()
         // 新增的行
         let insertRecords = $table.getInsertRecords()
-        if(updateRecords){
-          submitData = [...updateRecords,...insertRecords]
+        console.log('updateRecords',updateRecords)
+        if(updateRecords.length){
+          submitData = updateRecords
         }
         console.log('remarkTb',remarkTb)
         console.log('insertRecords',insertRecords)
@@ -1388,7 +1390,7 @@ export default {
     // 树结构查询
     async getBomTree(remarkTb,keyWords){
       let form = this.formSearchs[remarkTb].datas
-      form['Code'] =  keyWords
+      form['ParentCode'] =  keyWords
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       console.log('form',form)
