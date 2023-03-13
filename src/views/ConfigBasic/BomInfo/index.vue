@@ -22,7 +22,7 @@
         @pageSize="pageSize"
         :pagerCount="5"
         :pageSizes="[10,20,30]"
-        :expand="true"
+        :expand="false"
       />
     </div>
     <div class="admin_container">
@@ -279,28 +279,26 @@ export default {
       dialogShowChild: false,
       dialogShow2:false,
       formData: {
-        ParentID:0,
+        // ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
         LineNum:null,
         Remark1:null,
         Status: 0,
-        Code:null,
-        MaterialName:null,
-        children:[]
+        ParentCode:null,
+        ParentMaterialName:null,
       },
       formDataParent: {
-        ParentID:0,
+        // ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
         LineNum:null,
         Remark1:null,
         Status: 0,
-        Code:null,
-        MaterialName:null,
-        children:[]
+        ParentCode:null,
+        ParentMaterialName:null,
       },
       formDataChild: {
         Code:null,
@@ -317,8 +315,8 @@ export default {
       treeListTmp: [],
       formController: [
 
-        { label: "父件物料号", prop: "Code", type: "input" },
-        { label: "父件描述", prop: "MaterialName", type: "textarea" },
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
@@ -340,16 +338,16 @@ export default {
         },
       ],
       formRules: {
-        Code: [{ required: true, message: "必填项", trigger: "blur" }],
-        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
         // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
       formControllerParent: [
-        { label: "父件物料号", prop: "Code", type: "input" },
-        { label: "父件描述", prop: "MaterialName", type: "textarea" },
+        { label: "父件物料号", prop: "ParentCode", type: "input" },
+        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
@@ -371,8 +369,8 @@ export default {
         },
       ],
       formRulesParent: {
-        Code: [{ required: true, message: "必填项", trigger: "blur" }],
-        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
+        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
         // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
@@ -535,9 +533,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      userInfo: (state) => state.user.userInfo,
-    }),
+    // ...mapState({
+    //   userInfo: (state) => state.user.userInfo,
+    // }),
   },
   created() {
     _this = this;
@@ -1167,6 +1165,7 @@ export default {
       console.log('node',node)
       this.clickData = data;
       this.formData = data
+      this.formSearchs[1].datas['BOMMasterID'] =  data&&data.BOMMasterID
       // 通过父级ID查询下级子件
       // this.formSearchs[1].datas['ParentID'] = data.BOMMasterID
       let dataList = this.dataSearch(1)
