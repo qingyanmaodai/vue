@@ -620,6 +620,8 @@
           sheet.defaults.colWidth = 100;
           sheet.defaults.colHeaderRowHeight = 23;
           sheet.defaults.rowHeaderColWidth = 60;
+          // 重置表单
+          sheet.reset();
           let colHeader1 = [];
           let colInfos = [];
           let newData = [];
