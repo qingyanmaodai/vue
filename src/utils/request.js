@@ -17,7 +17,7 @@ let base_url;
 //http://10.50.18.130             --佛照内网
 
  
-let apsUrl = 'http://192.168.1.166';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = '';  //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
  
 
 
