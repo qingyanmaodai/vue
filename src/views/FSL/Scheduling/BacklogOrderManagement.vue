@@ -2,21 +2,16 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <!-- <div v-for="(ele,i) in Status1" :key="i"> -->
-        <ComSearch
-          v-for="(item,i) in Status1"
-          :key="i"
-          v-show="labelStatus1 == i"
-          ref="searchRef"
-          :searchData="formSearchs[i].datas"
-          :searchForm="formSearchs[i].forms"
-          :remark="i"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          :signName="labelStatus1"
-          @btnClick="btnClick"
-        />
-      <!-- </div> -->
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        :signName="labelStatus1"
+        @btnClick="btnClick"
+      />
     </div>
     <div>
       <div class="admin_content">
@@ -26,21 +21,18 @@
               <span class="title">{{ title }}</span>
             </el-col>
             <el-col :span="20" class="flex_flex_end">
-              <!-- <div
-                    :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                    v-for="(item, y) in Status1"
-                    :key="y"
-                  >
-                    <span @click="changeStatus(item, y)">{{ item.label }}</span>
-                    <el-divider direction="vertical"></el-divider>
-                  </div> -->
+              <div
+                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                v-for="(item, y) in Status1"
+                :key="y"
+              >
+                <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                <el-divider direction="vertical"></el-divider>
+              </div>
             </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{ height: height }"
-        >
+        <div class="flex_column" :style="{ height: height }">
           <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
             <gc-spread-sheets
               class="sample-spreadsheets"
@@ -58,10 +50,16 @@
               </span>
             </div>
             <div class="flex">
-              <el-pagination background @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[tagRemark].pageIndex" :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[tagRemark].pageSize" :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)" layout="total, sizes, prev, pager, next,jumper">
+              <el-pagination
+                background
+                @size-change="(val) => pageSize(val, 0)"
+                :current-page="tablePagination[tagRemark].pageIndex"
+                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                :page-size="tablePagination[tagRemark].pageSize"
+                :total="tablePagination[0].pageTotal"
+                @current-change="(val) => pageChange(val, 0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
               </el-pagination>
             </div>
           </div>
@@ -121,8 +119,10 @@ export default {
         // { ID: 9042 },
       ],
       Status1: [
-        { label: "待排订单", value: 0 },
-        { label: "已排订单", value: 1 },
+        { label: "全部", value: "" },
+        { label: "已下达", value: 21 },
+        { label: "未下达", value: 26 },
+        { label: "已完成", value: 25 },
       ],
       title: this.$route.meta.title,
       labelStatus1: 0,
@@ -139,70 +139,24 @@ export default {
         {
           datas: {},
           forms: [],
-        }
+        },
       ],
       btnForm: [],
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          signName: 0,
-          Methods: "dataSave",
-          Icon: "",
-        },
-        {
-          ButtonCode: "releasedOrder",
-          BtnName: "下达",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          signName: 0,
-          Methods: "toMianPlan",
-          Params: { },
-          Icon: "",
-        },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "保存",
-        //   Type: "success",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: 1,
-        //   Methods: "dataSave",
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "noPass",
-        //   BtnName: "退回",
-        //   isLoading: false,
-        //   Methods: "dataDel",
-        //   Type: "danger",
-        //   Icon: "",
-        //   Size: "small",
-        //   signName: 1,
-        //   Params: {
-        //     dataName: "selectionData",
-        //   },
-        // },
-      ],
-      tableData: [[],[]],
-      delData: [[],[]],
-      tableColumns: [[],[]],
-      tableLoading: [false,false],
-      isClear: [false,false],
+      tableData: [[], []],
+      delData: [[], []],
+      tableColumns: [[], []],
+      tableLoading: [false, false],
+      isClear: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       initialBtnData: [],
-      selectionData: [[],[]],
+      selectionData: [[], []],
       hasSelect: [true],
       isEdit: false,
       losePrepareDate: 1,
@@ -221,7 +175,8 @@ export default {
     this.adminLoading = true;
     this.getTableHeader();
     // 获取所有按钮
-    this.judgeBtn();
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
   },
   activated() {
     if (this.spread) {
@@ -243,41 +198,11 @@ export default {
         },
       });
     },
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter((y) => {
-            // 如果页面定义了取页面的，否则取按钮权限配置中的
-            if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = y.BtnName||x.ButtonName;
-              y.Methods = y.Methods||x.OnClick;
-              y.Type = y.Type || x.ButtonType;
-              return y;
-            }
-          });
-
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-        });
-      }
-
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
-    },
     initSpread: function (spread) {
       this.spread = spread;
     },
 
     setData() {
-      
       this.spread.suspendPaint();
       let sheet = this.spread.getActiveSheet();
       sheet.reset(); //重置表单
@@ -288,7 +213,7 @@ export default {
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      let colIndex = 0
+      let colIndex = 0;
       this.tableColumns[this.tagRemark].forEach((x) => {
         if (
           x.ControlType === "comboboxMultiple" ||
@@ -308,23 +233,26 @@ export default {
             cellType: combobox,
             size: parseInt(x.width),
           });
-        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width),
-              formatter: '@'//字符串格式
-            });
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            size: parseInt(x.width),
+            formatter: "@", //字符串格式
+          });
         } else {
-        colInfos.push({
-          name: x.prop,
-          displayName: x.label,
-          size: parseInt(x.width),
-        });
-          
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            size: parseInt(x.width),
+          });
         }
         colHeader1.push(x.label);
-        cellIndex++
+        cellIndex++;
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -350,12 +278,12 @@ export default {
       }
       // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
-      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, colIndex);
-      
-      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)
+      var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, colIndex);
+
+      var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
       var row = sheet.getRange(
         0,
         -1,
@@ -414,24 +342,27 @@ export default {
           // );
           // cell.foreColor("gray");
         }
-        
+
         cellIndex++;
       });
 
       // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
-      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)      
+      var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
 
       var colindexs = [1, 2, 3, 4, 5];
       this.tableData[this.tagRemark].forEach((row, index) => {
         let cellIndex = 0;
         this.tableColumns[this.tagRemark].forEach((m, num) => {
           //行，start,end
-          if ((m.DataType == "bit"||m.ControlType=='checkbox') && m.isEdit) {
+          if (
+            (m.DataType == "bit" || m.ControlType == "checkbox") &&
+            m.isEdit
+          ) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
             cellType.caption("");
             cellType.textTrue("");
@@ -514,20 +445,20 @@ export default {
         }
       });
       sheet.options.isProtected = true;
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowSelectLockedCells = true;
-        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowDeleteColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowInsertColumns = true;
-        sheet.options.protectionOptions.allowDargInsertRows = true;
-        sheet.options.protectionOptions.allowDragInsertColumns = true;
-        sheet.options.protectionOptions.allowSort = true
-        sheet.options.protectionOptions.allowFilter = true
-        sheet.options.allowUserDragDrop = true;
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.protectionOptions.allowInsertRows = true;
+      sheet.options.protectionOptions.allowDeleteRows = true;
+      sheet.options.protectionOptions.allowSelectLockedCells = true;
+      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+      sheet.options.protectionOptions.allowDeleteRows = true;
+      sheet.options.protectionOptions.allowDeleteColumns = true;
+      sheet.options.protectionOptions.allowInsertRows = true;
+      sheet.options.protectionOptions.allowInsertColumns = true;
+      sheet.options.protectionOptions.allowDargInsertRows = true;
+      sheet.options.protectionOptions.allowDragInsertColumns = true;
+      sheet.options.protectionOptions.allowSort = true;
+      sheet.options.protectionOptions.allowFilter = true;
+      sheet.options.allowUserDragDrop = true;
 
       this.spread.resumePaint();
       this.adminLoading = false;
@@ -698,7 +629,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["ProductionAccounts"] = this.$store.getters.userInfo.Account;//登录账号
+      form["ProductionAccounts"] = this.$store.getters.userInfo.Account; //登录账号
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (remarkTb == 0) {
@@ -724,9 +655,10 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     // 改变状态
-    changeStatus(x, index) {
+    changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.dataSearch(index);
+      this.formSearchs[0].datas["ProductionStatus"] = item.value;
+      this.dataSearch(0);
     },
     // 保存
     async dataSave() {
@@ -764,19 +696,20 @@ export default {
       this.adminLoading = false;
     },
     // 转入主计划
-    async toMianPlan() {
+    async releaseOrders() {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
         newData.forEach((x) => {
           if (x.isChecked) {
-            x['dicID'] = 9053//下达到主计划表
+            x["dicID"] = 9053; //下达到主计划表
+            x["ProductionStatus"] = 21;
             this.selectionData[this.tagRemark].push(x);
           }
         });
-      } 
-      if(this.selectionData[this.tagRemark].length==0) {
+      }
+      if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要转入的数据！");
         return;
       }
@@ -787,10 +720,10 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
