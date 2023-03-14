@@ -1129,7 +1129,7 @@ export default {
       // this.formSearchs[1].datas['MaterialID'] =  data&&data.MaterialID?data.MaterialID:data.BOMMasterID
       // 通过父级ID查询下级子件
       this.formSearchs[1].datas['ParentID'] = data&&data.BOMMasterID
-      let dataList = this.dataSearch(1)
+      this.dataSearch(1)
       console.log('dataList',dataList)
       // if (data.OrganizeID == "-1") {
       //   this.$set(this.formSearchs[0].datas, "OrganizeID", data.OrganizeID);
@@ -1251,6 +1251,7 @@ export default {
       if (result) {
         this.formData = this.formDataParent
         this.getBomTree(0,this.keyWords)
+        this.dataSearch(1)
         this.adminLoading = false;
         this.$message({
           message: msg,
