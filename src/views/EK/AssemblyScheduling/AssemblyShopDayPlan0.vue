@@ -989,6 +989,7 @@
         sheet.bind(
           GC.Spread.Sheets.Events.ClipboardChanged,
           function (sender, args) {
+            console.log('1123')
             let s = sheet.getSelections()[0];
             _this.sheetSelectRows = sheet.getArray(
               s.row,
@@ -1048,6 +1049,7 @@
           });
           // 粘贴事件
           this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+            console.log('e',e)
             // 粘贴插入
             if(e&&e.cellRange.colCount<0){//插入的列
               let cellValList = e.pasteData.text.split(/\t|\r\n/)
@@ -1063,7 +1065,7 @@
                     // 获取剪切
                     let rowIndex  = e.cellRange.row
                     let colIndex = index
-                    sheet.setValue(rowIndex, colIndex, null);//插入的数据清空工序计划ID
+                    sheet.setValue(rowIndex, colIndex, 0);//插入的数据清空工序计划ID
                   }
                 })
               }

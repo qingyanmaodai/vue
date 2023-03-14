@@ -1027,7 +1027,7 @@
                     // 获取剪切
                     let rowIndex  = e.cellRange.row
                     let colIndex = index
-                    sheet.setValue(rowIndex, colIndex, null);//插入的数据清空工序计划ID
+                    sheet.setValue(rowIndex, colIndex, 0);//插入的数据清空工序计划ID
                   }
                 })
               }

@@ -9,7 +9,8 @@
           v-model="Value"
           placeholder="搜索"
           suffix-icon="el-icon-search"
-          class="w2/3 cx_margin_right1"
+          class="cx_margin_right1"
+          :class="classNameInput"
           @input="searchTree"
           @keyup.enter.native="searchTreeEnter"
         ></el-input>
@@ -55,7 +56,7 @@
       :load="loadNode"
       :style="{ height: '' + treeHeight + '', overflow: 'auto' }"
       highlight-current
-      :expand-on-click-node="false"
+      :expand-on-click-node="expandOnClickNode"
       @node-click="handleNodeClick"
     ></el-tree>
     <div>
@@ -185,6 +186,16 @@ export default {
     expand:{
       type: Boolean,
       default: true,
+    },
+    // 是否在点击节点的时候展开或者收缩节点
+    expandOnClickNode:{
+      type: Boolean,
+      default: false,
+    },
+    //自定义样式
+    classNameInput:{
+      type: String,
+      default: "w2\/3",
     }
   },
   data() {

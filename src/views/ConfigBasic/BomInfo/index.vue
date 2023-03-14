@@ -21,11 +21,13 @@
         @pageChange="pageChange"
         @pageSize="pageSize"
         :pagerCount="5"
-        :pageSizes="[10,20,30]"
+        :pageSizes="[32,50,100,150,200,250,300,350,400]"
         :expand="false"
+        expandOnClickNode
+        classNameInput="searchInput"
       />
     </div>
-    <div class="admin_container">
+    <div class="admin_container_right2">
       <div class="admin_head_3" ref="headRef">
         <div style="text-align: right;;">
           <el-button
@@ -174,17 +176,6 @@
       @dialogBtnClick="childConfirm"
     />
 
-    <!-- 批量修改 -->
-    <!-- <ComFormDialog
-      ref="orgRef2"
-      :title="updateTitle"
-      :dialogShow="dialogShow2"
-      :formData="formData2"
-      :formController="formController2"
-      @selectHandleNodeClick="selectHandleNodeClick2"
-      @dialogBtnClick="dialogBtnClick2"
-    /> -->
-
     <el-dialog
       title="导入模板"
       :visible.sync="dialogImport"
@@ -279,7 +270,7 @@ export default {
       dialogShowChild: false,
       dialogShow2:false,
       formData: {
-        // ParentID:0,
+        ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
@@ -290,7 +281,7 @@ export default {
         ParentMaterialName:null,
       },
       formDataParent: {
-        // ParentID:0,
+        ParentID:0,
         Denominator:null,
         ParentUnit:null,
         ItemClass:null,
@@ -400,7 +391,7 @@ export default {
         },
       ],
       formRulesChild: {
-        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        // Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
         Unit: [ { required: true, message: "必填项", trigger: "blur" }],
@@ -469,16 +460,16 @@ export default {
         },
       ],
       parmsBtn2: [
-        {
-          ButtonCode: "addParentBom",
-          BtnName: "",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          Methods: "addParentBom",
-          Icon: "",
-          sort:1,
-        },
+        // {
+        //   ButtonCode: "addParentBom",
+        //   BtnName: "",
+        //   Type: "primary",
+        //   Ghost: true,
+        //   Size: "small",
+        //   Methods: "addParentBom",
+        //   Icon: "",
+        //   sort:1,
+        // },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -510,8 +501,8 @@ export default {
       tableLoading: [false,false],
       isClear: [false,false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 10, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 10, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -851,12 +842,14 @@ export default {
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      this.getBomTree(remarkTb,this.keyWords)
+      // this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      this.getBomTree(remarkTb,this.keyWords)
+      // this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
     sortChange(order, prop, remarkTb, filtertb, row, index) {
@@ -1123,49 +1116,16 @@ export default {
       }
       this.dialogShow2 = true;
     },
-    // 弹框确定添加
-    dialogBtnClick(val) {
-      this.dialogShow = false;
-      if (val) {
-        let newData = [];
-        newData.push(this.formData);
-        this.generalSaveData(newData, 0, 0);
-      } else {
-        for (let name in this.formData) {
-          this.formData[name] = "";
-        }
-      }
-    },
-    // 弹框确定批量修改
-    dialogBtnClick2(val) {
-      if (val) {
-        if (this.selectionData[0].length == 0) {
-          this.$refs.error("请选择数据进行批量修改！");
-          return;
-        }
-        this.selectionData[0].forEach((x) => {
-          for (var name in this.formData2) {
-            if (this.formData2[name]) {
-              x[name] = this.formData2[name];
-            }
-          }
-        });
-        this.generalSaveData(this.selectionData[0], 0, 0);
-        this.dialogShow2 = false;
-      } else {
-        for (let name in this.formData) {
-          this.formData[name] = "";
-        }
-        this.dialogShow2 = false;
-      }
-    },
     // 单击出来组织人员
     handleNodeClick(data, node) {
       console.log('data',data)
       console.log('node',node)
+      this.resetForm('ruleForm0')
+      // this.handleTree([data])
       this.clickData = data;
       this.formData = data
       this.formSearchs[1].datas['BOMMasterID'] =  data&&data.BOMMasterID
+      
       // 通过父级ID查询下级子件
       // this.formSearchs[1].datas['ParentID'] = data.BOMMasterID
       let dataList = this.dataSearch(1)
@@ -1180,6 +1140,21 @@ export default {
       // this.dataSearch(0);
       // this.getBomTree(0,this.keyWords)
     },
+    //树结构递归
+    // handleTree(data) {
+    //   return data.filter((item, index) => {
+    //     // item.label = item.Code
+    //     // item.id = item.BOMMasterID
+    //     item.expanded = true
+    //     if (item.children && item.children.length>0) {
+    //       item.children = this.handleTree(item.children)
+    //     }else{
+    //       // 树结构最后一层有children节点不能选择问题修改
+    //       delete item.children
+    //     }
+    //     return true
+    //   })
+    // },
     // 选择菜单树形
     selectHandleNodeClick(data, node) {
       this.formData.OrganizeName = data.OrganizeName;
@@ -1238,13 +1213,14 @@ export default {
     addChildBom(){
       // 对接好添加这个判断
       if(!this.formData.MaterialBomID){
-        this.$message.error("未关联到父件，请检查！");
+        this.$message.error("未选择关联到父件，请检查！");
         return
       }
       if(this.formData&&this.formData.MaterialBomID){
         this.formDataChild['dicID'] = this.sysID[this.tagRemark].ID
-        this.formDataChild['ParentID'] = this.formData['BOMMasterID']
         this.formDataChild['ParentCode'] = this.formData['Code']
+        // this.formDataChild['BOMMasterID'] = this.formData['BOMMasterID']//主键
+        this.formDataChild['ParentID'] = this.formData['BOMMasterID']//父件ID
       }
       this.dialogShowChild = true
       this.$nextTick(()=>{
@@ -1292,6 +1268,7 @@ export default {
     // 直接保存
     async dataSave(remarkTb, index, params) {
       let submitData = []
+      let isPass = true
       if(remarkTb==0){
         this.$refs['ruleForm0'].$refs['formData'].validate((valid) => {
           if (valid) {
@@ -1299,9 +1276,13 @@ export default {
             submitData = [this.formData]
           } else {
             console.log('error submit!!');
-            return false;
+            isPass = false
           }
         });
+        // 校验不通过
+        if(!isPass){
+          return
+        }
         
       }else if(remarkTb==1){
         if(this.tableData[remarkTb].length){
@@ -1332,12 +1313,12 @@ export default {
         console.log('remarkTb',remarkTb)
         console.log('insertRecords',insertRecords)
         console.log('submitData1',submitData)
-        if(submitData.length==0){
-          this.$message.error("当前数据没做修改，请先修改再保存！");
-          return
-        }
+        
       }
-
+      if(submitData.length==0){
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return
+      }
       console.log('index',index)
       console.log('remarkTb',remarkTb)
       console.log('params',submitData)
@@ -1412,3 +1393,13 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+// .container {
+  ::v-deep .admin_left{
+    width: 300px;
+  }
+  ::v-deep.el-pagination-tree .searchInput>.w2\/3{
+    width:100% !important
+  }
+// }
+</style>
