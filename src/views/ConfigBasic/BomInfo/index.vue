@@ -25,6 +25,7 @@
         :expand="false"
         expandOnClickNode
         classNameInput="searchInput"
+        placeholder="按回车键查询"
       />
     </div>
     <div class="admin_container_right2">
@@ -1124,10 +1125,10 @@ export default {
       // this.handleTree([data])
       this.clickData = data;
       this.formData = data
-      this.formSearchs[1].datas['BOMMasterID'] =  data&&data.BOMMasterID
-      
+      // this.formSearchs[1].datas['BOMMasterID'] =  data&&data.BOMMasterID
+      // this.formSearchs[1].datas['MaterialID'] =  data&&data.MaterialID?data.MaterialID:data.BOMMasterID
       // 通过父级ID查询下级子件
-      // this.formSearchs[1].datas['ParentID'] = data.BOMMasterID
+      this.formSearchs[1].datas['ParentID'] = data&&data.BOMMasterID
       let dataList = this.dataSearch(1)
       console.log('dataList',dataList)
       // if (data.OrganizeID == "-1") {
@@ -1219,7 +1220,7 @@ export default {
       if(this.formData&&this.formData.MaterialBomID){
         this.formDataChild['dicID'] = this.sysID[this.tagRemark].ID
         this.formDataChild['ParentCode'] = this.formData['Code']
-        // this.formDataChild['BOMMasterID'] = this.formData['BOMMasterID']//主键
+        this.formDataChild['BOMMasterID'] = this.formData['BOMMasterID']//主键
         this.formDataChild['ParentID'] = this.formData['BOMMasterID']//父件ID
       }
       this.dialogShowChild = true

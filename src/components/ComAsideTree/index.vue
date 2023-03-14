@@ -7,7 +7,7 @@
           size="mini"
           clearable
           v-model="Value"
-          placeholder="搜索"
+          :placeholder="placeholder"
           suffix-icon="el-icon-search"
           class="cx_margin_right1"
           :class="classNameInput"
@@ -196,7 +196,12 @@ export default {
     classNameInput:{
       type: String,
       default: "w2\/3",
-    }
+    },
+    //
+    placeholder:{
+      type: String,
+      default: "搜索",
+    },
   },
   data() {
     return {
