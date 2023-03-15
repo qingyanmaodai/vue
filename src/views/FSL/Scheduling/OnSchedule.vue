@@ -729,6 +729,7 @@
         this.$set(this.tableLoading, remarkTb, true);
         form["rows"] = this.tablePagination[remarkTb].pageSize;
         form["page"] = this.tablePagination[remarkTb].pageIndex;
+        form["ProductionAccounts"] = this.$store.getters.userInfo.Account;//登录账号
   
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;

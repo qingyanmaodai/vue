@@ -7,9 +7,10 @@
           size="mini"
           clearable
           v-model="Value"
-          placeholder="搜索"
+          :placeholder="placeholder"
           suffix-icon="el-icon-search"
-          class="w2/3 cx_margin_right1"
+          class="cx_margin_right1"
+          :class="classNameInput"
           @input="searchTree"
           @keyup.enter.native="searchTreeEnter"
         ></el-input>
@@ -49,13 +50,13 @@
       :indent="0"
       ref="asideTree"
       :node-key="nodekey"
-      :default-expand-all="isOpen"
+      :default-expand-all="expand?isOpen:expand"
       :data="treeData"
       :props="treeProps"
       :load="loadNode"
       :style="{ height: '' + treeHeight + '', overflow: 'auto' }"
       highlight-current
-      :expand-on-click-node="false"
+      :expand-on-click-node="expandOnClickNode"
       @node-click="handleNodeClick"
     ></el-tree>
     <div>
@@ -84,21 +85,7 @@
             background
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
-            :page-sizes="[
-              32,
-              50,
-              100,
-              150,
-              200,
-              250,
-              300,
-              350,
-              400,
-              800,
-              1000,
-              1500,
-              2000,
-            ]"
+            :page-sizes="pageSizes"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"
             @current-change="pageChange"
@@ -189,7 +176,32 @@ export default {
     pagerCount:{
       type: Number,
       default: 7,//5~21之间的奇数
-    }
+    },
+    pageSizes:{
+      type: Array,
+      default: function () {
+        return [32,50,100,150,200,250,300,350,400,800,1000,1500,2000,];
+      },
+    },
+    expand:{
+      type: Boolean,
+      default: true,
+    },
+    // 是否在点击节点的时候展开或者收缩节点
+    expandOnClickNode:{
+      type: Boolean,
+      default: false,
+    },
+    //自定义样式
+    classNameInput:{
+      type: String,
+      default: "w2\/3",
+    },
+    //
+    placeholder:{
+      type: String,
+      default: "搜索",
+    },
   },
   data() {
     return {

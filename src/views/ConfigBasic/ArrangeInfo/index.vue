@@ -1,9 +1,6 @@
 <!--排班信息-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <ComCheckboxTree
         ref="asideRef"
@@ -13,39 +10,14 @@
         :nodekey="'OrganizeID'"
         :treeProps="treeProps"
         @searchTree="searchTree"
-        @handleNodeClick="handleNodeClick"
         @check="check"
       />
     </div>
     <div class="admin_container">
       <div>
         <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
-                <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status1"
-                  :key="y"
-                >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-          <div
-            v-show="labelStatus1 == 0"
-            class="bgFFF"
-          >
-            <div
-              class="admin_head flex_row_spaceBtn"
-              ref="headRef"
-            >
+          <div class="bgFFF">
+            <div class="admin_head flex_row_spaceBtn" ref="headRef">
               <div class="flex">
                 <div class="tree_text">排班配置</div>
                 <el-divider direction="vertical"></el-divider>
@@ -79,7 +51,7 @@
                   @change="changeWorkingTimesID"
                 >
                   <el-option
-                    v-for="(item,y) in WorkingTimesIDs"
+                    v-for="(item, y) in WorkingTimesIDs"
                     :key="y"
                     :label="item.WorkingTimesName"
                     :value="item.WorkingTimesID"
@@ -91,7 +63,8 @@
                   v-model="IsCicle"
                   :label="true"
                   @click.native.prevent="clickitem(true)"
-                >是否循环大小周</el-radio>
+                  >是否循环大小周</el-radio
+                >
               </div>
               <div>
                 <el-button
@@ -100,23 +73,16 @@
                   size="mini"
                   :disabled="!isEdit"
                   @click="saveWork"
-                >保存</el-button>
+                  >保存</el-button
+                >
               </div>
             </div>
             <div class="margin_lr10">
-              <ux-grid
-                size="mini"
-                ref="plxTable"
-                :row-key="true"
-              >
-                <ux-table-column
-                  field="empty"
-                  title=""
-                  width="160"
-                >
+              <ux-grid size="mini" ref="plxTable" :row-key="true">
+                <ux-table-column field="empty" title="" width="160">
                 </ux-table-column>
                 <ux-table-column
-                  v-for="(item,index) in tableHeader"
+                  v-for="(item, index) in tableHeader"
                   :key="index"
                   :title="item.label"
                   :field="item.prop"
@@ -138,14 +104,9 @@
             </div>
             <div class="margin_top15 hr-line-dashed"></div>
             <div>
-              <div
-                class="admin_head flex_between"
-                ref="headRef"
-              >
+              <div class="admin_head flex_between" ref="headRef">
                 <div class="flex">
-                  <div class="tree_text">
-                    排班日历
-                  </div>
+                  <div class="tree_text">排班日历</div>
                   <el-divider direction="vertical"></el-divider>
                   <el-select
                     size="mini"
@@ -155,7 +116,7 @@
                     @change="changeWorkingTimesID2"
                   >
                     <el-option
-                      v-for="(item,y) in WorkingTimesIDs"
+                      v-for="(item, y) in WorkingTimesIDs"
                       :key="y"
                       :label="item.WorkingTimesName"
                       :value="item.WorkingTimesID"
@@ -174,147 +135,100 @@
                   size="mini"
                   :disabled="!isEdit"
                   @click="saveOnlyWeek"
-                >保存</el-button>
+                  >保存</el-button
+                >
               </div>
               <div class="margin_lr10">
                 <el-calendar
                   class="arrange_calendar__body"
                   v-model="calendarMonth"
                 >
-                  <template
-                    slot="dateCell"
-                    slot-scope="{data}"
-                  >
+                  <template slot="dateCell" slot-scope="{ data }">
                     <div :class="data.isSelected ? 'is-selected' : ''">
-                      <div class="flex_between">
-                        <span> {{ data.day.split('-').slice(1).join('-') }} </span>
+                      <span v-if="calenderData.length === 0">
+                        {{ data.day.split("-").slice(1).join("-") }}
+                      </span>
+                    </div>
+                    <div v-for="(item, index) in calenderData" :key="index">
+                      <div
+                        class="flex_between"
+                        v-if="item.WorkingDate.indexOf(data.day) != -1"
+                      >
+                        <span>
+                          {{ data.day.split("-").slice(1).join("-") }}
+                        </span>
                         <el-checkbox
-                          v-model="calenderData[Number(data.day.split('-').slice(2).join('-'))-1]['IsRest']"
-                          @change="(val)=>clearInput(val,Number(data.day.split('-').slice(2).join('-'))-1)"
+                          v-model="item.ElementDeleteFlag"
+                          :true-label="1"
+                          :false-label="0"
                         >
                           <span>休</span>
                         </el-checkbox>
                       </div>
+                      <div v-if="item.WorkingDate.indexOf(data.day) != -1">
+                        <el-row class="text_row">
+                          <el-col :span="12"> 班次： </el-col>
+                          <el-col :span="12">
+                            <el-select
+                              size="mini"
+                              clearable
+                              filterable
+                              v-model="item.WorkingTimesID"
+                              placeholder=""
+                              :disabled="item.ElementDeleteFlag === 1"
+                            >
+                              <el-option
+                                v-for="(item, y) in WorkingTimesIDs"
+                                :key="y"
+                                :label="item.WorkingTimesName"
+                                :value="item.WorkingTimesID"
+                              ></el-option>
+                            </el-select>
+                          </el-col>
+                        </el-row>
+                        <el-row class="text_row">
+                          <el-col :span="12"> 上班人数： </el-col>
+                          <el-col :span="12">
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.Peoples"
+                              :disabled="item.ElementDeleteFlag === 1"
+                            ></el-input>
+                          </el-col>
+                        </el-row>
+                        <el-row class="text_row">
+                          <el-col :span="12"> 总时长： </el-col>
+                          <el-col :span="12">
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.TotalHours"
+                              :disabled="item.ElementDeleteFlag === 1"
+                            ></el-input>
+                          </el-col>
+                        </el-row>
+                        <el-row class="text_row">
+                          <el-col :span="12"> 加班时长： </el-col>
+                          <el-col :span="12">
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.OverTime"
+                              :disabled="item.ElementDeleteFlag === 1"
+                            ></el-input>
+                          </el-col>
+                        </el-row>
+                      </div>
                     </div>
-                    <div>
-                      <el-row class="text_row">
-                        <el-col :span="12">
-                          班次：
-                        </el-col>
-                        <el-col :span="12">
-                          <el-select
-                            size="mini"
-                            clearable
-                            filterable
-                            v-model="calenderData[Number(data.day.split('-').slice(2).join('-'))-1].WorkingTimesID"
-                          >
-                            <el-option
-                              v-for="(item,y) in WorkingTimesIDs"
-                              :key="y"
-                              :label="item.WorkingTimesName"
-                              :value="item.WorkingTimesID"
-                            ></el-option>
-
-                          </el-select>
-                        </el-col>
-                      </el-row>
-                      <el-row class="text_row">
-                        <el-col :span="12">
-                          上班人数：
-                        </el-col>
-                        <el-col :span="12">
-                          <el-input
-                            size="mini"
-                            type="number"
-                            :disabled="calenderData[Number(data.day.split('-').slice(2).join('-'))-1]['Disabled']"
-                            v-model="calenderData[Number(data.day.split('-').slice(2).join('-'))-1].Peoples"
-                          ></el-input>
-                        </el-col>
-                      </el-row>
-                      <el-row class="text_row">
-                        <el-col :span="12">
-                          上班时长：
-                        </el-col>
-                        <el-col :span="12">
-                          <el-input
-                            size="mini"
-                            type="number"
-                            :disabled="calenderData[Number(data.day.split('-').slice(2).join('-'))-1]['Disabled']"
-                            v-model="calenderData[Number(data.day.split('-').slice(2).join('-'))-1].WorkTime"
-                          ></el-input>
-                        </el-col>
-                      </el-row>
-                      <el-row class="text_row">
-                        <el-col :span="12">
-                          加班时长：
-                        </el-col>
-                        <el-col :span="12">
-                          <el-input
-                            size="mini"
-                            type="number"
-                            :disabled="calenderData[Number(data.day.split('-').slice(2).join('-'))-1]['Disabled']"
-                            v-model="calenderData[Number(data.day.split('-').slice(2).join('-'))-1].OverTime"
-                          ></el-input>
-                        </el-col>
-                      </el-row>
-                    </div>
-
                   </template>
                 </el-calendar>
               </div>
             </div>
           </div>
-          <div
-            v-show="labelStatus1 == 1"
-            class="bgFFF"
-          >
-            <div
-              class="admin_head flex_between"
-              ref="headRef"
-            >
-              <div class="notice">
-                注意：切换月份前要先保存哦~
-              </div>
-              <el-button
-                type="success"
-                plain
-                size="mini"
-                :disabled="!isEdit"
-                @click="saveOnlyWeekRest"
-              >保存</el-button>
-            </div>
-            <div class="margin_lr10">
-              <el-calendar
-                class="arrange_calendar__body2"
-                v-model="calendarMonth2"
-              >
-                <template
-                  slot="dateCell"
-                  slot-scope="{data}"
-                >
-                  <div :class="data.isSelected ? 'is-selected' : ''">
-                    <div class="flex_between">
-                      <span> {{ data.day.split('-').slice(1).join('-') }}</span>
-                    </div>
-                    <div class="flex_row_center">
-                      <el-checkbox
-                        size="medium "
-                        v-model="calenderData2[Number(data.day.split('-').slice(2).join('-'))-1]['IsRest']"
-                        class="largeCheckbox"
-                      >
-                        <span>休</span>
-                      </el-checkbox>
-                    </div>
-                  </div>
-                </template>
-              </el-calendar>
-            </div>
-
-          </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -347,11 +261,6 @@ export default {
   data() {
     return {
       adminLoading: false,
-      labelStatus1: 0,
-      Status1: [
-        { label: "上班", value: 0 },
-        { label: "休假", value: 1 },
-      ],
       pickerOptions: {
         shortcuts: [
           {
@@ -445,9 +354,7 @@ export default {
         { label: "周日", prop: "Week7" },
       ],
       calenderData: [],
-      calenderData2: [],
       calendarMonth: new Date(),
-      calendarMonth2: new Date(),
       selectionLines: [],
       //////////////左侧树节点//////////////
       treeData: [],
@@ -497,11 +404,12 @@ export default {
       tagRemark: 0,
       isEdit: false,
       clickData: {},
-      currentMonth: new Date().getMonth() + 1,
-      currentMonth2: new Date().getMonth() + 1,
+      currentMonth: this.zero(new Date().getMonth() + 1),
+      currentYear: new Date().getFullYear(),
       treeListTmp: [],
       treeHeight: "790px",
       lines: [],
+      days: 0, //当月天数
     };
   },
   computed: {
@@ -514,24 +422,21 @@ export default {
       handler(newValue, oldValue) {
         if (this.lines.length == 1) {
           this.currentMonth = this.zero(new Date(newValue).getMonth() + 1);
-          let currentYear = new Date(newValue).getFullYear();
-          let YearMonth = String(currentYear) + String(this.currentMonth);
-          let YearMonth2 =
-            String(currentYear) + "-" + String(this.currentMonth) + "01";
-          this.setCalender(
-            currentYear,
-            this.currentMonth,
-            YearMonth,
-            YearMonth2
-          );
+          this.currentYear = new Date(newValue).getFullYear();
+          this.days = this.getDays(this.currentYear, this.currentMonth); // 判断当前月有多少天
+          let firstYearMonth = `${this.currentYear}-${this.currentMonth}-01`;
+          let lastYearMonth = `${this.currentYear}-${this.currentMonth}-${this.days}`;
+          this.formSearchs[0].datas["WorkingDate"] = [
+            firstYearMonth,
+            lastYearMonth,
+          ];
+          if (
+            new Date(newValue).getMonth() + 1 !==
+            new Date(oldValue).getMonth() + 1
+          ) {
+            this.getTableData(this.formSearchs[0].datas, 0);
+          }
         }
-      },
-      deep: true,
-    },
-    calendarMonth2: {
-      handler(newValue, oldValue) {
-        this.currentMonth2 = new Date(newValue).getMonth() + 1;
-        // 切换数据
       },
       deep: true,
     },
@@ -554,12 +459,12 @@ export default {
   },
   methods: {
     //累计时长计算
-    totalTimesChange(scope){
-      if(scope.rowIndex!=0){
+    totalTimesChange(scope) {
+      if (scope.rowIndex != 0) {
         // 上班/加班时间发生改变时计算累加时长
         let name = "Week" + scope.columnIndex;
-        let workTimes =this.tableData[1][name]?this.tableData[1][name]:0
-        let overTimes = this.tableData[2][name]?this.tableData[2][name]:0
+        let workTimes = this.tableData[1][name] ? this.tableData[1][name] : 0;
+        let overTimes = this.tableData[2][name] ? this.tableData[2][name] : 0;
         this.tableData[3][name] = parseFloat(workTimes) + parseFloat(overTimes);
       }
     },
@@ -606,31 +511,18 @@ export default {
       return newarr;
     },
     // 添加属性
-    setCalender(Year, Month, YearMonth, YearMonth2) {
-      let days = this.getDays(Year, Month); // 判断当前月有多少天
+    setCalender(Year, Month) {
+      this.days = this.getDays(Year, Month); // 判断当前月有多少天
       let WorkingTimesID = "";
       if (this.WorkingTimesIDs.length != 0) {
         WorkingTimesID = this.WorkingTimesIDs[0].WorkingTimesID;
       }
-      for (var i = 1; i <= days; i++) {
-        let obj = {};
-        obj["IsRest"] = false;
-        obj["Peoples"] = 0;
-        obj["WorkTime"] = 0;
-        obj["OverTime"] = 0;
-        obj["WorkingTimesID"] = WorkingTimesID;
-        this.calenderData.push(obj);
-        this.calenderData2.push(obj);
-      }
-      if (YearMonth) {
-        // 切换数据
-        this.searchWorkTime(
-          YearMonth,
-          YearMonth2,
-          this.lines[0].OrganizeID,
-          95
-        );
-      }
+      let firstYearMonth = String(Year) + "-" + String(Month) + "-" + +"01";
+      let lastYearMonth = String(Year) + "-" + String(Month) + "-" + this.days;
+      this.formSearchs[0].datas["WorkingDate"] = [
+        firstYearMonth,
+        lastYearMonth,
+      ];
     },
     // 获取组织
     async getOrgData() {
@@ -645,9 +537,10 @@ export default {
       let res = await GetOrgData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.treeData = data;
-        this.treeListTmp = data;
+        this.treeData = JSON.parse(JSON.stringify(data));
+        this.treeListTmp = this.treeData;
         this.adminLoading = false;
+        this.formSearchs[0].datas["dicID"] = 97;
       } else {
         this.$message({
           message: msg,
@@ -790,11 +683,8 @@ export default {
         });
       }
     },
-    // 单击出来组织人员
-    handleNodeClick(data, node) {
-      this.clickData = data;
-    },
-    check(data) {
+    // 复选框状态改变的时候进行
+    check() {
       this.lines = this.$refs.asideRef.$refs.asideTree
         .getCheckedNodes()
         .filter((x) => {
@@ -802,49 +692,15 @@ export default {
         });
       if (this.lines.length > 1 || this.lines.length == 0) {
         this.cicleName(0, true);
+        if (this.lines.length == 0) {
+          this.calenderData = [];
+        }
       } else if (this.lines.length == 1) {
         this.cicleName(this.lines[0].TotalPeoples, false);
       }
       if (this.lines.length == 1) {
-        let YearMonth =
-          String(this.calendarMonth.getFullYear()) +
-          this.zero(this.calendarMonth.getMonth() + 1);
-        let YearMonth2 =
-          this.calendarMonth.getFullYear() +
-          "-" +
-          (this.calendarMonth.getMonth() + 1) +
-          "-" +
-          "01";
-        this.searchWorkTime(
-          YearMonth,
-          YearMonth2,
-          this.lines[0].OrganizeID,
-          95
-        );
-      }
-    },
-    // 查询线别排班
-    async searchWorkTime(YearMonth, YearMonth2, OrganizeID, dicID) {
-      let obj = {
-        YearMonth: YearMonth,
-        YearMonth2: YearMonth2,
-        OrganizeID: OrganizeID,
-        dicID: dicID,
-      };
-      let res = await GetWorkTimeData(obj);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        data.some((x, i) => {
-          for (var name in x) {
-            this.$set(this.calenderData[i], name, x[name]);
-          }
-        });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
+        this.formSearchs[0].datas["OrganizeID"] = this.lines[0].OrganizeID;
+        this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
     zero(num) {
@@ -868,10 +724,6 @@ export default {
       }
     },
     ////////////////////////////事件///////////////
-    // 切换状态
-    changeStatus(item, index) {
-      this.labelStatus1 = index;
-    },
     // 切换大小周
     changeRadio() {
       this.clearTable();
@@ -915,12 +767,65 @@ export default {
     },
     //批量设置单个日历班次
     changeWorkingTimesID2(val) {
-      this.calenderData.forEach((x) => {
-        x.WorkingTimesID = val;
+      if (this.lines == 0 || this.lines > 1) {
+        this.$message.error("请选择仅限一条班次！");
+        this.WorkingTimesID2 = null;
+        return;
+      }
+      const newData = this.WorkingTimesIDs.find(
+        (x) => x.WorkingTimesID === val
+      );
+      this.calenderData.forEach((item) => {
+        if (item.ElementDeleteFlag === 0) {
+          item.TotalHours = newData.TotalHour;
+          item.OverTime = newData.OverTimeHour;
+          item.WorkingTimesID = val;
+        }
       });
     },
     // 获取这个班次的具体时间
-    getTypeData() {},
+    async getTableData(form, remarkTb) {
+      this.$set(this.tableLoading, remarkTb, true);
+      form["rows"] = this.days;
+      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        this.calenderData = [];
+        //对没有返回的值进行默认值处理
+        for (let i = 0; i < this.days; i++) {
+          const date = `${this.currentYear}-${this.currentMonth}-${this.zero(
+            i + 1
+          )}`;
+          const found = data.find((obj) => obj.WorkingDate === date);
+          if (found) {
+            found["ElementDeleteFlag"] = 0;
+            this.calenderData.push(found); // 如果找到了，直接添加到结果数组中
+          } else {
+            // 如果没有找到，则根据日期生成一个新的对象
+            this.calenderData.push({
+              ElementDeleteFlag: 1,
+              WorkingDate: date,
+              dicID: 97,
+              OverTime: "",
+              Peoples: "",
+              WorkHour: "",
+              WorkingTimesID: "",
+              TotalHours: "",
+              OrganizeID: this.formSearchs[0].datas["OrganizeID"],
+            });
+          }
+        }
+        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+      this.$set(this.tableLoading, remarkTb, false);
+    },
     // 获取班次
     async getWorkingTimes() {
       let res = await GetSearchData({ dicID: 5033 });
@@ -1005,7 +910,7 @@ export default {
       let res = await SaveWorkingTimes(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
-       // this.largeOrSmall = null;
+        // this.largeOrSmall = null;
         this.dataPicker = [];
         this.WorkingTimesID = null;
         this.IsCicle = false;
@@ -1028,7 +933,6 @@ export default {
     },
     // 保存单条线的设置  SaveCalendarData  有删除与插入的例子
     async saveOnlyWeek() {
-      let obj = {};
       this.lines = this.$refs.asideRef.$refs.asideTree
         .getCheckedNodes()
         .filter((x) => {
@@ -1039,19 +943,11 @@ export default {
       } else {
         this.$confirm("确定要保存当前线别的月份排班吗？")
           .then(async (_) => {
-            obj["OrganizeID"] = _this.lines[0].OrganizeID;
-            obj["YearMonth"] = YearMonth;
-            let YearMonth =
-              String(_this.calendarMonth.getFullYear()) +
-              _this.zero(_this.calendarMonth.getMonth() + 1);
-            _this.calenderData.forEach((x) => {
-              x.WorkingTimesDetailID = "";
-              x.OrganizeID = _this.lines[0].OrganizeID;
-              x.YearMonth = YearMonth;
+            //对数据进行筛选
+            const resultArr = this.calenderData.filter((item) => {
+              return item.ElementDeleteFlag === 0 || item.WorkingTimesDetailID;
             });
-            obj["submitData"] = _this.calenderData;
-            // return;
-            let res = await SaveLineWorkingTimes(obj);
+            let res = await SaveData(resultArr);
             const { result, data, count, msg } = res.data;
             if (result) {
               _this.adminLoading = false;
@@ -1060,6 +956,7 @@ export default {
                 type: "success",
                 dangerouslyUseHTMLString: true,
               });
+              this.getTableData(this.formSearchs[0].datas, 0);
             } else {
               _this.adminLoading = false;
               _this.$message({
@@ -1072,20 +969,9 @@ export default {
           .catch((_) => {});
       }
     },
-    // 保存单条线的休假
-    saveOnlyWeekRest() {},
     // 点击是否循环大小周
     clickitem(val) {
       val == this.IsCicle ? (this.IsCicle = false) : (this.IsCicle = true);
-    },
-    // 计算累计工时
-    computedTime() {},
-    // 点击休息清空上班时间加班时间
-    clearInput(val, index) {
-      if (val) {
-        this.$set(this.calenderData[index], "OverTime", 0);
-        this.$set(this.calenderData[index], "WorkTime", 0);
-      }
     },
   },
 };

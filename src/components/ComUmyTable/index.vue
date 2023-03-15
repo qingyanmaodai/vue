@@ -24,6 +24,7 @@
       @row-dblclick="handleRowdbClick"
       show-header-overflow="ellipsis"
       @sort-change="sortChange"
+      :keep-source="keepSource"
     >
       <ux-table-column
         :reserve-selection="true"
@@ -955,6 +956,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    // 懒加载
+    keepSource:{
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {

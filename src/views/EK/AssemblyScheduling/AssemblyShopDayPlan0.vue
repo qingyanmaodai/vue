@@ -601,6 +601,14 @@
             msg
           } = res.data;
           if (result) {
+            data.forEach((item)=>{
+              // 是否转机字符串类型保存后会被转化导致显示不正常，优化下
+              if(item['Remark2']==='False'){
+                item['Remark2'] = false
+              }else if(item['Remark2']==='True'){
+                item['Remark2'] = true
+              }
+            })
             this.$set(this.tableData, remarkTb, data);
             this.setData();
             this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -981,6 +989,7 @@
         sheet.bind(
           GC.Spread.Sheets.Events.ClipboardChanged,
           function (sender, args) {
+            console.log('1123')
             let s = sheet.getSelections()[0];
             _this.sheetSelectRows = sheet.getArray(
               s.row,
@@ -1039,7 +1048,28 @@
             }
           });
           // 粘贴事件
-          // this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+          this.spread.bind(GCsheets.Events.ClipboardPasted, function(s, e) {
+            console.log('e',e)
+            // 粘贴插入
+            if(e&&e.cellRange.colCount<0){//插入的列
+              let cellValList = e.pasteData.text.split(/\t|\r\n/)
+              if(cellValList&&cellValList.length){
+                _this.tableColumns[0].forEach((item,index)=>{
+                  if(item.prop==='LineID'){
+                    // 获取剪切
+                    let rowIndex  = e.cellRange.row
+                    let colIndex = index
+                    sheet.setValue(rowIndex, colIndex, null);//插入的数据清空产线
+                  }
+                  if(item.prop==='ProcessPlanID'){
+                    // 获取剪切
+                    let rowIndex  = e.cellRange.row
+                    let colIndex = index
+                    sheet.setValue(rowIndex, colIndex, 0);//插入的数据清空工序计划ID
+                  }
+                })
+              }
+            }
           //   // 日期列才触发
           //   if(_this.tableColumns[0][e.cellRange.col].prop.indexOf('-')>-1){
           //     // 正则分割剪切单元格的所有值
@@ -1067,8 +1097,8 @@
           //       }
           //     }
           //   }
-          // });
-          sheet.options.isProtected = true;
+          });
+          // sheet.options.isProtected = true;//支持行插入时不能锁定
           sheet.options.protectionOptions.allowResizeColumns = true;
           sheet.options.protectionOptions.allowInsertRows = true;
           sheet.options.protectionOptions.allowDeleteRows = true;
@@ -1283,6 +1313,9 @@
         // 保存日计划
         async dataSaveDay() {
           let sheet = this.spread.getActiveSheet();
+          if (sheet.isEditing()) {
+            sheet.endEdit();
+          }
           let newData = sheet.getDirtyRows();
           let submitData = [];
           let noAttendance = false
@@ -1291,12 +1324,19 @@
               submitData.push(x.item);
               // 判断同个产线今日出勤人数是否一致
               this.tableData[this.tagRemark].forEach((y)=>{
-                if(x.item['Code']&&y['Code']&&x.item['LineID']===y['LineID']&&x.item['TotalPeoples']!=y['TotalPeoples']){
+                if(x.item['Code']&&y['Code']&&x.item['LineID']===y['LineID']&&x['LineID']&&x.item['TotalPeoples']!=y['TotalPeoples']){
                   noAttendance = true
                 }
               })
             });
           }
+         let newData2 =sheet.getInsertRows();
+          if (newData2.length != 0) {
+            newData2.forEach((x) => {
+              x.item["dicID"]=this.sysID[this.tagRemark].ID;
+              submitData.push(x.item);
+          });
+        }
           if (submitData.length == 0) {
             this.$message.error("没修改过任何数据！");
             return;
@@ -1306,6 +1346,7 @@
             this.$message.error("同个产线的今日出勤人数需要一致，请修改！");
             return 
           }
+          console.log('submitData',submitData)
           this.adminLoading = true;
           let res = await SaveMOPlanStep4(submitData);
           const {
