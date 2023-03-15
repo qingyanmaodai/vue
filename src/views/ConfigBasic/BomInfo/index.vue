@@ -28,7 +28,7 @@
         :loading="tableLoading[0]"
       />
     </div>
-    <div class="admin_container_right2">
+    <div class="admin_container_right">
       <div class="admin_head_3" ref="headRef">
         <div style="text-align: right;;">
           <el-button
@@ -204,7 +204,7 @@ export default {
       
       ChildTitle:'子件信息',
       treeProps: {
-        label: "Code",
+        label: "label",
         children: "children",
       },
       keyWords:'',
@@ -496,7 +496,6 @@ export default {
     // 回车获取值
     searchTreeEnter(msg) {
       // 树结构查询接口,需要传入BOM编码
-      console.log('msg',msg)
       // this.getBomTree(0,msg)
       this.dataSearch(0)
     },
@@ -717,7 +716,7 @@ export default {
                 }
             }
             if(n.Required){
-                this.formSearchs[this.tagRemark].required.push(n)
+                this.formSearchs[i].required.push(n)
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -751,6 +750,21 @@ export default {
         }
       }
     },
+    //递归
+    handleTree(data) {
+      return data.filter((item, index) => {
+        let name =''
+        if(item.MaterialName&&item.MaterialName.length>12){
+          name = item.MaterialName.slice(0,12)+'...'
+        }
+         
+        item.label =`${name}[${item.Code||'空'}]`
+        if (item.children && item.children.length>0) {
+          item.children = this.handleTree(item.children)
+        }
+        return true
+      })
+    },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
@@ -760,11 +774,8 @@ export default {
       if(remarkTb===0){//左侧树结构
         form['Code'] =  this.keyWords
         res = await GetSearch(form,'/APSAPI/GetBomData');
+        res.data.data = this.handleTree(res.data.data)
       }else{//右边表格
-        // if(!form.MaterialID){
-        //   this.$set(this.tableLoading, remarkTb, false);
-        //   return
-        // }
         res = await GetSearchData(form);
       }
       const { result, data, count, msg } = res.data;
@@ -783,8 +794,6 @@ export default {
     },
     // 单击节点查看父件和子件
     handleNodeClick(data, node) {
-      console.log('data',data)
-      console.log('node',node)
       let self = this
       self.resetForm('ruleForm0')
       self.formData = _.cloneDeep(data);//这需要克隆，resetForm重置会影响
@@ -820,14 +829,12 @@ export default {
     },
     // 重置校验
     resetForm(formName) {
-      console.log('this.$refs',this.$refs)
         this.$refs[formName].$refs['formData'].resetFields();
     },
     // 新增父件
     addParentBom(){
       this.dialogShowParent = true
       this.formDataParent['dicID'] = this.sysID[this.tagRemark].ID
-      console.log('this.formDataParent',this.formDataParent)
       this.$nextTick(()=>{
         this.resetForm('refParent')
       })
@@ -835,7 +842,6 @@ export default {
     // 父件确认添加
     parentConfirm(val){
       if(val){
-        console.log('this.formDataParent',this.formDataParent)
         this.$refs['refParent'].$refs['formData'].validate((valid) => {
           if (valid) {
             //因为后端用这些字段保存才能更新Code,因此要同步改
@@ -857,20 +863,19 @@ export default {
     addChildBom(){
       // 对接好添加这个判断
       let self = this
+      
+      if(!self.formData.MaterialBomID){
+        self.$message.error("未选择关联到父件，请检查！");
+        return
+      }
       self.dialogShowChild = true
       this.$nextTick(()=>{
         self.resetForm('refChild')
-        if(!self.formData.MaterialBomID){
-          self.$message.error("未选择关联到父件，请检查！");
-          return
-        }
         if(self.formData&&self.formData.MaterialBomID){
           self.formDataChild['dicID'] = self.sysID[self.tagRemark].ID
           self.formDataChild['ParentCode'] = self.formData['Code']
           self.formDataChild['BOMMasterID'] = self.formData['MaterialID']//父件ID
           self.formDataChild['ParentID'] = self.formData['MaterialID']//父件主键
-          console.log('this.formDataChild',self.formDataChild)
-          console.log('formData',this.formData)
         }
       })
     },
@@ -890,7 +895,6 @@ export default {
     
     // 批量锁定/取消锁定弹框
     openDrawer(remarkTb, index, params) {
-      console.log('remarkTb',remarkTb)
       if(!this.selectionData[remarkTb].length){
         this.$message.error("请选择需要操作的数据！");
         return
@@ -970,7 +974,6 @@ export default {
             this.formData['dicID'] = this.sysID[this.tagRemark].ID
             submitData = [this.formData]
           } else {
-            console.log('error submit!!');
             isPass = false
           }
         });
@@ -980,21 +983,18 @@ export default {
         }
         
       }else if(remarkTb==1){
-        console.log('required',this.formSearchs[remarkTb].required)
         if(this.tableData[remarkTb].length){
           if(this.formSearchs[remarkTb].required.length){
               // 动态检验必填项
               for(let i=0;i<this.tableData[remarkTb].length;i++){
                   for(let x=0;x<this.formSearchs[remarkTb].required.length;x++){
-                      if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]){
-                      this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
+                      if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]&&String(this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']])!=='0'){
+                      this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请填写`)
                       return
                   }
               }
           }
           }
-        }else{
-          return
         }
         const $table = this.$refs.ComUmyTable.$refs.plxTable
         // 获取修改记录
@@ -1042,7 +1042,6 @@ export default {
       let res = await GetSearch(form, "/APSAPI/GetDataSource");
       const { result, data, count, msg } = res.data;
       if (result) {
-        console.log('data',data)
         if(data){
           for(let key in data){
             for(let obj in this.DataSourceList){
@@ -1088,7 +1087,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   ::v-deep .admin_left{
-    width: 300px;
+    width: 350px;
   }
   ::v-deep.el-pagination-tree .searchInput>.w2\/3{
     width:100% !important
