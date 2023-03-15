@@ -72,10 +72,6 @@
                 :span="20"
                 class="flex_flex_end"
               >
-              <!-- <div v-if="childAddEdit">
-                <span>新增行数：</span>
-                  <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"></el-input-number>
-              </div> -->
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -143,7 +139,6 @@
             :isEdit="isEdit"
             :isClear="isClear[1]"
             :pagination="tablePagination[1]"
-            @handleRowClick="handleRowClick"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @selectfun="selectFun"
@@ -154,17 +149,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 新增父件弹框 -->
-    <!-- <ComFormDialog
-      ref="refParent"
-      :title="addParentTitle"
-      :dialogShow="dialogShowParent"
-      :formData="formDataParent"
-      :formRules="formRulesParent"
-      :formController="formControllerParent"
-      @dialogBtnClick="parentConfirm"
-    /> -->
     <!-- 新增子件弹框 -->
     <ComFormDialog
       ref="refChild"
@@ -173,7 +157,6 @@
       :formData="formDataChild"
       :formRules="formRulesChild"
       :formController="formControllerChild"
-      @selectHandleNodeClick="selectHandleNodeClick"
       @dialogBtnClick="childConfirm"
     />
     <!-- 批量锁定/取消锁定 -->
@@ -183,57 +166,8 @@
       :dialogShow="dialogShow2"
       :formData="formData2"
       :formController="formController2"
-      @selectHandleNodeClick="selectHandleNodeClick2"
       @dialogBtnClick="dialogBtnClick2"
     />
-
-    <el-dialog
-      title="导入模板"
-      :visible.sync="dialogImport"
-      width="30%"
-    >
-      <el-upload
-        action="https://jsonplaceholder.typicode.com/posts/"
-        style="padding-top: 10px"
-        class="upload-demo"
-        drag
-        :limit="1"
-        :multiple="false"
-        name="files"
-        ref="upload"
-        :on-change="handleChanged"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        accept=".xls, .xlsx"
-      >
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
-        </div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >
-          只能上传xls、xslx文件且仅支持上传一个文件
-        </div>
-      </el-upload>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogImport = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="sureImport"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -252,7 +186,6 @@ import {
   GetSearch
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
 import ComForm from "@/components/ComForm";
 export default {
   name: "BomInfo",
@@ -290,18 +223,10 @@ export default {
         Status: 0,
         ParentCode:null,
         ParentMaterialName:null,
+        Code:null,
+        MaterialName:null,
+        Unit:null,
       },
-      // formDataParent: {
-      //   ParentID:0,
-      //   Denominator:null,
-      //   ParentUnit:null,
-      //   ItemClass:null,
-      //   LineNum:null,
-      //   Remark1:null,
-      //   Status: 0,
-      //   ParentCode:null,
-      //   ParentMaterialName:null,
-      // },
       formDataChild: {
         Code:null,
         MaterialName:null,
@@ -310,15 +235,29 @@ export default {
         Scrappage:null,
         Remark1:null,
         Status: 0,
+        ParentCode:null,
       },
       UserTypes: [],
       PositionIDs: [],
       treeData: [],
       treeListTmp: [],
+      formData2:{
+        Status: 0,
+      },
+      formController2: [
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "禁用", value: 0 },
+            { label: "启用", value: 1 },
+          ],
+        },
+      ],
       formController: [
-
-        { label: "父件物料号", prop: "ParentCode", type: "input" },
-        { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
+        { label: "父件物料号", prop: "Code", type: "input" },
+        { label: "父件描述", prop: "MaterialName", type: "textarea" },
         {
           label: "基本数量",
           prop: "Denominator",
@@ -328,56 +267,13 @@ export default {
         { label: "单位", prop: "ParentUnit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input",inputType: "number", },
-        // { label: "备注", prop: "Remark1", type: "textarea" },
-        // {
-        //   label: "状态",
-        //   prop: "Status",
-        //   type: "radioGroupLabel",
-        //   radioGroups: [
-        //     { label: "启用", value: 1 },
-        //     { label: "禁用", value: 0 },
-        //   ],
-        // },
       ],
       formRules: {
         ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
         ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
-        // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
-        // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
       },
-      // formControllerParent: [
-      //   { label: "父件物料号", prop: "ParentCode", type: "input" },
-      //   { label: "父件描述", prop: "ParentMaterialName", type: "textarea" },
-      //   {
-      //     label: "基本数量",
-      //     prop: "Denominator",
-      //     type: "input",
-      //     inputType: "number",
-      //   },
-      //   { label: "单位", prop: "ParentUnit", type: "input" },
-      //   { label: "项目类别", prop: "ItemClass", type: "input" },
-      //   { label: "项目", prop: "LineNum", type: "input" },
-      //   // { label: "备注", prop: "Remark1", type: "textarea" },
-      //   {
-      //     label: "状态",
-      //     prop: "Status",
-      //     type: "radioGroupLabel",
-      //     radioGroups: [
-      //       { label: "启用", value: 1 },
-      //       { label: "禁用", value: 0 },
-      //     ],
-      //   },
-      // ],
-      // formRulesParent: {
-      //   ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
-      //   ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
-      //   Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
-      //   ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
-      //   // ItemClass: [{ required: true, message: "必填项", trigger: "blur" }],
-      //   // LineNum: [{ required: true, message: "必填项", trigger: "blur" }]
-      // },
       formControllerChild: [
       { label: "父件物料号", prop: "ParentCode",type: "input",disabled:true  },
       { label: "子件物料号", prop: "Code", type: "input" },
@@ -402,7 +298,6 @@ export default {
         },
       ],
       formRulesChild: {
-        // Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
         Unit: [ { required: true, message: "必填项", trigger: "blur" }],
@@ -410,7 +305,6 @@ export default {
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      // drawerTitle: "新增人员",
       drawer: false,
       delData: [[],[]],
       formSearchs: [
@@ -426,17 +320,6 @@ export default {
         },
       ],
       parmsBtn: [
-        {
-          ButtonCode: "import",
-          BtnName: "导入",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Params: "",
-          Icon: "",
-          sort:1,
-        },
         {
           ButtonCode: "addChildBom",
           BtnName: "",
@@ -475,23 +358,13 @@ export default {
           Type: "warning",
           Ghost: true,
           Size: "small",
-          Methods: "dataSave",
+          Methods: "openDrawer",
           Icon: "",
           sort:5,
           Params: { },
         },
       ],
       parmsBtn2: [
-        // {
-        //   ButtonCode: "addParentBom",
-        //   BtnName: "",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "addParentBom",
-        //   Icon: "",
-        //   sort:1,
-        // },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -503,17 +376,6 @@ export default {
           sort:2,
           Params: { dataName: "saveData" },
         },
-        // {
-        //   ButtonCode: "delete",
-        //   BtnName: "删除",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   Size: "small",
-        //   Methods: "dataDel",
-        //   Params: { },
-        //   Icon: "",
-        //   sort:3,
-        // },
       ],
       saveData: [[],[]],
       selectionData: [[],[]],
@@ -546,9 +408,6 @@ export default {
     };
   },
   computed: {
-    // ...mapState({
-    //   userInfo: (state) => state.user.userInfo,
-    // }),
   },
   created() {
     _this = this;
@@ -558,54 +417,9 @@ export default {
   mounted() {
     setTimeout(() => {
       this.setHeight();
-      // this.getOrgData();
     }, 500);
   },
   methods: {
-    async getUserType() {
-      let res = await GetSearchData({ dicID: 43, StatusType: "人员属性" });
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        if (data.length != 0) {
-          let newData = [];
-          data.forEach((x) => {
-            let obj = {};
-            obj["label"] = x.StatusName;
-            obj["value"] = x.StatusID;
-            newData.push(obj);
-          });
-          this.$set(this.formController[6], "select", newData);
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    async getPosition() {
-      let res = await GetSearchData({ dicID: 39, Status: 1 });
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        if (data.length != 0) {
-          let newData = [];
-          data.forEach((x) => {
-            let obj = {};
-            obj["label"] = x.PositionName;
-            obj["value"] = x.PositionID;
-            newData.push(obj);
-          });
-          this.$set(this.formController[7], "select", newData);
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
     //输入框改变查询的值
     async searchTree(msg) {
       this.keyWords = msg
@@ -614,37 +428,8 @@ export default {
     searchTreeEnter(msg) {
       // 树结构查询接口,需要传入BOM编码
       console.log('msg',msg)
-      this.getBomTree(0,msg)
-    },
-    rebuildData(value, arr) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach((element) => {
-          if (element.OrganizeName.indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children,
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children);
-              const obj = {
-                ...element,
-                children: ab,
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
+      // this.getBomTree(0,msg)
+      this.dataSearch(0)
     },
     // 导出
     async dataExport(remarkTb) {
@@ -654,146 +439,6 @@ export default {
       let res = await ExportData(form);
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
-    },
-    // 导入模板
-    dataImport() {
-      this.dialogImport = true;
-      this.fileList = [];
-      this.file = [];
-    },
-    // 确认导入
-    sureImport() {
-      if (this.fileList.length == 0) {
-        this.$message.error("请先选择文件");
-        return;
-      } else if (this.fileList.length > 1) {
-        this.$message.error("仅支持一个文件上传");
-      } else {
-        this.$confirm("确定要导入人员模板吗？")
-          .then((_) => {
-            _this.importExcel(this.file);
-          })
-          .catch((_) => {});
-      }
-    },
-    importExcel(file) {
-      this.adminLoading = true;
-      this.dialogImport = false;
-      const result = [];
-      const reader = new FileReader(); //就这啊点上传就解析文件
-      var that = this;
-      reader.onload = function (e) {
-        const data = e.target.result;
-        this.wb = XLSX.read(data, {
-          type: "binary",
-        });
-        this.wb.SheetNames.forEach((sheetName) => {
-          result.push({
-            sheetName: sheetName,
-            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName]),
-          });
-        });
-        that.dataSys(result); // 解析文件
-      };
-      reader.readAsBinaryString(file.raw);
-    },
-    // 解析文件
-    async dataSys(importData) {
-      if (importData && importData.length > 0) {
-        let DataList = [];
-        importData[0].sheet.forEach((m) => {
-          var obj = {};
-          obj["Name"] = m["姓名"];
-          obj["Account"] = m["账号"];
-          obj["Pwd"] = m["密码"];
-          obj["OrganizeID"] = m["组织"];
-          obj["Sex"] = m["性别"];
-          obj["EntryDate"] = m["入职日期"];
-          // obj["dicID"] = 3007;
-          DataList.push(obj);
-        });
-        let res = await SaveData(DataList);
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.adminLoading = false;
-          this.dataSearch(0);
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      }
-    },
-    handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
-      if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
-        // 取消时在文件列表中删除该文件
-        this.$refs.upload.handleRemove(file);
-        return false;
-      }
-      const isLt2M = file.size / 1024 / 1024 < 50;
-      if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
-        // 取消时在文件列表中删除该文件
-        this.$refs.upload.handleRemove(file);
-        return false;
-      } else {
-        this.file = file;
-        this.fileList = fileList;
-      }
-    },
-    handleRemove(file) {
-      this.fileList.splice(
-        this.fileList.findIndex((item) => item.url === file.url),
-        1
-      );
-    },
-    // 获取组织
-    async getOrgData() {
-      this.treeData = [];
-      this.treeListTmp = [];
-      let form = {
-        dicID: 3026,
-        OrganizeIDs: this.userInfo.CenterID,
-        OrganizeID: this.userInfo.OrganizeID,
-        Status: 1,
-      };
-      let res = await GetOrgData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.treeData = JSON.parse(JSON.stringify(data));
-        this.formController[3].treeData = data;
-        this.treeData.unshift({ OrganizeID: -1, OrganizeName: "未配组织人员" });
-        this.treeListTmp = this.treeData;
-        if (data.length != 0) {
-          this.$nextTick(function () {
-            if (_this.$$refs) {
-              _this.$refs.asideRef.$refs.asideTree.setCurrentKey(
-                data[0].OrganizeID
-              );
-            }
-          });
-          this.formSearchs[0].datas["OrganizeIDs"] = data[0].OrganizeID;
-          this.formSearchs[0].datas["dicID"] = 3007;
-          this.getTableData(this.formSearchs[0].datas, 0);
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     // 判断按钮权限
     judgeBtn() {
@@ -807,10 +452,6 @@ export default {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
-            // 是否有增行权限
-            if(x.ButtonCode == y.ButtonCode&&x.ButtonCode==='addChildBom'){
-              this.$set(this, "childAddEdit", true);
-            }
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = y.BtnName||x.ButtonName;
@@ -843,13 +484,11 @@ export default {
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
       this.$set(this, "parmsBtn2", newBtn2);
-      
     },
     // 高度控制
     setHeight() {
       this.treeHeight = document.documentElement.clientHeight - 250 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
-
       let rem =
         document.documentElement.clientHeight -
         headHeight -
@@ -864,14 +503,14 @@ export default {
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-      this.getBomTree(remarkTb,this.keyWords)
-      // this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      // this.getBomTree(remarkTb,this.keyWords)
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
-      this.getBomTree(remarkTb,this.keyWords)
-      // this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      // this.getBomTree(remarkTb,this.keyWords)
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
     sortChange(order, prop, remarkTb, filtertb, row, index) {
@@ -922,56 +561,16 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if (this.formSearchs[remarkTb].forms.length) {
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            });
+          }
         }
       }
-    },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
-    // 增行
-    async  addRow(remarkTb){
-        if(!this.addNum){
-            this.$message.error('请输入需要添加的行数!')
-            return
-        }
-        // 下拉数据是需要获取数据源
-        for(let x=0;x<this.addNum;x++){
-          let obj ={
-            dicID: this.sysID[remarkTb].ID,
-            rowNum: _.uniqueId("rowNum_")
-          }
-        this.tableColumns[remarkTb].map((item)=>{
-            obj[item.prop] = null
-            if(item.prop==='Status'){
-               obj[item.prop]  = 0
-            }
-            for(let key in this.DataSourceList){
-                if(item.DataSourceName ===key){
-                
-                    obj[key] = this.DataSourceList[key]
-                }
-            }
-        })
-        
-        console.log('this.DataSourceList',this.DataSourceList)
-        
-        this.tableData[remarkTb].unshift(obj)
-        // obj加入行, 表示加入行的row对象，第2各个数为空则插入第一行，为-1插入最后一行
-        let row = 0
-        let newRow  = await  this.$refs.ComUmyTable.$refs.plxTable.insertRow(obj)
-        console.log('row',row)
-        // 激活单元格编辑
-        this.$nextTick(()=>{
-            this.$refs.ComUmyTable.$refs.plxTable.setActiveRow(newRow)
-        })
-        
-        }
-            
-        
-        console.log('this.tableData[remarkTb]',this.tableData[remarkTb])
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -997,19 +596,18 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          _this.generalSaveData(newData, remarkTb, index,'delete');
+          _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {});
     },
     // 通用直接保存
-    async generalSaveData(newData, remarkTb, index,status) {
+    async generalSaveData(newData, remarkTb, index) {
       this.adminLoading = true;
       let res = await SaveData(newData);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if(status==='delete'){
-          this.getBomTree(0,this.keyWords)
-        }
+        this.dataSearch(0);
+        // this.getBomTree(0,this.keyWords)
         this.dataSearch(remarkTb);
         this.adminLoading = false;
         this.$message({
@@ -1068,25 +666,8 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         // 获取左侧树结构
-        this.getBomTree(0)
-        // this.tagRemark = 1
-        // await this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
-        // 获取下拉的数据源
-        // this.$nextTick(()=>{
-        //     // 有数据时直接取行数据源
-        //     if(this.tableData[this.tagRemark].length){
-        //         for(let key in this.tableData[this.tagRemark][0]){
-        //             for(let obj in this.DataSourceList){
-        //             if(obj === key){
-        //                 this.DataSourceList[obj] = this.tableData[this.tagRemark][0][key]
-        //             }
-        //         }
-        //         }
-        //     }else{
-        //       let ids = this.DataSourceIds.join(',') ||''
-        //       this.getDataSource(ids)
-        //     }
-        // })
+        // this.getBomTree(0)
+        this.getTableData(this.formSearchs[0].datas, 0)
       }
     },
     // 验证数据
@@ -1106,12 +687,18 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearchData(form);
-      // let res = await GetSearch(form,'/APSAPI/GetBomData')
+      let res = ''
+      if(remarkTb===0){//左侧树结构
+        form['Code'] =  this.keyWords
+        res = await GetSearch(form,'/APSAPI/GetBomData');
+      }else{//右边表格
+        res = await GetSearchData(form);
+      }
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tableLoading, remarkTb, false);
       } else {
         this.$message({
           message: msg,
@@ -1121,36 +708,12 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
-    // 点击新增用户
-    openDrawer() {
-      for (var name in this.formData) {
-        this.formData[name] = "";
-        // this.formData["dicID"] = 3007;
-      }
-      if (this.clickData && this.clickData.OrganizeID != -1) {
-        this.$set(this.formData, "OrganizeID", this.clickData.OrganizeID);
-        this.$set(this.formData, "OrganizeName", this.clickData.OrganizeName);
-      }
-      this.dialogShow = true;
-    },
-    // 点击批量修改数据
-    openDrawer2() {
-      for (var name in this.formData2) {
-        this.formData2[name] = "";
-        // this.formData2["dicID"] = 3007;
-      }
-      this.dialogShow2 = true;
-    },
-    // 单击出来组织人员
+    // 单击节点查看父件和子件
     handleNodeClick(data, node) {
       console.log('data',data)
       console.log('node',node)
-
       this.resetForm('ruleForm0')
-      // this.handleTree([data])
-      // this.clickData = _.cloneDeep(data);
       this.formData = _.cloneDeep(data);//这需要克隆，resetForm重置会影响
-      // this.formSearchs[1].datas['MaterialID'] =  data&&data.MaterialID?data.MaterialID:data.BOMMasterID
       // 通过父级ID查询下级子件
       this.formSearchs[1].datas["ParentID"] = "";
       this.formSearchs[1].datas["MaterialID"] = "";
@@ -1162,33 +725,6 @@ export default {
           data && data.MaterialID ? data.MaterialID : data.BOMMasterID;
       }
       this.dataSearch(1)
-    },
-    //树结构递归
-    // handleTree(data) {
-    //   return data.filter((item, index) => {
-    //     // item.label = item.Code
-    //     // item.id = item.BOMMasterID
-    //     item.expanded = true
-    //     if (item.children && item.children.length>0) {
-    //       item.children = this.handleTree(item.children)
-    //     }else{
-    //       // 树结构最后一层有children节点不能选择问题修改
-    //       delete item.children
-    //     }
-    //     return true
-    //   })
-    // },
-    // 选择菜单树形
-    selectHandleNodeClick(data, node) {
-      this.formData.OrganizeName = data.OrganizeName;
-      this.formData.OrganizeID = data.OrganizeID;
-      this.$refs.orgRef.$refs.formTreeRef[0].blur();
-    },
-    // 选择菜单树形
-    selectHandleNodeClick2(data, node) {
-      this.formData2.OrganizeName = data.OrganizeName;
-      this.formData2.OrganizeID = data.OrganizeID;
-      this.$refs.orgRef2.$refs.formTreeRef[0].blur();
     },
     // 刷新页面
     refrshPage() {
@@ -1210,44 +746,25 @@ export default {
       console.log('this.$refs',this.$refs)
         this.$refs[formName].$refs['formData'].resetFields();
     },
-    // 新增父件
-    // addParentBom(){
-    //   this.dialogShowParent = true
-    //   this.formDataParent['dicID'] = this.sysID[this.tagRemark].ID
-    //   console.log('this.formDataParent',this.formDataParent)
-    //   this.$nextTick(()=>{
-    //     this.resetForm('refParent')
-    //   })
-    // },
-    // 父件确认添加
-    // parentConfirm(val){
-    //   if(val){
-    //     this.$refs['refParent'].$refs['formData'].validate((valid) => {
-    //       if (valid) {
-    //         this.addDataSave([this.formDataParent],0)
-    //         this.dialogShowParent = false
-    //       }
-    //     });
-    //   }else{
-    //     this.dialogShowParent = false
-    //   }
-    // },
     // 新增子件
     addChildBom(){
       // 对接好添加这个判断
-      if(!this.formData.MaterialBomID){
-        this.$message.error("未选择关联到父件，请检查！");
-        return
-      }
-      if(this.formData&&this.formData.MaterialBomID){
-        this.formDataChild['dicID'] = this.sysID[this.tagRemark].ID
-        this.formDataChild['ParentCode'] = this.formData['Code']
-        this.formDataChild['BOMMasterID'] = this.formData['BOMMasterID']//主键
-        this.formDataChild['ParentID'] = this.formData['BOMMasterID']//父件ID
-      }
-      this.dialogShowChild = true
+      let self = this
+      self.dialogShowChild = true
       this.$nextTick(()=>{
-        this.resetForm('refChild')
+        self.resetForm('refChild')
+        if(!self.formData.MaterialBomID){
+          self.$message.error("未选择关联到父件，请检查！");
+          return
+        }
+        if(self.formData&&self.formData.MaterialBomID){
+          self.formDataChild['dicID'] = self.sysID[self.tagRemark].ID
+          self.formDataChild['ParentCode'] = self.formData['Code']
+          self.formDataChild['BOMMasterID'] = self.formData['BOMMasterID']//主键
+          self.formDataChild['ParentID'] = self.formData['BOMMasterID']//父件ID
+          console.log('this.formDataChild',self.formDataChild)
+          console.log('formData',this.formData)
+        }
       })
     },
     // 子件确认添加
@@ -1263,16 +780,40 @@ export default {
         this.dialogShowChild = false
       }
     },
-    // 新增保存
-    async addDataSave(newData, remarkTb) {
+    
+    // 批量锁定/取消锁定弹框
+    openDrawer(remarkTb, index, params) {
       console.log('remarkTb',remarkTb)
-      console.log('newData',newData)
+      if(!this.selectionData[remarkTb].length){
+        this.$message.error("请选择需要操作的数据！");
+        return
+      }
+      this.dialogShow2 = true;
+    },
+    // 确认批量锁定/取消锁定
+    dialogBtnClick2(val){
+      if(val){
+        let newData = []
+        this.selectionData[this.tagRemark].forEach((item)=>{
+          item.Status = this.formData2.Status
+          newData.push(item)
+        })
+        this.addDataSave(newData,1,'update')
+        this.dialogShow2 = false
+      }else{
+        this.dialogShow2 = false
+      }
+    },
+    // 新增保存
+    async addDataSave(newData, remarkTb,status) {
       this.adminLoading = true;
       let res = await SaveData(newData);
       const { result, data, count, msg } = res.data;
       if (result) {
-        // this.formData = this.formDataParent
-        this.getBomTree(0,this.keyWords)
+        if(status!='update'){
+          this.dataSearch(0)
+          // this.getBomTree(0,this.keyWords)
+        }
         this.dataSearch(1)
         this.adminLoading = false;
         this.$message({
@@ -1309,12 +850,12 @@ export default {
         }
         
       }else if(remarkTb==1){
+        console.log('required',this.formSearchs[remarkTb].required)
         if(this.tableData[remarkTb].length){
           if(this.formSearchs[remarkTb].required.length){
               // 动态检验必填项
               for(let i=0;i<this.tableData[remarkTb].length;i++){
                   for(let x=0;x<this.formSearchs[remarkTb].required.length;x++){
-                      // console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
                       if(!this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]){
                       this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
                       return
@@ -1328,32 +869,24 @@ export default {
         const $table = this.$refs.ComUmyTable.$refs.plxTable
         // 获取修改记录
         let updateRecords =$table.getUpdateRecords()
-        // 新增的行
-        let insertRecords = $table.getInsertRecords()
-        console.log('updateRecords',updateRecords)
         if(updateRecords.length){
           submitData = updateRecords
         }
-        console.log('remarkTb',remarkTb)
-        console.log('insertRecords',insertRecords)
-        console.log('submitData1',submitData)
-        
       }
       if(submitData.length==0){
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return
       }
-      console.log('index',index)
-      console.log('remarkTb',remarkTb)
-      console.log('params',submitData)
       this.adminLoading = true;
       let res = await SaveData(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         if(remarkTb==0){
-          this.getBomTree(0,this.keyWords)
+          // this.getBomTree(0,this.keyWords)
+          this.dataSearch(remarkTb)
         }else{
-          this.getBomTree(0,this.keyWords)
+          this.dataSearch(0)
+          // this.getBomTree(0,this.keyWords)
           this.dataSearch(remarkTb);
         }
         
@@ -1389,7 +922,6 @@ export default {
             }
           }
         }
-                 
       } else {
         this.$message({
           message: msg,
@@ -1400,13 +932,11 @@ export default {
     },
     // 树结构查询
     async getBomTree(remarkTb,keyWords){
-      console.log('树结构下标',remarkTb)
       this.$set(this.tableLoading, remarkTb, true);
       let form = this.formSearchs[remarkTb].datas
       form['Code'] =  keyWords
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      console.log('form',form)
       this.$set(this.tableLoading, remarkTb, true);
       let res = await GetSearch(form,'/APSAPI/GetBomData');
       const { result, data, count, msg } = res.data;
@@ -1427,12 +957,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// .container {
   ::v-deep .admin_left{
     width: 300px;
   }
   ::v-deep.el-pagination-tree .searchInput>.w2\/3{
     width:100% !important
   }
-// }
 </style>
