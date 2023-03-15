@@ -962,7 +962,7 @@ export default {
       switch (index) {
         case 0: //总排期
          // this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 24, 26];
-          this.formSearchs[0].datas["ProcessPlanID"] = 0;
+          //this.formSearchs[0].datas["ProcessPlanID"] = 0;
           this.formSearchs[0].datas["CompletionStatus"] =0
           break;
         case 1: //已完成待出货
