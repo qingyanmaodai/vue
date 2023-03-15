@@ -159,15 +159,6 @@
       :formController="formControllerChild"
       @dialogBtnClick="childConfirm"
     />
-    <!-- 批量锁定/取消锁定 -->
-    <ComFormDialog
-      ref="orgRef2"
-      :title="'批量锁定/取消锁定'"
-      :dialogShow="dialogShow2"
-      :formData="formData2"
-      :formController="formController2"
-      @dialogBtnClick="dialogBtnClick2"
-    />
   </div>
 </template>
 
@@ -226,6 +217,7 @@ export default {
         Code:null,
         MaterialName:null,
         Unit:null,
+        Scrappage:null,
       },
       formDataChild: {
         Code:null,
@@ -259,34 +251,43 @@ export default {
         { label: "父件物料号", prop: "Code", type: "input" },
         { label: "父件描述", prop: "MaterialName", type: "textarea" },
         {
-          label: "基本数量",
-          prop: "Denominator",
+          label: "数量",
+          prop: "Molecule",
           type: "input",
           inputType: "number",
         },
-        { label: "单位", prop: "ParentUnit", type: "input" },
+        { label: "单位", prop: "Unit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
         { label: "项目", prop: "LineNum", type: "input",inputType: "number", },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+        },
       ],
       formRules: {
-        ParentCode: [{ required: true, message: "必填项", trigger: "blur" }],
-        ParentMaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
-        Denominator: [{ required: true, message: "必填项", trigger: "blur" }],
-        ParentUnit: [ { required: true, message: "必填项", trigger: "blur" }],
+        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
+        Unit: [ { required: true, message: "必填项", trigger: "blur" }],
       },
       formControllerChild: [
       { label: "父件物料号", prop: "ParentCode",type: "input",disabled:true  },
       { label: "子件物料号", prop: "Code", type: "input" },
         { label: "子件描述", prop: "MaterialName", type: "textarea" },
         {
-          label: "子件数量",
+          label: "数量",
           prop: "Molecule",
           type: "input",
           inputType: "number",
         },
         { label: "单位", prop: "Unit", type: "input" },
         { label: "报废率", prop: "Scrappage", type: "input" },
-        { label: "备注", prop: "Remark1", type: "textarea" },
+        // { label: "备注", prop: "Remark1", type: "textarea" },
         {
           label: "状态",
           prop: "Status",
@@ -354,11 +355,11 @@ export default {
         },
         {
           ButtonCode: "update",
-          BtnName: "锁定/取消锁定",
+          BtnName: "锁定",
           Type: "warning",
           Ghost: true,
           Size: "small",
-          Methods: "openDrawer",
+          Methods: "lockSave",
           Icon: "",
           sort:5,
           Params: { },
@@ -712,19 +713,23 @@ export default {
     handleNodeClick(data, node) {
       console.log('data',data)
       console.log('node',node)
-      this.resetForm('ruleForm0')
-      this.formData = _.cloneDeep(data);//这需要克隆，resetForm重置会影响
+      let self = this
+      self.resetForm('ruleForm0')
+      self.formData = _.cloneDeep(data);//这需要克隆，resetForm重置会影响
+      // if(!this.formData.ParentID){
+       
+      // }
       // 通过父级ID查询下级子件
-      this.formSearchs[1].datas["ParentID"] = "";
-      this.formSearchs[1].datas["MaterialID"] = "";
+      self.formSearchs[1].datas["ParentID"] = "";
+      self.formSearchs[1].datas["MaterialID"] = "";
       if (data && data.ParentID == 0) {
-        this.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
+        self.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
       } else {
-        this.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
-        this.formSearchs[1].datas["MaterialID"] =
+        self.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
+        self.formSearchs[1].datas["MaterialID"] =
           data && data.MaterialID ? data.MaterialID : data.BOMMasterID;
       }
-      this.dataSearch(1)
+      self.dataSearch(1)
     },
     // 刷新页面
     refrshPage() {
@@ -795,7 +800,7 @@ export default {
       if(val){
         let newData = []
         this.selectionData[this.tagRemark].forEach((item)=>{
-          item.Status = this.formData2.Status
+          item.Status = 0
           newData.push(item)
         })
         this.addDataSave(newData,1,'update')
@@ -803,6 +808,21 @@ export default {
       }else{
         this.dialogShow2 = false
       }
+    },
+    lockSave(remarkTb){
+      if(!this.selectionData[remarkTb].length){
+        this.$message.error("请选择需要操作的数据！");
+        return
+      }
+      let newData = []
+      this.selectionData[remarkTb].forEach((item)=>{
+        let obj = _.cloneDeep(item)
+        obj.Status = 0
+        newData.push(obj)
+      })
+      this.$confirm("确定要锁定的【" + newData.length + "】数据吗？").then(() => {
+        this.addDataSave(newData,1,'update')
+      }).catch((_) => {});
     },
     // 新增保存
     async addDataSave(newData, remarkTb,status) {
@@ -837,6 +857,11 @@ export default {
       if(remarkTb==0){
         this.$refs['ruleForm0'].$refs['formData'].validate((valid) => {
           if (valid) {
+            //因为后端用这些字段保存才能更新Code,因此要同步改
+            this.formData.ParentCode = this.formData.Code
+            this.formData.ParentMaterialName = this.formData.MaterialName
+            this.formData.ParentUnit = this.formData.Unit
+            this.formData.Denominator = this.formData.Molecule
             this.formData['dicID'] = this.sysID[this.tagRemark].ID
             submitData = [this.formData]
           } else {
