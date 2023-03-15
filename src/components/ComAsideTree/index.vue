@@ -58,6 +58,7 @@
       highlight-current
       :expand-on-click-node="expandOnClickNode"
       @node-click="handleNodeClick"
+      v-loading="loading"
     ></el-tree>
     <div>
       <div
@@ -197,10 +198,15 @@ export default {
       type: String,
       default: "w2\/3",
     },
-    //
+    //输入框提示文字
     placeholder:{
       type: String,
       default: "搜索",
+    },
+    //加载
+    loading:{
+      type: Boolean,
+      default: false,
     },
   },
   data() {
