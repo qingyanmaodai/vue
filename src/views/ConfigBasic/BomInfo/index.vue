@@ -149,6 +149,17 @@
         </div>
       </div>
     </div>
+
+     <!-- 新增父件弹框 -->
+    <ComFormDialog
+      ref="refParent"
+      :title="addParentTitle"
+      :dialogShow="dialogShowParent"
+      :formData="formDataParent"
+      :formRules="formRulesParent"
+      :formController="formController"
+      @dialogBtnClick="parentConfirm"
+    />
     <!-- 新增子件弹框 -->
     <ComFormDialog
       ref="refChild"
@@ -204,6 +215,23 @@ export default {
       dialogShowParent: false,
       dialogShowChild: false,
       dialogShow2:false,
+      formDataParent: {
+        // BOMMasterID:0,
+        ParentID:0,
+        Denominator:null,
+        ParentUnit:null,
+        ItemClass:null,
+        LineNum:null,
+        Remark1:null,
+        Status: 0,
+        ParentCode:null,
+        ParentMaterialName:null,
+        Code:null,
+        MaterialName:null,
+        Unit:null,
+        Scrappage:0,
+        Molecule:null,
+      },
       formData: {
         ParentID:0,
         Denominator:null,
@@ -217,7 +245,8 @@ export default {
         Code:null,
         MaterialName:null,
         Unit:null,
-        Scrappage:null,
+        Scrappage:0,
+        Molecule:null,
       },
       formDataChild: {
         Code:null,
@@ -247,6 +276,35 @@ export default {
           ],
         },
       ],
+      // formControllerParent: [
+      //   { label: "父件物料号", prop: "Code", type: "input" },
+      //   { label: "父件描述", prop: "MaterialName", type: "textarea" },
+      //   {
+      //     label: "基本数量",
+      //     prop: "Molecule",
+      //     type: "input",
+      //     inputType: "number",
+      //   },
+      //   { label: "单位", prop: "Unit", type: "input" },
+      //   { label: "项目类别", prop: "ItemClass", type: "input" },
+      //   { label: "项目", prop: "LineNum", type: "input" },
+      //   // { label: "备注", prop: "Remark1", type: "textarea" },
+      //   {
+      //     label: "状态",
+      //     prop: "Status",
+      //     type: "radioGroupLabel",
+      //     radioGroups: [
+      //       { label: "启用", value: 1 },
+      //       { label: "禁用", value: 0 },
+      //     ],
+      //   },
+      // ],
+      formRulesParent: {
+        Code: [{ required: true, message: "必填项", trigger: "blur" }],
+        MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
+        Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
+        Unit: [ { required: true, message: "必填项", trigger: "blur" }],
+      },
       formController: [
         { label: "父件物料号", prop: "Code", type: "input" },
         { label: "父件描述", prop: "MaterialName", type: "textarea" },
@@ -366,6 +424,16 @@ export default {
         },
       ],
       parmsBtn2: [
+        {
+          ButtonCode: "addParentBom",
+          BtnName: "",
+          Type: "primary",
+          Ghost: true,
+          Size: "small",
+          Methods: "addParentBom",
+          Icon: "",
+          sort:1,
+        },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -693,6 +761,10 @@ export default {
         form['Code'] =  this.keyWords
         res = await GetSearch(form,'/APSAPI/GetBomData');
       }else{//右边表格
+        // if(!form.MaterialID){
+        //   this.$set(this.tableLoading, remarkTb, false);
+        //   return
+        // }
         res = await GetSearchData(form);
       }
       const { result, data, count, msg } = res.data;
@@ -722,10 +794,10 @@ export default {
       // 通过父级ID查询下级子件
       self.formSearchs[1].datas["ParentID"] = "";
       self.formSearchs[1].datas["MaterialID"] = "";
-      if (data && data.ParentID == 0) {
+      if (data && data.children.length) {
         self.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
       } else {
-        self.formSearchs[1].datas["ParentID"] = data && data.BOMMasterID;
+        self.formSearchs[1].datas["ParentID"] = data && data.ParentID;
         self.formSearchs[1].datas["MaterialID"] =
           data && data.MaterialID ? data.MaterialID : data.BOMMasterID;
       }
@@ -751,6 +823,36 @@ export default {
       console.log('this.$refs',this.$refs)
         this.$refs[formName].$refs['formData'].resetFields();
     },
+    // 新增父件
+    addParentBom(){
+      this.dialogShowParent = true
+      this.formDataParent['dicID'] = this.sysID[this.tagRemark].ID
+      console.log('this.formDataParent',this.formDataParent)
+      this.$nextTick(()=>{
+        this.resetForm('refParent')
+      })
+    },
+    // 父件确认添加
+    parentConfirm(val){
+      if(val){
+        console.log('this.formDataParent',this.formDataParent)
+        this.$refs['refParent'].$refs['formData'].validate((valid) => {
+          if (valid) {
+            //因为后端用这些字段保存才能更新Code,因此要同步改
+            this.formDataParent.ParentCode = this.formDataParent.Code
+            this.formDataParent.ParentMaterialName = this.formDataParent.MaterialName
+            this.formDataParent.ParentUnit = this.formDataParent.Unit
+            this.formDataParent.Denominator = this.formDataParent.Molecule
+            
+            
+            this.addDataSave([this.formDataParent],0)
+            this.dialogShowParent = false
+          }
+        });
+      }else{
+        this.dialogShowParent = false
+      }
+    },
     // 新增子件
     addChildBom(){
       // 对接好添加这个判断
@@ -765,8 +867,8 @@ export default {
         if(self.formData&&self.formData.MaterialBomID){
           self.formDataChild['dicID'] = self.sysID[self.tagRemark].ID
           self.formDataChild['ParentCode'] = self.formData['Code']
-          self.formDataChild['BOMMasterID'] = self.formData['BOMMasterID']//主键
-          self.formDataChild['ParentID'] = self.formData['BOMMasterID']//父件ID
+          self.formDataChild['BOMMasterID'] = self.formData['MaterialID']//父件ID
+          self.formDataChild['ParentID'] = self.formData['MaterialID']//父件主键
           console.log('this.formDataChild',self.formDataChild)
           console.log('formData',this.formData)
         }
@@ -834,7 +936,9 @@ export default {
           this.dataSearch(0)
           // this.getBomTree(0,this.keyWords)
         }
-        this.dataSearch(1)
+        if(remarkTb==1){
+          this.dataSearch(1)
+        }
         this.adminLoading = false;
         this.$message({
           message: msg,
@@ -862,6 +966,7 @@ export default {
             this.formData.ParentMaterialName = this.formData.MaterialName
             this.formData.ParentUnit = this.formData.Unit
             this.formData.Denominator = this.formData.Molecule
+            // this.formData.BOMMasterID = this.formData.ParentID
             this.formData['dicID'] = this.sysID[this.tagRemark].ID
             submitData = [this.formData]
           } else {
