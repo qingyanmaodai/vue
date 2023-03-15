@@ -625,7 +625,50 @@ export default {
           rowSheet.backColor("#f2d852");
           }
 
-        }});
+        }
+        let cellIndex = 0;
+        this.tableColumns[0].forEach((m, num) => {
+          //行，start,end
+          if (m.DataType == "bit" && m.isEdit) {
+            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+            cellType.caption("");
+            cellType.textTrue("");
+            cellType.textFalse("");
+            cellType.textIndeterminate("");
+            cellType.textAlign(
+              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            );
+            cellType.isThreeState(false);
+            sheet.getCell(index, cellIndex).cellType(cellType);
+          }
+          cellIndex++;
+
+          var rowSheet = sheet.getRange(
+            index,
+            num,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          // SMT已排、插件已排、补焊已排、测试已排、三防漆已排字段结尾1~5区分，单元格样式动态生成
+          // for (let i = 0; i < colindexs.length; i++) {
+            if (
+              m.prop == 'IsTransToDaily' &&
+              row[m.prop] == "是"
+            ) {
+              rowSheet.backColor("#4CD964");
+              rowSheet.foreColor("balck");
+            } else if (
+              m.prop == 'IsTransToDaily' &&
+              row[m.prop] == "否"
+            ) {
+              rowSheet.backColor("#FFFF00");
+              rowSheet.foreColor("black");
+            } 
+          // }
+        });
+      
+      });
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
