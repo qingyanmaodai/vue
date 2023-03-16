@@ -1,4 +1,4 @@
-<!--恩平通用表格-->
+<!--江门通用表格-->
 <template>
   <div
     class="container"
