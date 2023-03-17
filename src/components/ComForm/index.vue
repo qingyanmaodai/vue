@@ -9,9 +9,8 @@
             class="comForm"
             @submit.native.prevent
         >
-        <el-row  v-for="(a, i) in rowNum"
-          :key="i">
-        <el-col :span="newItem.colSpan||colSpan"  v-for="(newItem, index) in formController.slice((i)*initCol, (i+1) * initCol)" :key="index">
+        <el-row  type="flex">
+        <el-col :span="newItem.colSpan||colSpan" :offset="newItem.offset||offset"  v-for="(newItem, index) in formController" :key="index">
             <el-form-item
           
           :label="newItem.label"
@@ -280,6 +279,16 @@
         type:Number,
         default:8,
       },
+      //栅格占据的列数
+      colSpan:{
+        type:Number,
+        default:8,
+      },
+      //栅格左侧的间隔格数
+      offset:{
+        type:Number,
+        default:0,
+      },
       //表单域标签的的宽度
       labelWidth:{
         type:String,
@@ -308,16 +317,7 @@
     watch: {
         formController: {
             handler: function (val, oldVal) {
-                console.log('formController',this.formController)
-                // this.row = this.formController.length <= 6 ? 0 : 1;
-                this.rowNum = Math.ceil(this.formController.length /this.initCol ); // 有几行
-                // this.tag = this.formController.length % 7;
-                // this.col = 24 - 3 * this.tag;
-                // this.col2 = 24 - 3 * this.tag;
-                // if (this.formController.length == 7 || this.circle >= 2) {
-                // this.isSpread = true;
-                // this.tagRemark = 0;
-                // }
+                
             },
             // 深度观察监听
             immediate: true,
@@ -370,6 +370,9 @@
   }
   .comForm ::v-deep .el-select {
     width: 100%;
+  }
+  .el-row{
+    flex-wrap: wrap;
   }
   </style>
   

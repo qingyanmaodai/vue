@@ -49,7 +49,7 @@
           class="formStyle"
           ref="ruleForm0"
           :formData="formData"
-          :formController="formController"
+          :formController="formControllerParent"
           :formRules="formRules"
         ></ComForm>
       </div>
@@ -276,29 +276,29 @@ export default {
           ],
         },
       ],
-      // formControllerParent: [
-      //   { label: "父件物料号", prop: "Code", type: "input" },
-      //   { label: "父件描述", prop: "MaterialName", type: "textarea" },
-      //   {
-      //     label: "基本数量",
-      //     prop: "Molecule",
-      //     type: "input",
-      //     inputType: "number",
-      //   },
-      //   { label: "单位", prop: "Unit", type: "input" },
-      //   { label: "项目类别", prop: "ItemClass", type: "input" },
-      //   { label: "项目", prop: "LineNum", type: "input" },
-      //   // { label: "备注", prop: "Remark1", type: "textarea" },
-      //   {
-      //     label: "状态",
-      //     prop: "Status",
-      //     type: "radioGroupLabel",
-      //     radioGroups: [
-      //       { label: "启用", value: 1 },
-      //       { label: "禁用", value: 0 },
-      //     ],
-      //   },
-      // ],
+      formControllerParent: [
+        { label: "父件物料号", prop: "Code", type: "input",colSpan:8 },
+        { label: "父件描述", prop: "MaterialName", type: "textarea",colSpan:12 },
+        {
+          label: "数量",
+          prop: "Molecule",
+          type: "input",
+          inputType: "number",colSpan:4,
+        },
+        { label: "单位", prop: "Unit", type: "input",colSpan:4 },
+        { label: "项目类别", prop: "ItemClass", type: "input",colSpan:4 },
+        { label: "项目", prop: "LineNum", type: "input",inputType: "number",colSpan:4 },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+          colSpan:6
+        },
+      ],
       formRulesParent: {
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
@@ -444,6 +444,17 @@ export default {
           Icon: "",
           sort:2,
           Params: { dataName: "saveData" },
+        },
+        {
+          ButtonCode: "delete",
+          BtnName: "删除",
+          Type: "danger",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataDel",
+          Params: { },
+          Icon: "",
+          sort:3,
         },
       ],
       saveData: [[],[]],
@@ -657,6 +668,9 @@ export default {
           });
         }
       }else if(remarkTb==0){//删除父级
+        if(this.formData&&!this.formData.MaterialID){
+          return
+        }
         let obj = this.formData
         obj["ElementDeleteFlag"] = 1;
         obj["dicID"] = this.sysID[remarkTb].ID;
