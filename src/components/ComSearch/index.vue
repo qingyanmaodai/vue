@@ -152,10 +152,11 @@
               size="small"
               @click="btnClick(item.Methods, item.Params, i)"
               v-show="
-                item.signName
-                  ? item.signName.includes(signName)
-                    ? true
-                    : false
+                Array.prototype.isPrototypeOf(item.signName) &&
+                item.signName.includes(signName)
+                  ? true
+                  : item.signName || item.signName == 0
+                  ? item.signName == signName
                   : true
               "
             >
@@ -324,10 +325,11 @@
               size="small"
               @click="btnClick(item.Methods, item.Params, i)"
               v-show="
-                item.signName
-                  ? item.signName.includes(signName)
-                    ? true
-                    : false
+                Array.prototype.isPrototypeOf(item.signName) &&
+                item.signName.includes(signName)
+                  ? true
+                  : item.signName || item.signName == 0
+                  ? item.signName == signName
                   : true
               "
             >
