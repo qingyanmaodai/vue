@@ -21,13 +21,6 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <el-button
-                type="primary"
-                size="mini"
-                @click="addRow"
-                v-show="isAdd"
-                >新增</el-button
-              >
               <el-divider direction="vertical"></el-divider>
               <el-tooltip
                 class="item"
@@ -268,20 +261,6 @@ export default {
         }
       }
     },
-    // 判断按钮权限
-    // judgeBtn() {
-    //   let routeBtn = this.$route.meta.btns;
-    //   if (routeBtn && routeBtn.length > 0)
-    //     routeBtn.some((item) => {
-    //       if (item.ButtonCode == "edit") {
-    //         this.$set(this, "isEdit", true);
-    //       }
-    //       if (item.ButtonCode == "add") {
-    //         this.$set(this, "isAdd", true);
-    //       }
-    //     });
-    //   this.$set(this, "btnForm", routeBtn);
-    // },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
@@ -446,6 +425,12 @@ export default {
               });
             }
           });
+          //删除带有选择的一列
+          let isChecked = m.findIndex((item) => item.prop == "isChecked");
+          if (isChecked !== -1) {
+            m.splice(isChecked, 1);
+          }
+
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮

@@ -4,11 +4,8 @@ export default {
     let _this = thisWay;
     if (routeBtn && routeBtn.length > 0)
       routeBtn.some(item => {
-        if (item.ButtonCode == "edit") {
+        if (item.ButtonCode == "save") {
           _this.$set(_this, "isEdit", true);
-        }
-        if (item.ButtonCode == "add") {
-          _this.$set(_this, "isAdd", true);
         }
       });
     _this.$set(_this, "btnForm", routeBtn);

@@ -880,10 +880,6 @@ export default {
           }
         });
       } 
-      if(this.selectionData[this.tagRemark].length==0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
       this.adminLoading = true;
       let res = await GetSearch(this.selectionData[this.tagRemark], "/APSAPI/CalculateBOMDemand");
       const { result, data, count, msg } = res.data;
