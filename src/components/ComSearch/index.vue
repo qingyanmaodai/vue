@@ -19,7 +19,10 @@
             :key="y"
             class="form_col"
           >
-            <el-form-item :label="x.label" :name="x.prop">
+            <el-form-item
+              :label="x.label"
+              :name="x.prop"
+            >
               <el-input
                 v-if="x.type === null"
                 v-model="searchData[x.prop]"
@@ -37,10 +40,8 @@
               <!-- 下拉框 -->
               <el-select
                 v-if="x.type === 'Select'"
-                v-model="searchData[x.prop]"
-                filterable
-                :multiple="x.multiple"
-                size="small"
+                v-model="searchData[x.prop]"   filterable :multiple="x.multiple"
+                size="small" 
                 clearable
               >
                 <el-option
@@ -100,31 +101,31 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="col" class="text_right">
+          <el-col
+            :span="col"
+            class="text_right"
+          >
             <el-button
               plain
               type="primary"
               size="small"
               @click="btnClick('dataSearch')"
               v-if="defaultShow"
-              >查询</el-button
-            >
+            >查询</el-button>
             <el-button
               plain
               type="info"
               size="small"
               @click="btnClick('dataReset')"
               v-if="defaultShow"
-              >重置</el-button
-            >
+            >重置</el-button>
             <el-button
               v-if="defaultShow && exportList.length == 0"
               plain
               type="warning"
               size="small"
               @click="btnClick('dataExport')"
-              >导出</el-button
-            >
+            >导出</el-button>
 
             <el-dropdown
               size="small"
@@ -136,11 +137,10 @@
               导出
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
-                  v-for="(a, x) in exportList"
+                  v-for="(a,x) in exportList"
                   :key="x"
                   :command="x"
-                  >{{ a.label }}</el-dropdown-item
-                >
+                >{{a.label}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <el-button
@@ -151,16 +151,13 @@
               :icon="item.Icon"
               size="small"
               @click="btnClick(item.Methods, item.Params, i)"
-              v-show="
-                item.signName
-                  ? item.signName.includes(signName)
-                    ? true
-                    : false
+              v-show="Array.prototype.isPrototypeOf(item.signName) && item.signName.includes(signName)?true:
+                item.signName || item.signName == 0
+                  ? item.signName == signName
                   : true
               "
             >
-              {{ item.BtnName }}</el-button
-            >
+              {{ item.BtnName }}</el-button>
             <el-button
               v-show="isSpread"
               type="text"
@@ -168,13 +165,11 @@
               size="small"
             >
               <span>{{ text }}</span>
-              <span
-                :class="
+              <span :class="
                   tagRemark == 0
                     ? 'search_up cx_margin_left1'
                     : 'search_down cx_margin_left1'
-                "
-              >
+                ">
                 <img src="../../assets/svg/updown.svg" />
               </span>
             </el-button>
@@ -189,7 +184,10 @@
             v-for="(x, y) in searchForm.slice(0, 5)"
             :key="y"
           >
-            <el-form-item :label="x.label" :name="x.prop">
+            <el-form-item
+              :label="x.label"
+              :name="x.prop"
+            >
               <el-input
                 v-if="x.type === null"
                 v-model="searchData[x.prop]"
@@ -208,12 +206,10 @@
               <!-- 下拉框 -->
               <el-select
                 v-if="x.type === 'Select'"
-                v-model="searchData[x.prop]"
-                filterable
-                :multiple="x.multiple"
+                v-model="searchData[x.prop]"   filterable :multiple="x.multiple"
                 size="small"
                 clearable
-                style="width: 100%"
+                style="width:100%"
               >
                 <el-option
                   v-for="op in x.options"
@@ -272,31 +268,31 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6" class="text_right">
+          <el-col
+            :span="6"
+            class="text_right"
+          >
             <el-button
               plain
               type="primary"
               size="small"
               @click="btnClick('dataSearch')"
               v-if="defaultShow"
-              >查询</el-button
-            >
+            >查询</el-button>
             <el-button
               plain
               type="info"
               size="small"
               @click="btnClick('dataReset')"
               v-if="defaultShow"
-              >重置</el-button
-            >
+            >重置</el-button>
             <el-button
               v-if="defaultShow && exportList.length == 0"
               plain
               type="warning"
               size="small"
               @click="btnClick('dataExport')"
-              >导出</el-button
-            >
+            >导出</el-button>
 
             <el-dropdown
               size="small"
@@ -308,11 +304,10 @@
               导出
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
-                  v-for="(a, x) in exportList"
+                  v-for="(a,x) in exportList"
                   :key="x"
                   :command="x"
-                  >{{ a.label }}</el-dropdown-item
-                >
+                >{{a.label}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <el-button
@@ -323,16 +318,13 @@
               :icon="item.Icon"
               size="small"
               @click="btnClick(item.Methods, item.Params, i)"
-              v-show="
-                item.signName
-                  ? item.signName.includes(signName)
-                    ? true
-                    : false
+              v-show="Array.prototype.isPrototypeOf(item.signName) && item.signName.includes(signName)?true:
+                item.signName || item.signName == 0
+                  ? item.signName == signName
                   : true
               "
             >
-              {{ item.BtnName }}</el-button
-            >
+              {{ item.BtnName }}</el-button>
             <el-button
               v-show="isSpread"
               type="text"
@@ -340,26 +332,31 @@
               size="small"
             >
               <span>{{ text }}</span>
-              <span
-                :class="
+              <span :class="
                   tagRemark == 0
                     ? 'search_up cx_margin_left1'
                     : 'search_down cx_margin_left1'
-                "
-              >
+                ">
                 <img src="../../assets/svg/updown.svg" />
               </span>
             </el-button>
           </el-col>
         </el-row>
-        <el-row v-for="(a, i) in circle - 1" :key="i" v-show="tagRemark == 1">
+        <el-row
+          v-for="(a, i) in circle-1"
+          :key="i"
+          v-show="tagRemark == 1"
+        >
           <el-col
             class="form_col"
             :span="3"
-            v-for="(x, y) in searchForm.slice(i * 7 + 5, (i + 1) * 7 + 5)"
+            v-for="(x, y) in searchForm.slice((i)*7 + 5, (i+1) * 7 + 5)"
             :key="y"
           >
-            <el-form-item :label="x.label" :name="x.prop">
+            <el-form-item
+              :label="x.label"
+              :name="x.prop"
+            >
               <el-input
                 v-if="x.type === null"
                 v-model="searchData[x.prop]"
@@ -377,13 +374,11 @@
               ></el-input>
               <!-- 下拉框 -->
               <el-select
-                v-if="x.type === 'Select'"
-                filterable
-                :multiple="x.multiple"
+                v-if="x.type === 'Select'"   filterable :multiple="x.multiple"
                 v-model="searchData[x.prop]"
                 size="small"
                 clearable
-                style="width: 100%"
+                style="width:100%"
               >
                 <el-option
                   v-for="op in x.options"
@@ -1010,7 +1005,7 @@ export default {
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
-        console.log("searchForm", this.searchForm);
+        console.log('searchForm',this.searchForm)
         this.row = this.searchForm.length <= 6 ? 0 : 1;
         this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
         this.tag = this.searchForm.length % 7;
@@ -1062,7 +1057,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.el-select__input {
-  vertical-align: baseline;
-}
+  .el-select__input {
+    vertical-align: baseline;
+  }
 </style>
