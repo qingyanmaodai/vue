@@ -1,13 +1,7 @@
 <!--菜单权限-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -25,21 +19,14 @@
             <el-col :span="4">
               <span class="title">{{ title }}</span>
             </el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
-            >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="openDrawer(1)"
-              >新增菜单</el-button>
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="primary" size="mini" @click="openDrawer(1)"
+                >新增菜单</el-button
+              >
               <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="warning"
-                size="mini"
-                @click="openDrawer(2)"
-              >修改菜单/配置按钮</el-button>
+              <el-button type="warning" size="mini" @click="openDrawer(2)"
+                >修改菜单/配置按钮</el-button
+              >
               <el-divider direction="vertical"></el-divider>
               <el-tooltip
                 class="item"
@@ -47,15 +34,12 @@
                 content="刷新"
                 placement="bottom"
               >
-                <span
-                  class="right_icon"
-                  @click="refrshPage"
-                >
+                <span class="right_icon" @click="refrshPage">
                   <span
                     role="img"
                     aria-label="redo"
                     class="anticon anticon-redo icon_size"
-                  ><svg
+                    ><svg
                       class=""
                       data-icon="redo"
                       width="1em"
@@ -65,8 +49,10 @@
                       viewBox="64 64 896 896"
                       focusable="false"
                     >
-                      <path d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"></path>
-                    </svg></span>
+                      <path
+                        d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
+                      ></path></svg
+                  ></span>
                 </span>
               </el-tooltip>
               <el-divider direction="vertical"></el-divider>
@@ -81,7 +67,7 @@
           :tableLoading="tableLoading[0]"
           :isEdit="true"
           :remark="0"
-          :sysID="1"
+          :sysID="sysID[0].ID"
           :isClear="isClear[0]"
           :pagination="tablePagination[0]"
           @handleRowClick="handleRowClick"
@@ -96,19 +82,16 @@
       :title="drawerTitle"
       :visible.sync="drawer"
       direction="rtl"
+      :lock-scroll="false"
+      :modal="false"
+      :size="'50%'"
     >
       <div class="drawer_body">
         <el-form label-width="90px">
           <el-row>
             <el-col :span="24">
-              <el-form-item
-                :label="`${dialogTitle}`+'类型'"
-                prop=""
-              >
-                <el-radio-group
-                  v-model="Type"
-                  size="small"
-                >
+              <el-form-item :label="`${dialogTitle}` + '类型'" prop="">
+                <el-radio-group v-model="Type" size="small">
                   <el-radio-button label="菜单"></el-radio-button>
                   <el-radio-button
                     label="按钮"
@@ -129,10 +112,7 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="上级菜单"
-                prop="ParentMenuName"
-              >
+              <el-form-item label="上级菜单" prop="ParentMenuName">
                 <el-select
                   ref="formRef"
                   v-model="menuForm.ParentMenuName"
@@ -155,98 +135,53 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="菜单名称"
-                prop="MenuName"
-              >
-                <el-input
-                  v-model="menuForm.MenuName"
-                  type="text"
-                ></el-input>
+              <el-form-item label="菜单名称" prop="MenuName">
+                <el-input v-model="menuForm.MenuName" type="text"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="路由地址"
-                prop="Url"
-              >
-                <el-input
-                  v-model="menuForm.Url"
-                  type="text"
-                ></el-input>
+              <el-form-item label="路由地址" prop="Url">
+                <el-input v-model="menuForm.Url" type="text"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="图标"
-                prop="Ico"
-              >
-                <el-input
-                  v-model="menuForm.Ico"
-                  type="text"
-                ></el-input>
+              <el-form-item label="图标" prop="Ico">
+                <el-input v-model="menuForm.Ico" type="text"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="组件"
-                prop="Component"
-              >
-                <el-input
-                  v-model="menuForm.Component"
-                  type="text"
-                ></el-input>
+              <el-form-item label="组件" prop="Component">
+                <el-input v-model="menuForm.Component" type="text"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="组件名称"
-                prop="Name"
-              >
-                <el-input
-                  v-model="menuForm.Name"
-                  type="text"
-                ></el-input>
+              <el-form-item label="组件名称" prop="Name">
+                <el-input v-model="menuForm.Name" type="text"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="是否启用"
-                prop="IsEnable"
-              >
-                <el-radio-group
-                  v-model="menuForm.IsEnable"
-                  size="small"
-                >
+              <el-form-item label="是否启用" prop="IsEnable">
+                <el-radio-group v-model="menuForm.IsEnable" size="small">
                   <el-radio :label="1">启用</el-radio>
                   <el-radio :label="0">禁用</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="排序"
-                prop="ViewSort"
-              >
-                <el-input
-                  v-model="menuForm.ViewSort"
-                  type="number"
-                ></el-input>
+              <el-form-item label="排序" prop="ViewSort">
+                <el-input v-model="menuForm.ViewSort" type="number"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="是否隐藏"
-                prop="Hidden"
-              >
+              <el-form-item label="是否隐藏" prop="Hidden">
                 <el-switch
                   v-model="menuForm.Hidden"
                   active-color="#13ce66"
@@ -256,10 +191,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="不缓存"
-                prop="keepAlive"
-              >
+              <el-form-item label="不缓存" prop="keepAlive">
                 <el-switch
                   v-model="menuForm.keepAlive"
                   active-color="#13ce66"
@@ -271,22 +203,39 @@
           </el-row>
         </el-form>
         <div v-show="Type == '按钮'">
-          <div class="flex_row_spaceBtn px-7-20 border-b-1">
+          <!-- <div class="flex_row_spaceBtn px-7-20 border-b-1">
             <span class="px_16">按钮分配</span>
             <el-dropdown @command="handleCommand">
               <img src="../../../assets/svg/dot.svg" />
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">选择全部</el-dropdown-item>
                 <el-dropdown-item command="2">取消全部</el-dropdown-item>
-                <el-dropdown-item
-                  command="3"
-                  divided
-                >展开全部</el-dropdown-item>
+                <el-dropdown-item command="3" divided
+                  >展开全部</el-dropdown-item
+                >
                 <el-dropdown-item command="4">折叠全部</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+          </div> -->
+          <div>
+            <ComVxeTable
+              ref="ComVxeTable"
+              :row-key="'RowNumber'"
+              :sysID="sysID[1].ID"
+              :tableData="tableData[1]"
+              :isToolbar="false"
+              :isClear="false"
+              :isEdit="true"
+              :remark="1"
+              :table-header="tableColumns[1]"
+              :table-loading="tableLoading[1]"
+              :pagination="tablePagination[1]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              :hasSelect="true"
+            />
           </div>
-          <div class="btnTree">
+          <!-- <div class="btnTree">
             <el-tree
               :data="btnData"
               show-checkbox
@@ -297,22 +246,19 @@
               highlight-current
               :props="btnProps"
             >
-            </el-tree>
-          </div>
+            </el-tree> -->
+          <!-- </div> -->
         </div>
       </div>
       <div class="drawer_footer">
-        <el-button
-          plain
-          size="small"
-          @click="drawer = false"
-        >取消</el-button>
+        <el-button plain size="small" @click="drawer = false">取消</el-button>
         <el-button
           type="primary"
           size="small"
           @click="sureAdd"
           :loading="sureLoading"
-        >确认</el-button>
+          >确认</el-button
+        >
       </div>
     </el-drawer>
   </div>
@@ -322,6 +268,8 @@
 var _this;
 import ComSearch from "@/components/ComSearch";
 import ComUmyTable from "@/components/ComUmyTable";
+import ComVxeTable from "@/components/ComVxeTable";
+
 import {
   GetHeader,
   GetSearchData,
@@ -334,6 +282,7 @@ export default {
   components: {
     ComSearch,
     ComUmyTable,
+    ComVxeTable,
   },
   data() {
     return {
@@ -345,6 +294,10 @@ export default {
       checkdBtnCodes: [],
       drawer: false,
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -369,12 +322,18 @@ export default {
           Params: { dataName: "delData" },
         },
       ],
+      sysID: [{ ID: 1 }, { ID: 61 }],
       tableData: [[]],
       delData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+      ],
+      selectionDefaultData: [[], []],
+      selectionData: [[], []],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -658,7 +617,7 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 1 }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -690,7 +649,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.getTableData(this.formSearchs[0].datas, 0);
+        await this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
     },
@@ -711,11 +670,19 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetMenus(form);
+      let res;
+      if (remarkTb == 0) {
+        res = await GetMenus(form);
+      } else {
+        res = await GetSearchData(form);
+      }
       const { result, data, count, msg } = res.data;
       this.$set(this.tableLoading, remarkTb, false);
       if (result) {
         this.$set(this.tableData, remarkTb, data);
+        this.selectionDefaultData[remarkTb] = this.tableData[remarkTb].filter(
+          (item) => item.isChecked == true
+        );
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -804,52 +771,33 @@ export default {
     sureAdd() {
       if (this.Type == "按钮") {
         this.sureLoading = true;
-        let btns = _this.$refs.btnTree.getCheckedNodes();
-        btns = btns.concat(_this.$refs.btnTree.getHalfCheckedNodes());
-        if (this.delData[0].length == 0) {
-          this.$message.error("请单击需要配置按钮的菜单！");
-        } else {
-          let newData = btns.filter(
-            (x) => !this.initialBtnData.some((y) => y.ButtonID == x.ButtonID)
-          ); //新增
-          let newData2 = this.initialBtnData.filter(
-            (c) => !btns.some((z) => c.ButtonID == z.ButtonID)
-          ); //删除
-          let submitData = [];
-          if (newData.length != 0) {
-            newData.forEach((a) => {
-              a["MenuCode"] = this.delData[0][0].MenuCode;
-              a["ButtonMenuMapID"] = -1;
-              a["dicID"] = 30;
-              submitData.push(a);
-            });
-          }
-          if (newData2.length != 0) {
-            newData2.forEach((b) => {
-              b["dicID"] = 30;
-              b["ElementDeleteFlag"] = 1;
-              submitData.push(b);
-            });
-          }
-          this.returnResultData(submitData).then((res) => {
-            const { result, msg } = res.data;
-            if (result) {
-              this.getMenuBtn(this.delData[0][0].MenuCode);
-              this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
+        //将所选的数据和默认的数据做对比
+        this.selectionData[1] =
+          this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
+        let sendData = this.selectionDefaultData[1]
+          .map((item) => {
+            const findVal = this.selectionData[1].find(
+              (val) => val.ButtonID === item.ButtonID
+            );
+            if (findVal) {
+              return item;
             } else {
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+              return {
+                ...item,
+                ElementDeleteFlag: 1,
+              };
             }
-            this.sureLoading = false;
-          });
-        }
+          })
+          .concat(
+            this.selectionData[1].filter(
+              (item) =>
+                !this.selectionDefaultData[1].some(
+                  (val) => val.ButtonID === item.ButtonID
+                )
+            )
+          );
+        this.dataSave(1, "", "", sendData);
+        this.sureLoading = false;
       } else {
         this.$refs.menuForm.validate((valid) => {
           if (valid) {
@@ -885,26 +833,26 @@ export default {
       this.$refs.formRef.blur();
     },
     // 下拉选择事件
-    handleCommand(val) {
-      if (val == 1) {
-      } else if (val == 2) {
-      } else if (val == 3 || val == 4) {
-        this.isOpen = !this.isOpen;
-        this.changeTreeNodeStatus(this.$refs.btnTree.store.root);
-      }
-    },
+    // handleCommand(val) {
+    //   if (val == 1) {
+    //   } else if (val == 2) {
+    //   } else if (val == 3 || val == 4) {
+    //     this.isOpen = !this.isOpen;
+    //     this.changeTreeNodeStatus(this.$refs.btnTree.store.root);
+    //   }
+    // },
     // 改变节点状态
-    changeTreeNodeStatus(node) {
-      node.expanded = this.isOpen;
-      for (let i = 0; i < node.childNodes.length; i++) {
-        // 改变节点的自身expanded状态
-        node.childNodes[i].expanded = this.isOpen;
-        // 遍历子节点
-        if (node.childNodes[i].childNodes.length > 0) {
-          this.changeTreeNodeStatus(node.childNodes[i]);
-        }
-      }
-    },
+    // changeTreeNodeStatus(node) {
+    //   node.expanded = this.isOpen;
+    //   for (let i = 0; i < node.childNodes.length; i++) {
+    //     // 改变节点的自身expanded状态
+    //     node.childNodes[i].expanded = this.isOpen;
+    //     // 遍历子节点
+    //     if (node.childNodes[i].childNodes.length > 0) {
+    //       this.changeTreeNodeStatus(node.childNodes[i]);
+    //     }
+    //   }
+    // },
     // 获取所有按钮
     async getAllBtn() {
       let res = await GetSearchData({ dicID: 28, rows: 0 });
@@ -941,22 +889,8 @@ export default {
     },
     // 获取菜单下的按钮
     async getMenuBtn(MenuCode) {
-      let res = await GetSearchData({ dicID: 30, MenuCode: MenuCode, rows: 0 });
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.$set(this, "checkdBtnCodes", []);
-        this.$refs.btnTree.setCheckedKeys([]);
-        this.initialBtnData = data;
-        data.forEach((x) => {
-          this.checkdBtnCodes.push(x.ButtonID);
-        });
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+      this.formSearchs[1].datas = { dicID: 61, MenuCode: MenuCode, rows: 0 };
+      this.dataSearch(1);
     },
     // 清除上级角色
     clearData(val) {
