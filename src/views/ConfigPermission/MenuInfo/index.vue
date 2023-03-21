@@ -233,6 +233,7 @@
               @pageChange="pageChange"
               @pageSize="pageSize"
               :hasSelect="true"
+              @sortChange="sortChange"
             />
           </div>
           <!-- <div class="btnTree">

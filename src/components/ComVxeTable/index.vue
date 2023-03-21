@@ -63,7 +63,7 @@
         title="序号"
       ></vxe-column>
       <vxe-column
-        v-for="(x, z) in tableHeader"
+        v-for="(x, z) in tableHeaderChange"
         :key="z"
         :resizable="true"
         :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
@@ -1553,7 +1553,21 @@ export default {
       deep: true,
     },
   },
-  computed: {},
+  computed: {
+    tableHeaderChange() {
+      //如果hasSelect值存在的话
+      if (this.hasSelect) {
+        //删除带有选择的一列
+        let isChecked = this.tableHeader.findIndex(
+          (item) => item.prop == "isChecked"
+        );
+        if (isChecked !== -1) {
+          this.tableHeader.splice(isChecked, 1);
+        }
+      }
+      return this.tableHeader;
+    },
+  },
   activated() {
     // // 在 keep-alive 钩子函数中，显示之后手动调用
     // this.$nextTick(() => {

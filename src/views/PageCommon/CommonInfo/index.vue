@@ -170,6 +170,10 @@ export default {
           "dicIDData" + this.ID,
           JSON.stringify(dicIDData)
         );
+        sessionStorage.setItem(
+          "isSelect" + this.ID,
+          JSON.stringify(this.isSelect)
+        );
         sessionStorage.removeItem("dicIDStatus" + this.ID);
       } else {
         // 在tag操作右键快捷方法后都需要重新渲染清除缓存状态，防止切换tag一直不缓存 导致一直刷新请求。
@@ -205,6 +209,7 @@ export default {
     this.ID = parseInt(routeBtn.meta.dicID);
 
     if (sessionStorage.getItem("dicIDForm" + this.ID)) {
+      this.isSelect = JSON.parse(sessionStorage.getItem("isSelect" + this.ID));
       let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
       if (tmp) {
         this.$set(this.formSearchs[0], "datas", tmp.dicData);
@@ -425,11 +430,6 @@ export default {
               });
             }
           });
-          //删除带有选择的一列
-          let isChecked = m.findIndex((item) => item.prop == "isChecked");
-          if (isChecked !== -1) {
-            m.splice(isChecked, 1);
-          }
 
           this.$set(this.tableColumns, i, m);
         });

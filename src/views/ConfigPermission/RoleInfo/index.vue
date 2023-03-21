@@ -237,7 +237,6 @@
               ref="roleMenuTree"
               highlight-current
               :props="menuProps"
-              :check-strictly="true"
             >
             </el-tree>
           </div>
@@ -295,6 +294,7 @@ import ComUmyTable from "@/components/ComUmyTable";
 import {
   GetHeader,
   GetSearchData,
+  GetSearch,
   GetRoles,
   SaveData,
   ExportData,
@@ -763,29 +763,29 @@ export default {
       } else {
         if (this.editType == "菜单") {
           this.sureLoading = true;
-          let menus = _this.$refs.roleMenuTree.getCheckedNodes();
-          let menus2 = _this.$refs.roleMenuTree.getHalfCheckedNodes();
-          if (menus2.length != 0) {
-            menus2.forEach((x) => {
-              x.TempKey = 1;
-            });
-          }
+          let menus = _this.$refs.roleMenuTree.getCheckedNodes(false, true);
+          // let menus2 = _this.$refs.roleMenuTree.getHalfCheckedNodes();
+          // if (menus2.length != 0) {
+          //   menus2.forEach((x) => {
+          //     x.TempKey = 1;
+          //   });
+          // }
           let submitData = [];
-          menus = menus.concat(menus2);
+          // menus = menus.concat(menus2);
           let newData = menus.filter(
             (x) => !this.initialBtnData.some((y) => y.MenuCode == x.MenuCode)
           ); //新增
 
-          let newData3 = this.initialBtnData.filter((r) =>
-            menus2.some((t) => r.MenuCode == t.MenuCode)
-          ); // 本来有的值但是变成半选状态需要更新
-          if (newData3.length != 0) {
-            newData3.forEach((p) => {
-              p["dicID"] = 42;
-              p["TempKey"] = 1;
-              submitData.push(p);
-            });
-          }
+          // let newData3 = this.initialBtnData.filter((r) =>
+          //   menus2.some((t) => r.MenuCode == t.MenuCode)
+          // ); // 本来有的值但是变成半选状态需要更新
+          // if (newData3.length != 0) {
+          //   newData3.forEach((p) => {
+          //     p["dicID"] = 42;
+          //     p["TempKey"] = 1;
+          //     submitData.push(p);
+          //   });
+          // }
           let newData2 = this.initialBtnData.filter(
             (c) => !menus.some((z) => c.MenuCode == z.MenuCode)
           ); //删除
@@ -1112,17 +1112,23 @@ export default {
     // 获取角色下的菜单
     async getRoleMenu(RoleID) {
       this.$set(this.dialogLoading, 1, true);
-      let res = await GetSearchData({ dicID: 42, RoleID: RoleID, rows: 0 });
+      let res = await GetSearch(
+        { dicID: 42, RoleID: RoleID, rows: 0 },
+        "/APSAPI/GetRoleMenu"
+      );
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this, "checkdBtnCodes", []);
         this.$refs.roleMenuTree.setCheckedKeys([]);
-        this.initialBtnData = data;
-        data.forEach((x) => {
-          if (x.TempKey != 1) {
-            this.checkdBtnCodes.push(x.MenuCode);
-          }
-        });
+        if (data) {
+          this.checkdBtnCodes = data["Table1"].map((item) => item.MenuCode);
+          this.initialBtnData = [...data["Table"], ...data["Table1"]];
+        }
+        // data.forEach((x) => {
+        //   if (x.TempKey != 1) {
+        //     this.checkdBtnCodes.push(x.MenuCode);
+        //   }
+        // });
         this.$set(this.dialogLoading, 1, false);
       } else {
         this.$set(this.dialogLoading, 1, false);
