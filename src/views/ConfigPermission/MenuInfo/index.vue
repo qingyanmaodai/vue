@@ -221,6 +221,7 @@
             <ComVxeTable
               ref="ComVxeTable"
               :row-key="'RowNumber'"
+              :height="height2"
               :sysID="sysID[1].ID"
               :tableData="tableData[1]"
               :isToolbar="false"
@@ -336,6 +337,7 @@ export default {
       selectionDefaultData: [[], []],
       selectionData: [[], []],
       height: "707px",
+      height2: "500px",
       showPagination: true,
       tagRemark: 0,
       /* 弹框数据 */
