@@ -75,17 +75,6 @@ export default {
         },
       ],
       btnForm: [],
-      parmsBtn: [
-        {
-          BtnName: "保存",
-          ButtonCode: "save",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
-        },
-      ],
       tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
@@ -115,8 +104,11 @@ export default {
   },
   created() {
     _this = this;
-    this.judgeBtn();
+    // 获取所有按钮
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
+    console.log(this.btnForm,'this.btnForm');
   },
   mounted() {
     setTimeout(() => {
@@ -124,27 +116,6 @@ export default {
     }, 350);
   },
   methods: {
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-        });
-      }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
-    },
     // 修改自身id的字段属性
     oneselftSysID(val) {
       this.DictionaryID = val;
@@ -237,6 +208,41 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
+      let submitData = [];
+      if (this.isUpdate && this.tableData[remarkTb].length != 0) {
+        this.tableData[remarkTb].forEach((x) => {
+          if (x.update) {
+            submitData.push(x);
+          }
+        });
+      } else {
+        submitData = this.tableData[remarkTb];
+      }
+      this.adminLoading = true;
+      let res = await SaveData(submitData);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        this.adminLoading = false;
+        if (this.DictionaryID) {
+          this.formSearchs[0]["DictionaryID"] = this.DictionaryID;
+        }
+        this.dataSearch(remarkTb);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+        this.adminLoading = false;
+      }
+    },
+    // 保存个人方案
+    async dataPersonSave(remarkTb, index) {
       let submitData = [];
       if (this.isUpdate && this.tableData[remarkTb].length != 0) {
         this.tableData[remarkTb].forEach((x) => {
