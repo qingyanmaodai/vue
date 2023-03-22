@@ -133,7 +133,9 @@ export default {
       height: "707px",
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ProductionStatus: 26,
+          },
           forms: [],
         },
         {
