@@ -8,12 +8,18 @@
           clearable
           v-model="Value"
           :placeholder="placeholder"
-          suffix-icon="el-icon-search"
           class="cx_margin_right1"
           :class="classNameInput"
           @input="searchTree"
           @keyup.enter.native="searchTreeEnter"
-        ></el-input>
+        >
+        <!-- 搜索图标可点击查询 -->
+        <i
+          slot="suffix"
+          class="el-icon-search"
+          @click.stop="searchTreeEnter"
+        ></i>
+        </el-input>
         <el-dropdown
           v-show="!isEdit"
           @command="handleCommand"
