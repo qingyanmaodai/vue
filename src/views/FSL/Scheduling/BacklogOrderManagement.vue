@@ -125,7 +125,7 @@ export default {
         { label: "已完成", value: 25 },
       ],
       title: this.$route.meta.title,
-      labelStatus1: 0,
+      labelStatus1: 2,
       PrepareDate: "",
       adminLoading: false,
       checkdBtnCodes: [],
