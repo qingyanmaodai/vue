@@ -36,6 +36,9 @@ Vue.prototype.$moment = moment
 Vue.prototype.$_ = _
 Vue.prototype.$common = common
 
+import dataV from '@jiaminghi/data-view'
+Vue.use(dataV)
+
 // import 'default-passive-events'
 /**
  * If you don't want to use mock-server

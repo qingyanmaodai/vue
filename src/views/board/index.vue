@@ -12,14 +12,7 @@
             <h2>待生产订单</h2>
           </div>
           <div class="chart1">
-            <div class="tableHead">
-              <span
-                :style="{ width: item.width }"
-                :key="item.label"
-                v-for="item in tableColumn[0]"
-                >{{ item.label }}</span
-              >
-            </div>
+            <dv-scroll-board :config="config" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -27,7 +20,17 @@
           <div class="chartHead">
             <h2>物料需求汇总</h2>
           </div>
-          <div class="chart1"></div>
+          <div class="chart1">
+            <div class="tableHead">
+              <div
+                :style="{ width: item.width }"
+                :key="item.label"
+                v-for="item in tableColumn[1]"
+              >
+                {{ item.label }}
+              </div>
+            </div>
+          </div>
           <div class="panel-footer"></div>
         </div>
       </div>
@@ -43,77 +46,23 @@
           <div class="chartHead">
             <h2>缺料TOP6</h2>
           </div>
-          <div class="chart2"></div>
+          <div class="chart2" ref="chart"></div>
           <div class="panel-footer"></div>
         </div>
         <div class="panel three bar1">
           <div class="chartHead">
             <h2>采购申请概览</h2>
           </div>
-          <div id="rule">
-            <div class="list" id="list">
-              <p><span>汉族</span><span>24471085人</span><span>98.39%</span></p>
-              <p><span>蒙古族</span><span>21097人</span><span>0.08%</span></p>
-              <p><span>回族</span><span>84925人</span><span>0.34%</span></p>
-              <p><span>藏族</span><span>5749人</span><span>0.02%</span></p>
-              <p><span>维吾尔族</span><span>10039人</span><span>0.04%</span></p>
-              <p><span>苗族</span><span>38916人</span><span>0.16%</span></p>
-              <p><span>彝族</span><span>21952人</span><span>0.09%</span></p>
-              <p><span>壮族</span><span>27531人</span><span>0.11%</span></p>
-              <p><span>布依族</span><span>9914人</span><span>0.04%</span></p>
-              <p><span>朝鲜族</span><span>25404人</span><span>0.1%</span></p>
-              <p><span>满族</span><span>43197人</span><span>0.17%</span></p>
-              <p><span>侗族</span><span>11870人</span><span>0.05%</span></p>
-              <p><span>瑶族</span><span>6309人</span><span>0.03%</span></p>
-              <p><span>白族</span><span>7299人</span><span>0.03%</span></p>
-              <p><span>土家族</span><span>41807人</span><span>0.17%</span></p>
-              <p><span>哈尼族</span><span>8573人</span><span>0.03%</span></p>
-              <p><span>哈萨克族</span><span>1695人</span><span>0.01%</span></p>
-              <p><span>傣族</span><span>3445人</span><span>0.01%</span></p>
-              <p><span>黎族</span><span>3192人</span><span>0.01%</span></p>
-              <p><span>傈僳族</span><span>1619人</span><span>0.01%</span></p>
-              <p><span>佤族</span><span>2888人</span><span>0.01%</span></p>
-              <p><span>畲族</span><span>4476人</span><span>0.02%</span></p>
-              <p><span>高山族</span><span>89人</span><span></span></p>
-              <p><span>拉祜族</span><span>1234人</span><span></span></p>
-              <p><span>水族</span><span>1215人</span><span></span></p>
-              <p><span>东乡族</span><span>1078人</span><span></span></p>
-              <p><span>纳西族</span><span>532人</span><span></span></p>
-              <p><span>景颇族</span><span>598人</span><span></span></p>
-              <p><span>柯尔克孜族</span><span>196人</span><span></span></p>
-              <p><span>土族</span><span>603人</span><span></span></p>
-              <p><span>达斡尔族</span><span>879人</span><span></span></p>
-              <p><span>仫佬族</span><span>1140人</span><span></span></p>
-              <p><span>羌族</span><span>821人</span><span></span></p>
-              <p><span>布朗族</span><span>315人</span><span></span></p>
-              <p><span>撒拉族</span><span>1361人</span><span>0.01%</span></p>
-              <p><span>毛南族</span><span>349人</span><span></span></p>
-              <p><span>仡佬族</span><span>3138人</span><span>0.01%</span></p>
-              <p><span>锡伯族</span><span>1181人</span><span></span></p>
-              <p><span>阿昌族</span><span>232人</span><span></span></p>
-              <p><span>普米族</span><span>65人</span><span></span></p>
-              <p><span>塔吉克族</span><span>48人</span><span></span></p>
-              <p><span>怒族</span><span>44人</span><span></span></p>
-              <p><span>乌孜别克族</span><span>50人</span><span></span></p>
-              <p><span>俄罗斯族</span><span>286人</span><span></span></p>
-              <p><span>鄂温克族</span><span>126人</span><span></span></p>
-              <p><span>德昂族</span><span>70人</span><span></span></p>
-              <p><span>保安族</span><span>32人</span><span></span></p>
-              <p><span>裕固族</span><span>44人</span><span></span></p>
-              <p><span>京族</span><span>49人</span><span></span></p>
-              <p><span>塔塔尔族</span><span>13人</span><span></span></p>
-              <p><span>独龙族</span><span>11人</span><span></span></p>
-              <p><span>鄂伦春族</span><span>81人</span><span></span></p>
-              <p><span>赫哲族</span><span>50人</span><span></span></p>
-              <p><span>门巴族</span><span>25人</span><span></span></p>
-              <p><span>珞巴族</span><span>6人</span><span></span></p>
-              <p><span>基诺族</span><span>46人</span><span></span></p>
-              <p>
-                <span>未定族称人口</span><span>1775人</span><span>0.01%</span>
-              </p>
-              <p><span>入籍</span><span>131人</span><span></span></p>
+          <div class="chart2">
+            <div class="tableHead">
+              <div
+                :style="{ width: item.width }"
+                :key="item.label"
+                v-for="item in tableColumn[2]"
+              >
+                {{ item.label }}
+              </div>
             </div>
-            <div class="list2" id="list2"></div>
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -123,39 +72,247 @@
 </template>
 
 <script>
+import * as echarts from "echarts";
+import { debounce } from "lodash";
 export default {
   name: "Board",
   data() {
     return {
+      chart: null,
+      handleWindowResizeDebounced: null,
+      chartData: {
+        grid: {
+          // width:'100%',
+          left: "2%",
+          right: "2%",
+          bottom: "5%",
+          top: "10%",
+          containLabel: true, //是否包含刻度标签
+          // height:'100%',
+        },
+        // 图表数据
+        xAxis: {
+          type: "category",
+          data: [
+            "贴片电阻",
+            "铝基板T50ZP",
+            "贴片母端2PIN",
+            "LED灯珠",
+            "贴片整流桥",
+            "贴片二吸管",
+          ],
+          axisLine: {
+            lineStyle: {
+              color: "#75A1F4",
+            },
+          },
+          axisLabel: {
+            interval: 0,
+            margin: 15,
+            color: "#BEE0FF",
+          },
+          axisTick: {
+            show: false,
+          },
+        },
+        yAxis: {
+          type: "value",
+          splitNumber: 4, // 刻度数量为 3
+
+          splitLine: {
+            lineStyle: {
+              color: "#4B4CCE",
+              type: "dashed",
+            },
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLine: {
+            show: false,
+
+            lineStyle: {
+              color: "#75A1F4",
+            },
+          },
+        },
+        series: [
+          {
+            data: [120, 210, 182, 218, 64, 89],
+            type: "bar",
+            itemStyle: {
+              color: "#00FFFF",
+            },
+            barWidth: "30%",
+            label: {
+              show: true,
+              position: "top",
+            },
+          },
+        ],
+      },
+      chartOptions: {
+        // 图表样式和配置
+        // title: {
+        //   text: "柱状图示例",
+        // },
+      },
       todayDate: "",
+      config: {
+        header: [
+          "部门",
+          "规格",
+          "待生产日期",
+          "订单数",
+          "生产数",
+          "检测结果",
+          "齐套率",
+        ],
+        data: [
+          [
+            "高明T1车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "",
+            "23,394111111",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T2车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T3车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T4车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T5车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T6车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T7车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T8车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T9车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T10车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T11车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+
+            "欠料",
+            "23.45%",
+          ],
+          [
+            "高明T12车间",
+            "T5支架光源14W",
+            "2023/04-21",
+            "23,394",
+            "23,394",
+            "欠料",
+            "23.45%",
+          ],
+        ],
+        columnWidth: [90, 225, 135, 81, 81, 108, 108],
+        oddRowBGC: "#12137900",
+        evenRowBGC: "#121379",
+        rowNum: 10,
+      },
       tableColumn: [
         [
-          { label: "部门", width: "20%" },
-          { label: "规格", width: "40%" },
-          { label: "待生产日期", width: "8%" },
-          { label: "订单数", width: "8%" },
-          { label: "生产数", width: "8%" },
-          { label: "检测结果", width: "8%" },
-          { label: "齐套率", width: "8%" },
+          { label: "部门", width: "10%" },
+          { label: "规格", width: "25%" },
+          { label: "待生产日期", width: "15%" },
+          { label: "订单数", width: "9%" },
+          { label: "生产数", width: "9%" },
+          { label: "检测结果", width: "12%" },
+          { label: "齐套率", width: "12%" },
         ],
         [
-          { label: "父件物料号" },
-          { label: "物料编码" },
-          { label: "物料名称" },
-          { label: "需求数量" },
-          { label: "订单在制" },
-          { label: "库存数" },
-          { label: "待检数" },
-          { label: "冻结数" },
-          { label: "请购需求" },
+          { label: "父件物料号", width: "15%" },
+          { label: "物料编码", width: "15%" },
+          { label: "物料名称", width: "20%" },
+          { label: "需求数量", width: "10%" },
+          { label: "订单在制", width: "10%" },
+          { label: "库存数", width: "8%" },
+          { label: "待检数", width: "8%" },
+          { label: "冻结数", width: "8%" },
+          { label: "请购需求", width: "12%" },
         ],
         [
-          { label: "物料名称" },
-          { label: "申请日期" },
-          { label: "申请数量" },
-          { label: "到货数量" },
-          { label: "未清数量" },
-          { label: "申请交期" },
+          { label: "物料名称", width: "15%" },
+          { label: "申请日期", width: "20%" },
+          { label: "申请数量", width: "15%" },
+          { label: "到货数量", width: "15%" },
+          { label: "未清数量", width: "15%" },
+          { label: "申请交期", width: "20%" },
         ],
       ],
     };
@@ -165,7 +322,29 @@ export default {
   created() {
     this.todayDate = this.showtime();
   },
+  mounted() {
+    // 初始化图表
+    this.initChart();
+    // 在窗口大小变化时，调用 resize 方法重新渲染图表
+    this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200);
+    window.addEventListener("resize", this.handleWindowResizeDebounced);
+  },
+  beforeDestroy() {
+    // 在组件销毁时，移除 resize 事件监听器
+    window.removeEventListener("resize", this.handleWindowResizeDebounced);
+    this.handleWindowResizeDebounced.cancel();
+  },
   methods: {
+    initChart() {
+      this.chart = echarts.init(this.$refs.chart); // 获取 DOM 对象
+      this.chart.setOption(this.chartOptions); // 设置图表配置
+      this.chart.setOption(this.chartData); // 设置图表数据
+    },
+    handleWindowResize() {
+      // 调用 resize 方法重新渲染图表
+      this.chart.resize();
+      debugger
+    },
     showtime() {
       const now = new Date();
       const year = now.getFullYear(); // 获取当前年份
@@ -192,7 +371,7 @@ export default {
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 // html {
@@ -317,7 +496,7 @@ export default {
     background-size: 100% 100%;
   }
   h2 {
-    height: 100%;
+    height: 55px;
     line-height: 55px;
     padding-left: 25px;
     color: #fff;
@@ -325,179 +504,57 @@ export default {
     font-weight: 400;
   }
   .chart1 {
-    padding: 0 12px;
-    height: 570px;
+    padding: 9px 12px;
+    height: calc(100% - 55px);
   }
   .chart2 {
-    padding: 0 12px;
-    height: 230px;
+    padding: 9px 12px;
+
+    overflow: hidden;
+    height: calc(100% - 55px);
   }
-  .tableHead {
-    span {
+  ::v-deep.dv-scroll-board {
+    overflow: hidden;
+    font-size: 18px;
+    .header {
+      background-color: rgba(0, 255, 255, 0.2) !important;
+      border-bottom: 2px solid #00ffff;
       color: #00ffff;
       font-weight: 400;
-      font-size: 18px;
+      height: 50px;
+      .header-item {
+        height: 50px !important;
+        line-height: 50px !important;
+      }
     }
-    width: 100%;
-    height: 50px;
-    background: rgba(0, 255, 255, 0.2);
+    .rows {
+      .row-item {
+        height: 50px !important;
+        line-height: 50px !important;
+        color: #bee0ff;
+        .ceil:nth-child(1) {
+          width: 15%;
+        }
+        .ceil:nth-child(2) {
+          width: 25%;
+        }
+        .ceil:nth-child(3) {
+          width: 15%;
+        }
+        .ceil:nth-child(4) {
+          width: 9%;
+        }
+        .ceil:nth-child(5) {
+          width: 9%;
+        }
+        .ceil:nth-child(6) {
+          width: 12%;
+        }
+        .ceil:nth-child(7) {
+          width: 12%;
+        }
+      }
+    }
   }
 }
-// .no {
-//   background: rgba(101, 132, 226, 0.1);
-//   padding: 0.1875rem;
-//   .no-hd {
-//     position: relative;
-//     border: 1px solid rgba(25, 186, 139, 0.17);
-//     &::before {
-//       content: "";
-//       position: absolute;
-//       width: 30px;
-//       height: 10px;
-//       border-top: 2px solid #67d1ff;
-//       border-left: 2px solid #67d1ff;
-//       top: 0;
-//       left: 0;
-//     }
-//     &::after {
-//       content: "";
-//       position: absolute;
-//       width: 30px;
-//       height: 10px;
-//       border-bottom: 2px solid #67d1ff;
-//       border-right: 2px solid #67d1ff;
-//       right: 0;
-//       bottom: 0;
-//     }
-//     ul {
-//       display: flex;
-//       li {
-//         position: relative;
-//         flex: 1;
-//         text-align: center;
-//         height: 1rem;
-//         line-height: 1rem;
-//         font-size: 0.875rem;
-//         color: #ffeb7b;
-//         padding: 0.05rem 0;
-//         font-family: electronicFont;
-//         font-weight: bold;
-//         &:first-child::after {
-//           content: "";
-//           position: absolute;
-//           height: 50%;
-//           width: 1px;
-//           background: rgba(255, 255, 255, 0.2);
-//           right: 0;
-//           top: 25%;
-//         }
-//       }
-//     }
-//   }
-//   .no-bd ul {
-//     display: flex;
-//     li {
-//       flex: 1;
-//       height: 0.5rem;
-//       line-height: 0.5rem;
-//       text-align: center;
-//       font-size: 0.225rem;
-//       color: rgba(255, 255, 255, 0.7);
-//       padding-top: 0.125rem;
-//     }
-//   }
-// }
-// .map {
-//   position: relative;
-//   height: 10.125rem;
-//   .chart {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     z-index: 5;
-//     height: 10.125rem;
-//     width: 100%;
-//   }
-//   .map1,
-//   .map2,
-//   .map3 {
-//     position: absolute;
-//     top: 50%;
-//     left: 50%;
-//     transform: translate(-50%, -50%);
-//     width: 6.475rem;
-//     height: 6.475rem;
-//     background: url(../images/map.png) no-repeat;
-//     background-size: 100% 100%;
-//     opacity: 0.3;
-//   }
-//   .map2 {
-//     width: 8.0375rem;
-//     height: 8.0375rem;
-//     background-image: url(../images/lbx.png);
-//     opacity: 0.6;
-//     animation: rotate 15s linear infinite;
-//     z-index: 2;
-//   }
-//   .map3 {
-//     width: 7.075rem;
-//     height: 7.075rem;
-//     background-image: url(../images/jt.png);
-//     animation: rotate1 10s linear infinite;
-//   }
-
-//   @keyframes rotate {
-//     from {
-//       transform: translate(-50%, -50%) rotate(0deg);
-//     }
-//     to {
-//       transform: translate(-50%, -50%) rotate(360deg);
-//     }
-//   }
-//   @keyframes rotate1 {
-//     from {
-//       transform: translate(-50%, -50%) rotate(0deg);
-//     }
-//     to {
-//       transform: translate(-50%, -50%) rotate(-360deg);
-//     }
-//   }
-// }
-
-// @media screen and (max-width: 1024px) {
-//   html {
-//     font-size: 42px !important;
-//   }
-// }
-// @media screen and (min-width: 1920) {
-//   html {
-//     font-size: 80px !important;
-//   }
-// }
-
-// #rule {
-//   max-height: 90%;
-//   overflow-y: hidden;
-//   margin-top: 2%;
-// }
-// #list p {
-//   display: flex;
-//   color: rgba(255, 255, 255, 0.7);
-//   font-size: 0.2rem;
-//   margin-bottom: 0.2rem;
-// }
-// #list p span {
-//   flex: 1;
-//   text-align: center;
-// }
-// #list2 p {
-//   display: flex;
-//   color: rgba(255, 255, 255, 0.7);
-//   font-size: 0.2rem;
-//   margin-bottom: 0.2rem;
-// }
-// #list2 p span {
-//   flex: 1;
-//   text-align: center;
-// }
 </style>
