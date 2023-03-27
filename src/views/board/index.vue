@@ -21,15 +21,7 @@
             <h2>物料需求汇总</h2>
           </div>
           <div class="chart1">
-            <div class="tableHead">
-              <div
-                :style="{ width: item.width }"
-                :key="item.label"
-                v-for="item in tableColumn[1]"
-              >
-                {{ item.label }}
-              </div>
-            </div>
+            <dv-scroll-board :config="config" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -39,14 +31,14 @@
           <div class="chartHead">
             <h2>物料需求车间</h2>
           </div>
-          <div class="chart2"></div>
+          <div class="chart2" ref="chart1"></div>
           <div class="panel-footer"></div>
         </div>
         <div class="panel three circle">
           <div class="chartHead">
             <h2>缺料TOP6</h2>
           </div>
-          <div class="chart2" ref="chart"></div>
+          <div class="chart2" ref="chart2"></div>
           <div class="panel-footer"></div>
         </div>
         <div class="panel three bar1">
@@ -54,15 +46,7 @@
             <h2>采购申请概览</h2>
           </div>
           <div class="chart2">
-            <div class="tableHead">
-              <div
-                :style="{ width: item.width }"
-                :key="item.label"
-                v-for="item in tableColumn[2]"
-              >
-                {{ item.label }}
-              </div>
-            </div>
+            <dv-scroll-board :config="config" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -72,91 +56,14 @@
 </template>
 
 <script>
+var _this;
 import * as echarts from "echarts";
 import { debounce } from "lodash";
 export default {
   name: "Board",
   data() {
     return {
-      chart: null,
       handleWindowResizeDebounced: null,
-      chartData: {
-        grid: {
-          // width:'100%',
-          left: "2%",
-          right: "2%",
-          bottom: "5%",
-          top: "10%",
-          containLabel: true, //是否包含刻度标签
-          // height:'100%',
-        },
-        // 图表数据
-        xAxis: {
-          type: "category",
-          data: [
-            "贴片电阻",
-            "铝基板T50ZP",
-            "贴片母端2PIN",
-            "LED灯珠",
-            "贴片整流桥",
-            "贴片二吸管",
-          ],
-          axisLine: {
-            lineStyle: {
-              color: "#75A1F4",
-            },
-          },
-          axisLabel: {
-            interval: 0,
-            margin: 15,
-            color: "#BEE0FF",
-          },
-          axisTick: {
-            show: false,
-          },
-        },
-        yAxis: {
-          type: "value",
-          splitNumber: 4, // 刻度数量为 3
-
-          splitLine: {
-            lineStyle: {
-              color: "#4B4CCE",
-              type: "dashed",
-            },
-          },
-          axisTick: {
-            show: false,
-          },
-          axisLine: {
-            show: false,
-
-            lineStyle: {
-              color: "#75A1F4",
-            },
-          },
-        },
-        series: [
-          {
-            data: [120, 210, 182, 218, 64, 89],
-            type: "bar",
-            itemStyle: {
-              color: "#00FFFF",
-            },
-            barWidth: "30%",
-            label: {
-              show: true,
-              position: "top",
-            },
-          },
-        ],
-      },
-      chartOptions: {
-        // 图表样式和配置
-        // title: {
-        //   text: "柱状图示例",
-        // },
-      },
       todayDate: "",
       config: {
         header: [
@@ -315,18 +222,50 @@ export default {
           { label: "申请交期", width: "20%" },
         ],
       ],
+      chartData1: [
+        {
+          value: 335,
+          name: "高明筒灯吸顶灯车间",
+          color: "#00FFFF",
+        },
+        {
+          value: 310,
+          name: "球泡灯车间",
+          color: "#0085FF",
+        },
+        {
+          value: 234,
+          name: "高明T8车间",
+          color: "#BC4EFF",
+        },
+        {
+          value: 135,
+          name: "高明T5支架灯盘车间",
+          color: "#FF35A2",
+        },
+        {
+          value: 1548,
+          name: "高明面板灯车间",
+          color: "#1EAF72",
+        },
+      ],
+      chartTotal: 2562,
+      chart: [],
+      chartOptions: [],
     };
   },
   components: {},
   watch: {},
   created() {
     this.todayDate = this.showtime();
+    _this = this;
   },
   mounted() {
-    // 初始化图表
-    this.initChart();
+    //初始化图表;
+    this.chart = [this.$refs.chart1, this.$refs.chart2];
+    this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
-    this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200);
+    this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
   },
   beforeDestroy() {
@@ -335,15 +274,186 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
-    initChart() {
-      this.chart = echarts.init(this.$refs.chart); // 获取 DOM 对象
-      this.chart.setOption(this.chartOptions); // 设置图表配置
-      this.chart.setOption(this.chartData); // 设置图表数据
+    // 渲染echart图
+    barData(id, option) {
+      // echarts.dispose(id);
+      echarts.init(id).setOption(option);
+    },
+    getEcharts() {
+      //获取屏幕宽度并计算比例
+      function fontSize(res) {
+        let clientWidth =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        if (!clientWidth) return;
+        return res * (clientWidth / 1920);
+      }
+      this.chartOptions = [
+        {
+          textStyle: {
+            fontSize: fontSize(14),
+          },
+          legend: {
+            itemGap: fontSize(20),
+            orient: "vertical",
+            left: "50%",
+            top: "center",
+            icon: "circle",
+            data: [
+              { name: "高明筒灯吸顶灯车间" },
+              { name: "球泡灯车间" },
+              { name: "高明T8车间" },
+              { name: "高明T5支架灯盘车间" },
+              { name: "高明面板灯车间" },
+            ],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            itemStyle: {},
+            textStyle: {
+              color: "#fff",
+              padding: [0, 0, 0, 12],
+            },
+            formatter: function (name) {
+              let prefect;
+              _this.chartData1.map((item) => {
+                item.name == name;
+                prefect =
+                  ((item.value / _this.chartTotal) * 100).toFixed(2) + "%";
+              });
+              return name + "      " + prefect;
+            },
+          },
+          grid: {
+            left: "10%",
+            containLabel: true,
+          },
+          series: [
+            {
+              name: "数据来源",
+              type: "pie",
+              radius: ["65%", "80%"],
+              center: ["25%", "50%"],
+              avoidLabelOverlap: false,
+              labelLine: {
+                show: false,
+              },
+              data: this.chartData1,
+              itemStyle: {
+                labelLine: {
+                  show: false,
+                },
+                color: function (params) {
+                  //自定义颜色
+                  return params.data.color;
+                },
+              },
+              label: {
+                //饼图中间文字设置
+                fontSize: fontSize(20),
+                show: true,
+                position: "center",
+                color: "#fff",
+                formatter: "总数量" + "\n\n" + this.chartTotal,
+              },
+              emphasis: {
+                label: {
+                  show: true,
+                  // fontSize: "14",
+                  // fontWeight: "bold",
+                },
+              },
+            },
+          ],
+        },
+        {
+          textStyle: {
+            fontSize: fontSize(14),
+          },
+          grid: {
+            left: "2%",
+            right: "2%",
+            bottom: "5%",
+            top: "10%",
+            containLabel: true, //是否包含刻度标签
+          },
+          // 图表数据
+          xAxis: {
+            type: "category",
+            data: [
+              "贴片电阻",
+              "铝基板T50ZP",
+              "贴片母端2PIN",
+              "LED灯珠",
+              "贴片整流桥",
+              "贴片二吸管",
+            ],
+            axisLine: {
+              lineStyle: {
+                color: "#75A1F4",
+              },
+            },
+            axisLabel: {
+              interval: 0,
+              margin: 15,
+              color: "#BEE0FF",
+              fontSize: fontSize(14),
+            },
+            axisTick: {
+              show: false,
+            },
+          },
+          yAxis: {
+            type: "value",
+            splitNumber: 4, // 刻度数量为 4
+            splitLine: {
+              lineStyle: {
+                color: "#4B4CCE",
+                type: "dashed",
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              fontSize: fontSize(14),
+            },
+            axisLine: {
+              show: false,
+
+              lineStyle: {
+                color: "#75A1F4",
+              },
+            },
+          },
+          series: [
+            {
+              data: [120, 210, 182, 218, 64, 89],
+              type: "bar",
+              itemStyle: {
+                color: "#00FFFF",
+              },
+              barWidth: "30%",
+              label: {
+                show: true,
+                position: "top",
+              },
+            },
+          ],
+        },
+      ];
+      this.chart.map((item, index) => {
+        this.barData(item, this.chartOptions[index]);
+      });
+      // 调用 resize 方法重新渲染图表
+      setTimeout(() => {
+        this.chart.map((item) => {
+          echarts.init(item).resize();
+        });
+      }, 100);
     },
     handleWindowResize() {
-      // 调用 resize 方法重新渲染图表
-      this.chart.resize();
-      debugger
+      this.getEcharts();
     },
     showtime() {
       const now = new Date();
