@@ -24,11 +24,14 @@ export function GetServerTime(data) {
     })
 }
 // 查询数据
-export function GetSearchData(data) {
+export function GetSearchData(data,token) {
     return request({
         url: '/APSAPI/APSData',
         method: 'POST',
-        data
+        data,
+        headers: {
+            'token': token
+          },
     })
 }
 

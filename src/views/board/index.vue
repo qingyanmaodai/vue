@@ -361,7 +361,7 @@ export default {
     // 获取表格数据
     async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
-      let res = await GetSearchData(params);
+      let res = await GetSearchData(params, "6E8BF76C6BA5B0D8");
       const { result, data, count, msg, AppColumns } = res.data;
       if (result) {
         //对数据进行处理
@@ -406,12 +406,15 @@ export default {
       }
     },
     async getEchartsData1() {
-      let res = await GetSearchData({
-        dicID: 9037,
-        groupby: "Dept",
-        fields: "SUM(DemandQty) as DemandQty,Dept",
-        sort: "Dept",
-      });
+      let res = await GetSearchData(
+        {
+          dicID: 9037,
+          groupby: "Dept",
+          fields: "SUM(DemandQty) as DemandQty,Dept",
+          sort: "DemandQty desc",
+        },
+        "6E8BF76C6BA5B0D8"
+      );
       const { result, data, msg } = res.data;
       if (result) {
         this.chartTotal1 = data.reduce(
@@ -432,12 +435,15 @@ export default {
       }
     },
     async getEchartsData2() {
-      let res = await GetSearchData({
-        dicID: 9062,
-        sort: "OweQty",
-        page: 1,
-        rows: 6,
-      });
+      let res = await GetSearchData(
+        {
+          dicID: 9062,
+          sort: "OweQty",
+          page: 1,
+          rows: 6,
+        },
+        "6E8BF76C6BA5B0D8"
+      );
       const { result, data, msg } = res.data;
       if (result) {
         this.chartData2[0] = data.map(

@@ -114,7 +114,7 @@ export default {
       },
       colDialogVisible: false,
       footerLabel: ["", ""],
-      sysID: [{ ID: 9062 }],
+      sysID: [{ ID: 10070 }],
       Status1: [
         { label: "已推", value: 1 },
         { label: "未推", value: 0 },
