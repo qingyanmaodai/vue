@@ -11,8 +11,12 @@
           <div class="chartHead">
             <h2>待生产订单</h2>
           </div>
-          <div class="chart1">
-            <dv-scroll-board :config="config" style="height: 100%" />
+          <div
+            class="chart1"
+            v-loading="tableLoading[0]"
+            element-loading-background="#060765"
+          >
+            <dv-scroll-board :config="config[0]" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -20,8 +24,12 @@
           <div class="chartHead">
             <h2>物料需求汇总</h2>
           </div>
-          <div class="chart1">
-            <dv-scroll-board :config="config" style="height: 100%" />
+          <div
+            class="chart1"
+            v-loading="tableLoading[1]"
+            element-loading-background="#060765"
+          >
+            <dv-scroll-board :config="config[1]" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -45,8 +53,12 @@
           <div class="chartHead">
             <h2>采购申请概览</h2>
           </div>
-          <div class="chart2">
-            <dv-scroll-board :config="config" style="height: 100%" />
+          <div
+            class="chart2"
+            v-loading="tableLoading[2]"
+            element-loading-background="#060765"
+          >
+            <dv-scroll-board :config="config[2]" style="height: 100%" />
           </div>
           <div class="panel-footer"></div>
         </div>
@@ -59,197 +71,68 @@
 var _this;
 import * as echarts from "echarts";
 import { debounce } from "lodash";
+import { GetSearchData } from "@/api/Common";
 export default {
   name: "Board",
   data() {
     return {
       handleWindowResizeDebounced: null,
+      tableLoading: [false, false, false], //每个表加载
+      formSearchs: [
+        //不同标签页面的查询条件
+        {
+          datas: {
+            sort: "CreatedOn desc",
+            dicID: 9036,
+            IsClose: "否",
+            Status: 1,
+            page: 1,
+            row: 1000,
+          }, //查询入参
+        },
+        {
+          datas: {
+            dicID: 9062,
+            page: 1,
+            rows: 1000,
+          }, //查询入参
+        },
+        {
+          datas: { dicID: 7898, page: 1, rows: 1000 },
+        },
+      ],
       todayDate: "",
-      config: {
-        header: [
-          "部门",
-          "规格",
-          "待生产日期",
-          "订单数",
-          "生产数",
-          "检测结果",
-          "齐套率",
-        ],
-        data: [
-          [
-            "高明T1车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "",
-            "23,394111111",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T2车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T3车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T4车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T5车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T6车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T7车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T8车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T9车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T10车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T11车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-
-            "欠料",
-            "23.45%",
-          ],
-          [
-            "高明T12车间",
-            "T5支架光源14W",
-            "2023/04-21",
-            "23,394",
-            "23,394",
-            "欠料",
-            "23.45%",
-          ],
-        ],
-        columnWidth: [90, 225, 135, 81, 81, 108, 108],
-        oddRowBGC: "#12137900",
-        evenRowBGC: "#121379",
-        rowNum: 10,
-      },
-      tableColumn: [
-        [
-          { label: "部门", width: "10%" },
-          { label: "规格", width: "25%" },
-          { label: "待生产日期", width: "15%" },
-          { label: "订单数", width: "9%" },
-          { label: "生产数", width: "9%" },
-          { label: "检测结果", width: "12%" },
-          { label: "齐套率", width: "12%" },
-        ],
-        [
-          { label: "父件物料号", width: "15%" },
-          { label: "物料编码", width: "15%" },
-          { label: "物料名称", width: "20%" },
-          { label: "需求数量", width: "10%" },
-          { label: "订单在制", width: "10%" },
-          { label: "库存数", width: "8%" },
-          { label: "待检数", width: "8%" },
-          { label: "冻结数", width: "8%" },
-          { label: "请购需求", width: "12%" },
-        ],
-        [
-          { label: "物料名称", width: "15%" },
-          { label: "申请日期", width: "20%" },
-          { label: "申请数量", width: "15%" },
-          { label: "到货数量", width: "15%" },
-          { label: "未清数量", width: "15%" },
-          { label: "申请交期", width: "20%" },
-        ],
-      ],
-      chartData1: [
+      config: [
         {
-          value: 335,
-          name: "高明筒灯吸顶灯车间",
-          color: "#00FFFF",
+          header: [],
+          data: [],
+          columnWidth: [],
+          oddRowBGC: "#12137900",
+          evenRowBGC: "#121379",
+          rowNum: 10,
+          waitTime: 5000,
+          carousel: "page",
         },
         {
-          value: 310,
-          name: "球泡灯车间",
-          color: "#0085FF",
+          header: [],
+          data: [],
+          columnWidth: [],
+          oddRowBGC: "#12137900",
+          evenRowBGC: "#121379",
+          rowNum: 10,
         },
         {
-          value: 234,
-          name: "高明T8车间",
-          color: "#BC4EFF",
-        },
-        {
-          value: 135,
-          name: "高明T5支架灯盘车间",
-          color: "#FF35A2",
-        },
-        {
-          value: 1548,
-          name: "高明面板灯车间",
-          color: "#1EAF72",
+          header: [],
+          data: [],
+          columnWidth: [],
+          oddRowBGC: "#12137900",
+          evenRowBGC: "#121379",
+          rowNum: 3,
         },
       ],
-      chartTotal: 2562,
+      chartData1: [],
+      chartData2: [[], []],
+      chartTotal1: 2562,
       chart: [],
       chartOptions: [],
     };
@@ -260,10 +143,16 @@ export default {
     this.todayDate = this.showtime();
     _this = this;
   },
-  mounted() {
+  async mounted() {
+    //表格接口调用
+    this.formSearchs.map(async (item, index) => {
+      this.getTableData(item.datas, index);
+    });
+    await this.getEchartsData1();
+    await this.getEchartsData2();
     //初始化图表;
     this.chart = [this.$refs.chart1, this.$refs.chart2];
-    this.getEcharts();
+    await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
@@ -294,19 +183,13 @@ export default {
           textStyle: {
             fontSize: fontSize(14),
           },
+          color: ["#00FFFF", "#0085FF", "#BC4EFF", "#FF35A2", "#1EAF72"],
           legend: {
             itemGap: fontSize(20),
             orient: "vertical",
             left: "50%",
             top: "center",
             icon: "circle",
-            data: [
-              { name: "高明筒灯吸顶灯车间" },
-              { name: "球泡灯车间" },
-              { name: "高明T8车间" },
-              { name: "高明T5支架灯盘车间" },
-              { name: "高明面板灯车间" },
-            ],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
             itemStyle: {},
@@ -317,9 +200,10 @@ export default {
             formatter: function (name) {
               let prefect;
               _this.chartData1.map((item) => {
-                item.name == name;
-                prefect =
-                  ((item.value / _this.chartTotal) * 100).toFixed(2) + "%";
+                if (item.name == name) {
+                  prefect =
+                    ((item.value / _this.chartTotal1) * 100).toFixed(2) + "%";
+                }
               });
               return name + "      " + prefect;
             },
@@ -343,18 +227,18 @@ export default {
                 labelLine: {
                   show: false,
                 },
-                color: function (params) {
-                  //自定义颜色
-                  return params.data.color;
-                },
+                // color: function (params) {
+                //自定义颜色
+                // return params.data.color;
+                // },
               },
               label: {
                 //饼图中间文字设置
-                fontSize: fontSize(20),
+                fontSize: fontSize(18),
                 show: true,
                 position: "center",
                 color: "#fff",
-                formatter: "总数量" + "\n\n" + this.chartTotal,
+                formatter: "总数量" + "\n\n" + this.chartTotal1,
               },
               emphasis: {
                 label: {
@@ -380,14 +264,7 @@ export default {
           // 图表数据
           xAxis: {
             type: "category",
-            data: [
-              "贴片电阻",
-              "铝基板T50ZP",
-              "贴片母端2PIN",
-              "LED灯珠",
-              "贴片整流桥",
-              "贴片二吸管",
-            ],
+            data: this.chartData2[0],
             axisLine: {
               lineStyle: {
                 color: "#75A1F4",
@@ -398,6 +275,13 @@ export default {
               margin: 15,
               color: "#BEE0FF",
               fontSize: fontSize(14),
+              formatter: function (value) {
+                if (value.length > 6) {
+                  return value.substring(0, 6) + "..."; // 只显示前6个字符
+                } else {
+                  return value;
+                }
+              },
             },
             axisTick: {
               show: false,
@@ -406,6 +290,7 @@ export default {
           yAxis: {
             type: "value",
             splitNumber: 4, // 刻度数量为 4
+            inverse: true,
             splitLine: {
               lineStyle: {
                 color: "#4B4CCE",
@@ -428,7 +313,7 @@ export default {
           },
           series: [
             {
-              data: [120, 210, 182, 218, 64, 89],
+              data: this.chartData2[1],
               type: "bar",
               itemStyle: {
                 color: "#00FFFF",
@@ -472,6 +357,100 @@ export default {
       ];
       const weekDayName = weekDayNames[weekDay]; // 获取星期几的名称
       return `${year}年${month}月${day}日 ${weekDayName}`;
+    },
+    // 获取表格数据
+    async getTableData(params, index) {
+      this.$set(this.tableLoading, index, true);
+      let res = await GetSearchData(params);
+      const { result, data, count, msg, AppColumns } = res.data;
+      if (result) {
+        //对数据进行处理
+        const propValues = data.reduce((acc, obj) => {
+          const values = [];
+          AppColumns.forEach((propObj) => {
+            if (obj[propObj.prop]) {
+              values.push(obj[propObj.prop]);
+            } else {
+              values.push("");
+            }
+          });
+          if (values.length > 0) {
+            acc.push(values);
+          }
+          return acc;
+        }, []);
+        this.$set(this.config[index], "data", propValues);
+        //设置宽度
+        this.$set(
+          this.config[index],
+          "columnWidth",
+          AppColumns.map((item) => Number(item.appWidth))
+        );
+        // 查询时重新获取列渲染
+        if (AppColumns.length) {
+          this.$set(
+            this.config[index],
+            "header",
+            AppColumns.map((item) => item.label)
+          );
+        }
+        this.config[index] = { ...this.config[index] };
+        console.log(this.config, "this.config");
+        this.$set(this.tableLoading, index, false);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    async getEchartsData1() {
+      let res = await GetSearchData({
+        dicID: 9037,
+        groupby: "Dept",
+        fields: "SUM(DemandQty) as DemandQty,Dept",
+        sort: "Dept",
+      });
+      const { result, data, msg } = res.data;
+      if (result) {
+        this.chartTotal1 = data.reduce(
+          (accumulator, current) => accumulator + current.DemandQty,
+          0
+        );
+        this.chartData1 = data.map((item) => ({
+          value: item.DemandQty,
+          name: item.Dept,
+        }));
+        console.log(this.chartData1, "this.chartData2[0]");
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    async getEchartsData2() {
+      let res = await GetSearchData({
+        dicID: 9062,
+        sort: "OweQty",
+        page: 1,
+        rows: 6,
+      });
+      const { result, data, msg } = res.data;
+      if (result) {
+        this.chartData2[0] = data.map(
+          (item) => item.MaterialName.split(" ")[0]
+        );
+        this.chartData2[1] = data.map((item) => item.OweQty);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
     },
   },
 };
@@ -601,8 +580,8 @@ export default {
   }
   .chartHead {
     width: 100%;
-    height: 55px;
     background: url(./chartHead.png) no-repeat;
+    height: 55px;
     background-size: 100% 100%;
   }
   h2 {
@@ -619,7 +598,6 @@ export default {
   }
   .chart2 {
     padding: 9px 12px;
-
     overflow: hidden;
     height: calc(100% - 55px);
   }
@@ -642,27 +620,6 @@ export default {
         height: 50px !important;
         line-height: 50px !important;
         color: #bee0ff;
-        .ceil:nth-child(1) {
-          width: 15%;
-        }
-        .ceil:nth-child(2) {
-          width: 25%;
-        }
-        .ceil:nth-child(3) {
-          width: 15%;
-        }
-        .ceil:nth-child(4) {
-          width: 9%;
-        }
-        .ceil:nth-child(5) {
-          width: 9%;
-        }
-        .ceil:nth-child(6) {
-          width: 12%;
-        }
-        .ceil:nth-child(7) {
-          width: 12%;
-        }
       }
     }
   }
