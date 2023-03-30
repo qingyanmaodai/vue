@@ -52,12 +52,12 @@
             <div class="flex">
               <el-pagination
                 background
-                @size-change="(val) => pageSize(val, 0)"
+                @size-change="val => pageSize(val, 0)"
                 :current-page="tablePagination[tagRemark].pageIndex"
                 :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
                 :page-size="tablePagination[tagRemark].pageSize"
                 :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)"
+                @current-change="val => pageChange(val, 0)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
@@ -96,7 +96,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch,
+  GetSearch
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
@@ -104,25 +104,25 @@ export default {
   components: {
     ComSearch,
     ComVxeTable,
-    DialogTable,
+    DialogTable
   },
   data() {
     return {
       ////////////////// Search /////////////////
       dialogSearchForm: {
-        OrderID: "",
+        OrderID: ""
       },
       colDialogVisible: false,
       footerLabel: ["", ""],
       sysID: [
-        { ID: 9053 },
+        { ID: 9053 }
         // { ID: 9042 },
       ],
       Status1: [
         { label: "全部", value: "" },
-        { label: "已下达", value: 21 },
-        { label: "未下达", value: 26 },
-        { label: "已完成", value: 25 },
+        { label: "已分配", value: 21 },
+        { label: "未分配", value: 26 },
+        { label: "已完成", value: 25 }
       ],
       title: this.$route.meta.title,
       labelStatus1: 2,
@@ -135,13 +135,14 @@ export default {
         {
           datas: {
             ProductionStatus: 26,
+            ProductionAccounts: this.$store.getters.userInfo.Account
           },
-          forms: [],
+          forms: []
         },
         {
           datas: {},
-          forms: [],
-        },
+          forms: []
+        }
       ],
       btnForm: [],
       tableData: [[], []],
@@ -151,7 +152,7 @@ export default {
       isClear: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
       showPagination: true,
@@ -165,10 +166,10 @@ export default {
       losePrepareDate2: 1,
       ruleForm: {
         LineIDs: [],
-        ProducedDate: "",
+        ProducedDate: ""
       },
       lines: [],
-      checkBoxCellTypeLine: "",
+      checkBoxCellTypeLine: ""
     };
   },
   watch: {},
@@ -196,11 +197,11 @@ export default {
       this.$router.push({
         name: "FieldInfo",
         params: {
-          ID: id,
-        },
+          ID: id
+        }
       });
     },
-    initSpread: function (spread) {
+    initSpread: function(spread) {
       this.spread = spread;
     },
 
@@ -216,7 +217,7 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
       let colIndex = 0;
-      this.tableColumns[this.tagRemark].forEach((x) => {
+      this.tableColumns[this.tagRemark].forEach(x => {
         if (
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
@@ -233,7 +234,7 @@ export default {
             name: x.prop,
             displayName: x.label,
             cellType: combobox,
-            size: parseInt(x.width),
+            size: parseInt(x.width)
           });
         } else if (
           x.DataType == "datetime" ||
@@ -244,20 +245,20 @@ export default {
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: "@", //字符串格式
+            formatter: "@" //字符串格式
           });
         } else {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
-            size: parseInt(x.width),
+            size: parseInt(x.width)
           });
         }
         colHeader1.push(x.label);
         cellIndex++;
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-      colHeader1.forEach(function (value, index) {
+      colHeader1.forEach(function(value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
       if (colInfos.length && colInfos[0].name === "isChecked") {
@@ -272,7 +273,7 @@ export default {
           name: "isChecked",
           displayName: "选择",
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-          size: 60,
+          size: 60
         };
         for (var name in checkbox) {
           colInfos[0][name] = checkbox[name];
@@ -326,7 +327,7 @@ export default {
 
       let cellIndex = 0;
 
-      this.tableColumns[this.tagRemark].forEach((m) => {
+      this.tableColumns[this.tagRemark].forEach(m => {
         //行，start,end
         if (m.isEdit) {
           sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -427,13 +428,13 @@ export default {
       });
       //表格编辑事件
 
-      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
-      this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
+      this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
+      this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
         // 自动计算数量
       });
 
       // 表格单击齐套率弹框事件
-      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
+      this.spread.bind(GCsheets.Events.CellClick, function(e, args) {
         if (_this.tableColumns[_this.tagRemark].length) {
           _this.tableColumns[_this.tagRemark].map((item, index) => {
             if (item.name === "MaterialSet" && args.col === index) {
@@ -488,8 +489,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then((_) => {})
-        .catch((_) => {});
+        .then(_ => {})
+        .catch(_ => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -557,7 +558,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element) => {
+            this.formSearchs[remarkTb].forms.forEach(element => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -583,14 +584,14 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach(n => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
             }
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+              n.childrens.forEach(x => {
                 this.verifyDta(x);
               });
             }
@@ -600,7 +601,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
+          x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -631,7 +632,6 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["ProductionAccounts"] = this.$store.getters.userInfo.Account; //登录账号
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (remarkTb == 0) {
@@ -648,7 +648,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -660,6 +660,16 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       this.formSearchs[0].datas["ProductionStatus"] = item.value;
+      this.formSearchs[0].datas[
+        "ProductionAccounts"
+      ] = this.$store.getters.userInfo.Account; //登录账号
+      if (index === 0) {
+        this.formSearchs[0].datas["ProductionAccounts"] = null;
+      } else {
+        this.formSearchs[0].datas[
+          "ProductionAccounts"
+        ] = this.$store.getters.userInfo.Account; //登录账号
+      }
       this.dataSearch(0);
     },
     // 保存
@@ -668,7 +678,7 @@ export default {
       let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           submitData.push(x.item);
         });
       }
@@ -686,13 +696,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
       this.adminLoading = false;
@@ -703,7 +713,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           if (x.isChecked) {
             x["dicID"] = 9053; //下达到主计划表
             x["ProductionStatus"] = 21;
@@ -724,7 +734,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -732,7 +742,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
         }
       } catch (error) {
@@ -740,7 +750,7 @@ export default {
           this.adminLoading = false;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
