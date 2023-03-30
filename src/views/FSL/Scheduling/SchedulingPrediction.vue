@@ -55,12 +55,12 @@
           <div class="flex">
             <el-pagination
               background
-              @size-change="(val) => pageSize(val, 0)"
+              @size-change="val => pageSize(val, 0)"
               :current-page="tablePagination[tagRemark].pageIndex"
               :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
               :page-size="tablePagination[tagRemark].pageSize"
               :total="tablePagination[tagRemark].pageTotal"
-              @current-change="(val) => pageChange(val, 0)"
+              @current-change="val => pageChange(val, 0)"
               layout="total, sizes, prev, pager, next,jumper"
             >
             </el-pagination>
@@ -107,7 +107,7 @@
     </div>
   </div>
 </template>
-  <script>
+<script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -121,7 +121,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch,
+  GetSearch
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import formatDates from "@/utils/formatDate";
@@ -129,7 +129,7 @@ import XLSX from "xlsx";
 export default {
   name: "SchedulingPrediction",
   components: {
-    ComSearch,
+    ComSearch
   },
   data() {
     return {
@@ -205,11 +205,11 @@ export default {
         //不同标签页面的查询条件
         {
           datas: {
-            IsClose: "否",
+            IsClose: "否"
           }, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [], //获取必填项
-        },
+          required: [] //获取必填项
+        }
       ],
       tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
       tableColumns: [[]], //表格表头列
@@ -217,18 +217,20 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
       ],
       sysID: [{ ID: 9036 }],
       Status1: [
+        { label: "全部数据", value: "" },
+        { label: "我的数据", value: "" },
         { label: "未关闭", value: "否" },
-        { label: "已关闭", value: "是" },
+        { label: "已关闭", value: "是" }
       ],
       spread: null, //excel初始
       fileList: [],
       file: [],
       selectionData: [[]],
-      ImportParams: "",
+      ImportParams: ""
     };
   },
   activated() {
@@ -252,7 +254,7 @@ export default {
   },
   methods: {
     //初始化SpreadJS
-    initSpread: function (spread) {
+    initSpread: function(spread) {
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -278,7 +280,7 @@ export default {
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: id },
+        params: { ID: id }
       });
     },
     // 获取表头
@@ -299,7 +301,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
+          x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -315,7 +317,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -340,7 +342,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -355,7 +357,7 @@ export default {
         // 渲染列
         let colInfos = [];
         let cellIndex = 0;
-        this.tableColumns[this.tagRemark].forEach((x) => {
+        this.tableColumns[this.tagRemark].forEach(x => {
           if (
             x.ControlType === "comboboxMultiple" ||
             x.ControlType === "combobox"
@@ -364,7 +366,7 @@ export default {
               name: x.prop,
               displayName: x.label,
               cellType: "",
-              size: parseInt(x.width),
+              size: parseInt(x.width)
             });
             let newData = [];
             let list = null;
@@ -392,13 +394,13 @@ export default {
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
-              formatter: "@", //字符串格式
+              formatter: "@" //字符串格式
             });
           } else {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
-              size: parseInt(x.width),
+              size: parseInt(x.width)
             });
           }
 
@@ -438,7 +440,7 @@ export default {
             name: "isChecked",
             displayName: "选择",
             cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60,
+            size: 60
           };
           for (var name in checkbox) {
             colInfos[0][name] = checkbox[name];
@@ -522,7 +524,7 @@ export default {
           column.property === "AvailableQty"
         ) {
           return {
-            color: "red",
+            color: "red"
           };
         }
       }
@@ -540,7 +542,7 @@ export default {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       if (newData && newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           if (x.isChecked) {
             x.Status = 0;
           }
@@ -555,7 +557,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element) => {
+            this.formSearchs[remarkTb].forms.forEach(element => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -585,8 +587,19 @@ export default {
     },
     // 改变状态
     changeStatus(item, index) {
+      this.formSearchs[0].datas["IsClose"] = null;
+      this.formSearchs[0].datas["CreatedBy"] = null;
+      if (index == 0) {
+      } else if (index == 1) {
+        this.formSearchs[0].datas[
+          "CreatedBy"
+        ] = this.$store.getters.userInfo.Account;
+      } else if (index == 2) {
+        this.formSearchs[0].datas["IsClose"] = item.value;
+      } else if (index == 3) {
+        this.formSearchs[0].datas["IsClose"] = item.value;
+      }
       this.labelStatus = index;
-      this.formSearchs[0].datas["IsClose"] = item.value;
       this.dataSearch(0);
     },
     // 保存
@@ -595,7 +608,7 @@ export default {
       let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           submitData.push(x.item);
         });
         this.adminLoading = true;
@@ -606,7 +619,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
           this.dataSearch(remarkTb);
         } else {
@@ -614,7 +627,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
         }
       } else {
@@ -637,10 +650,10 @@ export default {
         this.$message.error("仅支持一个文件上传");
       } else {
         this.$confirm("确定要导入并分析吗？")
-          .then((_) => {
+          .then(_ => {
             _this.importExcel(this.file);
           })
-          .catch((_) => {});
+          .catch(_ => {});
       }
     },
     //导入解析excel
@@ -650,19 +663,19 @@ export default {
       const result = [];
       const reader = new FileReader(); //上传就解析文件
       var that = this;
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
           cellDates: true,
-          dateNF: "yyyy-MM-dd",
+          dateNF: "yyyy-MM-dd"
         });
-        this.wb.SheetNames.forEach((sheetName) => {
+        this.wb.SheetNames.forEach(sheetName => {
           result.push({
             sheetName: sheetName,
             sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
-              defval: null,
-            }),
+              defval: null
+            })
           });
         });
         that.dataSys(result); // 解析文件
@@ -804,13 +817,13 @@ export default {
           //异常集合
           this.adminLoading = false;
           let txt = "";
-          split.map((value) => {
+          split.map(value => {
             return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
           });
           this.$alert(txt, {
             dangerouslyUseHTMLString: true,
             title: "导入异常信息!",
-            customClass: "message-width",
+            customClass: "message-width"
           });
 
           return;
@@ -829,14 +842,14 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true,
+              dangerouslyUseHTMLString: true
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true,
+              dangerouslyUseHTMLString: true
             });
           }
         } else {
@@ -867,7 +880,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex((item) => item.url === file.url),
+        this.fileList.findIndex(item => item.url === file.url),
         1
       );
     },
@@ -881,7 +894,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           if (x.isChecked) {
             this.selectionData[this.tagRemark].push(x);
           }
@@ -899,7 +912,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -907,7 +920,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true,
+            dangerouslyUseHTMLString: true
           });
         }
       } catch (error) {
@@ -922,7 +935,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
-        newData.forEach((x) => {
+        newData.forEach(x => {
           if (x.isChecked) {
             x.ElementDeleteFlag = 1; //删除标识
             this.selectionData[this.tagRemark].push(x);
@@ -940,7 +953,7 @@ export default {
         this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "info",
+          type: "info"
         }).then(async () => {
           this.adminLoading = true;
           let res = await SaveData(this.selectionData[this.tagRemark]);
@@ -951,23 +964,23 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true,
+              dangerouslyUseHTMLString: true
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true,
+              dangerouslyUseHTMLString: true
             });
           }
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
-  <style lang="scss">
+<style lang="scss">
 .message-width {
   width: 500px;
   height: 90%;
