@@ -82,8 +82,6 @@
           :tableLoading="tableLoading[0]"
           :remark="0"
           :sysID="ID"
-          :isEdit="isEdit"
-          :isClear="isClear[0]"
           :pagination="tablePagination[0]"
           @pageChange="pageChange"
           @pageSize="pageSize"
@@ -138,7 +136,7 @@ export default {
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 100, pageTotal: 0 }],
+      tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -204,7 +202,6 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
-
     if (sessionStorage.getItem("dicIDForm" + this.ID)) {
       this.isSelect = JSON.parse(sessionStorage.getItem("isSelect" + this.ID));
       let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
@@ -471,12 +468,8 @@ export default {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
-      this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-      setTimeout(() => {
-        this.$set(this.isClear, remarkTb, false);
-      });
     },
     // 重置
     dataReset(remarkTb) {
@@ -494,9 +487,6 @@ export default {
       let res = await ExportData(form);
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
-    },
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -550,10 +540,6 @@ export default {
       let IDs = [{ ID: this.ID }];
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
-      if (datas.length > 0) {
-        this.tablePagination[0].pageSize = datas[0][0].pageSize;
-      }
-
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
@@ -590,13 +576,6 @@ export default {
         if (this.newTag != -1) {
           this.tableColumns.splice(this.newTag, 1);
         }
-        // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-        //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-
-        //   if (tmp.dicID) {
-        //     this.formSearchs[0].datas = tmp;
-        //   }
-        // }
         this.formSearchs[0].datas["dicID"] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -643,45 +622,6 @@ export default {
           });
         });
       });
-    },
-    // 新增
-    addRow() {
-      let obj = {};
-      obj["dicID"] = this.ID;
-      obj["update"] = true;
-      // 先找表头有没有字段是下拉的性质 ,把数据源名称找出来
-      let Props = [];
-      this.tableColumns[0].forEach(a => {
-        if (a.ControlType == "combobox") {
-          if (a.DataSourceID) {
-            Props.push(a.DataSourceID);
-          }
-        }
-      });
-      // 拿到数据源去查找数据
-      if ((Props, length != 0)) {
-        // this.getDataSource(Props)
-      }
-
-      this.tableColumns[0].forEach(x => {
-        obj[x.prop] = "";
-      });
-      this.tableData[0].unshift(obj);
-    },
-    async getDataSource(Props) {
-      form["DataSourceID"] = Props;
-      let res = await GetSearch(form, "/APSAPI/GetDataSource");
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
     }
   }
 };
