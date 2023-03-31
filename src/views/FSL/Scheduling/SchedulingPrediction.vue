@@ -23,13 +23,19 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <div style="margin-right: 10px"></div>
-              <div
-                :class="labelStatus == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item, y) in Status1"
-                :key="y"
-              >
-                <span @click="changeStatus(item, y)">{{ item.label }}</span>
-                <el-divider direction="vertical"></el-divider>
+              <div>
+                <el-checkbox-group
+                  v-model="selectedOption"
+                  @change="changeStatus"
+                  size="mini"
+                >
+                  <el-checkbox-button
+                    v-for="item in Status1"
+                    :key="item.value"
+                    :label="item.value"
+                    >{{ item.label }}</el-checkbox-button
+                  >
+                </el-checkbox-group>
               </div>
             </el-col>
           </el-row>
@@ -133,6 +139,10 @@ export default {
   },
   data() {
     return {
+      selectedOption: [],
+      label: "重复导入",
+      label1: "个人数据",
+      label2: "已关闭",
       dialogSearchForm: {},
       colDialogVisible: false,
       colAdd: [],
@@ -221,10 +231,9 @@ export default {
       ],
       sysID: [{ ID: 9036 }],
       Status1: [
-        { label: "全部数据", value: "" },
-        { label: "我的数据", value: "" },
-        { label: "未关闭", value: "否" },
-        { label: "已关闭", value: "是" }
+        { label: "重复导入", value: 0 },
+        { label: "个人数据", value: 1 },
+        { label: "已关闭", value: 2 }
       ],
       spread: null, //excel初始
       fileList: [],
@@ -586,26 +595,27 @@ export default {
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 改变状态
-    changeStatus(item, index) {
-      this.formSearchs[0].datas["IsClose"] = null;
-      this.formSearchs[0].datas["CreatedBy"] = null;
-      if (index == 0) {
-      } else if (index == 1) {
-        this.formSearchs[0].datas[
-          "CreatedBy"
-        ] = this.$store.getters.userInfo.Account;
-      } else if (index == 2) {
-        this.formSearchs[0].datas["IsClose"] = item.value;
-      } else if (index == 3) {
-        this.formSearchs[0].datas["IsClose"] = item.value;
-      }
-      this.labelStatus = index;
+    changeStatus() {
+      console.log(this.selectedOption, "selectedOption");
+      this.formSearchs[0]["datas"]["Status"] = this.selectedOption.includes(0)
+        ? 0
+        : null;
+      this.formSearchs[0]["datas"]["CreatedBy"] = this.selectedOption.includes(
+        1
+      )
+        ? this.$store.getters.userInfo.Account
+        : null;
+      this.formSearchs[0]["datas"]["IsClose"] = this.selectedOption.includes(2)
+        ? "是"
+        : "否";
+      console.log("item", this.formSearchs[0]["datas"]);
+      // this.labelStatus = index;
       this.dataSearch(0);
     },
     // 保存
     async dataSave(remarkTb) {
-      let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDirtyRows(); //获取修改过的数据
+      let sheet = this.spread.getActiveSheet();
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach(x => {
