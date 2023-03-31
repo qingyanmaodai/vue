@@ -139,10 +139,7 @@ export default {
   },
   data() {
     return {
-      selectedOption: [],
-      label: "重复导入",
-      label1: "个人数据",
-      label2: "已关闭",
+      selectedOption: [1],
       dialogSearchForm: {},
       colDialogVisible: false,
       colAdd: [],
@@ -154,68 +151,13 @@ export default {
       labelStatus: 0,
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
-      // parmsBtn: [
-      //   // {
-      //   //     ButtonCode: "import",
-      //   //     BtnName: "1.删除并导入",
-      //   //     Type: "danger",
-      //   //     Ghost: true,
-      //   //     Size: "small",
-      //   //     Methods: "dataImport",
-      //   //     Icon: "",
-      //   //     sort:1,
-      //   //     Params:{isDel:1}
-      //   //   },
-      //   {
-      //     ButtonCode: "import",
-      //     BtnName: "1.导入",
-      //     Type: "danger",
-      //     Ghost: true,
-      //     Size: "small",
-      //     Methods: "dataImport",
-      //     Icon: "",
-      //     sort: 1,
-      //     Params: { isDel: 0 },
-      //   },
-      //   {
-      //     ButtonCode: "sysData",
-      //     BtnName: "2.需求运算",
-      //     Type: "primary",
-      //     Ghost: true,
-      //     Size: "small",
-      //     Methods: "Analysis",
-      //     Icon: "",
-      //     sort: 2,
-      //   },
-      //   {
-      //     ButtonCode: "delete",
-      //     BtnName: "删除",
-      //     isLoading: false,
-      //     Methods: "deleteRow",
-      //     Type: "danger",
-      //     Ghost: true,
-      //     Icon: "",
-      //     Size: "small",
-      //     sort: 4,
-      //   },
-      //   {
-      //     ButtonCode: "save",
-      //     BtnName: "保存",
-      //     Type: "success",
-      //     Ghost: true,
-      //     Size: "small",
-      //     Methods: "dataSave",
-      //     Icon: "",
-      //     sort: 5,
-      //   },
-      // ],
       // 表头添加动态按钮
-      parmsBtn2: [],
       formSearchs: [
         //不同标签页面的查询条件
         {
           datas: {
-            IsClose: "否"
+            IsClose: "否",
+            CreatedBy: this.$store.getters.userInfo.Account
           }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [] //获取必填项
