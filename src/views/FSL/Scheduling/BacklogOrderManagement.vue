@@ -135,7 +135,8 @@ export default {
         {
           datas: {
             ProductionStatus: 26,
-            ProductionAccounts: this.$store.getters.userInfo.Account
+            ProductionAccounts: this.$store.getters.userInfo.Account,
+            sort: "OrderDate ASC"
           },
           forms: []
         },
