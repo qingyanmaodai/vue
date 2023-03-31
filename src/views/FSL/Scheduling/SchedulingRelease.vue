@@ -108,7 +108,7 @@ export default {
         { label: "未下达", value: 26 }
       ],
       title: this.$route.meta.title,
-      labelStatus: 0,
+      labelStatus: 2,
       PrepareDate: "",
       adminLoading: false,
       checkdBtnCodes: [],
@@ -116,7 +116,10 @@ export default {
       height: "707px",
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ProductionStatus: 26,
+            ProductionAccounts: this.$store.getters.userInfo.Account
+          },
           forms: []
         },
         {
