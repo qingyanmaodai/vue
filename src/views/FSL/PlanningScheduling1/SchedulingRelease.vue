@@ -50,7 +50,7 @@
                 >
                   预排运算
                 </el-button>
-                <el-button
+                <!-- <el-button
                   v-show="labelStatus1 == 1"
                   type="warning"
                   size="mini"
@@ -65,7 +65,7 @@
                   @click="subSAP"
                 >
                   提交同步申请
-                </el-button>
+                </el-button> -->
                 <el-button
                   v-show="labelStatus1 == 4"
                   type="primary"

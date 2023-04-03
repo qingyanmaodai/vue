@@ -87,6 +87,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
         />
       </div>
     </div>
@@ -249,34 +250,25 @@ export default {
         // 重置表单
         sheet.reset();
         // 渲染列
-        let colInfos = [];
-        let cellIndex = 0;
-        this.tableColumns[this.tagRemark].forEach(x => {
+        // let colInfos = [];
+        // let cellIndex = 0;
+        this.tableColumns[this.tagRemark].forEach((x, y) => {
           if (
             x.ControlType === "comboboxMultiple" ||
             x.ControlType === "combobox"
           ) {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              cellType: "",
-              size: parseInt(x.width)
-            });
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   cellType: "",
+            //   size: parseInt(x.width)
+            // });
             let newData = [];
-            let list = null;
+            // let list = null;
             this.tableData[this.tagRemark].map((item, index) => {
               if (x.DataSourceID && x.DataSourceName) {
                 newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-                list = new GCsheets.CellTypes.ComboBox();
-                list.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value
-                );
-                list.editable(true);
-                list.items(newData);
-                list.itemHeight(24);
-                sheet
-                  .getCell(index, cellIndex, GCsheets.SheetArea.viewport)
-                  .cellType(list);
+                this.bindComboBoxToCell(sheet, index, y, newData);
               }
             });
           } else if (
@@ -284,44 +276,55 @@ export default {
             x.DataType === "varchar" ||
             x.DataType === "nvarchar"
           ) {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width),
-              formatter: "@" //字符串格式
-            });
+            x.formatter = "@";
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   size: parseInt(x.width),
+            //   formatter: "@" //字符串格式
+            // });
           } else {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width)
-            });
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   size: parseInt(x.width)
+            // });
           }
 
           //行，start,end
           if (x.isEdit) {
-            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport
-            );
-            cell.foreColor("#2a06ecd9");
+            sheet
+              .getCell(-1, y)
+              .locked(false)
+              .foreColor("#2a06ecd9");
+            // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            // let cell = sheet.getCell(
+            //   -1,
+            //   cellIndex,
+            //   GC.Spread.Sheets.SheetArea.viewport
+            // );
+            // cell.foreColor("#2a06ecd9");
           }
-
-          cellIndex++;
+          // cellIndex++;
         });
         // 列筛选
         // 参数2 开始列
         // 参数3
         // 参数4 结束列
-        var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-
-        var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+        let cellrange = new GC.Spread.Sheets.Range(
+          -1,
+          -1,
+          -1,
+          this.tableColumns[this.tagRemark].length
+        );
+        let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
           cellrange
         );
         sheet.rowFilter(hideRowFilter);
-        if (colInfos.length && colInfos[0].name === "isChecked") {
+        if (
+          this.tableColumns[this.tagRemark].length &&
+          this.tableColumns[this.tagRemark][0].prop === "isChecked"
+        ) {
           // 选框
           sheet.setCellType(
             0,
@@ -331,13 +334,13 @@ export default {
           );
 
           let checkbox = {
-            name: "isChecked",
-            displayName: "选择",
-            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+            prop: "isChecked",
+            label: "选择",
+            CellTypes: new GC.Spread.Sheets.CellTypes.CheckBox(),
             size: 60
           };
           for (var name in checkbox) {
-            colInfos[0][name] = checkbox[name];
+            this.tableColumns[this.tagRemark][0][name] = checkbox[name];
           }
         }
 
@@ -381,7 +384,7 @@ export default {
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
-        sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
+        // sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         // 设置行颜色，最终判断有错误整行底色红色
         this.tableData[this.tagRemark].forEach((row, index) => {
@@ -409,10 +412,33 @@ export default {
       this.spread.refresh(); //重新定位宽高度
       this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
+    //获取当前选中行的值
+    selectChanged(newValue, remarkTb) {
+      // 在子组件计算属性发生变化时，更新父组件的计算属性
+      this.selectionData[remarkTb] = newValue;
+    },
+    bindComboBoxToCell(sheet, row, col, dataSourceName) {
+      // 获取要绑定下拉菜单的单元格对象
+      let cell = sheet.getCell(row, col);
+
+      // 创建下拉菜单单元格类型，并设置其选项数据
+      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+      comboBox.editorValueType(
+        GC.Spread.Sheets.CellTypes.EditorValueType.value
+      );
+      comboBox.editable(true);
+      // 获取下拉菜单的选项数据
+
+      comboBox.items(dataSourceName);
+      comboBox.itemHeight(24);
+
+      // 将下拉菜单单元格类型绑定到指定的单元格中
+      cell.cellType(comboBox);
+    },
+
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
-
       let rem =
         document.documentElement.clientHeight -
         headHeight -

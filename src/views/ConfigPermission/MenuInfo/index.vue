@@ -277,14 +277,14 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetMenus,
+  GetMenus
 } from "@/api/Common";
 export default {
   name: "MenuInfo",
   components: {
     ComSearch,
     ComUmyTable,
-    ComVxeTable,
+    ComVxeTable
   },
   data() {
     return {
@@ -298,12 +298,12 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: [],
+          forms: []
         },
         {
           datas: {},
-          forms: [],
-        },
+          forms: []
+        }
       ],
       btnForm: [
         {
@@ -312,7 +312,7 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataTreeSave",
-          Icon: "",
+          Icon: ""
         },
         {
           BtnName: "删除",
@@ -321,8 +321,8 @@ export default {
           Size: "small",
           Methods: "dataDel",
           Icon: "",
-          Params: { dataName: "delData" },
-        },
+          Params: { dataName: "delData" }
+        }
       ],
       sysID: [{ ID: 1 }, { ID: 61 }],
       tableData: [[]],
@@ -332,7 +332,7 @@ export default {
       isClear: [false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
       ],
       selectionDefaultData: [[], []],
       selectionData: [[], []],
@@ -357,14 +357,14 @@ export default {
         keepAlive: false,
         ViewSort: 1,
         Ico: "",
-        Status: 1,
+        Status: 1
       },
       menuRules: {
         MenuName: [
-          { required: true, message: "请输入菜单名称", trigger: "blur" },
+          { required: true, message: "请输入菜单名称", trigger: "blur" }
         ],
         Url: [{ required: true, message: "请输入路由地址", trigger: "blur" }],
-        ViewSort: [{ required: true, message: "请输入排序", trigger: "blur" }],
+        ViewSort: [{ required: true, message: "请输入排序", trigger: "blur" }]
       },
       treeProps: { label: "MenuName", children: "children" },
       treeData: [],
@@ -372,11 +372,11 @@ export default {
       isOpen: false,
       btnProps: {
         children: "children",
-        label: "ButtonName",
+        label: "ButtonName"
       },
       isLoading: false,
       initialBtnData: [],
-      tagRremark: 1,
+      tagRremark: 1
     };
   },
   watch: {},
@@ -413,8 +413,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then((_) => {})
-        .catch((_) => {});
+        .then(_ => {})
+        .catch(_ => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -499,7 +499,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: "/redirect" + fullPath
           });
         });
       });
@@ -517,7 +517,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
         this.getAllMenu();
         this.dataSearch(remarkTb);
@@ -525,7 +525,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -533,7 +533,7 @@ export default {
     dataTreeSave(remarkTb, index, parms, newData) {
       if (this.tableData[remarkTb].length != 0) {
         let submitData = [];
-        this.tableData[remarkTb].forEach((x) => {
+        this.tableData[remarkTb].forEach(x => {
           if (x.update) {
             x["dicID"] = 1;
             submitData.push(x);
@@ -554,7 +554,7 @@ export default {
     // 递归获取子数据
     getChildrensData(row, submitData) {
       submitData.concat(row.children);
-      row.children.forEach((x) => {
+      row.children.forEach(x => {
         if (x.update) {
           x["dicID"] = 1;
           submitData.push(x);
@@ -573,7 +573,7 @@ export default {
           this.$message.error("请单击需要操作的数据！");
           return;
         } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
+          this[parms.dataName][remarkTb].forEach(x => {
             let obj = x;
             obj["ElementDeleteFlag"] = 1;
             obj["dicID"] = 1;
@@ -581,17 +581,17 @@ export default {
           });
         }
       } else {
-        this.tableData[remarkTb].forEach((y) => {
+        this.tableData[remarkTb].forEach(y => {
           let obj2 = y;
           obj2["ElementDeleteFlag"] = 1;
           newData.push(obj2);
         });
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then((_) => {
+        .then(_ => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => {});
+        .catch(_ => {});
     },
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
@@ -603,13 +603,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -626,14 +626,14 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach(n => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
             }
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+              n.childrens.forEach(x => {
                 this.verifyDta(x);
               });
             }
@@ -643,7 +643,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
+          x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -684,14 +684,14 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.selectionDefaultData[remarkTb] = this.tableData[remarkTb].filter(
-          (item) => item.isChecked == true
+          item => item.isChecked == true
         );
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -710,7 +710,7 @@ export default {
         keepAlive: true,
         ViewSort: 1,
         Ico: "",
-        Status: 1,
+        Status: 1
       };
     },
     // 点击新增菜单或按钮
@@ -750,7 +750,7 @@ export default {
               MenuCode: row.ParentCode,
               dicID: 1,
               IsEnable: 1,
-              rows: 0,
+              rows: 0
             });
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -759,7 +759,7 @@ export default {
               this.$message({
                 message: msg,
                 type: "error",
-                dangerouslyUseHTMLString: true,
+                dangerouslyUseHTMLString: true
               });
             }
           }
@@ -775,37 +775,38 @@ export default {
       if (this.Type == "按钮") {
         this.sureLoading = true;
         //将所选的数据和默认的数据做对比
-        this.selectionData[1] =
-          this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
+        this.selectionData[1] = this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
         let sendData = this.selectionDefaultData[1]
-          .map((item) => {
+          .map(item => {
             const findVal = this.selectionData[1].find(
-              (val) => val.ButtonID === item.ButtonID
+              val => val.ButtonID === item.ButtonID
             );
             if (findVal) {
               return item;
             } else {
               return {
                 ...item,
-                ElementDeleteFlag: 1,
+                ElementDeleteFlag: 1
               };
             }
           })
           .concat(
-            this.selectionData[1].filter(
-              (item) =>
-                !this.selectionDefaultData[1].some(
-                  (val) => val.ButtonID === item.ButtonID
-                )
-            )
+            this.selectionData[1]
+              .filter(
+                item =>
+                  !this.selectionDefaultData[1].some(
+                    val => val.ButtonID === item.ButtonID
+                  )
+              )
+              .map(item => ({ ...item, Status: 1 }))
           );
         this.dataSave(1, "", "", sendData);
         this.sureLoading = false;
       } else {
-        this.$refs.menuForm.validate((valid) => {
+        this.$refs.menuForm.validate(valid => {
           if (valid) {
             this.sureLoading = true;
-            this.returnResultData([this.menuForm]).then((res) => {
+            this.returnResultData([this.menuForm]).then(res => {
               const { result, msg } = res.data;
               if (result) {
                 this.dataSearch(0);
@@ -814,13 +815,13 @@ export default {
                 this.$message({
                   message: msg,
                   type: "success",
-                  dangerouslyUseHTMLString: true,
+                  dangerouslyUseHTMLString: true
                 });
               } else {
                 this.$message({
                   message: msg,
                   type: "error",
-                  dangerouslyUseHTMLString: true,
+                  dangerouslyUseHTMLString: true
                 });
               }
               this.sureLoading = false;
@@ -866,7 +867,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -876,7 +877,7 @@ export default {
         dicID: 1,
         MenuCode: null,
         MenuName: "",
-        IsEnable: 1,
+        IsEnable: 1
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -886,7 +887,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -900,7 +901,7 @@ export default {
       if (!val) {
         this.menuForm.ParentCode = null;
       }
-    },
-  },
+    }
+  }
 };
 </script>
