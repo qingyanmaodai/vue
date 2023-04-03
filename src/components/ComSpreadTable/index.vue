@@ -125,6 +125,9 @@ export default {
     }
   },
   watch: {
+    multipleSelection(newValue) {
+      this.$emit("selectChanged", newValue, this.remark);
+    },
     tableColumns: {
       handler(newValue, oldValue) {
         console.log(newValue, "tableColumns");
