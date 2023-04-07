@@ -42,15 +42,15 @@
                 >
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
+                <!-- <el-button
                   type="primary"
                   size="mini"
                   v-show="labelStatus1 != 4"
                   @click="MOPlanStep1CalculationPre(0)"
                 >
                   预排运算
-                </el-button>
-                <!-- <el-button
+                </el-button> -->
+                <el-button
                   v-show="labelStatus1 == 1"
                   type="warning"
                   size="mini"
@@ -58,7 +58,7 @@
                 >
                   进入分线列表
                 </el-button>
-                <el-button
+                <!--   <el-button
                   v-show="labelStatus1 == 1"
                   type="warning"
                   size="mini"
