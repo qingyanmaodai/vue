@@ -118,6 +118,26 @@
           <div class="itemCard">
             <div class="echartHead">
               <div class="echartTitle">库存耗用分析</div>
+              <el-button-group>
+                <el-button
+                  :class="{
+                    select: selected1Index === 0
+                  }"
+                  size="small"
+                  @click="handleConsumeBtnClick(0)"
+                >
+                  预计消耗
+                </el-button>
+                <el-button
+                  :class="{
+                    select: selected1Index === 1
+                  }"
+                  size="small"
+                  @click="handleConsumeBtnClick(1)"
+                >
+                  预计超额
+                </el-button>
+              </el-button-group>
             </div>
             <div class="echartBody" ref="chart2"></div>
           </div>
@@ -132,6 +152,26 @@
           <div class="itemCard">
             <div class="echartHead">
               <div class="echartTitle">数据统计</div>
+              <el-button-group>
+                <el-button
+                  :class="{
+                    select: selected2Index === 0
+                  }"
+                  size="small"
+                  @click="handleDayBtnClick(0)"
+                >
+                  今日
+                </el-button>
+                <el-button
+                  :class="{
+                    select: selected2Index === 1
+                  }"
+                  size="small"
+                  @click="handleDayBtnClick(1)"
+                >
+                  昨日
+                </el-button>
+              </el-button-group>
             </div>
             <div class="echartBody" ref="chart4"></div>
           </div>
@@ -320,7 +360,9 @@ export default {
       chartData2: [[], []],
       chart: [],
       chartOptions: [],
-      handleWindowResizeDebounced: null
+      handleWindowResizeDebounced: null,
+      selected1Index: 0,
+      selected2Index: 0
     };
   },
   watch: {},
@@ -343,8 +385,8 @@ export default {
     this.chart = [
       this.$refs.chart1,
       this.$refs.chart2,
-      this.$refs.chart3
-      // this.$refs.chart4
+      this.$refs.chart3,
+      this.$refs.chart4
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -369,6 +411,9 @@ export default {
       }
       this.chartOptions = [
         {
+          textStyle: {
+            fontSize: fontSize(14)
+          },
           tooltip: {
             trigger: "axis",
             formatter: function(params, ticket, callback) {
@@ -381,7 +426,7 @@ export default {
                     params[i].seriesName +
                     " : " +
                     (params[i].value ? params[i].value : "-") +
-                    "h";
+                    "%";
                 } else {
                   res +=
                     "<br/>" +
@@ -398,7 +443,7 @@ export default {
             containLabel: true
           },
           legend: {
-            data: ["个数", "库存金额", "在途金额"]
+            data: ["库存金额", "在途金额"]
           },
           xAxis: [
             {
@@ -415,7 +460,19 @@ export default {
                 "9月5日",
                 "9月6日",
                 "9月7日"
-              ]
+              ],
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#CCCCCC"
+                }
+              },
+              axisLabel: {
+                textStyle: {
+                  color: "#666666", // 设置文字颜色为灰色
+                  fontSize: fontSize(14)
+                }
+              }
             }
           ],
           dataZoom: [
@@ -427,22 +484,8 @@ export default {
               end: 100
             },
             {
-              type: "slider",
-              yAxisIndex: 0,
-              filterMode: "empty",
-              start: 0,
-              end: 100
-            },
-            {
               type: "inside",
               xAxisIndex: 0,
-              filterMode: "empty",
-              start: 0,
-              end: 100
-            },
-            {
-              type: "inside",
-              yAxisIndex: 0,
               filterMode: "empty",
               start: 0,
               end: 100
@@ -452,22 +495,73 @@ export default {
             {
               type: "value",
               name: "个数",
-              min: 0,
               position: "left",
+              nameTextStyle: {
+                align: "right",
+                color: "#666",
+                fontWeight: "bold",
+                fontSize: fontSize(14)
+              },
               axisLabel: {
-                formatter: "{value}"
+                formatter: "{value}",
+                textStyle: {
+                  color: "#666666", // 设置文字颜色为灰色
+                  fontSize: fontSize(14)
+                }
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#CCCCCC"
+                }
               },
               axisTick: {
                 show: false
+              },
+              splitLine: {
+                show: false,
+                lineStyle: {
+                  color: ["#CCCCCC"]
+                }
               }
             },
             {
               type: "value",
-              name: "个数",
-              min: 0,
+              name: "增长率",
               position: "right",
+              min: function(value) {
+                return value.min * 2;
+              },
+              max: function(value) {
+                return value.max * 2;
+              },
+              nameTextStyle: {
+                align: "right",
+                color: "#666",
+                fontWeight: "bold",
+                fontSize: fontSize(14)
+              },
               axisLabel: {
-                formatter: "{value} 个"
+                formatter: "{value}%",
+                textStyle: {
+                  color: "#666666", // 设置文字颜色为灰色
+                  fontSize: fontSize(14)
+                }
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#CCCCCC"
+                }
+              },
+              axisTick: {
+                show: false
+              },
+              splitLine: {
+                show: false,
+                lineStyle: {
+                  color: ["#CCCCCC"]
+                }
               }
             }
           ],
@@ -475,58 +569,69 @@ export default {
             {
               name: "库存金额",
               type: "line",
+              yAxisIndex: 1,
               label: {
                 normal: {
                   show: true,
-                  position: "top"
+                  position: "top",
+                  color: "#666",
+                  formatter: function(params) {
+                    return params.data.toFixed() + "%";
+                  }
                 }
               },
               lineStyle: {
                 normal: {
-                  width: 3,
-                  shadowColor: "#5964FE",
-                  shadowBlur: 10,
-                  shadowOffsetY: 10
+                  // width: 3,
+                  shadowColor: "#5964FE"
+                  // shadowBlur: 10,
+                  // shadowOffsetY: 10
                 }
               },
               itemStyle: {
                 color: "#5964FE"
               },
-              data: [1200, 900, 950, 750, 1000, 900, 600]
+              data: [0, -25.0, 5.56, -21.05, 33.33, -10.0, -33.33]
             },
             {
               name: "在途金额",
               type: "line",
+              yAxisIndex: 1,
+
               label: {
                 normal: {
                   show: true,
-                  position: "top"
+                  position: "top",
+                  color: "#666",
+                  formatter: function(params) {
+                    return params.data.toFixed() + "%";
+                  }
                 }
               },
               lineStyle: {
                 normal: {
-                  width: 3,
-                  shadowColor: "#33CB90",
-                  shadowBlur: 10,
-                  shadowOffsetY: 10
+                  // width: 3,
+                  shadowColor: "#33CB90"
+                  // shadowBlur: 10,
+                  // shadowOffsetY: 10
                 }
               },
               itemStyle: {
                 color: "#33CB90"
               },
-              data: [2100, 1600, 900, 800, 1900, 1100, 700]
+              data: [0, -23.81, -43.75, -11.11, 137.5, -42.11, -36.36]
             },
             {
               name: "库存金额",
               type: "bar",
-              yAxisIndex: 1,
+              yAxisIndex: 0,
               label: {
                 normal: {
                   show: true,
                   position: "top"
                 }
               },
-              barWidth: "20%",
+              barWidth: fontSize(20),
               data: [1200, 900, 950, 750, 1000, 900, 600],
               itemStyle: {
                 color: "#5964FE"
@@ -535,14 +640,14 @@ export default {
             {
               name: "在途金额",
               type: "bar",
-              yAxisIndex: 1,
+              yAxisIndex: 0,
               label: {
                 normal: {
                   show: true,
                   position: "top"
                 }
               },
-              barWidth: "20%",
+              barWidth: fontSize(20),
               data: [2100, 1600, 900, 800, 1900, 1100, 700],
               itemStyle: {
                 color: "#33CB90"
@@ -551,6 +656,10 @@ export default {
           ]
         },
         {
+          tooltip: {
+            trigger: "item",
+            formatter: "{a} <br/>{b}: {c}"
+          },
           textStyle: {
             fontSize: fontSize(14)
           },
@@ -919,6 +1028,46 @@ export default {
               }
             }
           ]
+        },
+        {
+          tooltip: {
+            trigger: "item",
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          legend: {
+            orient: "horizontal",
+            top: 0,
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            align: "left",
+            itemGap: fontSize(100),
+            data: ["异常超订金额", "正常超订金额"],
+            textStyle: {
+              color: "#999999",
+              fontSize: fontSize(14)
+            }
+          },
+          series: [
+            {
+              name: "数据统计",
+              type: "pie",
+              hoverAnimation: false,
+              legendHoverLink: false,
+              radius: ["40%", "55%"],
+              color: ["#6866F8", "#FE4E4E"],
+              label: {
+                normal: {
+                  fontSize: fontSize(20),
+                  // position: "inner",
+                  formatter: "{c}"
+                }
+              },
+              data: [
+                { value: 1244, name: "异常超订金额" },
+                { value: 254, name: "正常超订金额" }
+              ]
+            }
+          ]
         }
       ];
       this.chart.map((item, index) => {
@@ -933,6 +1082,42 @@ export default {
     },
     handleWindowResize() {
       this.getEcharts();
+    },
+    handleConsumeBtnClick(index) {
+      if (
+        (index === 0 && this.selected1Index === 0) ||
+        (index === 1 && this.selected1Index === 1)
+      ) {
+        // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
+        return;
+      } else {
+        this.selected1Index = index;
+        if (index === 0) {
+          // 调用第一个方法
+          // your code here
+        } else {
+          // 调用第二个方法
+          // your code here
+        }
+      }
+    },
+    handleDayBtnClick(index) {
+      if (
+        (index === 0 && this.selected2Index === 0) ||
+        (index === 1 && this.selected2Index === 1)
+      ) {
+        // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
+        return;
+      } else {
+        this.selected2Index = index;
+        if (index === 0) {
+          // 调用第一个方法
+          // your code here
+        } else {
+          // 调用第二个方法
+          // your code here
+        }
+      }
     },
     // 高度控制
     setHeight() {
@@ -1357,20 +1542,36 @@ export default {
     justify-content: space-between;
     align-items: center;
     .echartTitle {
+      padding-left: 10px;
+      position: relative;
       font-weight: 400;
       font-size: 20px;
       color: #333333;
       font-weight: bold;
     }
-    ::before {
-      content: ""; /* 伪元素的内容为空 */
-      display: inline-block; /* 将伪元素设置为行内块元素 */
-      width: 4px;
-      height: 20px;
-      background: #8598ff;
-      border-radius: 2px;
-      margin-right: 10px;
+    .el-button {
+      border-radius: 6px !important;
     }
+    .select,
+    .el-button:focus,
+    .el-button:hover {
+      color: #fff;
+      border-color: #5c67fd;
+      background-color: #5c67fd;
+    }
+  }
+  .echartTitle::before {
+    content: ""; /* 伪元素的内容为空 */
+    position: absolute; /* 将伪元素设置为绝对定位 */
+    top: 50%;
+    left: 0; /* 将伪元素向左偏移 50% */
+    transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
+    display: inline-block; /* 将伪元素设置为行内块元素 */
+    width: 4px;
+    height: 20px;
+    background: #8598ff;
+    border-radius: 2px;
+    margin-right: 10px;
   }
   .echartBody {
     // height: 480px;
