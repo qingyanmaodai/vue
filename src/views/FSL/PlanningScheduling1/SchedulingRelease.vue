@@ -229,7 +229,11 @@ import {
   GetOrgData
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
-import { MOPlanStep1, MOPlanStep1Calculation } from "@/api/wjApi";
+import {
+  MOPlanStep1,
+  MOPlanStep1Calculation,
+  FSLMOPlanStep1
+} from "@/api/wjApi";
 
 import {
   SaveMOPlanStep4,
@@ -1387,7 +1391,8 @@ export default {
         m["MOSchedulingType"] = 3;
       });
       this.adminLoading = true;
-      let res = await MOPlanStep1(submitData);
+      // let res = await MOPlanStep1(submitData);
+      let res = await FSLMOPlanStep1(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (index == 1) {
