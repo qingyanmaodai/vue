@@ -702,7 +702,7 @@ export default {
             cellIndex,
             GC.Spread.Sheets.SheetArea.viewport
           );
-          //cell.foreColor("#2a06ecd9");
+          cell.foreColor("#2a06ecd9");
         } else {
           var cell = sheet.getCell(
             -1,
@@ -714,7 +714,7 @@ export default {
 
         cellIndex++;
       });
-      //  sheet.options.isProtected = true;
+      sheet.options.isProtected = true;
       sheet.options.protectionOptions.allowResizeColumns = true;
       sheet.options.protectionOptions.allowInsertRows = true;
       sheet.options.protectionOptions.allowDeleteRows = true;
