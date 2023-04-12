@@ -76,6 +76,7 @@
           </el-row>
         </div>
         <ComSpreadTable
+          ref="spreadsheetRef"
           :height="height"
           :tableData="tableData[0]"
           :tableColumns="tableColumns[0]"
@@ -99,13 +100,6 @@ let rand = Math.random();
 import ComSearch from "@/components/ComSearch";
 import ComSpreadTable from "@/components/ComSpreadTable";
 import ComFormDialog from "@/components/ComFormDialog";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
-const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
 import {
   GetHeader,
   GetSearchData,
@@ -132,13 +126,13 @@ export default {
           forms: []
         }
       ],
+      headHeight: 0,
       btnForm: [],
       tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
-      height: "707px",
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -196,6 +190,17 @@ export default {
       deep: true
     }
   },
+  computed: {
+    height() {
+      let rem =
+        document.documentElement.clientHeight -
+        this.headHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + "px";
+      return newHeight;
+    }
+  },
+
   created() {
     _this = this;
     let routeBtn = this.$route;
@@ -226,6 +231,7 @@ export default {
       this.$set(this.tableColumns, 0, newData.tableColumns);
       this.$nextTick(() => {
         this.$set(this.tableData, 0, newData.tableData);
+        this.$refs.spreadsheetRef.shouldRender = true;
       });
     } else {
       this.adminLoading = true;
@@ -233,184 +239,14 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 450);
+    // setTimeout(() => {
+    this.setHeight();
+    // }, 450);
   },
   methods: {
     //获取子组件实例
     workbookInitialized: function(workbook) {
       this.spread = workbook;
-    },
-    async setData() {
-      try {
-        this.spread.suspendPaint();
-        // 获取活动表单
-        let sheet = this.spread.getActiveSheet();
-        // 重置表单
-        sheet.reset();
-        // 渲染列
-        // let colInfos = [];
-        // let cellIndex = 0;
-        this.tableColumns[this.tagRemark].forEach((x, y) => {
-          if (
-            x.ControlType === "comboboxMultiple" ||
-            x.ControlType === "combobox"
-          ) {
-            // colInfos.push({
-            //   name: x.prop,
-            //   displayName: x.label,
-            //   cellType: "",
-            //   size: parseInt(x.width)
-            // });
-            let newData = [];
-            // let list = null;
-            this.tableData[this.tagRemark].map((item, index) => {
-              if (x.DataSourceID && x.DataSourceName) {
-                newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-                this.bindComboBoxToCell(sheet, index, y, newData);
-              }
-            });
-          } else if (
-            x.DataType == "datetime" ||
-            x.DataType === "varchar" ||
-            x.DataType === "nvarchar"
-          ) {
-            x.formatter = "@";
-            // colInfos.push({
-            //   name: x.prop,
-            //   displayName: x.label,
-            //   size: parseInt(x.width),
-            //   formatter: "@" //字符串格式
-            // });
-          } else {
-            // colInfos.push({
-            //   name: x.prop,
-            //   displayName: x.label,
-            //   size: parseInt(x.width)
-            // });
-          }
-
-          //行，start,end
-          if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
-            // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            // let cell = sheet.getCell(
-            //   -1,
-            //   cellIndex,
-            //   GC.Spread.Sheets.SheetArea.viewport
-            // );
-            // cell.foreColor("#2a06ecd9");
-          }
-          // cellIndex++;
-        });
-        // 列筛选
-        // 参数2 开始列
-        // 参数3
-        // 参数4 结束列
-        let cellrange = new GC.Spread.Sheets.Range(
-          -1,
-          -1,
-          -1,
-          this.tableColumns[this.tagRemark].length
-        );
-        let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange
-        );
-        sheet.rowFilter(hideRowFilter);
-        if (
-          this.tableColumns[this.tagRemark].length &&
-          this.tableColumns[this.tagRemark][0].prop === "isChecked"
-        ) {
-          // 选框
-          sheet.setCellType(
-            0,
-            0,
-            new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
-          );
-
-          let checkbox = {
-            prop: "isChecked",
-            label: "选择",
-            CellTypes: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60
-          };
-          for (var name in checkbox) {
-            this.tableColumns[this.tagRemark][0][name] = checkbox[name];
-          }
-        }
-
-        // 设置整个列头的背景色和前景色。
-        /**
-         * 参数1:表示行
-         * 参数2:列，-1表示
-         * 参数3:
-         * 参数4:
-         * 参数5:
-         */
-        let colHeaderStyle = sheet.getRange(
-          0,
-          -1,
-          1,
-          -1,
-          GC.Spread.Sheets.SheetArea.colHeader
-        );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
-        colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
-        );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-
-        //设置数据渲染的单元格默认的样式
-        var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        sheet.setDefaultStyle(
-          defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        defaultStyle.showEllipsis = true;
-
-        // 冻结
-        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
-        //渲染数据源
-        sheet.setDataSource(this.tableData[this.tagRemark]);
-        //渲染列
-        // sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
-        this.spread.options.tabStripVisible = false; //是否显示表单标签
-        // 设置行颜色，最终判断有错误整行底色红色
-        this.tableData[this.tagRemark].forEach((row, index) => {
-          if (row["Result"] && row["Result"] != "正确") {
-            sheet.getCell(index, -1).backColor("red");
-          }
-        });
-        this.spread.resumePaint();
-        sheet.options.isProtected = true;
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowSelectLockedCells = true;
-        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-        sheet.options.protectionOptions.allowDeleteColumns = true;
-        sheet.options.protectionOptions.allowInsertColumns = true;
-        sheet.options.protectionOptions.allowDargInsertRows = true;
-        sheet.options.protectionOptions.allowDragInsertColumns = true;
-        sheet.options.protectionOptions.allowSort = true;
-        sheet.options.protectionOptions.allowFilter = true;
-        sheet.options.allowUserDragDrop = true;
-      } catch (error) {
-        console.log("表格渲染的错误信息:", error);
-      }
-      this.spread.refresh(); //重新定位宽高度
-      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
@@ -438,13 +274,13 @@ export default {
 
     // 高度控制
     setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      this.headHeight = this.$refs.headRef.offsetHeight;
+      // let rem =
+      //   document.documentElement.clientHeight -
+      //   headHeight -
+      //   this.$store.getters.reduceHeight;
+      // let newHeight = rem + "px";
+      // this.$set(this, "height", newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -585,6 +421,7 @@ export default {
           });
 
           this.$set(this.tableColumns, i, m);
+          // 在此处获取表头和数据，然后设置 shouldRenderHeaders 为 true
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -627,8 +464,9 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
+        this.$refs.spreadsheetRef.shouldRender = true;
+
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        this.setData();
       } else {
         this.$message({
           message: msg,
