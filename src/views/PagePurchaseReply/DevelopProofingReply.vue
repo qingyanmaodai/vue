@@ -82,7 +82,7 @@
                 @pageChange="pageChange"
                 @pageSize="pageSize"
                 @selectfun="selectFun"
-                @toPage="usingSearch"
+                @toPage="toPage"
                 @sortChange="sortChange"
                 :keepSource="true"
               />
@@ -91,6 +91,27 @@
         </div>
       </el-main>
     </el-container>
+    <el-dialog title="复期变更记录" :visible.sync="orderDialog" width="70%">
+      <div class="container" style="background-color: #f0f2f5;">
+        <div class="admin_content">
+          复期变更记录
+          <ComReportTable
+            :rowKey="'RowNumber'"
+            :height="height1"
+            :tableData="tableData[1]"
+            :tableHeader="tableColumns[1]"
+            :tableLoading="tableLoading[1]"
+            :remark="1"
+            :sysID="sysID[1].ID"
+            :isClear="isClear[1]"
+            :pagination="tablePagination[1]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+          />
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -121,7 +142,9 @@ export default {
   },
   data() {
     return {
+      height1: "500px",
       dialogShow: false,
+      orderDialog: false,
       EditDisabled: false,
       height1: "360px",
       labelStatus1: 1,
@@ -246,7 +269,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 9023 }],
+      sysID: [{ ID: 9023 }, { ID: 9028 }],
       userInfo: {},
       IsPurchaseBoss: false,
       footerLabel: [""],
@@ -695,12 +718,16 @@ export default {
       }
       this.dataSearch(0);
     },
-    // 可用量查询
-    usingSearch(row, prop) {
-      // this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      // this.formSearchs[1].datas["Remark1"] = "送货";
-      // this.dataSearch(1);
-      // this.dialogShow = true;
+    // 弹窗查询
+    toPage(row, prop) {
+      console.log(row, prop);
+      if (prop == "ChangeDetials" && row["ChangeDetials"] > 0) {
+        this.formSearchs[1].datas["ProofingID"] = row.ProofingID;
+        this.dataSearch(1);
+        this.orderDialog = true;
+      } else if (prop == "ChangeDetials" && row["ChangeDetials"] <= 0) {
+        this.$message.warning("请查看大于0的交期变更记录");
+      }
     },
     // 同步采购员
     async refreshPOTraker() {
