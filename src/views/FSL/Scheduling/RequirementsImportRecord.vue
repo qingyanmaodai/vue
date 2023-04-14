@@ -10,7 +10,7 @@
         :isLoading="tableLoading[tagRemark]"
         :btnForm="btnForm"
         @btnClick="btnClick"
-        :defaultShow="false"
+        :defaultShow="true"
         :signName="labelStatus"
       />
     </div>
@@ -40,38 +40,20 @@
             </el-col>
           </el-row>
         </div>
-        <div class="flex_column" :style="{ height: height }">
-          <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread"
-            >
-              <gc-worksheet></gc-worksheet>
-            </gc-spread-sheets>
-          </div>
-        </div>
-        <div class="flex_row_spaceBtn">
-          <div>
-            <span
-              @click="toPageSetting(sysID[tagRemark].ID)"
-              class="primaryColor cursor"
-              >SysID:{{ sysID[tagRemark].ID }}
-            </span>
-          </div>
-          <div class="flex">
-            <el-pagination
-              background
-              @size-change="val => pageSize(val, 0)"
-              :current-page="tablePagination[tagRemark].pageIndex"
-              :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
-              :page-size="tablePagination[tagRemark].pageSize"
-              :total="tablePagination[tagRemark].pageTotal"
-              @current-change="val => pageChange(val, 0)"
-              layout="total, sizes, prev, pager, next,jumper"
-            >
-            </el-pagination>
-          </div>
-        </div>
+        <ComSpreadTable
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[0]"
+          :tableColumns="tableColumns[0]"
+          :tableLoading="tableLoading[0]"
+          :remark="0"
+          :sysID="sysID[0]['ID']"
+          :pagination="tablePagination[0]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
       </div>
     </div>
     <!-- 导入文件 -->
@@ -122,6 +104,7 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
+import ComSpreadTable from "@/components/ComSpreadTable";
 import {
   GetHeader,
   GetSearchData,
@@ -135,10 +118,12 @@ import XLSX from "xlsx";
 export default {
   name: "RequirementsImportRecord",
   components: {
-    ComSearch
+    ComSearch,
+    ComSpreadTable
   },
   data() {
     return {
+      headHeight: 0,
       selectedOption: [1],
       dialogSearchForm: {},
       colDialogVisible: false,
@@ -146,7 +131,6 @@ export default {
       dialogImport: false,
       machineCycle: "",
       title: this.$route.meta.title, //表名
-      height: "740px",
       adminLoading: false, //加载状态
       labelStatus: 0,
       tagRemark: 0,
@@ -171,7 +155,7 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
       ],
-      sysID: [{ ID: 9036 }],
+      sysID: [{ ID: 10077 }],
       Status1: [
         { label: "重复导入", value: 0 },
         { label: "个人数据", value: 1 },
@@ -199,14 +183,31 @@ export default {
     _this.getTableHeader();
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 350);
+    this.setHeight();
+  },
+  computed: {
+    height() {
+      let rem =
+        document.documentElement.clientHeight -
+        this.headHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + "px";
+      return newHeight;
+    }
   },
   methods: {
     //初始化SpreadJS
-    initSpread: function(spread) {
-      this.spread = spread;
+    // initSpread: function(spread) {
+    //   this.spread = spread;
+    // },
+    //获取子组件实例
+    workbookInitialized: function(workbook) {
+      this.spread = workbook;
+    },
+    //获取当前选中行的值
+    selectChanged(newValue, remarkTb) {
+      // 在子组件计算属性发生变化时，更新父组件的计算属性
+      this.selectionData[remarkTb] = newValue;
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -219,13 +220,13 @@ export default {
     },
     // 高度控制
     setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      this.headHeight = this.$refs.headRef.offsetHeight;
+      // let rem =
+      //   document.documentElement.clientHeight -
+      //   headHeight -
+      //   this.$store.getters.reduceHeight;
+      // let newHeight = rem + "px";
+      // this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置
     toPageSetting(id) {
@@ -306,34 +307,35 @@ export default {
         // 重置表单
         sheet.reset();
         // 渲染列
-        let colInfos = [];
-        let cellIndex = 0;
-        this.tableColumns[this.tagRemark].forEach(x => {
-          if (
+        this.tableColumns[this.tagRemark].forEach((x, y) => {
+          x["name"] = x["prop"];
+          x["displayName"] = x["label"];
+          x["width"] = parseInt(x.width);
+          if (x.prop === "isChecked") {
+            // 选框
+            sheet.setCellType(
+              0,
+              0,
+              new HeaderCheckBoxCellType(),
+              GCsheets.SheetArea.colHeader
+            );
+            x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          } else if (
             x.ControlType === "comboboxMultiple" ||
             x.ControlType === "combobox"
           ) {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              cellType: "",
-              size: parseInt(x.width)
-            });
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   cellType: "",
+            //   size: parseInt(x.width)
+            // });
             let newData = [];
-            let list = null;
+            // let list = null;
             this.tableData[this.tagRemark].map((item, index) => {
               if (x.DataSourceID && x.DataSourceName) {
                 newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-                list = new GCsheets.CellTypes.ComboBox();
-                list.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value
-                );
-                list.editable(true);
-                list.items(newData);
-                list.itemHeight(24);
-                sheet
-                  .getCell(index, cellIndex, GCsheets.SheetArea.viewport)
-                  .cellType(list);
+                this.bindComboBoxToCell(sheet, index, y, newData);
               }
             });
           } else if (
@@ -341,62 +343,73 @@ export default {
             x.DataType === "varchar" ||
             x.DataType === "nvarchar"
           ) {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width),
-              formatter: "@" //字符串格式
-            });
-          } else {
-            colInfos.push({
-              name: x.prop,
-              displayName: x.label,
-              size: parseInt(x.width)
-            });
+            x.formatter = "@";
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   size: parseInt(x.width),
+            //   formatter: "@" //字符串格式
+            // });
           }
 
           //行，start,end
           if (x.isEdit) {
-            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport
-            );
-            cell.foreColor("#2a06ecd9");
+            sheet
+              .getCell(-1, y)
+              .locked(false)
+              .foreColor("#2a06ecd9");
+            // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            // let cell = sheet.getCell(
+            //   -1,
+            //   cellIndex,
+            //   GC.Spread.Sheets.SheetArea.viewport
+            // );
+            // cell.foreColor("#2a06ecd9");
           }
-
-          cellIndex++;
+          // cellIndex++;
         });
+        //改变字体颜色
+        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
+          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
+            const key = column.prop;
+
+            // 获取当前单元格
+            const cell = sheet.getCell(rowIndex, columnIndex);
+
+            // 获取颜色
+            if (row && row.colorMapping && row.colorMapping[key]) {
+              const color = row.colorMapping[key];
+              cell.style({
+                backColor: color,
+                foreColor: "#FFFFFF"
+              });
+              // 其他代码
+            }
+            // const color = row.colorMapping[key];
+
+            // 如果该属性有颜色信息，则设置单元格样式
+            // if (color) {
+            //   // const style = new GC.Spread.Sheets.Style();
+            //   cell.backColor(color);
+            //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
+            // }
+          });
+        });
+
         // 列筛选
         // 参数2 开始列
         // 参数3
         // 参数4 结束列
-        var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-
-        var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+        let cellrange = new GC.Spread.Sheets.Range(
+          -1,
+          -1,
+          -1,
+          this.tableColumns[this.tagRemark].length
+        );
+        let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
           cellrange
         );
         sheet.rowFilter(hideRowFilter);
-        if (colInfos.length && colInfos[0].name === "isChecked") {
-          // 选框
-          sheet.setCellType(
-            0,
-            0,
-            new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
-          );
-
-          let checkbox = {
-            name: "isChecked",
-            displayName: "选择",
-            cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-            size: 60
-          };
-          for (var name in checkbox) {
-            colInfos[0][name] = checkbox[name];
-          }
-        }
 
         // 设置整个列头的背景色和前景色。
         /**
@@ -432,20 +445,16 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
         defaultStyle.showEllipsis = true;
-
         // 冻结
-        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
-        sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
+        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false; //是否显示表单标签
-        // 设置行颜色，最终判断有错误整行底色红色
-        this.tableData[this.tagRemark].forEach((row, index) => {
-          if (row["Result"] && row["Result"] != "正确") {
-            sheet.getCell(index, -1).backColor("red");
-          }
-        });
+        this.spread.options.scrollbarMaxAlign = true;
+        // this.spread.options.scrollByPixel = true;
+
         this.spread.resumePaint();
         sheet.options.isProtected = true;
         sheet.options.protectionOptions.allowResizeColumns = true;
@@ -464,7 +473,6 @@ export default {
         console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
-      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
     // 单元格样式控制
     cellStyle({ row, column }) {
