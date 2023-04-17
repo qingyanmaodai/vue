@@ -177,6 +177,7 @@ import {
   GetHeader,
   GetSearchData,
   ExportData,
+  GetSearch,
   SaveData,
   GetServerTime,
   GetOrgData,
@@ -557,7 +558,10 @@ export default {
           this.$message.error("有订单没有填写计划交期!");
           return;
         }
-        let res = await SaveData(this.selectionData[0]);
+        let res = await GetSearch(
+          this.selectionData[0],
+          "/APSAPI/OrderTaskDownload"
+        );
         const { datas, forms, result, msg } = res.data;
         if (result) {
           this.$message({
@@ -605,7 +609,10 @@ export default {
         this.selectionData[0][0]["PlanDeliveryDate"] = this.PlanDeliveryDate
           ? this.PlanDeliveryDate
           : this.selectionData[0][0]["PlanDeliveryDate"];
-        let res = await SaveData(this.selectionData[0]);
+        let res = await GetSearch(
+          this.selectionData[0],
+          "/APSAPI/OrderTaskDownload"
+        );
         const { datas, forms, result, msg } = res.data;
         if (result) {
           this.$message({
