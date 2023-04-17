@@ -33,6 +33,7 @@
               :remark="0"
               :btnForm="btnForm"
               @btnClick="btnClick"
+              :signName="labelStatus1"
             />
           </div>
           <div>
@@ -53,10 +54,14 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <div class="flex" v-if="selectionData[0].length === 1">
+                    <div
+                      class="flex"
+                      v-if="selectionData[0].length === 1 && labelStatus1 === 1"
+                    >
                       <div class="flex">
                         拆分数量：
                         <el-input
+                          type="number"
                           v-model="CurrentSendQty"
                           size="small"
                           style="flex: 1;"
@@ -66,7 +71,7 @@
                       <div class="flex">
                         交期:
                         <el-date-picker
-                          v-model="PlanDeliveryDate"
+                          v-model="selectionData[0][0]['DownDeilveryDate']"
                           type="date"
                           size="small"
                           value-format="yyyy-MM-dd"
@@ -185,7 +190,6 @@ import {
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 import { mapState } from "vuex";
-import { Level } from "chalk";
 export default {
   name: "ReleaseDocumentaryPlan",
   components: {
@@ -198,12 +202,11 @@ export default {
   data() {
     return {
       CurrentSendQty: "",
-      PlanDeliveryDate: "",
       footerLabel: [""],
       dialogShow: false,
       EditDisabled: false,
       height1: "360px",
-      labelStatus1: 0,
+      labelStatus1: 1,
       Status1: [
         { label: "未指定排产员", value: -1 },
         { label: "待下达计划", value: 0 },
@@ -225,7 +228,9 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            IsClose: 0
+          },
           forms: []
         },
         {
@@ -355,7 +360,7 @@ export default {
       let form = {
         dicID: 10090,
         Account: [this.userInfo.Account, null],
-        sort: "level"
+        sort: "Level"
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -598,17 +603,11 @@ export default {
           this.$message.error("该单据拆分数量不能大于未下达数量");
           return;
         }
-        if (
-          !this.selectionData[0][0]["PlanDeliveryDate"] &&
-          !this.PlanDeliveryDate
-        ) {
-          this.$message.error("请填写该单据的交期时间");
+        if (!this.selectionData[0][0]["PlanDeliveryDate"]) {
+          this.$message.error("请填写该单据的计划交期");
           return;
         }
         this.selectionData[0][0]["CurrentSendQty"] = this.CurrentSendQty;
-        this.selectionData[0][0]["PlanDeliveryDate"] = this.PlanDeliveryDate
-          ? this.PlanDeliveryDate
-          : this.selectionData[0][0]["PlanDeliveryDate"];
         let res = await GetSearch(
           this.selectionData[0],
           "/APSAPI/OrderTaskDownload"
@@ -620,7 +619,7 @@ export default {
             type: "success",
             dangerouslyUseHTMLString: true
           });
-          this.dataSearch(remarkTb);
+          this.dataSearch(0);
           this.$set(this, "adminLoading", false);
         } else {
           this.$message({
@@ -798,7 +797,11 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-      if (this.selectionData[remarkTb].length === 1) {
+      console.log(this.labelStatus1, "this.labelStatus1");
+      if (
+        this.selectionData[remarkTb].length === 1 &&
+        this.labelStatus1 === 1
+      ) {
         const {
           OrderNo,
           Code,
@@ -808,6 +811,11 @@ export default {
         } = this.selectionData[remarkTb][0];
         let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
         this.$set(this.footerLabel, 0, StringValue);
+        this.$set(
+          this.selectionData[remarkTb][0],
+          "DownDeilveryDate",
+          this.selectionData[remarkTb][0]["PlanDeliveryDate"]
+        );
       } else {
         this.$set(this.footerLabel, 0, "");
       }
