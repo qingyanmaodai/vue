@@ -84,7 +84,7 @@
       direction="rtl"
       :lock-scroll="false"
       :modal="false"
-      :size="'50%'"
+      :size="'40%'"
     >
       <div class="drawer_body">
         <el-form label-width="90px">

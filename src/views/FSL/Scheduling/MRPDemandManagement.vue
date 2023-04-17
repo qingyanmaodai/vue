@@ -10,7 +10,7 @@
         :isLoading="isLoading"
         :btnForm="btnForm"
         :signName="labelStatus"
-        :defaultShow="false"
+        :defaultShow="true"
         @btnClick="btnClick"
       />
     </div>
@@ -115,7 +115,7 @@ export default {
       },
       colDialogVisible: false,
       footerLabel: ["", ""],
-      sysID: [{ ID: 10070 }],
+      sysID: [{ ID: 9036 }],
       Status1: [
         { label: "待计算", value: 0 },
         { label: "已完成", value: 1 },
@@ -132,9 +132,7 @@ export default {
       height: "707px",
       formSearchs: [
         {
-          datas: {
-            IsPush: 0
-          },
+          datas: {},
           forms: []
         },
         {
@@ -177,6 +175,7 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
+    console.log(this.btnForm, "this.btnForm");
     this.$common.judgeBtn(this, this.btnForm);
   },
   activated() {
@@ -658,8 +657,53 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus = index;
-      this.formSearchs[0].datas["IsPush"] = item.value;
+      this.formSearchs[0].datas["MRPStatus"] = item.label;
       this.dataSearch(0);
+    },
+    //需求导入
+    async MRPToPlan() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData && newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
+      }
+      if (this.selectionData[this.tagRemark].length == 0) {
+        this.$message.error("请选择需要转入的数据！");
+        return;
+      }
+      this.adminLoading = true;
+      let res = await GetSearch(
+        this.selectionData[this.tagRemark],
+        "/APSAPI/MRPToPlan"
+      );
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
     },
     // 保存
     async dataSave() {

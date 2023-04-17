@@ -116,7 +116,7 @@ import { HeaderCheckBoxCellType } from "@/static/data.js";
 import formatDates from "@/utils/formatDate";
 import XLSX from "xlsx";
 export default {
-  name: "DemandSourceMaintenance",
+  name: "RequirementsImportRecord",
   components: {
     ComSearch,
     ComSpreadTable
@@ -154,7 +154,7 @@ export default {
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
       ],
-      sysID: [{ ID: 10076 }],
+      sysID: [{ ID: 10081 }],
       Status1: [
         { label: "重复导入", value: 0 },
         { label: "个人数据", value: 1 },
@@ -164,8 +164,7 @@ export default {
       fileList: [],
       file: [],
       selectionData: [[]],
-      ImportParams: "",
-      isEdit: true
+      ImportParams: ""
     };
   },
   activated() {
@@ -179,7 +178,8 @@ export default {
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
-    this.getTableHeader();
+    // _this.judgeBtn();
+    _this.getTableHeader();
   },
   mounted() {
     this.setHeight();
@@ -219,7 +219,13 @@ export default {
     },
     // 高度控制
     setHeight() {
-      this.headHeight = this.$refs.headRef.getBoundingClientRect().height;
+      this.headHeight = this.$refs.headRef.offsetHeight;
+      // let rem =
+      //   document.documentElement.clientHeight -
+      //   headHeight -
+      //   this.$store.getters.reduceHeight;
+      // let newHeight = rem + "px";
+      // this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置
     toPageSetting(id) {
@@ -299,21 +305,6 @@ export default {
         let sheet = this.spread.getActiveSheet();
         // 重置表单
         sheet.reset();
-        this.tableData[this.tagRemark].map((item, index) => {
-          if (index <= 1000) {
-            item.colorMapping = {
-              Remark1: "#0000FF", // 蓝色
-              Dept: "#FF0000", // 红色
-              Code: "#008000" // 绿色
-            };
-          } else {
-            item.colorMapping = {
-              Remark1: "#008000", // 绿色
-              Dept: "#0000FF", // 蓝色
-              Code: "#FF0000" // 红色
-            };
-          }
-        });
         // 渲染列
         this.tableColumns[this.tagRemark].forEach((x, y) => {
           x["name"] = x["prop"];
@@ -376,10 +367,6 @@ export default {
           }
           // cellIndex++;
         });
-        //渲染数据源
-        sheet.setDataSource(this.tableData[this.tagRemark]);
-        //渲染列
-        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
         this.tableData[this.tagRemark].forEach((row, rowIndex) => {
           this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
@@ -387,16 +374,27 @@ export default {
 
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-            // const cell = sheet.getCell(-1, columnIndex);
 
             // 获取颜色
             if (row && row.colorMapping && row.colorMapping[key]) {
               const color = row.colorMapping[key];
-              cell.backColor(color);
-              cell.foreColor("#ffffff"); // 假设背景色为 color 的单元格的字体颜色为白色
+              cell.style({
+                backColor: color,
+                foreColor: "#FFFFFF"
+              });
+              // 其他代码
             }
+            // const color = row.colorMapping[key];
+
+            // 如果该属性有颜色信息，则设置单元格样式
+            // if (color) {
+            //   // const style = new GC.Spread.Sheets.Style();
+            //   cell.backColor(color);
+            //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
+            // }
           });
         });
+
         // 列筛选
         // 参数2 开始列
         // 参数3
@@ -448,7 +446,10 @@ export default {
         defaultStyle.showEllipsis = true;
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
-
+        //渲染数据源
+        sheet.setDataSource(this.tableData[this.tagRemark]);
+        //渲染列
+        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         this.spread.options.scrollbarMaxAlign = true;
         // this.spread.options.scrollByPixel = true;
@@ -490,6 +491,20 @@ export default {
       // 将下拉菜单单元格类型绑定到指定的单元格中
       cell.cellType(comboBox);
     },
+    // 单元格样式控制
+    cellStyle({ row, column }) {
+      //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
+      if (row["DBResult"] && row["DBResult"] == "错误") {
+        if (
+          column.property === "Remark1" ||
+          column.property === "AvailableQty"
+        ) {
+          return {
+            color: "red"
+          };
+        }
+      }
+    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -497,6 +512,20 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
+    //关闭
+    closeDown(remarkTb) {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      if (newData && newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            x.Status = 0;
+          }
+        });
+      }
+      sheet.setDataSource(newData);
+      this.dataSave(remarkTb);
     },
     // 重置
     dataReset(remarkTb) {
@@ -510,6 +539,41 @@ export default {
               }
             });
           }
+        }
+      }
+    },
+    //需求导入
+    async MRPReturn() {
+      if (this.selectionData[this.tagRemark].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.adminLoading = true;
+      let res = await GetSearch(
+        this.selectionData[this.tagRemark],
+        "/APSAPI/MRPReturn"
+      );
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
         }
       }
     },
@@ -532,24 +596,24 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
-    // // 改变状态
-    // changeStatus() {
-    //   console.log(this.selectedOption, "selectedOption");
-    //   this.formSearchs[0]["datas"]["Status"] = this.selectedOption.includes(0)
-    //     ? 0
-    //     : null;
-    //   this.formSearchs[0]["datas"]["CreatedBy"] = this.selectedOption.includes(
-    //     1
-    //   )
-    //     ? this.$store.getters.userInfo.Account
-    //     : null;
-    //   this.formSearchs[0]["datas"]["IsClose"] = this.selectedOption.includes(2)
-    //     ? "是"
-    //     : "否";
-    //   console.log("item", this.formSearchs[0]["datas"]);
-    //   // this.labelStatus = index;
-    //   this.dataSearch(0);
-    // },
+    // 改变状态
+    changeStatus() {
+      console.log(this.selectedOption, "selectedOption");
+      this.formSearchs[0]["datas"]["Status"] = this.selectedOption.includes(0)
+        ? 0
+        : null;
+      this.formSearchs[0]["datas"]["CreatedBy"] = this.selectedOption.includes(
+        1
+      )
+        ? this.$store.getters.userInfo.Account
+        : null;
+      this.formSearchs[0]["datas"]["IsClose"] = this.selectedOption.includes(2)
+        ? "是"
+        : "否";
+      console.log("item", this.formSearchs[0]["datas"]);
+      // this.labelStatus = index;
+      this.dataSearch(0);
+    },
     // 保存
     async dataSave(remarkTb) {
       let newData = sheet.getDirtyRows(); //获取修改过的数据
@@ -587,7 +651,7 @@ export default {
       this.dialogImport = true;
       this.fileList = [];
       this.file = [];
-      // this.ImportParams = params.isDel;
+      this.ImportParams = params.isDel;
     },
     // 确认导入
     sureImport() {
@@ -725,7 +789,6 @@ export default {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
-            obj["Status"] = 0;
             // 需要使用...obj 不然值回写有问题
             DataList.push({ ...obj });
           }
@@ -781,7 +844,7 @@ export default {
         // =0表示不删除（增量导入）
         if (DataList.length) {
           console.log("DataList", DataList);
-          let res = await GetSearch(DataList, "/APSAPI/MRPImport");
+          let res = await GetSearch(DataList, "/APSAPI/ImportPlanOrderOA");
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
@@ -882,70 +945,20 @@ export default {
         }
       }
     },
-    //需求检查
-    async MRPCheckData() {
-      this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/MRPCheckData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData && newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            x.ElementDeleteFlag = 1; //删除标识
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
       }
     },
-    //需求导入
-    async MRPToOfficial() {
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[this.tagRemark],
-        "/APSAPI/MRPToOfficial"
-      );
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-
     //删除
     dataDel() {
       this.getSelectionData();

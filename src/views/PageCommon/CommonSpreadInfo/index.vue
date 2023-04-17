@@ -133,10 +133,8 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      isSelect: false,
       ID: 0,
       newTag: -1,
       selectionData: [[], [], [], []]
@@ -162,10 +160,6 @@ export default {
         sessionStorage.setItem(
           "dicIDData" + this.ID,
           JSON.stringify(dicIDData)
-        );
-        sessionStorage.setItem(
-          "isSelect" + this.ID,
-          JSON.stringify(this.isSelect)
         );
         sessionStorage.removeItem("dicIDStatus" + this.ID);
       } else {
@@ -209,7 +203,6 @@ export default {
     this.$common.judgeBtn(this, this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
     if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-      this.isSelect = JSON.parse(sessionStorage.getItem("isSelect" + this.ID));
       let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
       if (tmp) {
         this.$set(this.formSearchs[0], "datas", tmp.dicData);
@@ -406,7 +399,7 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           m.some((n, j) => {
-            this.isSelect = n.IsSelect;
+            // this.isSelect = n.IsSelect;
             if (n.prop == "Operation" || n.label == "操作") {
               this.newTag = j;
               return true;

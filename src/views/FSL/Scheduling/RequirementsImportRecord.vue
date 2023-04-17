@@ -140,7 +140,6 @@ export default {
         //不同标签页面的查询条件
         {
           datas: {
-            IsClose: "否",
             CreatedBy: this.$store.getters.userInfo.Account
           }, //查询入参
           forms: [], // 页面显示的查询条件
@@ -473,6 +472,24 @@ export default {
         console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
+    },
+    bindComboBoxToCell(sheet, row, col, dataSourceName) {
+      // 获取要绑定下拉菜单的单元格对象
+      let cell = sheet.getCell(row, col);
+
+      // 创建下拉菜单单元格类型，并设置其选项数据
+      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+      comboBox.editorValueType(
+        GC.Spread.Sheets.CellTypes.EditorValueType.value
+      );
+      comboBox.editable(true);
+      // 获取下拉菜单的选项数据
+
+      comboBox.items(dataSourceName);
+      comboBox.itemHeight(24);
+
+      // 将下拉菜单单元格类型绑定到指定的单元格中
+      cell.cellType(comboBox);
     },
     // 单元格样式控制
     cellStyle({ row, column }) {
