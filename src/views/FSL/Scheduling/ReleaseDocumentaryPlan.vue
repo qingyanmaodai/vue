@@ -204,17 +204,11 @@ export default {
       height1: "360px",
       labelStatus1: 0,
       Status1: [
-        // { label: "全部", value: "" },
-        // { label: "待复期", value: 0 },
-        // { label: "复期超时", value: 5 },
-        // { label: "三天内即将到期", value: 4 },
-        // { label: "已复期", value: [1, 2, 3, 4, 5] },
-        // { label: "复期异常", value: 2 },
-        // { label: "复期变更", value: 3 },
-        { label: "全部", value: "" },
-        { label: "未复期", value: 1 },
-        { label: "复期不满足", value: 2 },
-        { label: "逾期未交", value: 3 }
+        { label: "未指定排产员", value: -1 },
+        { label: "待下达计划", value: 0 },
+        { label: "生产任务单", value: "" },
+        { label: "生产计划追踪", value: 3 },
+        { label: "完成下达清单", value: "" }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -238,17 +232,6 @@ export default {
           forms: []
         }
       ],
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          Methods: "allSave",
-          Icon: ""
-        }
-      ],
       selectionData: [[], []],
       btnForm: [],
       tableData: [[], []],
@@ -270,7 +253,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 9053 }, { ID: 6751 }],
+      sysID: [{ ID: 9053 }, { ID: 10089 }],
       userInfo: {},
       IsPurchaseBoss: false,
       isBoss: false
@@ -291,25 +274,6 @@ export default {
     }, 500);
   },
   methods: {
-    // 获取查询到的所有欠料数
-    async getTotalOweNum() {
-      let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
-      // form["fields"] = "isnull(sum(OweQty),0) as OweQty";
-      form["rows"] = 0;
-      let res = await GetSearchData(form);
-      const { result, data, msg } = res.data;
-      // if (result) {
-      //   let StringValue =
-      //     "当前查询结果【欠料合计：" + `${data[0].OweQty}` + "】";
-      //   this.$set(this.footerLabel, 0, StringValue);
-      // } else {
-      //   this.$message({
-      //     message: msg,
-      //     type: "error",
-      //     dangerouslyUseHTMLString: true
-      //   });
-      // }
-    },
     searchTree(msg) {
       this.treeData = [];
       let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
@@ -384,39 +348,18 @@ export default {
       );
     },
     // 获取供应商数据
-    async getSupplierData(POTracker) {
+    async getDeptData() {
       this.treeData = [];
       this.treeListTmp = [];
       let form = {
         dicID: 10090,
-        // this.userInfo.Account
-        Account: [208242, null],
+        Account: [this.userInfo.Account, null],
         sort: "level"
       };
-      // let num = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         let newTree = [];
-        // if (data.length != 0) {
-        //   data.forEach(a => {
-        //     num += parseInt(a.SumCount);
-        //     let sum = 0;
-        //     if (a.SupplierName == "众诺") {
-        //     }
-        //     data.forEach(b => {
-        //       if (b.SupplierName == a.SupplierName) {
-        //         sum += b.SumCount;
-        //       }
-        //     });
-        //     a["DeptCount"] = a.Dept + "(" + sum + ")";
-        //     let newIndex = -1;
-        //     newIndex = newTree.findIndex(c => c.SupplierName == a.SupplierName);
-        //     if (newIndex == -1) {
-        //       newTree.push(a);
-        //     }
-        //   });
-        // }
         if (data.length != 0) {
           let supplierMap = new Map();
           data.forEach(a => {
@@ -453,54 +396,6 @@ export default {
           dangerouslyUseHTMLString: true
         });
       }
-    },
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter(y => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-        });
-      }
-      // 采购员或者采购主管
-      let newIndex = this.userInfo.RoleMap.findIndex(
-        a => a.RoleID == "R2106240003" || a.RoleID == "R2106240002"
-      );
-
-      if (newIndex != -1) {
-        /// 只有是采购员角色才可以编辑
-        this.$set(this, "btnForm", newBtn);
-        this.$set(this, "isEdit", permission);
-      }
-      let newIndex2 = this.userInfo.RoleMap.findIndex(
-        a => a.RoleID == "R2106240002"
-      );
-      if (newIndex2 != -1) {
-        this.IsPurchaseBoss = true;
-      }
-
-      // 超级采购
-      let newIndex3 = this.userInfo.RoleMap.findIndex(
-        a => a.RoleID == "R2201110001"
-      );
-      if (newIndex3 != -1) {
-        this.$set(this, "btnForm", newBtn);
-        this.$set(this, "isEdit", permission);
-        this.isBoss = true;
-      } else {
-        this.isBoss = false;
-      }
-      this.getTableHeader();
     },
     // 高度控制
     setHeight() {
@@ -589,39 +484,35 @@ export default {
       }
     },
     // 获取服务器时间
-    async getServerDate(remarkTb, index) {
-      let res = await GetServerTime();
-      const { result, data, msg } = res.data;
-      if (result) {
-        let submitData = [];
-        _this.tableData[0].forEach(x => {
-          let MaterialFormID = x.MaterialFormID.split(",");
-          MaterialFormID.forEach((b, i) => {
-            let obj = JSON.parse(JSON.stringify(x));
-            obj["MaterialFormID"] = b;
-            if (!obj.ReplyDate && !obj.SecondReplyDate) {
-              obj.IsReplyStatus = 0;
-            } else {
-              obj.IsReplyStatus = 1;
-            }
-            // 判断如果是第一次填复期，写进日期 ，如果是第一次填二次复期，写进日期
-            if (obj.tag_1 == 1 && obj.ReplyDate) {
-              obj.FirstReplyDate = data;
-            }
-            if (obj.tag_2 == 1 && obj.SecondReplyDate) {
-              obj.LastReplyDate = data;
-            }
-            submitData.push(obj);
-          });
-        });
-        _this.generalSaveData(submitData, 0);
-      } else {
-      }
-    },
-    // 整表保存
-    allSave(remarkTb, index) {
-      this.getServerDate(remarkTb, index);
-    },
+    // async getServerDate(remarkTb, index) {
+    //   let res = await GetServerTime();
+    //   const { result, data, msg } = res.data;
+    //   if (result) {
+    //     let submitData = [];
+    //     _this.tableData[0].forEach(x => {
+    //       let MaterialFormID = x.MaterialFormID.split(",");
+    //       MaterialFormID.forEach((b, i) => {
+    //         let obj = JSON.parse(JSON.stringify(x));
+    //         obj["MaterialFormID"] = b;
+    //         if (!obj.ReplyDate && !obj.SecondReplyDate) {
+    //           obj.IsReplyStatus = 0;
+    //         } else {
+    //           obj.IsReplyStatus = 1;
+    //         }
+    //         // 判断如果是第一次填复期，写进日期 ，如果是第一次填二次复期，写进日期
+    //         if (obj.tag_1 == 1 && obj.ReplyDate) {
+    //           obj.FirstReplyDate = data;
+    //         }
+    //         if (obj.tag_2 == 1 && obj.SecondReplyDate) {
+    //           obj.LastReplyDate = data;
+    //         }
+    //         submitData.push(obj);
+    //       });
+    //     });
+    //     _this.generalSaveData(submitData, 0);
+    //   } else {
+    //   }
+    // },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       let res = null;
@@ -657,12 +548,13 @@ export default {
         return;
       } else {
         if (
-          !this.selectionData[0].every(obj =>
-            obj.hasOwnProperty("PlanDeliveryDate")
+          !this.selectionData[0].every(
+            obj =>
+              obj.hasOwnProperty("PlanDeliveryDate") && obj.PlanDeliveryDate
           )
         ) {
           // 显示错误消息
-          this.$message.error("每个对象都必须包含 PlanDeliveryDate 属性");
+          this.$message.error("有订单没有填写计划交期!");
           return;
         }
         let res = await SaveData(this.selectionData[0]);
@@ -685,25 +577,34 @@ export default {
         }
       }
     },
-    // 批量复期
+    // 拆分下达
     async changeDate(val) {
       if (this.selectionData[0].length !== 1) {
         this.$message.error("请选择需要提交的单条数据！");
         return;
       }
       if (val == 0) {
+        if (!this.CurrentSendQty) {
+          this.$message.error("请填写拆分数量");
+          return;
+        }
         if (
           Number(this.selectionData[0][0]["UnSentQty"]) < this.CurrentSendQty
         ) {
           this.$message.error("该单据拆分数量不能大于未下达数量");
           return;
         }
-        if (!this.selectionData[0][0]["PlanDeliveryDate"]) {
+        if (
+          !this.selectionData[0][0]["PlanDeliveryDate"] &&
+          !this.PlanDeliveryDate
+        ) {
           this.$message.error("请填写该单据的交期时间");
           return;
         }
         this.selectionData[0][0]["CurrentSendQty"] = this.CurrentSendQty;
-        this.selectionData[0][0]["PlanDeliveryDate"] = this.PlanDeliveryDate;
+        this.selectionData[0][0]["PlanDeliveryDate"] = this.PlanDeliveryDate
+          ? this.PlanDeliveryDate
+          : this.selectionData[0][0]["PlanDeliveryDate"];
         let res = await SaveData(this.selectionData[0]);
         const { datas, forms, result, msg } = res.data;
         if (result) {
@@ -724,64 +625,59 @@ export default {
         }
       }
     },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
     // 删除
-    async dataDel(remarkTb, index, parms) {
-      let res = null;
-      let newData = [];
-      if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-        } else {
-          this[parms.dataName][remarkTb].forEach(x => {
-            let obj = x;
-            obj["ElementDeleteFlag"] = 1;
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach(y => {
-          let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
-          newData.push(obj2);
-        });
-      }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
-          _this.generalSaveData(newData, remarkTb, index);
-        })
-        .catch(_ => {});
-    },
+    // async dataDel(remarkTb, index, parms) {
+    //   let res = null;
+    //   let newData = [];
+    //   if (parms && parms.dataName) {
+    //     if (this[parms.dataName][remarkTb].length == 0) {
+    //       this.$message.error("请单击需要操作的数据！");
+    //     } else {
+    //       this[parms.dataName][remarkTb].forEach(x => {
+    //         let obj = x;
+    //         obj["ElementDeleteFlag"] = 1;
+    //         newData.push(obj);
+    //       });
+    //     }
+    //   } else {
+    //     this.tableData[remarkTb].forEach(y => {
+    //       let obj2 = y;
+    //       obj2["ElementDeleteFlag"] = 1;
+    //       newData.push(obj2);
+    //     });
+    //   }
+    //   this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+    //     .then(_ => {
+    //       _this.generalSaveData(newData, remarkTb, index);
+    //     })
+    //     .catch(_ => {});
+    // },
     // 通用直接保存
-    async generalSaveData(newData, remarkTb, index) {
-      if (newData.length == 0) {
-        this.$message.error("没有提交保存的数据！");
-        return;
-      }
-      this.adminLoading = true;
-      let res = await SaveData(newData);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.dataSearch(remarkTb);
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
+    // async generalSaveData(newData, remarkTb, index) {
+    //   if (newData.length == 0) {
+    //     this.$message.error("没有提交保存的数据！");
+    //     return;
+    //   }
+    //   this.adminLoading = true;
+    //   let res = await SaveData(newData);
+    //   const { result, data, count, msg } = res.data;
+    //   if (result) {
+    //     this.dataSearch(remarkTb);
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "success",
+    //       dangerouslyUseHTMLString: true
+    //     });
+    //   } else {
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "error",
+    //       dangerouslyUseHTMLString: true
+    //     });
+    //   }
+    // },
     // 获取表头数据
     async getTableHeader() {
       let IDs = this.sysID;
@@ -813,21 +709,8 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.getTotalOweNum();
-        // if (this.isBoss) {
-        //   this.getSupplierData("");
-        //   return;
-        // }
-        // if (this.IsPurchaseBoss) {
-        //   this.formSearchs[0].datas["POTracker"] = "无采购员";
-        //   this.getSupplierData("无采购员");
-        // } else if (this.isEdit) {
-        //   this.formSearchs[0].datas["POTracker"] = this.userInfo.Name;
-        //   this.getSupplierData(this.userInfo.Name);
-        // } else {
-        this.formSearchs[0].datas["Account"] = [208242, null];
-        this.getSupplierData("");
-        // }
+        this.formSearchs[0].datas["Account"] = [this.userInfo.Account, null];
+        this.getDeptData();
       }
     },
     // 验证数据
@@ -850,7 +733,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.getTotalOweNum();
         if (data.length != 0) {
           data.forEach(x => {
             if (!x.IsReplyStatus) {
@@ -885,6 +767,11 @@ export default {
       this.clickData = data;
       this.$set(
         this.formSearchs[0].datas,
+        "Dept",
+        data.Dept == "全部" ? "" : data.Dept
+      );
+      this.$set(
+        this.formSearchs[1].datas,
         "Dept",
         data.Dept == "全部" ? "" : data.Dept
       );
@@ -1023,13 +910,13 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      // this.formSearchs[0].datas["Remark6"] = x.label+"，";
-      this.formSearchs[0].datas["ReplyStatus"] = x.label;
-      if (x.label == "全部") {
-        // this.formSearchs[0].datas["Remark6"] = "";
-        this.formSearchs[0].datas["ReplyStatus"] = "";
+      this.formSearchs[0].datas["IsClose"] = x.value;
+      if (x.label === "未指定排产员") {
+      } else if (x.label === "生产任务单") {
+        this.dataSearch(1);
+      } else {
+        this.dataSearch(0);
       }
-      this.dataSearch(0);
     },
     // 可用量查询
     usingSearch(row, prop) {
@@ -1037,40 +924,6 @@ export default {
       // this.formSearchs[1].datas["Remark1"] = "送货";
       this.dataSearch(1);
       this.dialogShow = true;
-    },
-    // 同步采购员
-    async refreshPOTraker() {
-      this.adminLoading = true;
-      let res = await UpdateOrderBomPOTracker();
-      const { result, msg } = res.data;
-      if (result) {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true
-        });
-        if (this.isBoss) {
-          this.getSupplierData("");
-          return;
-        }
-        if (this.IsPurchaseBoss) {
-          this.formSearchs[0].datas["POTracker"] = "无采购员";
-          this.getSupplierData("无采购员");
-        } else if (this.isEdit) {
-          this.formSearchs[0].datas["POTracker"] = this.userInfo.Name;
-          this.getSupplierData(this.userInfo.Name);
-        } else {
-          this.getSupplierData("");
-        }
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
     }
   }
 };
