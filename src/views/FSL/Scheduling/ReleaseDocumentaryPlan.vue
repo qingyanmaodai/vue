@@ -911,8 +911,7 @@ export default {
     changeStatus(x, index) {
       this.labelStatus1 = index;
       this.formSearchs[0].datas["IsClose"] = x.value;
-      if (x.label === "未指定排产员") {
-      } else if (x.label === "生产任务单") {
+      if (x.label === "生产任务单") {
         this.dataSearch(1);
       } else {
         this.dataSearch(0);
