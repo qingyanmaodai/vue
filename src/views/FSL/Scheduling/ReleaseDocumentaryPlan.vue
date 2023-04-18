@@ -224,8 +224,8 @@ export default {
         { label: "未指定排产员", value: -1 },
         { label: "待下达计划", value: 0 },
         { label: "生产任务单", value: "" },
-        { label: "生产计划追踪", value: 1 },
-        { label: "完成下达清单", value: "" }
+        { label: "生产计划追踪", value: "" },
+        { label: "完成下达清单", value: 1 }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -243,7 +243,8 @@ export default {
         {
           datas: {
             IsClose: -1,
-            sort: "OrderDate"
+            sort: "OrderDate",
+            Account: ""
           },
           forms: []
         },
@@ -261,11 +262,13 @@ export default {
           forms: []
         },
         {
-          datas: { IsClose: 1, sort: "OrderDate" },
+          datas: {
+            sort: "OrderDate"
+          },
           forms: []
         },
         {
-          datas: {},
+          datas: { IsClose: 1, sort: "OrderDate" },
           forms: []
         }
       ],
@@ -279,7 +282,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
@@ -297,7 +300,7 @@ export default {
         { ID: 9053 },
         { ID: 9053 },
         { ID: 10089 },
-        { ID: 9053 },
+        { ID: 90531 },
         { ID: 9053 }
       ],
       userInfo: {}
@@ -747,6 +750,13 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          if (z !== 0) {
+            this.$set(
+              this.formSearchs[z].datas,
+              "Account",
+              this.userInfo.Account
+            );
+          }
           x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
