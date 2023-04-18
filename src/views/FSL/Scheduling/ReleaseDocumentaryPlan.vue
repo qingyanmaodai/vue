@@ -26,15 +26,22 @@
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :btnForm="btnForm"
-              @btnClick="btnClick"
-              :signName="labelStatus1"
-            />
+            <div
+              v-for="i in [0, 1, 2, 3, 4]"
+              :key="i"
+              v-show="labelStatus1 == i"
+            >
+              <ComSearch
+                ref="searchRef"
+                :searchData="formSearchs[i].datas"
+                :searchForm="formSearchs[i].forms"
+                :remark="i"
+                :isLoading="isLoading"
+                :btnForm="btnForm"
+                :signName="labelStatus1"
+                @btnClick="btnClick"
+              />
+            </div>
           </div>
           <div>
             <div class="admin_content">
@@ -56,7 +63,7 @@
                   <el-col :span="20" class="flex_flex_end">
                     <div
                       class="flex"
-                      v-if="selectionData[0].length === 1 && labelStatus1 === 1"
+                      v-if="selectionData[1].length === 1 && labelStatus1 === 1"
                     >
                       <div class="flex">
                         拆分数量：
@@ -71,7 +78,7 @@
                       <div class="flex">
                         交期:
                         <el-date-picker
-                          v-model="selectionData[0][0]['DownDeilveryDate']"
+                          v-model="selectionData[1][0]['DownDeilveryDate']"
                           type="date"
                           size="small"
                           value-format="yyyy-MM-dd"
@@ -120,27 +127,32 @@
                   </el-col>
                 </el-row>
               </div>
-              <ComVxeTable
-                :rowKey="'RowNumber'"
-                :height="height"
-                :tableData="tableData[0]"
-                :tableHeader="tableColumns[0]"
-                :tableLoading="tableLoading[0]"
-                :remark="0"
-                :sysID="sysID[0].ID"
-                :hasSelect="true"
-                :isEdit="isEdit"
-                :cellStyle="cellStyle"
-                :tableRowClassName="tableRowClassName"
-                :isClear="isClear[0]"
-                :pagination="tablePagination[0]"
-                @pageChange="pageChange"
-                @pageSize="pageSize"
-                :footerLabel="footerLabel[0]"
-                @selectfun="selectFun"
-                @toPage="usingSearch"
-                @sortChange="sortChange"
-              />
+              <div
+                v-for="item in [0, 1, 2, 3, 4]"
+                :key="item"
+                v-show="labelStatus1 == item"
+              >
+                <ComVxeTable
+                  :rowKey="'RowNumber'"
+                  :ref="`tableRef${item}`"
+                  :height="height"
+                  :tableData="tableData[item]"
+                  :tableHeader="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :isEdit="isEdit"
+                  :hasSelect="hasSelect[item]"
+                  :remark="item"
+                  :cellStyle="cellStyle"
+                  :sysID="sysID[item].ID"
+                  :isClear="isClear[item]"
+                  :footerLabel="footerLabel[item]"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @selectfun="selectFun"
+                  @sortChange="sortChange"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -189,7 +201,6 @@ import {
   UpdateOrderBomPOTracker
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
 export default {
   name: "ReleaseDocumentaryPlan",
   components: {
@@ -202,6 +213,8 @@ export default {
   data() {
     return {
       CurrentSendQty: "",
+      isLoading: false,
+      hasSelect: [true, true, true, true, true],
       footerLabel: [""],
       dialogShow: false,
       EditDisabled: false,
@@ -211,7 +224,7 @@ export default {
         { label: "未指定排产员", value: -1 },
         { label: "待下达计划", value: 0 },
         { label: "生产任务单", value: "" },
-        { label: "生产计划追踪", value: 3 },
+        { label: "生产计划追踪", value: 1 },
         { label: "完成下达清单", value: "" }
       ],
       //////////////左侧树节点//////////////
@@ -229,8 +242,26 @@ export default {
       formSearchs: [
         {
           datas: {
-            IsClose: 0
+            IsClose: -1,
+            sort: "OrderDate"
           },
+          forms: []
+        },
+        {
+          datas: {
+            IsClose: 0,
+            sort: "OrderDate"
+          },
+          forms: []
+        },
+        {
+          datas: {
+            sort: "OrderDate"
+          },
+          forms: []
+        },
+        {
+          datas: { IsClose: 1, sort: "OrderDate" },
           forms: []
         },
         {
@@ -238,15 +269,18 @@ export default {
           forms: []
         }
       ],
-      selectionData: [[], []],
+      selectionData: [[], [], [], [], []],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false, false],
-      isClear: [false, false],
+      tableData: [[], [], [], [], []],
+      tableColumns: [[], [], [], [], []],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 500, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 500, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
       treeHeight: "765px",
@@ -259,10 +293,14 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 9053 }, { ID: 10089 }],
-      userInfo: {},
-      IsPurchaseBoss: false,
-      isBoss: false
+      sysID: [
+        { ID: 9053 },
+        { ID: 9053 },
+        { ID: 10089 },
+        { ID: 9053 },
+        { ID: 9053 }
+      ],
+      userInfo: {}
     };
   },
   computed: {},
@@ -389,7 +427,10 @@ export default {
         //   SupplierNameCount: "全部" + "(" + num + ")",
         // });
         this.treeListTmp = this.treeData;
-        this.getTableData(this.formSearchs[0].datas, 0);
+        this.getTableData(
+          this.formSearchs[this.labelStatus1].datas,
+          this.labelStatus1
+        );
         if (data.length != 0) {
           this.$nextTick(function() {
             _this.$refs.asideTree.setCurrentKey(-1);
@@ -549,12 +590,12 @@ export default {
     // 全部下达
     async releaseOrders(remarkTb, index) {
       let submitData = [];
-      if (this.selectionData[0].length == 0) {
+      if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要提交的数据！");
         return;
       } else {
         if (
-          !this.selectionData[0].every(
+          !this.selectionData[remarkTb].every(
             obj =>
               obj.hasOwnProperty("PlanDeliveryDate") && obj.PlanDeliveryDate
           )
@@ -564,7 +605,7 @@ export default {
           return;
         }
         let res = await GetSearch(
-          this.selectionData[0],
+          this.selectionData[remarkTb],
           "/APSAPI/OrderTaskDownload"
         );
         const { datas, forms, result, msg } = res.data;
@@ -588,28 +629,28 @@ export default {
     },
     // 拆分下达
     async changeDate(val) {
-      if (this.selectionData[0].length !== 1) {
-        this.$message.error("请选择需要提交的单条数据！");
-        return;
-      }
       if (val == 0) {
+        if (this.selectionData[1].length !== 1) {
+          this.$message.error("请选择需要提交的单条数据！");
+          return;
+        }
         if (!this.CurrentSendQty) {
           this.$message.error("请填写拆分数量");
           return;
         }
         if (
-          Number(this.selectionData[0][0]["UnSentQty"]) < this.CurrentSendQty
+          Number(this.selectionData[1][0]["UnSentQty"]) < this.CurrentSendQty
         ) {
           this.$message.error("该单据拆分数量不能大于未下达数量");
           return;
         }
-        if (!this.selectionData[0][0]["PlanDeliveryDate"]) {
+        if (!this.selectionData[1][0]["PlanDeliveryDate"]) {
           this.$message.error("请填写该单据的计划交期");
           return;
         }
-        this.selectionData[0][0]["CurrentSendQty"] = this.CurrentSendQty;
+        this.selectionData[1][0]["CurrentSendQty"] = this.CurrentSendQty;
         let res = await GetSearch(
-          this.selectionData[0],
+          this.selectionData[1],
           "/APSAPI/OrderTaskDownload"
         );
         const { datas, forms, result, msg } = res.data;
@@ -619,7 +660,7 @@ export default {
             type: "success",
             dangerouslyUseHTMLString: true
           });
-          this.dataSearch(0);
+          this.dataSearch(1);
           this.$set(this, "adminLoading", false);
         } else {
           this.$message({
@@ -715,7 +756,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.formSearchs[0].datas["Account"] = [this.userInfo.Account, null];
+        // this.formSearchs[0].datas["Account"] = [this.userInfo.Account, null];
         this.getDeptData();
       }
     },
@@ -770,18 +811,12 @@ export default {
     },
     // 单击出来供应商人员
     handleNodeClick(data, node) {
-      this.clickData = data;
       this.$set(
-        this.formSearchs[0].datas,
+        this.formSearchs[this.labelStatus1].datas,
         "Dept",
         data.Dept == "全部" ? "" : data.Dept
       );
-      this.$set(
-        this.formSearchs[1].datas,
-        "Dept",
-        data.Dept == "全部" ? "" : data.Dept
-      );
-      this.dataSearch(0);
+      this.dataSearch(this.labelStatus1);
     },
     // 刷新页面
     refrshPage() {
@@ -797,7 +832,6 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-      console.log(this.labelStatus1, "this.labelStatus1");
       if (
         this.selectionData[remarkTb].length === 1 &&
         this.labelStatus1 === 1
@@ -810,14 +844,14 @@ export default {
           UnSentQty
         } = this.selectionData[remarkTb][0];
         let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
-        this.$set(this.footerLabel, 0, StringValue);
+        this.$set(this.footerLabel, 1, StringValue);
         this.$set(
           this.selectionData[remarkTb][0],
           "DownDeilveryDate",
           this.selectionData[remarkTb][0]["PlanDeliveryDate"]
         );
       } else {
-        this.$set(this.footerLabel, 0, "");
+        this.$set(this.footerLabel, remarkTb, "");
       }
     },
     tableRowClassName({ row, rowIndex }) {
@@ -923,22 +957,29 @@ export default {
       }
     },
     // 改变状态
-    changeStatus(x, index) {
+    changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsClose"] = x.value;
-      if (x.label === "生产任务单") {
-        this.dataSearch(1);
-      } else {
-        this.dataSearch(0);
+      if (this.tableData[index].length == 0) {
+        this.dataSearch(index);
       }
-    },
-    // 可用量查询
-    usingSearch(row, prop) {
-      this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      // this.formSearchs[1].datas["Remark1"] = "送货";
-      this.dataSearch(1);
-      this.dialogShow = true;
     }
+    // 改变状态
+    // changeStatus(x, index) {
+    //   this.labelStatus1 = index;
+    //   this.formSearchs[0].datas["IsClose"] = x.value;
+    //   if (x.label === "生产任务单") {
+    //     this.dataSearch(1);
+    //   } else {
+    //     this.dataSearch(0);
+    //   }
+    // },
+    // 可用量查询
+    // usingSearch(row, prop) {
+    //   this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
+    //   // this.formSearchs[1].datas["Remark1"] = "送货";
+    //   this.dataSearch(1);
+    //   this.dialogShow = true;
+    // }
   }
 };
 </script>
