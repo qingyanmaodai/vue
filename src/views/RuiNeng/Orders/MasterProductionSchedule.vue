@@ -147,7 +147,7 @@ export default {
       footerLabel: [""],
       dialogShow: false,
       height1: "360px",
-      labelStatus1: 1,
+      labelStatus1: 0,
       Status1: [
         { label: "分配数量", value: -1 },
         { label: "数量+时间+线体", value: 0 },
@@ -355,10 +355,10 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
+      console.log(remarkTb, "remarkTb");
       let res = null;
       this.adminLoading = true;
       if (remarkTb !== 3) {
-      } else {
         if (newData && newData.length != 0) {
           res = await GetSearch(newData, "/APSAPI/SaveData10075");
         } else {
@@ -367,6 +367,12 @@ export default {
             "/APSAPI/SaveData10075"
           );
         }
+      } else {
+         if (newData && newData.length != 0) {
+        res = await SaveData(newData);
+      } else {
+        res = await SaveData(this.tableData[remarkTb]);
+      }
       }
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -474,34 +480,34 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          if (i == 1) {
-            m.forEach(n => {
-              // 进行验证
-              this.verifyData(n);
-              if (n.childrens && n.children.length != 0) {
-                n.childrens.forEach(x => {
-                  this.verifyData(x);
-                });
-              }
-              if (n.label === '') {
-                
-              }
-            });
-          } else {
-            m.forEach(n => {
-              // 进行验证
-              this.verifyData(n);
-              if (n.childrens && n.children.length != 0) {
-                n.childrens.forEach(x => {
-                  this.verifyData(x);
-                });
-              }
-            });
-          }
-          this.$set(this.tableColumns, i, m);
-        });
+        // // 获取每个表头
+        // datas.some((m, i) => {
+        //   if (i == 1) {
+        //     m.forEach(n => {
+        //       // 进行验证
+        //       this.verifyData(n);
+        //       if (n.childrens && n.children.length != 0) {
+        //         n.childrens.forEach(x => {
+        //           this.verifyData(x);
+        //         });
+        //       }
+        //       if (n.label === '') {
+
+        //       }
+        //     });
+        //   } else {
+        //     m.forEach(n => {
+        //       // 进行验证
+        //       this.verifyData(n);
+        //       if (n.childrens && n.children.length != 0) {
+        //         n.childrens.forEach(x => {
+        //           this.verifyData(x);
+        //         });
+        //       }
+        //     });
+        //   }
+        //   this.$set(this.tableColumns, i, m);
+        // });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
@@ -521,6 +527,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
+        this.dataSearch(0);
       }
     },
     // 验证数据
@@ -541,8 +548,39 @@ export default {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      let { result, data, count, msg, Columns } = res.data;
       if (result) {
+        if (remarkTb === 0) {
+          Columns[0] = Columns[0].filter(
+            item =>
+              item["label"] !== "预计生产日期" &&
+              item["label"] !== "线体" &&
+              item["label"] !== "标准人员" &&
+              item["label"] !== "每托数量" &&
+              item["label"] !== "托板数"
+          );
+        } else if (remarkTb === 1) {
+          Columns[0] = Columns[0].filter(
+            item =>
+              item["label"] !== "标准人员" &&
+              item["label"] !== "每托数量" &&
+              item["label"] !== "托板数"
+          );
+        } else if (remarkTb === 2) {
+          Columns[0] = Columns[0].filter(item => item["label"] !== "标准人员");
+        }
+        Columns.some((m, i) => {
+          m.forEach(n => {
+            // 进行验证
+            this.verifyData(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach(x => {
+                this.verifyData(x);
+              });
+            }
+          });
+        });
+        this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {

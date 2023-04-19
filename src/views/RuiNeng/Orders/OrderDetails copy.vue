@@ -2,18 +2,18 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <!-- <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i"> -->
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="i"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        :signName="labelStatus1"
-        @btnClick="btnClick"
-      />
-      <!-- </div> -->
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="labelStatus1"
+          @btnClick="btnClick"
+        />
+      </div>
     </div>
     <div>
       <div class="admin_content">
@@ -414,6 +414,7 @@ export default {
   created() {
     _this = this;
     this.adminLoading = true;
+    this.getLine();
     this.getTableHeader();
     // 获取所有按钮
     this.judgeBtn();
@@ -1243,6 +1244,41 @@ export default {
             this.adminLoading = false;
           }
         }
+      }
+    },
+    // 选线获取剩余工时
+    setFooterLabel(val) {
+      let LineIDs = this.lines.filter(a =>
+        this.ruleForm.LineIDs.some(b => b == a.LineID)
+      );
+      let LineName = LineIDs.map(c => c.LineName).join(",");
+      //查询线别剩余工时
+      let StrValue = `提示：当前所选${LineName}线，在${this.ruleForm.ProducedDate}共有350个小时，已占用250小时，剩余100小时【已选4项，预计占用50小时，剩余50小时】`;
+      this.$set(this.footerLabel, 0, StrValue);
+    },
+    // 获取线别
+    async getLine() {
+      let form = {};
+      form["rows"] = 0;
+      form["dicID"] = 36;
+      form["Status"] = 1;
+      form["OrganizeTypeID"] = 6;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          data.forEach(a => {
+            a["LineID"] = a.OrganizeID;
+            a["LineName"] = a.OrganizeName;
+          });
+        }
+        this.lines = data;
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
       }
     },
     // 备料任务
