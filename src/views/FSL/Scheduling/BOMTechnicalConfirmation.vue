@@ -1,17 +1,13 @@
 <!--物料点检-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div
       ref="content_up"
-      :class="enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'"
+      :class="
+        enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'
+      "
     >
-      <div
-        class="admin_head_2"
-        ref="headRef"
-      >
+      <div class="admin_head_2" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -25,16 +21,12 @@
       </div>
       <div>
         <div class="admin_content">
-          <div
-            class="ant-table-title"
-            ref="headRef_2"
-          >
+          <div class="ant-table-title" ref="headRef_2">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
@@ -67,20 +59,13 @@
       </div>
     </div>
 
-    <div
-      ref="content_down"
-      class="list_content_down"
-    >
+    <div ref="content_down" class="list_content_down">
       <div>
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
               <!-- <el-col :span="1"><span class="title">物料明细</span></el-col> -->
-              <el-col
-                :span="24"
-                class="flex_flex_end"
-              >
-
+              <el-col :span="24" class="flex_flex_end">
                 <span>料号：</span>
                 <el-input
                   size="small"
@@ -117,10 +102,10 @@
                   @change="selectOrderNo"
                 >
                   <el-option
-                    v-for="(item,i) in OrderNos"
+                    v-for="(item, i) in OrderNos"
                     :key="i"
                     :label="item.OrderNo"
-                    :value="item.	OrderNo"
+                    :value="item.OrderNo"
                   ></el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
@@ -134,10 +119,10 @@
                   @change="selectWarehouse"
                 >
                   <el-option
-                    v-for="(item,i) in warehouses"
+                    v-for="(item, i) in warehouses"
                     :key="i"
                     :label="item.WarehouseName"
-                    :value="item.	WarehouseID"
+                    :value="item.WarehouseID"
                   ></el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
@@ -147,17 +132,13 @@
                   @click="clearShort"
                 >清空超领</el-button>
                 <el-divider direction="vertical"></el-divider> -->
-                <el-button
-                  type="success"
-                  size="small"
-                  @click="submitChildren"
-                >提交</el-button>
+                <el-button type="success" size="small" @click="submitChildren"
+                  >提交</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="warning"
-                  size="small"
-                  @click="dataExport(1)"
-                >导出</el-button>
+                <el-button type="warning" size="small" @click="dataExport(1)"
+                  >导出</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
                 <div
                   :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
@@ -215,15 +196,8 @@
       </div>
     </div>
 
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5;">
         <div class="admin_content">
           库存列表
           <ComReportTable
@@ -264,7 +238,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -278,14 +251,14 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetServerTime,
+  GetServerTime
 } from "@/api/Common";
 export default {
   name: "BOMTechnicalConfirmation",
   components: {
     ComSearch,
     ComVxeTable,
-    ComReportTable,
+    ComReportTable
   },
   data() {
     return {
@@ -303,20 +276,20 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: [],
+          forms: []
         },
         {
           datas: {},
-          forms: [],
+          forms: []
         },
         {
           datas: {},
-          forms: [],
+          forms: []
         },
         {
           datas: {},
-          forms: [],
-        },
+          forms: []
+        }
       ],
       parmsBtn: [],
       parmsBtn2: [
@@ -327,8 +300,8 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataSave",
-          Icon: "",
-        },
+          Icon: ""
+        }
       ],
       btnForm: [],
       btnForm2: [],
@@ -340,7 +313,7 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 }
       ],
       height: "707px",
       showPagination: true,
@@ -355,13 +328,13 @@ export default {
       Status1: [
         { label: "待确认", value: "未开始" },
         { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" },
+        { label: "全部", value: "" }
       ],
       Status2: [
         { label: "全部", value: 0 },
         { label: "未点检", value: 1 },
         { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 },
+        { label: "已领未点", value: 3 }
       ],
       labelStatus1: 0,
       labelStatus2: 0,
@@ -370,7 +343,7 @@ export default {
       enlargeType: true,
       rem: "",
       warehouses: [],
-      userInfo: {},
+      userInfo: {}
     };
   },
   watch: {},
@@ -380,8 +353,9 @@ export default {
     this.userInfo = this.$store.getters.userInfo;
     this.getTableHeader();
     // 获取所有按钮
-    this.judgeBtn();
-    this.getWarehosueData();
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
+    // this.getWarehosueData();
   },
   mounted() {
     setTimeout(() => {
@@ -390,51 +364,22 @@ export default {
   },
   methods: {
     // 获取所有仓库
-    async getWarehosueData() {
-      let form = {};
-      form["dicID"] = 80;
-      form["rows"] = 0;
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.warehouses = data;
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    //判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let newBtn2 = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          let newData2 = this.parmsBtn2.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-          if (newData2.length != 0) {
-            newBtn2 = newBtn2.concat(newData2);
-          }
-        });
-      }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "btnForm2", newBtn2);
-      this.$set(this, "isEdit", permission);
-    },
+    // async getWarehosueData() {
+    //   let form = {};
+    //   form["dicID"] = 80;
+    //   form["rows"] = 0;
+    //   let res = await GetSearchData(form);
+    //   const { result, data, count, msg } = res.data;
+    //   if (result) {
+    //     this.warehouses = data;
+    //   } else {
+    //     this.$message({
+    //       message: msg,
+    //       type: "error",
+    //       dangerouslyUseHTMLString: true
+    //     });
+    //   }
+    // },
     // 高度控制
     setHeight() {
       let headHeight =
@@ -528,11 +473,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach(n => {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+              n.childrens.forEach(x => {
                 this.verifyDta(x);
               });
             }
@@ -542,7 +487,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
+          x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -583,7 +528,7 @@ export default {
       if (result) {
         if (remarkTb == 1) {
           if (data.length != 0) {
-            data.forEach((a) => {
+            data.forEach(a => {
               this.$set(a, "update", false);
             });
           }
@@ -594,7 +539,7 @@ export default {
           let num2 = 0;
           let Rate = 0;
           if (data.length != 0) {
-            data.forEach((x) => {
+            data.forEach(x => {
               if (x.NoInspectStatusCount == 0) {
                 num2++;
               }
@@ -617,7 +562,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -628,7 +573,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: "/redirect" + fullPath
           });
         });
       });
@@ -671,7 +616,7 @@ export default {
       this.OrderNos = [];
       if (row.MOS) {
         let OrderNos = row.MOS.split(",");
-        OrderNos.forEach((x) => {
+        OrderNos.forEach(x => {
           this.OrderNos.push({ OrderNo: x });
         });
       }
@@ -693,7 +638,7 @@ export default {
         this.$confirm("确定清空选中的吗，会直接保存哟？")
           .then(() => {
             let newData = [];
-            _this.selectionData[1].forEach((x) => {
+            _this.selectionData[1].forEach(x => {
               x.ShortQty = null;
               if (parseInt(x.UnIssuedQty) == 0) {
                 x.InspectStatus = 1;
@@ -724,14 +669,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         });
       }
     },
@@ -759,7 +704,7 @@ export default {
       //   });
       // }
       if (this.selectionData[1].length != 0) {
-        this.selectionData[1].forEach((y) => {
+        this.selectionData[1].forEach(y => {
           // if (parseInt(y.UnIssuedQty) != 0) {
           //   y.InspectStatus = 2;
           //   y.PrepareType = "异常";
@@ -799,15 +744,15 @@ export default {
       if (column.property == "IsCompleteInspect") {
         if (row.IsCompleteInspect == "未开始") {
           return {
-            backgroundColor: "#ff7b7b",
+            backgroundColor: "#ff7b7b"
           };
         } else if (row.IsCompleteInspect == "进行中") {
           return {
-            backgroundColor: "#fdfd8f",
+            backgroundColor: "#fdfd8f"
           };
         } else if (row.IsCompleteInspect == "已完成") {
           return {
-            backgroundColor: "#9fff9f",
+            backgroundColor: "#9fff9f"
           };
         }
       }
@@ -817,12 +762,12 @@ export default {
       if (column.property == "OrderNo") {
         if (row.InspectStatus == 2) {
           return {
-            backgroundColor: "#ff7b7b",
+            backgroundColor: "#ff7b7b"
           };
         } else {
           if (row.InspectStatus == 1) {
             return {
-              backgroundColor: "#9fff9f",
+              backgroundColor: "#9fff9f"
             };
           }
         }
@@ -846,7 +791,7 @@ export default {
     selectOrderNo(val) {
       this.formSearchs[1].datas["OrderNo"] = val;
       this.dataSearch(1);
-    },
-  },
+    }
+  }
 };
 </script>

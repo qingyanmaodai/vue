@@ -800,6 +800,11 @@ export default {
               )
               .map(item => ({ ...item, Status: 1 }))
           );
+        if (sendData.length === 0) {
+          this.$message.error("请选择需要修改的按钮！");
+          this.sureLoading = false;
+          return;
+        }
         this.dataSave(1, "", "", sendData);
         this.sureLoading = false;
       } else {

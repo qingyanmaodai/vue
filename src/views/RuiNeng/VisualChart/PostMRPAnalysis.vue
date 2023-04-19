@@ -295,7 +295,7 @@ import {
   GetSearch
 } from "@/api/Common";
 export default {
-  name: "TestVue",
+  name: "PostMRPAnalysis",
   components: {
     ComSearch,
     ComVxeTable
