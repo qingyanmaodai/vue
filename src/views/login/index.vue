@@ -1,26 +1,18 @@
 <template>
-  <div
-    class="login-container"
-    v-loading="loading"
-  >
+  <div class="login-container" v-loading="loading">
     <div class="login_header">
-      <div class="logoIcon"></div>
-      <div class="barCode" :style="{'--base_url': `url(${base_url})`}"></div>
+      <!-- <div class="logoIcon"></div>
+      <div class="barCode" :style="{'--base_url': `url(${base_url})`}"></div> -->
+      <img class="logoIcon" src="../../assets/imgs/logo.png" alt="" />
+      <img class="barCode" :src="base_url" mode="heightFix" />
     </div>
     <div class="login_content flex">
       <div class="content"></div>
       <div class="content flex">
         <div class="card flex">
           <div class="fill">
-            <div
-              class="label"
-              @click="clickNum"
-            >账号登录</div>
-            <el-form
-              :model="loginForm"
-              :rules="loginRules"
-              ref="loginForm"
-            >
+            <div class="label" @click="clickNum">账号登录</div>
+            <el-form :model="loginForm" :rules="loginRules" ref="loginForm">
               <el-form-item prop="Account">
                 <div class="input">
                   <el-input
@@ -60,10 +52,7 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button
-                class="btn"
-                @click="login"
-              >登录</el-button>
+              <el-button class="btn" @click="login">登录</el-button>
             </div>
           </div>
         </div>
@@ -77,8 +66,8 @@
 </template>
 
 <script>
-import request from '@/utils/request'
-import store from '@/store'
+import request from "@/utils/request";
+import store from "@/store";
 export default {
   name: "Login",
   components: {},
@@ -87,29 +76,28 @@ export default {
       loginForm: {
         Account: "",
         Pwd: "",
-        URL: "",
+        URL: ""
       },
       loginRules: {
         Account: [{ required: true, trigger: "blur", message: "账号为必填项" }],
-        Pwd: [{ required: true, trigger: "blur", message: "密码为必填项" }],
+        Pwd: [{ required: true, trigger: "blur", message: "密码为必填项" }]
       },
       loading: false,
       redirect: undefined,
       clickSign: 0,
-      base_url:localStorage.getItem('apsurl')+'/images/logo.png',//动态获取服务器对应的logo
+      base_url: localStorage.getItem("apsurl") + "/images/logo.png" //动态获取服务器对应的logo
     };
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect;
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
-  created() { 
-console.log('base_url',this.base_url)
-    
+  created() {
+    console.log("base_url", this.base_url);
   },
   methods: {
     // 点击触发地址
@@ -121,27 +109,27 @@ console.log('base_url',this.base_url)
       }
     },
     login() {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              let indexNum = -1
-              indexNum = _.findIndex(store.getters.menus, function(o) { 
-                  if(o.ParentCode&&o.MenuName==='首页'){
-                      return o
-                  }
-              })
+              let indexNum = -1;
+              indexNum = _.findIndex(store.getters.menus, function(o) {
+                if (o.ParentCode && o.MenuName === "首页") {
+                  return o;
+                }
+              });
               // 登录成功后动态渲染首页，如果配置了首页渲染配置的，否则渲染路由文件的静态路由
-              if(indexNum>-1){
+              if (indexNum > -1) {
                 this.$router.push({ path: store.getters.menus[indexNum].Url });
-              }else{
+              } else {
                 this.$router.push({ path: "/" });
               }
               this.loading = false;
             })
-            .catch((error) => {
+            .catch(error => {
               this.$message.error(error.message);
               this.loading = false;
             });
@@ -149,8 +137,8 @@ console.log('base_url',this.base_url)
           return false;
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -163,17 +151,17 @@ console.log('base_url',this.base_url)
 }
 
 .logoIcon {
-  width: 126px;
+  // width: 126px;
   height: 82px;
-  background: url(../../assets/imgs/logo.png);
-  background-size: 100% 100%;
+  // background: url(../../assets/imgs/logo.png);
+  // background-size: 100% 100%;
 }
 .barCode {
-  width: 126px;
+  // width: 126px;
   height: 82px;
   // background: url(http://10.50.18.130/assets/icon/APP.jpg);
-  background: var(--base_url);
-  background-size: 100% 100%;
+  // background: var(--base_url);
+  // background-size: 100% 100%;
 }
 
 .login_content {
