@@ -6,7 +6,7 @@
         <div class="admin_left_2" style="height:100%;overflow:hidden">
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
-              <span class="tree_text">成品车间</span>
+              <span class="tree_text">供应商</span>
             </div>
             <el-tree
               class="tree-line"
@@ -26,11 +26,7 @@
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <div
-              v-for="i in [0, 1, 2, 3, 4]"
-              :key="i"
-              v-show="labelStatus1 == i"
-            >
+            <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -61,56 +57,27 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <div
-                      class="flex"
-                      v-if="selectionData[1].length === 1 && labelStatus1 === 1"
-                    >
-                      <div class="flex">
-                        拆分数量：
-                        <el-input
-                          type="number"
-                          v-model="CurrentSendQty"
-                          size="small"
-                          style="flex: 1;"
-                        ></el-input>
-                      </div>
-                      <el-divider direction="vertical"></el-divider>
-                      <div class="flex">
-                        交期:
-                        <el-date-picker
-                          v-model="selectionData[1][0]['DownDeilveryDate']"
-                          type="date"
-                          size="small"
-                          value-format="yyyy-MM-dd"
-                          style="flex: 1;"
-                        >
-                        </el-date-picker>
-                      </div>
-                      <el-divider direction="vertical"></el-divider>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="changeDate(0)"
+                    <el-divider direction="vertical"></el-divider>
+                    <div class="flex">
+                      复期:
+                      <el-date-picker
+                        v-model="Rescheduled"
+                        type="date"
+                        size="small"
+                        value-format="yyyy-MM-dd"
+                        style="flex: 1;"
+                        placeholder="请输入复期"
                       >
-                        拆分下达
-                      </el-button>
+                      </el-date-picker>
                     </div>
-                    <!-- <el-divider direction="vertical"></el-divider>
-                    <el-button
-                      type="warning"
-                      size="mini"
-                      @click="changeDate(1)"
-                    >
-                      批量二次回复日期
-                    </el-button>
                     <el-divider direction="vertical"></el-divider>
                     <el-button
-                      type="success "
+                      type="primary"
                       size="mini"
-                      @click="refreshPOTraker"
+                      @click="changeDate(0)"
                     >
-                      同步更新采购员
-                    </el-button> -->
+                      批量指定日期
+                    </el-button>
                     <el-divider direction="vertical"></el-divider>
                     <div
                       :class="
@@ -127,11 +94,7 @@
                   </el-col>
                 </el-row>
               </div>
-              <div
-                v-for="item in [0, 1, 2, 3, 4]"
-                :key="item"
-                v-show="labelStatus1 == item"
-              >
+              <div v-for="item in [0]" :key="item" v-show="true">
                 <ComVxeTable
                   :rowKey="'RowNumber'"
                   :ref="`tableRef${item}`"
@@ -202,7 +165,7 @@ import {
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "ReleaseDocumentaryPlan",
+  name: "PurchasingReplyDate",
   components: {
     ComSearch,
     ComAsideTree,
@@ -212,6 +175,7 @@ export default {
   },
   data() {
     return {
+      Rescheduled: "",
       CurrentSendQty: "",
       isLoading: false,
       hasSelect: [true, true, true, true, true],
@@ -219,19 +183,18 @@ export default {
       dialogShow: false,
       EditDisabled: false,
       height1: "360px",
-      labelStatus1: 1,
+      labelStatus1: 0,
       Status1: [
-        { label: "未指定排产员", value: -1 },
-        { label: "待下达计划", value: 0 },
-        { label: "生产任务单", value: "" },
-        { label: "生产计划追踪", value: "" },
-        { label: "完成下达清单", value: 1 }
+        { label: "全部", value: -1 },
+        { label: "未复期", value: 0 },
+        { label: "复期不满足", value: "" },
+        { label: "逾期未交", value: "" }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
       ReplyDate: "",
       treeProps: {
-        label: "DeptCount",
+        label: "SumCount",
         children: "children"
       },
       treeData: [],
@@ -241,34 +204,23 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {
-            IsClose: -1,
-            sort: "OrderDate",
-            Account: ""
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            IsClose: 0,
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: { IsClose: 1, sort: "OrderDate" },
+          datas: {},
           forms: []
         }
       ],
@@ -282,7 +234,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
@@ -297,7 +249,7 @@ export default {
       fileList: [],
       file: [],
       sysID: [
-        { ID: 9053 },
+        { ID: 10099 },
         { ID: 9053 },
         { ID: 10089 },
         { ID: 90531 },
@@ -395,12 +347,11 @@ export default {
       );
     },
     // 获取供应商数据
-    async getDeptData() {
+    async getSupplierData() {
       this.treeData = [];
       this.treeListTmp = [];
       let form = {
-        dicID: 10090,
-        Account: [this.userInfo.Account, null],
+        dicID: 10098,
         sort: "Level"
       };
       let res = await GetSearchData(form);
@@ -410,18 +361,20 @@ export default {
         if (data.length != 0) {
           let supplierMap = new Map();
           data.forEach(a => {
-            let currentSum = supplierMap.get(a.Dept) || 0;
+            let currentSum = supplierMap.get(a.SupplierName) || 0;
             currentSum += a.SumCount;
-            supplierMap.set(a.Dept, currentSum);
-            a["DeptCount"] = `${a.Dept}(${currentSum})`;
+            supplierMap.set(a.SupplierName, currentSum);
+            a["SumCount"] = `${a.SupplierName}(${currentSum})`;
           });
-          newTree = Array.from(supplierMap.entries()).map(([Dept, sum]) => {
-            const foundItem = data.find(a => a.Dept === Dept);
-            return {
-              ...foundItem,
-              DeptCount: `${foundItem.Dept}(${sum})`
-            };
-          });
+          newTree = Array.from(supplierMap.entries()).map(
+            ([SupplierName, sum]) => {
+              const foundItem = data.find(a => a.SupplierName === SupplierName);
+              return {
+                ...foundItem,
+                SumCount: `${foundItem.SupplierName}(${sum})`
+              };
+            }
+          );
         }
         this.treeData = JSON.parse(JSON.stringify(newTree));
         // this.treeData.unshift({
@@ -533,36 +486,6 @@ export default {
         }
       }
     },
-    // 获取服务器时间
-    // async getServerDate(remarkTb, index) {
-    //   let res = await GetServerTime();
-    //   const { result, data, msg } = res.data;
-    //   if (result) {
-    //     let submitData = [];
-    //     _this.tableData[0].forEach(x => {
-    //       let MaterialFormID = x.MaterialFormID.split(",");
-    //       MaterialFormID.forEach((b, i) => {
-    //         let obj = JSON.parse(JSON.stringify(x));
-    //         obj["MaterialFormID"] = b;
-    //         if (!obj.ReplyDate && !obj.SecondReplyDate) {
-    //           obj.IsReplyStatus = 0;
-    //         } else {
-    //           obj.IsReplyStatus = 1;
-    //         }
-    //         // 判断如果是第一次填复期，写进日期 ，如果是第一次填二次复期，写进日期
-    //         if (obj.tag_1 == 1 && obj.ReplyDate) {
-    //           obj.FirstReplyDate = data;
-    //         }
-    //         if (obj.tag_2 == 1 && obj.SecondReplyDate) {
-    //           obj.LastReplyDate = data;
-    //         }
-    //         submitData.push(obj);
-    //       });
-    //     });
-    //     _this.generalSaveData(submitData, 0);
-    //   } else {
-    //   }
-    // },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
@@ -638,51 +561,43 @@ export default {
         }
       }
     },
-    // 拆分下达
-    // async changeDate(val) {
-    //   if (val == 0) {
-    //     if (this.selectionData[1].length !== 1) {
-    //       this.$message.error("请选择需要提交的单条数据！");
-    //       return;
-    //     }
-    //     if (!this.CurrentSendQty) {
-    //       this.$message.error("请填写拆分数量");
-    //       return;
-    //     }
-    //     if (
-    //       Number(this.selectionData[1][0]["UnSentQty"]) < this.CurrentSendQty
-    //     ) {
-    //       this.$message.error("该单据拆分数量不能大于未下达数量");
-    //       return;
-    //     }
-    //     if (!this.selectionData[1][0]["PlanDeliveryDate"]) {
-    //       this.$message.error("请填写该单据的计划交期");
-    //       return;
-    //     }
-    //     this.selectionData[1][0]["CurrentSendQty"] = this.CurrentSendQty;
-    //     let res = await GetSearch(
-    //       this.selectionData[1],
-    //       "/APSAPI/OrderTaskDownload"
-    //     );
-    //     const { datas, forms, result, msg } = res.data;
-    //     if (result) {
-    //       this.$message({
-    //         message: msg,
-    //         type: "success",
-    //         dangerouslyUseHTMLString: true
-    //       });
-    //       this.dataSearch(1);
-    //       this.$set(this, "adminLoading", false);
-    //     } else {
-    //       this.$message({
-    //         message: msg,
-    //         type: "error",
-    //         dangerouslyUseHTMLString: true
-    //       });
-    //       this.$set(this, "adminLoading", false);
-    //     }
-    //   }
-    // },
+    async changeDate(val) {
+      if (val == 0) {
+        if (this.selectionData[0].length === 0) {
+          this.$message.error("请选择需要提交的数据！");
+          return;
+        }
+        if (!this.Rescheduled) {
+          this.$message.error("请填写复期时间");
+          return;
+        }
+        this.selectionData[0].map(item => {
+          this.$set(item, "DeliveryDate", this.Rescheduled);
+          item["DeliveryDate"] = this.Rescheduled;
+        });
+        // let res = await GetSearch(
+        //   this.selectionData[1],
+        //   "/APSAPI/OrderTaskDownload"
+        // );
+        // const { datas, forms, result, msg } = res.data;
+        // if (result) {
+        //   this.$message({
+        //     message: msg,
+        //     type: "success",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.dataSearch(1);
+        //   this.$set(this, "adminLoading", false);
+        // } else {
+        //   this.$message({
+        //     message: msg,
+        //     type: "error",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.$set(this, "adminLoading", false);
+        // }
+      }
+    },
     // 删除
     // async dataDel(remarkTb, index, parms) {
     //   let res = null;
@@ -775,7 +690,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         // this.formSearchs[0].datas["Account"] = [this.userInfo.Account, null];
-        this.getDeptData();
+        this.getSupplierData();
       }
     },
     // 验证数据
@@ -798,24 +713,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (data.length != 0) {
-          data.forEach(x => {
-            if (!x.IsReplyStatus) {
-              x.ReplyQty = x.RealOweQty;
-            }
-            if (!x.ReplyDate) {
-              this.$set(x, "tag_1", 1);
-            }
-            if (!x.SecondReplyDate) {
-              this.$set(x, "tag_2", 1);
-            }
-            if (x.EditDisabled) {
-              this.$set(x, "EditDisabled", true);
-            } else {
-              this.$set(x, "EditDisabled", false);
-            }
-          });
-        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -831,8 +728,8 @@ export default {
     handleNodeClick(data, node) {
       this.$set(
         this.formSearchs[this.labelStatus1].datas,
-        "Dept",
-        data.Dept == "全部" ? "" : data.Dept
+        "SupplierName",
+        data.SupplierName == "全部" ? "" : data.SupplierName
       );
       this.dataSearch(this.labelStatus1);
     },
@@ -977,9 +874,9 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      if (this.tableData[index].length == 0) {
-        this.dataSearch(index);
-      }
+      // if (this.tableData[index].length == 0) {
+      this.dataSearch(0);
+      // }
     }
     // 改变状态
     // changeStatus(x, index) {

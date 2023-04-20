@@ -398,12 +398,17 @@ export default {
       this.adminLoading = true;
       const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
       // 获取修改记录
-      const updateRecords = $table.getUpdateRecords();
+      let updateRecords;
+      if (newData) {
+        updateRecords = newData;
+      } else {
+        updateRecords = $table.getUpdateRecords();
+      }
       if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-
       let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -963,7 +968,11 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.dataSearch(index);
+      this.formSearchs[0].datas["IsOverTime"] = "";
+      if (index === 0) {
+        this.formSearchs[0].datas["IsOverTime"] = 1;
+      }
+      this.dataSearch(0);
     }
   }
 };

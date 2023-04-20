@@ -2,35 +2,10 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-aside v-show="showAside" style="width:auto">
-        <div class="admin_left_2" style="height:100%;overflow:hidden">
-          <div>
-            <div class="flex px-2 py-1.5 border-b-1 tree_Head">
-              <span class="tree_text">成品车间</span>
-            </div>
-            <el-tree
-              class="tree-line"
-              :indent="0"
-              ref="asideTree"
-              node-key="SupplierID"
-              :data="treeData"
-              :props="treeProps"
-              :style="{ height: '' + treeHeight + '', overflow: 'auto' }"
-              highlight-current
-              :expand-on-click-node="false"
-              @node-click="handleNodeClick"
-            ></el-tree>
-          </div>
-        </div>
-      </el-aside>
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <div
-              v-for="i in [0, 1, 2, 3, 4]"
-              :key="i"
-              v-show="labelStatus1 == i"
-            >
+            <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -61,57 +36,7 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <div
-                      class="flex"
-                      v-if="selectionData[1].length === 1 && labelStatus1 === 1"
-                    >
-                      <div class="flex">
-                        拆分数量：
-                        <el-input
-                          type="number"
-                          v-model="CurrentSendQty"
-                          size="small"
-                          style="flex: 1;"
-                        ></el-input>
-                      </div>
-                      <el-divider direction="vertical"></el-divider>
-                      <div class="flex">
-                        交期:
-                        <el-date-picker
-                          v-model="selectionData[1][0]['DownDeilveryDate']"
-                          type="date"
-                          size="small"
-                          value-format="yyyy-MM-dd"
-                          style="flex: 1;"
-                        >
-                        </el-date-picker>
-                      </div>
-                      <el-divider direction="vertical"></el-divider>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="changeDate(0)"
-                      >
-                        拆分下达
-                      </el-button>
-                    </div>
                     <!-- <el-divider direction="vertical"></el-divider>
-                    <el-button
-                      type="warning"
-                      size="mini"
-                      @click="changeDate(1)"
-                    >
-                      批量二次回复日期
-                    </el-button>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button
-                      type="success "
-                      size="mini"
-                      @click="refreshPOTraker"
-                    >
-                      同步更新采购员
-                    </el-button> -->
-                    <el-divider direction="vertical"></el-divider>
                     <div
                       :class="
                         labelStatus1 == y ? 'statusActive cursor' : 'cursor'
@@ -123,14 +48,35 @@
                         item.label
                       }}</span>
                       <el-divider direction="vertical"></el-divider>
-                    </div>
+                    </div> -->
                   </el-col>
                 </el-row>
               </div>
+              <!-- <div
+                class="flex_column"
+                :style="{ height: height }"
+                v-show="labelStatus1 == 1"
+              >
+                <ComSpreadTable
+                  ref="spreadsheetRef"
+                  :height="height"
+                  :tableData="tableData[1]"
+                  :tableColumns="tableColumns[1]"
+                  :tableLoading="tableLoading[1]"
+                  :remark="1"
+                  :sysID="sysID[1]['ID']"
+                  :pagination="tablePagination[1]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @workbookInitialized="workbookInitialized"
+                  @selectChanged="selectChanged"
+                />
+              </div> -->
               <div
-                v-for="item in [0, 1, 2, 3, 4]"
+                class="flex_column"
+                v-for="item in [0]"
                 :key="item"
-                v-show="labelStatus1 == item"
+                v-if="true"
               >
                 <ComVxeTable
                   :rowKey="'RowNumber'"
@@ -152,39 +98,75 @@
                   @selectfun="selectFun"
                   @sortChange="sortChange"
                 />
+                <!-- <ComSpreadTable
+                  ref="spreadsheetRef"
+                  :height="height"
+                  :tableData="tableData[item]"
+                  :tableColumns="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :remark="item"
+                  :sysID="sysID[item]['ID']"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @workbookInitialized="workbookInitialized"
+                  @selectChanged="selectChanged"
+                /> -->
               </div>
             </div>
           </div>
         </div>
       </el-main>
     </el-container>
-    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5;">
-        <div class="admin_content">
-          采购单
-          <ComReportTable
-            :rowKey="'RowNumber'"
-            :height="height1"
-            :tableData="tableData[1]"
-            :tableHeader="tableColumns[1]"
-            :tableLoading="tableLoading[1]"
-            :remark="1"
-            :sysID="sysID[1].ID"
-            :isClear="isClear[1]"
-            :showFooter="true"
-            :pagination="tablePagination[1]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-          />
-        </div>
-      </div>
-    </el-dialog>
+    <!-- 导入文件 -->
+    <!-- <div>
+      <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
+        <el-upload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          style="padding-top: 10px"
+          class="upload-demo"
+          drag
+          :limit="1"
+          :multiple="false"
+          name="files"
+          ref="upload"
+          :on-change="handleChanged"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          accept=".xls, .xlsx"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xls、xslx文件且仅支持上传一个文件
+          </div>
+        </el-upload>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogImport = false" size="small"
+            >取 消</el-button
+          >
+          <el-button size="small" type="primary" @click="sureImport"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
+    </div> -->
   </div>
 </template>
 
 <script>
 var _this;
+const GCsheets = GC.Spread.Sheets;
+import "@grapecity/spread-sheets-vue";
+import GC from "@grapecity/spread-sheets";
+import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
+import "@grapecity/spread-sheets/js/zh.js";
+GC.Spread.Common.CultureManager.culture("zh-cn");
+import ComSpreadTable from "@/components/ComSpreadTable";
 import XLSX from "xlsx";
 import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
@@ -200,75 +182,58 @@ import {
   GetOrgData,
   UpdateOrderBomPOTracker
 } from "@/api/Common";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "ReleaseDocumentaryPlan",
+  name: "PurchasingReplyHistory",
   components: {
     ComSearch,
     ComAsideTree,
     ComVxeTable,
     ComReportTable,
-    ComFormDialog
+    ComFormDialog,
+    ComSpreadTable
   },
   data() {
     return {
-      CurrentSendQty: "",
       isLoading: false,
       hasSelect: [true, true, true, true, true],
       footerLabel: [""],
       dialogShow: false,
-      EditDisabled: false,
       height1: "360px",
-      labelStatus1: 1,
+      labelStatus1: 0,
       Status1: [
-        { label: "未指定排产员", value: -1 },
-        { label: "待下达计划", value: 0 },
-        { label: "生产任务单", value: "" },
-        { label: "生产计划追踪", value: "" },
-        { label: "完成下达清单", value: 1 }
+        { label: "分配数量", value: -1 },
+        { label: "数量+时间+线体", value: 0 },
+        { label: "数量+时间+线体+托盘", value: "" },
+        { label: "综合分析", value: "" },
+        { label: "全部", value: 1 }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
       ReplyDate: "",
-      treeProps: {
-        label: "DeptCount",
-        children: "children"
-      },
-      treeData: [],
-      treeListTmp: [],
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       delData: [[]],
       formSearchs: [
         {
-          datas: {
-            IsClose: -1,
-            sort: "OrderDate",
-            Account: ""
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            IsClose: 0,
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: {
-            sort: "OrderDate"
-          },
+          datas: {},
           forms: []
         },
         {
-          datas: { IsClose: 1, sort: "OrderDate" },
+          datas: {},
           forms: []
         }
       ],
@@ -282,7 +247,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
       ],
       height: "707px",
@@ -297,11 +262,11 @@ export default {
       fileList: [],
       file: [],
       sysID: [
-        { ID: 9053 },
-        { ID: 9053 },
-        { ID: 10089 },
-        { ID: 90531 },
-        { ID: 9053 }
+        { ID: 10088 },
+        { ID: 10075 },
+        { ID: 10075 },
+        { ID: 10075 },
+        { ID: 10075 }
       ],
       userInfo: {}
     };
@@ -321,43 +286,14 @@ export default {
     }, 500);
   },
   methods: {
-    searchTree(msg) {
-      this.treeData = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
-      let tmp = msg
-        ? this.rebuildData(msg, treeListTmp)
-        : JSON.parse(JSON.stringify(treeListTmp));
-      this.treeData.push(...tmp);
+    //获取子组件实例
+    workbookInitialized: function(workbook) {
+      this.spread = workbook;
     },
-    rebuildData(value, arr) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach(element => {
-          if (element.SupplierName.indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children);
-              const obj = {
-                ...element,
-                children: ab
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
+    //获取当前选中行的值
+    selectChanged(newValue, remarkTb) {
+      // 在子组件计算属性发生变化时，更新父组件的计算属性
+      this.selectionData[remarkTb] = newValue;
     },
     // 导出
     async dataExport(remarkTb) {
@@ -394,59 +330,6 @@ export default {
         1
       );
     },
-    // 获取供应商数据
-    async getDeptData() {
-      this.treeData = [];
-      this.treeListTmp = [];
-      let form = {
-        dicID: 10090,
-        Account: [this.userInfo.Account, null],
-        sort: "Level"
-      };
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        let newTree = [];
-        if (data.length != 0) {
-          let supplierMap = new Map();
-          data.forEach(a => {
-            let currentSum = supplierMap.get(a.Dept) || 0;
-            currentSum += a.SumCount;
-            supplierMap.set(a.Dept, currentSum);
-            a["DeptCount"] = `${a.Dept}(${currentSum})`;
-          });
-          newTree = Array.from(supplierMap.entries()).map(([Dept, sum]) => {
-            const foundItem = data.find(a => a.Dept === Dept);
-            return {
-              ...foundItem,
-              DeptCount: `${foundItem.Dept}(${sum})`
-            };
-          });
-        }
-        this.treeData = JSON.parse(JSON.stringify(newTree));
-        // this.treeData.unshift({
-        //   SupplierID: -1,
-        //   SupplierName: "",
-        //   SupplierNameCount: "全部" + "(" + num + ")",
-        // });
-        this.treeListTmp = this.treeData;
-        this.getTableData(
-          this.formSearchs[this.labelStatus1].datas,
-          this.labelStatus1
-        );
-        if (data.length != 0) {
-          this.$nextTick(function() {
-            _this.$refs.asideTree.setCurrentKey(-1);
-          });
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
     // 高度控制
     setHeight() {
       this.treeHeight = document.documentElement.clientHeight - 150 + "px";
@@ -459,10 +342,6 @@ export default {
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
-    // 编辑行
-    editRow(row) {},
-    // 删除行
-    delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -533,38 +412,8 @@ export default {
         }
       }
     },
-    // 获取服务器时间
-    // async getServerDate(remarkTb, index) {
-    //   let res = await GetServerTime();
-    //   const { result, data, msg } = res.data;
-    //   if (result) {
-    //     let submitData = [];
-    //     _this.tableData[0].forEach(x => {
-    //       let MaterialFormID = x.MaterialFormID.split(",");
-    //       MaterialFormID.forEach((b, i) => {
-    //         let obj = JSON.parse(JSON.stringify(x));
-    //         obj["MaterialFormID"] = b;
-    //         if (!obj.ReplyDate && !obj.SecondReplyDate) {
-    //           obj.IsReplyStatus = 0;
-    //         } else {
-    //           obj.IsReplyStatus = 1;
-    //         }
-    //         // 判断如果是第一次填复期，写进日期 ，如果是第一次填二次复期，写进日期
-    //         if (obj.tag_1 == 1 && obj.ReplyDate) {
-    //           obj.FirstReplyDate = data;
-    //         }
-    //         if (obj.tag_2 == 1 && obj.SecondReplyDate) {
-    //           obj.LastReplyDate = data;
-    //         }
-    //         submitData.push(obj);
-    //       });
-    //     });
-    //     _this.generalSaveData(submitData, 0);
-    //   } else {
-    //   }
-    // },
     // 保存
-    async dataSave(remarkTb, index, parms, newData) {
+    async dataSave(remarkTb) {
       this.adminLoading = true;
       const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
       // 获取修改记录
@@ -598,26 +447,15 @@ export default {
         this.$set(this, "adminLoading", false);
       }
     },
-    // 全部下达
-    async releaseOrders(remarkTb, index) {
-      let submitData = [];
+    // 从月计划更新
+    async monthUpdata(remarkTb, index) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要提交的数据！");
         return;
       } else {
-        if (
-          !this.selectionData[remarkTb].every(
-            obj =>
-              obj.hasOwnProperty("PlanDeliveryDate") && obj.PlanDeliveryDate
-          )
-        ) {
-          // 显示错误消息
-          this.$message.error("有订单没有填写计划交期!");
-          return;
-        }
         let res = await GetSearch(
           this.selectionData[remarkTb],
-          "/APSAPI/OrderTaskDownload"
+          "/APSAPI/SaveData10075FromMonth"
         );
         const { datas, forms, result, msg } = res.data;
         if (result) {
@@ -638,51 +476,6 @@ export default {
         }
       }
     },
-    // 拆分下达
-    // async changeDate(val) {
-    //   if (val == 0) {
-    //     if (this.selectionData[1].length !== 1) {
-    //       this.$message.error("请选择需要提交的单条数据！");
-    //       return;
-    //     }
-    //     if (!this.CurrentSendQty) {
-    //       this.$message.error("请填写拆分数量");
-    //       return;
-    //     }
-    //     if (
-    //       Number(this.selectionData[1][0]["UnSentQty"]) < this.CurrentSendQty
-    //     ) {
-    //       this.$message.error("该单据拆分数量不能大于未下达数量");
-    //       return;
-    //     }
-    //     if (!this.selectionData[1][0]["PlanDeliveryDate"]) {
-    //       this.$message.error("请填写该单据的计划交期");
-    //       return;
-    //     }
-    //     this.selectionData[1][0]["CurrentSendQty"] = this.CurrentSendQty;
-    //     let res = await GetSearch(
-    //       this.selectionData[1],
-    //       "/APSAPI/OrderTaskDownload"
-    //     );
-    //     const { datas, forms, result, msg } = res.data;
-    //     if (result) {
-    //       this.$message({
-    //         message: msg,
-    //         type: "success",
-    //         dangerouslyUseHTMLString: true
-    //       });
-    //       this.dataSearch(1);
-    //       this.$set(this, "adminLoading", false);
-    //     } else {
-    //       this.$message({
-    //         message: msg,
-    //         type: "error",
-    //         dangerouslyUseHTMLString: true
-    //       });
-    //       this.$set(this, "adminLoading", false);
-    //     }
-    //   }
-    // },
     // 删除
     // async dataDel(remarkTb, index, parms) {
     //   let res = null;
@@ -742,19 +535,6 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          m.forEach(n => {
-            // 进行验证
-            this.verifyData(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
-                this.verifyData(x);
-              });
-            }
-          });
-          this.$set(this.tableColumns, i, m);
-        });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
@@ -774,8 +554,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        // this.formSearchs[0].datas["Account"] = [this.userInfo.Account, null];
-        this.getDeptData();
+        this.dataSearch(0);
       }
     },
     // 验证数据
@@ -796,27 +575,22 @@ export default {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      let { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (data.length != 0) {
-          data.forEach(x => {
-            if (!x.IsReplyStatus) {
-              x.ReplyQty = x.RealOweQty;
-            }
-            if (!x.ReplyDate) {
-              this.$set(x, "tag_1", 1);
-            }
-            if (!x.SecondReplyDate) {
-              this.$set(x, "tag_2", 1);
-            }
-            if (x.EditDisabled) {
-              this.$set(x, "EditDisabled", true);
-            } else {
-              this.$set(x, "EditDisabled", false);
+        Columns.some((m, i) => {
+          m.forEach(n => {
+            // 进行验证
+            this.verifyData(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach(x => {
+                this.verifyData(x);
+              });
             }
           });
-        }
+        });
+        this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
+        // this.setData();
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -827,14 +601,200 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
-    // 单击出来供应商人员
-    handleNodeClick(data, node) {
-      this.$set(
-        this.formSearchs[this.labelStatus1].datas,
-        "Dept",
-        data.Dept == "全部" ? "" : data.Dept
+    // excle表数据渲染
+    async setData() {
+      try {
+        console.log(this.tagRemark, "1");
+        this.spread.suspendPaint();
+        // 获取活动表单
+        let sheet = this.spread.getActiveSheet();
+        // 重置表单
+        sheet.reset();
+        // 渲染列
+        this.tableColumns[this.tagRemark].forEach((x, y) => {
+          x["name"] = x["prop"];
+          x["displayName"] = x["label"];
+          x["width"] = parseInt(x.width);
+          if (x.prop === "isChecked") {
+            // 选框
+            sheet.setCellType(
+              0,
+              0,
+              new HeaderCheckBoxCellType(),
+              GCsheets.SheetArea.colHeader
+            );
+            x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          } else if (
+            x.ControlType === "comboboxMultiple" ||
+            x.ControlType === "combobox"
+          ) {
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   cellType: "",
+            //   size: parseInt(x.width)
+            // });
+            let newData = [];
+            // let list = null;
+            this.tableData[this.tagRemark].map((item, index) => {
+              if (x.DataSourceID && x.DataSourceName) {
+                newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+                this.bindComboBoxToCell(sheet, index, y, newData);
+              }
+            });
+          } else if (
+            x.DataType == "datetime" ||
+            x.DataType === "varchar" ||
+            x.DataType === "nvarchar"
+          ) {
+            x.formatter = "@";
+            // colInfos.push({
+            //   name: x.prop,
+            //   displayName: x.label,
+            //   size: parseInt(x.width),
+            //   formatter: "@" //字符串格式
+            // });
+          }
+
+          //行，start,end
+          if (x.isEdit) {
+            sheet
+              .getCell(-1, y)
+              .locked(false)
+              .foreColor("#2a06ecd9");
+            // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+            // let cell = sheet.getCell(
+            //   -1,
+            //   cellIndex,
+            //   GC.Spread.Sheets.SheetArea.viewport
+            // );
+            // cell.foreColor("#2a06ecd9");
+          }
+          // cellIndex++;
+        });
+        //改变字体颜色
+        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
+          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
+            const key = column.prop;
+
+            // 获取当前单元格
+            const cell = sheet.getCell(rowIndex, columnIndex);
+
+            // 获取颜色
+            if (row && row.colorMapping && row.colorMapping[key]) {
+              const color = row.colorMapping[key];
+              cell.style({
+                backColor: color,
+                foreColor: "#FFFFFF"
+              });
+              // 其他代码
+            }
+            // const color = row.colorMapping[key];
+
+            // 如果该属性有颜色信息，则设置单元格样式
+            // if (color) {
+            //   // const style = new GC.Spread.Sheets.Style();
+            //   cell.backColor(color);
+            //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
+            // }
+          });
+        });
+
+        // 列筛选
+        // 参数2 开始列
+        // 参数3
+        // 参数4 结束列
+        let cellrange = new GC.Spread.Sheets.Range(
+          -1,
+          -1,
+          -1,
+          this.tableColumns[this.tagRemark].length
+        );
+        let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+          cellrange
+        );
+        sheet.rowFilter(hideRowFilter);
+
+        // 设置整个列头的背景色和前景色。
+        /**
+         * 参数1:表示行
+         * 参数2:列，-1表示
+         * 参数3:
+         * 参数4:
+         * 参数5:
+         */
+        let colHeaderStyle = sheet.getRange(
+          0,
+          -1,
+          1,
+          -1,
+          GC.Spread.Sheets.SheetArea.colHeader
+        );
+        colHeaderStyle.foreColor("000000d9");
+        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.font(
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+        );
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
+
+        //设置数据渲染的单元格默认的样式
+        var defaultStyle = new GC.Spread.Sheets.Style();
+        defaultStyle.font =
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        sheet.setDefaultStyle(
+          defaultStyle,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+        defaultStyle.showEllipsis = true;
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
+        //渲染数据源
+        sheet.setDataSource(this.tableData[this.tagRemark]);
+        //渲染列
+        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
+        this.spread.options.scrollbarMaxAlign = true;
+        // this.spread.options.scrollByPixel = true;
+
+        this.spread.resumePaint();
+        sheet.options.isProtected = true;
+        sheet.options.protectionOptions.allowResizeColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowSelectLockedCells = true;
+        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+        sheet.options.protectionOptions.allowDeleteColumns = true;
+        sheet.options.protectionOptions.allowInsertColumns = true;
+        sheet.options.protectionOptions.allowDargInsertRows = true;
+        sheet.options.protectionOptions.allowDragInsertColumns = true;
+        sheet.options.protectionOptions.allowSort = true;
+        sheet.options.protectionOptions.allowFilter = true;
+        sheet.options.allowUserDragDrop = true;
+      } catch (error) {
+        console.log("表格渲染的错误信息:", error);
+      }
+      this.spread.refresh(); //重新定位宽高度
+    },
+    bindComboBoxToCell(sheet, row, col, dataSourceName) {
+      // 获取要绑定下拉菜单的单元格对象
+      let cell = sheet.getCell(row, col);
+
+      // 创建下拉菜单单元格类型，并设置其选项数据
+      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+      comboBox.editorValueType(
+        GC.Spread.Sheets.CellTypes.EditorValueType.value
       );
-      this.dataSearch(this.labelStatus1);
+      comboBox.editable(true);
+      // 获取下拉菜单的选项数据
+
+      comboBox.items(dataSourceName);
+      comboBox.itemHeight(24);
+
+      // 将下拉菜单单元格类型绑定到指定的单元格中
+      cell.cellType(comboBox);
     },
     // 刷新页面
     refrshPage() {
@@ -850,34 +810,6 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-      // if (
-      //   this.selectionData[remarkTb].length === 1 &&
-      //   this.labelStatus1 === 1
-      // ) {
-      //   const {
-      //     OrderNo,
-      //     Code,
-      //     OProductionQty,
-      //     SentQty,
-      //     UnSentQty
-      //   } = this.selectionData[remarkTb][0];
-      //   let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
-      //   this.$set(this.footerLabel, 1, StringValue);
-      //   this.$set(
-      //     this.selectionData[remarkTb][0],
-      //     "DownDeilveryDate",
-      //     this.selectionData[remarkTb][0]["PlanDeliveryDate"]
-      //   );
-      // } else {
-      //   this.$set(this.footerLabel, remarkTb, "");
-      // }
-    },
-    tableRowClassName({ row, rowIndex }) {
-      // let className = "";
-      // if (row["JudgeResult"] == "交期冲突") {
-      //   className += "bgRedColor";
-      // }
-      // return className;
     },
     // 行内列样式
     cellStyle({ row, column }) {
@@ -902,16 +834,7 @@ export default {
         return {
           background: "#fdfd8f"
         };
-      }
-      // else if (
-      //   column.property == "JudgeResult" &&
-      //   row["JudgeResult"] == "交期冲突"
-      // ) {
-      //   return {
-      //     background: "red",
-      //   };
-      // }
-      else if (
+      } else if (
         (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
         (column.property == "IsReplyStatusName" &&
           row["IsReplyStatusName"] == "是")
@@ -977,27 +900,8 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      if (this.tableData[index].length == 0) {
-        this.dataSearch(index);
-      }
+      this.dataSearch(index);
     }
-    // 改变状态
-    // changeStatus(x, index) {
-    //   this.labelStatus1 = index;
-    //   this.formSearchs[0].datas["IsClose"] = x.value;
-    //   if (x.label === "生产任务单") {
-    //     this.dataSearch(1);
-    //   } else {
-    //     this.dataSearch(0);
-    //   }
-    // },
-    // 可用量查询
-    // usingSearch(row, prop) {
-    //   this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-    //   // this.formSearchs[1].datas["Remark1"] = "送货";
-    //   this.dataSearch(1);
-    //   this.dialogShow = true;
-    // }
   }
 };
 </script>
