@@ -556,8 +556,8 @@ export default {
     },
     // 保存
     async dataSave(remarkTb) {
-      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach(x => {
@@ -901,7 +901,6 @@ export default {
     },
     //删除
     dataDel() {
-      this.getSelectionData();
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要删除的数据！");
         return;
@@ -912,6 +911,7 @@ export default {
           type: "info"
         }).then(async () => {
           this.adminLoading = true;
+          this.getSelectionData();
           let res = await SaveData(this.selectionData[this.tagRemark]);
           const { result, data, count, msg } = res.data;
           if (result) {

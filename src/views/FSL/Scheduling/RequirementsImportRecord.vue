@@ -581,8 +581,8 @@ export default {
     },
     // 保存
     async dataSave(remarkTb) {
-      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach(x => {

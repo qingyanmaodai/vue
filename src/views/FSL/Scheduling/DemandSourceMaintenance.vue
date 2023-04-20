@@ -299,21 +299,21 @@ export default {
         let sheet = this.spread.getActiveSheet();
         // 重置表单
         sheet.reset();
-        this.tableData[this.tagRemark].map((item, index) => {
-          if (index <= 1000) {
-            item.colorMapping = {
-              Remark1: "#0000FF", // 蓝色
-              Dept: "#FF0000", // 红色
-              Code: "#008000" // 绿色
-            };
-          } else {
-            item.colorMapping = {
-              Remark1: "#008000", // 绿色
-              Dept: "#0000FF", // 蓝色
-              Code: "#FF0000" // 红色
-            };
-          }
-        });
+        // this.tableData[this.tagRemark].map((item, index) => {
+        //   if (index <= 1000) {
+        //     item.colorMapping = {
+        //       Remark1: "#0000FF", // 蓝色
+        //       Dept: "#FF0000", // 红色
+        //       Code: "#008000" // 绿色
+        //     };
+        //   } else {
+        //     item.colorMapping = {
+        //       Remark1: "#008000", // 绿色
+        //       Dept: "#0000FF", // 蓝色
+        //       Code: "#FF0000" // 红色
+        //     };
+        //   }
+        // });
         // 渲染列
         this.tableColumns[this.tagRemark].forEach((x, y) => {
           x["name"] = x["prop"];
@@ -381,22 +381,22 @@ export default {
         //渲染列
         sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
-        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
-          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
-            const key = column.prop;
+        // this.tableData[this.tagRemark].forEach((row, rowIndex) => {
+        //   this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
+        //     const key = column.prop;
 
-            // 获取当前单元格
-            const cell = sheet.getCell(rowIndex, columnIndex);
-            // const cell = sheet.getCell(-1, columnIndex);
+        //     // 获取当前单元格
+        //     const cell = sheet.getCell(rowIndex, columnIndex);
+        //     // const cell = sheet.getCell(-1, columnIndex);
 
-            // 获取颜色
-            if (row && row.colorMapping && row.colorMapping[key]) {
-              const color = row.colorMapping[key];
-              cell.backColor(color);
-              cell.foreColor("#ffffff"); // 假设背景色为 color 的单元格的字体颜色为白色
-            }
-          });
-        });
+        //     // 获取颜色
+        //     if (row && row.colorMapping && row.colorMapping[key]) {
+        //       const color = row.colorMapping[key];
+        //       cell.backColor(color);
+        //       cell.foreColor("#ffffff"); // 假设背景色为 color 的单元格的字体颜色为白色
+        //     }
+        //   });
+        // });
         // 列筛选
         // 参数2 开始列
         // 参数3
@@ -552,8 +552,8 @@ export default {
     // },
     // 保存
     async dataSave(remarkTb) {
-      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach(x => {
@@ -945,7 +945,6 @@ export default {
         }
       }
     },
-
     //删除
     dataDel() {
       if (this.selectionData[this.tagRemark].length == 0) {
@@ -958,6 +957,9 @@ export default {
           type: "info"
         }).then(async () => {
           this.adminLoading = true;
+          this.selectionData[this.tagRemark].map(item => {
+            item["ElementDeleteFlag"] = 1;
+          });
           let res = await SaveData(this.selectionData[this.tagRemark]);
           const { result, data, count, msg } = res.data;
           if (result) {

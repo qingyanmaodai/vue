@@ -565,13 +565,22 @@ export default {
     // },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      let res = null;
       this.adminLoading = true;
+      let res = null;
+      const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
+      // 获取修改记录
+      const updateRecords = $table.getUpdateRecords();
+      if (updateRecords.length == 0) {
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
       if (newData && newData.length != 0) {
         res = await SaveData(newData);
       } else {
         res = await SaveData(this.tableData[remarkTb]);
       }
+
+      
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -631,50 +640,50 @@ export default {
       }
     },
     // 拆分下达
-    async changeDate(val) {
-      if (val == 0) {
-        if (this.selectionData[1].length !== 1) {
-          this.$message.error("请选择需要提交的单条数据！");
-          return;
-        }
-        if (!this.CurrentSendQty) {
-          this.$message.error("请填写拆分数量");
-          return;
-        }
-        if (
-          Number(this.selectionData[1][0]["UnSentQty"]) < this.CurrentSendQty
-        ) {
-          this.$message.error("该单据拆分数量不能大于未下达数量");
-          return;
-        }
-        if (!this.selectionData[1][0]["PlanDeliveryDate"]) {
-          this.$message.error("请填写该单据的计划交期");
-          return;
-        }
-        this.selectionData[1][0]["CurrentSendQty"] = this.CurrentSendQty;
-        let res = await GetSearch(
-          this.selectionData[1],
-          "/APSAPI/OrderTaskDownload"
-        );
-        const { datas, forms, result, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-          this.dataSearch(1);
-          this.$set(this, "adminLoading", false);
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-          this.$set(this, "adminLoading", false);
-        }
-      }
-    },
+    // async changeDate(val) {
+    //   if (val == 0) {
+    //     if (this.selectionData[1].length !== 1) {
+    //       this.$message.error("请选择需要提交的单条数据！");
+    //       return;
+    //     }
+    //     if (!this.CurrentSendQty) {
+    //       this.$message.error("请填写拆分数量");
+    //       return;
+    //     }
+    //     if (
+    //       Number(this.selectionData[1][0]["UnSentQty"]) < this.CurrentSendQty
+    //     ) {
+    //       this.$message.error("该单据拆分数量不能大于未下达数量");
+    //       return;
+    //     }
+    //     if (!this.selectionData[1][0]["PlanDeliveryDate"]) {
+    //       this.$message.error("请填写该单据的计划交期");
+    //       return;
+    //     }
+    //     this.selectionData[1][0]["CurrentSendQty"] = this.CurrentSendQty;
+    //     let res = await GetSearch(
+    //       this.selectionData[1],
+    //       "/APSAPI/OrderTaskDownload"
+    //     );
+    //     const { datas, forms, result, msg } = res.data;
+    //     if (result) {
+    //       this.$message({
+    //         message: msg,
+    //         type: "success",
+    //         dangerouslyUseHTMLString: true
+    //       });
+    //       this.dataSearch(1);
+    //       this.$set(this, "adminLoading", false);
+    //     } else {
+    //       this.$message({
+    //         message: msg,
+    //         type: "error",
+    //         dangerouslyUseHTMLString: true
+    //       });
+    //       this.$set(this, "adminLoading", false);
+    //     }
+    //   }
+    // },
     // 删除
     // async dataDel(remarkTb, index, parms) {
     //   let res = null;
@@ -842,27 +851,27 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-      if (
-        this.selectionData[remarkTb].length === 1 &&
-        this.labelStatus1 === 1
-      ) {
-        const {
-          OrderNo,
-          Code,
-          OProductionQty,
-          SentQty,
-          UnSentQty
-        } = this.selectionData[remarkTb][0];
-        let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
-        this.$set(this.footerLabel, 1, StringValue);
-        this.$set(
-          this.selectionData[remarkTb][0],
-          "DownDeilveryDate",
-          this.selectionData[remarkTb][0]["PlanDeliveryDate"]
-        );
-      } else {
-        this.$set(this.footerLabel, remarkTb, "");
-      }
+      // if (
+      //   this.selectionData[remarkTb].length === 1 &&
+      //   this.labelStatus1 === 1
+      // ) {
+      //   const {
+      //     OrderNo,
+      //     Code,
+      //     OProductionQty,
+      //     SentQty,
+      //     UnSentQty
+      //   } = this.selectionData[remarkTb][0];
+      //   let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
+      //   this.$set(this.footerLabel, 1, StringValue);
+      //   this.$set(
+      //     this.selectionData[remarkTb][0],
+      //     "DownDeilveryDate",
+      //     this.selectionData[remarkTb][0]["PlanDeliveryDate"]
+      //   );
+      // } else {
+      //   this.$set(this.footerLabel, remarkTb, "");
+      // }
     },
     tableRowClassName({ row, rowIndex }) {
       // let className = "";
