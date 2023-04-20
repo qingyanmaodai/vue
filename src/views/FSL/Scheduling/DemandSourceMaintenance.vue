@@ -948,7 +948,6 @@ export default {
 
     //删除
     dataDel() {
-      this.getSelectionData();
       if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要删除的数据！");
         return;
