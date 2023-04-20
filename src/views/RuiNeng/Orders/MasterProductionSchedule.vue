@@ -41,6 +41,15 @@
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
                     <el-divider direction="vertical"></el-divider>
+
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="changeDate(0)"
+                    >
+                      复制
+                    </el-button>
+                    <el-divider direction="vertical"></el-divider>
                     <div
                       :class="
                         labelStatus1 == y ? 'statusActive cursor' : 'cursor'
@@ -369,6 +378,52 @@ export default {
         this[methods](remarkTb, index);
       }
     },
+    // 复制
+    async changeDate(val) {
+      let sheet = this.spread.getActiveSheet();
+      if (val == 0) {
+        if (this.selectionData[0].length === 0) {
+          this.$message.error("请选择需要复制的数据的数据！");
+          return;
+        }
+        this.selectionData[0].map(item => {});
+
+        const arr = [{ label: 1 }, { label: 2 }, { label: 3 }];
+        this.tableData[0] = this.tableData[0]
+          .flatMap(obj => {
+            if (obj.isChecked) {
+              return [obj, obj];
+            } else {
+              return [obj];
+            }
+          })
+          .sort((a, b) => a.SalesOrderDetailPlanID - b.SalesOrderDetailPlanID);
+        this.setData();
+        // sheet.setDataSource(this.tableData[0]);
+        // [{label:1},{label:1},{label:2},{label:2},{label:3},{label:3}]
+        // let res = await GetSearch(
+        //   this.selectionData[1],
+        //   "/APSAPI/OrderTaskDownload"
+        // );
+        // const { datas, forms, result, msg } = res.data;
+        // if (result) {
+        //   this.$message({
+        //     message: msg,
+        //     type: "success",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.dataSearch(1);
+        //   this.$set(this, "adminLoading", false);
+        // } else {
+        //   this.$message({
+        //     message: msg,
+        //     type: "error",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.$set(this, "adminLoading", false);
+        // }
+      }
+    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -397,35 +452,41 @@ export default {
       }
     },
     // 保存
-    async dataSave(remarkTb) {
-      let newData = sheet.getDirtyRows(); //获取修改过的数据
+    async dataSave(remarkTb, index, parms, newData) {
       let sheet = this.spread.getActiveSheet();
-      let res = null;
       this.adminLoading = true;
-      if (remarkTb !== 3 && newData.length != 0) {
-        res = await GetSearch(newData, "/APSAPI/SaveData10075");
-      } else if (remarkTb === 3 && newData.length != 0) {
-        res = await SaveData(newData);
+      // const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
+      // 获取修改记录
+      let updateRecords;
+      if (newData) {
+        updateRecords = newData;
       } else {
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        // updateRecords = $table.getUpdateRecords();
+        updateRecords = sheet.getDirtyRows(); //获取修改过的数据
       }
-      // const { datas, forms, result, msg } = res.data;
-      // if (result) {
-      //   this.$message({
-      //     message: msg,
-      //     type: "success",
-      //     dangerouslyUseHTMLString: true
-      //   });
-      //   this.dataSearch(remarkTb);
-      //   this.$set(this, "adminLoading", false);
-      // } else {
-      //   this.$message({
-      //     message: msg,
-      //     type: "error",
-      //     dangerouslyUseHTMLString: true
-      //   });
-      //   this.$set(this, "adminLoading", false);
-      // }
+      if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
+      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10075");
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+        this.$set(this, "adminLoading", false);
+      }
     },
     // 从月计划更新
     async monthUpdata(remarkTb, index) {
