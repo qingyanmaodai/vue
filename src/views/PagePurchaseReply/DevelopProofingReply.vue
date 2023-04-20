@@ -149,7 +149,7 @@ export default {
       height1: "360px",
       labelStatus1: 1,
       Status1: [
-        { label: "全部", value: "" },
+        { label: "全部未结案", value: "" },
         { label: "未复期", value: "未复期" },
         { label: "复期不满足", value: "已复期" },
         { label: "逾期未回", value: "已复期" },
@@ -702,7 +702,9 @@ export default {
       this.formSearchs[0].datas["CloseStatus"] = "";
       this.formSearchs[0].datas["RemainreceiveQty"] = "";
       this.formSearchs[0].datas["IsOverTime"] = "";
-      if (this.labelStatus1 === 1) {
+      if (this.labelStatus1 === 0) {
+        this.formSearchs[0].datas["CloseStatus"] = "未结案"; //未结案
+      } else if (this.labelStatus1 === 1) {
         this.formSearchs[0].datas["CloseStatus"] = "未结案"; //未结案
         this.formSearchs[0].datas["ReplyStatus"] = x.value;
       } else if (this.labelStatus1 === 2) {
