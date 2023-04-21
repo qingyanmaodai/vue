@@ -5,11 +5,7 @@
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <div
-              v-for="i in [0, 1, 2, 3, 4]"
-              :key="i"
-              v-show="labelStatus1 == i"
-            >
+            <div v-for="i in [0, 3]" :key="i" v-if="labelStatus2 === i">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -17,7 +13,7 @@
                 :remark="i"
                 :isLoading="isLoading"
                 :btnForm="btnForm"
-                :signName="labelStatus1"
+                :signName="i"
                 @btnClick="btnClick"
               />
             </div>
@@ -65,34 +61,14 @@
                   </el-col>
                 </el-row>
               </div>
-              <!-- <div
-                class="flex_column"
-                :style="{ height: height }"
-                v-show="labelStatus1 == 1"
-              >
-                <ComSpreadTable
-                  ref="spreadsheetRef"
-                  :height="height"
-                  :tableData="tableData[1]"
-                  :tableColumns="tableColumns[1]"
-                  :tableLoading="tableLoading[1]"
-                  :remark="1"
-                  :sysID="sysID[1]['ID']"
-                  :pagination="tablePagination[1]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @workbookInitialized="workbookInitialized"
-                  @selectChanged="selectChanged"
-                />
-              </div> -->
               <div
                 class="flex_column"
-                v-for="item in [0, 1, 2, 3, 4]"
+                v-for="item in [0, 3]"
                 :key="item"
-                v-if="labelStatus1 == item"
+                v-if="item === labelStatus2"
               >
                 <ComSpreadTable
-                  ref="spreadsheetRef"
+                  ref="`spreadsheetRef${remarkTb}`"
                   :height="height"
                   :tableData="tableData[item]"
                   :tableColumns="tableColumns[item]"
@@ -189,12 +165,14 @@ export default {
   },
   data() {
     return {
+      Columns: [[]],
       isLoading: false,
       hasSelect: [true, true, true, true, true],
       footerLabel: [""],
       dialogShow: false,
       height1: "360px",
       labelStatus1: 0,
+      labelStatus2: 0,
       Status1: [
         { label: "分配数量", value: -1 },
         { label: "数量+时间+线体", value: 0 },
@@ -208,6 +186,7 @@ export default {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       delData: [[]],
+      spread: [[], [], [], [], []],
       formSearchs: [
         {
           datas: {},
@@ -258,7 +237,7 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10075 },
-        { ID: 10075 },
+        { ID: 5615 },
         { ID: 10075 }
       ],
       userInfo: {}
@@ -280,8 +259,8 @@ export default {
   },
   methods: {
     //获取子组件实例
-    workbookInitialized: function(workbook) {
-      this.spread = workbook;
+    workbookInitialized: function(workbook, remarkTb) {
+      this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
@@ -449,17 +428,25 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      let sheet = this.spread.getActiveSheet();
       this.adminLoading = true;
-      // const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
+      const sheet = this.spread[remarkTb]?.getActiveSheet();
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+
       // 获取修改记录
-      let updateRecords;
+      let updateRecords = [];
       if (newData) {
         updateRecords = newData;
       } else {
-        // updateRecords = $table.getUpdateRecords();
-        updateRecords = sheet.getDirtyRows(); //获取修改过的数据
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          updateRecords = sheet.getDirtyRows(); //获取修改过的数据
+          updateRecords = updateRecords.map(x => {
+            return x["item"];
+          });
+        }
       }
+
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
@@ -614,25 +601,6 @@ export default {
       let res = await GetSearchData(form);
       let { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (remarkTb === 0) {
-          Columns[0] = Columns[0].filter(
-            item =>
-              item["label"] !== "预计生产日期" &&
-              item["label"] !== "线体" &&
-              item["label"] !== "标准人员" &&
-              item["label"] !== "每托数量" &&
-              item["label"] !== "托板数"
-          );
-        } else if (remarkTb === 1) {
-          Columns[0] = Columns[0].filter(
-            item =>
-              item["label"] !== "标准人员" &&
-              item["label"] !== "每托数量" &&
-              item["label"] !== "托板数"
-          );
-        } else if (remarkTb === 2) {
-          Columns[0] = Columns[0].filter(item => item["label"] !== "标准人员");
-        }
         Columns.some((m, i) => {
           m.forEach(n => {
             // 进行验证
@@ -644,10 +612,11 @@ export default {
             }
           });
         });
+        this.$set(this.Columns, remarkTb, Columns[0]);
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
-        this.setData();
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -658,16 +627,15 @@ export default {
       this.$set(this.tableLoading, remarkTb, false);
     },
     // excle表数据渲染
-    async setData() {
+    async setData(remarkTb) {
       try {
-        console.log(this.tagRemark, "1");
-        this.spread.suspendPaint();
+        this.spread[remarkTb].suspendPaint();
         // 获取活动表单
-        let sheet = this.spread.getActiveSheet();
+        let sheet = this.spread[remarkTb].getActiveSheet();
         // 重置表单
         sheet.reset();
         // 渲染列
-        this.tableColumns[this.tagRemark].forEach((x, y) => {
+        this.tableColumns[remarkTb].forEach((x, y) => {
           x["name"] = x["prop"];
           x["displayName"] = x["label"];
           x["width"] = parseInt(x.width);
@@ -692,7 +660,7 @@ export default {
             // });
             let newData = [];
             // let list = null;
-            this.tableData[this.tagRemark].map((item, index) => {
+            this.tableData[remarkTb].map((item, index) => {
               if (x.DataSourceID && x.DataSourceName) {
                 newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
                 this.bindComboBoxToCell(sheet, index, y, newData);
@@ -729,8 +697,8 @@ export default {
           // cellIndex++;
         });
         //改变字体颜色
-        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
-          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
+        this.tableData[remarkTb].forEach((row, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
             const key = column.prop;
 
             // 获取当前单元格
@@ -764,7 +732,7 @@ export default {
           -1,
           -1,
           -1,
-          this.tableColumns[this.tagRemark].length
+          this.tableColumns[remarkTb].length
         );
         let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
           cellrange
@@ -806,16 +774,16 @@ export default {
         );
         defaultStyle.showEllipsis = true;
         // 冻结
-        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
         //渲染数据源
-        sheet.setDataSource(this.tableData[this.tagRemark]);
+        sheet.setDataSource(this.tableData[remarkTb]);
         //渲染列
-        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
-        this.spread.options.tabStripVisible = false; //是否显示表单标签
-        this.spread.options.scrollbarMaxAlign = true;
-        // this.spread.options.scrollByPixel = true;
+        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
+        this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+        this.spread[remarkTb].options.scrollbarMaxAlign = true;
+        // this.spread[remarkTb].options.scrollByPixel = true;
 
-        this.spread.resumePaint();
+        this.spread[remarkTb].resumePaint();
         sheet.options.isProtected = true;
         sheet.options.protectionOptions.allowResizeColumns = true;
         sheet.options.protectionOptions.allowInsertRows = true;
@@ -832,7 +800,7 @@ export default {
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
-      this.spread.refresh(); //重新定位宽高度
+      this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     bindComboBoxToCell(sheet, row, col, dataSourceName) {
       // 获取要绑定下拉菜单的单元格对象
@@ -956,7 +924,45 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.dataSearch(index);
+      let changeColumns = [[]];
+      if (index === 0) {
+        changeColumns[0] = this.Columns[0].filter(
+          item =>
+            item["label"] !== "预计生产日期" &&
+            item["label"] !== "线体" &&
+            item["label"] !== "标准人员" &&
+            item["label"] !== "每托数量" &&
+            item["label"] !== "托板数"
+        );
+        this.$set(this.tableColumns, 0, changeColumns[0]);
+        this.labelStatus2 = 0;
+        this.setData(0);
+      } else if (index === 1) {
+        changeColumns[0] = this.Columns[0].filter(
+          item =>
+            item["label"] !== "标准人员" &&
+            item["label"] !== "每托数量" &&
+            item["label"] !== "托板数"
+        );
+        this.$set(this.tableColumns, 0, changeColumns[0]);
+        this.labelStatus2 = 0;
+        this.setData(0);
+      } else if (index === 2) {
+        changeColumns[0] = this.Columns[0].filter(
+          item => item["label"] !== "标准人员"
+        );
+        this.$set(this.tableColumns, 0, changeColumns[0]);
+        this.labelStatus2 = 0;
+        this.setData(0);
+      } else if (index === 3) {
+        this.labelStatus2 = 3;
+        this.dataSearch(3);
+      } else if (index === 4) {
+        changeColumns[0] = this.Columns[0];
+        this.$set(this.tableColumns, 0, changeColumns[0]);
+        this.labelStatus2 = 0;
+        this.setData(0);
+      }
     }
   }
 };

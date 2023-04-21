@@ -146,7 +146,7 @@ export default {
     // 初始化SpreadJS
     initSpread: function(spread) {
       this.spread = spread;
-      this.$emit("workbookInitialized", spread);
+      this.$emit("workbookInitialized", spread, this.remark);
     },
     // 选择一页显示多少数据
     pageSize(val) {
