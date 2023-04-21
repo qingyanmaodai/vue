@@ -779,26 +779,17 @@ export default {
     },
     // 行内列样式
     cellStyle({ row, column }) {
-      if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "缺采购单"
-      ) {
+      if (column.property == "PODeliveryDate" || column.property == "Remark") {
         return {
-          background: "#ff7b7b"
+          background: "#00b0f0"
         };
-      } else if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "在途不足"
-      ) {
+      } else if (column.property == "ArriveQty") {
         return {
-          background: "#ffced6"
+          color: "#00b0f0"
         };
-      } else if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "待复期"
-      ) {
+      } else if (column.property == "UnaccountedQty") {
         return {
-          background: "#fdfd8f"
+          color: "#ff0000"
         };
       }
       // else if (
