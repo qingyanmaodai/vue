@@ -61,7 +61,7 @@
                     <div class="flex">
                       复期:
                       <el-date-picker
-                        v-model="Rescheduled"
+                        v-model="PODeliveryDate"
                         type="date"
                         size="small"
                         value-format="yyyy-MM-dd"
@@ -175,7 +175,7 @@ export default {
   },
   data() {
     return {
-      Rescheduled: "",
+      PODeliveryDate: "",
       CurrentSendQty: "",
       isLoading: false,
       hasSelect: [true, true, true, true, true],
@@ -185,10 +185,10 @@ export default {
       height1: "360px",
       labelStatus1: 0,
       Status1: [
-        { label: "全部", value: -1 },
-        { label: "未复期", value: 0 },
-        { label: "复期不满足", value: "" },
-        { label: "逾期未交", value: "" }
+        { label: "全部", value: "" },
+        { label: "未复期", value: "未复期" },
+        { label: "复期不满足", value: "复期不满足" },
+        { label: "逾期未交", value: "逾期未交" }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -561,19 +561,19 @@ export default {
         }
       }
     },
+    //批量设置日期
     async changeDate(val) {
       if (val == 0) {
         if (this.selectionData[0].length === 0) {
           this.$message.error("请选择需要提交的数据！");
           return;
         }
-        if (!this.Rescheduled) {
+        if (!this.PODeliveryDate) {
           this.$message.error("请填写复期时间");
           return;
         }
         this.selectionData[0].map(item => {
-          this.$set(item, "DeliveryDate", this.Rescheduled);
-          item["DeliveryDate"] = this.Rescheduled;
+          this.$set(item, "PODeliveryDate", this.PODeliveryDate);
         });
         // let res = await GetSearch(
         //   this.selectionData[1],
@@ -874,6 +874,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
+      this.formSearchs[0].datas["ReplyStatus"] = item.value;
       // if (this.tableData[index].length == 0) {
       this.dataSearch(0);
       // }
