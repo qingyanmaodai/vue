@@ -3,15 +3,18 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
+      <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="i"
+          @btnClick="btnClick"
+        />
+      </div>
     </div>
     <div>
       <div class="admin_content">
@@ -23,35 +26,26 @@
             <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div class="flex_column" :style="{ height: height }">
-          <div class="spreadContainer" v-loading="tableLoading[0]">
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread"
-            >
-              <gc-worksheet></gc-worksheet>
-            </gc-spread-sheets>
-          </div>
-        </div>
-        <div class="flex_row_spaceBtn pagination">
-          <div>
-            <span @click="toPageSetting" class="primaryColor cursor"
-              >SysID:6734
-            </span>
-          </div>
-          <div class="flex">
-            <el-pagination
-              background
-              @size-change="val => pageSize(val, 0)"
-              :current-page="tablePagination[0].pageIndex"
-              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-              :page-size="tablePagination[0].pageSize"
-              :total="tablePagination[0].pageTotal"
-              @current-change="val => pageChange(val, 0)"
-              layout="total, sizes, prev, pager, next,jumper"
-            >
-            </el-pagination>
-          </div>
+        <div
+          class="flex_column"
+          v-for="item in [0]"
+          :key="item"
+          v-show="labelStatus1 === item"
+        >
+          <ComSpreadTable
+            ref="`spreadsheetRef${remarkTb}`"
+            :height="height"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @workbookInitialized="workbookInitialized"
+            @selectChanged="selectChanged"
+          />
         </div>
       </div>
     </div>
@@ -81,6 +75,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
+import ComSpreadTable from "@/components/ComSpreadTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
@@ -98,10 +93,13 @@ export default {
     ComSearch,
     ComReportTable,
     ComAsideTree,
-    DialogTable
+    DialogTable,
+    ComSpreadTable
   },
   data() {
     return {
+      labelStatus1: 0,
+      spread: [[], [], [], [], []],
       dialogSearchForm: {
         OrderID: ""
       },
@@ -119,7 +117,6 @@ export default {
       treeData: [],
       treeData2: [],
       autoGenerateColumns: true,
-      spread: null,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
@@ -193,15 +190,13 @@ export default {
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: 6734,
-      spread: null,
+      sysID: [{ ID: 10093 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
       selectionData: [[]],
       NoWorkHour: [],
       LineViewSort: [],
-      spread: null,
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 }
     };
@@ -210,14 +205,16 @@ export default {
   created() {
     _this = this;
     this.adminLoading = true;
-    this.judgeBtn();
+    // 获取所有按钮
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
   },
-  activated() {
-    if (this.spread) {
-      this.spread.refresh();
-    }
-  },
+  // activated() {
+  //   if (this.spread) {
+  //     this.spread.refresh();
+  //   }
+  // },
   computed: {
     ...mapState({
       userInfo: state => state.user.userInfo
@@ -246,29 +243,14 @@ export default {
         }
       };
     },
-    initSpread: function(spread) {
-      this.spread = spread;
+    //获取子组件实例
+    workbookInitialized: function(workbook, remarkTb) {
+      this.spread[remarkTb] = workbook;
     },
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter(y => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-        });
-      }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+    //获取当前选中行的值
+    selectChanged(newValue, remarkTb) {
+      // 在子组件计算属性发生变化时，更新父组件的计算属性
+      this.selectionData[remarkTb] = newValue;
     },
     // 高度控制
     setHeight() {
@@ -449,17 +431,14 @@ export default {
         .then(async _ => {
           this.adminLoading = true;
 
-          let sheet = this.spread.getActiveSheet();
+          let sheet = this.spread[this.labelStatus1].getActiveSheet();
           let submitData = sheet.getDataSource();
           submitData.forEach(m => {
             m["isChecked"] = true;
           });
           if (submitData.length >= 0) {
             this.adminLoading = true;
-            let res = await GetSearch(
-              submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
-            );
+            let res = await GetSearch(submitData, "/APSAPI/Reset10093");
             const { result, data, count, msg } = res.data;
             if (result) {
               this.dataSearch(0);
@@ -487,19 +466,6 @@ export default {
         })
         .catch(_ => {});
     },
-    // 获取选中的数据
-    getSelectionData() {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDataSource();
-      this.selectionData[0] = [];
-      if (newData.length != 0) {
-        newData.forEach(x => {
-          if (x.isChecked) {
-            this.selectionData[0].push(x);
-          }
-        });
-      }
-    },
     // 单击行
     handleRowClick(row, remarkTb) {
       this.delData[remarkTb] = [];
@@ -507,13 +473,31 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      let res = null;
+      this.adminLoading = true;
+      const sheet = this.spread[remarkTb]?.getActiveSheet();
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
 
-      if (newData && newData.length != 0) {
-        res = await SaveData(newData);
+      // 获取修改记录
+      let updateRecords = [];
+      if (newData) {
+        updateRecords = newData;
       } else {
-        res = await SaveData(this.tableData[remarkTb]);
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          updateRecords = sheet.getDirtyRows(); //获取修改过的数据
+          updateRecords = updateRecords.map(x => {
+            return x["item"];
+          });
+        }
       }
+
+      if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
+      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -522,17 +506,19 @@ export default {
           dangerouslyUseHTMLString: true
         });
         this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
       } else {
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true
         });
+        this.$set(this, "adminLoading", false);
       }
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: this.sysID }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -574,14 +560,14 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID;
+      form["dicID"] = this.sysID[remarkTb]["ID"];
       form["ControlID"] = this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
 
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.setData();
+        this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -593,9 +579,9 @@ export default {
       this.$set(this.tableLoading, remarkTb, false);
     },
     // 渲染数据
-    setData() {
-      this.spread.suspendPaint();
-      let sheet = this.spread.getActiveSheet();
+    setData(remarkTb) {
+      this.spread[remarkTb].suspendPaint();
+      let sheet = this.spread[remarkTb].getActiveSheet();
       sheet.options.allowCellOverflow = true;
       sheet.defaults.rowHeight = 23;
       sheet.defaults.colWidth = 100;
@@ -684,7 +670,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false; //是否显示表单标签
+      this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {
@@ -874,13 +860,13 @@ export default {
         }
       };
 
-      this.spread
+      this.spread[remarkTb]
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
 
       function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-        this.spread
+        this.spread[remarkTb]
       );
       MyContextMenu.prototype.onOpenMenu = function(
         menuData,
@@ -900,7 +886,7 @@ export default {
         });
       };
       var contextMenu = new MyContextMenu();
-      this.spread.contextMenu = contextMenu;
+      this.spread[remarkTb].contextMenu = contextMenu;
       // 剪贴板事件绑定
       sheet.bind(GC.Spread.Sheets.Events.ClipboardChanged, function(
         sender,
@@ -920,7 +906,7 @@ export default {
       });
 
       /////////////////表格事件/////////////
-      this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
+      this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
         const cellType = sheet.getCellType(row, col);
         if (cellType instanceof GCsheets.CellTypes.Button) {
@@ -932,8 +918,11 @@ export default {
       });
       //表格编辑事件
 
-      this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
-      this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
+      this.spread[remarkTb].bind(GCsheets.Events.EditStarting, function(
+        e,
+        args
+      ) {});
+      this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function(e, args) {
         // 自动计算数量
 
         _this.computedNum(args.row, args.col, args.editingText);
@@ -943,7 +932,7 @@ export default {
       });
 
       // 表格单击单元格弹框事件
-      this.spread.bind(GCsheets.Events.CellClick, function(e, args) {
+      this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
         if (_this.tableColumns[0].length) {
           _this.tableColumns[0].map((item, index) => {
             if (item.name === "Q1" && args.col === index) {
@@ -957,14 +946,14 @@ export default {
         }
       });
 
-      this.spread.resumePaint();
+      this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
-      this.spread.refresh(); //重新定位宽高度
+      this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread.getActiveSheet();
+      let sheet = this.spread[remarkTb].getActiveSheet();
       let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
@@ -1101,13 +1090,6 @@ export default {
         });
       });
     },
-    // 跳转至页面配置
-    toPageSetting() {
-      this.$router.push({
-        name: "FieldInfo",
-        params: { ID: this.sysID }
-      });
-    },
     //////////////////////////////
     async getOrgData() {
       this.getLineData(this.userInfo.WorkFlowInstanceID);
@@ -1237,7 +1219,7 @@ export default {
     },
     // 保存日计划
     async dataSaveDay() {
-      let sheet = this.spread.getActiveSheet();
+      let sheet = this.spread[this.labelStatus1].getActiveSheet();
       if (sheet.isEditing()) {
         sheet.endEdit();
       }
@@ -1251,7 +1233,7 @@ export default {
       newData = sheet.getInsertRows();
       if (newData.length != 0) {
         newData.forEach(x => {
-          x.item["dicID"] = this.sysID;
+          x.item["dicID"] = this.sysID[this.labelStatus1]["ID"];
           submitData.push(x.item);
         });
       }

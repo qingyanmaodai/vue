@@ -5,7 +5,7 @@
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <div v-for="i in [0, 3]" :key="i" v-if="labelStatus2 === i">
+            <div v-for="i in [0, 3]" :key="i" v-show="labelStatus2 === i">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -65,7 +65,7 @@
                 class="flex_column"
                 v-for="item in [0, 3]"
                 :key="item"
-                v-if="item === labelStatus2"
+                v-show="item === labelStatus2"
               >
                 <ComSpreadTable
                   ref="`spreadsheetRef${remarkTb}`"
@@ -562,13 +562,6 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          if (z !== 0) {
-            this.$set(
-              this.formSearchs[z].datas,
-              "Account",
-              this.userInfo.Account
-            );
-          }
           x.forEach(y => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
@@ -625,6 +618,9 @@ export default {
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
+      if (this.labelStatus1 !== 3) {
+        this.changeStatus(null, this.labelStatus1);
+      }
     },
     // excle表数据渲染
     async setData(remarkTb) {
@@ -800,7 +796,7 @@ export default {
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
-      this.spread[remarkTb].refresh(); //重新定位宽高度
+      // this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     bindComboBoxToCell(sheet, row, col, dataSourceName) {
       // 获取要绑定下拉菜单的单元格对象
