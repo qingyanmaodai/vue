@@ -97,6 +97,7 @@
                   @pageSize="pageSize"
                   @selectfun="selectFun"
                   @sortChange="sortChange"
+                  :keepSource="true"
                 />
                 <!-- <ComSpreadTable
                   ref="spreadsheetRef"

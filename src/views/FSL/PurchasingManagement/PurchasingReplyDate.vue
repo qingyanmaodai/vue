@@ -114,6 +114,7 @@
                   @pageSize="pageSize"
                   @selectfun="selectFun"
                   @sortChange="sortChange"
+                  :keepSource="true"
                 />
               </div>
             </div>
