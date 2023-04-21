@@ -40,7 +40,7 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <el-divider direction="vertical"></el-divider>
+                    <!-- <el-divider direction="vertical"></el-divider>
 
                     <el-button
                       type="primary"
@@ -48,7 +48,7 @@
                       @click="changeDate(0)"
                     >
                       复制
-                    </el-button>
+                    </el-button> -->
                     <el-divider direction="vertical"></el-divider>
                     <div
                       :class="
@@ -379,51 +379,47 @@ export default {
       }
     },
     // 复制
-    async changeDate(val) {
-      let sheet = this.spread.getActiveSheet();
-      if (val == 0) {
-        if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要复制的数据的数据！");
-          return;
-        }
-        this.selectionData[0].map(item => {});
-
-        const arr = [{ label: 1 }, { label: 2 }, { label: 3 }];
-        this.tableData[0] = this.tableData[0]
-          .flatMap(obj => {
-            if (obj.isChecked) {
-              return [obj, obj];
-            } else {
-              return [obj];
-            }
-          })
-          .sort((a, b) => a.SalesOrderDetailPlanID - b.SalesOrderDetailPlanID);
-        this.setData();
-        // sheet.setDataSource(this.tableData[0]);
-        // [{label:1},{label:1},{label:2},{label:2},{label:3},{label:3}]
-        // let res = await GetSearch(
-        //   this.selectionData[1],
-        //   "/APSAPI/OrderTaskDownload"
-        // );
-        // const { datas, forms, result, msg } = res.data;
-        // if (result) {
-        //   this.$message({
-        //     message: msg,
-        //     type: "success",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.dataSearch(1);
-        //   this.$set(this, "adminLoading", false);
-        // } else {
-        //   this.$message({
-        //     message: msg,
-        //     type: "error",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.$set(this, "adminLoading", false);
-        // }
-      }
-    },
+    // async changeDate(val) {
+    //   let sheet = this.spread.getActiveSheet();
+    //   if (val == 0) {
+    //     if (this.selectionData[0].length === 0) {
+    //       this.$message.error("请选择需要复制的数据的数据！");
+    //       return;
+    //     }
+    //     this.tableData[0] = this.tableData[0].flatMap(obj => {
+    //       if (obj.isChecked) {
+    //         return [obj, { ...obj, LineID: "", SalesOrderDetailPlanID: null }];
+    //       } else {
+    //         return [obj];
+    //       }
+    //     });
+    //     // .sort((a, b) => a.SalesOrderDetailPlanID - b.SalesOrderDetailPlanID);
+    //     this.setData();
+    //     console.log(this.tableData[0],'this.tableData[0]');
+    //     // sheet.setDataSource(this.tableData[0]);
+    //     // let res = await GetSearch(
+    //     //   this.selectionData[1],
+    //     //   "/APSAPI/OrderTaskDownload"
+    //     // );
+    //     // const { datas, forms, result, msg } = res.data;
+    //     // if (result) {
+    //     //   this.$message({
+    //     //     message: msg,
+    //     //     type: "success",
+    //     //     dangerouslyUseHTMLString: true
+    //     //   });
+    //     //   this.dataSearch(1);
+    //     //   this.$set(this, "adminLoading", false);
+    //     // } else {
+    //     //   this.$message({
+    //     //     message: msg,
+    //     //     type: "error",
+    //     //     dangerouslyUseHTMLString: true
+    //     //   });
+    //     //   this.$set(this, "adminLoading", false);
+    //     // }
+    //   }
+    // },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
