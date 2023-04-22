@@ -497,7 +497,8 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
+      let res = await SaveMOPlanStep4(updateRecords);
+     // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
