@@ -221,9 +221,9 @@ export default {
     })
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.setHeight();
-    // }, 300);
+    setTimeout(() => {
+      this.setHeight();
+    }, 300);
     this.keyDown();
   },
   methods: {
@@ -238,7 +238,7 @@ export default {
           e.preventDefault();
           e.returnValue = false;
 
-          this.dataSaveDay();
+          this.dataSave(this.labelStatus1);
           return false;
         }
       };

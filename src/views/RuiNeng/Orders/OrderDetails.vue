@@ -2,18 +2,18 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <!-- <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i"> -->
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="i"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        :signName="labelStatus1"
-        @btnClick="btnClick"
-      />
-      <!-- </div> -->
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="labelStatus1"
+          @btnClick="btnClick"
+        />
+      </div>
     </div>
     <div>
       <div class="admin_content">
@@ -23,7 +23,7 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <div>
+              <!-- <div>
                 <span>生产时段：</span>
                 <el-date-picker
                   v-model="ruleForm.ProducedDate"
@@ -33,7 +33,7 @@
                 >
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
-              </div>
+              </div> -->
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -47,16 +47,19 @@
         </div>
         <div
           class="flex_column"
+          v-for="item in [0, 1, 2, 3, 4]"
+          :key="item"
+          v-if="labelStatus1 === item"
         >
           <ComSpreadTable
-            ref="spreadsheetRef"
+            ref="`spreadsheetRef${remarkTb}`"
             :height="height"
-            :tableData="tableData[0]"
-            :tableColumns="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :sysID="sysID[0]['ID']"
-            :pagination="tablePagination[0]"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @workbookInitialized="workbookInitialized"
@@ -391,7 +394,9 @@ export default {
     this.adminLoading = true;
     this.getTableHeader();
     // 获取所有按钮
-    this.judgeBtn();
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
+    // this.judgeBtn();
   },
   activated() {
     if (this.spread) {
@@ -1144,7 +1149,7 @@ export default {
         });
       }
       this.adminLoading = false;
-    },
+    }
   }
 };
 </script>

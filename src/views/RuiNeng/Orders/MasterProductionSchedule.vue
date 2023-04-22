@@ -500,6 +500,35 @@ export default {
         }
       }
     },
+    // 从月计划更新
+    async transferMonthlyPlan(remarkTb, index) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要提交的数据！");
+        return;
+      } else {
+        let res = await GetSearch(
+          this.selectionData[remarkTb],
+          "/APSAPI/TOProcessPlanFromSalesOrderh"
+        );
+        const { datas, forms, result, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+          this.dataSearch(remarkTb);
+          this.$set(this, "adminLoading", false);
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true
+          });
+          this.$set(this, "adminLoading", false);
+        }
+      }
+    },
     // 删除
     // async dataDel(remarkTb, index, parms) {
     //   let res = null;
