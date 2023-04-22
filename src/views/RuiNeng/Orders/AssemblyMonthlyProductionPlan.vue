@@ -438,7 +438,7 @@ export default {
           });
           if (submitData.length >= 0) {
             this.adminLoading = true;
-            let res = await GetSearch(submitData, "/APSAPI/Reset10093");
+            let res =  await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan?isPlan=1");
             const { result, data, count, msg } = res.data;
             if (result) {
               this.dataSearch(0);
@@ -476,7 +476,10 @@ export default {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-
+      if(sheet.isEditing())
+  {
+    sheet.endEdit();
+  }
       // 获取修改记录
       let updateRecords = [];
       if (newData) {
