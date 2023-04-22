@@ -578,14 +578,14 @@ export default {
       }
 
       this.tableData[0].forEach((row, index) => {
-        var rowSheet = sheet.getRange(
+        let rowSheet = sheet.getRange(
           index,
           0,
           1,
           colindex,
           GC.Spread.Sheets.SheetArea.viewport
         );
-        var rowSheet2 = sheet.getRange(
+        let rowSheet2 = sheet.getRange(
           index,
           colindex,
           1,
@@ -593,7 +593,7 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
         // 齐套列
-        var rowSheet3 = "";
+        let rowSheet3 = "";
         if (_this.tableColumns[0].length) {
           for (let i = 0; i < _this.tableColumns[0].length; i++) {
             let item = _this.tableColumns[0][i];
@@ -608,56 +608,56 @@ export default {
           }
         }
 
-        if (row["Code"] == null) {
-          rowSheet.backColor("#A0CFFF");
-          rowSheet.foreColor("balck");
-          rowSheet2.backColor("#A0CFFF");
-          rowSheet2.foreColor("balck");
-          if (row["K1"] != "100.00%") {
-            //不齐套时字体为红色
-            rowSheet3.foreColor("red");
-          }
-        } else if (row["MFGOrganizeID"] === 162) {
-          // row.backColor();
-          rowSheet.backColor("#FFFF00");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("#FFFF00");
-          if (row["K1"] != "100.00%") {
-            //不齐套时字体为红色
-            rowSheet3.foreColor("red");
-          }
-        } else if (row["SchedulingResult"] === "超期") {
-          // row.backColor();
-          rowSheet.backColor("#C2E7B0");
-          rowSheet.foreColor("black");
-          if (row["K1"] != "100.00%") {
-            //不齐套时字体为红色
-            rowSheet3.foreColor("red");
-          }
-        } else if (
-          row["DBResult"] != "计算成功" &&
-          row["DBResult"] != "" &&
-          row["DBResult"] != null
-        ) {
-          // row.backColor();
-          rowSheet.backColor("#C2E7B0");
-          rowSheet.foreColor("red");
-          if (row["K1"] != "100.00%") {
-            //不齐套时字体为红色
-            rowSheet3.foreColor("red");
-          }
-        } else if (row["K1"] != "100.00%") {
-          //不齐套时字体为红色
-          rowSheet.foreColor("black");
-          rowSheet2.foreColor("balck");
-          rowSheet3.foreColor("red");
-        } else {
-          // row.backColor();
-          rowSheet.foreColor("black");
-          rowSheet.backColor("");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("");
-        }
+        // if (row["Code"] == null) {
+        //   rowSheet.backColor("#A0CFFF");
+        //   rowSheet.foreColor("balck");
+        //   rowSheet2.backColor("#A0CFFF");
+        //   rowSheet2.foreColor("balck");
+        //   if (row["K1"] != "100.00%") {
+        //     //不齐套时字体为红色
+        //     rowSheet3.foreColor("red");
+        //   }
+        // } else if (row["MFGOrganizeID"] === 162) {
+        //   // row.backColor();
+        //   rowSheet.backColor("#FFFF00");
+        //   rowSheet.foreColor("black");
+        //   rowSheet2.backColor("#FFFF00");
+        //   if (row["K1"] != "100.00%") {
+        //     //不齐套时字体为红色
+        //     rowSheet3.foreColor("red");
+        //   }
+        // } else if (row["SchedulingResult"] === "超期") {
+        //   // row.backColor();
+        //   rowSheet.backColor("#C2E7B0");
+        //   rowSheet.foreColor("black");
+        //   if (row["K1"] != "100.00%") {
+        //     //不齐套时字体为红色
+        //     rowSheet3.foreColor("red");
+        //   }
+        // } else if (
+        //   row["DBResult"] != "计算成功" &&
+        //   row["DBResult"] != "" &&
+        //   row["DBResult"] != null
+        // ) {
+        //   // row.backColor();
+        //   rowSheet.backColor("#C2E7B0");
+        //   rowSheet.foreColor("red");
+        //   if (row["K1"] != "100.00%") {
+        //     //不齐套时字体为红色
+        //     rowSheet3.foreColor("red");
+        //   }
+        // } else if (row["K1"] != "100.00%") {
+        //   //不齐套时字体为红色
+        //   rowSheet.foreColor("black");
+        //   rowSheet2.foreColor("balck");
+        //   rowSheet3.foreColor("red");
+        // } else {
+        //   // row.backColor();
+        //   rowSheet.foreColor("black");
+        //   rowSheet.backColor("");
+        //   rowSheet.foreColor("black");
+        //   rowSheet2.backColor("");
+        // }
 
         let cellIndex = 0;
         this.tableColumns[0].forEach(m => {

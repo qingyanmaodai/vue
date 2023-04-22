@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -24,6 +24,23 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <!-- <div>
+                <span>选择机台/班组：</span>
+                <el-select
+                  clearable
+                  filterable
+                  size="mini"
+                  v-model="ruleForm.LineIDs"
+                  @change="setFooterLabel"
+                  style="width: 320px"
+                >
+                  <el-option
+                    v-for="(item, i) in lines"
+                    :key="i"
+                    :label="item.LineName"
+                    :value="item.LineID"
+                  >
+                  </el-option>
+                </el-select>
                 <span>生产时段：</span>
                 <el-date-picker
                   v-model="ruleForm.ProducedDate"
@@ -47,26 +64,25 @@
         </div>
         <div
           class="flex_column"
-          v-for="item in [0, 1, 2, 3, 4]"
-          :key="item"
-          v-if="labelStatus1 === item"
+          :style="{ height: height }"
+          v-show="labelStatus1 == 1"
         >
           <ComSpreadTable
-            ref="`spreadsheetRef${remarkTb}`"
+            ref="spreadsheetRef"
             :height="height"
-            :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :pagination="tablePagination[item]"
+            :tableData="tableData[1]"
+            :tableColumns="tableColumns[1]"
+            :tableLoading="tableLoading[1]"
+            :remark="1"
+            :sysID="sysID[1]['ID']"
+            :pagination="tablePagination[1]"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @workbookInitialized="workbookInitialized"
             @selectChanged="selectChanged"
           />
         </div>
-        <!-- <div
+        <div
           v-for="item in [0, 2, 3, 4, 5]"
           :key="item"
           v-show="labelStatus1 == item"
@@ -92,7 +108,7 @@
             @keyupEnter="editSort"
             @sortChange="sortChange"
           />
-        </div> -->
+        </div>
       </div>
 
       <!-- 点击齐套率弹框-->
@@ -385,6 +401,12 @@ export default {
       selectionData: [[], [], [], [], [], [], []],
       hasSelect: [true, true, false, true, false, false],
       isEdit: false,
+      losePrepareDate: 1,
+      losePrepareDate2: 1,
+      ruleForm: {
+        LineIDs: [],
+        ProducedDate: ""
+      },
       lines: []
     };
   },
@@ -392,11 +414,10 @@ export default {
   created() {
     _this = this;
     this.adminLoading = true;
+    this.getLine();
     this.getTableHeader();
     // 获取所有按钮
-    this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
-    // this.judgeBtn();
+    this.judgeBtn();
   },
   activated() {
     if (this.spread) {
@@ -1149,6 +1170,144 @@ export default {
         });
       }
       this.adminLoading = false;
+    },
+    // 转入日计划
+    async setPlan(remarkTb, index, params) {
+      let arr = this.getSelectionData();
+      if (this.ruleForm.LineIDs.length == 0 && false) {
+        this.$message.error("请选择生产线再转入日计划！");
+      } else {
+        if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("请选择需要转入日计划的数据！");
+        } else {
+          let ProcessID = "";
+          this.adminLoading = true;
+          // if (remarkTb == 1) {
+          //   ProcessID = "P202009092233201";
+          // } else if (remarkTb == 3) {
+          //   ProcessID = "P202009092233413";
+          // }
+
+          let errMsg = "";
+          // let okCount = 0;
+          let okCount = this.selectionData[remarkTb].length;
+          this.selectionData[remarkTb].forEach(d => {
+            let isOk = true;
+            //判断是否转入
+            // if (
+            //   params.ProcessID == "P202009092233201" &&
+            //   d["IsToPlanDay1"] != "否"
+            // ) {
+            //   isOk = false;
+            // } else if (
+            //   params.ProcessID == "P202009092233413" &&
+            //   d["IsToPlanDay2"] != "否"
+            // ) {
+            //   isOk = false;
+            // }
+
+            if (isOk) {
+              d["LineIDs"] = this.ruleForm.LineIDs;
+              d["ProducedDate"] = this.ruleForm.ProducedDate;
+              d["ProcessID"] = params.ProcessID;
+              d["LineID"] = null;
+              okCount++;
+            } else {
+              errMsg += d["OrderNo"] + "已转入或者无此工序";
+            }
+          });
+          if (errMsg != "") {
+            this.$message({
+              message: errMsg,
+              type: "error",
+              dangerouslyUseHTMLString: true
+            });
+          }
+          if (okCount > 0) {
+            let res = await GetSearch(
+              this.selectionData[remarkTb],
+              "/APSAPI/MOPlanSaveToDayPlanV2?isPlan=1"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true
+              });
+            }
+          } else {
+            this.adminLoading = false;
+          }
+        }
+      }
+    },
+    // 选线获取剩余工时
+    setFooterLabel(val) {
+      let LineIDs = this.lines.filter(a =>
+        this.ruleForm.LineIDs.some(b => b == a.LineID)
+      );
+      let LineName = LineIDs.map(c => c.LineName).join(",");
+      //查询线别剩余工时
+      let StrValue = `提示：当前所选${LineName}线，在${this.ruleForm.ProducedDate}共有350个小时，已占用250小时，剩余100小时【已选4项，预计占用50小时，剩余50小时】`;
+      this.$set(this.footerLabel, 0, StrValue);
+    },
+    // 获取线别
+    async getLine() {
+      let form = {};
+      form["rows"] = 0;
+      form["dicID"] = 36;
+      form["Status"] = 1;
+      form["OrganizeTypeID"] = 6;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          data.forEach(a => {
+            a["LineID"] = a.OrganizeID;
+            a["LineName"] = a.OrganizeName;
+          });
+        }
+        this.lines = data;
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+      }
+    },
+    // 备料任务
+    async readyTask(remarkTb, index, MOSchedulingType) {
+      let submitData = this.selectionData[remarkTb];
+      if (submitData.length != 0) {
+        this.adminLoading = true;
+        let url = "/APSAPI/SetPreParePlanV2";
+        let res = await GetSearch(submitData, url);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.dataSearch(this.tagRemark);
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true
+          });
+        }
+      } else {
+        this.$message.error("请选择需要操作的数据！");
+      }
     }
   }
 };
