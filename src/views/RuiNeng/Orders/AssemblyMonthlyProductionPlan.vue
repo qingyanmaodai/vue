@@ -438,7 +438,10 @@ export default {
           });
           if (submitData.length >= 0) {
             this.adminLoading = true;
-            let res = await GetSearch(submitData, "/APSAPI/Reset10093");
+            let res = await GetSearch(
+              submitData,
+              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+            );
             const { result, data, count, msg } = res.data;
             if (result) {
               this.dataSearch(0);
@@ -581,6 +584,7 @@ export default {
     // 渲染数据
     setData(remarkTb) {
       this.spread[remarkTb].suspendPaint();
+      debugger;
       let sheet = this.spread[remarkTb].getActiveSheet();
       sheet.options.allowCellOverflow = true;
       sheet.defaults.rowHeight = 23;
@@ -953,7 +957,7 @@ export default {
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread[remarkTb].getActiveSheet();
+      let sheet = this.spread[this.labelStatus1].getActiveSheet();
       let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
