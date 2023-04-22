@@ -479,7 +479,9 @@ export default {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-
+      if (sheet.isEditing()) {
+        sheet.endEdit();
+      }
       // 获取修改记录
       let updateRecords = [];
       if (newData) {
@@ -500,7 +502,8 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
+      let res = await SaveMOPlanStep4(updateRecords);
+      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -584,7 +587,6 @@ export default {
     // 渲染数据
     setData(remarkTb) {
       this.spread[remarkTb].suspendPaint();
-      debugger;
       let sheet = this.spread[remarkTb].getActiveSheet();
       sheet.options.allowCellOverflow = true;
       sheet.defaults.rowHeight = 23;
