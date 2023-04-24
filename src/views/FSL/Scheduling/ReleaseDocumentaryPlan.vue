@@ -61,7 +61,7 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <div
+                    <!-- <div
                       class="flex"
                       v-if="selectionData[1].length === 1 && labelStatus1 === 1"
                     >
@@ -94,7 +94,7 @@
                       >
                         拆分下达
                       </el-button>
-                    </div>
+                    </div> -->
                     <!-- <el-divider direction="vertical"></el-divider>
                     <el-button
                       type="warning"
@@ -301,7 +301,7 @@ export default {
         { ID: 9053 },
         { ID: 9053 },
         { ID: 10089 },
-        { ID: 90531 },
+        { ID: 10097 },
         { ID: 9053 }
       ],
       userInfo: {}
@@ -883,11 +883,21 @@ export default {
     // 行内列样式
     cellStyle({ row, column }) {
       if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "缺采购单"
+        (this.labelStatus1 == 0 || this.labelStatus1 == 1) &&
+        (column.property == "Account" ||
+          column.property == "PlanType" ||
+          column.property == "PlanDeliveryDate" ||
+          column.property == "Model" ||
+          column.property == "ArrivalRemark" ||
+          column.property == "Sign" ||
+          column.property == "Manufacturers" ||
+          column.property == "Remark3" ||
+          column.property == "ProductionLine" ||
+          column.property == "ProductionOrderNo" ||
+          column.property == "CurrentSendQty")
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#00b0f0"
         };
       } else if (
         column.property == "JudgeResult" &&
