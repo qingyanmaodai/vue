@@ -338,7 +338,7 @@ export default {
               {
                 ...copyObj,
                 LineID: null,
-                ProcessPlanID: null,
+                ProcessPlanID: 0,
                 PlanQty: null,
                 HasQty: null
               }
@@ -419,7 +419,7 @@ export default {
     // 退回
     async dataDel(remarkTb, index, parms) {
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请点击需要操作的数据！");
+        this.$message.error("请选择需要操作的数据！");
         return;
       }
       this.$confirm(

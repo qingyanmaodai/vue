@@ -74,7 +74,7 @@
                   1.匹配拉线
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
+                <!-- <el-button
                   v-show="labelStatus1 == 4"
                   type="warning"
                   size="mini"
@@ -82,14 +82,14 @@
                 >
                   2.配套计算
                 </el-button>
-                <el-divider direction="vertical"></el-divider>
+                <el-divider direction="vertical"></el-divider> -->
                 <el-button
                   v-show="labelStatus1 == 4"
                   type="success"
                   size="mini"
                   @click="MOPlanSaveToDayPlan"
                 >
-                  3.更新计划
+                  2.更新计划
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <div
@@ -103,40 +103,26 @@
               </el-col>
             </el-row>
           </div>
-
-          <div v-show="labelStatus1 <= 2">
-            <div class="admin_content">
-              <div class="flex_column" :style="{ height: height }">
-                <div class="spreadContainer" v-loading="tableLoading[0]">
-                  <gc-spread-sheets
-                    class="sample-spreadsheets"
-                    @workbookInitialized="initSpread"
-                  >
-                    <gc-worksheet></gc-worksheet>
-                  </gc-spread-sheets>
-                </div>
-              </div>
-              <div class="flex_row_spaceBtn pagination">
-                <div>
-                  <span @click="toPageSetting" class="primaryColor cursor"
-                    >SysID:7961
-                  </span>
-                </div>
-                <div class="flex">
-                  <el-pagination
-                    background
-                    @size-change="val => pageSize(val, 0)"
-                    :current-page="tablePagination[0].pageIndex"
-                    :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                    :page-size="tablePagination[0].pageSize"
-                    :total="tablePagination[0].pageTotal"
-                    @current-change="val => pageChange(val, 0)"
-                    layout="total, sizes, prev, pager, next,jumper"
-                  >
-                  </el-pagination>
-                </div>
-              </div>
-            </div>
+          <div
+            class="flex_column"
+            v-for="item in [0]"
+            :key="item"
+            v-show="labelStatus1 <= 2"
+          >
+            <ComSpreadTable
+              ref="`spreadsheetRef${remarkTb}`"
+              :height="height"
+              :tableData="tableData[item]"
+              :tableColumns="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @workbookInitialized="workbookInitialized"
+              @selectChanged="selectChanged"
+            />
           </div>
           <ComVxeTable
             ref="tableRefTwo"
@@ -219,6 +205,7 @@ import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
 import DialogTable from "@/components/Dialog/dialogTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
+import ComSpreadTable from "@/components/ComSpreadTable";
 import {
   GetHeader,
   GetSearchData,
@@ -247,7 +234,8 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComFormDialog,
-    DialogTable
+    DialogTable,
+    ComSpreadTable
   },
   data() {
     return {
@@ -282,36 +270,6 @@ export default {
         }
       ],
       parmsBtn: [
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "计算排期",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: [0, 1, 2, 3],
-        //   Methods: "computedScheduling",
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "下发周计划",
-        //   Type: "primary",
-        //   Ghost: true,
-        //   signName: [0, 1, 2, 3],
-        //   Size: "small",
-        //   Methods: "setWeekData",
-        //   Icon: "",
-        // },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "暂停",
-        //   Type: "danger",
-        //   Ghost: true,
-        //   signName: [0, 1, 2, 3],
-        //   Size: "small",
-        //   Methods: "parseData",
-        //   Icon: "",
-        // },
         {
           ButtonCode: "save",
           BtnName: "保存",
@@ -405,10 +363,11 @@ export default {
   computed: {},
   created() {
     _this = this;
-
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
+    console.log(this.btnForm, "this.btnForm");
+
     this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
   },
@@ -423,6 +382,15 @@ export default {
     }, 500);
   },
   methods: {
+    //获取子组件实例
+    workbookInitialized: function(workbook, remarkTb) {
+      this.spread = workbook;
+    },
+    //获取当前选中行的值
+    selectChanged(newValue, remarkTb) {
+      // 在子组件计算属性发生变化时，更新父组件的计算属性
+      this.selectionData[remarkTb] = newValue;
+    },
     async subSAP() {
       this.getSelectionData(1);
       this.adminLoading = true;
@@ -956,9 +924,9 @@ export default {
         params: { ID: this.sysID[0].ID }
       });
     },
-    initSpread: function(spread) {
-      this.spread = spread;
-    },
+    // initSpread: function(spread) {
+    //   this.spread = spread;
+    // },
     changenoworkhours(item, value, prop, index, a, b) {
       if (this.NoWorkHour.findIndex(m => m.OrderID == item.OrderID) === -1) {
         this.NoWorkHour.push(item);
@@ -1611,12 +1579,14 @@ export default {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
       // }
-      let submitData = [];
-      this.tableData[1].forEach(x => {
-        x["Type"] = 0;
-        x["dicID"] = 7960;
-        x["isChecked"] = true;
-        submitData.push(x);
+      // [];
+      let submitData = this.tableData[1].map(x => {
+        return {
+          ...x,
+          Type: 0,
+          dicID: 7960,
+          isChecked: true
+        };
       });
       if (submitData.length == 0) {
         this.$message.error("请选择需要计算的数据！");
@@ -1629,12 +1599,10 @@ export default {
           // 清空选中的，把选中的数据重新绑定
 
           this.resultMsg = res.data.resultMsg;
-
-          let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
-          this.$set(this.selectionData, 1, []);
           let newData = this.tableData[1].filter(a =>
-            templateData.some(b => b.OrderID == a.OrderID)
+            this.selectionData[1].some(b => b.OrderID == a.OrderID)
           );
+          this.$set(this.selectionData, 1, []);
           if (newData.length != 0) {
             newData.forEach(c => {
               this.$nextTick(() => {
@@ -1642,6 +1610,10 @@ export default {
                 _this.selectionData[1].push(c);
               });
             });
+          } else {
+            this.selectionData[1] = this.tableData.filter(
+              item => item["isChecked"] == true
+            );
           }
           this.adminLoading = false;
           this.$message({
