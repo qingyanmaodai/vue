@@ -407,7 +407,9 @@ export default {
     _this = this;
 
     this.userInfo = this.$store.getters.userInfo;
-    this.judgeBtn();
+    // 获取所有按钮
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
   },
   activated() {
@@ -1393,8 +1395,8 @@ export default {
         m["MOSchedulingType"] = 3;
       });
       this.adminLoading = true;
-      // let res = await MOPlanStep1(submitData);
-      let res = await FSLMOPlanStep1(submitData);
+      let res = await MOPlanStep1(submitData);
+      // let res = await FSLMOPlanStep1(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (index == 1) {
@@ -1455,39 +1457,35 @@ export default {
           });
       }
     },
-    save4() {
-      //在分线列表处保存
-      if (this.selectionData[1].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+    // 保存
+    async save(remarkTb, index, parms) {
+      if (remarkTb === 4) {
+        //在分线列表处保存
+        if (this.selectionData[1].length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+          return;
+        } else {
+          this.adminLoading = true;
+          this.dataSave(submitData, 1);
+        }
       } else {
-        this.adminLoading = true;
-
-        let submitData = this.selectionData[1];
+        let sheet = this.spread.getActiveSheet();
+        let newData = sheet.getDirtyRows();
+        let submitData = [];
+        if (newData.length != 0) {
+          newData.forEach(x => {
+            submitData.push(x.item);
+          });
+        }
 
         if (submitData.length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
-          this.dataSave(submitData, 1);
+          this.dataSave(submitData, remarkTb);
         }
       }
     },
-    // 保存
-    async save(remarkTb, index, parms) {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows();
-      let submitData = [];
-      if (newData.length != 0) {
-        newData.forEach(x => {
-          submitData.push(x.item);
-        });
-      }
-
-      if (submitData.length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-      } else {
-        this.dataSave(submitData, remarkTb);
-      }
-    },
+    // save4() {},
     //恢复计划
     async recovery(remarkTb) {
       remarkTb = 2;
