@@ -988,9 +988,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      if (this.tableData[index].length == 0) {
-        this.dataSearch(index);
-      }
+      this.dataSearch(index);
     }
     // 改变状态
     // changeStatus(x, index) {
