@@ -23,7 +23,12 @@
             <el-col :span="4"
               ><span class="title">{{ title }}</span></el-col
             >
-            <el-col :span="20" class="flex_flex_end"> </el-col>
+            <el-col :span="20" class="flex_flex_end"
+              ><el-divider direction="vertical"></el-divider>
+              <el-button type="primary" size="mini" @click="changeEvent(0)">
+                复制
+              </el-button>
+            </el-col>
           </el-row>
         </div>
         <div
@@ -311,6 +316,64 @@ export default {
         this[methods](remarkTb, index);
       }
     },
+    // 复制
+    async changeEvent(val) {
+      // let sheet = this.spread[this.labelStatus1].getActiveSheet();
+      if (val == 0) {
+        if (this.selectionData[0].length === 0) {
+          this.$message.error("请选择需要复制的数据的数据！");
+          return;
+        }
+        this.tableData[0] = this.tableData[0].flatMap(obj => {
+          if (obj["isChecked"]) {
+            const objKeys = Object.keys(obj);
+            let copyObj = JSON.parse(JSON.stringify(obj)); //深拷贝
+            objKeys.forEach(key => {
+              if (key.endsWith("dy")) {
+                copyObj[key.replace(/dy$/, "")] = null;
+              }
+            });
+            return [
+              obj,
+              {
+                ...copyObj,
+                LineID: null,
+                ProcessPlanID: null,
+                PlanQty: null,
+                HasQty: null
+              }
+            ];
+          } else {
+            return [obj];
+          }
+        });
+        // .sort((a, b) => a.SalesOrderDetailPlanID - b.SalesOrderDetailPlanID);
+        this.setData(0);
+        console.log(this.tableData[0], "this.tableData[0]");
+        // sheet.setDataSource(this.tableData[0]);
+        // let res = await GetSearch(
+        //   this.selectionData[1],
+        //   "/APSAPI/OrderTaskDownload"
+        // );
+        // const { datas, forms, result, msg } = res.data;
+        // if (result) {
+        //   this.$message({
+        //     message: msg,
+        //     type: "success",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.dataSearch(1);
+        //   this.$set(this, "adminLoading", false);
+        // } else {
+        //   this.$message({
+        //     message: msg,
+        //     type: "error",
+        //     dangerouslyUseHTMLString: true
+        //   });
+        //   this.$set(this, "adminLoading", false);
+        // }
+      }
+    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -340,38 +403,36 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
     },
-    // 删除
+    // 获取选中的数据
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[0] = [];
+      if (newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            this.selectionData[0].push(x);
+          }
+        });
+      }
+    },
+    // 退回
     async dataDel(remarkTb, index, parms) {
-      let res = null;
-      this.getSelectionData();
-      let newData = [];
-
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请点击需要操作的数据！");
+        return;
+      }
       this.$confirm(
         "确定要退回的【" +
-          this[parms.dataName][remarkTb].length +
+          this.selectionData[remarkTb].length +
           "】数据吗，如果已经报工则无法退回？"
       )
         .then(_ => {
-          if (parms && parms.dataName) {
-            if (this[parms.dataName][remarkTb].length == 0) {
-              this.$message.error("请单击需要操作的数据！");
-              return;
-            } else {
-              this[parms.dataName][remarkTb].forEach(x => {
-                let obj = x;
-                obj["ElementDeleteFlag"] = 1;
-                newData.push(obj);
-              });
-            }
-          } else {
-            this.tableData[remarkTb].forEach(y => {
-              let obj2 = y;
-              obj2["ElementDeleteFlag"] = 1;
-              newData.push(obj2);
-            });
-          }
+          this.selectionData[remarkTb].forEach(x => {
+            x["ElementDeleteFlag"] = 1;
+          });
           this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, newData);
+          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
         })
         .catch(_ => {});
     },
