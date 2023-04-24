@@ -657,8 +657,36 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
       console.log(this.checkBoxCellTypeLine);
-      this.tableColumns[0].forEach(x => {
-        if (x.prop == "LineID") {
+      this.tableColumns[0].forEach((x, colIndex) => {
+        if (x.prop === "LineID") {
+          let newData = [];
+          let list = null;
+          this.tableData[0].map((item, index) => {
+            if (item["Lines"]) {
+              newData = item["Lines"];
+              if (newData.length !== 0 && newData) {
+                list = new GCsheets.CellTypes.ComboBox();
+                list.editorValueType(
+                  GC.Spread.Sheets.CellTypes.EditorValueType.value
+                );
+                list.editable(true);
+                list.items(newData);
+                list.itemHeight(24);
+                sheet
+                  .getCell(index, colIndex, GCsheets.SheetArea.viewport)
+                  .cellType(list);
+              }
+            } else {
+              item["LineID"] = null;
+            }
+          });
+          colInfos.push({
+            name: x.prop,
+            displayName: x.label,
+            cellType: "",
+            size: parseInt(x.width)
+          });
+        } else if (x.prop == "LineID") {
           colInfos.push({
             name: x.prop,
             displayName: "线别",
