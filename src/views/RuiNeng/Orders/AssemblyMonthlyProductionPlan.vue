@@ -1152,11 +1152,9 @@ export default {
           let label = this.tableColumns[0][j].prop + "dy";
           let obj = currentRow[label];
           remainNum = remainNum - parseInt(val);
-          let maxNum =
-            parseInt(Capacity) *
-            parseInt(obj.TotalHours) *
-            parseInt(obj.DayCapacity);
-          // parseInt(obj.StandardPeoples)
+          let maxNum =Capacity *obj.TotalHours *
+            obj.DayCapacity/currentRow.StandardPeoples
+            maxNum=parseInt(maxNum)
           if (remainNum <= 0) {
             list[j] = null;
           } else {
