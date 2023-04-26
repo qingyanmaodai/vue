@@ -654,6 +654,10 @@ export default {
         let sheet = this.spread[remarkTb].getActiveSheet();
         // 重置表单
         sheet.reset();
+        //渲染数据源
+        sheet.setDataSource(this.tableData[remarkTb]);
+        //渲染列
+        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         // 渲染列
         this.tableColumns[remarkTb].forEach((x, y) => {
           x["name"] = x["prop"];
@@ -795,10 +799,7 @@ export default {
         defaultStyle.showEllipsis = true;
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
-        //渲染数据源
-        sheet.setDataSource(this.tableData[remarkTb]);
-        //渲染列
-        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
+
         this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
         this.spread[remarkTb].options.scrollbarMaxAlign = true;
         // this.spread[remarkTb].options.scrollByPixel = true;
