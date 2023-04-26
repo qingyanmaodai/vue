@@ -70,11 +70,11 @@
                   v-show="labelStatus1 == 4"
                   type="primary"
                   size="mini"
-                  @click="MOPlanStep1Calculation"
+                  @click="FSLMOPlanStep1Calculation"
                 >
                   1.匹配拉线
                 </el-button>
-                <el-divider direction="vertical"></el-divider>
+                <!-- <el-divider direction="vertical"></el-divider>
                 <el-button
                   v-show="labelStatus1 == 4"
                   type="warning"
@@ -82,7 +82,7 @@
                   @click="dataComputedDate"
                 >
                   2.配套计算
-                </el-button>
+                </el-button> -->
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   v-show="labelStatus1 == 4"
@@ -90,7 +90,7 @@
                   size="mini"
                   @click="MOPlanSaveToDayPlan"
                 >
-                  3.更新计划
+                  2.更新计划
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
                 <div
@@ -232,7 +232,8 @@ import ComFormDialog from "@/components/ComFormDialog";
 import {
   MOPlanStep1,
   MOPlanStep1Calculation,
-  FSLMOPlanStep1
+  FSLMOPlanStep1,
+  FSLMOPlanStep1Calculation
 } from "@/api/wjApi";
 
 import {
@@ -1606,7 +1607,7 @@ export default {
       }
     },
     //正排倒排计算，匹配拉线
-    async MOPlanStep1Calculation() {
+    async FSLMOPlanStep1Calculation() {
       // if (this.selectionData[1].length == 0) {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
@@ -1622,7 +1623,10 @@ export default {
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
+        let res = await GetSearch(
+          submitData,
+          "/APSAPI/FSLMOPlanStep1Calculation"
+        );
         const { data, forms, result, msg } = res.data;
         if (result) {
           this.$set(this.tableData, 1, data);

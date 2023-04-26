@@ -24,3 +24,11 @@ export function MOPlanStep1Calculation(data) {
     data
   });
 }
+// 计算完成期FSL
+export function FSLMOPlanStep1Calculation(data) {
+  return request({
+    url: "/APSAPI/FSLMOPlanStep1Calculation",
+    method: "POST",
+    data
+  });
+}
