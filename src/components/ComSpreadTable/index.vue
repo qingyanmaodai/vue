@@ -2,15 +2,16 @@
   <div>
     <!--  spreadJSform表单控件  -->
 
-    <div class="flex_column" :style="{ height: height }">
+    <div class="flex_column">
       <div class="spreadContainer" v-loading="tableLoading">
         <gc-spread-sheets
           class="sample-spreadsheets"
-          @workbookInitialized="initSpread"
+          ref="gcSpreadSheets"
+          :hostStyle="{ height: height }"
         >
         </gc-spread-sheets>
       </div>
-      <div class="flex_row_spaceBtn pagination">
+      <div class="flex_row_spaceBtn pagination" v-show="spaceBtnShow">
         <div v-show="sysID > 0">
           <span @click="toPageSetting" class="primaryColor cursor"
             >SysID:{{ sysID }}
@@ -81,6 +82,10 @@ export default {
       type: Boolean,
       default: false
     },
+    spaceBtnShow: {
+      type: Boolean,
+      default: true
+    },
     pagination: {
       type: Object,
       default() {
@@ -106,7 +111,7 @@ export default {
   },
   computed: {
     multipleSelection() {
-      let CheckNum = this.tableData.filter(item => item.isChecked === true);
+      let CheckNum = this.tableData.filter(item => item["isChecked"] === true);
       return CheckNum;
     },
     dataToRender() {
@@ -127,7 +132,9 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    this.initSpread();
+  },
   created() {},
   methods: {
     // 跳转至页面配置
@@ -144,9 +151,9 @@ export default {
       // this.$emit("toPageSetting");
     },
     // 初始化SpreadJS
-    initSpread: function(spread) {
-      this.spread = spread;
-      this.$emit("workbookInitialized", spread, this.remark);
+    initSpread: function() {
+      this.spread = this.$refs.gcSpreadSheets.spread;
+      this.$emit("workbookInitialized", this.spread, this.remark);
     },
     // 选择一页显示多少数据
     pageSize(val) {

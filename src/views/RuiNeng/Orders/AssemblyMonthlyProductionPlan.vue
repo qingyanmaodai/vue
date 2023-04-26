@@ -26,7 +26,7 @@
             <el-col :span="20" class="flex_flex_end"
               ><el-divider direction="vertical"></el-divider>
               <el-button type="primary" size="mini" @click="changeEvent(0)">
-                复制
+                拆分订单
               </el-button>
             </el-col>
           </el-row>
@@ -38,7 +38,7 @@
           v-show="labelStatus1 === item"
         >
           <ComSpreadTable
-            ref="`spreadsheetRef${remarkTb}`"
+            ref="spreadsheetRef"
             :height="height"
             :tableData="tableData[item]"
             :tableColumns="tableColumns[item]"
@@ -54,7 +54,38 @@
         </div>
       </div>
     </div>
-
+    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="24" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
+            <el-button type="primary" size="mini" @click="changeEvent(1)">
+              确定拆分
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [1]" :key="item">
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
+      </div>
+    </el-dialog>
     <!-- 弹框-->
     <DialogTable
       title="全局欠料"
@@ -81,6 +112,8 @@ import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComSpreadTable from "@/components/ComSpreadTable";
+import ComSpreadTable2 from "@/components/ComSpreadTable";
+import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
@@ -99,10 +132,13 @@ export default {
     ComReportTable,
     ComAsideTree,
     DialogTable,
-    ComSpreadTable
+    ComVxeTable,
+    ComSpreadTable,
+    ComSpreadTable2
   },
   data() {
     return {
+      Dialog: false,
       labelStatus1: 0,
       spread: [[], [], [], [], []],
       dialogSearchForm: {
@@ -127,6 +163,10 @@ export default {
       drawer: false,
       delData: [[]],
       formSearchs: [
+        {
+          datas: {},
+          forms: []
+        },
         {
           datas: {},
           forms: []
@@ -184,22 +224,24 @@ export default {
           Params: { dataName: "resetScheduling" }
         }
       ],
-      tableData: [[]],
-      tableColumns: [[]],
+      tableData: [[], []],
+      tableColumns: [[], []],
       tableLoading: [false],
-      isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 3000, pageTotal: 0 }],
+      isClear: [false, false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 }
+      ],
       height: "707px",
       treeHeight: "765px",
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      isEdit: false,
-      sysID: [{ ID: 6734 }],
+      sysID: [{ ID: 6734 }, { ID: 6734 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
-      selectionData: [[]],
+      selectionData: [[], []],
       NoWorkHour: [],
       LineViewSort: [],
       sheetSelectRows: [],
@@ -321,9 +363,54 @@ export default {
       // let sheet = this.spread[this.labelStatus1].getActiveSheet();
       if (val == 0) {
         if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要复制的数据的数据！");
+          this.$message.error("请选择需要拆单的数据！");
           return;
         }
+        this.Dialog = true;
+        let targetArray = JSON.parse(JSON.stringify(this.selectionData[0]));
+        let targetColumns = JSON.parse(JSON.stringify(this.tableColumns[0]));
+
+        targetColumns = targetColumns.filter(
+          item =>
+            item.label == "生产订单" ||
+            item.label == "数量" ||
+            item.label == "计划数"
+        );
+        targetColumns.push({
+          label: "拆单数量",
+          prop: "SQty"
+        });
+        targetColumns.map(item => {
+          item["width"] = 250;
+          if (item.label === "拆单数量") {
+            item["isEdit"] = true;
+          } else {
+            item["isEdit"] = false;
+          }
+        });
+        this.$set(this.tableColumns, 1, targetColumns);
+        this.$nextTick(() => {
+          this.$set(this.tableData, 1, targetArray);
+          this.setData(1);
+        });
+      } else if (val === 1) {
+        const errorNum1 = this.selectionData[1].findIndex(
+          item => !item["SQty"]
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
+          return;
+        }
+
+        const errorNum2 = this.selectionData[1].findIndex(item => {
+          return item["SQty"] > item["Qty"];
+        });
+        if (errorNum2 !== -1) {
+          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
+          return;
+        }
+        this.Dialog = false;
+
         this.tableData[0] = this.tableData[0].flatMap(obj => {
           if (obj["isChecked"]) {
             const objKeys = Object.keys(obj);
@@ -333,45 +420,45 @@ export default {
                 copyObj[key.replace(/dy$/, "")] = null;
               }
             });
+            const curObj = this.selectionData[1].find(item => {
+              return item["RowNumber"] === obj["RowNumber"];
+            });
             return [
-              obj,
+              {
+                ...obj,
+                Qty: obj["Qty"] - curObj["SQty"]
+              },
               {
                 ...copyObj,
                 LineID: null,
                 ProcessPlanID: 0,
                 PlanQty: null,
-                HasQty: null
+                HasQty: null,
+                Qty: curObj["SQty"]
               }
             ];
           } else {
-            return [obj];
+            return [{ ...obj }];
           }
         });
-        // .sort((a, b) => a.SalesOrderDetailPlanID - b.SalesOrderDetailPlanID);
-        this.setData(0);
-        console.log(this.tableData[0], "this.tableData[0]");
-        // sheet.setDataSource(this.tableData[0]);
-        // let res = await GetSearch(
-        //   this.selectionData[1],
-        //   "/APSAPI/OrderTaskDownload"
-        // );
-        // const { datas, forms, result, msg } = res.data;
-        // if (result) {
-        //   this.$message({
-        //     message: msg,
-        //     type: "success",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.dataSearch(1);
-        //   this.$set(this, "adminLoading", false);
-        // } else {
-        //   this.$message({
-        //     message: msg,
-        //     type: "error",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.$set(this, "adminLoading", false);
-        // }
+
+        const changedIndices = [];
+        this.tableData[0].forEach((element, index) => {
+          if (element.isChecked) {
+            element.isChecked = false;
+            changedIndices.push(index);
+          }
+        });
+
+        this.$nextTick(() => {
+          this.setData(0);
+          debugger;
+        });
+
+        //处理脏数据
+        changedIndices.forEach(index => {
+          this.tableData[0][index]["isChecked"] = true;
+        });
       }
     },
     // 查询
@@ -539,6 +626,7 @@ export default {
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
+
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (sheet.isEditing()) {
         sheet.endEdit();
@@ -657,11 +745,11 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
       console.log(this.checkBoxCellTypeLine);
-      this.tableColumns[0].forEach((x, colIndex) => {
+      this.tableColumns[remarkTb].forEach((x, colIndex) => {
         if (x.prop === "LineID") {
           let newData = [];
           let list = null;
-          this.tableData[0].map((item, index) => {
+          this.tableData[remarkTb].map((item, index) => {
             if (item["Lines"]) {
               newData = item["Lines"];
               if (newData.length !== 0 && newData) {
@@ -717,12 +805,6 @@ export default {
       colHeader1.forEach(function(value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
-      sheet.setCellType(
-        0,
-        0,
-        new HeaderCheckBoxCellType(),
-        GCsheets.SheetArea.colHeader
-      );
 
       // 选框
       let checkbox = {
@@ -731,8 +813,16 @@ export default {
         cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
         size: 60
       };
-      for (var name in checkbox) {
-        colInfos[0][name] = checkbox[name];
+      if (colInfos[0]["displayName"] === "选择") {
+        for (var name in checkbox) {
+          colInfos[0][name] = checkbox[name];
+        }
+        sheet.setCellType(
+          0,
+          0,
+          new HeaderCheckBoxCellType(),
+          GCsheets.SheetArea.colHeader
+        );
       }
 
       var defaultStyle = new GC.Spread.Sheets.Style();
@@ -761,9 +851,9 @@ export default {
 
       // 冻结第一列
 
-      sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
+      sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
 
-      sheet.setDataSource(this.tableData[0]);
+      sheet.setDataSource(this.tableData[remarkTb]);
       sheet.bindColumns(colInfos);
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
 
@@ -784,7 +874,7 @@ export default {
         colindex++;
       }
 
-      this.tableData[0].forEach((row, index) => {
+      this.tableData[remarkTb].forEach((row, index) => {
         var rowSheet = sheet.getRange(
           index,
           0,
@@ -817,7 +907,7 @@ export default {
           rowSheet2.backColor("#FFFFFF");
         }
         let cellIndex = 0;
-        this.tableColumns[0].forEach(m => {
+        this.tableColumns[remarkTb].forEach(m => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -838,7 +928,7 @@ export default {
       let cellIndex = 0;
       let viewSortIndex = 0; //排序的索引
       let lineIDIndex = 0;
-      this.tableColumns[0].forEach(m => {
+      this.tableColumns[remarkTb].forEach(m => {
         //行，start,end
         if (m.prop == "ViewSort") {
           viewSortIndex = cellIndex;
@@ -867,7 +957,7 @@ export default {
         cellIndex++;
       });
       sheet.options.protectionOptions.allowResizeColumns = true;
-      //sheet.options.isProtected = true;
+      sheet.options.isProtected = true;
 
       var insertRowsCopyStyle = {
         canUndo: true,
@@ -993,7 +1083,7 @@ export default {
           s.row,
           0,
           s.rowCount,
-          _this.tableColumns[0].length
+          _this.tableColumns[remarkTb].length
         );
         _this.sheetSelectObj.start = s.row;
 
@@ -1028,13 +1118,13 @@ export default {
 
       // 表格单击单元格弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
-        if (_this.tableColumns[0].length) {
-          _this.tableColumns[0].map((item, index) => {
+        if (_this.tableColumns[remarkTb].length) {
+          _this.tableColumns[remarkTb].map((item, index) => {
             if (item.name === "Q1" && args.col === index) {
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
               _this.dialogSearchForm.OrderID =
-                _this.tableData[_this.tagRemark][args.row].OrderID;
+                _this.tableData[remarkTb][args.row].OrderID;
               _this.dialogSearchForm.OweQty = 0;
             }
           });
@@ -1043,7 +1133,7 @@ export default {
 
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
-      this.tableLoading[0] = false;
+      this.tableLoading[remarkTb] = false;
       this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     // 自动计算数量
@@ -1105,7 +1195,7 @@ export default {
           }
         } else {
         }
-        sheet.setDataSource(this.tableData[0]);
+        sheet.setDataSource(this.tableData[this.labelStatus1]);
         return;
       }
       if (
@@ -1311,6 +1401,10 @@ export default {
     },
     changeStatus(item, index) {
       this.labelStatus1 = index;
+    },
+    // 选择数据
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
     },
     // 保存日计划
     async dataSaveDay() {
