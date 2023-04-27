@@ -358,109 +358,6 @@ export default {
         this[methods](remarkTb, index);
       }
     },
-    // 复制
-    async changeEvent(val) {
-      // let sheet = this.spread[this.labelStatus1].getActiveSheet();
-      if (val == 0) {
-        if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要拆单的数据！");
-          return;
-        }
-        this.Dialog = true;
-        let targetArray = JSON.parse(JSON.stringify(this.selectionData[0]));
-        let targetColumns = JSON.parse(JSON.stringify(this.tableColumns[0]));
-
-        targetColumns = targetColumns.filter(
-          item =>
-            item.label == "生产订单" ||
-            item.label == "数量" ||
-            item.label == "计划数"
-        );
-        targetColumns.push({
-          label: "拆单数量",
-          prop: "SQty"
-        });
-        targetColumns.map(item => {
-          item["width"] = 250;
-          if (item.label === "拆单数量") {
-            item["isEdit"] = true;
-          } else {
-            item["isEdit"] = false;
-          }
-        });
-        this.$set(this.tableColumns, 1, targetColumns);
-        this.$nextTick(() => {
-          this.$set(this.tableData, 1, targetArray);
-          this.setData(1);
-        });
-      } else if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          item => !item["SQty"]
-        );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
-        }
-
-        const errorNum2 = this.selectionData[1].findIndex(item => {
-          return item["SQty"] > item["Qty"];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.Dialog = false;
-
-        this.tableData[0] = this.tableData[0].flatMap(obj => {
-          if (obj["isChecked"]) {
-            const objKeys = Object.keys(obj);
-            let copyObj = JSON.parse(JSON.stringify(obj)); //深拷贝
-            objKeys.forEach(key => {
-              if (key.endsWith("dy")) {
-                copyObj[key.replace(/dy$/, "")] = null;
-              }
-            });
-            const curObj = this.selectionData[1].find(item => {
-              return item["RowNumber"] === obj["RowNumber"];
-            });
-            return [
-              {
-                ...obj,
-                Qty: obj["Qty"] - curObj["SQty"]
-              },
-              {
-                ...copyObj,
-                LineID: null,
-                ProcessPlanID: 0,
-                PlanQty: null,
-                HasQty: null,
-                Qty: curObj["SQty"]
-              }
-            ];
-          } else {
-            return [{ ...obj }];
-          }
-        });
-
-        const changedIndices = [];
-        this.tableData[0].forEach((element, index) => {
-          if (element.isChecked) {
-            element.isChecked = false;
-            changedIndices.push(index);
-          }
-        });
-
-        this.$nextTick(() => {
-          this.setData(0);
-          debugger;
-        });
-
-        //处理脏数据
-        changedIndices.forEach(index => {
-          this.tableData[0][index]["isChecked"] = true;
-        });
-      }
-    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -639,10 +536,15 @@ export default {
         if ($table) {
           updateRecords = $table.getUpdateRecords();
         } else {
-          updateRecords = sheet.getDirtyRows(); //获取修改过的数据
-          updateRecords = updateRecords.map(x => {
+          let DirtyRows = sheet.getDirtyRows(); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows(); //获取插入过的数据
+          DirtyRows = DirtyRows.map(x => {
             return x["item"];
           });
+          InsertRows = InsertRows.map(x => {
+            return x["item"];
+          });
+          updateRecords = [...DirtyRows, ...InsertRows];
         }
       }
 
@@ -1115,7 +1017,23 @@ export default {
         //   sheet.setArray(args.row, i, [2021]);
         // }
       });
-
+      //脏数据清除
+      sheet.bind(GC.Spread.Sheets.Events.RowChanged, function(e, info) {
+        console.log(
+          info.row +
+            "," +
+            info.col +
+            "," +
+            "由" +
+            info.oldValue +
+            "改变为" +
+            info.newValue
+        );
+        var arr = sheet.getDirtyRows();
+        var arr2 = sheet.getInsertRows();
+        console.log(arr, arr2);
+        // sheet.clearPendingChanges();
+      });
       // 表格单击单元格弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
         if (_this.tableColumns[remarkTb].length) {
@@ -1242,9 +1160,10 @@ export default {
           let label = this.tableColumns[0][j].prop + "dy";
           let obj = currentRow[label];
           remainNum = remainNum - parseInt(val);
-          let maxNum =Capacity *obj.TotalHours *
-            obj.DayCapacity/currentRow.StandardPeoples
-            maxNum=parseInt(maxNum)
+          let maxNum =
+            (Capacity * obj.TotalHours * obj.DayCapacity) /
+            currentRow.StandardPeoples;
+          maxNum = parseInt(maxNum);
           if (remainNum <= 0) {
             list[j] = null;
           } else {
@@ -1503,6 +1422,144 @@ export default {
         if (node.childNodes[i].childNodes.length > 0) {
           this.changeTreeNodeStatus(node.childNodes[i]);
         }
+      }
+    },
+    //在该行数据下面增加新的一行
+    copyRowFormat(rowNumber, sheet) {
+      sheet.addRows(rowNumber + 1, 1);
+      sheet.copyTo(
+        rowNumber,
+        -1,
+        rowNumber + 1,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.CopyToOptions.all
+      );
+      let newRowIndex = rowNumber + 1;
+      var newData = sheet.getDataSource()[newRowIndex]; // 获取数据源中新行的值
+      var oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
+      let SQtyObj = this.selectionData[1].find(
+        item => item["RowNumber"] === oldData["RowNumber"]
+      );
+      //去掉dy前面的值
+      const objKeys = Object.keys(newData);
+      objKeys.forEach(key => {
+        if (key.endsWith("dy")) {
+          newData[key.replace(/dy$/, "")] = null;
+        }
+      });
+      oldData["Qty"] = oldData["Qty"] - SQtyObj["SQty"];
+      newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
+      newData["LineID"] = null;
+      newData["PlanQty"] = null;
+      newData["HasQty"] = null;
+      newData["Qty"] = SQtyObj["SQty"];
+      this.$nextTick(() => {
+        sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+      });
+    },
+    // 复制
+    async changeEvent(val) {
+      if (val == 0) {
+        if (this.selectionData[0].length === 0) {
+          this.$message.error("请选择需要拆单的数据！");
+          return;
+        }
+        this.Dialog = true;
+        let targetArray = JSON.parse(JSON.stringify(this.selectionData[0]));
+        let targetColumns = JSON.parse(JSON.stringify(this.tableColumns[0]));
+
+        targetColumns = targetColumns.filter(
+          item =>
+            item.label == "生产订单" ||
+            item.label == "数量" ||
+            item.label == "计划数"
+        );
+        targetColumns.push({
+          label: "拆单数量",
+          prop: "SQty"
+        });
+        targetColumns.map(item => {
+          item["width"] = 250;
+          if (item.label === "拆单数量") {
+            item["isEdit"] = true;
+          } else {
+            item["isEdit"] = false;
+          }
+        });
+        this.$set(this.tableColumns, 1, targetColumns);
+        this.$nextTick(() => {
+          this.$set(this.tableData, 1, targetArray);
+          this.setData(1);
+        });
+      } else if (val === 1) {
+        const errorNum1 = this.selectionData[1].findIndex(
+          item => !item["SQty"]
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
+          return;
+        }
+
+        const errorNum2 = this.selectionData[1].findIndex(item => {
+          return item["SQty"] > item["Qty"];
+        });
+        if (errorNum2 !== -1) {
+          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
+          return;
+        }
+        this.Dialog = false;
+        let sheet = this.spread[0].getActiveSheet();
+
+        this.copyRowFormat(0, sheet);
+        // this.tableData[0] = this.tableData[0].flatMap(obj => {
+        //   if (obj["isChecked"]) {
+        //     const objKeys = Object.keys(obj);
+        //     let copyObj = JSON.parse(JSON.stringify(obj)); //深拷贝
+        //     objKeys.forEach(key => {
+        //       if (key.endsWith("dy")) {
+        //         copyObj[key.replace(/dy$/, "")] = null;
+        //       }
+        //     });
+        //     const curObj = this.selectionData[1].find(item => {
+        //       return item["RowNumber"] === obj["RowNumber"];
+        //     });
+        //     return [
+        //       {
+        //         ...obj,
+        //         Qty: obj["Qty"] - curObj["SQty"]
+        //       },
+        //       {
+        //         ...copyObj,
+        //         LineID: null,
+        //         ProcessPlanID: 0,
+        //         PlanQty: null,
+        //         HasQty: null,
+        //         Qty: curObj["SQty"]
+        //       }
+        //     ];
+        //   } else {
+        //     return [{ ...obj }];
+        //   }
+        // });
+
+        // const changedIndices = [];
+        // this.tableData[0].forEach((element, index) => {
+        //   if (element.isChecked) {
+        //     element.isChecked = false;
+        //     changedIndices.push(index);
+        //   }
+        // });
+
+        // this.$nextTick(() => {
+        //   this.setData(0);
+        // });
+
+        // //处理脏数据
+        // changedIndices.forEach(index => {
+        //   this.tableData[0][index]["isChecked"] = true;
+        // });
       }
     }
   }
