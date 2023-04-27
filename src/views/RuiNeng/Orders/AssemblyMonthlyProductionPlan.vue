@@ -553,6 +553,8 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
+      console.log(updateRecords, "updateRecords");
+      return;
       let res = await SaveMOPlanStep4(updateRecords);
       // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
@@ -1439,9 +1441,12 @@ export default {
       let newRowIndex = rowNumber + 1;
       var newData = sheet.getDataSource()[newRowIndex]; // 获取数据源中新行的值
       var oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
+      newData = JSON.parse(JSON.stringify(oldData));
+      sheet.setRow()
       let SQtyObj = this.selectionData[1].find(
         item => item["RowNumber"] === oldData["RowNumber"]
       );
+      debugger;
       //去掉dy前面的值
       const objKeys = Object.keys(newData);
       objKeys.forEach(key => {
@@ -1455,6 +1460,7 @@ export default {
       newData["PlanQty"] = null;
       newData["HasQty"] = null;
       newData["Qty"] = SQtyObj["SQty"];
+      console.log(this.tableData[0], "sheet.getDataSource()");
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
       });

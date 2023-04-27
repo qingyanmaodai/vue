@@ -41,14 +41,14 @@
                 >
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <!-- <el-button
+                <el-button
                   type="primary"
                   size="mini"
                   v-show="labelStatus1 != 4"
                   @click="MOPlanStep1CalculationPre(0)"
                 >
                   预排运算
-                </el-button> -->
+                </el-button>
                 <el-button
                   v-show="labelStatus1 == 1"
                   type="warning"
@@ -1358,7 +1358,7 @@ export default {
         this.$message.error("请选择需要下达的数据！");
         return;
       }
-
+      submitData = submitData.filter(item => item.OrderID);
       submitData.forEach(m => {
         m["MOSchedulingType"] = 3;
       });
