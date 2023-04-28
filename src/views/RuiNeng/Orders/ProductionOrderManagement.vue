@@ -1555,6 +1555,9 @@ export default {
           isChecked: true
         };
       });
+      const originalSelectionData = JSON.parse(
+        JSON.stringify(this.selectionData[1])
+      );
       if (submitData.length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
@@ -1567,21 +1570,24 @@ export default {
 
           this.resultMsg = res.data.resultMsg;
           let newData = this.tableData[1].filter(a =>
-            this.selectionData[1].some(b => b.OrderID == a.OrderID)
+            originalSelectionData.some(b => b.OrderID == a.OrderID)
           );
+
           this.$set(this.selectionData, 1, []);
           if (newData.length != 0) {
-            newData.forEach(c => {
-              this.$nextTick(() => {
-                _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-                _this.selectionData[1].push(c);
-              });
+            this.tableData[1].forEach(item1 => {
+              // 使用some方法查找是否存在匹配的OrdID
+              const isMatched = newData.some(
+                item2 => item2.OrderID === item1.OrderID
+              );
+              // 根据匹配结果设置IsChecked属性
+              item1.isChecked = isMatched;
             });
-          } else {
-            this.selectionData[1] = this.tableData.filter(
-              item => item["isChecked"] == true
-            );
           }
+          this.selectionData[1] = this.tableData[1].filter(
+            item => item["isChecked"] == true
+          );
+
           this.adminLoading = false;
           this.$message({
             message: msg,
@@ -1652,6 +1658,8 @@ export default {
         m["dicID"] = 7960;
       });
       this.adminLoading = true;
+      console.log(submitData, "submitData");
+      return;
       let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
       const { result, data, count, msg } = res.data;
       if (result) {
