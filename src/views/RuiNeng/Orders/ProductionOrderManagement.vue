@@ -391,49 +391,49 @@ export default {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
       this.selectionData[remarkTb] = newValue;
     },
-    async subSAP() {
-      this.getSelectionData(1);
-      this.adminLoading = true;
-      let newData = this.selectionData[0];
-      let pushData = [];
-      newData.forEach(m => {
-        m["dicID"] = 7967;
-        // if (m["Extend8"] == "待同步") {
-        //   this.$message.error(m["OrderNo"] + "已经待同步了");
-        // } else {
-        //   if (m["Extend8"] != "已同步") {
-        //     m["Extend8"] = "待同步";
-        //   }
-        pushData.push(m);
-        // }
-      });
-      if (pushData.length > 0) {
-        let res = await GetSearch(pushData, "/APSAPI/UpdateOrderStartDate");
-        const { result, data, count, msg } = res.data;
-        this.adminLoading = false;
-        if (result) {
-          this.dataSearch(0);
+    // async subSAP() {
+    //   this.getSelectionData(1);
+    //   this.adminLoading = true;
+    //   let newData = this.selectionData[0];
+    //   let pushData = [];
+    //   newData.forEach(m => {
+    //     m["dicID"] = 7967;
+    //     // if (m["Extend8"] == "待同步") {
+    //     //   this.$message.error(m["OrderNo"] + "已经待同步了");
+    //     // } else {
+    //     //   if (m["Extend8"] != "已同步") {
+    //     //     m["Extend8"] = "待同步";
+    //     //   }
+    //     pushData.push(m);
+    //     // }
+    //   });
+    //   if (pushData.length > 0) {
+    //     let res = await GetSearch(pushData, "/APSAPI/UpdateOrderStartDate");
+    //     const { result, data, count, msg } = res.data;
+    //     this.adminLoading = false;
+    //     if (result) {
+    //       this.dataSearch(0);
 
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } else {
-        this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
-        this.adminLoading = false;
-      }
-    },
-    schedulingPre() {
-      this.getSelectionData();
-    },
+    //       this.$message({
+    //         message: msg,
+    //         type: "success",
+    //         dangerouslyUseHTMLString: true
+    //       });
+    //     } else {
+    //       this.$message({
+    //         message: msg,
+    //         type: "error",
+    //         dangerouslyUseHTMLString: true
+    //       });
+    //     }
+    //   } else {
+    //     this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
+    //     this.adminLoading = false;
+    //   }
+    // },
+    // schedulingPre() {
+    //   this.getSelectionData();
+    // },
     setData() {
       //sheet获取
       this.spread.suspendPaint();
@@ -896,25 +896,14 @@ export default {
     },
     // 获取选中的数据，type:0需要验证工艺，1不需要
     getSelectionData(type) {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDataSource();
-      let resultTag = false;
-      this.selectionData[0] = [];
-      if (newData.length != 0) {
-        newData.forEach((x, y) => {
-          if (x.isChecked) {
-            if (!x.ProcessGroupID) {
-              resultTag = true;
-              this.$message.error("第" + (y + 1) + "行工艺不能为空");
-            } else {
-              this.selectionData[0].push(x);
-            }
-          }
-        });
-      }
-      if (resultTag && type === 0) {
-        //
-        this.selectionData[0] = [];
+      if (type === 0) {
+        const errorNum = this.tableData[0].findIndex(
+          item => item["isChecked"] && !item["ProcessGroupID"]
+        );
+        if (errorNum !== -1) {
+          this.$message.error(`第${errorNum + 1}行工艺不能为空`);
+          throw new Error("工艺不能为空");
+        }
       }
     },
     // 跳转至页面配置
@@ -1322,35 +1311,11 @@ export default {
         });
       }
     },
-    // getSelectionData(tag) {
-    //   let newData = this.selectionData[tag];
-
-    //   let resultTag = false;
-    //   if (newData.length != 0) {
-    //     if (tag == 0) {
-    //       newData.forEach((x, y) => {
-    //         x.isChecked = true;
-
-    //         if (!x.ProcessGroupID) {
-    //           resultTag = true;
-    //           this.$message.error(y + 1 + "工艺不能为空");
-    //         } else {
-    //         }
-    //       });
-    //     } else {
-    //       newData.forEach((x) => {
-    //         if (x.isChecked) {
-    //         }
-    //       });
-    //     }
-    //   }
-    //   return resultTag;
-    // },
     // 下发周计划
     async setWeekData(index) {
-      let resultTag = this.getSelectionData(0);
-      if (resultTag) {
-        this.$message.error("工艺不能为空");
+      try {
+        this.getSelectionData(0);
+      } catch (error) {
         return;
       }
       let submitData = this.selectionData[0];
@@ -1358,6 +1323,7 @@ export default {
         this.$message.error("请选择需要下达的数据！");
         return;
       }
+      //假如OrdID为空，则不传给后端
       submitData = submitData.filter(item => item.OrderID);
       submitData.forEach(m => {
         m["MOSchedulingType"] = 3;
@@ -1521,9 +1487,10 @@ export default {
     },
     // 进入分线列表
     insertList() {
-      this.getSelectionData(0);
+      // this.getSelectionData(0);
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
+        return;
       } else {
         // 进入预排计划
 
@@ -1537,22 +1504,22 @@ export default {
       //   return;
       // }
 
-      let submitData = [];
-      this.getSelectionData();
+      // let submitData = [];
+      // this.getSelectionData();
       this.selectionData[0].forEach(x => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
         x["AutoDays2"] = this.AutoDays2;
-        submitData.push(x);
+        // submitData.push(x);
       });
 
-      if (submitData.length == 0) {
+      if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
         let res = await GetSearch(
-          submitData,
+          this.selectionData[0],
           "/APSAPI/MOPlanStep1CalculationV1"
         );
         const { data, forms, result, msg } = res.data;

@@ -536,15 +536,13 @@ export default {
         if ($table) {
           updateRecords = $table.getUpdateRecords();
         } else {
-          let DirtyRows = sheet.getDirtyRows(); //获取修改过的数据
-          let InsertRows = sheet.getInsertRows(); //获取插入过的数据
-          DirtyRows = DirtyRows.map(x => {
-            return x["item"];
-          });
-          InsertRows = InsertRows.map(x => {
-            return x["item"];
-          });
-          updateRecords = [...DirtyRows, ...InsertRows];
+          let DirtyRows = sheet.getDirtyRows().map(row => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map(row => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map(row => row.item);
+          DeletedRows.forEach(item => {
+            item["ElementDeleteFlag"] = 1;
+          }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
 
@@ -553,8 +551,6 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      console.log(updateRecords, "updateRecords");
-      return;
       let res = await SaveMOPlanStep4(updateRecords);
       // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
