@@ -1439,14 +1439,13 @@ export default {
         GC.Spread.Sheets.CopyToOptions.all
       );
       let newRowIndex = rowNumber + 1;
-      var newData = sheet.getDataSource()[newRowIndex]; // 获取数据源中新行的值
-      var oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      newData = JSON.parse(JSON.stringify(oldData));
-      sheet.setRow()
+      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
+      // newData = JSON.parse(JSON.stringify(oldData));
+      this.tableData[0][newRowIndex] = JSON.parse(JSON.stringify(oldData));
+      let newData = this.tableData[0][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[1].find(
         item => item["RowNumber"] === oldData["RowNumber"]
       );
-      debugger;
       //去掉dy前面的值
       const objKeys = Object.keys(newData);
       objKeys.forEach(key => {
@@ -1460,9 +1459,9 @@ export default {
       newData["PlanQty"] = null;
       newData["HasQty"] = null;
       newData["Qty"] = SQtyObj["SQty"];
-      console.log(this.tableData[0], "sheet.getDataSource()");
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+        sheet.repaint();
       });
     },
     // 复制
@@ -1517,55 +1516,19 @@ export default {
         }
         this.Dialog = false;
         let sheet = this.spread[0].getActiveSheet();
-
-        this.copyRowFormat(0, sheet);
-        // this.tableData[0] = this.tableData[0].flatMap(obj => {
-        //   if (obj["isChecked"]) {
-        //     const objKeys = Object.keys(obj);
-        //     let copyObj = JSON.parse(JSON.stringify(obj)); //深拷贝
-        //     objKeys.forEach(key => {
-        //       if (key.endsWith("dy")) {
-        //         copyObj[key.replace(/dy$/, "")] = null;
-        //       }
-        //     });
-        //     const curObj = this.selectionData[1].find(item => {
-        //       return item["RowNumber"] === obj["RowNumber"];
-        //     });
-        //     return [
-        //       {
-        //         ...obj,
-        //         Qty: obj["Qty"] - curObj["SQty"]
-        //       },
-        //       {
-        //         ...copyObj,
-        //         LineID: null,
-        //         ProcessPlanID: 0,
-        //         PlanQty: null,
-        //         HasQty: null,
-        //         Qty: curObj["SQty"]
-        //       }
-        //     ];
-        //   } else {
-        //     return [{ ...obj }];
-        //   }
-        // });
-
-        // const changedIndices = [];
-        // this.tableData[0].forEach((element, index) => {
-        //   if (element.isChecked) {
-        //     element.isChecked = false;
-        //     changedIndices.push(index);
-        //   }
-        // });
-
-        // this.$nextTick(() => {
-        //   this.setData(0);
-        // });
-
-        // //处理脏数据
-        // changedIndices.forEach(index => {
-        //   this.tableData[0][index]["isChecked"] = true;
-        // });
+        const changedIndices = [];
+        this.tableData[0].forEach((element, index) => {
+          if (element["isChecked"]) {
+            changedIndices.push(index);
+          }
+        });
+        //每增加一行，需要插入新的一行，后面一行比前面一行多1
+        const arr = changedIndices.map((num, index) => num + index);
+        //处理脏数据
+        arr.forEach(item => {
+          this.copyRowFormat(item, sheet);
+          console.log(item, "item");
+        });
       }
     }
   }
