@@ -619,7 +619,7 @@ export default {
 
       this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.options.scrollbarMaxAlign = true;
-      this.spread.options.scrollByPixel = true;
+      // this.spread.options.scrollByPixel = true;
 
       this.spread.resumePaint();
       sheet.options.isProtected = true;
