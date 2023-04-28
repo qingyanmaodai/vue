@@ -123,6 +123,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
+      spread: null,
       adminLoading: false,
       title: this.$route.meta.title,
       delData: [[]],
@@ -208,13 +209,17 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
+  },
+  mounted() {
+    // setTimeout(() => {
+    this.setHeight();
+    // }, 450);
     if (sessionStorage.getItem("dicIDForm" + this.ID)) {
       let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
       if (tmp) {
         this.$set(this.formSearchs[0], "datas", tmp.dicData);
         this.$set(this.formSearchs[0], "forms", tmp.dicForm);
         this.$set(this.formSearchs[0].datas, "dicID", this.ID);
-
         if (tmp.tablePagination) {
           this.tablePagination = tmp.tablePagination;
         }
@@ -236,11 +241,6 @@ export default {
       this.adminLoading = true;
       this.getTableHeader();
     }
-  },
-  mounted() {
-    // setTimeout(() => {
-    this.setHeight();
-    // }, 450);
   },
   methods: {
     //获取子组件实例
@@ -503,10 +503,6 @@ export default {
       let sheet = this.spread.getActiveSheet();
       // 重置表单
       sheet.reset();
-      //渲染数据源
-      sheet.setDataSource(this.tableData[remarkTb]);
-      //渲染列
-      sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
       // 渲染列
       console.log(this.tableColumns[remarkTb], "this.tableColumns[remarkTb]");
       this.tableColumns[remarkTb].forEach((x, y) => {
@@ -619,6 +615,10 @@ export default {
 
       this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.options.scrollbarMaxAlign = true;
+      //渲染数据源
+      sheet.setDataSource(this.tableData[remarkTb]);
+      //渲染列
+      sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
       // this.spread.options.scrollByPixel = true;
 
       this.spread.resumePaint();
