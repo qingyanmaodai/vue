@@ -76,7 +76,8 @@ export default {
 <style lang="scss">
 #app {
   // padding: 10px;
-  color: #000000d9;
+  color: #000000;
+  font-size: 16px;
   height: 100%;
   background-color: #f0f2f5;
 }
