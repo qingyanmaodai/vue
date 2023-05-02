@@ -59,6 +59,43 @@
         :isToolbar="false"
       ></DialogTable>
     </div>
+    <!-- 导入文件 -->
+    <div>
+      <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
+        <el-upload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          style="padding-top: 10px"
+          class="upload-demo"
+          drag
+          :limit="1"
+          :multiple="false"
+          name="files"
+          ref="upload"
+          :on-change="handleChanged"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          accept=".xls, .xlsx"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xls、xslx文件且仅支持上传一个文件
+          </div>
+        </el-upload>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogImport = false" size="small"
+            >取 消</el-button
+          >
+          <el-button size="small" type="primary" @click="sureImport"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -87,8 +124,9 @@ import {
   GetSearch
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
+import XLSX from "xlsx";
 export default {
-  name: "POOrderUpdate",
+  name: "NewPage",
   components: {
     ComSearch,
     ComVxeTable,
@@ -98,6 +136,7 @@ export default {
   data() {
     return {
       dialogSearchForm: {},
+      fileList: [],
       colDialogVisible: false,
       ////////////////// Search /////////////////
       footerLabel: ["", "", "", "", "", "", ""],
@@ -121,38 +160,52 @@ export default {
       labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,
+      dialogImport: false,
       checkdBtnCodes: [],
       drawer: false,
       height: "707px",
       formSearchs: [
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
         },
         {
-          datas: {},
-          forms: []
-        }
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        
       ],
       btnForm: [],
       spread: [[], [], [], [], []],
@@ -670,7 +723,307 @@ export default {
         });
       }
       this.adminLoading = false;
-    }
+    },
+    // 导入并分析模板
+    dataImport(remarkTb, index, params) {
+      this.dialogImport = true;
+      this.fileList = [];
+      this.file = [];
+      // this.ImportParams = params.isDel;
+    },
+    // 确认导入
+    sureImport() {
+      if (this.fileList.length == 0) {
+        this.$message.error("请先选择文件");
+        return;
+      } else if (this.fileList.length > 1) {
+        this.$message.error("仅支持一个文件上传");
+      } else {
+        this.$confirm("确定要导入并分析吗？")
+          .then(_ => {
+            _this.importExcel(this.file);
+          })
+          .catch(_ => {});
+      }
+    },
+    //导入解析excel
+    importExcel(file) {
+      this.adminLoading = true;
+      this.dialogImport = false;
+      const result = [];
+      const reader = new FileReader(); //上传就解析文件
+      var that = this;
+      reader.onload = function(e) {
+        const data = e.target.result;
+        this.wb = XLSX.read(data, {
+          type: "binary",
+          cellDates: true,
+          dateNF: "yyyy-MM-dd"
+        });
+        this.wb.SheetNames.forEach(sheetName => {
+          result.push({
+            sheetName: sheetName,
+            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
+              defval: null
+            })
+          });
+        });
+        that.dataSys(result); // 解析文件
+      };
+      reader.readAsBinaryString(file.raw);
+    },
+    isValidDate(date) {
+      return date instanceof Date && !isNaN(date.getTime());
+    },
+    // 解析文件
+    async dataSys(importData) {
+      this.adminLoading = true;
+      if (importData && importData.length > 0) {
+        let DataList = [];
+        let isDate = false;
+        this.colAdd = [];
+        let obj = {};
+        let rowNo = 0; // excel行号
+        let propName = "";
+        let split = []; //存储需求到料日期过期信息
+        let groupList = [];
+        importData[0].sheet.forEach((m, y) => {
+          for (let key in m) {
+            if (this.tableColumns[this.tagRemark].length) {
+              // 判断是否和配置里的取名一致，一致才可导入
+              for (
+                let i = 0;
+                i < this.tableColumns[this.tagRemark].length;
+                i++
+              ) {
+                let item = this.tableColumns[this.tagRemark][i];
+                if (item.label === key) {
+                  if (item.DataType === "datetime") {
+                    if (m[key] && !this.isValidDate(m[key])) {
+                      //预防用户输入日期格式不正确的判断
+                      propName = key;
+                      rowNo = Number(m.__rowNum__) + 1;
+                      // 异常提示
+                      split.push(
+                        `第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`
+                      );
+                    } else {
+                      if (this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")) {
+                        let getDate = new Date(m[key]);
+                        // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
+                        var date = new Date(
+                          getDate.setSeconds(getDate.getSeconds() + 43)
+                        );
+                        obj[item.prop] = m[key]
+                          ? this.$moment(date).format("YYYY-MM-DD")
+                          : "";
+                      }
+                    }
+                    // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                    // 判断需求到料日期是否大于今天
+                    // if (
+                    //   item.prop === "DeliveryDate" &&obj[item.prop]&&
+                    //   obj[item.prop] < formatDates.formatTodayDate()
+                    // ) {
+                    //   propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
+                    //   rowNo = Number(m.__rowNum__) + 1;
+                    //   // 异常提示
+                    //   split.push(
+                    //     `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
+                    //   );
+                    // }
+                  }
+                  // else if (item.prop === "DemandQty") {
+                  //   if (m[key] > 0) {
+                  //     //导入欠料数大于0才导入
+                  //     obj[item.prop] = m[key];
+                  //   } else {
+                  //     return;
+                  //   }
+                  // }
+                  else {
+                    obj[item.prop] = m[key];
+                  }
+                } else if (isNaN(key) && !isNaN(Date.parse(key))) {
+                  //导入日期并且数大于0才导入
+                  // 列为日期的格式
+                  isDate = true;
+                  if (Number(m[key]) > 0) {
+                    // obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
+                    // obj["DemandQty"] = m[key];
+                    obj["dicID"] = _this.sysID[_this.tagRemark].ID;
+                    obj["Account"] = _this.$store.getters.userInfo.Account;
+                    obj["row"] = m.__rowNum__;
+                    // 需要使用...obj 不然值回写有问题
+                    DataList.push({ ...obj });
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // 以下为固定入参
+          if (!isDate) {
+            obj["dicID"] = this.sysID[this.tagRemark].ID;
+            obj["Account"] = this.$store.getters.userInfo.Account;
+            obj["row"] = m.__rowNum__;
+            obj["Status"] = 0;
+            // 需要使用...obj 不然值回写有问题
+            DataList.push({ ...obj });
+          }
+        });
+        // 必填校验
+        if (this.formSearchs[this.tagRemark].required.length) {
+          // 动态检验必填项
+          for (let i = 0; i < DataList.length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[this.tagRemark].required.length;
+              x++
+            ) {
+              if (
+                DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ] === undefined ||
+                DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ] === null ||
+                DataList[i][
+                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                ] === ""
+              ) {
+                rowNo = Number(DataList[i]["row"]) + 1;
+                // 异常提示
+                split.push(
+                  `第${rowNo}行,【${
+                    this.formSearchs[this.tagRemark].required[x]["label"]
+                  }】不能为空，导入失败，请填写`
+                );
+                this.adminLoading = false;
+              }
+            }
+          }
+        }
+        if (split.length) {
+          //异常集合
+          this.adminLoading = false;
+          let txt = "";
+          split.map(value => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
+          });
+          this.$alert(txt, {
+            dangerouslyUseHTMLString: true,
+            title: "导入异常信息!",
+            customClass: "message-width"
+          });
+
+          return;
+        }
+        // =1表示要删记录（删除并导入）
+        // =0表示不删除（增量导入）
+        if (DataList.length) {
+          console.log("DataList", DataList);
+          let res = await GetSearch(DataList, "/APSAPI/MRPImport");
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            // this.dataSearch(this.tagRemark);
+            // 导入可能存在表头格式不一样，需要更新
+            this.getTableHeader();
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true
+            });
+          }
+        } else {
+          this.adminLoading = false;
+          this.$message.error("未接收到数据，请检查！");
+        }
+      }
+    },
+    handleChanged(file, fileList) {
+      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const extension = ext === "xlsx" || ext === "xls";
+      if (!extension) {
+        this.$message.error("上传文件格式只能为xlsx/xls");
+        // 取消时在文件列表中删除该文件
+        this.$refs.upload.handleRemove(file);
+        return false;
+      }
+      const isLt2M = file.size / 1024 / 1024 < 50;
+      if (!isLt2M) {
+        this.$message.error("上传文件大小不能超过 50MB!");
+        // 取消时在文件列表中删除该文件
+        this.$refs.upload.handleRemove(file);
+        return false;
+      } else {
+        this.file = file;
+        this.fileList = fileList;
+      }
+    },
+    handleRemove(file) {
+      this.fileList.splice(
+        this.fileList.findIndex(item => item.url === file.url),
+        1
+      );
+    },
+    // 分析
+    async Analysis() {
+      // let form = {
+      // SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
+      // Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
+      // };
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[this.tagRemark] = [];
+      if (newData && newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            this.selectionData[this.tagRemark].push(x);
+          }
+        });
+      }
+      if (this.selectionData[this.tagRemark].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.adminLoading = true;
+      let res = await GetSearch(
+        this.selectionData[this.tagRemark],
+        "/APSAPI/CalculateBOMDemand"
+      );
+      const { result, data, count, msg } = res.data;
+      try {
+        if (result) {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+          this.dataSearch(this.tagRemark);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true
+          });
+        }
+      } catch (error) {
+        if (error) {
+          this.adminLoading = false;
+        }
+      }
+    },
   }
 };
 </script>

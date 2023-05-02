@@ -62,10 +62,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          v-show="labelStatus1 == 1"
-        >
+        <div class="flex_column" v-show="labelStatus1 == 1">
           <ComSpreadTable
             ref="spreadsheetRef"
             :height="height"
@@ -416,7 +413,8 @@ export default {
     this.getLine();
     this.getTableHeader();
     // 获取所有按钮
-    this.judgeBtn();
+    this.btnForm = this.$route.meta.btns;
+    this.$common.judgeBtn(this, this.btnForm);
   },
   activated() {
     if (this.spread) {
