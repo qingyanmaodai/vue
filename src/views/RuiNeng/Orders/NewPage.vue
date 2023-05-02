@@ -923,7 +923,7 @@ export default {
         // =0表示不删除（增量导入）
         if (DataList.length) {
           console.log("DataList", DataList);
-          let res = await GetSearch(DataList, "/APSAPI/MRPImport");
+          let res = await SaveData(DataList);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
