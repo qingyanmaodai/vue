@@ -51,6 +51,15 @@
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
               </div> -->
+              <span>新增行数：</span>
+              <el-input-number
+                v-model.trim="addNum"
+                :min="1"
+                :max="100"
+                :step="10"
+                placeholder="请输入"
+              ></el-input-number>
+              <el-divider direction="vertical"></el-divider>
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -156,6 +165,7 @@ export default {
   },
   data() {
     return {
+      addNum: 1,
       dialogSearchForm: {},
       colDialogVisible: false,
       ////////////////// Search /////////////////
@@ -894,6 +904,16 @@ export default {
     async returnResultData(newData) {
       let res = await SaveData(newData);
       return res;
+    },
+    // 增行
+    addRow(remarkTb) {
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+      let sheet = this.spread.getActiveSheet();
+      //新增数据
+      sheet.addRows(0, 1);
     },
     // 获取表头数据
     async getTableHeader() {
