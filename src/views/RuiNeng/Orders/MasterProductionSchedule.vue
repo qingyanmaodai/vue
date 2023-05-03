@@ -5,7 +5,7 @@
       <el-main style="padding:0;margin:0">
         <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
-            <div v-for="i in [0, 3]" :key="i" v-show="labelStatus2 === i">
+            <div v-for="i in [0, 3, 5]" :key="i" v-show="labelStatus2 === i">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -63,7 +63,7 @@
               </div>
               <div
                 class="flex_column"
-                v-for="item in [0, 3]"
+                v-for="item in [0, 3, 5]"
                 :key="item"
                 v-show="item === labelStatus2"
               >
@@ -178,7 +178,8 @@ export default {
         { label: "数量+时间+线体", value: 0 },
         { label: "数量+时间+线体+托盘", value: "" },
         { label: "综合分析", value: "" },
-        { label: "全部", value: 1 }
+        { label: "全部", value: 1 },
+        { label: "业务订单分析", value: 1 }
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -207,15 +208,20 @@ export default {
         {
           datas: {},
           forms: []
+        },
+        {
+          datas: {},
+          forms: []
         }
       ],
-      selectionData: [[], [], [], [], []],
+      selectionData: [[], [], [], [], [], []],
       btnForm: [],
-      tableData: [[], [], [], [], []],
-      tableColumns: [[], [], [], [], []],
-      tableLoading: [false, false, false, false, false],
-      isClear: [false, false, false, false, false],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -238,7 +244,8 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
         { ID: 5615 },
-        { ID: 10075 }
+        { ID: 10075 },
+        { ID: 10109 }
       ],
       userInfo: {}
     };
@@ -668,7 +675,7 @@ export default {
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
-      if (this.labelStatus1 !== 3) {
+      if (this.labelStatus1 !== 3 && this.labelStatus1 !== 5) {
         this.changeStatus(null, this.labelStatus1);
       }
     },
@@ -753,16 +760,23 @@ export default {
             const key = column.prop;
 
             // 获取当前单元格
-            const cell = sheet.getCell(rowIndex, columnIndex);
+            // const cell = sheet.getCell(rowIndex, columnIndex);
 
             // 获取颜色
-            if (row && row.colorMapping && row.colorMapping[key]) {
-              const color = row.colorMapping[key];
+            // if (row && row.colorMapping && row.colorMapping[key]) {
+            //   const color = row.colorMapping[key];
+            //   cell.style({
+            //     backColor: color,
+            //     foreColor: "#FFFFFF"
+            //   });
+            //   // 其他代码
+            // }
+            if (row["Result"] != "满足") {
+              const cell = sheet.getCell(rowIndex, -1);
+
               cell.style({
-                backColor: color,
-                foreColor: "#FFFFFF"
+                foreColor: "#FF0000"
               });
-              // 其他代码
             }
             // const color = row.colorMapping[key];
 
@@ -1010,6 +1024,9 @@ export default {
         this.$set(this.tableColumns, 0, changeColumns[0]);
         this.labelStatus2 = 0;
         this.setData(0);
+      } else if (index === 5) {
+        this.labelStatus2 = 5;
+        this.dataSearch(5);
       }
     }
   }
