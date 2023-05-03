@@ -500,6 +500,32 @@ export default {
         }
       }
     },
+    // 从业务订单更新
+    async updateBusinessOrder(remarkTb, index) {
+      // if (this.selectionData[remarkTb].length == 0) {
+      //   this.$message.error("请选择需要提交的数据！");
+      //   return;
+      // } else {
+      let res = await GetSearch("", "/APSAPI/FromOrderDetail");
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+        this.$set(this, "adminLoading", false);
+      }
+      // }
+    },
     // 转入月计划
     async transferMonthlyPlan(remarkTb, index) {
       let res = await GetSearch(
