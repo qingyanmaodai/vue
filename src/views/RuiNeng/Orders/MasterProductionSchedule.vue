@@ -45,6 +45,14 @@
                     >
                       复制
                     </el-button> -->
+                    <!-- <el-divider direction="vertical"></el-divider>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="changeEvent(0)"
+                    >
+                      拆分订单
+                    </el-button> -->
                     <el-divider direction="vertical"></el-divider>
                     <div
                       :class="
@@ -87,6 +95,67 @@
         </div>
       </el-main>
     </el-container>
+    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="24" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
+            <el-button type="primary" size="mini" @click="changeEvent(1)">
+              确定拆分
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [6]" :key="item">
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="新增排程"
+      :visible.sync="newDataDialog"
+      width="80%"
+      :close-on-click-modal="false"
+    >
+      <div v-for="item in [7]" :key="item">
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="newDataDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureAddNewData" size="small"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
     <!-- 导入文件 -->
     <!-- <div>
       <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
@@ -141,6 +210,7 @@ import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
+import ComSpreadTable2 from "@/components/ComSpreadTable";
 import {
   GetHeader,
   GetSearchData,
@@ -161,10 +231,13 @@ export default {
     ComVxeTable,
     ComReportTable,
     ComFormDialog,
-    ComSpreadTable
+    ComSpreadTable,
+    ComSpreadTable2
   },
   data() {
     return {
+      newDataDialog: false,
+      Dialog: false,
       Columns: [[]],
       isLoading: false,
       hasSelect: [true, true, true, true, true],
@@ -187,8 +260,16 @@ export default {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       delData: [[]],
-      spread: [[], [], [], [], []],
+      spread: [[], [], [], [], [], [], [], []],
       formSearchs: [
+        {
+          datas: {},
+          forms: []
+        },
+        {
+          datas: {},
+          forms: []
+        },
         {
           datas: {},
           forms: []
@@ -214,13 +295,15 @@ export default {
           forms: []
         }
       ],
-      selectionData: [[], [], [], [], [], []],
+      selectionData: [[], [], [], [], [], [], [], []],
       btnForm: [],
-      tableData: [[], [], [], [], [], []],
-      tableColumns: [[], [], [], [], [], []],
-      tableLoading: [false, false, false, false, false, false],
-      isClear: [false, false, false, false, false, false],
+      tableData: [[], [], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -245,7 +328,9 @@ export default {
         { ID: 10075 },
         { ID: 5615 },
         { ID: 10075 },
-        { ID: 10109 }
+        { ID: 10109 },
+        { ID: 10109 },
+        { ID: 5646 }
       ],
       userInfo: {}
     };
@@ -447,10 +532,13 @@ export default {
         if ($table) {
           updateRecords = $table.getUpdateRecords();
         } else {
-          updateRecords = sheet.getDirtyRows(); //获取修改过的数据
-          updateRecords = updateRecords.map(x => {
-            return x["item"];
-          });
+          let DirtyRows = sheet.getDirtyRows().map(row => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map(row => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map(row => row.item);
+          DeletedRows.forEach(item => {
+            item["ElementDeleteFlag"] = 1;
+          }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
 
@@ -682,6 +770,7 @@ export default {
     // excle表数据渲染
     setData(remarkTb) {
       try {
+        console.log(this.spread, "this.spread");
         this.spread[remarkTb].suspendPaint();
         // 获取活动表单
         let sheet = this.spread[remarkTb].getActiveSheet();
@@ -689,8 +778,6 @@ export default {
         sheet.reset();
         //渲染数据源
         sheet.setDataSource(this.tableData[remarkTb]);
-        //渲染列
-        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         // 渲染列
         this.tableColumns[remarkTb].forEach((x, y) => {
           x["name"] = x["prop"];
@@ -753,14 +840,15 @@ export default {
           }
           // cellIndex++;
         });
-
+        //渲染列
+        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
         this.tableData[remarkTb].forEach((row, rowIndex) => {
           this.tableColumns[remarkTb].forEach((column, columnIndex) => {
             const key = column.prop;
 
             // 获取当前单元格
-            // const cell = sheet.getCell(rowIndex, columnIndex);
+            const cell = sheet.getCell(rowIndex, columnIndex);
 
             // 获取颜色
             // if (row && row.colorMapping && row.colorMapping[key]) {
@@ -771,12 +859,11 @@ export default {
             //   });
             //   // 其他代码
             // }
-            if (row["Result"] != "满足" && row["Result"]) {
-              const cell = sheet.getCell(rowIndex, -1);
-
-              cell.style({
-                foreColor: "#FF0000"
-              });
+            if (row["Result"] !== "满足" && row["Result"]) {
+              cell.backColor("#FF0000");
+              // cell.style({
+              //   foreColor: "#FF0000"
+              // });
             }
             // const color = row.colorMapping[key];
 
@@ -1027,6 +1114,162 @@ export default {
       } else if (index === 5) {
         this.labelStatus2 = 5;
         this.dataSearch(5);
+      }
+    },
+    // 拆单
+    splitOrder(remarkTb) {
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要拆单的数据！");
+        return;
+      }
+      this.Dialog = true;
+      let targetArray = JSON.parse(
+        JSON.stringify(this.selectionData[remarkTb])
+      );
+      let targetColumns = JSON.parse(
+        JSON.stringify(this.tableColumns[remarkTb])
+      );
+
+      targetColumns = targetColumns.filter(
+        item =>
+          item.label == "生产订单" ||
+          item.label == "数量" ||
+          item.label == "计划数"
+      );
+      targetColumns.push({
+        label: "拆单数量",
+        prop: "SQty"
+      });
+      targetColumns.map(item => {
+        item["width"] = 250;
+        if (item.label === "拆单数量") {
+          item["isEdit"] = true;
+        } else {
+          item["isEdit"] = false;
+        }
+      });
+      this.$set(this.tableColumns, 6, targetColumns);
+      this.$nextTick(() => {
+        this.$set(this.tableData, 6, targetArray);
+        this.setData(6);
+      });
+    },
+    // 拆单
+    async changeEvent(val) {
+      if (val === 1) {
+        const errorNum1 = this.selectionData[6].findIndex(
+          item => !item["SQty"]
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
+          return;
+        }
+
+        const errorNum2 = this.selectionData[6].findIndex(item => {
+          return item["SQty"] > item["Qty"];
+        });
+        if (errorNum2 !== -1) {
+          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
+          return;
+        }
+        this.Dialog = false;
+        let sheet = this.spread[this.labelStatus1].getActiveSheet();
+        const changedIndices = [];
+        this.tableData[this.labelStatus1].forEach((element, index) => {
+          if (element["isChecked"]) {
+            changedIndices.push(index);
+          }
+        });
+        //每增加一行，需要插入新的一行，后面一行比前面一行多1
+        const arr = changedIndices.map((num, index) => num + index);
+        //处理脏数据
+        arr.forEach(item => {
+          this.copyRowFormat(item, sheet);
+          console.log(item, "item");
+        });
+      }
+    },
+    //在该行数据下面增加新的一行
+    copyRowFormat(rowNumber, sheet) {
+      sheet.addRows(rowNumber + 1, 1);
+      sheet.copyTo(
+        rowNumber,
+        -1,
+        rowNumber + 1,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.CopyToOptions.all
+      );
+      let newRowIndex = rowNumber + 1;
+      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
+      // newData = JSON.parse(JSON.stringify(oldData));
+      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
+        JSON.stringify(oldData)
+      );
+      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
+      let SQtyObj = this.selectionData[6].find(
+        item => item["RowNumber"] === oldData["RowNumber"]
+      );
+      //去掉dy前面的值
+      const objKeys = Object.keys(newData);
+      objKeys.forEach(key => {
+        if (key.endsWith("dy")) {
+          newData[key.replace(/dy$/, "")] = null;
+        }
+      });
+      oldData["Qty"] = oldData["Qty"] - SQtyObj["SQty"];
+      newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
+      newData["LineID"] = null;
+      newData["PlanQty"] = null;
+      newData["HasQty"] = null;
+      newData["Qty"] = SQtyObj["SQty"];
+      this.$nextTick(() => {
+        sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+        sheet.repaint();
+      });
+    },
+    // 新增排程
+    addSchedule() {
+      this.dataSearch(7);
+      this.newDataDialog = true;
+    },
+    // 确定添加这些排程进来
+    async sureAddNewData() {
+      // 不确定是否加进来就保存在数据库，怕其他按钮操作执行查询白添加了
+      if (this.selectionData[7].length == 0) {
+        this.$message.error("未选择数据！");
+        this.newDataDialog = true;
+      } else {
+        this.selectionData[7].forEach(m => {
+          m.ProductionStatus = 26;
+        });
+        _this.adminLoading = true;
+        let res = await GetSearch(
+          this.selectionData[7],
+          `/APSAPI/SaveData10075`
+        );
+        const { result, msg } = res.data;
+
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(this.labelStatus1);
+          this.selectionData[7] = [];
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+            duration: 8000
+          });
+        }
+        this.newDataDialog = false;
       }
     }
   }
