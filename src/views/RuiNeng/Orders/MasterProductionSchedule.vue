@@ -771,7 +771,7 @@ export default {
             //   });
             //   // 其他代码
             // }
-            if (row["Result"] != "满足") {
+            if (row["Result"] != "满足" && row["Result"]) {
               const cell = sheet.getCell(rowIndex, -1);
 
               cell.style({
