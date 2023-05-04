@@ -680,13 +680,17 @@ export default {
       }
     },
     // excle表数据渲染
-    async setData(remarkTb) {
+    setData(remarkTb) {
       try {
         this.spread[remarkTb].suspendPaint();
         // 获取活动表单
         let sheet = this.spread[remarkTb].getActiveSheet();
         // 重置表单
         sheet.reset();
+        //渲染数据源
+        sheet.setDataSource(this.tableData[remarkTb]);
+        //渲染列
+        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         // 渲染列
         this.tableColumns[remarkTb].forEach((x, y) => {
           x["name"] = x["prop"];
@@ -750,10 +754,6 @@ export default {
           // cellIndex++;
         });
 
-        //渲染数据源
-        sheet.setDataSource(this.tableData[remarkTb]);
-        //渲染列
-        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
         this.tableData[remarkTb].forEach((row, rowIndex) => {
           this.tableColumns[remarkTb].forEach((column, columnIndex) => {

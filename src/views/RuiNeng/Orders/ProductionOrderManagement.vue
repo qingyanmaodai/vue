@@ -1659,7 +1659,6 @@ export default {
       });
       this.adminLoading = true;
       console.log(submitData, "submitData");
-      return;
       let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
       const { result, data, count, msg } = res.data;
       if (result) {
