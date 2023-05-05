@@ -112,7 +112,7 @@
       <div v-for="item in [6]" :key="item">
         <ComSpreadTable2
           ref="spreadsheetRef"
-          :height="height"
+          height="600px"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
           :tableLoading="tableLoading[item]"
@@ -146,7 +146,7 @@
         />
         <ComSpreadTable2
           ref="spreadsheetRef"
-          :height="height"
+          height="500px"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
           :tableLoading="tableLoading[item]"
@@ -1253,6 +1253,8 @@ export default {
       } else {
         this.selectionData[7].forEach(m => {
           m.dicID = 10075;
+          m["SalesOrderDetailPlanID"] = null;
+          m["PlanQty"] = m["Qty"];
         });
         _this.adminLoading = true;
         let res = await GetSearch(
@@ -1263,7 +1265,7 @@ export default {
 
         if (result) {
           this.adminLoading = false;
-          this.dataSearch(this.labelStatus1);
+          this.dataSearch(0);
           this.selectionData[7] = [];
           this.$message({
             message: msg,
