@@ -95,7 +95,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
+    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="50%">
       <div class="ant-table-title">
         <el-row>
           <el-col :span="4"
@@ -134,6 +134,16 @@
       :close-on-click-modal="false"
     >
       <div v-for="item in [7]" :key="item">
+        <ComSearch
+          class="margin_bottom_10 dialog_search"
+          ref="searchRef"
+          :searchData="formSearchs[item].datas"
+          :searchForm="formSearchs[item].forms"
+          :remark="item"
+          :isLoading="isLoading[item]"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
         <ComSpreadTable2
           ref="spreadsheetRef"
           :height="height"
@@ -572,6 +582,7 @@ export default {
         this.$message.error("请选择需要提交的数据！");
         return;
       } else {
+        this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[remarkTb],
           "/APSAPI/SaveData10075FromMonth"
@@ -601,6 +612,7 @@ export default {
       //   this.$message.error("请选择需要提交的数据！");
       //   return;
       // } else {
+      this.adminLoading = true;
       let res = await GetSearch("", "/APSAPI/FromOrderDetail");
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -623,6 +635,7 @@ export default {
     },
     // 转入月计划
     async transferMonthlyPlan(remarkTb, index) {
+      this.adminLoading = true;
       let res = await GetSearch(
         this.selectionData[remarkTb],
         "/APSAPI/TOProcessPlanFromSalesOrder"
@@ -1141,7 +1154,7 @@ export default {
         prop: "SQty"
       });
       targetColumns.map(item => {
-        item["width"] = 250;
+        item["width"] = 350;
         if (item.label === "拆单数量") {
           item["isEdit"] = true;
         } else {
@@ -1218,12 +1231,9 @@ export default {
           newData[key.replace(/dy$/, "")] = null;
         }
       });
-      oldData["Qty"] = oldData["Qty"] - SQtyObj["SQty"];
-      newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
-      newData["LineID"] = null;
-      newData["PlanQty"] = null;
-      newData["HasQty"] = null;
-      newData["Qty"] = SQtyObj["SQty"];
+      oldData["PlanQty"] = oldData["Qty"] - SQtyObj["SQty"];
+      newData["SalesOrderDetailPlanID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
+      newData["PlanQty"] = SQtyObj["SQty"];
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
         sheet.repaint();
@@ -1241,9 +1251,6 @@ export default {
         this.$message.error("未选择数据！");
         this.newDataDialog = true;
       } else {
-        this.selectionData[7].forEach(m => {
-          m.ProductionStatus = 26;
-        });
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[7],
