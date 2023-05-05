@@ -1251,6 +1251,9 @@ export default {
         this.$message.error("未选择数据！");
         this.newDataDialog = true;
       } else {
+        this.selectionData[7].forEach(m => {
+          m.dicID = 10075;
+        });
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[7],
