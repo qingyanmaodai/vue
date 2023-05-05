@@ -1146,7 +1146,7 @@ export default {
       targetColumns = targetColumns.filter(
         item =>
           item.label == "生产订单" ||
-          item.label == "数量" ||
+          item.label == "分配数" ||
           item.label == "计划数"
       );
       targetColumns.push({
@@ -1179,7 +1179,7 @@ export default {
         }
 
         const errorNum2 = this.selectionData[6].findIndex(item => {
-          return item["SQty"] > item["Qty"];
+          return item["SQty"] > item["PlanQty"];
         });
         if (errorNum2 !== -1) {
           this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
@@ -1231,7 +1231,7 @@ export default {
           newData[key.replace(/dy$/, "")] = null;
         }
       });
-      oldData["PlanQty"] = oldData["Qty"] - SQtyObj["SQty"];
+      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
       newData["SalesOrderDetailPlanID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
       newData["PlanQty"] = SQtyObj["SQty"];
       this.$nextTick(() => {
