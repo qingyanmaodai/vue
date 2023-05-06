@@ -127,12 +127,7 @@
         />
       </div>
     </el-dialog>
-    <el-dialog
-      title="新增排程"
-      :visible.sync="newDataDialog"
-      width="80%"
-      :close-on-click-modal="false"
-    >
+    <el-dialog title="新增排程" :visible.sync="newDataDialog" width="80%">
       <div v-for="item in [7]" :key="item">
         <ComSearch
           class="margin_bottom_10 dialog_search"
@@ -872,6 +867,10 @@ export default {
             //   });
             //   // 其他代码
             // }
+            if (row["IsToMainPlan"] && row["IsToMainPlan"] === "已排") {
+              cell.locked(true);
+              // sheet.setCellType(rowIndex, columnIndex, "");
+            }
             if (row["Result"] !== "满足" && row["Result"]) {
               cell.backColor("#FF0000");
               // cell.style({
@@ -1255,6 +1254,7 @@ export default {
           m.dicID = 10075;
           m["SalesOrderDetailPlanID"] = null;
           m["PlanQty"] = m["Qty"];
+          m["DataSource"] = "手动加单";
         });
         _this.adminLoading = true;
         let res = await GetSearch(
