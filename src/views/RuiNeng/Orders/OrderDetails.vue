@@ -375,7 +375,7 @@ export default {
             // const cell = sheet.getCell(-1, columnIndex);
 
             // 获取颜色
-            if (row["Result"] !== "满足" && row["Result"] && columnIndex < 5) {
+            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
               cell.backColor("#FF0000");
             }
           });
