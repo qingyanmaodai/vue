@@ -1,18 +1,19 @@
-<!-- 待生产订单 -->
+<!--订单明细-->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[tagRemark].datas"
-        :searchForm="formSearchs[tagRemark].forms"
-        :remark="tagRemark"
-        :isLoading="tableLoading[tagRemark]"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-        :defaultShow="true"
-        :signName="labelStatus"
-      />
+      <div v-for="i in [0]" :key="i" v-show="labelStatus1 == i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="labelStatus1"
+          @btnClick="btnClick"
+        />
+      </div>
     </div>
     <div>
       <div class="admin_content">
@@ -21,40 +22,42 @@
             <el-col :span="4"
               ><span class="title">{{ title }}</span></el-col
             >
-            <el-col :span="20" class="flex_flex_end">
-              <!-- <div style="margin-right: 10px"></div>
-              <div>
-                <el-checkbox-group
-                  v-model="selectedOption"
-                  @change="changeStatus"
-                  size="mini"
-                >
-                  <el-checkbox-button
-                    v-for="item in Status1"
-                    :key="item.value"
-                    :label="item.value"
-                    >{{ item.label }}</el-checkbox-button
-                  >
-                </el-checkbox-group>
-              </div> -->
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableColumns="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :remark="0"
-          :sysID="sysID[0]['ID']"
-          :pagination="tablePagination[0]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
-        />
+        <div
+          class="flex_column"
+          v-for="item in [0]"
+          :key="item"
+          v-show="labelStatus1 == item"
+        >
+          <ComSpreadTable
+            ref="spreadsheetRef"
+            :height="height"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @workbookInitialized="workbookInitialized"
+            @selectChanged="selectChanged"
+          />
+        </div>
       </div>
+
+      <!-- 点击齐套率弹框-->
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="7916"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
     <!-- 导入文件 -->
     <div>
@@ -95,6 +98,7 @@
     </div>
   </div>
 </template>
+
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
@@ -102,9 +106,16 @@ import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
+import ComVxeTable from "@/components/ComVxeTable";
 import ComSpreadTable from "@/components/ComSpreadTable";
+import {
+  HighlightColumnItemsCellType,
+  TopItemsCellType,
+  HeaderCheckBoxCellType,
+  SortHyperlinkCellType,
+  HighlightRowItemsCellType
+} from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -112,192 +123,172 @@ import {
   SaveData,
   GetSearch
 } from "@/api/Common";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
-import formatDates from "@/utils/formatDate";
+import DialogTable from "@/components/Dialog/dialogTable";
 import XLSX from "xlsx";
 export default {
-  name: "OrderDetails",
+  name: "ShipmentAchievementSummary",
   components: {
     ComSearch,
+    ComVxeTable,
+    DialogTable,
     ComSpreadTable
   },
   data() {
     return {
-      selectedOption: [1],
       dialogSearchForm: {},
-      colDialogVisible: false,
-      colAdd: [],
-      dialogImport: false,
-      machineCycle: "",
-      title: this.$route.meta.title, //表名
-      adminLoading: false, //加载状态
-      labelStatus: 0,
-      tagRemark: 0,
-      btnForm: [], //拥有的按钮权限
-      // 表头添加动态按钮
-      formSearchs: [
-        //不同标签页面的查询条件
-        {
-          datas: {
-            CreatedBy: this.$store.getters.userInfo.Account
-          }, //查询入参
-          forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
-        }
-      ],
-      tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[]], //表格表头列
-      tableLoading: [false], //每个表加载
-      isClear: [false],
-      tablePagination: [
-        //表分页参数
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
-      ],
-      sysID: [{ ID: 10108 }],
-      Status1: [
-        { label: "重复导入", value: 0 },
-        { label: "个人数据", value: 1 },
-        { label: "已关闭", value: 2 }
-      ],
-      spread: null, //excel初始
       fileList: [],
-      file: [],
-      selectionData: [[]],
-      ImportParams: "",
-      isEdit: true
+      colDialogVisible: false,
+      ////////////////// Search /////////////////
+      footerLabel: ["", "", "", "", "", "", ""],
+      sysID: [
+        { ID: 5156 },
+        { ID: 5615 },
+        { ID: 5156 },
+        { ID: 5156 },
+        { ID: 5156 },
+        { ID: 5156 },
+        { ID: 5156 }
+      ],
+      // Status1: [
+      //   { label: "待维护PO", value: 0 },
+      //   { label: "暂停挂起", value: 1 },
+      //   { label: "已完成", value: 3 },
+      //   { label: "排产中", value: 4 },
+      //   { label: "全部", value: 5 }
+      // ],
+      title: this.$route.meta.title,
+      labelStatus1: 0,
+      PrepareDate: "",
+      adminLoading: false,
+      dialogImport: false,
+      checkdBtnCodes: [],
+      drawer: false,
+      height: "707px",
+      formSearchs: [
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        
+      ],
+      btnForm: [],
+      spread: [[], [], [], [], []],
+      tableData: [[], [], [], [], [], [], []],
+      delData: [[], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 500, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+      ],
+      height: "707px",
+      showPagination: true,
+      tagRemark: 0,
+      isLoading: false,
+      initialBtnData: [],
+      tagRremark: 1,
+      selectionData: [[], [], [], [], [], [], []],
+      hasSelect: [true, true, false, true, false, false],
+      isEdit: false,
+      losePrepareDate: 1,
+      losePrepareDate2: 1,
+      ruleForm: {
+        LineIDs: [],
+        ProducedDate: ""
+      },
+      lines: []
     };
   },
-  activated() {
-    if (this.spread) {
-      this.spread.refresh();
-    }
-  },
+  watch: {},
   created() {
     _this = this;
-    _this.adminLoading = true;
+    this.adminLoading = true;
+    this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
-    this.getTableHeader();
   },
+  // activated() {
+  //   if (this.spread) {
+  //     this.spread.refresh();
+  //   }
+  // },
   mounted() {
-    this.setHeight();
+    setTimeout(() => {
+      this.setHeight();
+    }, 450);
   },
   methods: {
-    //初始化SpreadJS
-    // initSpread: function(spread) {
-    //   this.spread = spread;
-    // },
     //获取子组件实例
-    workbookInitialized: function(workbook) {
-      this.spread = workbook;
+    workbookInitialized: function(workbook, remarkTb) {
+      this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
       this.selectionData[remarkTb] = newValue;
     },
-    // 统一渲染按钮事件
-    btnClick(methods, parms, index, remarkTb) {
-      if (parms) {
-        // 下标 要用的数据 标题 ref
-        this[methods](remarkTb, index, parms);
-      } else {
-        this[methods](remarkTb, index);
-      }
-    },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
-    },
-    // 跳转至属性配置
+    // 跳转至页面配置
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: id }
+        params: {
+          ID: id
+        }
       });
     },
-    // 获取表头
-    async getTableHeader() {
-      let IDs = this.sysID;
-      let res = await GetHeader(IDs);
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
-          m.forEach((n, index) => {
-            if (n.Required) {
-              this.formSearchs[this.tagRemark].required.push(n);
-            }
-          });
-        });
-        // 获取查询的初始化字段 组件 按钮
-        forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
-            if (y.prop && y.value) {
-              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-            } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
-            }
-          });
-          this.$set(this.formSearchs[z], "forms", x);
-          this.getTableData(this.formSearchs[z].datas, z);
-        });
-        this.adminLoading = false;
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
-    // 获取表格数据
-    async getTableData(params, index) {
-      this.$set(this.tableLoading, index, true);
-      params["rows"] = this.tablePagination[index].pageSize;
-      params["page"] = this.tablePagination[index].pageIndex;
-      let res = await GetSearchData(params);
-      const { result, data, count, msg, Columns } = res.data;
-      if (result) {
-        this.$set(this.tableData, index, data);
-        this.$set(this.tablePagination[index], "pageTotal", count);
-        // 查询时重新获取列渲染
-        if (Columns.length) {
-          this.tableColumns[index] = Columns[0];
-        }
-        this.$set(this.tableLoading, index, false);
-
-        this.setData();
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
     // excle表数据渲染
-    async setData() {
+    async setData(remarkTb) {
       try {
-        this.spread.suspendPaint();
+        this.spread[remarkTb].suspendPaint();
         // 获取活动表单
-        let sheet = this.spread.getActiveSheet();
+        let sheet = this.spread[remarkTb].getActiveSheet();
         // 重置表单
         sheet.reset();
-        //渲染数据源
-        sheet.setDataSource(this.tableData[this.tagRemark]);
         // 渲染列
-        this.tableColumns[this.tagRemark].forEach((x, y) => {
+        this.tableColumns[remarkTb].forEach((x, y) => {
           x["name"] = x["prop"];
           x["displayName"] = x["label"];
           x["width"] = parseInt(x.width);
@@ -322,7 +313,7 @@ export default {
             // });
             let newData = [];
             // let list = null;
-            this.tableData[this.tagRemark].map((item, index) => {
+            this.tableData[remarkTb].map((item, index) => {
               if (x.DataSourceID && x.DataSourceName) {
                 newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
                 this.bindComboBoxToCell(sheet, index, y, newData);
@@ -358,23 +349,38 @@ export default {
           }
           // cellIndex++;
         });
+        //渲染数据源
+        sheet.setDataSource(this.tableData[remarkTb]);
         //渲染列
-        sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
+        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
-        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
-          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
+        this.tableData[remarkTb].forEach((row, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
             const key = column.prop;
 
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-            // const cell = sheet.getCell(-1, columnIndex);
 
             // 获取颜色
-            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
-              cell.backColor("#FF0000");
+            if (row && row.colorMapping && row.colorMapping[key]) {
+              const color = row.colorMapping[key];
+              cell.style({
+                backColor: color,
+                foreColor: "#FFFFFF"
+              });
+              // 其他代码
             }
+            // const color = row.colorMapping[key];
+
+            // 如果该属性有颜色信息，则设置单元格样式
+            // if (color) {
+            //   // const style = new GC.Spread.Sheets.Style();
+            //   cell.backColor(color);
+            //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
+            // }
           });
         });
+
         // 列筛选
         // 参数2 开始列
         // 参数3
@@ -383,7 +389,7 @@ export default {
           -1,
           -1,
           -1,
-          this.tableColumns[this.tagRemark].length
+          this.tableColumns[remarkTb].length
         );
         let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
           cellrange
@@ -425,13 +431,13 @@ export default {
         );
         defaultStyle.showEllipsis = true;
         // 冻结
-        sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
 
-        this.spread.options.tabStripVisible = false; //是否显示表单标签
-        this.spread.options.scrollbarMaxAlign = true;
-        // this.spread.options.scrollByPixel = true;
+        this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+        this.spread[remarkTb].options.scrollbarMaxAlign = true;
+        // this.spread[remarkTb].options.scrollByPixel = true;
 
-        this.spread.resumePaint();
+        this.spread[remarkTb].resumePaint();
         sheet.options.isProtected = true;
         sheet.options.protectionOptions.allowResizeColumns = true;
         sheet.options.protectionOptions.allowInsertRows = true;
@@ -448,7 +454,7 @@ export default {
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
-      this.spread.refresh(); //重新定位宽高度
+      // this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     bindComboBoxToCell(sheet, row, col, dataSourceName) {
       // 获取要绑定下拉菜单的单元格对象
@@ -468,13 +474,98 @@ export default {
       // 将下拉菜单单元格类型绑定到指定的单元格中
       cell.cellType(comboBox);
     },
+    getSelectionData() {
+      let sheet = this.spread.getActiveSheet();
+      let newData = sheet.getDataSource();
+      this.selectionData[1] = [];
+      if (newData.length != 0) {
+        newData.forEach(x => {
+          if (x.isChecked) {
+            this.selectionData[1].push(x);
+          }
+        });
+      }
+    },
+    // 高度控制
+    setHeight() {
+      let headHeight = this.$refs.headRef.offsetHeight;
+
+      let rem =
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + "px";
+      this.$set(this, "height", newHeight);
+    },
+    // 编辑行
+    editRow(row) {
+      this.$set(row, "update", true);
+    },
+    // 删除行
+    delRow(row) {
+      this.$confirm("确定要删除该菜单嘛？")
+        .then(_ => {})
+        .catch(_ => {});
+    },
+    // 单击行
+    handleRowClick(row, remarkTb) {
+      this.delData[remarkTb] = [];
+      this.delData[remarkTb].push(row);
+    },
+    // 第几页
+    pageChange(val, remarkTb, filtertb) {
+      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
+    // 页数
+    pageSize(val, remarkTb, filtertb) {
+      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    },
+    // 排序
+    sortChange(order, prop, remarkTb, filtertb, row, index) {
+      if (filtertb == -100) {
+        // 改变父表格的行数据
+        this.changeTableRowData(remarkTb, row, index);
+        return;
+      }
+      if (order) {
+        if (order === "desc") {
+          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        } else {
+          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+        }
+      } else {
+        this.formSearchs[remarkTb].datas["sort"] = null;
+      }
+      this.dataSearch(remarkTb);
+    },
+    // 改变父组件表格行数据
+    changeTableRowData(remarkTb, row, index) {
+      for (let name in row) {
+        this.$set(this.tableData[remarkTb][index], name, row[name]);
+      }
+    },
+    // 统一渲染按钮事件
+    btnClick(methods, parms, index, remarkTb) {
+      if (parms) {
+        // 下标 要用的数据 标题 ref
+        this[methods](remarkTb, index, parms);
+      } else {
+        this[methods](remarkTb, index);
+      }
+    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
+      this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      setTimeout(() => {
+        this.$set(this.isClear, remarkTb, false);
+      });
     },
     // 重置
     dataReset(remarkTb) {
@@ -491,6 +582,24 @@ export default {
         }
       }
     },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      if (column.property == "IsCompleteInspect") {
+        if (row.IsCompleteInspect == "未开始") {
+          return {
+            backgroundColor: "#ff7b7b"
+          };
+        } else if (row.IsCompleteInspect == "进行中") {
+          return {
+            backgroundColor: "#fdfd8f"
+          };
+        } else if (row.IsCompleteInspect == "已完成") {
+          return {
+            backgroundColor: "#9fff9f"
+          };
+        }
+      }
+    },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
@@ -500,65 +609,120 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
     },
-    // 当前第几页
-    pageChange(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+    // 保存返回结果自己处理事件
+    async returnResultData(newData) {
+      let res = await SaveData(newData);
+      return res;
     },
-    // 页数
-    pageSize(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-    },
-    // // 改变状态
-    // changeStatus() {
-    //   console.log(this.selectedOption, "selectedOption");
-    //   this.formSearchs[0]["datas"]["Status"] = this.selectedOption.includes(0)
-    //     ? 0
-    //     : null;
-    //   this.formSearchs[0]["datas"]["CreatedBy"] = this.selectedOption.includes(
-    //     1
-    //   )
-    //     ? this.$store.getters.userInfo.Account
-    //     : null;
-    //   this.formSearchs[0]["datas"]["IsClose"] = this.selectedOption.includes(2)
-    //     ? "是"
-    //     : "否";
-    //   console.log("item", this.formSearchs[0]["datas"]);
-    //   // this.labelStatus = index;
-    //   this.dataSearch(0);
-    // },
-    // 保存
-    async dataSave(remarkTb) {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows(); //获取修改过的数据
-      let submitData = [];
-      if (newData.length != 0) {
-        newData.forEach(x => {
-          submitData.push(x.item);
+    // 获取表头数据
+    async getTableHeader() {
+      let IDs = this.sysID;
+      let res = await GetHeader(IDs);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        // 获取每个表头
+        datas.some((m, i) => {
+          m.forEach(n => {
+            // 进行验证
+            if (n.prop == "MenuCode" || n.prop == "MenuName") {
+              this.$set(n, "treeNode", true);
+            }
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach(x => {
+                this.verifyDta(x);
+              });
+            }
+          });
+          this.$set(this.tableColumns, i, m);
         });
-        this.adminLoading = true;
-        let res = await SaveData(submitData);
-        const { datas, forms, result, msg } = res.data;
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
+        // 获取查询的初始化字段 组件 按钮
+        forms.some((x, z) => {
+          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          x.forEach(y => {
+            if (y.prop && y.value) {
+              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+            } else {
+              this.$set(this.formSearchs[z].datas, [y.prop], "");
+            }
           });
-          this.dataSearch(remarkTb);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } else {
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+          this.$set(this.formSearchs[z], "forms", x);
+        });
+        this.getTableData(this.formSearchs[0].datas, 0);
+
+        this.adminLoading = false;
       }
+    },
+    // 验证数据
+    verifyDta(n) {
+      for (let name in n) {
+        if (
+          (name == "component" && n[name]) ||
+          (name == "button" && n[name]) ||
+          (name == "active" && n[name])
+        ) {
+          n[name] = eval("(" + n[name] + ")");
+        }
+      }
+    },
+    // 获取表格数据
+    async getTableData(form, remarkTb) {
+      this.$set(this.tableLoading, remarkTb, true);
+      form["rows"] = this.tablePagination[remarkTb].pageSize;
+      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      this.$set(this.tableLoading, remarkTb, false);
+      if (result) {
+        // if(data.length != 0){
+        //   data.forEach(a=>{
+        //     a.ViewSort = a.RowNumber
+        //   })
+        // } // 只能强行给1-最后用来行号测试，不确定后台数据怎么存，一开始这些数据就不是从1开始排序
+
+        this.$set(this.tableData, remarkTb, data);
+        this.setData(remarkTb);
+        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+      }
+    },
+    // 选择数据
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
+    },
+    // 改变状态
+    changeStatus(x, index) {
+      this.labelStatus1 = index;
+      this.dataSearch(index);
+    },
+
+    // 保存
+    async dataSave(data1, index) {
+      this.adminLoading = true;
+
+      let res = await SaveData(data1);
+      const { result, data, count, msg } = res.data;
+
+      if (result) {
+        this.dataSearch(1);
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true
+        });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+      }
+      this.adminLoading = false;
     },
     // 导入并分析模板
     dataImport(remarkTb, index, params) {
@@ -759,7 +923,7 @@ export default {
         // =0表示不删除（增量导入）
         if (DataList.length) {
           console.log("DataList", DataList);
-          let res = await GetSearch(DataList, "/APSAPI/OrderDetailImport");
+          let res = await SaveData(DataList);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
@@ -860,115 +1024,6 @@ export default {
         }
       }
     },
-    //需求检查
-    async MRPCheckData() {
-      this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/MRPCheckData");
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    //需求导入
-    async MRPToOfficial() {
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[this.tagRemark],
-        "/APSAPI/MRPToOfficial"
-      );
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    //删除
-    dataDel() {
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要删除的数据！");
-        return;
-      } else {
-        this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "info"
-        }).then(async () => {
-          this.adminLoading = true;
-          this.selectionData[this.tagRemark].map(item => {
-            item["ElementDeleteFlag"] = 1;
-          });
-          let res = await SaveData(this.selectionData[this.tagRemark]);
-          const { result, data, count, msg } = res.data;
-          if (result) {
-            this.dataSearch(this.tagRemark);
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true
-            });
-          }
-        });
-      }
-    }
   }
 };
 </script>
-<style lang="scss">
-.message-width {
-  width: 500px;
-  height: 90%;
-  .el-message-box__content {
-    height: 93%;
-    overflow-y: scroll;
-  }
-}
-</style>
