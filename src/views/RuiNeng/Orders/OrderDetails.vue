@@ -370,7 +370,7 @@ export default {
             // const cell = sheet.getCell(-1, columnIndex);
 
             // 获取颜色
-            if (row["Result"] !== "满足" && row["Result"]) {
+            if (row["Result"] !== "满足" && row["Result"] && columnIndex < 5) {
               cell.backColor("#FF0000");
             }
           });
