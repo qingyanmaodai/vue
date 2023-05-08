@@ -465,9 +465,11 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      this.tablePagination[remarkTb].pageSize = this.tableColumns[remarkTb][
-        remarkTb
-      ].pageSize;
+      if (this.tableData[0].length === 0) {
+        this.tablePagination[0]["pageSize"] = this.tableColumns[0][0][
+          "pageSize"
+        ];
+      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
