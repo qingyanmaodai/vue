@@ -2,17 +2,18 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[tagRemark].datas"
-        :searchForm="formSearchs[tagRemark].forms"
-        :remark="tagRemark"
-        :isLoading="tableLoading[tagRemark]"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-        :defaultShow="true"
-        :signName="labelStatus"
-      />
+      <div v-for="i in [0]" :key="i" v-show="labelStatus === i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="tableLoading[i]"
+          :btnForm="btnForm"
+          :signName="i"
+          @btnClick="btnClick"
+        />
+      </div>
     </div>
     <div>
       <div class="admin_content">
@@ -56,6 +57,40 @@
         />
       </div>
     </div>
+    <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
+      <div v-for="item in [1]" :key="item">
+        <ComSearch
+          class="margin_bottom_10 dialog_search"
+          ref="searchRef"
+          :searchData="formSearchs[item].datas"
+          :searchForm="formSearchs[item].forms"
+          :remark="item"
+          :isLoading="tableLoading[item]"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          height="500px"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="newDataDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureAddNewData" size="small"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
     <!-- 导入文件 -->
     <div>
       <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
@@ -105,6 +140,7 @@ import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComSpreadTable from "@/components/ComSpreadTable";
+import ComSpreadTable2 from "@/components/ComSpreadTable";
 import {
   GetHeader,
   GetSearchData,
@@ -119,10 +155,13 @@ export default {
   name: "OrderDetails",
   components: {
     ComSearch,
-    ComSpreadTable
+    ComSpreadTable,
+    ComSpreadTable2
   },
   data() {
     return {
+      newDataDialog: false,
+      height: "707px",
       selectedOption: [1],
       dialogSearchForm: {},
       colDialogVisible: false,
@@ -143,17 +182,25 @@ export default {
           }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [] //获取必填项
+        },
+        {
+          datas: {
+            CreatedBy: this.$store.getters.userInfo.Account
+          }, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [] //获取必填项
         }
       ],
-      tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[]], //表格表头列
-      tableLoading: [false], //每个表加载
-      isClear: [false],
+      tableData: [[], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], []], //表格表头列
+      tableLoading: [false, false], //每个表加载
+      isClear: [false, false],
       tablePagination: [
         //表分页参数
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
       ],
-      sysID: [{ ID: 10108 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }],
       Status1: [
         { label: "重复导入", value: 0 },
         { label: "个人数据", value: 1 },
@@ -957,6 +1004,52 @@ export default {
             });
           }
         });
+      }
+    },
+    // 添加计划
+    addPlan() {
+      this.dataSearch(1);
+      this.newDataDialog = true;
+    },
+    // 确定添加这些排程进来
+    async sureAddNewData() {
+      // 不确定是否加进来就保存在数据库，怕其他按钮操作执行查询白添加了
+      if (this.selectionData[7].length == 0) {
+        this.$message.error("未选择数据！");
+        this.newDataDialog = true;
+      } else {
+        this.selectionData[7].forEach(m => {
+          m.dicID = 10075;
+          m["SalesOrderDetailPlanID"] = null;
+          m["PlanQty"] = m["Qty"];
+          m["DataSource"] = "手动加单";
+        });
+        _this.adminLoading = true;
+        let res = await GetSearch(
+          this.selectionData[7],
+          `/APSAPI/SaveData10075`
+        );
+        const { result, msg } = res.data;
+
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(0);
+          this.selectionData[7] = [];
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true
+          });
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+            duration: 8000
+          });
+        }
+        this.newDataDialog = false;
       }
     }
   }
