@@ -178,7 +178,7 @@ export default {
         //不同标签页面的查询条件
         {
           datas: {
-            CreatedBy: this.$store.getters.userInfo.Account
+            // CreatedBy: this.CreatedBy
           }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [] //获取必填项
@@ -211,7 +211,9 @@ export default {
       file: [],
       selectionData: [[]],
       ImportParams: "",
-      isEdit: true
+      isEdit: true,
+      RoleMapStatus: false,
+      CreatedBy: ""
     };
   },
   activated() {
@@ -226,6 +228,18 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
+    let RoleMapList = this.$store.getters.userInfo.RoleMap;
+    if (RoleMapList.length) {
+      RoleMapList.forEach(item => {
+        if (item.RoleID === "R2305080001") {
+          //业务经理
+          this.RoleMapStatus = true;
+          return;
+        }
+      });
+    }
+    this.CreatedBy =
+      this.RoleMapStatus === true ? "" : this.$store.getters.userInfo.Account;
   },
   mounted() {
     this.setHeight();
@@ -313,6 +327,7 @@ export default {
       this.$set(this.tableLoading, index, true);
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
+      params["CreatedBy"] = this.CreatedBy;
       let res = await GetSearchData(params);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
@@ -417,7 +432,7 @@ export default {
             // const cell = sheet.getCell(-1, columnIndex);
 
             // 获取颜色
-            if (row["Result"] !== "满足" && row["Result"] && columnIndex < 5) {
+            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
               cell.backColor("#FF0000");
             }
           });
@@ -805,7 +820,7 @@ export default {
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
         if (DataList.length) {
-          console.log("DataList", DataList);
+          // console.log("DataList", DataList);
           let res = await GetSearch(DataList, "/APSAPI/OrderDetailImport");
           const { result, data, count, msg } = res.data;
           if (result) {
