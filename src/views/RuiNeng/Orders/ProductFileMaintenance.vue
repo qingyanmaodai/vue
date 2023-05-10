@@ -82,12 +82,21 @@
         <div class="flex_wrap" style="margin-bottom:20px;">
           <div>
             存储属性:
-            <el-input
-              type="number"
-              v-model="storageProperty"
+            <el-select
+              clearable
+              filterable
               size="small"
+              placeholder="请选择存储属性"
+              v-model="storageProperty"
               style="width:120px;margin:0 20px 0 10px"
-            ></el-input>
+            >
+              <el-option
+                v-for="(item, i) in storagePropertyItems"
+                :key="i"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </div>
           <el-button type="primary" size="mini" @click="changeDate(0)">
             批量应用
@@ -205,7 +214,21 @@ export default {
       processDialog: false,
       storageProperty: null,
       palletQuantity: null,
-      otherProperty: null
+      otherProperty: null,
+      storagePropertyItems: [
+        {
+          title: "是",
+          value: "是",
+          label: "是",
+          text: "是"
+        },
+        {
+          title: "否",
+          value: "否",
+          label: "否",
+          text: "否"
+        }
+      ]
     };
   },
   watch: {},
@@ -473,15 +496,20 @@ export default {
     },
     // 批量设置
     batchSetting() {
+      if (this.selectionData[0].length === 0) {
+        this.$message.error("请选择要批量设置的数据！");
+        return;
+      }
       this.Dialog = true;
     },
     //批量应用
     async changeDate(val) {
       if (val === 0) {
         this.selectionData[0].map(item => {
-          item["TrayOfQty"] = this.storageProperty;
+          item["Extend18"] = this.storageProperty;
         });
         let res = await SaveData(this.selectionData[0]);
+        console.log(this.tableData[0]);
         this.storageProperty = null;
       } else if (val === 1) {
         this.selectionData[0].map(item => {
