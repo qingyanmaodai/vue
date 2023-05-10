@@ -871,7 +871,7 @@ export default {
               cell.locked(true);
               // sheet.setCellType(rowIndex, columnIndex, "");
             }
-            if (row["Result"] !== "满足" && row["Result"]) {
+            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
               cell.backColor("#FF0000");
               // cell.style({
               //   foreColor: "#FF0000"
