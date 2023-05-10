@@ -40,7 +40,7 @@
           :tableLoading="tableLoading[0]"
           :remark="0"
           :sysID="10110"
-          :hasSelect="isSelect"
+          :hasSelect="true"
           :isEdit="isEdit"
           :isClear="isClear[0]"
           :pagination="tablePagination[0]"
@@ -74,6 +74,34 @@
         >
       </span>
     </el-dialog>
+    <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="50%">
+      <div class="">
+        <div>
+          <el-input
+            type="number"
+            v-model="storageProperty"
+            size="small"
+            style="width:120px;margin:0 20px 0 10px"
+          ></el-input>
+        </div>
+        <div>
+          <el-input
+            type="number"
+            v-model="palletQuantity"
+            size="small"
+            style="width:120px;margin:0 20px 0 10px"
+          ></el-input>
+        </div>
+        <div>
+          <el-input
+            type="number"
+            v-model="otherProperty"
+            size="small"
+            style="width:120px;margin:0 20px 0 10px"
+          ></el-input>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,6 +127,7 @@ export default {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
+      Dialog: false,
       formSearchs: [
         {
           datas: {},
@@ -148,10 +177,13 @@ export default {
         { label: "已完成", value: 25 }
       ],
       isSelect: false,
-      isEdit: false,
+      isEdit: true,
       dialogCurrentRow: "",
       processGroupOptions: [],
-      processDialog: false
+      processDialog: false,
+      storageProperty: null,
+      palletQuantity: null,
+      otherProperty: null
     };
   },
   watch: {},
@@ -301,7 +333,7 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 49 }];
+      let IDs = [{ ID: 10110 }];
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -405,6 +437,11 @@ export default {
           dangerouslyUseHTMLString: true
         });
       }
+    },
+    // 批量设置
+    batchSetting() {
+      // this.dataSearch(7);
+      this.Dialog = true;
     }
   }
 };
