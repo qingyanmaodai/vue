@@ -507,9 +507,9 @@ export default {
       if (val === 0) {
         this.selectionData[0].map(item => {
           item["Extend18"] = this.storageProperty;
+          item["Extend18Text"] = this.storageProperty;
         });
         let res = await SaveData(this.selectionData[0]);
-        console.log(this.tableData[0]);
         this.storageProperty = null;
       } else if (val === 1) {
         this.selectionData[0].map(item => {
