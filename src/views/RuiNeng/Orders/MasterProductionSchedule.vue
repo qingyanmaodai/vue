@@ -539,11 +539,11 @@ export default {
         } else {
           let DirtyRows = sheet.getDirtyRows().map(row => row.item); //获取修改过的数据
           let InsertRows = sheet.getInsertRows().map(row => row.item); //获取插入过的数据
-          let DeletedRows = sheet.getDeletedRows().map(row => row.item);
-          DeletedRows.forEach(item => {
-            item["ElementDeleteFlag"] = 1;
-          }); //获取被删除的数据
-          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+          // let DeletedRows = sheet.getDeletedRows().map(row => row.item);
+          // DeletedRows.forEach(item => {
+          //   item["ElementDeleteFlag"] = 1;
+          // }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows];
         }
       }
 
@@ -654,32 +654,25 @@ export default {
       }
     },
     // 删除
-    // async dataDel(remarkTb, index, parms) {
-    //   let res = null;
-    //   let newData = [];
-    //   if (parms && parms.dataName) {
-    //     if (this[parms.dataName][remarkTb].length == 0) {
-    //       this.$message.error("请单击需要操作的数据！");
-    //     } else {
-    //       this[parms.dataName][remarkTb].forEach(x => {
-    //         let obj = x;
-    //         obj["ElementDeleteFlag"] = 1;
-    //         newData.push(obj);
-    //       });
-    //     }
-    //   } else {
-    //     this.tableData[remarkTb].forEach(y => {
-    //       let obj2 = y;
-    //       obj2["ElementDeleteFlag"] = 1;
-    //       newData.push(obj2);
-    //     });
-    //   }
-    //   this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-    //     .then(_ => {
-    //       _this.generalSaveData(newData, remarkTb, index);
-    //     })
-    //     .catch(_ => {});
-    // },
+    async dataDel(remarkTb, index, parms) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.$confirm(
+        "确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗"
+      )
+        .then(_ => {
+          this.selectionData[remarkTb].forEach(x => {
+            if (x["DataSource"] === "手动加单") {
+              x["ElementDeleteFlag"] = 1;
+            }
+          });
+          this.adminLoading = true;
+          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+        })
+        .catch(_ => {});
+    },
     // 通用直接保存
     // async generalSaveData(newData, remarkTb, index) {
     //   if (newData.length == 0) {
@@ -937,8 +930,10 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
         defaultStyle.showEllipsis = true;
-        // 冻结
-        sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
+        if (this.tableColumns[remarkTb][0]["FixCount"]) {
+          // 冻结
+          sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+        }
 
         this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
         this.spread[remarkTb].options.scrollbarMaxAlign = true;
@@ -1231,8 +1226,10 @@ export default {
         }
       });
       oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
+      newData["SourceDetailPlanID"] = oldData["SalesOrderDetailPlanID"]; // 将 SourceDetailPlanID 值设置为 null
       newData["SalesOrderDetailPlanID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
       newData["PlanQty"] = SQtyObj["SQty"];
+      newData["DataSource"] = "手动加单";
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
         sheet.repaint();
