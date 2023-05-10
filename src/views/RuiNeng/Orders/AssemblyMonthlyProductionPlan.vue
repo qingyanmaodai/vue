@@ -645,6 +645,8 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
       console.log(this.checkBoxCellTypeLine);
+      sheet.setDataSource(this.tableData[remarkTb]);
+
       this.tableColumns[remarkTb].forEach((x, colIndex) => {
         if (x.prop === "LineID") {
           let newData = [];
@@ -753,7 +755,6 @@ export default {
 
       sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
 
-      sheet.setDataSource(this.tableData[remarkTb]);
       sheet.bindColumns(colInfos);
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
 

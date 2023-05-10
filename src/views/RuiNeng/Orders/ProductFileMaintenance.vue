@@ -33,6 +33,7 @@
           </el-row>
         </div>
         <ComVxeTable
+          ref="tableRef"
           :rowKey="'RowNumber'"
           :height="height"
           :tableData="tableData[0]"
@@ -43,11 +44,13 @@
           :hasSelect="true"
           :isEdit="isEdit"
           :isClear="isClear[0]"
+          :keepSource="true"
           :pagination="tablePagination[0]"
           @configprocess="configprocess"
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @selectfun="selectFun"
         />
       </div>
     </div>
@@ -74,31 +77,49 @@
         >
       </span>
     </el-dialog>
-    <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="50%">
-      <div class="">
-        <div>
-          <el-input
-            type="number"
-            v-model="storageProperty"
-            size="small"
-            style="width:120px;margin:0 20px 0 10px"
-          ></el-input>
+    <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="22%">
+      <div class="flex_column" style="padding:20px">
+        <div class="flex_wrap" style="margin-bottom:20px;">
+          <div>
+            存储属性:
+            <el-input
+              type="number"
+              v-model="storageProperty"
+              size="small"
+              style="width:120px;margin:0 20px 0 10px"
+            ></el-input>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(0)">
+            批量应用
+          </el-button>
         </div>
-        <div>
-          <el-input
-            type="number"
-            v-model="palletQuantity"
-            size="small"
-            style="width:120px;margin:0 20px 0 10px"
-          ></el-input>
+        <div class="flex_wrap" style="margin-bottom:20px">
+          <div>
+            托盘数量:
+            <el-input
+              type="number"
+              v-model="palletQuantity"
+              size="small"
+              style="width:120px;margin:0 20px 0 10px"
+            ></el-input>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(1)">
+            批量应用
+          </el-button>
         </div>
-        <div>
-          <el-input
-            type="number"
-            v-model="otherProperty"
-            size="small"
-            style="width:120px;margin:0 20px 0 10px"
-          ></el-input>
+        <div class="flex_wrap" style="margin-bottom:20px">
+          <div>
+            其他属性:
+            <el-input
+              type="number"
+              v-model="otherProperty"
+              size="small"
+              style="width:120px;margin:0 20px 0 10px"
+            ></el-input>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(2)">
+            批量应用
+          </el-button>
         </div>
       </div>
     </el-dialog>
@@ -128,6 +149,7 @@ export default {
       title: this.$route.meta.title,
       drawer: false,
       Dialog: false,
+      selectionData: [[]],
       formSearchs: [
         {
           datas: {},
@@ -287,13 +309,20 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      let res = null;
+      console.log(this.tableData[0]);
+      const $table = this.$refs.tableRef.$refs.vxeTable;
+      // 获取修改记录
+      let updateRecords = [];
       this.adminLoading = true;
-      if (newData && newData.length != 0) {
-        res = await SaveData(newData);
-      } else {
-        res = await SaveData(this.tableData[remarkTb]);
+      if ($table) {
+        updateRecords = $table.getUpdateRecords();
       }
+      if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
+      let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.adminLoading = false;
@@ -420,6 +449,10 @@ export default {
       }
       this.processDialog = true;
     },
+    // 选择数据
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
+    },
     // 确定当前工艺
     async sureProcess() {
       let obj = {};
@@ -440,8 +473,29 @@ export default {
     },
     // 批量设置
     batchSetting() {
-      // this.dataSearch(7);
       this.Dialog = true;
+    },
+    //批量应用
+    async changeDate(val) {
+      if (val === 0) {
+        this.selectionData[0].map(item => {
+          item["TrayOfQty"] = this.storageProperty;
+        });
+        let res = await SaveData(this.selectionData[0]);
+        this.storageProperty = null;
+      } else if (val === 1) {
+        this.selectionData[0].map(item => {
+          item["TrayOfQty"] = this.palletQuantity;
+        });
+        let res = await SaveData(this.selectionData[0]);
+        this.palletQuantity = null;
+      } else if (val === 2) {
+        this.selectionData[0].map(item => {
+          item["Extend20"] = this.otherProperty;
+        });
+        let res = await SaveData(this.selectionData[0]);
+        this.otherProperty = null;
+      }
     }
   }
 };
