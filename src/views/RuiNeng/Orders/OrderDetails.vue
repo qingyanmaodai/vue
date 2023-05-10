@@ -161,7 +161,7 @@ export default {
   data() {
     return {
       newDataDialog: false,
-      height: "707px",
+      height: "607px",
       selectedOption: [1],
       dialogSearchForm: {},
       colDialogVisible: false,
@@ -242,7 +242,9 @@ export default {
       this.RoleMapStatus === true ? "" : this.$store.getters.userInfo.Account;
   },
   mounted() {
-    this.setHeight();
+    setTimeout(() => {
+      this.setHeight();
+    }, 100);
   },
   methods: {
     //初始化SpreadJS
@@ -275,6 +277,11 @@ export default {
         headHeight -
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
+      console.log(
+        headHeight,
+        document.documentElement.clientHeight,
+        this.$store.getters.reduceHeight
+      );
       this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置
