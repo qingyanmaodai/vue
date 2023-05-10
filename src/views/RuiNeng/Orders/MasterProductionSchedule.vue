@@ -659,6 +659,13 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
+      const errorNum1 = this.selectionData[remarkTb].findIndex(
+        item => item["DataSource"] === "业务订单"
+      );
+      if (errorNum1 !== -1) {
+        this.$message.error(`操作的数据中含有业务订单`);
+        return;
+      }
       this.$confirm(
         "确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗"
       )
