@@ -23,6 +23,13 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
+              <a
+                style="color: #0960bd;"
+                :href="`${apsurl}` + '/业务订单明细导入模板.xlsx'"
+                target="_blank"
+                class="font_size_1"
+                >操作指南</a
+              >
               <!-- <div style="margin-right: 10px"></div>
               <div>
                 <el-checkbox-group
@@ -160,6 +167,7 @@ export default {
   },
   data() {
     return {
+      apsurl: null,
       newDataDialog: false,
       height: "607px",
       selectedOption: [1],
@@ -222,6 +230,7 @@ export default {
     }
   },
   created() {
+    this.apsurl = localStorage.getItem("apsurl");
     _this = this;
     _this.adminLoading = true;
     // 获取所有按钮
@@ -244,7 +253,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.setHeight();
-    }, 100);
+    }, 500);
   },
   methods: {
     //初始化SpreadJS

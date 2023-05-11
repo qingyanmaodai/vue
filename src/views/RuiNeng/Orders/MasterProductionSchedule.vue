@@ -1155,7 +1155,7 @@ export default {
         prop: "SQty"
       });
       targetColumns.map(item => {
-        item["width"] = 350;
+        item["width"] = 250;
         if (item.label === "拆单数量") {
           item["isEdit"] = true;
         } else {
