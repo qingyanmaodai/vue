@@ -671,7 +671,7 @@ export default {
       )
         .then(_ => {
           this.selectionData[remarkTb].forEach(x => {
-            if (x["DataSource"] === "手动" || x["DataSource"] === "拆单") {
+            if (x["DataSource"] === "手工" || x["DataSource"] === "拆单") {
               x["ElementDeleteFlag"] = 1;
             }
           });
@@ -1258,7 +1258,7 @@ export default {
           m.dicID = 10075;
           m["SalesOrderDetailPlanID"] = null;
           m["PlanQty"] = m["Qty"];
-          m["DataSource"] = "手动";
+          m["DataSource"] = "手工";
         });
         _this.adminLoading = true;
         let res = await GetSearch(
