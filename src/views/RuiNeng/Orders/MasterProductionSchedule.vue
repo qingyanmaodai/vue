@@ -296,7 +296,7 @@ export default {
           forms: []
         },
         {
-          datas: {},
+          datas: { IsToMainPlan: "未排" },
           forms: []
         }
       ],
@@ -660,7 +660,7 @@ export default {
         return;
       }
       const errorNum1 = this.selectionData[remarkTb].findIndex(
-        item => item["DataSource"] === "业务订单"
+        item => item["DataSource"] === "业务"
       );
       if (errorNum1 !== -1) {
         this.$message.error(`操作的数据中含有业务订单`);
@@ -671,7 +671,7 @@ export default {
       )
         .then(_ => {
           this.selectionData[remarkTb].forEach(x => {
-            if (x["DataSource"] === "手动加单") {
+            if (x["DataSource"] === "手动" || x["DataSource"] === "拆单") {
               x["ElementDeleteFlag"] = 1;
             }
           });
@@ -1236,7 +1236,7 @@ export default {
       newData["SourceDetailPlanID"] = oldData["SalesOrderDetailPlanID"]; // 将 SourceDetailPlanID 值设置为 null
       newData["SalesOrderDetailPlanID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
       newData["PlanQty"] = SQtyObj["SQty"];
-      newData["DataSource"] = "手动加单";
+      newData["DataSource"] = "拆单";
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
         sheet.repaint();
@@ -1258,7 +1258,7 @@ export default {
           m.dicID = 10075;
           m["SalesOrderDetailPlanID"] = null;
           m["PlanQty"] = m["Qty"];
-          m["DataSource"] = "手动加单";
+          m["DataSource"] = "手动";
         });
         _this.adminLoading = true;
         let res = await GetSearch(
