@@ -286,11 +286,6 @@ export default {
         headHeight -
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
-      console.log(
-        headHeight,
-        document.documentElement.clientHeight,
-        this.$store.getters.reduceHeight
-      );
       this.$set(this, "height", newHeight);
     },
     // 跳转至属性配置

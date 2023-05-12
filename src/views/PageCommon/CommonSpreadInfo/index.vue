@@ -465,8 +465,8 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[0].length === 0) {
-        this.tablePagination[0]["pageSize"] = this.tableColumns[0][0][
+      if (this.tableData[remarkTb].length === 0) {
+        this.tablePagination[remarkTb]["pageSize"] = this.tableColumns[remarkTb][1][
           "pageSize"
         ];
       }
