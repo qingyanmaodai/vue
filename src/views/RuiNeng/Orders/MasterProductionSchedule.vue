@@ -36,6 +36,23 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
+                    <el-input-number
+                      v-model="Days"
+                      type="number"
+                      v-show="labelStatus1 != 3 || labelStatus1 != 5"
+                      size="small"
+                      placeholder="请选择周期"
+                    >
+                    </el-input-number>
+                    <el-divider direction="vertical"></el-divider>
+                    <el-button
+                      type="warning"
+                      size="mini"
+                      v-show="labelStatus1 != 3 || labelStatus1 != 5"
+                      @click="transferMonthlyPlan"
+                    >
+                      转入月计划
+                    </el-button>
                     <!-- <el-divider direction="vertical"></el-divider>
 
                     <el-button
@@ -241,6 +258,7 @@ export default {
   },
   data() {
     return {
+      Days: 30,
       newDataDialog: false,
       Dialog: false,
       Columns: [[]],
@@ -630,28 +648,56 @@ export default {
     },
     // 转入月计划
     async transferMonthlyPlan(remarkTb, index) {
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[remarkTb],
-        "/APSAPI/TOProcessPlanFromSalesOrder"
-      );
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        this.$message({
-          message: msg,
-          type: "success",
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1; // 月份从0开始，需要加1
+      const day = today.getDate();
+      const date2 = new Date(today);
+      date2.setDate(date2.getDate() + this.Days);
+      const year2 = date2.getFullYear();
+      const month2 = date2.getMonth() + 1; // 月份从0开始，需要加1
+      const day2 = date2.getDate();
+      this.$confirm(
+        `当前日期<span style="color: #2f8acb;">${year}-${month}-${day}</span>,转单范围为<span style="color: red;">+${
+          this.Days
+        }天</span>，即<span style="color: red;">${year2}-${month2}-${day2}</span>，确认将会把主计划<span style="color: red;">${
+          month === month2 ? month + "月" : month + "月~" + month2 + "月"
+        }</span>的排产数据转入整机月计划中，请确认是否转入`,
+        "转月计划提醒",
+        {
           dangerouslyUseHTMLString: true
+        }
+      )
+        .then(async () => {
+          this.adminLoading = true;
+          let res = await GetSearch(
+            {
+              Days: this.Days
+            },
+            "/APSAPI/TOProcessPlanFromSalesOrder"
+          );
+          const { datas, forms, result, msg } = res.data;
+          console.log(result, "result");
+          if (result) {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true
+            });
+            this.dataSearch(remarkTb);
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true
+            });
+          }
+        })
+        .catch(() => {
+          // 取消
         });
-        this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-        this.$set(this, "adminLoading", false);
-      }
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
