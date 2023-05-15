@@ -1016,6 +1016,21 @@ export default {
         //   sheet.setArray(args.row, i, [2021]);
         // }
       });
+      // 表格单击齐套率弹框事件
+      this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
+        if (_this.tableColumns[remarkTb].length) {
+          _this.tableColumns[remarkTb].map((item, index) => {
+            if (item.prop.indexOf("FormRate") !== -1) {
+              console.log("OrderID", _this.tableData[_this.tagRemark]);
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[remarkTb][args.row].OrderID;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
+      });
       //脏数据清除
       sheet.bind(GC.Spread.Sheets.Events.RowChanged, function(e, info) {
         console.log(
@@ -1033,21 +1048,6 @@ export default {
         console.log(arr, arr2);
         // sheet.clearPendingChanges();
       });
-      // 表格单击单元格弹框事件
-      this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
-        if (_this.tableColumns[remarkTb].length) {
-          _this.tableColumns[remarkTb].map((item, index) => {
-            if (item.name === "Q1" && args.col === index) {
-              // 显示ERP供需平衡表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.OrderID =
-                _this.tableData[remarkTb][args.row].OrderID;
-              _this.dialogSearchForm.OweQty = 0;
-            }
-          });
-        }
-      });
-
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
@@ -1450,12 +1450,11 @@ export default {
           newData[key.replace(/dy$/, "")] = null;
         }
       });
-      oldData["Qty"] = oldData["Qty"] - SQtyObj["SQty"];
+      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
       newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
       newData["LineID"] = null;
-      newData["PlanQty"] = null;
+      newData["PlanQty"] = SQtyObj["SQty"];
       newData["HasQty"] = null;
-      newData["Qty"] = SQtyObj["SQty"];
       this.$nextTick(() => {
         sheet.setDataSource(sheet.getDataSource()); // 更新数据源
         sheet.repaint();
