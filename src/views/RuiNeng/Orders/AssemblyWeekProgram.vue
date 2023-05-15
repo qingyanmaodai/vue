@@ -396,7 +396,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7944 }, { ID: 7944 }, { ID: 7944 }],
+      sysID: [{ ID: 10115 }, { ID: 7944 }, { ID: 7944 }],
       //sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7944 },{ ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
