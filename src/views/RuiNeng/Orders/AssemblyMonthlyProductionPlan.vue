@@ -1020,7 +1020,7 @@ export default {
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function(e, args) {
         if (_this.tableColumns[remarkTb].length) {
           _this.tableColumns[remarkTb].map((item, index) => {
-            if (item.prop.indexOf("FormRate") !== -1) {
+            if (item["prop"].indexOf("FormRate") !== -1 && args.col === index) {
               console.log("OrderID", _this.tableData[_this.tagRemark]);
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
