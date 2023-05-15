@@ -258,7 +258,7 @@ export default {
   },
   data() {
     return {
-      Days: 30,
+      Days: 50,
       newDataDialog: false,
       Dialog: false,
       Columns: [[]],
