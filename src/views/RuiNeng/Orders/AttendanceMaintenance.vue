@@ -307,7 +307,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 10104 }, { ID: 10104 }, { ID: 10084 }, { ID: 6751 }],
+      sysID: [{ ID: 10113 }, { ID: 10112 }, { ID: 10084 }, { ID: 6751 }],
       isEdit: false,
       enlargeType: true,
       rem: "",
