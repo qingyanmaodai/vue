@@ -237,7 +237,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 6734 }, { ID: 6734 }],
+      sysID: [{ ID: 10115 }, { ID: 6734 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
