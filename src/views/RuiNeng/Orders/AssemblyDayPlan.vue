@@ -222,7 +222,7 @@ export default {
       showAside: true,
       ReplyDate: "",
       treeProps: {
-        label: "OrganizeTypeIDText",
+        label: "OrganizeName",
         children: "children"
       },
       treeData: [],
@@ -395,26 +395,27 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let newTree = [];
-        if (data.length != 0) {
-          let supplierMap = new Map();
-          data.forEach(a => {
-            let currentSum = supplierMap.get(a.SupplierName) || 0;
-            currentSum += a.SumCount;
-            supplierMap.set(a.SupplierName, currentSum);
-            a["SumCount"] = `${a.SupplierName}(${currentSum})`;
-          });
-          newTree = Array.from(supplierMap.entries()).map(
-            ([SupplierName, sum]) => {
-              const foundItem = data.find(a => a.SupplierName === SupplierName);
-              return {
-                ...foundItem,
-                SumCount: `${foundItem.SupplierName}(${sum})`
-              };
-            }
-          );
-        }
-        this.treeData = JSON.parse(JSON.stringify(newTree));
+        // let newTree = [];
+        // if (data.length != 0) {
+        // let supplierMap = new Map();
+        // data.forEach(a => {
+        //   let currentSum = supplierMap.get(a.OrganizeName) || 0;
+        //   currentSum += a.SumCount;
+        //   supplierMap.set(a.OrganizeName, currentSum);
+        //   a["SumCount"] = `${a.OrganizeName}(${currentSum})`;
+        // });
+        // newTree = Array.from(supplierMap.entries()).map(
+        //   ([OrganizeName, sum]) => {
+        //     const foundItem = data.find(a => a.OrganizeName === OrganizeName);
+        //     return {
+        //       ...foundItem,
+        //       SumCount: `${foundItem.OrganizeName}(${sum})`
+        //     };
+        //   }
+        // );
+        // }
+        // console.log(newTree, "newTree");
+        this.treeData = JSON.parse(JSON.stringify(data));
         // this.treeData.unshift({
         //   SupplierID: -1,
         //   SupplierName: "",
@@ -1315,8 +1316,8 @@ export default {
     handleNodeClick(data, node) {
       this.$set(
         this.formSearchs[this.labelStatus1].datas,
-        "SupplierName",
-        data.SupplierName == "全部" ? "" : data.SupplierName
+        "OrganizeName",
+        data.OrganizeName == "全部" ? "" : data.OrganizeName
       );
       this.dataSearch(this.labelStatus1);
     },
