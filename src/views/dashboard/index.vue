@@ -86,7 +86,7 @@
                     </el-button>
                   </el-button-group> -->
                 </div>
-                <div class="echartBody" ref="chart4"></div>
+                <div class="echartBody" ref="chart2"></div>
               </div>
               <div class="itemCard">
                 <div class="echartHead">
@@ -112,7 +112,7 @@
                     </el-button>
                   </el-button-group> -->
                 </div>
-                <div class="echartBody" ref="chart4"></div>
+                <div class="echartBody" ref="chart3"></div>
               </div>
             </div>
           </div>
@@ -127,7 +127,7 @@
               <div class="echartHead">
                 <div class="echartTitle">待办事项清单</div>
               </div>
-              <div class="echartBody" ref="chart3"></div>
+              <div class="echartBody" ref="chart4"></div>
             </div>
           </div>
           <div class="secondCard">
@@ -155,7 +155,7 @@
                   </el-button>
                 </el-button-group>
               </div>
-              <div class="echartBody" ref="chart2"></div>
+              <div class="echartBody" ref="chart5"></div>
             </div>
           </div>
           <div class="thirdCard">
@@ -163,7 +163,7 @@
               <div class="echartHead">
                 <div class="echartTitle">今日生产情况</div>
               </div>
-              <div class="echartBody" ref="chart5"></div>
+              <div class="echartBody" ref="chart6"></div>
             </div>
           </div>
         </div>
@@ -379,7 +379,8 @@ export default {
       this.$refs.chart2,
       this.$refs.chart3,
       this.$refs.chart4,
-      this.$refs.chart5
+      this.$refs.chart5,
+      this.$refs.chart6
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -404,621 +405,318 @@ export default {
       }
       this.chartOptions = [
         {
-          textStyle: {
-            fontSize: fontSize(14)
+          grid: {
+            containLabel: true,
+            bottom: 0,
+            left: fontSize(10),
+            right: fontSize(10)
           },
           tooltip: {
             trigger: "axis",
-            formatter: function(params, ticket, callback) {
-              var res = params[0].name;
-
-              for (var i = 0, l = params.length; i < l; i++) {
-                if (params[i].seriesType === "line") {
-                  res +=
-                    "<br/>" +
-                    params[i].seriesName +
-                    " : " +
-                    (params[i].value ? params[i].value : "-") +
-                    "%";
-                } else {
-                  res +=
-                    "<br/>" +
-                    params[i].seriesName +
-                    " : " +
-                    (params[i].value ? params[i].value : "-") +
-                    "个";
-                }
-              }
-              return res;
+            axisPointer: {
+              type: "shadow"
             }
-          },
-          grid: {
-            containLabel: true
           },
           legend: {
-            data: ["库存金额", "在途金额"]
-          },
-          xAxis: [
-            {
-              type: "category",
-              axisTick: {
-                alignWithLabel: true,
-                show: false
-              },
-              data: [
-                "9月1日",
-                "9月2日",
-                "9月3日",
-                "9月4日",
-                "9月5日",
-                "9月6日",
-                "9月7日"
-              ],
-              axisLine: {
-                show: true,
-                lineStyle: {
-                  color: "#CCCCCC"
-                }
-              },
-              axisLabel: {
-                textStyle: {
-                  color: "#666666", // 设置文字颜色为灰色
-                  fontSize: fontSize(14)
-                }
-              }
-            }
-          ],
-          dataZoom: [
-            {
-              type: "slider",
-              xAxisIndex: 0,
-              filterMode: "empty",
-              start: 0,
-              end: 100
-            },
-            {
-              type: "inside",
-              xAxisIndex: 0,
-              filterMode: "empty",
-              start: 0,
-              end: 100
-            }
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "个数",
-              position: "left",
-              nameTextStyle: {
-                align: "right",
-                color: "#666",
-                fontWeight: "bold",
-                fontSize: fontSize(14)
-              },
-              axisLabel: {
-                formatter: "{value}",
-                textStyle: {
-                  color: "#666666", // 设置文字颜色为灰色
-                  fontSize: fontSize(14)
-                }
-              },
-              axisLine: {
-                show: true,
-                lineStyle: {
-                  color: "#CCCCCC"
-                }
-              },
-              axisTick: {
-                show: false
-              },
-              splitLine: {
-                show: false,
-                lineStyle: {
-                  color: ["#CCCCCC"]
-                }
-              }
-            },
-            {
-              type: "value",
-              name: "增长率",
-              position: "right",
-              min: function(value) {
-                return value.min * 2;
-              },
-              max: function(value) {
-                return value.max * 2;
-              },
-              nameTextStyle: {
-                align: "right",
-                color: "#666",
-                fontWeight: "bold",
-                fontSize: fontSize(14)
-              },
-              axisLabel: {
-                formatter: "{value}%",
-                textStyle: {
-                  color: "#666666", // 设置文字颜色为灰色
-                  fontSize: fontSize(14)
-                }
-              },
-              axisLine: {
-                show: true,
-                lineStyle: {
-                  color: "#CCCCCC"
-                }
-              },
-              axisTick: {
-                show: false
-              },
-              splitLine: {
-                show: false,
-                lineStyle: {
-                  color: ["#CCCCCC"]
-                }
-              }
-            }
-          ],
-          series: [
-            {
-              name: "库存金额",
-              type: "line",
-              yAxisIndex: 1,
-              label: {
-                normal: {
-                  show: true,
-                  position: "top",
-                  color: "#666",
-                  formatter: function(params) {
-                    return params.data.toFixed() + "%";
-                  }
-                }
-              },
-              lineStyle: {
-                normal: {
-                  // width: 3,
-                  shadowColor: "#5964FE"
-                  // shadowBlur: 10,
-                  // shadowOffsetY: 10
-                }
-              },
-              itemStyle: {
-                color: "#5964FE"
-              },
-              data: [0, -25.0, 5.56, -21.05, 33.33, -10.0, -33.33]
-            },
-            {
-              name: "在途金额",
-              type: "line",
-              yAxisIndex: 1,
-
-              label: {
-                normal: {
-                  show: true,
-                  position: "top",
-                  color: "#666",
-                  formatter: function(params) {
-                    return params.data.toFixed() + "%";
-                  }
-                }
-              },
-              lineStyle: {
-                normal: {
-                  // width: 3,
-                  shadowColor: "#33CB90"
-                  // shadowBlur: 10,
-                  // shadowOffsetY: 10
-                }
-              },
-              itemStyle: {
-                color: "#33CB90"
-              },
-              data: [0, -23.81, -43.75, -11.11, 137.5, -42.11, -36.36]
-            },
-            {
-              name: "库存金额",
-              type: "bar",
-              yAxisIndex: 0,
-              label: {
-                normal: {
-                  show: true,
-                  position: "top"
-                }
-              },
-              barWidth: fontSize(20),
-              data: [1200, 900, 950, 750, 1000, 900, 600],
-              itemStyle: {
-                color: "#5964FE"
-              }
-            },
-            {
-              name: "在途金额",
-              type: "bar",
-              yAxisIndex: 0,
-              label: {
-                normal: {
-                  show: true,
-                  position: "top"
-                }
-              },
-              barWidth: fontSize(20),
-              data: [2100, 1600, 900, 800, 1900, 1100, 700],
-              itemStyle: {
-                color: "#33CB90"
-              }
-            }
-          ]
-        },
-        {
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c}"
-          },
-          textStyle: {
-            fontSize: fontSize(14)
-          },
-          grid: {
-            left: "8%",
-            right: "8%",
-            bottom: "10%",
-            containLabel: true
-          },
-          legend: {
-            data: ["估算库存", "预计消耗"],
-            bottom: "0",
-            textStyle: {
-              color: "#666"
-            }
+            top: "0",
+            data: ["未达成", "已达成"],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14)
           },
           xAxis: {
-            show: false,
-            type: "value",
-            max: function(value) {
-              return value.max * 1.2;
-            },
-            splitLine: {
-              lineStyle: {
-                color: "rgba(255,255,255,0.2)"
+            // name: "班级",
+            triggerEvent: true,
+            data: [
+              "1日",
+              "4日",
+              "7日",
+              "11日",
+              "15日",
+              "19日",
+              "23日",
+              "27日",
+              "30日"
+            ],
+            axisLabel: {
+              interval: 0,
+              show: true,
+              textStyle: {
+                color: "#000"
               }
-            },
-            axisTick: {
-              show: false
             },
             axisLine: {
-              //  改变x轴颜色
               lineStyle: {
-                color: "#3c4654"
-              }
-            },
-            axisLabel: {
-              //  改变x轴字体颜色和大小
-              textStyle: {
-                color: "#666"
+                show: false,
+                color: "#F3F3F3",
+                width: 2
               }
             }
           },
           yAxis: [
             {
-              type: "category",
-              name: "日期",
-              inverse: true,
-              data: ["3月1", "3月2", "3月3", "3月4", "3月5", "3月6", "3月7"],
-              nameLocation: "start",
+              name: "单位:万",
+              type: "value",
               nameTextStyle: {
-                align: "right",
-                color: "#333",
-                fontWeight: "bold",
-                fontSize: fontSize(14)
+                color: "#444444"
               },
-              splitLine: {
-                show: true
+              axisLabel: {
+                interval: 0,
+                show: true,
+                textStyle: {
+                  color: "#444444"
+                }
+              },
+              axisLine: {
+                show: false
+                // lineStyle: {
+                //   color: "#F3F3F3",
+                //   width: 2
+                // }
               },
               axisTick: {
                 show: false
               },
-              axisLine: {
-                show: false,
-                //  改变y轴颜色
+              splitLine: {
                 lineStyle: {
-                  color: "#3c4654"
-                }
-              },
-              axisLabel: {
-                //  改变y轴字体颜色和大小
-                //formatter: '{value} m³ ', //  给y轴添加单位
-                textStyle: {
-                  color: "#666",
-                  fontSize: fontSize(12)
+                  type: "dashed",
+                  color: "#E9E9E9"
                 }
               }
-            },
-            {
-              type: "category",
-              inverse: true,
-              name: "预计库存结余",
-              nameLocation: "start",
-              nameTextStyle: {
-                align: "center",
-                color: "#333",
-                fontWeight: "bold",
-                fontSize: fontSize(14)
-              },
-              axisTick: "none",
-              axisLine: "none",
-              show: true,
-              axisLabel: {
-                textStyle: {
-                  color: "#666",
-                  fontSize: fontSize(12)
-                }
-              },
-              data: [200, 200, 200, 100, 100, 400, 100]
             }
           ],
           series: [
             {
+              name: "未达成",
               type: "bar",
-              name: "估算库存",
+              silent: true,
               itemStyle: {
                 normal: {
-                  label: {
-                    show: true, //开启显示
-                    position: "right", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "#666666"
-                    }
-                  },
-                  color: "#0084BD",
-                  borderWidth: 0
-                  // barBorderRadius: [0, 30, 30, 0] //圆角大小
+                  color: "#578FFB"
                 }
               },
-              data: [1000, 600, 1000, 900, 800, 1000, 500],
-              barWidth: fontSize(10)
+              data: [
+                "45",
+                "23",
+                "65",
+                "45",
+                "54",
+                "45",
+                "56",
+                "54",
+                "67",
+                "43",
+                "34",
+                "5",
+                "46"
+              ]
             },
             {
+              name: "已达成",
               type: "bar",
-              name: "预计消耗",
+              silent: true,
               itemStyle: {
                 normal: {
-                  label: {
-                    show: true, //开启显示
-                    position: "right", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "#666666"
-                    }
-                  },
-                  color: "#E87171",
-                  borderWidth: 0
-                  // barBorderRadius: [0, 30, 30, 0] //圆角大小
+                  color: "#23CF9C"
                 }
               },
-              data: [800, 400, 800, 800, 700, 600, 400],
-              barWidth: fontSize(10)
+              data: [
+                "23",
+                "44",
+                "24",
+                "34",
+                "23",
+                "23",
+                "23",
+                "15",
+                "5",
+                "14",
+                "25",
+                "57",
+                "34"
+              ]
             }
           ]
         },
         {
-          tooltip: {
-            //提示框组件
-            trigger: "axis",
-            formatter: "{b}<br />{a0}: {c0}<br />{a1}: {c1}",
-            // axisPointer: {
-            //   type: "shadow",
-            //   label: {
-            //     backgroundColor: "#6a7985"
-            //   }
-            // },
+          backgroundColor: "#fff",
+          // title: {
+          //   text: "注册资金",
+          //   subtext: "2016年",
+          //   x: "center",
+          //   y: "center",
+          //   textStyle: {
+          //     fontWeight: "normal",
+          //     fontSize: 16
+          //   }
+          // },
+          // tooltip: {
+          //   show: false,
+          //   trigger: "item",
+          //   formatter: "{b}: {c} ({d}%)"
+          // },
+          legend: {
+            type: "scroll",
+            orient: "vertical",
+            right: "0%",
+            top: "center",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
             textStyle: {
-              color: "#fff",
-              fontStyle: "normal"
-            }
+              fontSize: fontSize(12)
+            },
+            itemStyle: {
+              borderRadius: "50%" // 将图例项的形状设定为圆形
+            },
+            data: ["包装", "自动插件", "焊线装配", "贴片", "灌胶老练", "印刷"]
           },
           grid: {
-            left: "2%",
-            right: "2%",
-            bottom: "10%",
             containLabel: true
           },
-          legend: {
-            //图例组件，颜色和名字
-            bottom: "0",
-            itemGap: fontSize(72),
-            itemWidth: fontSize(12),
-            itemHeight: fontSize(12),
-            data: [
-              {
-                name: "昨日"
-              },
-              {
-                name: "今日"
-              }
-            ],
-            textStyle: {
-              color: "#666666",
-              fontStyle: "normal",
-              fontSize: fontSize(14)
-            }
-          },
-          xAxis: [
+          series: [
             {
-              type: "category",
-              //	boundaryGap: true,//坐标轴两边留白
-              data: [
-                "采购员1",
-                "采购员2",
-                "采购员3",
-                "采购员4",
-                "采购员5",
-                "采购员6",
-                "采购员7",
-                "采购员8",
-                "采购员9",
-                "采购员A"
+              type: "pie",
+              // selectedMode: "single",
+              radius: ["30%", "60%"],
+              color: [
+                "#23CF9C",
+                "#578FFB",
+                "#6E40F2",
+                "#FF61E6",
+                "#E82074",
+                "#FBA806"
               ],
-              axisLabel: {
-                //坐标轴刻度标签的相关设置。
-                interval: 0, //设置为 1，表示『隔一个标签显示一个标签』
-                margin: fontSize(12),
+              center: ["30%", "50%"],
+              label: {
+                normal: {
+                  position: "inner",
+                  formatter: "{d}%"
+                },
                 textStyle: {
-                  color: "#666666",
-                  fontStyle: "normal",
-                  fontSize: fontSize(14)
-                }
-              },
-              axisTick: {
-                //坐标轴刻度相关设置。
-                show: false
-              },
-              axisLine: {
-                //坐标轴轴线相关设置
-                lineStyle: {
-                  color: "#D9DFF3"
-                }
-              },
-              splitLine: {
-                //坐标轴在 grid 区域中的分隔线。
-                show: false
-              }
-            }
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "金额",
-              splitNumber: 5,
-              axisLabel: {
-                textStyle: {
-                  color: "#a8aab0",
-                  fontStyle: "normal",
+                  color: "#fff",
                   fontSize: fontSize(12)
                 }
               },
-              nameTextStyle: {
-                fontWeight: "bold",
-                fontSize: fontSize(14),
-                align: "right",
-                color: "#333"
-              },
-              axisLine: {
-                show: true,
-                lineStyle: {
-                  color: "#D9DFF3"
+              labelLine: {
+                normal: {
+                  show: false
                 }
               },
-              axisTick: {
-                show: false
-              },
-              splitLine: {
-                show: true,
-                lineStyle: {
-                  color: ["#F5F7FE"]
+              data: [
+                {
+                  value: 3661,
+                  name: "包装"
+                },
+                {
+                  value: 5713,
+                  name: "自动插件"
+                },
+                {
+                  value: 9938,
+                  name: "焊线装配"
+                },
+                {
+                  value: 17623,
+                  name: "贴片"
+                },
+                {
+                  value: 3299,
+                  name: "灌胶老练"
+                },
+                {
+                  value: 3299,
+                  name: "印刷"
                 }
-              }
+              ]
             }
-          ],
-          // dataZoom: [
-          //   {
-          //     show: true,
-          //     height: fontSize(15),
-          //     xAxisIndex: [0],
-          //     bottom: 0,
-          //     start: 0,
-          //     end: 100,
-          //     handleSize: "100%",
-          //     handleStyle: {
-          //       color: "#d3dee5"
-          //     },
-          //     textStyle: {
-          //       color: "#666"
-          //     },
-          //     borderColor: "#90979c"
-          //   },
-          //   {
-          //     type: "inside",
-          //     show: true,
-          //     height: fontSize(15),
-          //     start: 0,
-          //     end: 100
+          ]
+        },
+        {
+          backgroundColor: "#fff",
+          // title: {
+          //   text: "注册资金",
+          //   subtext: "2016年",
+          //   x: "center",
+          //   y: "center",
+          //   textStyle: {
+          //     fontWeight: "normal",
+          //     fontSize: 16
           //   }
-          // ],
+          // },
+          // tooltip: {
+          //   show: false,
+          //   trigger: "item",
+          //   formatter: "{b}: {c} ({d}%)"
+          // },
+          legend: {
+            type: "scroll",
+            orient: "vertical",
+            right: "0%",
+            top: "center",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
+            textStyle: {
+              fontSize: fontSize(12)
+            },
+            itemStyle: {
+              borderRadius: "50%" // 将图例项的形状设定为圆形
+            },
+            data: [
+              "回货周期<6天",
+              "6天<回货周期<15天",
+              "15天<回货周期<30天",
+              "回货周期>30天",
+              "灌胶老练",
+              "印刷"
+            ]
+          },
+          grid: {
+            containLabel: true
+          },
           series: [
             {
-              name: "昨日",
-              type: "bar",
-              data: [
-                15600,
-                17500,
-                20000,
-                8000,
-                24500,
-                17500,
-                12500,
-                21000,
-                15000,
-                5100
+              type: "pie",
+              // selectedMode: "single",
+              radius: ["10%", "40%"],
+              color: [
+                "#23CF9C",
+                "#578FFB",
+                "#6E40F2",
+                "#FF61E6",
+                "#E82074",
+                "#FBA806"
               ],
-              barWidth: fontSize(20),
-              barGap: 0, //柱间距离
+              center: ["25%", "50%"],
               label: {
-                //图形上的文本标签
                 normal: {
-                  show: true,
-                  position: "top",
-                  textStyle: {
-                    color: "#01E197",
-                    fontStyle: "normal",
-                    fontSize: fontSize(8)
-                  }
+                  position: "inner",
+                  formatter: "{d}%",
+                  fontSize: fontSize(8),
+                  color: "#fff"
                 }
               },
-              itemStyle: {
+              labelLine: {
                 normal: {
-                  show: true,
-                  color: "#01E197",
-                  barBorderRadius: [50, 50, 0, 0],
-                  borderWidth: 0
-                }
-              }
-            },
-            {
-              name: "今日",
-              type: "bar",
-              data: [
-                12500,
-                18000,
-                16000,
-                7500,
-                28000,
-                14800,
-                8000,
-                18000,
-                17000,
-                5000
-              ],
-              barWidth: fontSize(20),
-              barGap: 0, //柱间距离
-              label: {
-                //图形上的文本标签
-                normal: {
-                  show: true,
-                  position: "top",
-                  textStyle: {
-                    color: "#1A8CDD",
-                    fontStyle: "normal",
-                    fontSize: fontSize(8)
-                  }
+                  show: false
                 }
               },
-              itemStyle: {
-                normal: {
-                  show: true,
-                  color: "#1A8CDD",
-                  barBorderRadius: [40, 40, 0, 0],
-                  borderWidth: 0
+              data: [
+                {
+                  value: 3661,
+                  name: "回货周期<6天"
+                },
+                {
+                  value: 5713,
+                  name: "6天<回货周期<15天"
+                },
+                {
+                  value: 9938,
+                  name: "15天<回货周期<30天"
+                },
+                {
+                  value: 17623,
+                  name: "回货周期>30天"
                 }
-              }
+              ]
             }
           ]
         },
@@ -1058,6 +756,132 @@ export default {
               data: [
                 { value: 1244, name: "异常超订金额" },
                 { value: 254, name: "正常超订金额" }
+              ]
+            }
+          ]
+        },
+        {
+          grid: {
+            containLabel: true,
+            bottom: 0,
+            left: fontSize(10),
+            right: fontSize(10)
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow"
+            }
+          },
+          legend: {
+            top: "0",
+            data: ["未达成", "已达成"],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14)
+          },
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: ["注塑", "电焊", "装配", "QC", "电子", "生产"],
+            axisLabel: {
+              interval: 0,
+              show: true,
+              textStyle: {
+                color: "#000"
+              }
+            },
+            axisLine: {
+              lineStyle: {
+                show: false,
+                color: "#F3F3F3",
+                width: 2
+              }
+            }
+          },
+          yAxis: [
+            {
+              name: "单位:万",
+              type: "value",
+              nameTextStyle: {
+                color: "#444444"
+              },
+              axisLabel: {
+                interval: 0,
+                show: true,
+                textStyle: {
+                  color: "#444444"
+                }
+              },
+              axisLine: {
+                show: false
+                // lineStyle: {
+                //   color: "#F3F3F3",
+                //   width: 2
+                // }
+              },
+              axisTick: {
+                show: false
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: "#E9E9E9"
+                }
+              }
+            }
+          ],
+          series: [
+            {
+              name: "未达成",
+              type: "bar",
+              silent: true,
+              barWidth: fontSize(14),
+              itemStyle: {
+                normal: {
+                  color: "#578FFB"
+                }
+              },
+
+              data: [
+                "45",
+                "23",
+                "65",
+                "45",
+                "54",
+                "45",
+                "56",
+                "54",
+                "67",
+                "43",
+                "34",
+                "5",
+                "46"
+              ]
+            },
+            {
+              name: "已达成",
+              type: "bar",
+              silent: true,
+              barWidth: fontSize(14),
+              itemStyle: {
+                normal: {
+                  color: "#23CF9C"
+                }
+              },
+              data: [
+                "23",
+                "44",
+                "24",
+                "34",
+                "23",
+                "23",
+                "23",
+                "15",
+                "5",
+                "14",
+                "25",
+                "57",
+                "34"
               ]
             }
           ]
