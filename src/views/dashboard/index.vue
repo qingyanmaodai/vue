@@ -57,15 +57,15 @@
           <div class="secondCard">
             <div class="itemCard1">
               <div class="echartHead">
-                <div class="echartTitle">近七日库存+在途超订金额统计</div>
+                <div class="echartTitle">近15日达成率趋势</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
             </div>
             <div class="itemCard2">
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">数据统计</div>
-                  <el-button-group>
+                  <div class="echartTitle">今日工序达成占比</div>
+                  <!-- <el-button-group>
                     <el-button
                       :class="{
                         select: selected2Index === 0
@@ -84,14 +84,14 @@
                     >
                       昨日
                     </el-button>
-                  </el-button-group>
+                  </el-button-group> -->
                 </div>
                 <div class="echartBody" ref="chart4"></div>
               </div>
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">数据统计</div>
-                  <el-button-group>
+                  <div class="echartTitle">物料到货情况</div>
+                  <!-- <el-button-group>
                     <el-button
                       :class="{
                         select: selected2Index === 0
@@ -110,7 +110,7 @@
                     >
                       昨日
                     </el-button>
-                  </el-button-group>
+                  </el-button-group> -->
                 </div>
                 <div class="echartBody" ref="chart4"></div>
               </div>
@@ -125,7 +125,7 @@
           <div class="firstCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">异常物料超订金额</div>
+                <div class="echartTitle">待办事项清单</div>
               </div>
               <div class="echartBody" ref="chart3"></div>
             </div>
@@ -133,7 +133,7 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">库存耗用分析</div>
+                <div class="echartTitle">昨日计划达成对比</div>
                 <el-button-group>
                   <el-button
                     :class="{
@@ -161,9 +161,9 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">异常物料超订金额</div>
+                <div class="echartTitle">今日生产情况</div>
               </div>
-              <div class="echartBody" ref="chart3"></div>
+              <div class="echartBody" ref="chart5"></div>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default {
       headCard: [
         {
           icon:
-            "data:image/png;base64,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",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
           title: "今日库存金额",
           statusNum: "3,841",
           changeNum: "+4500",
@@ -305,7 +305,7 @@ export default {
         },
         {
           icon:
-            "data:image/png;base64,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",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
           title: "今日在途金额",
           statusNum: "2,840",
           changeNum: "-4500",
@@ -313,7 +313,7 @@ export default {
         },
         {
           icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAYAAABXuSs3AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVqSURBVHgB1Vk9bBxFFH5vdh07OPgHKyADts41QnEoQ8G5ozQVdHFD2qTAJdgRLQW0NLFL08RUVMhOk5azREGXJRZEgiQ+R1j+O9/jzc3Pvt3z+WbO+IdPutu9uZ3db95872dmEU6JLaIRgKNZALzBnwo3TRPoNhhx1yBgxgf+UI0/jwAOa6N4NYNTAKEHGLLN29x9lklWoQfwYNb5HkujmC5DD4girgk3oXmPO90FYdFTIiOA5TFMFmM6BRPfosMqQfKAp7oCZ4MMgRZDZ6ArcWvlRWvlMwc/51sAdX8Usd7lus5g0hXW8EO28jScL9j6BzMnOXBH4pb02hlKoxtOJH8s8UtA2qEj+TbiWtNM+pdLQNoCaxw6Z8qaV+XLtCNeHtIa2r+aC+XWgsWfU2NOAT6AS4gjaM5cx75197tA/CU1n4RY+/vd3+AVNUx3QnEbe07i3P5HfB0e0zaZDMCng29BAFjv6qaTTOpaX9DRYgjplb0n8NXOhiWsPPkWMUzygZD9j68xpM2xlexlG39vHh3AF0MT3R5dYcnoXHIfQGicb3MbAvD48K+cNKE/R/cbxIAKbYZofl1OfrOxH/JoPZH3TJ1kiWttBzsklYgJImYgzrL5ESEx7X4miuQjKg9b3FniCaggaxuULOmIiA+W5VGSD5Hy1s9nIAw8+Fl9TE2yaVZDO04kg3Cr7zpIx8wdzyrPEbQDlfoG4aRkf793ZRDCQVUtF2SZzPK4H8L/CDzkuTQB/IgiOj0+eM5RYBeKunThDdpDHsg2+1grDbRtE0k/3Bq4BhHUp1P9ZQNvEFZ2Nzkk/iGciuerEBqLYdBo3obM4/TPZ58NjkURZ4lVUmrFxxhInSpPWJJBVPYa5Qm3aR3EoMKjiqOuLR5Xl5CI094pfTJhIohFS4uZoNIMYWGGojCiIjsYKxYsLMKgzaDDqs/Gcxm7zRHFDLjBEJ0DcQ0Xh8tW1YQm09fg5zc/gDvX3rZSEaTtrLiBU+8Wb92lHtNBOqXMmGQJfD081YoSP+1uif8dOZv2ffZ02u+JOEYRd7okymXirDj/+iR8PDAGX9Z/5/rj0LQ7Z7WO2WZpEokrHFnK3WoxkYVkNMA8Srzfd40rvMlWwTSEKcwPveuH6qTxw04dnjYawpnNoCgmkRgWmY4qWUwXWd1Ji33OmtaYSPthfvidY/tOplfg7otnvi8660dKhXvW0iOgDRXR0WTHPMk45/xm+09Y+ecleAtb7coFxK/7+z6SIOUxP17jap1TfrLKRVbwcg1BOqfyKf1p44Bl0vAxXGZRFOWvIw1CahRJfA/2NpRZCukNyDCQDXsgnMyHRxkmRXzPnVIVEhEUElUwg/Vx3q5ouTPfcjW0m9YlisVAnpCUH5TMjFhKUD7xiJIgRuN85RKAj0NqGYLjOYq0X4zH0uIkBuOWeFSI3eWVUhAytynaIq7lgq3Nxu6YSAeMFUsWk6VAPoi8jpEOLStH/f+HV/tDHq39acmd+6HG7GCt7HBNzs4oa2y/GoLcgcluUyBIB8TCAnpYIdwZCSppszcwmWojrvE374Hz+nMNLiH0qkfunRdyrd4pokDJnCc0p/KGf5tXWMmsXcCeeCdk27yDNdVt01M76j7gJ2DelF00sn3eZp465u1Exzj0jLct+i94Y1+THu+wsd+xnhxH5I44czGWx9pJpDVOLIQ1eQ5lN8/TYfWzttlg411e4AanLLN3rhbO9nWh4pCHj0Iujq0n9Xb0As/C3H84gLq28itQ301h+GosfrFnYWYA9GvxKvQEWmcDrNa5Tooh7NAzcQcdfQYAbvC7oyq2Yj9WoLgUrJsP8hKRuBxVNf7xYy9kJf4FVaRmWeIc5toAAAAASUVORK5CYII=",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
           title: "超订金额",
           statusNum: "45.21%",
           changeNum: "+4500",
@@ -321,7 +321,7 @@ export default {
         },
         {
           icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAYAAABXuSs3AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVXSURBVHgBzZlLbBtFGMf/s7HT5tE2oYBano6EeEt1L1yohJMzKqkEJw4xvcABiYK4x71x4FHEFSmJxBWawB0Sml5ACAcVCU5YcEFtoUmcxLWd7PSb3Z3dmX3YM07z+Eubzc7O7Pzmm2++eZhhl+Kcj6Ben0Qud4YeCpRSpOSR4JKqgdPlOFVsby8hn6+ygYEadiGGHuTBNhpTgDtJQCX0Io5F9PXNUgPm0IOswD3grY1LVOw96BbtXYzVsOPOsWPHKlbFTDPyer2EPmfGd4c9kGgAcyqmPeB0yyCszDfqV+CwH/YM2q+oAHdnlm9sfMbv3Onamx0tzhuNArh7lT5axH7Kt/54pwGcCR5A762VO6kLfCr4gUNLdYBP+LgXOQ4DNCD9/mqazycH5+ZG5VBARyrShDUdT9RchUZ0mVJmcBjl8nGK9YvyUQff2vyrq7UbDeDnn4DmXVEiSmdcv0O5h7Wk/D/yIPAsBa2jg+go4e/N1lk2OroqHnPhZzbrFSPoTz8BVv8PALl/92Dc4M6Vd7Ih6jslr8w3SvBvVzrDC7b+fjFjXxaPkY8zZwrddOOGD+1VzKMrDq2lKw2Qdwd649ZuAivL6C5+SQ5UD9zzbZMBKS0tK4VSuQoNBVTL5+o95cg0SmpuwUAjOHJkKgSnv92t7bc4BTQOHcCE8MF1dICqPQnNlcLLhTZeOsmlFalA9icbi6Wpo7oD9K6Pu4QEPP048MFHwIWLusXjjTcRQ0m4Sw7tdpFWfYaFuBgkOjh4yoUI7BGCLn/oD7yVa0h1KVvl8685yDmvWBUKLQod4gFygzff8e8s6PrTj0XQ818S+PWkS2lGMJSDogiHFiu/lPAnIU49CjxHnzpFsDMfA4ODEfSCAg2ejPVM6SkjDFbIUf6CcQHVh8OKA5A/fgW+/xaYOA9cDIAldHVZ7yEgObCtxD2LF2yK6L4Zc5ul7/yBWjrv5/Esvaz3DItZvDdfH8nBShkDUHWhxQWK97f8uPznL9BnUKW3GE9xnb0CV90khEGy2z0rq2nKuzRoZg8vOnbVqoScxuWkIScbpFhfHcAyzYnDWg7MnsE1kKBSJ249BVptjJwlWVp+K9VytFysGm8cxp6mSl4F4stTeU9bviZCn9KY8Jn0xPMwFhfg4DXjAnc3qX9uZ1TOM0DV6NMhmjSfhLEcVHPYdleMp/x//6GYfD0FJuYime/ikUTJd+Ih4KmXzDg4W3SwszMPU409kw0d+i+S4yAtgqj5xLsXx40x0GqtON5WiNEBpIkKBD75Fu1YTmZYDkgsW+MNURstruNk6QlaNR5/2AhBHJYScy2I4w5Z3S0ZFSye8680XfsG+PFrJCMG3V9+HTj3Bu6DZsUfH7zZnEN/vgLbE1gxQ679h3Agrt5MuoeQ+H+d3v39exRFhKVPGFo5Uo0ND895n5QpvLE5TUcAFdjoi/cJ6DYi91AnHCC5F1XSjtAC7N2vYCdWYUNDl3VwsQntz9MSz2LR9RttDNZuBd/kwSYjAA2/nhEyhU+/MAEL1djQ8Jh80M9VxBm4OE4+jOIoSzcR0gK4d1LEcAWHTcSkQvtJMQUuI6y+v2fi2aqh1Q5PsKQSU6aXodW+4BU4eAno8Ti0UOa6jCxfCCxfwMFIQtfSXmYuUrwCVBAHY/lqJ2ihjqurAP7svg5YUVcXaD+bofj6eplWkdPYO9ehX577yvSzyZJJZuu9RzDDlnG/GsA5LfIcsnLr87RBmCX7TZOsT/RAjo6md/OTOOfz9Nv+nA2wVM/gYf1e9Ok/Q9N4CSL2+wdMhSiDsCgjMNoiMtptuTTw2u2FXmBV3QPUgMSfzXTxswAAAABJRU5ErkJggg==",
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
           title: "超订计划金额",
           statusNum: "34.24%",
           changeNum: "+4500",
@@ -378,7 +378,8 @@ export default {
       this.$refs.chart1,
       this.$refs.chart2,
       this.$refs.chart3,
-      this.$refs.chart4
+      this.$refs.chart4,
+      this.$refs.chart5
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -1060,6 +1061,151 @@ export default {
               ]
             }
           ]
+        },
+        {
+          backgroundColor: "#fff",
+          color: [
+            "#0090FF",
+            "#36CE9E",
+            "#FFC005",
+            "#FF515A",
+            "#8B5CFF",
+            "#00CA69"
+          ],
+          legend: {
+            top: "0%"
+          },
+          tooltip: {
+            trigger: "axis",
+            extraCssText:
+              "background: #fff; border-radius: 0;box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);color: #333;",
+            axisPointer: {
+              type: "shadow",
+              shadowStyle: {
+                color: "#ffffff",
+                shadowColor: "rgba(225,225,225,1)",
+                shadowBlur: 10
+              }
+            }
+          },
+          grid: {
+            left: "10px",
+            right: "10px",
+            bottom: "10px",
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              axisLabel: {
+                formatter: "{value}月",
+                textStyle: {
+                  color: "#333"
+                }
+              },
+              axisLine: {
+                lineStyle: {
+                  color: "#D9D9D9"
+                }
+              },
+              data: ["1", "2", "3", "4", "5", "6", "7", "8"]
+            }
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name: "单位：万",
+              axisLabel: {
+                textStyle: {
+                  color: "#666"
+                }
+              },
+              nameTextStyle: {
+                color: "#666",
+                fontSize: 12,
+                lineHeight: 40
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: "#E9E9E9"
+                }
+              },
+              axisLine: {
+                show: false
+              },
+              axisTick: {
+                show: false
+              }
+            }
+          ],
+          series: [
+            {
+              name: "计划数",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,/
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#0090FF30"
+                      },
+                      {
+                        offset: 1,
+                        color: "#0090FF10"
+                      }
+                    ],
+                    false
+                  ),
+                  shadowColor: "#0090FF10",
+                  shadowBlur: 10
+                }
+              },
+              data: [100, 138, 350, 173, 180, 150, 180, 230]
+            },
+            {
+              name: "生产数",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#36CE9E30"
+                      },
+                      {
+                        offset: 1,
+                        color: "#36CE9E10"
+                      }
+                    ],
+                    false
+                  ),
+                  shadowColor: "#36CE9E10",
+                  shadowBlur: 10
+                }
+              },
+              data: [233, 233, 200, 180, 199, 233, 210, 180]
+            }
+          ]
         }
       ];
       this.chart.map((item, index) => {
@@ -1397,6 +1543,16 @@ export default {
           dangerouslyUseHTMLString: true
         });
       }
+    },
+    hexToRgba(hex, opacity) {
+      let rgbaColor = "";
+      let reg = /^#[\da-f]{6}$/i;
+      if (reg.test(hex)) {
+        rgbaColor = `rgba(${parseInt("0x" + hex.slice(1, 3))},${parseInt(
+          "0x" + hex.slice(3, 5)
+        )},${parseInt("0x" + hex.slice(5, 7))},${opacity})`;
+      }
+      return rgbaColor;
     }
   }
 };
@@ -1438,14 +1594,14 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 30%;
+            width: 40%;
             img {
-              width: 40px;
-              height: 40px;
+              width: 56px;
+              height: 56px;
             }
           }
           .textBox {
-            width: 70%;
+            width: 60%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -1610,7 +1766,7 @@ export default {
       padding-left: 10px;
       position: relative;
       font-weight: 400;
-      font-size: 20px;
+      font-size: 14px;
       color: #333333;
       font-weight: bold;
     }
@@ -1643,6 +1799,7 @@ export default {
     flex: 1;
     padding: 10px;
     width: 100%;
+    height: 100%;
   }
   .box:hover,
   .itemCard:hover {

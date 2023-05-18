@@ -3,7 +3,7 @@
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
       <el-aside v-show="showAside" style="width:auto">
-        <div class="admin_left_2" style="overflow:hidden">
+        <div class="admin_left" style="overflow:hidden">
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">线别</span>
@@ -24,7 +24,7 @@
         </div>
       </el-aside>
       <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+        <div class="admin_container" style="width:100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
@@ -390,7 +390,7 @@ export default {
       this.treeListTmp = [];
       let form = {
         dicID: 36,
-        OrganizeTypeID: 2
+        OrganizeTypeID: 6
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -1316,8 +1316,8 @@ export default {
     handleNodeClick(data, node) {
       this.$set(
         this.formSearchs[this.labelStatus1].datas,
-        "OrganizeName",
-        data.OrganizeName == "全部" ? "" : data.OrganizeName
+        "LineID",
+        data.OrganizeID == "全部" ? "" : data.OrganizeID
       );
       this.dataSearch(this.labelStatus1);
     },
