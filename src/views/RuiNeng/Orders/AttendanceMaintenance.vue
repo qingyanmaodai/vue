@@ -449,13 +449,16 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      console.log(this.tableData[0]);
+      // console.log(this.tableData[0]);
       const $table = this.$refs.tableRef.$refs.vxeTable;
       // 获取修改记录
       let updateRecords = [];
       this.adminLoading = true;
       if ($table) {
         updateRecords = $table.getUpdateRecords();
+        updateRecords.forEach(m => {
+          m["OrganizeID"] = m["ID"];
+        });
       }
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
