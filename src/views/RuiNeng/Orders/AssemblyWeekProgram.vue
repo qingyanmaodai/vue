@@ -617,8 +617,9 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = this.sysID[remarkTb]["ID"];
       form["ControlID"] = this.userInfo.WorkFlowInstanceID;
+      form["weekDays"] = 7;
       let res = await GetSearchData(form);
-
+      // console.log(res.data);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
