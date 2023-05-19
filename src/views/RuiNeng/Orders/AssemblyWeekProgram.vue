@@ -577,10 +577,6 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
-        });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
@@ -619,9 +615,14 @@ export default {
       form["ControlID"] = this.userInfo.WorkFlowInstanceID;
       form["weekDays"] = 7;
       let res = await GetSearchData(form);
+
       // console.log(res.data);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        // 获取每个表头
+        Columns.some((m, i) => {
+          this.$set(this.tableColumns, i, m);
+        });
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
