@@ -1,4 +1,4 @@
-<!--采购回复-->
+<!--组装日计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
@@ -232,7 +232,12 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            // PlanDayF:
+            //   new Date().getFullYear().toString() +
+            //   (new Date().getMonth() + 1).toString() +
+            //   new Date().getDate().toString()
+          },
           forms: []
         },
         {
