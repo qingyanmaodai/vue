@@ -1233,9 +1233,9 @@ export default {
           return;
         }
         this.Dialog = false;
-        let sheet = this.spread[this.labelStatus1].getActiveSheet();
+        let sheet = this.spread[this.labelStatus2].getActiveSheet();
         const changedIndices = [];
-        this.tableData[this.labelStatus1].forEach((element, index) => {
+        this.tableData[this.labelStatus2].forEach((element, index) => {
           if (element["isChecked"]) {
             changedIndices.push(index);
           }
@@ -1264,10 +1264,10 @@ export default {
       let newRowIndex = rowNumber + 1;
       let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
       // newData = JSON.parse(JSON.stringify(oldData));
-      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
+      this.tableData[this.labelStatus2][newRowIndex] = JSON.parse(
         JSON.stringify(oldData)
       );
-      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
+      let newData = this.tableData[this.labelStatus2][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[6].find(
         item => item["RowNumber"] === oldData["RowNumber"]
       );
