@@ -3,7 +3,7 @@
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
       <el-aside v-show="showAside" style="width:auto">
-        <div class="admin_left" style="overflow:hidden">
+        <div class="admin_left_2" style="overflow:hidden">
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">线别</span>
@@ -24,7 +24,7 @@
         </div>
       </el-aside>
       <el-main style="padding:0;margin:0">
-        <div class="admin_container" style="width:100%">
+        <div class="admin_container_2" style="width:100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
@@ -180,6 +180,7 @@ import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
 import ComSpreadTable from "@/components/ComSpreadTable";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -816,6 +817,24 @@ export default {
             size: parseInt(x.width)
           });
         } else if (
+          x.ControlType === "comboboxMultiple" ||
+          x.ControlType === "combobox"
+        ) {
+          // colInfos.push({
+          //   name: x.prop,
+          //   displayName: x.label,
+          //   cellType: "",
+          //   size: parseInt(x.width)
+          // });
+          let newData = [];
+          // let list = null;
+          this.tableData[remarkTb].map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+              this.bindComboBoxToCell(sheet, index, colIndex, newData);
+            }
+          });
+        } else if (
           x.DataType == "datetime" ||
           x.DataType === "varchar" ||
           x.DataType === "nvarchar"
@@ -1184,6 +1203,24 @@ export default {
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
       this.spread[remarkTb].refresh(); //重新定位宽高度
+    },
+    bindComboBoxToCell(sheet, row, col, dataSourceName) {
+      // 获取要绑定下拉菜单的单元格对象
+      let cell = sheet.getCell(row, col);
+
+      // 创建下拉菜单单元格类型，并设置其选项数据
+      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+      comboBox.editorValueType(
+        GC.Spread.Sheets.CellTypes.EditorValueType.value
+      );
+      comboBox.editable(true);
+      // 获取下拉菜单的选项数据
+
+      comboBox.items(dataSourceName);
+      comboBox.itemHeight(24);
+
+      // 将下拉菜单单元格类型绑定到指定的单元格中
+      cell.cellType(comboBox);
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
