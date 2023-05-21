@@ -24,10 +24,11 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end"
-              ><el-divider direction="vertical"></el-divider>
+              >
+              <!-- <el-divider direction="vertical"></el-divider>
               <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button>
+              </el-button> -->
             </el-col>
           </el-row>
         </div>
@@ -645,12 +646,25 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
-      let colInfos = [];
+      // let colInfos = [];
       console.log(this.checkBoxCellTypeLine);
       sheet.setDataSource(this.tableData[remarkTb]);
 
-      this.tableColumns[remarkTb].forEach((x, colIndex) => {
-        if (x.prop === "LineID") {
+      // 渲染列
+      this.tableColumns[remarkTb].forEach((x, y) => {
+        x["name"] = x["prop"];
+        x["displayName"] = x["label"];
+        x["width"] = parseInt(x.width);
+        if (x.prop === "isChecked") {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader
+          );
+          x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+        } else if (x.prop === "LineID") {
           let newData = [];
           let list = null;
           this.tableData[remarkTb].map((item, index) => {
@@ -665,69 +679,92 @@ export default {
                 list.items(newData);
                 list.itemHeight(24);
                 sheet
-                  .getCell(index, colIndex, GCsheets.SheetArea.viewport)
+                  .getCell(index, y, GCsheets.SheetArea.viewport)
                   .cellType(list);
               }
             } else {
               item["LineID"] = null;
             }
           });
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            cellType: "",
-            size: parseInt(x.width)
-          });
-        } else if (x.prop == "LineID") {
-          colInfos.push({
-            name: x.prop,
-            displayName: "线别",
-            cellType: this.checkBoxCellTypeLine,
-            size: parseInt(x.width)
+          // colInfos.push({
+          //   name: x.prop,
+          //   displayName: x.label,
+          //   cellType: "",
+          //   size: parseInt(x.width)
+          // });
+        } else if (
+          x.ControlType === "comboboxMultiple" ||
+          x.ControlType === "combobox"
+        ) {
+          // colInfos.push({
+          //   name: x.prop,
+          //   displayName: x.label,
+          //   cellType: "",
+          //   size: parseInt(x.width)
+          // });
+          let newData = [];
+          // let list = null;
+          this.tableData[remarkTb].map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+              this.bindComboBoxToCell(sheet, index, y, newData);
+            }
           });
         } else if (
           x.DataType == "datetime" ||
           x.DataType === "varchar" ||
           x.DataType === "nvarchar"
         ) {
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            size: parseInt(x.width),
-            formatter: "@" //字符串格式
-          });
-        } else {
-          colInfos.push({
-            name: x.prop,
-            displayName: x.label,
-            size: parseInt(x.width)
-          });
+          x.formatter = "@";
+          // colInfos.push({
+          //   name: x.prop,
+          //   displayName: x.label,
+          //   size: parseInt(x.width),
+          //   formatter: "@" //字符串格式
+          // });
         }
-        colHeader1.push(x.label);
+
+        //行，start,end
+        if (x.isEdit) {
+          sheet
+            .getCell(-1, y)
+            .locked(false)
+            .foreColor("#2a06ecd9");
+          // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+          // let cell = sheet.getCell(
+          //   -1,
+          //   cellIndex,
+          //   GC.Spread.Sheets.SheetArea.viewport
+          // );
+          // cell.foreColor("#2a06ecd9");
+        }
+        // cellIndex++;
       });
+      //渲染列
+      sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function(value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
 
-      // 选框
-      let checkbox = {
-        name: "isChecked",
-        displayName: "isChecked",
-        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60
-      };
-      if (colInfos[0]["displayName"] === "选择") {
-        for (var name in checkbox) {
-          colInfos[0][name] = checkbox[name];
-        }
-        sheet.setCellType(
-          0,
-          0,
-          new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
-        );
-      }
+      // // 选框
+      // let checkbox = {
+      //   name: "isChecked",
+      //   displayName: "isChecked",
+      //   cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+      //   size: 60
+      // };
+      // if (colInfos[0]["displayName"] === "选择") {
+      //   for (var name in checkbox) {
+      //     colInfos[0][name] = checkbox[name];
+      //   }
+      //   sheet.setCellType(
+      //     0,
+      //     0,
+      //     new HeaderCheckBoxCellType(),
+      //     GCsheets.SheetArea.colHeader
+      //   );
+      // }
 
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
@@ -757,76 +794,80 @@ export default {
 
       sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
 
-      sheet.bindColumns(colInfos);
+      // sheet.bindColumns(colInfos);
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+      //改变字体颜色
+      this.tableData[remarkTb].forEach((row, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
 
-      let colindex = 0;
-      for (let m of colInfos) {
-        if (m.name == "Capacity") {
-          var rowSheet = sheet.getRange(
-            -1,
-            colindex,
-            1,
-            1,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-          rowSheet.foreColor("red");
-          break;
-        }
-        colindex++;
-      }
-
-      this.tableData[remarkTb].forEach((row, index) => {
-        var rowSheet = sheet.getRange(
-          index,
-          0,
-          1,
-          colindex,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        var rowSheet2 = sheet.getRange(
-          index,
-          colindex,
-          1,
-          colInfos.length - colindex,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
-        if (row["Code"] == null) {
-          rowSheet.backColor("#A0CFFF");
-          rowSheet.foreColor("balck");
-          rowSheet2.backColor("#A0CFFF");
-          rowSheet2.foreColor("balck");
-        } else if (row["MFGOrganizeID"] === 162) {
-          // row.backColor();
-          rowSheet.backColor("#FFFF00");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("#FFFF00");
-        } else {
-          // row.backColor();
-          rowSheet.foreColor("black");
-          rowSheet.backColor("#FFFFFF");
-          rowSheet.foreColor("black");
-          rowSheet2.backColor("#FFFFFF");
-        }
-        let cellIndex = 0;
-        this.tableColumns[remarkTb].forEach(m => {
-          //行，start,end
-          if (m.DataType == "bit" && m.isEdit) {
-            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-            cellType.caption("");
-            cellType.textTrue("");
-            cellType.textFalse("");
-            cellType.textIndeterminate("");
-            cellType.textAlign(
-              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
-            );
-            cellType.isThreeState(false);
-            sheet.getCell(index, cellIndex).cellType(cellType);
+          if (row["Code"] == null) {
+            cell.backColor("#A0CFFF");
+            cell.foreColor("balck");
+          } else if (row["MFGOrganizeID"] === 162) {
+            cell.backColor("#FFFF00");
+            cell.foreColor("black");
+          } else {
+            cell.foreColor("black");
+            cell.backColor("#FFFFFF");
           }
-          cellIndex++;
+          if (row["Capacity"] && column["name"] === "Capacity") {
+            cell.foreColor("red");
+          }
         });
       });
+
+      // this.tableData[remarkTb].forEach((row, index) => {
+      //   var rowSheet = sheet.getRange(
+      //     index,
+      //     0,
+      //     1,
+      //     colindex,
+      //     GC.Spread.Sheets.SheetArea.viewport
+      //   );
+      //   var rowSheet2 = sheet.getRange(
+      //     index,
+      //     colindex,
+      //     1,
+      //     colInfos.length - colindex,
+      //     GC.Spread.Sheets.SheetArea.viewport
+      //   );
+      //   if (row["Code"] == null) {
+      //     rowSheet.backColor("#A0CFFF");
+      //     rowSheet.foreColor("balck");
+      //     rowSheet2.backColor("#A0CFFF");
+      //     rowSheet2.foreColor("balck");
+      //   } else if (row["MFGOrganizeID"] === 162) {
+      //     // row.backColor();
+      //     rowSheet.backColor("#FFFF00");
+      //     rowSheet.foreColor("black");
+      //     rowSheet2.backColor("#FFFF00");
+      //   } else {
+      //     // row.backColor();
+      //     rowSheet.foreColor("black");
+      //     rowSheet.backColor("#FFFFFF");
+      //     rowSheet.foreColor("black");
+      //     rowSheet2.backColor("#FFFFFF");
+      //   }
+      //   let cellIndex = 0;
+      //   this.tableColumns[remarkTb].forEach(m => {
+      //     //行，start,end
+      //     if (m.DataType == "bit" && m.isEdit) {
+      //       var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+      //       cellType.caption("");
+      //       cellType.textTrue("");
+      //       cellType.textFalse("");
+      //       cellType.textIndeterminate("");
+      //       cellType.textAlign(
+      //         GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+      //       );
+      //       cellType.isThreeState(false);
+      //       sheet.getCell(index, cellIndex).cellType(cellType);
+      //     }
+      //     cellIndex++;
+      //   });
+      // });
 
       let cellIndex = 0;
       let viewSortIndex = 0; //排序的索引
@@ -854,7 +895,7 @@ export default {
             cellIndex,
             GC.Spread.Sheets.SheetArea.viewport
           );
-          cell.foreColor("gray");
+          // cell.foreColor("gray");
         }
 
         cellIndex++;
@@ -1054,6 +1095,24 @@ export default {
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
       this.spread[remarkTb].refresh(); //重新定位宽高度
+    },
+    bindComboBoxToCell(sheet, row, col, dataSourceName) {
+      // 获取要绑定下拉菜单的单元格对象
+      let cell = sheet.getCell(row, col);
+
+      // 创建下拉菜单单元格类型，并设置其选项数据
+      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+      comboBox.editorValueType(
+        GC.Spread.Sheets.CellTypes.EditorValueType.value
+      );
+      comboBox.editable(true);
+      // 获取下拉菜单的选项数据
+
+      comboBox.items(dataSourceName);
+      comboBox.itemHeight(24);
+
+      // 将下拉菜单单元格类型绑定到指定的单元格中
+      cell.cellType(comboBox);
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {

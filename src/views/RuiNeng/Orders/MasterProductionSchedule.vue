@@ -989,7 +989,7 @@ export default {
         }
 
         this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
-        this.spread[remarkTb].options.scrollbarMaxAlign = true;
+        // this.spread[remarkTb].options.scrollbarMaxAlign = true;
         // this.spread[remarkTb].options.scrollByPixel = true;
 
         this.spread[remarkTb].resumePaint();
