@@ -117,8 +117,52 @@
             </div>
           </div>
           <div class="thirdCard">
-            <div class="itemCard"></div>
-            <div class="itemCard"></div>
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">计划配套分析</div>
+              </div>
+              <div class="echartBody">
+                <ComReportTable
+                  :isToolbar="false"
+                  ref="PurchaseRequisition"
+                  :isEdit="false"
+                  :remark="0"
+                  :row-key="'RowNumber'"
+                  :sysID="sysID[0]['ID']"
+                  :table-data="tableData[0]"
+                  :table-header="tableColumns[0]"
+                  :table-loading="tableLoading[0]"
+                  :pagination="tablePagination[0]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                >
+                </ComReportTable>
+              </div>
+            </div>
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">欠料回货追踪</div>
+              </div>
+              <div class="echartBody">
+                <ComReportTable2
+                  :isToolbar="false"
+                  ref="PurchaseRequisition"
+                  :isEdit="false"
+                  :remark="1"
+                  :row-key="'RowNumber'"
+                  :sysID="sysID[1]['ID']"
+                  :table-data="tableData[1]"
+                  :table-header="tableColumns[1]"
+                  :table-loading="tableLoading[1]"
+                  :pagination="tablePagination[1]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                >
+                </ComReportTable2>
+              </div>
+            </div>
           </div>
         </div>
         <div class="rightCard">
@@ -127,7 +171,33 @@
               <div class="echartHead">
                 <div class="echartTitle">待办事项清单</div>
               </div>
-              <!-- <div class="echartBody" ref="chart4"></div> -->
+              <div class="echartBody">
+                <div class="xnode">
+                  <div class="triangle">产品缺失工艺</div>
+                  <div></div>
+                  <div>23</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">工艺缺失</div>
+                  <div></div>
+                  <div>1,409</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">产能缺失</div>
+                  <div></div>
+                  <div>9</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">排班未配置</div>
+                  <div></div>
+                  <div>28</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">库存预警</div>
+                  <div></div>
+                  <div>531</div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="secondCard">
@@ -277,6 +347,8 @@
 let _this;
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
+import ComReportTable from "@/components/ComReportTable";
+import ComReportTable2 from "@/components/ComReportTable";
 import * as echarts from "echarts";
 import { debounce } from "lodash";
 import {
@@ -290,7 +362,9 @@ export default {
   name: "PostMRPAnalysis",
   components: {
     ComSearch,
-    ComVxeTable
+    ComVxeTable,
+    ComReportTable,
+    ComReportTable2
   },
   data() {
     return {
@@ -332,20 +406,38 @@ export default {
       isEdit: false,
       isSelect: false,
       adminLoading: false,
-      height: "700px",
+      // height: "700px",
       newTag: -1,
       btnForm: [],
-      tableData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 100, pageTotal: 0 }],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+      ],
       formSearchs: [
+        {
+          datas: {},
+          forms: []
+        },
+        {
+          datas: {},
+          forms: []
+        },
+        {
+          datas: {},
+          forms: []
+        },
         {
           datas: {},
           forms: []
         }
       ],
+      sysID: [{ ID: 10113 }, { ID: 10113 }, { ID: 10084 }, { ID: 6751 }],
 
       //echart部分
       chartData1: [],
@@ -369,8 +461,8 @@ export default {
   },
   activated() {},
   async mounted() {
-    await this.getEchartsData1();
-    await this.getEchartsData2();
+    // await this.getEchartsData1();
+    // await this.getEchartsData2();
     // await this.getEchartsData3();
     // await this.getEchartsData4();
     //初始化图表;
@@ -379,7 +471,7 @@ export default {
       this.$refs.chart2,
       this.$refs.chart3,
       this.$refs.chart4,
-      this.$refs.chart5,
+      this.$refs.chart5
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -860,21 +952,14 @@ export default {
           },
           tooltip: {
             trigger: "axis",
-            extraCssText:
-              "background: #fff; border-radius: 0;box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);color: #333;",
             axisPointer: {
-              type: "shadow",
-              shadowStyle: {
-                color: "#ffffff",
-                shadowColor: "rgba(225,225,225,1)",
-                shadowBlur: 10
-              }
+              type: "shadow"
             }
           },
           grid: {
-            left: "10px",
-            right: "10px",
-            bottom: "10px",
+            left: fontSize(10),
+            right: fontSize(10),
+            bottom: fontSize(10),
             containLabel: true
           },
           xAxis: [
@@ -1180,22 +1265,17 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: this.ID }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (datas.length > 0) {
-        this.tablePagination[0].pageSize = datas[0][0].pageSize;
+        this.tablePagination[0].pageSize = datas[0][1].pageSize;
       }
 
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
           m.some((n, j) => {
-            this.isSelect = n.IsSelect;
-            if (n.prop == "Operation" || n.label == "操作") {
-              this.newTag = j;
-              return true;
-            }
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
@@ -1220,18 +1300,16 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.adminLoading = false;
-        if (this.newTag != -1) {
-          this.tableColumns.splice(this.newTag, 1);
-        }
         // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
         //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
 
         //   if (tmp.dicID) {
         //     this.formSearchs[0].datas = tmp;
         //   }
-        // }
-        this.formSearchs[0].datas["dicID"] = this.ID;
+        // // }
+        // this.formSearchs[0].datas["dicID"] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
+        this.getTableData(this.formSearchs[1].datas, 1);
       }
     },
     // 验证数据
@@ -1249,6 +1327,11 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
+      if (this.tableData[remarkTb].length === 0) {
+        this.tablePagination[remarkTb]["pageSize"] = this.tableColumns[
+          remarkTb
+        ][1]["pageSize"];
+      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
@@ -1483,26 +1566,38 @@ export default {
       .thirdCard {
         flex-grow: 1;
         display: flex;
+        // margin-right: 10px;
+        overflow: hidden;
+
         .itemCard {
           height: 100%;
+          // flex-grow: 1;
           border-radius: 4px;
           background: #ffffff;
           display: flex;
           flex-direction: column;
-          width: 100%;
-        }
-        .itemCard:nth-child(1) {
           margin-right: 10px;
+          width: 50%;
+          .echartBody {
+            height: calc(100% - 60px);
+            overflow: auto;
+            // overflow: hidden;
+          }
+          .echartBody::-webkit-scrollbar {
+            display: none;
+          }
+        }
+        .itemCard:nth-child(2) {
+          margin-right: 0px;
         }
       }
     }
     .rightCard {
-      height: 100%;
       width: 34%;
       display: flex;
       flex-direction: column;
       .firstCard {
-        height: 29%;
+        height: 30%;
         margin-bottom: 10px;
         .itemCard {
           height: 100%;
@@ -1511,10 +1606,59 @@ export default {
           display: flex;
           flex-direction: column;
           width: 100%;
+          .xnode {
+            width: 100%;
+            height: 20%;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #444444;
+            font-size: 12px;
+            // .triangle
+          }
+          .xnode div:nth-child(1) {
+            padding-left: 20px;
+            width: 30%;
+            position: relative;
+          }
+          .xnode div:nth-child(1)::before {
+            content: ""; /* 伪元素的内容为空 */
+            position: absolute; /* 将伪元素设置为绝对定位 */
+            top: 50%;
+            left: 0; /* 将伪元素向左偏移 50% */
+            transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
+            display: inline-block; /* 将伪元素设置为行内块元素 */
+            width: 10px;
+            height: 10px;
+            background: #8598ff;
+            border-radius: 50%;
+          }
+          .xnode:nth-child(2) div:nth-child(1)::before {
+            background: #f9921a;
+          }
+          .xnode:nth-child(3) div:nth-child(1)::before {
+            background: #43b8fa;
+          }
+          .xnode:nth-child(4) div:nth-child(1)::before {
+            background: #fa43f2;
+          }
+          .xnode:nth-child(5) div:nth-child(1)::before {
+            background: #2dd87b;
+          }
+
+          .xnode div:nth-child(2) {
+            width: 50%;
+            border: 1px dashed #c0c0c0;
+          }
+          .xnode div:nth-child(3) {
+            width: 20%;
+            text-align: right;
+          }
         }
       }
       .secondCard {
-        height: 40%;
+        height: 35%;
         margin-bottom: 10px;
         .itemCard {
           height: 100%;
@@ -1526,7 +1670,8 @@ export default {
         }
       }
       .thirdCard {
-        height: 40%;
+        height: 35%;
+
         .itemCard {
           height: 100%;
           border-radius: 4px;
@@ -1579,10 +1724,10 @@ export default {
   }
   .echartBody {
     // height: 480px;
-    flex: 1;
+    flex-grow: 1;
     padding: 10px;
     width: 100%;
-    height: 100%;
+    // height: 100%;
   }
   .box:hover,
   .itemCard:hover {
