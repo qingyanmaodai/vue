@@ -1247,6 +1247,12 @@ export default {
           this.copyRowFormat(item, sheet);
           console.log(item, "item");
         });
+
+        this.$nextTick(() => {
+          sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+          sheet.repaint();
+        });
+        await this.dataSave(this.labelStatus2);
       }
     },
     //在该行数据下面增加新的一行
@@ -1283,10 +1289,6 @@ export default {
       newData["SalesOrderDetailPlanID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
       newData["PlanQty"] = SQtyObj["SQty"];
       newData["DataSource"] = "拆单";
-      this.$nextTick(() => {
-        sheet.setDataSource(sheet.getDataSource()); // 更新数据源
-        sheet.repaint();
-      });
     },
     // 新增排程
     addSchedule() {

@@ -127,7 +127,7 @@
               <div class="echartHead">
                 <div class="echartTitle">待办事项清单</div>
               </div>
-              <div class="echartBody" ref="chart4"></div>
+              <!-- <div class="echartBody" ref="chart4"></div> -->
             </div>
           </div>
           <div class="secondCard">
@@ -155,7 +155,7 @@
                   </el-button>
                 </el-button-group>
               </div>
-              <div class="echartBody" ref="chart5"></div>
+              <div class="echartBody" ref="chart4"></div>
             </div>
           </div>
           <div class="thirdCard">
@@ -163,7 +163,7 @@
               <div class="echartHead">
                 <div class="echartTitle">今日生产情况</div>
               </div>
-              <div class="echartBody" ref="chart6"></div>
+              <div class="echartBody" ref="chart5"></div>
             </div>
           </div>
         </div>
@@ -380,7 +380,6 @@ export default {
       this.$refs.chart3,
       this.$refs.chart4,
       this.$refs.chart5,
-      this.$refs.chart6
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -716,46 +715,6 @@ export default {
                   value: 17623,
                   name: "回货周期>30天"
                 }
-              ]
-            }
-          ]
-        },
-        {
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          legend: {
-            orient: "horizontal",
-            top: 0,
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
-            align: "left",
-            itemGap: fontSize(100),
-            data: ["异常超订金额", "正常超订金额"],
-            textStyle: {
-              color: "#999999",
-              fontSize: fontSize(14)
-            }
-          },
-          series: [
-            {
-              name: "数据统计",
-              type: "pie",
-              hoverAnimation: false,
-              legendHoverLink: false,
-              radius: ["40%", "55%"],
-              color: ["#6866F8", "#FE4E4E"],
-              label: {
-                normal: {
-                  fontSize: fontSize(20),
-                  // position: "inner",
-                  formatter: "{c}"
-                }
-              },
-              data: [
-                { value: 1244, name: "异常超订金额" },
-                { value: 254, name: "正常超订金额" }
               ]
             }
           ]

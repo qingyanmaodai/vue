@@ -1583,6 +1583,11 @@ export default {
           this.copyRowFormat(item, sheet);
           console.log(item, "item");
         });
+        this.$nextTick(() => {
+          sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+          sheet.repaint();
+        });
+        await this.dataSave(this.labelStatus1);
       }
     }
   }
