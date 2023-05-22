@@ -16,6 +16,9 @@
           <span @click="toPageSetting" class="primaryColor cursor"
             >SysID:{{ sysID }}
           </span>
+          <span style="color: red; font-weight: bold; margin-left: 10px">{{
+            Prompt
+          }}</span>
         </div>
         <div class="flex">
           <div class="footer_label" v-show="multipleSelection.length != 0">
@@ -46,6 +49,7 @@ import GC from "@grapecity/spread-sheets";
 const GCsheets = GC.Spread.Sheets;
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
+import { GetSearchData } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "../../static/data.js";
 
 export default {
@@ -120,7 +124,9 @@ export default {
   mounted() {
     this.initSpread();
   },
-  created() {},
+  created() {
+    this.getFooterRemark();
+  },
   methods: {
     // 跳转至页面配置
     toPageSetting() {
@@ -147,6 +153,20 @@ export default {
     // 分页导航
     pageChange(val) {
       this.$emit("pageChange", val, this.remark);
+    },
+    async getFooterRemark() {
+      let form = {};
+      form["dicID"] = 33;
+      form["page"] = 1;
+      form["rows"] = 0;
+      form["DictionaryID"] = this.sysID;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length && data[0].Remark1) {
+          this.Prompt = data[0].Remark1;
+        }
+      }
     }
   }
 };
