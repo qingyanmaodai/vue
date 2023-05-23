@@ -929,8 +929,22 @@ export default {
 
       sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
 
+      // 列筛选
+      // 参数2 开始列
+      // 参数3
+      // 参数4 结束列
+      let cellrange = new GC.Spread.Sheets.Range(
+        -1,
+        -1,
+        -1,
+        this.tableColumns[remarkTb].length
+      );
+      let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
+
       // sheet.bindColumns(colInfos);
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+
       //改变字体颜色
       this.tableData[remarkTb].forEach((row, rowIndex) => {
         this.tableColumns[remarkTb].forEach((column, columnIndex) => {
@@ -1037,6 +1051,18 @@ export default {
       });
       sheet.options.protectionOptions.allowResizeColumns = true;
       sheet.options.isProtected = true;
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.protectionOptions.allowInsertRows = true;
+      sheet.options.protectionOptions.allowDeleteRows = true;
+      sheet.options.protectionOptions.allowSelectLockedCells = true;
+      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+      sheet.options.protectionOptions.allowDeleteColumns = true;
+      sheet.options.protectionOptions.allowInsertColumns = true;
+      sheet.options.protectionOptions.allowDargInsertRows = true;
+      sheet.options.protectionOptions.allowDragInsertColumns = true;
+      sheet.options.protectionOptions.allowSort = true;
+      sheet.options.protectionOptions.allowFilter = true;
+      sheet.options.allowUserDragDrop = true;
 
       var insertRowsCopyStyle = {
         canUndo: true,

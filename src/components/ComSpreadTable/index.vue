@@ -107,7 +107,8 @@ export default {
   },
   data() {
     return {
-      spread: null
+      spread: null,
+      Prompt: null
     };
   },
   computed: {
