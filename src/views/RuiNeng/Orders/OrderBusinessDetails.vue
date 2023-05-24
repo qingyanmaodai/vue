@@ -68,20 +68,7 @@
           :key="item"
           v-show="labelStatus1 == item"
         >
-          <ComSpreadTable
-            ref="spreadsheetRef"
-            :height="height"
-            :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @workbookInitialized="workbookInitialized"
-            @selectChanged="selectChanged"
-          />
+          <ComHandsonTable/>
         </div>
       </div>
 
@@ -108,7 +95,8 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
-import ComSpreadTable from "@/components/ComSpreadTable";
+// import ComSpreadTable from "@/components/ComSpreadTable";
+import ComHandsonTable from "@/components/ComHandsonTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
@@ -124,7 +112,7 @@ export default {
     ComSearch,
     ComVxeTable,
     DialogTable,
-    ComSpreadTable,
+    ComHandsonTable
   },
   data() {
     return {
@@ -222,9 +210,9 @@ export default {
   watch: {},
   created() {
     _this = this;
-    this.adminLoading = true;
-    this.getLine();
-    this.getTableHeader();
+    // this.adminLoading = true;
+    // this.getLine();
+    // this.getTableHeader();
     // 获取所有按钮
     this.judgeBtn();
   },

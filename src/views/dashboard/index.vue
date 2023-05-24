@@ -1,522 +1,824 @@
-<!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="leftCard">
-          <div class="headCard">
-            <div class="box blue">
-              <div class="icon">
-                <img :src="headCard[0]['icon']" />
+  <div
+    class="container"
+    style="background:#f3f3f4"
+  >
+    <el-container class="home">
+      <el-main>
+        <div class="home_1">
+          <el-card
+            v-for="(item,index) in head"
+            :key="index"
+            class="box-card"
+          >
+            <el-image
+              :src="item.img"
+              style="margin:0 10% 0 5%;"
+            />
+            <div style="flex:1;display:flex;flex-direction: column;justify-content:space-between;">
+              <div>
+                <span class="head">{{ item.label }}</span>
               </div>
-              <div class="textBox">
-                <div class="statusNum">
-                  {{ headCard[0]["statusNum"] }}
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]["title"] }}</div>
-                </div>
-              </div>
+              <div class="span">{{ item.number }}</div>
             </div>
-            <div class="box green">
-              <div class="icon">
-                <img :src="headCard[1]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">
-                  {{ headCard[1]["statusNum"] }}
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box purple">
-              <div class="icon">
-                <img :src="headCard[2]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">{{ headCard[2]["statusNum"] }}</div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box red">
-              <div class="icon">
-                <img :src="headCard[3]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">{{ headCard[3]["statusNum"] }}</div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard1">
-              <div class="echartHead">
-                <div class="echartTitle">近15日达成率趋势</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
-            </div>
-            <div class="itemCard2">
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">今日工序达成占比</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
-                </div>
-                <div class="echartBody" ref="chart2"></div>
-              </div>
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">物料到货情况</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
-                </div>
-                <div class="echartBody" ref="chart3"></div>
-              </div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">计划配套分析</div>
-              </div>
-              <div class="echartBody">
-                <ComReportTable
-                  :isToolbar="false"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="0"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[0]['ID']"
-                  :table-data="tableData[0]"
-                  :table-header="tableColumns[0]"
-                  :table-loading="tableLoading[0]"
-                  :pagination="tablePagination[0]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                >
-                </ComReportTable>
-              </div>
-            </div>
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">欠料回货追踪</div>
-              </div>
-              <div class="echartBody">
-                <ComReportTable2
-                  :isToolbar="false"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="1"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[1]['ID']"
-                  :table-data="tableData[1]"
-                  :table-header="tableColumns[1]"
-                  :table-loading="tableLoading[1]"
-                  :pagination="tablePagination[1]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                >
-                </ComReportTable2>
-              </div>
-            </div>
-          </div>
+          </el-card>
         </div>
-        <div class="rightCard">
-          <div class="firstCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">待办事项清单</div>
-              </div>
-              <div class="echartBody">
-                <div class="xnode">
-                  <div class="triangle">产品缺失工艺</div>
-                  <div></div>
-                  <div>23</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">工艺缺失</div>
-                  <div></div>
-                  <div>1,409</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">产能缺失</div>
-                  <div></div>
-                  <div>9</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">排班未配置</div>
-                  <div></div>
-                  <div>28</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">库存预警</div>
-                  <div></div>
-                  <div>531</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">昨日计划达成对比</div>
-                <el-button-group>
-                  <el-button
-                    :class="{
-                      select: selected1Index === 0
-                    }"
-                    size="small"
-                    @click="handleConsumeBtnClick(0)"
-                  >
-                    预计消耗
-                  </el-button>
-                  <el-button
-                    :class="{
-                      select: selected1Index === 1
-                    }"
-                    size="small"
-                    @click="handleConsumeBtnClick(1)"
-                  >
-                    预计超额
-                  </el-button>
-                </el-button-group>
-              </div>
-              <div class="echartBody" ref="chart4"></div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">今日生产情况</div>
-              </div>
-              <div class="echartBody" ref="chart5"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div class="listCard">
-        <div class="container" v-loading="adminLoading">
-          <div class="admin_head" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :btnForm="btnForm"
-              @btnClick="btnClick"
+        <div class="home_2">
+          <div class="home_3">
+            <span class="home_4">常用功能</span>
+            <i
+              class="el-icon-edit"
+              style="float:right"
             />
           </div>
-          <div>
-            <div class="admin_content">
-              <div class="ant-table-title">
-                <el-row>
-                  <el-col :span="4"
-                    ><span class="title">{{ "表格title" }}</span></el-col
-                  >
-                  <el-col :span="20" class="flex_flex_end">
-                    <el-divider direction="vertical"></el-divider>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="刷新"
-                      placement="bottom"
-                    >
-                      <span class="right_icon">
-                        <span
-                          @click="refrshPage"
-                          role="img"
-                          aria-label="redo"
-                          class="anticon anticon-redo icon_size"
-                          ><svg
-                            class=""
-                            data-icon="redo"
-                            width="1em"
-                            height="1em"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            viewBox="64 64 896 896"
-                            focusable="false"
-                          >
-                            <path
-                              d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
-                            ></path></svg
-                        ></span>
-                      </span>
-                    </el-tooltip>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-tooltip
-                      effect="dark"
-                      content="列设置"
-                      placement="bottom"
-                    >
-                      <span class="right_icon">
-                        <span
-                          role="img"
-                          aria-label="setting"
-                          class="anticon anticon-setting icon_size"
-                          ><svg
-                            class=""
-                            data-icon="setting"
-                            width="1em"
-                            height="1em"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            viewBox="64 64 896 896"
-                            focusable="false"
-                          >
-                            <path
-                              d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.9-9.4-159 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00159 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM788.3 465.9c2.5 15.1 3.8 30.6 3.8 46.1s-1.3 31-3.8 46.1l-6.6 40.1 74.7 63.9a370.03 370.03 0 01-42.6 73.6L721 702.8l-31.4 25.8c-23.9 19.6-50.5 35-79.3 45.8l-38.1 14.3-17.9 97a377.5 377.5 0 01-85 0l-17.9-97.2-37.8-14.5c-28.5-10.8-55-26.2-78.7-45.7l-31.4-25.9-93.4 33.2c-17-22.9-31.2-47.6-42.6-73.6l75.5-64.5-6.5-40c-2.4-14.9-3.7-30.3-3.7-45.5 0-15.3 1.2-30.6 3.7-45.5l6.5-40-75.5-64.5c11.3-26.1 25.6-50.7 42.6-73.6l93.4 33.2 31.4-25.9c23.7-19.5 50.2-34.9 78.7-45.7l37.9-14.3 17.9-97.2c28.1-3.2 56.8-3.2 85 0l17.9 97 38.1 14.3c28.7 10.8 55.4 26.2 79.3 45.8l31.4 25.8 92.8-32.9c17 22.9 31.2 47.6 42.6 73.6L781.8 426l6.5 39.9zM512 326c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm79.2 255.2A111.6 111.6 0 01512 614c-29.9 0-58-11.7-79.2-32.8A111.6 111.6 0 01400 502c0-29.9 11.7-58 32.8-79.2C454 401.6 482.1 390 512 390c29.9 0 58 11.6 79.2 32.8A111.6 111.6 0 01624 502c0 29.9-11.7 58-32.8 79.2z"
-                            ></path></svg
-                        ></span>
-                      </span>
-                    </el-tooltip>
-                  </el-col>
-                </el-row>
+          <div class="bodyContent">
+            <div
+              v-for="(item,index) in head2"
+              :key="index"
+              class="box-card2"
+            >
+              <i :style="{backgroundImage:'url(' +item.img+ ')',display:'block',float:'left', backgroundRepeat:'no-repeat',backgroundSize: 'cover',width:'36px',height:'36px'}" />
+              <span
+                @click="toPage(item.path,item.isUsing)"
+                style="margin:10px 15px"
+              >{{ item.label }}</span>
+
+            </div>
+          </div>
+        </div>
+        <div class="home_5">
+          <div class="home_6">
+            <div class="home_7">
+              <span class="home_8">计划详情</span>
+              <i :style="{backgroundImage:'url('+img9+')',float:'left',width:'19px',height:'19px',marginTop:'3px',marginLeft:'5px'}" />
+            </div>
+            <div class="home_9">
+              <span class="home_10">今日计划</span>
+              <span class="home_11"></span>
+            </div>
+            <div class="home_12">
+              <div style="float:left;width:50%;text-align:center">
+                <el-image
+                  class="home_13"
+                  :src="img9"
+                />
               </div>
-              <ComVxeTable
-                :rowKey="'RowNumber'"
-                :height="height"
-                :tableData="tableData[0]"
-                :tableHeader="tableColumns[0]"
-                :tableLoading="tableLoading[0]"
-                :remark="0"
-                :sysID="ID"
-                :isEdit="isEdit"
-                :isClear="isClear[0]"
-                :hasSelect="isSelect"
-                :pagination="tablePagination[0]"
-                @selectfun="selectFun"
-                @handleRowClick="handleRowClick"
-                @pageChange="pageChange"
-                @pageSize="pageSize"
-                @sortChange="sortChange"
+              <div class="home_14">
+                <div class="balance">
+                  <i
+                    class="home_dot"
+                    style="background: #ed5565;"
+                  />
+                  <span>计划总产品数</span>
+                  <span style="float:right">{{ pieForm.Q0 }}个</span>
+                </div>
+                <div class="balance">
+                  <i
+                    class="home_dot"
+                    style="background: #5050d6;"
+                  />
+                  <span>已报工产品数</span>
+                  <span style="float:right">{{ pieForm.Q3 }}个</span>
+                </div>
+                <div class="balance">
+                  <i
+                    class="home_dot"
+                    style="background: #ba55d3;"
+                  />
+                  <span>未报工产品数</span>
+                  <span style="float:right">{{ pieForm.Q4 }}个</span>
+                </div>
+                <div class="balance">
+                  <i
+                    class="home_dot"
+                    style="background: #1ab394;"
+                  />
+                  <span>今日达成</span>
+                  <span style="float:right">{{ pieForm.P1 }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="home_15">
+            <div class="home_21">
+              <span class="home_22">生产统计</span>
+              <el-button
+                class="trend"
+                size="mini"
+                :class="{default:show==2}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryLastMonth"
+              >上月</el-button>
+              <el-button
+                size="mini"
+                class="trend"
+                :class="{default:show==1}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryMonth"
+              >本月</el-button>
+            </div>
+            <div
+              id="lineChart2"
+              class="home_18 echartOne"
+            />
+          </div>
+        </div>
+
+        <div class="home_19">
+          <div class="home_20">
+            <div class="home_21">
+              <span class="home_22">今日工序达成占比</span>
+            </div>
+            <div class="home_23">
+              <div
+                id="lineChart"
+                class="home_24 echartOne"
               />
             </div>
           </div>
-        </div></div
-    > -->
-    </el-main>
-  </el-container>
+          <div class="home_25">
+            <div class="home_21">
+              <span class="home_22">出货达成</span>
+              <el-button
+                class="trend"
+                size="mini"
+                :class="{default:show==2}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryLastMonth"
+              >上月</el-button>
+              <el-button
+                size="mini"
+                class="trend"
+                :class="{default:show==1}"
+                style="border-right: 1px solid #8f8f8f;"
+                @click="queryMonth"
+              >本月</el-button>
+            </div>
+            <div
+              id="lineChart3"
+              class="home_26 echartOne"
+            />
+          </div>
+        </div>
+      </el-main>
+      <el-aside
+        class="home_27"
+        width="300px"
+      >
+        <div class="home_28">
+          <span class="home_right_2">代办事项</span>
+          <div
+            class="asideOne"
+            @click="toPage('CategoryInfo',dotPage[0].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #ed5565;margin: 4px 8px;"
+            />
+            <span>产品缺失工艺</span>
+            <span class="asideRight">{{ dotOne }}</span>
+          </div>
+          <div
+            class="asideOne"
+            @click="toPage('ProcessInfo',dotPage[1].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #1ab394;margin: 4px 8px;"
+            />
+            <span>工艺缺失</span>
+            <span class="asideRight">{{ dotTwo }}</span>
+          </div>
+          <div
+            class="asideOne"
+            @click="toPage('CapaticyInfo',dotPage[2].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #5050d6;margin: 4px 8px;"
+            />
+            <span>产能缺失</span>
+            <span class="asideRight">{{ dotThree }}</span>
+          </div>
+          <div
+            class="asideOne"
+            @click="toPage('ArrangeInfo',dotPage[3].isUsing)"
+          >
+            <i
+              class="home_dot"
+              style="background: #f859d5;margin: 4px 8px;"
+            />
+            <span>排班未配置</span>
+            <span class="asideRight">{{ dotFour }}</span>
+          </div>
+          <div
+            class="asideOne"
+            style="border-bottom:none"
+          >
+            <i
+              class="home_dot"
+              style="background: #f8ac59;margin: 4px 8px;"
+            />
+            <span>库存预警</span>
+            <span class="asideRight">{{ dotFive }}</span>
+          </div>
+        </div>
+        <div class="home_right_1">
+          <span class="home_right_2">系统负责人</span>
+          <div class="home_right_3">
+            <span></span>
+          </div>
+        </div>
+        <div class="home_right_1">
+          <span class="home_right_2">联系电话</span>
+          <div class="home_right_3">
+            <span></span>
+          </div>
+        </div>
+        <div class="home_right_4">
+          <span />
+          <div class="home_right_5">
+            <span />
+          </div>
+        </div>
+      </el-aside>
+    </el-container>
+
+  </div>
 </template>
 
 <script>
-let _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import ComReportTable2 from "@/components/ComReportTable";
-import * as echarts from "echarts";
-import { debounce } from "lodash";
-import {
-  GetHeader,
-  GetSearchData,
-  ExportData,
-  SaveData,
-  GetSearch
-} from "@/api/Common";
+import { GetSearchData } from "@/api/Common";
+import { wjBoardData_1 } from "@/api/Report";
+import echarts from "echarts";
+import { mapState } from "vuex";
 export default {
-  name: "PostMRPAnalysis",
-  components: {
-    ComSearch,
-    ComVxeTable,
-    ComReportTable,
-    ComReportTable2
-  },
+  name: "dashboard",
   data() {
     return {
-      headCard: [
+      pieForm: {
+        Q1: 0,
+        Q2: 0,
+        Q3: 0,
+        Q4: 0,
+        P1: "0%",
+      },
+      img9: require("@/assets/imgs/img9.png"),
+      head: [
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
-          title: "今日库存金额",
-          statusNum: "3,841",
-          changeNum: "+4500",
-          iconStatus: true
+          label: "今日总计划数",
+          img: require("@/assets/imgs/img10.png"),
+          number: "0",
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
-          title: "今日在途金额",
-          statusNum: "2,840",
-          changeNum: "-4500",
-          iconStatus: false
+          label: "今日总报工数",
+          img: require("@/assets/imgs/img11.png"),
+          number: "0",
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
-          title: "超订金额",
-          statusNum: "45.21%",
-          changeNum: "+4500",
-          iconStatus: true
+          label: "今日总确认数",
+          img: require("@/assets/imgs/img12.png"),
+          number: "0",
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
-          title: "超订计划金额",
-          statusNum: "34.24%",
-          changeNum: "+4500",
-          iconStatus: true
-        }
+          label: "今日总达成率",
+          img: require("@/assets/imgs/img13.png"),
+          number: "0",
+        },
       ],
-      ID: 9046,
-      isEdit: false,
-      isSelect: false,
-      adminLoading: false,
-      // height: "700px",
-      newTag: -1,
-      btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
-      tablePagination: [
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+      head2: [
+        {
+          label: "需求转换",
+          img: require("@/assets/imgs/img1.png"),
+          path: "DemandTrans",
+          isUsing: false,
+        },
+        {
+          label: "销售计划",
+          img: require("@/assets/imgs/img2.png"),
+          path: "SaleScheduling",
+          isUsing: false,
+        },
+        {
+          label: "包装计划",
+          img: require("@/assets/imgs/img3.png"),
+          path: "PackPlan",
+          isUsing: false,
+        },
+        {
+          label: "当日计划",
+          img: require("@/assets/imgs/img4.png"),
+          path: "PackDayPlan",
+          isUsing: false,
+        },
+        {
+          label: "欠料追踪",
+          img: require("@/assets/imgs/img5.png"),
+          path: "OweInfo",
+          isUsing: false,
+        },
+        {
+          label: "排班配置",
+          img: require("@/assets/imgs/img6.png"),
+          path: "ArrangeInfo",
+          isUsing: false,
+        },
+        {
+          label: "工艺配置",
+          img: require("@/assets/imgs/img7.png"),
+          path: "CategoryInfo",
+          isUsing: false,
+        },
+        {
+          label: "产能配置",
+          img: require("@/assets/imgs/img8.png"),
+          path: "CapaticyInfo",
+          isUsing: false,
+        },
       ],
-      formSearchs: [
-        {
-          datas: {},
-          forms: []
+      dotOne: 0,
+      dotTwo: 0,
+      dotThree: 0,
+      dotOne: 0,
+      dotFour: 0,
+      dotFive: 0,
+      show: 1,
+      toDay: "",
+      option1: {
+        color: [
+          "#23d4c9",
+          "#7fe20d",
+          "#1cadf0",
+          "#4d72d9",
+          "#e22bca",
+          "#dcf117",
+          "#ac17f1",
+        ],
+        backgroundColor: "#fff",
+        grid: {
+          left: 10,
+          right: 40,
+          top: 0,
+          bottom: 0,
+          containLabel: true,
         },
-        {
-          datas: {},
-          forms: []
+        calculable: true,
+        series: [
+          {
+            name: "",
+            type: "pie",
+            radius: [10, 70],
+            center: ["50%", "50%"],
+            roseType: "area",
+            itemStyle: {
+              normal: {
+                fontSize: 14,
+              },
+            },
+            data: [
+              {name:'包装',value:100}
+            ],
+          },
+        ],
+      },
+      option2: {
+        tooltip: {
+          trigger: "axis",
         },
-        {
-          datas: {},
-          forms: []
+        legend: {
+          x: "35%",
+          y: "0%",
+          data: ["计划数", "完成数", "达成率（%）"],
+          textStyle: {
+            fontSize: 11,
+          },
+          itemWidth: 10,
+          itemHeight: 10,
         },
-        {
-          datas: {},
-          forms: []
-        }
+        calculable: true,
+        xAxis: [
+          {
+            type: "category",
+            data: [],
+            axisLabel: {
+              interval: 0,
+              textStyle: {
+                fontSize: 11,
+              },
+            },
+            interval: 4,
+            axisTick: {
+              //y轴刻度线
+              show: true,
+            },
+            axisLine: {
+              //y轴
+              show: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: "value",
+            scale: true,
+            name: "",
+            nameTextStyle: {
+              fontSize: 11,
+            },
+            max: null,
+            min: 0,
+            boundaryGap: [0.2, 0.2],
+            axisTick: {
+              //y轴刻度线
+              show: true,
+            },
+            axisLine: {
+              //y轴
+              show: true,
+            },
+            axisLabel: {
+              textStyle: {
+                fontSize: 11,
+                // opacity: 0.1,
+              },
+            },
+            splitLine: {
+              //决定是否显示坐标中网格
+              show: true,
+              lineStyle: {
+                opacity: 0.2,
+              },
+            },
+          },
+          {
+            type: "value",
+            name: "",
+            nameTextStyle: {
+              fontSize: 11,
+            },
+            min: 0,
+            max: 100,
+            interval: 5,
+            splitLine: { show: false },
+            axisTick: {
+              //y轴刻度线
+              show: false,
+            },
+            axisLine: {
+              //y轴
+              show: false,
+            },
+            axisLabel: {
+              formatter: "{value} %",
+              textStyle: {
+                color: "rgba(255,255,255,.8)",
+                fontSize: 11,
+                // opacity: 0.1,
+              },
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: ["#fff"],
+                opacity: 0.2,
+              },
+            },
+          },
+        ],
+        animationEasing: "cubicOut",
+        series: [
+          {
+            name: "计划数",
+            type: "bar",
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: "#b266ff" },
+                  { offset: 1, color: "#121b87" },
+                ]),
+              },
+            },
+            data: [],
+          },
+          {
+            name: "确认数",
+            type: "bar",
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: "#00f0ff" },
+                  { offset: 1, color: "#032a72" },
+                ]),
+              },
+            },
+            data: [],
+          },
+          {
+            name: "达成率（%）",
+            type: "line",
+            yAxisIndex: 1,
+            smooth: false,
+            symbolSize: 5,
+            lineStyle: { normal: { width: 2 } },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(230, 48, 123, 0.8)",
+                    },
+                    {
+                      offset: 0.8,
+                      color: "rgba(230, 48, 123, 0)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 10,
+              },
+            },
+            itemStyle: { normal: { color: "#DA2F78" } },
+            data: [],
+          },
+        ],
+      },
+      dotPage: [
+        { path: "CategoryInfo", isUsing: false },
+        { path: "ProcessInfo", isUsing: false },
+        { path: "CapaticyInfo", isUsing: false },
+        { path: "ArrangeInfo", isUsing: false },
+        { path: "", isUsing: false },
       ],
-      sysID: [{ ID: 10113 }, { ID: 10113 }, { ID: 10084 }, { ID: 6751 }],
-
-      //echart部分
-      chartData1: [],
-      chartData2: [[], []],
-      chart: [],
-      chartOptions: [],
-      handleWindowResizeDebounced: null,
-      selected1Index: 0,
-      selected2Index: 0
     };
   },
-  watch: {},
   created() {
-    _this = this;
-    let routeBtn = this.$route;
-    // 获取所有按钮
-    this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
-    // this.ID = parseInt(routeBtn.meta.dicID);
-    this.getTableHeader();
+    let d = new Date();
+    this.toDay = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    this.getEchartOneData();
+    this.getEchartTwoData();
+    this.judgePage();
+    this.getDataOne();
+    this.getDataTwo();
+    this.getDataThree();
+    this.getDataFour();
   },
-  activated() {},
-  async mounted() {
-    // await this.getEchartsData1();
-    // await this.getEchartsData2();
-    // await this.getEchartsData3();
-    // await this.getEchartsData4();
-    //初始化图表;
-    this.chart = [
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
-      this.$refs.chart4,
-      this.$refs.chart5
-    ];
-    await this.getEcharts();
-    // 在窗口大小变化时，调用 resize 方法重新渲染图表
-    this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
-    window.addEventListener("resize", this.handleWindowResizeDebounced);
+  mounted() {
+    this.drawLine();
+    // this.getWjBoardData_1();
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+      menus: (state) => state.user.menus,
+    }),
   },
   methods: {
-    // 渲染echart图
-    barData(id, option) {
-      // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+    // 判断是否有菜单权限
+    judgePage() {
+      this.head2.forEach((x) => {
+        if (
+          this.menus.findIndex((y) => {
+            return y.Name == x.path;
+          }) != -1
+        ) {
+          x.isUsing = true;
+        }
+      });
+
+      this.dotPage.forEach((a) => {
+        if (
+          this.menus.findIndex((s) => {
+            return s.Name == a.path;
+          }) != -1
+        ) {
+          a.isUsing = true;
+        }
+      });
     },
-    getEcharts() {
-      //获取屏幕宽度并计算比例
-      function fontSize(res) {
-        let clientWidth =
-          window.innerWidth ||
-          document.documentElement.clientWidth ||
-          document.body.clientWidth;
-        if (!clientWidth) return;
-        return res * (clientWidth / 1920);
+    // 跳转地址
+    toPage(val, tag,url) {
+      if (tag) {
+        this.$router.push({
+          name: val,
+        });
+      } else {
+        this.$message.error("您暂未开通此页面的权限！");
       }
-      this.chartOptions = [
-        {
-          grid: {
-            containLabel: true,
-            bottom: 0,
-            left: fontSize(10),
-            right: fontSize(10)
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow"
+    },
+    async getDataOne() {
+      let form = {};
+      form["dicID"] = 6721;
+      form["PlanDay"] = [this.toDay, this.toDay];
+      form["OrganizeIDs"] = this.userInfo.CenterID;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          this.pieForm = data[0];
+          this.pieForm.Q0 = this.pieForm.Q3 + this.pieForm.Q4;
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    async getDataTwo() {
+      let form = {};
+      form["dicID"] = 1177;
+      this.dotOne = 0;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          data.forEach((x) => {
+            if (!x.ProcessGroupName) {
+              this.dotOne++;
             }
-          },
-          legend: {
-            top: "0",
-            data: ["未达成", "已达成"],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14)
-          },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
+          });
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    async getDataThree() {
+      let form = {};
+      form["dicID"] = 1182;
+      this.dotTwo = 0;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          data.forEach((x) => {
+            if (!x.ProcessName) {
+              this.dotTwo++;
+            }
+          });
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    async getDataFour() {
+      let form = {};
+      form["dicID"] = 5126;
+      this.dotThree = 0;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length != 0) {
+          data.forEach((x) => {
+            if (!x.Capacity) {
+              this.dotThree++;
+            }
+          });
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    // 获取数据
+    async getWjBoardData_1() {
+      let form = {};
+      form["MFGOrganizeID"] = this.userInfo.CenterID;
+      let res = await wjBoardData_1(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.Table1.length != 0) {
+          this.head[0].number = data.Table1[0].PlanQty;
+          this.head[1].number = data.Table1[0].ProducedQty;
+          this.head[2].number = data.Table1[0].ConfirmQty;
+          if (data.Table1[0].ConfirmQty == 0) {
+            this.head[3].number = "0%";
+          } else {
+            this.head[3].number =
+              (
+                (data.Table1[0].ConfirmQty / data.Table1[0].PlanQty) *
+                100
+              ).toFixed(2) + "%";
+          }
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    // 获取本月计划与达成
+    async getEchartOneData() {
+      let d = new Date();
+      let startMonth = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + "01";
+      let form = {};
+      form["PlanDay"] = [startMonth, this.toDay];
+      form["fields"] =
+        "isNull(sum(PlanQty),0) as PlanQty,isNull(sum(ConfirmQty),0) as ConfirmQty, cast(isNull(sum(ConfirmQty),0)/isNull(sum(PlanQty),0)*100 as decimal(18,2)) as PlanQtyP,PlanDay";
+      form["groupby"] = "PlanDay";
+      form["dicID"] = 6720;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        var PlanQty = [];
+        var ConfirmQty = [];
+        var PlanQtyP = [];
+        var PlanDay = [];
+        if (data.length != 0) {
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].PlanDay) {
+              data[i].PlanDay = data[i].PlanDay.substring(5, 10);
+            }
+            PlanDay.push(data[i].PlanDay);
+            PlanQty.push(data[i].PlanQty);
+            ConfirmQty.push(data[i].ConfirmQty);
+            PlanQtyP.push(data[i].PlanQtyP);
+          }
+          this.option2.xAxis[0].data = PlanDay;
+          this.option2.series[0].data = PlanQty;
+          this.option2.series[1].data = ConfirmQty;
+          this.option2.series[2].data = PlanQtyP;
+          this.drawChart("lineChart2", this.option2);
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    // 获取今日工序占比
+    async getEchartTwoData() {
+      let form = {};
+      form["fields"] =
+        " ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value,PlanDay ";
+      form["PlanDay"] = [this.toDay, this.toDay];
+      form["groupby"] = " ProcessName,PlanDay";
+      form["dicID"] = 6720;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if(data.length != 0){
+          this.option1.series[0].data = data;
+        }
+        this.drawChart("lineChart", this.option1);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
+    drawChart(id, option) {
+      let myChart = echarts.init(document.getElementById(id));
+      myChart.setOption(option, true);
+      let chart = document.getElementById(id);
+      echarts.init(chart).resize();
+    },
+    // 查询生产统计本月
+    queryMonth: function () {
+      this.show = 1;
+    },
+    // 查询生产统计上月
+    queryLastMonth: function () {
+      this.show = 2;
+    },
+    // 查询生产统计本年
+    queryYear: function () {
+      this.show = 3;
+    },
+    drawLine() {
+      var echarts = require("echarts");
+      const myCharts3 = echarts.init(document.getElementById("lineChart3"));
+      var option3 = {
+        legend: {
+          data: ["已达成", "未达成"],
+        },
+        calculable: true,
+        xAxis: [
+          {
+            type: "category",
             data: [
               "1日",
               "4日",
@@ -526,1215 +828,371 @@ export default {
               "19日",
               "23日",
               "27日",
-              "30日"
+              "30日",
             ],
-            axisLabel: {
-              interval: 0,
-              show: true,
-              textStyle: {
-                color: "#000"
-              }
-            },
-            axisLine: {
-              lineStyle: {
-                show: false,
-                color: "#F3F3F3",
-                width: 2
-              }
-            }
           },
-          yAxis: [
-            {
-              name: "单位:万",
-              type: "value",
-              nameTextStyle: {
-                color: "#444444"
-              },
-              axisLabel: {
-                interval: 0,
-                show: true,
-                textStyle: {
-                  color: "#444444"
-                }
-              },
-              axisLine: {
-                show: false
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
-              },
-              axisTick: {
-                show: false
-              },
-              splitLine: {
-                lineStyle: {
-                  type: "dashed",
-                  color: "#E9E9E9"
-                }
-              }
-            }
-          ],
-          series: [
-            {
-              name: "未达成",
-              type: "bar",
-              silent: true,
-              itemStyle: {
-                normal: {
-                  color: "#578FFB"
-                }
-              },
-              data: [
-                "45",
-                "23",
-                "65",
-                "45",
-                "54",
-                "45",
-                "56",
-                "54",
-                "67",
-                "43",
-                "34",
-                "5",
-                "46"
-              ]
-            },
-            {
-              name: "已达成",
-              type: "bar",
-              silent: true,
-              itemStyle: {
-                normal: {
-                  color: "#23CF9C"
-                }
-              },
-              data: [
-                "23",
-                "44",
-                "24",
-                "34",
-                "23",
-                "23",
-                "23",
-                "15",
-                "5",
-                "14",
-                "25",
-                "57",
-                "34"
-              ]
-            }
-          ]
-        },
-        {
-          backgroundColor: "#fff",
-          // title: {
-          //   text: "注册资金",
-          //   subtext: "2016年",
-          //   x: "center",
-          //   y: "center",
-          //   textStyle: {
-          //     fontWeight: "normal",
-          //     fontSize: 16
-          //   }
-          // },
-          // tooltip: {
-          //   show: false,
-          //   trigger: "item",
-          //   formatter: "{b}: {c} ({d}%)"
-          // },
-          legend: {
-            type: "scroll",
-            orient: "vertical",
-            right: "0%",
-            top: "center",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12)
-            },
+        ],
+        yAxis: [
+          {
+            type: "value",
+          },
+        ],
+        series: [
+          {
+            name: "已达成",
+            type: "bar",
             itemStyle: {
-              borderRadius: "50%" // 将图例项的形状设定为圆形
-            },
-            data: ["包装", "自动插件", "焊线装配", "贴片", "灌胶老练", "印刷"]
-          },
-          grid: {
-            containLabel: true
-          },
-          series: [
-            {
-              type: "pie",
-              // selectedMode: "single",
-              radius: ["30%", "60%"],
-              color: [
-                "#23CF9C",
-                "#578FFB",
-                "#6E40F2",
-                "#FF61E6",
-                "#E82074",
-                "#FBA806"
-              ],
-              center: ["30%", "50%"],
-              label: {
-                normal: {
-                  position: "inner",
-                  formatter: "{d}%"
-                },
-                textStyle: {
-                  color: "#fff",
-                  fontSize: fontSize(12)
-                }
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: "#eb1de0" },
+                  { offset: 1, color: "#770371" },
+                ]),
               },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {
-                  value: 3661,
-                  name: "包装"
-                },
-                {
-                  value: 5713,
-                  name: "自动插件"
-                },
-                {
-                  value: 9938,
-                  name: "焊线装配"
-                },
-                {
-                  value: 17623,
-                  name: "贴片"
-                },
-                {
-                  value: 3299,
-                  name: "灌胶老练"
-                },
-                {
-                  value: 3299,
-                  name: "印刷"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          backgroundColor: "#fff",
-          // title: {
-          //   text: "注册资金",
-          //   subtext: "2016年",
-          //   x: "center",
-          //   y: "center",
-          //   textStyle: {
-          //     fontWeight: "normal",
-          //     fontSize: 16
-          //   }
-          // },
-          // tooltip: {
-          //   show: false,
-          //   trigger: "item",
-          //   formatter: "{b}: {c} ({d}%)"
-          // },
-          legend: {
-            type: "scroll",
-            orient: "vertical",
-            right: "0%",
-            top: "center",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12)
-            },
-            itemStyle: {
-              borderRadius: "50%" // 将图例项的形状设定为圆形
             },
             data: [
-              "回货周期<6天",
-              "6天<回货周期<15天",
-              "15天<回货周期<30天",
-              "回货周期>30天",
-              "灌胶老练",
-              "印刷"
-            ]
-          },
-          grid: {
-            containLabel: true
-          },
-          series: [
-            {
-              type: "pie",
-              // selectedMode: "single",
-              radius: ["10%", "40%"],
-              color: [
-                "#23CF9C",
-                "#578FFB",
-                "#6E40F2",
-                "#FF61E6",
-                "#E82074",
-                "#FBA806"
+              30000,
+              43000,
+              38670,
+              12320,
+              22560,
+              37670,
+              41356,
+              51622,
+              25260,
+            ],
+            markPoint: {
+              data: [
+                { type: "max", name: "最大值" },
+                { type: "min", name: "最小值" },
               ],
-              center: ["25%", "50%"],
-              label: {
-                normal: {
-                  position: "inner",
-                  formatter: "{d}%",
-                  fontSize: fontSize(8),
-                  color: "#fff"
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {
-                  value: 3661,
-                  name: "回货周期<6天"
-                },
-                {
-                  value: 5713,
-                  name: "6天<回货周期<15天"
-                },
-                {
-                  value: 9938,
-                  name: "15天<回货周期<30天"
-                },
-                {
-                  value: 17623,
-                  name: "回货周期>30天"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          grid: {
-            containLabel: true,
-            bottom: 0,
-            left: fontSize(10),
-            right: fontSize(10)
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow"
-            }
-          },
-          legend: {
-            top: "0",
-            data: ["未达成", "已达成"],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14)
-          },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
-            data: ["注塑", "电焊", "装配", "QC", "电子", "生产"],
-            axisLabel: {
-              interval: 0,
-              show: true,
-              textStyle: {
-                color: "#000"
-              }
             },
-            axisLine: {
-              lineStyle: {
-                show: false,
-                color: "#F3F3F3",
-                width: 2
-              }
-            }
-          },
-          yAxis: [
-            {
-              name: "单位:万",
-              type: "value",
-              nameTextStyle: {
-                color: "#444444"
-              },
-              axisLabel: {
-                interval: 0,
-                show: true,
-                textStyle: {
-                  color: "#444444"
-                }
-              },
-              axisLine: {
-                show: false
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
-              },
-              axisTick: {
-                show: false
-              },
-              splitLine: {
-                lineStyle: {
-                  type: "dashed",
-                  color: "#E9E9E9"
-                }
-              }
-            }
-          ],
-          series: [
-            {
-              name: "未达成",
-              type: "bar",
-              silent: true,
-              barWidth: fontSize(14),
-              itemStyle: {
-                normal: {
-                  color: "#578FFB"
-                }
-              },
-
-              data: [
-                "45",
-                "23",
-                "65",
-                "45",
-                "54",
-                "45",
-                "56",
-                "54",
-                "67",
-                "43",
-                "34",
-                "5",
-                "46"
-              ]
+            markLine: {
+              data: [{ type: "average", name: "平均值" }],
             },
-            {
-              name: "已达成",
-              type: "bar",
-              silent: true,
-              barWidth: fontSize(14),
-              itemStyle: {
-                normal: {
-                  color: "#23CF9C"
-                }
-              },
-              data: [
-                "23",
-                "44",
-                "24",
-                "34",
-                "23",
-                "23",
-                "23",
-                "15",
-                "5",
-                "14",
-                "25",
-                "57",
-                "34"
-              ]
-            }
-          ]
-        },
-        {
-          backgroundColor: "#fff",
-          color: [
-            "#0090FF",
-            "#36CE9E",
-            "#FFC005",
-            "#FF515A",
-            "#8B5CFF",
-            "#00CA69"
-          ],
-          legend: {
-            top: "0%"
           },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow"
-            }
-          },
-          grid: {
-            left: fontSize(10),
-            right: fontSize(10),
-            bottom: fontSize(10),
-            containLabel: true
-          },
-          xAxis: [
-            {
-              type: "category",
-              boundaryGap: false,
-              axisLabel: {
-                formatter: "{value}月",
-                textStyle: {
-                  color: "#333"
-                }
+          {
+            name: "未达成",
+            type: "bar",
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: "#87cefc" },
+                  { offset: 1, color: "#045f9c" },
+                ]),
               },
-              axisLine: {
-                lineStyle: {
-                  color: "#D9D9D9"
-                }
-              },
-              data: ["1", "2", "3", "4", "5", "6", "7", "8"]
-            }
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "单位：万",
-              axisLabel: {
-                textStyle: {
-                  color: "#666"
-                }
-              },
-              nameTextStyle: {
-                color: "#666",
-                fontSize: 12,
-                lineHeight: 40
-              },
-              splitLine: {
-                lineStyle: {
-                  type: "dashed",
-                  color: "#E9E9E9"
-                }
-              },
-              axisLine: {
-                show: false
-              },
-              axisTick: {
-                show: false
-              }
-            }
-          ],
-          series: [
-            {
-              name: "计划数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,/
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#0090FF30"
-                      },
-                      {
-                        offset: 1,
-                        color: "#0090FF10"
-                      }
-                    ],
-                    false
-                  ),
-                  shadowColor: "#0090FF10",
-                  shadowBlur: 10
-                }
-              },
-              data: [100, 138, 350, 173, 180, 150, 180, 230]
             },
-            {
-              name: "生产数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#36CE9E30"
-                      },
-                      {
-                        offset: 1,
-                        color: "#36CE9E10"
-                      }
-                    ],
-                    false
-                  ),
-                  shadowColor: "#36CE9E10",
-                  shadowBlur: 10
-                }
-              },
-              data: [233, 233, 200, 180, 199, 233, 210, 180]
-            }
-          ]
-        }
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
-      });
-      // 调用 resize 方法重新渲染图表
-      setTimeout(() => {
-        this.chart.map(item => {
-          echarts.init(item).resize();
-        });
-      }, 100);
+            data: [12800, 9900, 11900, 8640, 6287, 5707, 11756, 7822, 14870],
+            markPoint: {
+              data: [
+                { name: "月最高", value: 6400, xAxis: 10, yAxis: 6400 },
+                { name: "月最低", value: 1260, xAxis: 10, yAxis: 6400 },
+              ],
+            },
+            markLine: {
+              data: [{ type: "average", name: "平均值" }],
+            },
+          },
+        ],
+      };
+      myCharts3.setOption(option3);
     },
-    handleWindowResize() {
-      this.getEcharts();
-    },
-    handleConsumeBtnClick(index) {
-      if (
-        (index === 0 && this.selected1Index === 0) ||
-        (index === 1 && this.selected1Index === 1)
-      ) {
-        // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
-        return;
-      } else {
-        this.selected1Index = index;
-        if (index === 0) {
-          // 调用第一个方法
-          // your code here
-        } else {
-          // 调用第二个方法
-          // your code here
-        }
-      }
-    },
-    handleDayBtnClick(index) {
-      if (
-        (index === 0 && this.selected2Index === 0) ||
-        (index === 1 && this.selected2Index === 1)
-      ) {
-        // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
-        return;
-      } else {
-        this.selected2Index = index;
-        if (index === 0) {
-          // 调用第一个方法
-          // your code here
-        } else {
-          // 调用第二个方法
-          // your code here
-        }
-      }
-    },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
-    },
-    // 第几页
-    pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-    },
-    // 页数
-    pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-    },
-    // 排序
-    sortChange(order, prop, remarkTb, filtertb, row, index) {
-      if (filtertb == -100) {
-        // 改变父表格的行数据
-        this.changeTableRowData(remarkTb, row, index);
-        return;
-      }
-      if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
-        } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
-        }
-      } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
-      }
-      this.dataSearch(remarkTb);
-    },
-    // 改变父组件表格行数据
-    changeTableRowData(remarkTb, row, index) {
-      for (let name in row) {
-        this.$set(this.tableData[remarkTb][index], name, row[name]);
-      }
-    },
-    // 统一渲染按钮事件
-    btnClick(methods, parms, index, remarkTb) {
-      if (parms) {
-        // 下标 要用的数据 标题 ref
-        this[methods](remarkTb, index, parms);
-      } else {
-        this[methods](remarkTb, index);
-      }
-    },
-    // 查询
-    dataSearch(remarkTb) {
-      this.tagRemark = remarkTb;
-      this.tableData[remarkTb] = [];
-      this.$set(this.tableLoading, remarkTb, true);
-      this.$set(this.isClear, remarkTb, true);
-      this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-      setTimeout(() => {
-        this.$set(this.isClear, remarkTb, false);
-      });
-    },
-    // 重置
-    dataReset(remarkTb) {
-      for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
-        }
-      }
-    },
-    // 导出
-    async dataExport(remarkTb) {
-      this.adminLoading = true;
-      let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
-      let res = await ExportData(form);
-      this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
-    },
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
-    // 删除
-    async dataDel(remarkTb, index, parms) {
-      let res = null;
-      let newData = [];
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
-        return;
-      } else {
-        this.selectionData[remarkTb].forEach(x => {
-          let obj = x;
-          obj["ElementDeleteFlag"] = 1;
-          newData.push(obj);
-        });
-      }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch(_ => {});
-    },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
-    // 保存
-    async dataSave(remarkTb, index, parms, newData) {
-      let res = null;
-      this.adminLoading = true;
-      if (newData && newData.length != 0) {
-        res = await SaveData(newData);
-      } else {
-        res = await SaveData(this.tableData[remarkTb]);
-      }
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true
-        });
-        this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-        this.$set(this, "adminLoading", false);
-      }
-    },
-    // 获取表头数据
-    async getTableHeader() {
-      let IDs = this.sysID;
-      let res = await GetHeader(IDs);
-      const { datas, forms, result, msg } = res.data;
-      if (datas.length > 0) {
-        this.tablePagination[0].pageSize = datas[0][1].pageSize;
-      }
-
-      if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          m.some((n, j) => {
-            // 进行验证
-            this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
-                this.verifyDta(x);
-              });
-            }
-          });
-
-          this.$set(this.tableColumns, i, m);
-        });
-        // 获取查询的初始化字段 组件 按钮
-        forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
-            if (y.prop && y.value) {
-              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-            } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
-            }
-          });
-          this.$set(this.formSearchs[z], "forms", x);
-        });
-        this.adminLoading = false;
-        // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-        //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-
-        //   if (tmp.dicID) {
-        //     this.formSearchs[0].datas = tmp;
-        //   }
-        // // }
-        // this.formSearchs[0].datas["dicID"] = this.ID;
-        this.getTableData(this.formSearchs[0].datas, 0);
-        this.getTableData(this.formSearchs[1].datas, 1);
-      }
-    },
-    // 验证数据
-    verifyDta(n) {
-      for (let name in n) {
-        if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
-        ) {
-          n[name] = eval("(" + n[name] + ")");
-        }
-      }
-    },
-    // 获取表格数据
-    async getTableData(form, remarkTb) {
-      this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] = this.tableColumns[
-          remarkTb
-        ][1]["pageSize"];
-      }
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-      this.$set(this.tableLoading, remarkTb, false);
-    },
-    // 刷新页面
-    refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
-        const { fullPath } = this.$route;
-        this.$nextTick(() => {
-          this.$router.replace({
-            path: "/redirect" + fullPath
-          });
-        });
-      });
-    },
-    async getEchartsData1() {
-      let res = await GetSearchData(
-        {
-          dicID: 9037,
-          groupby: "Dept",
-          fields: "SUM(DemandQty) as DemandQty,Dept",
-          sort: "DemandQty desc"
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartTotal1 = data.reduce(
-          (accumulator, current) => accumulator + current.DemandQty,
-          0
-        );
-        this.chartData1 = data.map(item => ({
-          value: item.DemandQty,
-          name: item.Dept
-        }));
-        console.log(this.chartData1, "this.chartData2[0]");
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
-    async getEchartsData2() {
-      let res = await GetSearchData(
-        {
-          dicID: 9062,
-          sort: "OweQty",
-          page: 1,
-          rows: 6
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartData2[0] = data.map(item => item.MaterialName.split(" ")[0]);
-        this.chartData2[1] = data.map(item => item.OweQty);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
-      }
-    },
-    hexToRgba(hex, opacity) {
-      let rgbaColor = "";
-      let reg = /^#[\da-f]{6}$/i;
-      if (reg.test(hex)) {
-        rgbaColor = `rgba(${parseInt("0x" + hex.slice(1, 3))},${parseInt(
-          "0x" + hex.slice(3, 5)
-        )},${parseInt("0x" + hex.slice(5, 7))},${opacity})`;
-      }
-      return rgbaColor;
-    }
-  }
+  },
 };
 </script>
-<style lang="scss" scoped>
-* {
-  box-sizing: border-box;
+<style scoped>
+.home_1 {
+  height: 111px;
+  display: flex;
+  justify-content: space-between;
 }
-.el-container {
+.home_2 {
+  width: 99%;
+  height: 160px;
+  margin: 10px 0 10px 0;
+  background: #fff;
+  border-radius: 5px;
+  color: rgb(51, 51, 51);
 }
-.el-main {
-  padding: 16px;
-  height: calc(100vh - 80px);
+.home_3 {
+  height: 40px;
+  padding: 14px 14px 0 14px;
+}
+.home_4 {
+  float: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+.home_5 {
+  width: 99%;
+  height: 260px;
+}
+.home_6 {
+  width: 49%;
+  float: left;
+  margin-right: 1%;
+  background: #fff;
+  height: 260px;
+}
+.home_7 {
+  height: 40px;
+  padding: 15px 15px 15px 15px;
+}
+.home_8 {
+  float: left;
+  font-size: 16px;
+  color: rgb(51, 51, 51);
+  font-weight: bold;
+}
+.home_9 {
+  color: #676a6c;
+  width: 96%;
+  background: #f4f7fe;
+  height: 30px;
+  margin: 10px 2%;
+  padding: 5px 10px 0 30px;
+  font-size: 15px;
+  font-weight: bold;
+}
+.home_10 {
+  font-size: 16px;
+  font-weight: bold;
+  float: left;
+}
+.home_11 {
+  font-size: 16px;
+  font-weight: bold;
+  float: right;
+}
+.home_12 {
+  color: #676a6c;
+  width: 96%;
+  height: 170px;
+  margin: 0 2%;
+  padding: 0 10px 0 10px;
+  float: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+.home_13 {
+  width: 156px;
+  height: 156px;
+}
+.home_14 {
+  height: 120px;
+  float: right;
+  width: 48%;
+  margin-left: 8px;
+  padding: 15px 0;
+}
+.home_15 {
+  width: 50%;
+  height: 260px;
+  float: left;
+  background: #fff;
+}
+.home_18 {
+  width: 100%;
+  height: 220px;
+}
+.home_19 {
+  width: 99%;
+  height: 260px;
+  margin: 10px 0;
+}
+.home_20 {
+  width: 49%;
+  float: left;
+  margin-right: 1%;
+  background: #fff;
+  height: 260px;
+}
+.home_21 {
+  height: 40px;
+  padding: 15px 15px 15px 15px;
+}
+.home_22 {
+  float: left;
+  font-size: 16px;
+  color: rgb(51, 51, 51);
+  font-weight: bold;
+}
+.home_23 {
+  height: 210px;
+  padding: 7px 0;
+  width: 100%;
+}
+.home_24 {
+  width: 100%;
+  height: 210px;
+}
+.home_25 {
+  width: 50%;
+  height: 260px;
+  float: left;
+  background: #fff;
+}
+.home_26 {
+  width: 100%;
+  height: 220px;
+}
+.home_28 {
+  width: 100%;
+  height: 280px;
+  border-radius: 5px;
+  padding: 10px 10px;
+  background: #fff;
+}
+.home_right_1 {
+  width: 100%;
+  height: 125px;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 10px 10px;
+  background: #fff;
+}
+.home_right_2 {
+  margin: 5px 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.home_right_3 {
+  padding: 20px 10px;
+  font-size: 14px;
+  color: rgb(153, 153, 153);
+}
+.home_right_4 {
+  width: 100%;
+  height: 260px;
+  border-radius: 5px;
+  margin: 10px 0;
+  padding: 0 10px;
+  background: #fff;
+}
+.home_right_5 {
+  padding: 0 10px;
+  font-size: 14px;
+  color: rgb(153, 153, 153);
+}
 
-  .firstNode {
-    display: flex;
-    justify-content: space-between;
-    height: 100%;
-    .leftCard {
-      width: 66%;
-      margin-right: 10px;
-      display: flex;
-      flex-direction: column;
-      .headCard {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        .box {
-          display: flex;
-          // width: calc(25% - 16px);
-          width: 25%;
-          height: 100px;
-          // border: 1px solid #d5d6ff;
-          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-          border-radius: 4px;
-          margin-right: 10px;
+.container {
+  margin: 10px 10px 0 10px;
+  overflow: auto;
+  width: 100%;
+}
+.home /deep/ .box-card {
+  display: flex;
+  height: 100%;
+  /*  float: left; */
+  width: 24%;
+  margin-right: 1%;
+  /*padding-top: 15px; */
+}
+.home /deep/ .box-card2 {
+  height: 58px;
+  width: 25%;
+  /* float: left; */
+  cursor: pointer;
+  padding-left: 40px;
+  display: flex;
+  justify-items: center;
+}
+.home /deep/ .el-card__body {
+  width: 100%;
+  display: flex;
+}
+.bodyContent{
+  display: flex;
+  flex-wrap: wrap;
+}
+.bodyContent a {
+  width: 100%;
+  height: 58px;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+}
 
-          .icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40%;
-            img {
-              width: 56px;
-              height: 56px;
-            }
-          }
-          .textBox {
-            width: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 16px 0px 22px 0px;
-            .textHead {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              .title {
-                font-weight: 400;
-                font-size: 12px;
-                line-height: 12px;
-                color: #ffffff;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-              .content {
-                display: flex;
-                align-items: center;
-                img {
-                  width: 22px;
-                  height: 22px;
-                  margin-right: 10px;
-                }
-                .changeNum {
-                  font-weight: 400;
-                  font-size: 10px;
-                  color: #ff878a;
-                }
-                .loss {
-                  color: #a4ffbd;
-                }
-              }
-            }
-            .statusNum {
-              // text-align: center;
-              font-size: 26px;
-              font-weight: 400;
-              color: #ffffff;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-        }
-        .box:last-child {
-          margin-right: 0px;
-        }
-        .blue {
-          background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
-        }
-        .green {
-          background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
-        }
-        .purple {
-          background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
-        }
-        .red {
-          background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
-        }
-      }
-      .secondCard {
-        width: 100%;
-        height: 335px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        .itemCard1 {
-          height: 335px;
-          width: 50%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          margin-right: 10px;
-        }
-        .itemCard2 {
-          width: 50%;
-          height: 335px;
-          display: flex;
-          justify-content: space-between;
-          .itemCard {
-            height: 335px;
-            border-radius: 4px;
-            width: 50%;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-          }
-          .itemCard:nth-child(1) {
-            margin-right: 10px;
-          }
-        }
-      }
-      .thirdCard {
-        flex-grow: 1;
-        display: flex;
-        // margin-right: 10px;
-        overflow: hidden;
+.asideRight {
+  font-family: impact;
+  font-weight: bold;
+  font-size: 16px;
+  color: #676a6c;
+  float: right;
+}
+.box-card .head {
+  background: #fff;
+  border-radius: 5px;
+  color: #999;
+}
+.box-card /deep/ .el-image {
+  width: 50px;
+  height: 50px;
+}
+.balance {
+  height: 30px;
+}
+.bodyContent .el-image {
+  width: 36px;
+  height: 36px;
+  margin-top: 15px;
+}
+.box-card .span {
+  font-family: impact;
+  font-weight: bold;
+  /* clear: both; */
+  font-size: 30px;
+  /* text-align: center; */
+  color: #676a6c;
+}
+.home /deep/ .el-main {
+  padding: 0;
+}
+.default {
+  color: #0a7dfa !important;
+}
+.home_dot {
+  float: inherit;
+  max-width: 12px;
+  min-width: 12px;
+  max-height: 12px;
+  min-height: 12px;
+  border-radius: 50%;
+  margin: 5px 8px;
+  float: left;
+  display: block;
+  margin-left: 5px;
+}
+.trend {
+  float: right;
+  width: 50px;
+  background: #fff;
+  color: #8f8f8f;
+  border: hidden;
+  cursor: pointer;
+  border-radius: 0%;
+  margin-top: -5px;
+}
+.home /deep/ .el-aside {
+  padding: 0;
+}
+.asideOne {
+  height: 45px;
+  padding: 15px 5px;
+  font-size: 14px;
+  position: relative;
+  cursor: pointer;
+  color: rgb(153, 153, 153);
+  font-family: MicrosoftYaHei;
+  border-bottom: 1px solid #f5f5f5;
+}
+.el-button + .el-button,
+.el-checkbox.is-bordered + .el-checkbox.is-bordered {
+  margin-left: 0 !important;
+}
 
-        .itemCard {
-          height: 100%;
-          // flex-grow: 1;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          margin-right: 10px;
-          width: 50%;
-          .echartBody {
-            height: calc(100% - 60px);
-            overflow: auto;
-            // overflow: hidden;
-          }
-          .echartBody::-webkit-scrollbar {
-            display: none;
-          }
-        }
-        .itemCard:nth-child(2) {
-          margin-right: 0px;
-        }
-      }
-    }
-    .rightCard {
-      width: 34%;
-      display: flex;
-      flex-direction: column;
-      .firstCard {
-        height: 30%;
-        margin-bottom: 10px;
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          .xnode {
-            width: 100%;
-            height: 20%;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #444444;
-            font-size: 12px;
-            // .triangle
-          }
-          .xnode div:nth-child(1) {
-            padding-left: 20px;
-            width: 30%;
-            position: relative;
-          }
-          .xnode div:nth-child(1)::before {
-            content: ""; /* 伪元素的内容为空 */
-            position: absolute; /* 将伪元素设置为绝对定位 */
-            top: 50%;
-            left: 0; /* 将伪元素向左偏移 50% */
-            transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
-            display: inline-block; /* 将伪元素设置为行内块元素 */
-            width: 10px;
-            height: 10px;
-            background: #8598ff;
-            border-radius: 50%;
-          }
-          .xnode:nth-child(2) div:nth-child(1)::before {
-            background: #f9921a;
-          }
-          .xnode:nth-child(3) div:nth-child(1)::before {
-            background: #43b8fa;
-          }
-          .xnode:nth-child(4) div:nth-child(1)::before {
-            background: #fa43f2;
-          }
-          .xnode:nth-child(5) div:nth-child(1)::before {
-            background: #2dd87b;
-          }
-
-          .xnode div:nth-child(2) {
-            width: 50%;
-            border: 1px dashed #c0c0c0;
-          }
-          .xnode div:nth-child(3) {
-            width: 20%;
-            text-align: right;
-          }
-        }
-      }
-      .secondCard {
-        height: 35%;
-        margin-bottom: 10px;
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
-      }
-      .thirdCard {
-        height: 35%;
-
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
-      }
-    }
-  }
-
-  .echartHead {
-    padding: 0px 20px;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .echartTitle {
-      padding-left: 10px;
-      position: relative;
-      font-weight: 400;
-      font-size: 14px;
-      color: #333333;
-      font-weight: bold;
-    }
-    .el-button {
-      border-radius: 6px !important;
-    }
-    .select,
-    .el-button:focus,
-    .el-button:hover {
-      color: #fff;
-      border-color: #5c67fd;
-      background-color: #5c67fd;
-    }
-  }
-  .echartTitle::before {
-    content: ""; /* 伪元素的内容为空 */
-    position: absolute; /* 将伪元素设置为绝对定位 */
-    top: 50%;
-    left: 0; /* 将伪元素向左偏移 50% */
-    transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
-    display: inline-block; /* 将伪元素设置为行内块元素 */
-    width: 4px;
-    height: 20px;
-    background: #8598ff;
-    border-radius: 2px;
-    margin-right: 10px;
-  }
-  .echartBody {
-    // height: 480px;
-    flex-grow: 1;
-    padding: 10px;
-    width: 100%;
-    // height: 100%;
-  }
-  .box:hover,
-  .itemCard:hover {
-    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-  .container {
-    padding: 0;
-  }
+.echartOne canvas,
+.echartOne div {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>

@@ -76,25 +76,25 @@ export default {
       loginForm: {
         Account: "",
         Pwd: "",
-        URL: ""
+        URL: "",
       },
       loginRules: {
         Account: [{ required: true, trigger: "blur", message: "账号为必填项" }],
-        Pwd: [{ required: true, trigger: "blur", message: "密码为必填项" }]
+        Pwd: [{ required: true, trigger: "blur", message: "密码为必填项" }],
       },
       loading: false,
       redirect: undefined,
       clickSign: 0,
-      base_url: localStorage.getItem("apsurl") + "/images/logo.png" //动态获取服务器对应的logo
+      base_url: localStorage.getItem("apsurl") + "/images/logo.png", //动态获取服务器对应的logo
     };
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
     console.log("base_url", this.base_url);
@@ -109,27 +109,26 @@ export default {
       }
     },
     login() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              let indexNum = -1;
-              indexNum = _.findIndex(store.getters.menus, function(o) {
+              let trueObject = store.getters.menus.find((o) => {
                 if (o.ParentCode && o.MenuName === "首页") {
                   return o;
                 }
               });
               // 登录成功后动态渲染首页，如果配置了首页渲染配置的，否则渲染路由文件的静态路由
-              if (indexNum > -1) {
-                this.$router.push({ path: store.getters.menus[indexNum].Url });
+              if (trueObject) {
+                this.$router.push({ path: trueObject["Url"] });
               } else {
                 this.$router.push({ path: "/" });
               }
               this.loading = false;
             })
-            .catch(error => {
+            .catch((error) => {
               this.$message.error(error.message);
               this.loading = false;
             });
@@ -137,8 +136,8 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
