@@ -109,19 +109,13 @@ import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComSpreadTable from "@/components/ComSpreadTable";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType
-} from "@/static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
@@ -130,7 +124,7 @@ export default {
     ComSearch,
     ComVxeTable,
     DialogTable,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
@@ -145,7 +139,7 @@ export default {
         { ID: 5156 },
         { ID: 5156 },
         { ID: 5156 },
-        { ID: 5156 }
+        { ID: 5156 },
       ],
       // Status1: [
       //   { label: "待维护PO", value: 0 },
@@ -164,32 +158,32 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       btnForm: [],
       spread: [[], [], [], [], []],
@@ -205,7 +199,7 @@ export default {
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
@@ -220,9 +214,9 @@ export default {
       losePrepareDate2: 1,
       ruleForm: {
         LineIDs: [],
-        ProducedDate: ""
+        ProducedDate: "",
       },
-      lines: []
+      lines: [],
     };
   },
   watch: {},
@@ -246,7 +240,7 @@ export default {
   },
   methods: {
     //获取子组件实例
-    workbookInitialized: function(workbook, remarkTb) {
+    workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
@@ -263,7 +257,7 @@ export default {
           .then(() => {
             // 确定
             this.adminLoading = true;
-            this.selectionData[1].forEach(a => {
+            this.selectionData[1].forEach((a) => {
               a["ElementDeleteFlag"] = 1;
             });
             this.dataSave(this.selectionData[1], 0);
@@ -278,8 +272,8 @@ export default {
       this.$router.push({
         name: "FieldInfo",
         params: {
-          ID: id
-        }
+          ID: id,
+        },
       });
     },
     // 判断按钮权限
@@ -289,11 +283,11 @@ export default {
       let permission = false;
 
       if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
+        routeBtn.forEach((x) => {
           if (x.ButtonCode == "edit") {
             permission = true;
           }
-          let newData = this.parmsBtn.filter(y => {
+          let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
           });
           if (newData.length != 0) {
@@ -304,7 +298,7 @@ export default {
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "isEdit", permission);
     },
-    initSpread: function(spread) {
+    initSpread: function (spread) {
       this.spread = spread;
     },
     // excle表数据渲染
@@ -363,10 +357,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -394,7 +385,7 @@ export default {
               const color = row.colorMapping[key];
               cell.style({
                 backColor: color,
-                foreColor: "#FFFFFF"
+                foreColor: "#FFFFFF",
               });
               // 其他代码
             }
@@ -509,7 +500,7 @@ export default {
         this.$message({
           message: "请选择要操作的数据",
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = true;
@@ -526,7 +517,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -536,7 +527,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[1] = [];
       if (newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           if (x.isChecked) {
             this.selectionData[1].push(x);
           }
@@ -561,8 +552,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then(_ => {})
-        .catch(_ => {});
+        .then((_) => {})
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -630,7 +621,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -644,15 +635,15 @@ export default {
       if (column.property == "IsCompleteInspect") {
         if (row.IsCompleteInspect == "未开始") {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else if (row.IsCompleteInspect == "进行中") {
           return {
-            backgroundColor: "#fdfd8f"
+            backgroundColor: "#fdfd8f",
           };
         } else if (row.IsCompleteInspect == "已完成") {
           return {
-            backgroundColor: "#9fff9f"
+            backgroundColor: "#9fff9f",
           };
         }
       }
@@ -679,14 +670,14 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
             }
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
+              n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -696,7 +687,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -744,7 +735,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -761,9 +752,9 @@ export default {
       if (val < row.RowNumber) {
         // 改成比之前更小的行号 row.RowNumber为目标行数
         newData_1 = this.tableData[1].filter(
-          a => parseInt(a.ViewSort) < parseInt(val)
+          (a) => parseInt(a.ViewSort) < parseInt(val)
         ); //把最终行号的前面的数取出来
-        newData_2 = this.tableData[1].filter(b => {
+        newData_2 = this.tableData[1].filter((b) => {
           return (
             parseInt(b.RowNumber) >= parseInt(val) &&
             parseInt(b.RowNumber) != parseInt(row.RowNumber)
@@ -774,16 +765,16 @@ export default {
       } else {
         // 改成比原来大的数
         newData_1 = this.tableData[1].filter(
-          a => parseInt(a.ViewSort) < parseInt(row.RowNumber)
+          (a) => parseInt(a.ViewSort) < parseInt(row.RowNumber)
         ); //把最终行号的前面的数取出来
-        newData_2 = this.tableData[1].filter(b => {
+        newData_2 = this.tableData[1].filter((b) => {
           return (
             parseInt(b.RowNumber) > parseInt(row.RowNumber) &&
             parseInt(b.RowNumber) <= parseInt(val)
           );
         }); //把介于两数之间，大于原来的数，小于目标数的数拿出来
         newData_3 = [row];
-        newData_4 = this.tableData[1].filter(b => {
+        newData_4 = this.tableData[1].filter((b) => {
           return parseInt(b.RowNumber) > parseInt(val);
         });
         newData = newData_1
@@ -822,7 +813,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -833,7 +824,7 @@ export default {
       let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           submitData.push(x.item);
         });
       }
@@ -851,13 +842,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.adminLoading = false;
@@ -865,7 +856,7 @@ export default {
     // 清空排期
     clearPlan(remarkTb) {
       if (this.selectionData[remarkTb].length != 0) {
-        this.selectionData[remarkTb].forEach(a => {
+        this.selectionData[remarkTb].forEach((a) => {
           a.StartDate = "";
         });
       }
@@ -874,7 +865,7 @@ export default {
     async computedPlan(remarkTb) {
       this.getSelectionData();
       this.adminLoading = true;
-      this.selectionData[1].forEach(m => {
+      this.selectionData[1].forEach((m) => {
         m["isChecked"] = true;
       });
       let res = await GetSearch(
@@ -901,7 +892,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -918,13 +909,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.adminLoading = false;
@@ -949,7 +940,7 @@ export default {
           let errMsg = "";
           // let okCount = 0;
           let okCount = this.selectionData[remarkTb].length;
-          this.selectionData[remarkTb].forEach(d => {
+          this.selectionData[remarkTb].forEach((d) => {
             let isOk = true;
             //判断是否转入
             // if (
@@ -978,7 +969,7 @@ export default {
             this.$message({
               message: errMsg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
           if (okCount > 0) {
@@ -995,7 +986,7 @@ export default {
               this.$message({
                 message: msg,
                 type: "error",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             }
           } else {
@@ -1006,10 +997,10 @@ export default {
     },
     // 选线获取剩余工时
     setFooterLabel(val) {
-      let LineIDs = this.lines.filter(a =>
-        this.ruleForm.LineIDs.some(b => b == a.LineID)
+      let LineIDs = this.lines.filter((a) =>
+        this.ruleForm.LineIDs.some((b) => b == a.LineID)
       );
-      let LineName = LineIDs.map(c => c.LineName).join(",");
+      let LineName = LineIDs.map((c) => c.LineName).join(",");
       //查询线别剩余工时
       let StrValue = `提示：当前所选${LineName}线，在${this.ruleForm.ProducedDate}共有350个小时，已占用250小时，剩余100小时【已选4项，预计占用50小时，剩余50小时】`;
       this.$set(this.footerLabel, 0, StrValue);
@@ -1025,7 +1016,7 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
-          data.forEach(a => {
+          data.forEach((a) => {
             a["LineID"] = a.OrganizeID;
             a["LineName"] = a.OrganizeName;
           });
@@ -1035,7 +1026,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1053,20 +1044,20 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } else {
         this.$message.error("请选择需要操作的数据！");
       }
-    }
-  }
+    },
+  },
 };
 </script>

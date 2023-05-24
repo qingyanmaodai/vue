@@ -9,7 +9,7 @@
           ref="searchRef"
           :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[0].forms"
-          :remark="labelStatus1 == 3?2:0"
+          :remark="labelStatus1 == 3 ? 2 : 0"
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
@@ -105,7 +105,7 @@
             </el-row>
           </div>
 
-          <div v-show="labelStatus1 <=2">
+          <div v-show="labelStatus1 <= 2">
             <div class="admin_content">
               <div class="flex_column" :style="{ height: height }">
                 <div class="spreadContainer" v-loading="tableLoading[0]">
@@ -153,8 +153,6 @@
             :isEdit="isEdit"
             :showFooter="true"
             :includeFields="includeFields"
-     
-          
             :isClear="isClear[2]"
             :showPagination="false"
             :pagination="tablePagination[2]"
@@ -195,7 +193,15 @@
       </div>
     </div>
     <!-- 点击齐套率弹框-->
-    <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="供需平衡"
+      :tableDialog="colDialogVisible"
+      :sysID="7968"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -212,13 +218,7 @@ import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
 import DialogTable from "@/components/Dialog/dialogTable";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -243,14 +243,14 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComFormDialog,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-        OrderID:'',
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
+      colDialogVisible: false,
       includeFields: ["Qty"], // 包含合计的字段
       labelStatus1: 1,
       Status1: [
@@ -272,7 +272,7 @@ export default {
           datas: {},
           forms: [],
         },
-	{
+        {
           datas: {},
           forms: [],
         },
@@ -318,7 +318,7 @@ export default {
           signName: 1,
           Size: "small",
         },
-           {
+        {
           ButtonCode: "save",
           BtnName: "保存",
           isLoading: false,
@@ -337,7 +337,7 @@ export default {
           signName: 3,
           Icon: "",
           Size: "small",
-          Params: { dataName: "selectionData",remarkTb:2 },
+          Params: { dataName: "selectionData", remarkTb: 2 },
         },
         {
           ButtonCode: "save",
@@ -360,10 +360,10 @@ export default {
         //   Icon: "",
         // },
       ],
-      selectionData: [[], [],[]],
+      selectionData: [[], [], []],
       btnForm: [],
-      tableData: [[], [],[]],
-      tableColumns: [[], [],[]],
+      tableData: [[], [], []],
+      tableColumns: [[], [], []],
       tableLoading: [false, false, false],
       isClear: [false, false, false],
       tablePagination: [
@@ -382,7 +382,11 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7950, AutoDays2: this.AutoDays2 }, { ID: 7952 }, { ID: 5585 }],
+      sysID: [
+        { ID: 7950, AutoDays2: this.AutoDays2 },
+        { ID: 7952 },
+        { ID: 5585 },
+      ],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
@@ -403,7 +407,7 @@ export default {
     this.getTableHeader();
   },
   activated() {
-    if(this.spread){
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -426,16 +430,16 @@ export default {
         //   if (m["Extend8"] != "已同步") {
         //     m["Extend8"] = "待同步";
         //   }
-           pushData.push(m);
+        pushData.push(m);
         // }
       });
       if (pushData.length > 0) {
-        let res = await GetSearch(pushData,'/APSAPI/UpdateOrderStartDate');
+        let res = await GetSearch(pushData, "/APSAPI/UpdateOrderStartDate");
         const { result, data, count, msg } = res.data;
-                this.adminLoading = false;
+        this.adminLoading = false;
         if (result) {
           this.dataSearch(0);
-  
+
           this.$message({
             message: msg,
             type: "success",
@@ -450,7 +454,7 @@ export default {
         }
       } else {
         this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
-                this.adminLoading = false;
+        this.adminLoading = false;
       }
     },
     schedulingPre() {
@@ -476,12 +480,16 @@ export default {
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
-        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//转为日期格式
+            formatter: "@", //转为日期格式
           });
         } else {
           colInfos.push({
@@ -546,7 +554,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {
@@ -581,27 +589,28 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
         // 齐套列
-        var rowSheet3  = ''
-        if(_this.tableColumns[0].length){
-          for(let i=0;i<_this.tableColumns[0].length;i++){
-            let item = _this.tableColumns[0][i]
-            if(item.name ==="K1"){
-                 rowSheet3 = sheet.getCell(
-                  index,//行
-                  i,//列
-                  GC.Spread.Sheets.SheetArea.viewport
-                );
-                break
-              }
+        var rowSheet3 = "";
+        if (_this.tableColumns[0].length) {
+          for (let i = 0; i < _this.tableColumns[0].length; i++) {
+            let item = _this.tableColumns[0][i];
+            if (item.name === "K1") {
+              rowSheet3 = sheet.getCell(
+                index, //行
+                i, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              break;
+            }
           }
         }
-        
+
         if (row["Code"] == null) {
           rowSheet.backColor("#A0CFFF");
           rowSheet.foreColor("balck");
           rowSheet2.backColor("#A0CFFF");
           rowSheet2.foreColor("balck");
-          if(row["K1"] !="100.00%"){//不齐套时字体为红色
+          if (row["K1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["MFGOrganizeID"] === 162) {
@@ -609,30 +618,36 @@ export default {
           rowSheet.backColor("#FFFF00");
           rowSheet.foreColor("black");
           rowSheet2.backColor("#FFFF00");
-          if(row["K1"] !="100.00%"){//不齐套时字体为红色
+          if (row["K1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["SchedulingResult"] === "超期") {
           // row.backColor();
           rowSheet.backColor("#C2E7B0");
           rowSheet.foreColor("black");
-          if(row["K1"] !="100.00%"){//不齐套时字体为红色
+          if (row["K1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
-        } 
-         else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
+        } else if (
+          row["DBResult"] != "计算成功" &&
+          row["DBResult"] != "" &&
+          row["DBResult"] != null
+        ) {
           // row.backColor();
           rowSheet.backColor("#C2E7B0");
           rowSheet.foreColor("red");
-          if(row["K1"] !="100.00%"){//不齐套时字体为红色
+          if (row["K1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
-        }else if(row["K1"] !="100.00%"){//不齐套时字体为红色
+        } else if (row["K1"] != "100.00%") {
+          //不齐套时字体为红色
           rowSheet.foreColor("black");
           rowSheet2.foreColor("balck");
           rowSheet3.foreColor("red");
-        }
-        else {
+        } else {
           // row.backColor();
           rowSheet.foreColor("black");
           rowSheet.backColor("");
@@ -721,9 +736,6 @@ export default {
         if (cellType instanceof GCsheets.CellTypes.HyperLink) {
         }
       });
-
-
-
 
       var insertRowsCopyStyle = {
         canUndo: true,
@@ -860,16 +872,17 @@ export default {
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if(_this.tableColumns[0].length){
-            _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="K1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
-                _this.dialogSearchForm.ZQLS = 0
-              }
-            })
-          }
+        if (_this.tableColumns[0].length) {
+          _this.tableColumns[0].map((item, index) => {
+            if (item.name === "K1" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.AUFNR =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.ZQLS = 0;
+            }
+          });
+        }
       });
 
       //表格编辑事件
@@ -1293,9 +1306,9 @@ export default {
         s = [21, 22, 23];
       } else if (index === 3) {
         s = [24];
-	this.formSearchs[2].datas["ProductionStatus"] = s;
+        this.formSearchs[2].datas["ProductionStatus"] = s;
         this.dataSearch(2);
-        return
+        return;
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
 
@@ -1414,31 +1427,30 @@ export default {
           .then(() => {
             // 确定
             this.adminLoading = true;
-        this.selectionData[1].forEach((a) => {
-          a["ElementDeleteFlag"] = 1;
-        });
-        this.dataSave(this.selectionData[1], 1);
+            this.selectionData[1].forEach((a) => {
+              a["ElementDeleteFlag"] = 1;
+            });
+            this.dataSave(this.selectionData[1], 1);
           })
           .catch(() => {
             // 取消
           });
-        
       }
     },
-       save4() {//在分线列表处保存
+    save4() {
+      //在分线列表处保存
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
-        
-         let submitData = this.selectionData[1]
-    
 
-      if (submitData.length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-      } else {
-        this.dataSave(submitData, 1);
-      }
+        let submitData = this.selectionData[1];
+
+        if (submitData.length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+        } else {
+          this.dataSave(submitData, 1);
+        }
       }
     },
     // 保存
@@ -1460,16 +1472,14 @@ export default {
     },
     //恢复计划
     async recovery(remarkTb) {
-      remarkTb = 2
+      remarkTb = 2;
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        
-        this.selectionData[remarkTb].forEach(m=>{
-          m["ProductionStatus"]=23;
-
+        this.selectionData[remarkTb].forEach((m) => {
+          m["ProductionStatus"] = 23;
         });
-       this.dataSave(this.selectionData[remarkTb],remarkTb);
+        this.dataSave(this.selectionData[remarkTb], remarkTb);
       }
     },
     async dataSave(newData, remarkTb) {

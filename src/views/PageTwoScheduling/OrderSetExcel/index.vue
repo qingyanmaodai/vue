@@ -1,9 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <ComAsideTree
         ref="asideRef"
@@ -17,10 +14,7 @@
       />
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -35,55 +29,37 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
-              </el-col>
+              <el-col :span="20" class="flex_flex_end"> </el-col>
             </el-row>
           </div>
-          <div
-            class="flex_column"
-            :style="{'height':height}"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
-            >
+          <div class="flex_column" :style="{ height: height }">
+            <div class="spreadContainer" v-loading="tableLoading[0]">
               <gc-spread-sheets
                 class="sample-spreadsheets"
                 @workbookInitialized="initSpread"
               >
-                <gc-worksheet :colCount=49></gc-worksheet>
+                <gc-worksheet :colCount="49"></gc-worksheet>
               </gc-spread-sheets>
             </div>
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
-              >SysID:6736
+              <span @click="toPageSetting" class="primaryColor cursor"
+                >SysID:6736
               </span>
             </div>
             <div class="flex">
               <el-pagination
                 background
-                @size-change="val=>pageSize(val,0)"
+                @size-change="(val) => pageSize(val, 0)"
                 :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[
-              200,
-              500,
-              1000,
-              3000,
-              5000,
-              10000
-
-            ]"
+                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
                 :page-size="tablePagination[0].pageSize"
                 :total="tablePagination[0].pageTotal"
-                @current-change="val=>pageChange(val,0)"
+                @current-change="(val) => pageChange(val, 0)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
@@ -102,13 +78,7 @@ import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 const GCsheets = GC.Spread.Sheets;
 import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
@@ -152,7 +122,7 @@ export default {
       ],
       btnForm: [],
       parmsBtn: [
-       {
+        {
           ButtonCode: "save",
           BtnName: "下达至预排",
           isLoading: false,
@@ -160,7 +130,7 @@ export default {
           Type: "success",
           Icon: "",
           Size: "small",
-           Params: "3",
+          Params: "3",
         },
         {
           ButtonCode: "save",
@@ -173,7 +143,6 @@ export default {
           Params: "2",
         },
         {
-
           ButtonCode: "save",
           BtnName: "下达至日计划",
           isLoading: false,
@@ -181,7 +150,7 @@ export default {
           Type: "success",
           Icon: "",
           Size: "small",
-         Params:"1",
+          Params: "1",
         },
         /*
          {
@@ -478,7 +447,7 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -613,7 +582,7 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       let colHeader1 = [""];
       let colInfos = [];
-      
+
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "ProcessGroupID") {
           colInfos.push({
@@ -657,7 +626,6 @@ export default {
         new HeaderCheckBoxCellType(),
         GCsheets.SheetArea.colHeader
       );
-
 
       var row = sheet.getRange(
         0,
@@ -736,7 +704,7 @@ export default {
       sheet.frozenColumnCount(1);
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;

@@ -1,60 +1,60 @@
 <!--菜单设置-->
 <template>
   <div class="container" v-loading="adminLoading">
-      <div class="admin_head" ref="headRef">
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          @btnClick="btnClick"
-        />
-      </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"
-                ><span class="title">{{ title }}</span></el-col
-              >
-              <el-col :span="20" class="flex_flex_end"> </el-col>
-            </el-row>
+    <div class="admin_head" ref="headRef">
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
+    </div>
+    <div>
+      <div class="admin_content">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end"> </el-col>
+          </el-row>
+        </div>
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
+              <gc-worksheet></gc-worksheet>
+            </gc-spread-sheets>
           </div>
-          <div class="flex_column" :style="{ height: height }">
-            <div class="spreadContainer" v-loading="tableLoading[0]">
-              <gc-spread-sheets
-                class="sample-spreadsheets"
-                @workbookInitialized="initSpread"
-              >
-                <gc-worksheet></gc-worksheet>
-              </gc-spread-sheets>
-            </div>
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span @click="toPageSetting" class="primaryColor cursor"
+              >SysID:6735
+            </span>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span @click="toPageSetting" class="primaryColor cursor"
-                >SysID:6735
-              </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize"
-                :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -69,13 +69,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-}  from "../WeekSet/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -145,7 +139,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionDate" },
         },
-          {
+        {
           ButtonCode: "computedmating",
           BtnName: "自动计算",
           isLoading: false,
@@ -165,7 +159,7 @@ export default {
         //   Size: "small",
         //   Params: { Type: "1" },
         // },
-        
+
         //       {
         //   ButtonCode: "computedmating",
         //   BtnName: "下达至分配拉线",
@@ -177,7 +171,6 @@ export default {
         //   Params: "2",
         // },
         {
-
           ButtonCode: "computedmating",
           BtnName: "下达至日计划",
           isLoading: false,
@@ -185,7 +178,7 @@ export default {
           Type: "success",
           Icon: "",
           Size: "small",
-         Params:"1",
+          Params: "1",
         },
       ],
       tableData: [[]],
@@ -204,7 +197,7 @@ export default {
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
-      colInfos:[]
+      colInfos: [],
     };
   },
   watch: {},
@@ -335,7 +328,7 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-    this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -419,7 +412,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.getOrgData();
-       
       }
     },
     // 验证数据
@@ -440,7 +432,7 @@ export default {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = 6735;
-       form["ControlID"] = '207';
+      form["ControlID"] = "207";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -456,7 +448,7 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
-        // 下达
+    // 下达
     async MOPlanSaveToDayPlan(remarkTb, index, MOSchedulingType) {
       let resultTag = this.getSelectionData(0);
       if (resultTag) {
@@ -469,7 +461,7 @@ export default {
         m["MOSchedulingType"] = MOSchedulingType;
       });
       this.adminLoading = true;
-      let res = await GetSearch(submitData,'/APSAPI/MOPlanSaveToDayPlan');
+      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(0);
@@ -488,7 +480,7 @@ export default {
         });
       }
     },
-      // 获取选中的数据
+    // 获取选中的数据
     getSelectionData(tag) {
       let resultTag = false;
       let sheet = this.spread.getActiveSheet();
@@ -526,8 +518,8 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       sheet.defaults.rowHeaderColWidth = 50;
       let colHeader1 = [];
-  
-     this.colInfos=[];
+
+      this.colInfos = [];
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           this.colInfos.push({
@@ -573,36 +565,48 @@ export default {
       // 冻结第一列
       sheet.frozenColumnCount(5);
 
+      sheet.setRowCount(5, GC.Spread.Sheets.SheetArea.viewport);
+      sheet.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
+      //设置默认样式。
+      var defaultStyle = new GC.Spread.Sheets.Style();
+      //defaultStyle.backColor = "LemonChiffon";
+      //defaultStyle.foreColor = "Red";
+      defaultStyle.font =
+        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
 
+      defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
+      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.showEllipsis = true;
+      sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
+      // 设置整个列头的背景色和前景色。
+      var row = sheet.getRange(
+        0,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.SheetArea.colHeader
+      );
+      row.backColor("#F3F3F3");
 
-sheet.setRowCount(5, GC.Spread.Sheets.SheetArea.viewport);
-sheet.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
-//设置默认样式。
-var defaultStyle = new GC.Spread.Sheets.Style();
-//defaultStyle.backColor = "LemonChiffon";
-//defaultStyle.foreColor = "Red";
- defaultStyle.font="12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
- 
-defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.showEllipsis = true;
-sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-
-
- 
-
-   // 设置整个列头的背景色和前景色。
-   var row = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-   row.backColor("#F3F3F3");
- 
- 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(this.colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
@@ -616,7 +620,6 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
             GC.Spread.Sheets.SheetArea.viewport
           );
           cell.foreColor("gray");
-          
         }
 
         cellIndex++;
@@ -770,7 +773,7 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       let res = await GetSearchData({
         dicID: 36,
         OrganizeTypeID: 6,
-         OrganizeIDs: this.userInfo.OrganizeID,
+        OrganizeIDs: this.userInfo.OrganizeID,
       });
       const { data, forms, result, msg } = res.data;
       if (result) {
@@ -841,7 +844,7 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
- 
+
       this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       this.dataSearch(0);
       // this.getLineData(data.OrganizeID);
@@ -947,18 +950,16 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       }
       // }
     },
-//正排倒排计算
-   async MOPlanStep1Calculation(t,t2,Type)
-    {
-    
-  let sheet = this.spread.getActiveSheet();
+    //正排倒排计算
+    async MOPlanStep1Calculation(t, t2, Type) {
+      let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          if (x.isChecked||true) {
-            x["Type"]=Type.Type
-            x["isChecked"]=x.isChecked
+          if (x.isChecked || true) {
+            x["Type"] = Type.Type;
+            x["isChecked"] = x.isChecked;
             submitData.push(x);
           }
         });
@@ -967,40 +968,37 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
-       let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
+        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
         const { data, forms, result, msg } = res.data;
         if (result) {
-            console.log(data);
-            sheet.setDataSource(data);
-                sheet.bindColumns(this.colInfos);
+          console.log(data);
+          sheet.setDataSource(data);
+          sheet.bindColumns(this.colInfos);
 
-      let cellIndex = 0;
-      this.tableColumns[0].forEach((m) => {
-        //行，start,end
-        if(m.prop=='DbResult')
-        {
-  var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          cell.foreColor("red");
-        }
-        else{
-        if (m.isEdit) {
-          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-        } else {
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          cell.foreColor("gray");
-          
-        }
-        }
-        cellIndex++;
-      });
+          let cellIndex = 0;
+          this.tableColumns[0].forEach((m) => {
+            //行，start,end
+            if (m.prop == "DbResult") {
+              var cell = sheet.getCell(
+                -1,
+                cellIndex,
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              cell.foreColor("red");
+            } else {
+              if (m.isEdit) {
+                sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+              } else {
+                var cell = sheet.getCell(
+                  -1,
+                  cellIndex,
+                  GC.Spread.Sheets.SheetArea.viewport
+                );
+                cell.foreColor("gray");
+              }
+            }
+            cellIndex++;
+          });
           this.adminLoading = false;
           this.$message({
             message: msg,

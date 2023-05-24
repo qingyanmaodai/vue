@@ -109,19 +109,13 @@ import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComSpreadTable from "@/components/ComSpreadTable";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType
-} from "@/static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 import XLSX from "xlsx";
@@ -131,7 +125,7 @@ export default {
     ComSearch,
     ComVxeTable,
     DialogTable,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
@@ -147,7 +141,7 @@ export default {
         { ID: 5156 },
         { ID: 5156 },
         { ID: 5156 },
-        { ID: 5156 }
+        { ID: 5156 },
       ],
       // Status1: [
       //   { label: "待维护PO", value: 0 },
@@ -168,43 +162,43 @@ export default {
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
-        }
+          required: [], //获取必填项
+        },
       ],
       btnForm: [],
       spread: [[], [], [], [], []],
@@ -220,7 +214,7 @@ export default {
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
@@ -235,9 +229,9 @@ export default {
       losePrepareDate2: 1,
       ruleForm: {
         LineIDs: [],
-        ProducedDate: ""
+        ProducedDate: "",
       },
-      lines: []
+      lines: [],
     };
   },
   watch: {},
@@ -261,7 +255,7 @@ export default {
   },
   methods: {
     //获取子组件实例
-    workbookInitialized: function(workbook, remarkTb) {
+    workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
@@ -274,8 +268,8 @@ export default {
       this.$router.push({
         name: "FieldInfo",
         params: {
-          ID: id
-        }
+          ID: id,
+        },
       });
     },
     // excle表数据渲染
@@ -334,10 +328,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -365,7 +356,7 @@ export default {
               const color = row.colorMapping[key];
               cell.style({
                 backColor: color,
-                foreColor: "#FFFFFF"
+                foreColor: "#FFFFFF",
               });
               // 其他代码
             }
@@ -478,7 +469,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[1] = [];
       if (newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           if (x.isChecked) {
             this.selectionData[1].push(x);
           }
@@ -503,8 +494,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then(_ => {})
-        .catch(_ => {});
+        .then((_) => {})
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -572,7 +563,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -586,15 +577,15 @@ export default {
       if (column.property == "IsCompleteInspect") {
         if (row.IsCompleteInspect == "未开始") {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else if (row.IsCompleteInspect == "进行中") {
           return {
-            backgroundColor: "#fdfd8f"
+            backgroundColor: "#fdfd8f",
           };
         } else if (row.IsCompleteInspect == "已完成") {
           return {
-            backgroundColor: "#9fff9f"
+            backgroundColor: "#9fff9f",
           };
         }
       }
@@ -621,14 +612,14 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
             }
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
+              n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -638,7 +629,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -686,7 +677,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -708,10 +699,10 @@ export default {
       if (newData) {
         updateRecords = newData;
       } else {
-        let DirtyRows = sheet.getDirtyRows().map(row => row.item); //获取修改过的数据
-        let InsertRows = sheet.getInsertRows().map(row => row.item); //获取插入过的数据
-        let DeletedRows = sheet.getDeletedRows().map(row => row.item);
-        DeletedRows.forEach(item => {
+        let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+        let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+        let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+        DeletedRows.forEach((item) => {
           item["ElementDeleteFlag"] = 1;
         }); //获取被删除的数据
         updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
@@ -728,7 +719,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -736,7 +727,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -750,14 +741,14 @@ export default {
       this.$confirm(
         "确定要退回的【" + this.selectionData[remarkTb].length + "】数据吗"
       )
-        .then(_ => {
-          this.selectionData[remarkTb].forEach(x => {
+        .then((_) => {
+          this.selectionData[remarkTb].forEach((x) => {
             x["ElementDeleteFlag"] = 1;
           });
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 导入并分析模板
     dataImport(remarkTb, index, params) {
@@ -775,10 +766,10 @@ export default {
         this.$message.error("仅支持一个文件上传");
       } else {
         this.$confirm("确定要导入并分析吗？")
-          .then(_ => {
+          .then((_) => {
             _this.importExcel(this.file);
           })
-          .catch(_ => {});
+          .catch((_) => {});
       }
     },
     //导入解析excel
@@ -788,19 +779,19 @@ export default {
       const result = [];
       const reader = new FileReader(); //上传就解析文件
       var that = this;
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
           cellDates: true,
-          dateNF: "yyyy-MM-dd"
+          dateNF: "yyyy-MM-dd",
         });
-        this.wb.SheetNames.forEach(sheetName => {
+        this.wb.SheetNames.forEach((sheetName) => {
           result.push({
             sheetName: sheetName,
             sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
-              defval: null
-            })
+              defval: null,
+            }),
           });
         });
         that.dataSys(result); // 解析文件
@@ -943,13 +934,13 @@ export default {
           //异常集合
           this.adminLoading = false;
           let txt = "";
-          split.map(value => {
+          split.map((value) => {
             return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
           });
           this.$alert(txt, {
             dangerouslyUseHTMLString: true,
             title: "导入异常信息!",
-            customClass: "message-width"
+            customClass: "message-width",
           });
 
           return;
@@ -968,14 +959,14 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
         } else {
@@ -1006,7 +997,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -1020,7 +1011,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           if (x.isChecked) {
             this.selectionData[this.tagRemark].push(x);
           }
@@ -1042,7 +1033,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -1050,7 +1041,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } catch (error) {
@@ -1058,7 +1049,7 @@ export default {
           this.adminLoading = false;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>

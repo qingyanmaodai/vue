@@ -1,9 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <div class="admin_left">
         <div>
@@ -26,10 +23,7 @@
                   )
                 "
               ></el-input>
-              <el-dropdown
-                @command="handleCommand"
-                class="flex_inline"
-              >
+              <el-dropdown @command="handleCommand" class="flex_inline">
                 <img src="../../../assets/svg/dot.svg" />
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="1">展开全部</el-dropdown-item>
@@ -95,10 +89,7 @@
       </div>
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -113,21 +104,14 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              > </el-col>
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
+              >
+              <el-col :span="20" class="flex_flex_end"> </el-col>
             </el-row>
           </div>
-          <div
-            class="flex_column"
-            :style="{ height: height }"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
-            >
+          <div class="flex_column" :style="{ height: height }">
+            <div class="spreadContainer" v-loading="tableLoading[0]">
               <gc-spread-sheets
                 class="sample-spreadsheets"
                 @workbookInitialized="initSpread"
@@ -138,10 +122,8 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
-              >SysID:{{sysID}}
+              <span @click="toPageSetting" class="primaryColor cursor"
+                >SysID:{{ sysID }}
               </span>
             </div>
             <div class="flex">
@@ -169,12 +151,9 @@
       width="30%"
     >
       <span>
-        <el-select
-          value-key="LineID"
-          v-model="selectLineValue"
-        >
+        <el-select value-key="LineID" v-model="selectLineValue">
           <el-option
-            v-for="(x,y) in lineOptions"
+            v-for="(x, y) in lineOptions"
             :label="x.OrganizeName"
             :value="x"
             :key="y"
@@ -182,20 +161,13 @@
           </el-option>
         </el-select>
       </span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          type=""
-          @click="LineDialog = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureChangeLineData"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="" @click="LineDialog = false" size="small"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="sureChangeLineData" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -214,13 +186,7 @@ import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "../../../static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -683,7 +649,7 @@ export default {
             cellIndex,
             GC.Spread.Sheets.SheetArea.viewport
           );
-         // cell.backColor("#c5ffc1");
+          // cell.backColor("#c5ffc1");
         } else {
           //   var cell = sheet.getCell(
           //     -1,
@@ -718,7 +684,7 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
@@ -727,8 +693,9 @@ export default {
       if (!currentRow[currentlabel]) {
         return;
       }
-      if(val==0){//输入0不触发自动计算
-        return
+      if (val == 0) {
+        //输入0不触发自动计算
+        return;
       }
       if (
         !currentRow[currentlabel].TotalHours ||
@@ -975,7 +942,7 @@ export default {
         return;
       }
       this.adminLoading = true;
-    let res = await SaveMOPlanStep4(submitData);
+      let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(0);

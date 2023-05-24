@@ -1,75 +1,59 @@
 <!--插件日计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-  
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          @btnClick="btnClick"
-        />
-      </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              > </el-col>
-            </el-row>
-          </div>
-          <div
-            class="flex_column"
-            :style="{ height: height }"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
+    </div>
+    <div>
+      <div class="admin_content">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <gc-spread-sheets
-                class="sample-spreadsheets"
-                @workbookInitialized="initSpread"
-              >
-                <gc-worksheet></gc-worksheet>
-              </gc-spread-sheets>
-            </div>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
+          </el-row>
+        </div>
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
+              <gc-worksheet></gc-worksheet>
+            </gc-spread-sheets>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span @click="toPageSetting" class="primaryColor cursor"
               >SysID:7945
-              </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize"
-                :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            </span>
+          </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -85,19 +69,13 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
-    GetSearch,
+  GetSearch,
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
@@ -155,7 +133,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData" },
         },
-          {
+        {
           ButtonCode: "save",
           BtnName: "重排",
           isLoading: false,
@@ -185,17 +163,15 @@ export default {
       selectionData: [[]],
     };
   },
-  activated()
-  {
-    if(this.spread)
-    {
+  activated() {
+    if (this.spread) {
       this.spread.refresh();
     }
   },
   watch: {},
   created() {
     _this = this;
-   this.adminLoading = true;
+    this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
   },
@@ -320,86 +296,85 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
-   async dataDel(remarkTb, index, parms) {
+    async dataDel(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
       let newData = [];
 
-      this.$confirm("确定要退回的【" + this[parms.dataName][remarkTb].length + "】数据吗，如果已经报工则无法退回？")
+      this.$confirm(
+        "确定要退回的【" +
+          this[parms.dataName][remarkTb].length +
+          "】数据吗，如果已经报工则无法退回？"
+      )
         .then((_) => {
-
-                if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ElementDeleteFlag"] = 1;
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
-          newData.push(obj2);
-        });
-      }
-           this.adminLoading = true;
+          if (parms && parms.dataName) {
+            if (this[parms.dataName][remarkTb].length == 0) {
+              this.$message.error("请单击需要操作的数据！");
+              return;
+            } else {
+              this[parms.dataName][remarkTb].forEach((x) => {
+                let obj = x;
+                obj["ElementDeleteFlag"] = 1;
+                newData.push(obj);
+              });
+            }
+          } else {
+            this.tableData[remarkTb].forEach((y) => {
+              let obj2 = y;
+              obj2["ElementDeleteFlag"] = 1;
+              newData.push(obj2);
+            });
+          }
+          this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
-    resetScheduling()
-    {
-        this.$confirm("确定要重新排全部数据吗？")
+    resetScheduling() {
+      this.$confirm("确定要重新排全部数据吗？")
         .then(async (_) => {
-  this.adminLoading = true;
-  
-      let sheet = this.spread.getActiveSheet();
-      let submitData = sheet.getDataSource();
-       submitData.forEach((m) => {
-        m["isChecked"] = true;
-       
-      });
-      if(submitData.length>=0)
-      {
-      this.adminLoading = true;
-      let res =  await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan?isPlan=1");
-      const { result, data, count, msg } = res.data;
-      if (result) {
-             this.dataSearch(0);
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-      
-      }
-      else{
+          this.adminLoading = true;
 
-           this.$message({
-          message: '未有数据',
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+          let sheet = this.spread.getActiveSheet();
+          let submitData = sheet.getDataSource();
+          submitData.forEach((m) => {
+            m["isChecked"] = true;
+          });
+          if (submitData.length >= 0) {
+            this.adminLoading = true;
+            let res = await GetSearch(
+              submitData,
+              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.dataSearch(0);
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "success",
+                dangerouslyUseHTMLString: true,
+              });
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+            this.$message({
+              message: "未有数据",
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         })
         .catch((_) => {});
-    
     },
     // 获取选中的数据
     getSelectionData() {
@@ -466,9 +441,9 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        console.log('gettable')
+        console.log("gettable");
         this.getOrgData();
-           // this.dataSearch(0);
+        // this.dataSearch(0);
       }
     },
     // 验证数据
@@ -485,16 +460,14 @@ export default {
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
-        
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = 7945;
       let res = await GetSearchData(form);
-   
+
       const { result, data, count, msg } = res.data;
       if (result) {
-   
         this.$set(this.tableData, remarkTb, data);
         this.setData();
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -518,7 +491,7 @@ export default {
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      console.log(this.checkBoxCellTypeLine)
+      console.log(this.checkBoxCellTypeLine);
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -593,35 +566,42 @@ export default {
       defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       // 冻结第一列
-    
+
       sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
-      let colindex=0;
-      colInfos.forEach(m=>{
-    
-        if(m.name=="Capacity")
-        {
-     var row = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
- 
-    row.foreColor("red");
-    return;
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
+      let colindex = 0;
+      colInfos.forEach((m) => {
+        if (m.name == "Capacity") {
+          var row = sheet.getRange(
+            -1,
+            colindex,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+
+          row.foreColor("red");
+          return;
         }
         colindex++;
-
       });
-this.tableData[0].forEach((row,index)=>{
- 
-if(!row["Code"])
-{
-       var row = sheet.getRange(index, -1, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
+      this.tableData[0].forEach((row, index) => {
+        if (!row["Code"]) {
+          var row = sheet.getRange(
+            index,
+            -1,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
 
-    row.backColor("#019fde");
-     row.foreColor("white");
-}
-});
+          row.backColor("#019fde");
+          row.foreColor("white");
+        }
+      });
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
         //行，start,end
@@ -657,11 +637,11 @@ if(!row["Code"])
         }
       });
       //表格编辑事件
-    
+
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-        
+
         _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
@@ -674,83 +654,62 @@ if(!row["Code"])
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-       let sheet = this.spread.getActiveSheet();
-       let dataSource=sheet.getDataSource();
-      if(val==null)
-      {
-        val=0;
+      let sheet = this.spread.getActiveSheet();
+      let dataSource = sheet.getDataSource();
+      if (val == null) {
+        val = 0;
       }
       let currentRow = dataSource[rowIndex];
-      if(currentRow.ID==-1)
-      {
+      if (currentRow.ID == -1) {
         return false;
       }
       let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
-           if (false&&!currentRow[currentlabel]) {
-   
+      if (false && !currentRow[currentlabel]) {
         //不是天日的数量
-           currentlabel = this.tableColumns[0][colIndex].prop ;
-          if(currentlabel=='ViewSort')
-          {
-            val=currentRow[currentlabel];
-            if(val)
-            {
-
-              let newRowindex=1;
-              let flag=false;
-              let lineID=currentRow["LineID"];
+        currentlabel = this.tableColumns[0][colIndex].prop;
+        if (currentlabel == "ViewSort") {
+          val = currentRow[currentlabel];
+          if (val) {
+            let newRowindex = 1;
+            let flag = false;
+            let lineID = currentRow["LineID"];
             //循环上面
-             for(var r=0;r<dataSource.length-1;r++)
-             {
-         
-                let row = dataSource[r];
-                  if (lineID!=row["LineID"])
-                  {
-                    continue;
-                  }
-                let thisValue=newRowindex;//row[currentlabel];
-                  if(row["Code"]==null||row["Code"]=='')
-                  {
-                    break;
-                  }
-                if(r<rowIndex)
-                {//当前循环的在当前操作行的上面
-                  if(thisValue>=val&&flag===false)
-                  {
-                    newRowindex=val+1;
-                    flag=true;
-                  }
-                 
-                  thisValue=newRowindex;
-                   newRowindex++;
+            for (var r = 0; r < dataSource.length - 1; r++) {
+              let row = dataSource[r];
+              if (lineID != row["LineID"]) {
+                continue;
+              }
+              let thisValue = newRowindex; //row[currentlabel];
+              if (row["Code"] == null || row["Code"] == "") {
+                break;
+              }
+              if (r < rowIndex) {
+                //当前循环的在当前操作行的上面
+                if (thisValue >= val && flag === false) {
+                  newRowindex = val + 1;
+                  flag = true;
                 }
-                else if(r>rowIndex)
-                {//当前循环的在当前操作行的下面
-                  if(newRowindex==val)
-                  {
-                    newRowindex++;
-                  }
-                  
-                     thisValue=newRowindex;
-                     newRowindex++;
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else if (r > rowIndex) {
+                //当前循环的在当前操作行的下面
+                if (newRowindex == val) {
+                  newRowindex++;
                 }
-                else 
-                {
-                  thisValue=val;
-                }
-                 sheet.setValue(r, colIndex, thisValue);
-             }
-          
-                
-             
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else {
+                thisValue = val;
+              }
+              sheet.setValue(r, colIndex, thisValue);
             }
           }
-          else 
-          {
-          
-          }
-           sheet.setDataSource(this.tableData[0]);
-            return ;
+        } else {
+        }
+        sheet.setDataSource(this.tableData[0]);
+        return;
       }
       if (
         !currentRow[currentlabel].TotalHours ||
@@ -759,7 +718,7 @@ if(!row["Code"])
         this.$message.error("该天休息，上班时间为0");
         return;
       }
-     
+
       let Qty = parseInt(currentRow.OweQty);
       let Capacity = parseInt(currentRow.Capacity);
       let list = [];
@@ -768,7 +727,6 @@ if(!row["Code"])
       // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
       this.tableColumns[0].some((x, i) => {
         if (i <= colIndex) {
-          
           list.push(currentRow[x.prop]);
           if (x.prop2 && i != colIndex && currentRow[x.prop]) {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
@@ -778,7 +736,7 @@ if(!row["Code"])
         }
       });
       remainNum = Qty - editNum;
-      
+
       if (parseInt(val) > remainNum) {
         this.$message.error(
           "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
@@ -836,9 +794,8 @@ if(!row["Code"])
     },
     //////////////////////////////
     async getOrgData() {
-
-        this.getLineData(this.userInfo.WorkFlowInstanceID);
-        return ;
+      this.getLineData(this.userInfo.WorkFlowInstanceID);
+      return;
       this.treeListTmp = [];
       this.treeData = [];
       let form = {
@@ -950,7 +907,7 @@ if(!row["Code"])
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
-     // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       //this.dataSearch(0);
       this.getLineData(data.OrganizeID);
     },
@@ -976,7 +933,7 @@ if(!row["Code"])
         this.$message.error("没修改过任何数据！");
         return;
       }
-       
+
       this.adminLoading = true;
       let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;

@@ -160,13 +160,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -474,7 +468,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.getOrgData();
-       
       }
     },
     // 验证数据
@@ -565,36 +558,48 @@ export default {
       // 冻结第一列
       sheet.frozenColumnCount(5);
 
+      sheet.setRowCount(5, GC.Spread.Sheets.SheetArea.viewport);
+      sheet.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
+      //设置默认样式。
+      var defaultStyle = new GC.Spread.Sheets.Style();
+      //defaultStyle.backColor = "LemonChiffon";
+      //defaultStyle.foreColor = "Red";
+      defaultStyle.font =
+        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
 
+      defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
+      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+        "#CCCCCC",
+        GC.Spread.Sheets.LineStyle.min
+      );
+      defaultStyle.showEllipsis = true;
+      sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
+      // 设置整个列头的背景色和前景色。
+      var row = sheet.getRange(
+        0,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.SheetArea.colHeader
+      );
+      row.backColor("#F3F3F3");
 
-sheet.setRowCount(5, GC.Spread.Sheets.SheetArea.viewport);
-sheet.setColumnCount(5, GC.Spread.Sheets.SheetArea.viewport);
-//设置默认样式。
-var defaultStyle = new GC.Spread.Sheets.Style();
-//defaultStyle.backColor = "LemonChiffon";
-//defaultStyle.foreColor = "Red";
- defaultStyle.font="12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
- 
-defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
-defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder("#CCCCCC",GC.Spread.Sheets.LineStyle.min);
-defaultStyle.showEllipsis = true;
-sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-
-
- 
-
-   // 设置整个列头的背景色和前景色。
-   var row = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-   row.backColor("#F3F3F3");
- 
- 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
@@ -608,7 +613,6 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
             GC.Spread.Sheets.SheetArea.viewport
           );
           cell.foreColor("gray");
-          
         }
 
         cellIndex++;
@@ -833,7 +837,7 @@ sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
- 
+
       this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       this.dataSearch(0);
       // this.getLineData(data.OrganizeID);

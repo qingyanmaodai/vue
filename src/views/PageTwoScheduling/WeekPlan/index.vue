@@ -1,9 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <!-- <ComAsideTree
         ref="asideRef"
@@ -37,10 +34,7 @@
                   )
                 "
               ></el-input>
-              <el-dropdown
-                @command="handleCommand"
-                class="flex_inline"
-              >
+              <el-dropdown @command="handleCommand" class="flex_inline">
                 <img src="../../../assets/svg/dot.svg" />
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="1">展开全部</el-dropdown-item>
@@ -62,15 +56,10 @@
             @node-click="handleNodeClick"
           ></el-tree>
         </div>
-
- 
       </div>
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -85,21 +74,14 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              > </el-col>
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
+              >
+              <el-col :span="20" class="flex_flex_end"> </el-col>
             </el-row>
           </div>
-          <div
-            class="flex_column"
-            :style="{ height: height }"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
-            >
+          <div class="flex_column" :style="{ height: height }">
+            <div class="spreadContainer" v-loading="tableLoading[0]">
               <gc-spread-sheets
                 class="sample-spreadsheets"
                 @workbookInitialized="initSpread"
@@ -110,10 +92,8 @@
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
-              >SysID:7769
+              <span @click="toPageSetting" class="primaryColor cursor"
+                >SysID:7769
               </span>
             </div>
             <div class="flex">
@@ -148,13 +128,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "../DaySet/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -365,7 +339,7 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -484,7 +458,7 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = 7769;
       let res = await GetSearchData(form);
- 
+
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
@@ -588,7 +562,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
@@ -839,8 +813,8 @@ export default {
     handleNodeClick(data, node) {
       this.clickData = data;
       this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-     this.dataSearch(0);
-     // this.getLineData(data.OrganizeID);
+      this.dataSearch(0);
+      // this.getLineData(data.OrganizeID);
     },
     // 单击出来线别
     handleNodeClick2(data, node) {

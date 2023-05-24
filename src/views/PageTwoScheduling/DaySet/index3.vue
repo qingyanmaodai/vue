@@ -57,7 +57,15 @@
     </div>
 
     <!-- 弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="全局欠料"
+      :tableDialog="colDialogVisible"
+      :sysID="5165"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -73,13 +81,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -96,14 +98,14 @@ export default {
     ComSearch,
     ComReportTable,
     ComAsideTree,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-        OrderID:'',
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
+      colDialogVisible: false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -214,8 +216,7 @@ export default {
     this.getTableHeader();
   },
   activated() {
-    if(this.spread)
-    {
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -614,12 +615,16 @@ export default {
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
-        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//字符串格式
+            formatter: "@", //字符串格式
           });
         } else {
           colInfos.push({
@@ -683,7 +688,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {
@@ -754,17 +759,15 @@ export default {
       });
 
       let cellIndex = 0;
-            let viewSortIndex=0;//排序的索引
-      let lineIDIndex=0
+      let viewSortIndex = 0; //排序的索引
+      let lineIDIndex = 0;
       this.tableColumns[0].forEach((m) => {
         //行，start,end
-        if(m.prop=="ViewSort")
-        {
-          viewSortIndex=cellIndex;
+        if (m.prop == "ViewSort") {
+          viewSortIndex = cellIndex;
         }
-        if(m.prop=="LineID")
-        {
-          lineIDIndex=cellIndex;
+        if (m.prop == "LineID") {
+          lineIDIndex = cellIndex;
         }
         //行，start,end
         if (m.isEdit) {
@@ -798,7 +801,6 @@ export default {
             Commands.undoTransaction(context, options);
             return true;
           } else {
-          
             sheet.suspendPaint();
             sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
             //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
@@ -946,16 +948,17 @@ export default {
 
       // 表格单击单元格弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if(_this.tableColumns[0].length){
-            _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="Q1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
-                _this.dialogSearchForm.OweQty = 0 
-              }
-            })
-          }
+        if (_this.tableColumns[0].length) {
+          _this.tableColumns[0].map((item, index) => {
+            if (item.name === "Q1" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[_this.tagRemark][args.row].OrderID;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
       });
 
       this.spread.resumePaint();
@@ -969,8 +972,9 @@ export default {
       // let dataSource=sheet.getDataSource();
       if (val == null) {
         val = 0;
-      }else if(val==0){//输入0不触发自动计算
-        return
+      } else if (val == 0) {
+        //输入0不触发自动计算
+        return;
       }
       let currentRow = sheet.getDataItem(rowIndex); // dataSource[rowIndex];
       if (currentRow.ID == -1) {
@@ -1248,10 +1252,10 @@ export default {
           submitData.push(x.item);
         });
       }
-                newData =sheet.getInsertRows();
-          if (newData.length != 0) {
+      newData = sheet.getInsertRows();
+      if (newData.length != 0) {
         newData.forEach((x) => {
-          x.item["dicID"]=this.sysID;
+          x.item["dicID"] = this.sysID;
           submitData.push(x.item);
         });
       }
@@ -1285,27 +1289,29 @@ export default {
       this.getSelectionData();
       let newData = [];
 
-      this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
+      this.$confirm(
+        "确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？"
+      )
         .then((_) => {
-        if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ProductionStatus"] = 24
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-         obj["ProductionStatus"] = 24
-          newData.push(obj2);
-        });
-      }
-           this.adminLoading = true;
+          if (parms && parms.dataName) {
+            if (this[parms.dataName][remarkTb].length == 0) {
+              this.$message.error("请选择需要操作的数据！");
+              return;
+            } else {
+              this[parms.dataName][remarkTb].forEach((x) => {
+                let obj = x;
+                obj["ProductionStatus"] = 24;
+                newData.push(obj);
+              });
+            }
+          } else {
+            this.tableData[remarkTb].forEach((y) => {
+              let obj2 = y;
+              obj["ProductionStatus"] = 24;
+              newData.push(obj2);
+            });
+          }
+          this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});

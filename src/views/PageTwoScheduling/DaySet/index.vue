@@ -1,79 +1,71 @@
 <!--菜单设置-->
 <!-- 四部日计划 -->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-  
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          @btnClick="btnClick"
-        />
-      </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              > </el-col>
-            </el-row>
-          </div>
-          <div
-            class="flex_column"
-            :style="{ height: height }"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
+    </div>
+    <div>
+      <div class="admin_content">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <gc-spread-sheets
-                class="sample-spreadsheets"
-                @workbookInitialized="initSpread"
-              >
-                <gc-worksheet></gc-worksheet>
-              </gc-spread-sheets>
-            </div>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
+          </el-row>
+        </div>
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
+              <gc-worksheet></gc-worksheet>
+            </gc-spread-sheets>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span @click="toPageSetting" class="primaryColor cursor"
               >SysID:6734
-              </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize"
-                :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            </span>
+          </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- 弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <!-- 弹框-->
+    <DialogTable
+      title="全局欠料"
+      :tableDialog="colDialogVisible"
+      :sysID="5165"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -89,19 +81,13 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
-    GetSearch,
+  GetSearch,
   GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
@@ -112,14 +98,14 @@ export default {
     ComSearch,
     ComReportTable,
     ComAsideTree,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-        OrderID:'',
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
+      colDialogVisible: false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -175,7 +161,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData" },
         },
-             {
+        {
           ButtonCode: "SyncSAP",
           BtnName: "同步SAP",
           isLoading: false,
@@ -185,7 +171,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionData" },
         },
-          {
+        {
           ButtonCode: "save",
           BtnName: "重排",
           isLoading: false,
@@ -211,9 +197,9 @@ export default {
       spread: null,
       adminLoading: false,
       checkBoxCellTypeLine: "",
-         isOpen: true,
+      isOpen: true,
       selectionData: [[]],
-          NoWorkHour: [],
+      NoWorkHour: [],
       LineViewSort: [],
       spread: null,
       sheetSelectRows: [],
@@ -223,14 +209,12 @@ export default {
   watch: {},
   created() {
     _this = this;
-   this.adminLoading = true;
+    this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
   },
-    activated()
-  {
-    if(this.spread)
-    {
+  activated() {
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -243,26 +227,25 @@ export default {
     // setTimeout(() => {
     //   this.setHeight();
     // }, 300);
-     this.keyDown()
+    this.keyDown();
   },
   methods: {
     // 监听键盘
-keyDown() {
-    document.onkeydown = (e) => {
-        //事件对象兼容
-        let e1 = e || event || window.event || arguments.callee.caller.arguments[0]
+    keyDown() {
+      document.onkeydown = (e) => {
+        //事件对象兼容
+        let e1 =
+          e || event || window.event || arguments.callee.caller.arguments[0];
 
- if(e.ctrlKey&&e.keyCode==83)
-{ 
- e.preventDefault();
- e.returnValue=false;
- 
- this.dataSaveDay()
- return false;
-}
-       
-    }
-},
+        if (e.ctrlKey && e.keyCode == 83) {
+          e.preventDefault();
+          e.returnValue = false;
+
+          this.dataSaveDay();
+          return false;
+        }
+      };
+    },
     initSpread: function (spread) {
       this.spread = spread;
     },
@@ -373,7 +356,7 @@ keyDown() {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -381,33 +364,36 @@ keyDown() {
       this.getSelectionData();
       let newData = [];
 
-      this.$confirm("确定要退回的【" + this[parms.dataName][remarkTb].length + "】数据吗，如果已经报工则无法退回？")
+      this.$confirm(
+        "确定要退回的【" +
+          this[parms.dataName][remarkTb].length +
+          "】数据吗，如果已经报工则无法退回？"
+      )
         .then((_) => {
-
-                if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ElementDeleteFlag"] = 1;
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
-          newData.push(obj2);
-        });
-      }
-           this.adminLoading = true;
+          if (parms && parms.dataName) {
+            if (this[parms.dataName][remarkTb].length == 0) {
+              this.$message.error("请单击需要操作的数据！");
+              return;
+            } else {
+              this[parms.dataName][remarkTb].forEach((x) => {
+                let obj = x;
+                obj["ElementDeleteFlag"] = 1;
+                newData.push(obj);
+              });
+            }
+          } else {
+            this.tableData[remarkTb].forEach((y) => {
+              let obj2 = y;
+              obj2["ElementDeleteFlag"] = 1;
+              newData.push(obj2);
+            });
+          }
+          this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
-       updateSAP(remarkTb, index, parms) {
+    updateSAP(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
       let newData = [];
@@ -418,89 +404,88 @@ keyDown() {
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-       
+
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-    
+
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要同步的【" + newData.length + "】数据吗，如果已经同步过则无法再次同步")
+      this.$confirm(
+        "确定要同步的【" +
+          newData.length +
+          "】数据吗，如果已经同步过则无法再次同步"
+      )
         .then(async (_) => {
-           this.adminLoading = true;
-    
-      let res = await    GetSearch(newData, "/APSAPI/UpdateERPInfo");
-      const { result, data, count, msg } = res.data;
-       
-      if (result) {
-       
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+          this.adminLoading = true;
+
+          let res = await GetSearch(newData, "/APSAPI/UpdateERPInfo");
+          const { result, data, count, msg } = res.data;
+
+          if (result) {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         })
         .catch((_) => {});
     },
-    resetScheduling()
-    {
-        this.$confirm("确定要重新排全部数据吗？")
+    resetScheduling() {
+      this.$confirm("确定要重新排全部数据吗？")
         .then(async (_) => {
-  this.adminLoading = true;
-  
-      let sheet = this.spread.getActiveSheet();
-      let submitData = sheet.getDataSource();
-       submitData.forEach((m) => {
-        m["isChecked"] = true;
-       
-      });
-      if(submitData.length>=0)
-      {
-      this.adminLoading = true;
-      let res =  await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan?isPlan=1");
-      const { result, data, count, msg } = res.data;
-      if (result) {
-             this.dataSearch(0);
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-      
-      }
-      else{
+          this.adminLoading = true;
 
-           this.$message({
-          message: '未有数据',
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+          let sheet = this.spread.getActiveSheet();
+          let submitData = sheet.getDataSource();
+          submitData.forEach((m) => {
+            m["isChecked"] = true;
+          });
+          if (submitData.length >= 0) {
+            this.adminLoading = true;
+            let res = await GetSearch(
+              submitData,
+              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.dataSearch(0);
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "success",
+                dangerouslyUseHTMLString: true,
+              });
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+            this.$message({
+              message: "未有数据",
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         })
         .catch((_) => {});
-    
     },
     // 获取选中的数据
     getSelectionData() {
@@ -567,9 +552,9 @@ keyDown() {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        console.log('gettable')
+        console.log("gettable");
         this.getOrgData();
-           // this.dataSearch(0);
+        // this.dataSearch(0);
       }
     },
     // 验证数据
@@ -586,17 +571,15 @@ keyDown() {
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
-        
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = this.sysID;
-          form["ControlID"]=this.userInfo.WorkFlowInstanceID;
+      form["ControlID"] = this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
-   
+
       const { result, data, count, msg } = res.data;
       if (result) {
-   
         this.$set(this.tableData, remarkTb, data);
         this.setData();
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -620,7 +603,7 @@ keyDown() {
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      console.log(this.checkBoxCellTypeLine)
+      console.log(this.checkBoxCellTypeLine);
       this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
@@ -629,12 +612,16 @@ keyDown() {
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
-        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//字符串格式
+            formatter: "@", //字符串格式
           });
         } else {
           colInfos.push({
@@ -667,110 +654,116 @@ keyDown() {
         colInfos[0][name] = checkbox[name];
       }
 
-  
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
         "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
       defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-    defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
-      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
-      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
-      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder("gray", GC.Spread.Sheets.LineStyle.thin);
+      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+        "gray",
+        GC.Spread.Sheets.LineStyle.thin
+      );
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+        "gray",
+        GC.Spread.Sheets.LineStyle.thin
+      );
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+        "gray",
+        GC.Spread.Sheets.LineStyle.thin
+      );
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+        "gray",
+        GC.Spread.Sheets.LineStyle.thin
+      );
       defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
-
- 
       // 冻结第一列
-    
+
       sheet.frozenColumnCount(this.tableColumns[0][0].FixCount);
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
-      
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
- let colindex=0;
-      for(let m of colInfos)
-      {
-   if(m.name=="Capacity")
-        {
-        var rowSheet = sheet.getRange(-1, colindex, 1, 1, GC.Spread.Sheets.SheetArea.viewport);
-      rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
-     rowSheet.foreColor("red");
-      break;
+      let colindex = 0;
+      for (let m of colInfos) {
+        if (m.name == "Capacity") {
+          var rowSheet = sheet.getRange(
+            -1,
+            colindex,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
+          rowSheet.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+          rowSheet.foreColor("red");
+          break;
         }
         colindex++;
       }
-   
 
-
-this.tableData[0].forEach((row,index)=>{
- 
-    var rowSheet = sheet.getRange(index, 0, 1, colindex, GC.Spread.Sheets.SheetArea.viewport);
-     var rowSheet2 = sheet.getRange(index, colindex, 1, colInfos.length-colindex, GC.Spread.Sheets.SheetArea.viewport);
-if(row["Code"]==null)
-{
-    
- 
-     rowSheet.backColor("#A0CFFF");
-     rowSheet.foreColor("balck");
-        rowSheet2.backColor("#A0CFFF");
-     rowSheet2.foreColor("balck");
-     
-}
-else if(row["MFGOrganizeID"]===162)
-{
-     // row.backColor();
-     rowSheet.backColor("#FFFF00");
-       rowSheet.foreColor("black");
-        rowSheet2.backColor("#FFFF00");
-      
-}
-else 
-{
-     // row.backColor();
-        rowSheet.foreColor("black");
-       rowSheet.backColor("#FFFFFF");
-       rowSheet.foreColor("black");
-        rowSheet2.backColor("#FFFFFF");
-}
-  let cellIndex=0;
-     this.tableColumns[0].forEach((m) => {
-        //行，start,end
-        if (m.DataType=="bit"&&m.isEdit) {
-         
-
-            
-         var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-cellType.caption("");
-cellType.textTrue("");
-cellType.textFalse("");
-cellType.textIndeterminate("");
-cellType.textAlign(GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center);
-cellType.isThreeState(false);
-sheet.getCell(index, cellIndex).cellType(cellType);
-        }  
- cellIndex++;
+      this.tableData[0].forEach((row, index) => {
+        var rowSheet = sheet.getRange(
+          index,
+          0,
+          1,
+          colindex,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+        var rowSheet2 = sheet.getRange(
+          index,
+          colindex,
+          1,
+          colInfos.length - colindex,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+        if (row["Code"] == null) {
+          rowSheet.backColor("#A0CFFF");
+          rowSheet.foreColor("balck");
+          rowSheet2.backColor("#A0CFFF");
+          rowSheet2.foreColor("balck");
+        } else if (row["MFGOrganizeID"] === 162) {
+          // row.backColor();
+          rowSheet.backColor("#FFFF00");
+          rowSheet.foreColor("black");
+          rowSheet2.backColor("#FFFF00");
+        } else {
+          // row.backColor();
+          rowSheet.foreColor("black");
+          rowSheet.backColor("#FFFFFF");
+          rowSheet.foreColor("black");
+          rowSheet2.backColor("#FFFFFF");
+        }
+        let cellIndex = 0;
+        this.tableColumns[0].forEach((m) => {
+          //行，start,end
+          if (m.DataType == "bit" && m.isEdit) {
+            var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+            cellType.caption("");
+            cellType.textTrue("");
+            cellType.textFalse("");
+            cellType.textIndeterminate("");
+            cellType.textAlign(
+              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            );
+            cellType.isThreeState(false);
+            sheet.getCell(index, cellIndex).cellType(cellType);
+          }
+          cellIndex++;
+        });
       });
 
-  
-});
- 
-     
       let cellIndex = 0;
-          let viewSortIndex=0;//排序的索引
-      let lineIDIndex=0
+      let viewSortIndex = 0; //排序的索引
+      let lineIDIndex = 0;
       this.tableColumns[0].forEach((m) => {
         //行，start,end
-        if(m.prop=="ViewSort")
-        {
-          viewSortIndex=cellIndex;
+        if (m.prop == "ViewSort") {
+          viewSortIndex = cellIndex;
         }
-        if(m.prop=="LineID")
-        {
-          lineIDIndex=cellIndex;
+        if (m.prop == "LineID") {
+          lineIDIndex = cellIndex;
         }
         //行，start,end
         if (m.isEdit) {
@@ -787,23 +780,13 @@ sheet.getCell(index, cellIndex).cellType(cellType);
             cellIndex,
             GC.Spread.Sheets.SheetArea.viewport
           );
-            cell.foreColor("gray");
+          cell.foreColor("gray");
         }
 
         cellIndex++;
       });
-       sheet.options.protectionOptions.allowResizeColumns= true;
-//sheet.options.isProtected = true;
-
-
-
-
-
-
-
-
-
-
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      //sheet.options.isProtected = true;
 
       var insertRowsCopyStyle = {
         canUndo: true,
@@ -832,8 +815,8 @@ sheet.getCell(index, cellIndex).cellType(cellType);
                 sheet.getColumnCount(),
                 GC.Spread.Sheets.CopyToOptions.all
               );
-           
-          //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+
+              //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
               sheet.deleteRows(
                 _this.sheetSelectObj.start + _this.sheetSelectRows.length,
                 _this.sheetSelectObj.count
@@ -850,42 +833,31 @@ sheet.getCell(index, cellIndex).cellType(cellType);
                 sheet.getColumnCount(),
                 GC.Spread.Sheets.CopyToOptions.all
               );
-            //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
               sheet.deleteRows(
                 _this.sheetSelectObj.start,
                 _this.sheetSelectObj.count
               );
-              
             }
             let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
- 
-            let lineID=_this.sheetSelectRows[0][lineIDIndex]
-            let isFind=false;
-            let viewSort=1;
-   
 
-            for(var i=0;i<count;i++ )
-            {
- 
-              if(isFind==false&&sheet.getValue(i,lineIDIndex)==lineID)
-              {
-                  isFind=true;      
-                
+            let lineID = _this.sheetSelectRows[0][lineIDIndex];
+            let isFind = false;
+            let viewSort = 1;
+
+            for (var i = 0; i < count; i++) {
+              if (isFind == false && sheet.getValue(i, lineIDIndex) == lineID) {
+                isFind = true;
               }
-    if(isFind&&sheet.getValue(i,lineIDIndex)!=lineID)
-              {
-               
+              if (isFind && sheet.getValue(i, lineIDIndex) != lineID) {
                 break;
               }
-              if(isFind)
-              {
-                sheet.setValue(i,viewSortIndex,viewSort);
+              if (isFind) {
+                sheet.setValue(i, viewSortIndex, viewSort);
                 viewSort++;
               }
-             
-                
             }
-      
+
             // Commands.startTransaction(context, options);
 
             // sheet.suspendPaint();
@@ -902,12 +874,9 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         },
       };
 
-
-
       this.spread
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
-  
 
       function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
@@ -950,19 +919,6 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         }
       );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
@@ -975,11 +931,11 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         }
       });
       //表格编辑事件
-    
+
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-        
+
         _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
@@ -988,18 +944,19 @@ sheet.getCell(index, cellIndex).cellType(cellType);
 
       // 表格单击单元格弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if(_this.tableColumns[0].length){
-            _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="Q1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
-                _this.dialogSearchForm.OweQty = 0 
-              }
-            })
-          }
+        if (_this.tableColumns[0].length) {
+          _this.tableColumns[0].map((item, index) => {
+            if (item.name === "Q1" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[_this.tagRemark][args.row].OrderID;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
       });
-      
+
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
@@ -1007,97 +964,77 @@ sheet.getCell(index, cellIndex).cellType(cellType);
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-       let sheet = this.spread.getActiveSheet();
-      let dataSource=sheet.getDataSource();
-      if(val==null)
-      {
-        val=0;
-      }else if(val==0){//输入0不触发自动计算
-        return
+      let sheet = this.spread.getActiveSheet();
+      let dataSource = sheet.getDataSource();
+      if (val == null) {
+        val = 0;
+      } else if (val == 0) {
+        //输入0不触发自动计算
+        return;
       }
-     let currentRow = dataSource[rowIndex];
-      if(currentRow.ID==-1)
-      {
+      let currentRow = dataSource[rowIndex];
+      if (currentRow.ID == -1) {
         return false;
       }
       let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
       if (!currentRow[currentlabel]) {
-   
         //不是天日的数量
-           currentlabel = this.tableColumns[0][colIndex].prop ;
-          if(currentlabel=='ViewSort')
-          {
-            val=currentRow[currentlabel];
-            if(val)
-            {
-
-              let newRowindex=1;
-              let flag=false;
-              let lineID=currentRow["LineID"];
+        currentlabel = this.tableColumns[0][colIndex].prop;
+        if (currentlabel == "ViewSort") {
+          val = currentRow[currentlabel];
+          if (val) {
+            let newRowindex = 1;
+            let flag = false;
+            let lineID = currentRow["LineID"];
             //循环上面
-             for(var r=0;r<dataSource.length-1;r++)
-             {
-              
-                let row = dataSource[r];
-                  if (lineID!=row["LineID"])
-                  {
-                    continue;
-                  }
-                let thisValue=newRowindex;//row[currentlabel];
-                  if(row["Code"]==null||row["Code"]=='')
-                  {
-                    break;
-                  }
-                if(r<rowIndex)
-                {//当前循环的在当前操作行的上面
-                  if(thisValue>=val&&flag===false)
-                  {
-                    newRowindex=val+1;
-                    flag=true;
-                  }
-                 
-                  thisValue=newRowindex;
-                   newRowindex++;
+            for (var r = 0; r < dataSource.length - 1; r++) {
+              let row = dataSource[r];
+              if (lineID != row["LineID"]) {
+                continue;
+              }
+              let thisValue = newRowindex; //row[currentlabel];
+              if (row["Code"] == null || row["Code"] == "") {
+                break;
+              }
+              if (r < rowIndex) {
+                //当前循环的在当前操作行的上面
+                if (thisValue >= val && flag === false) {
+                  newRowindex = val + 1;
+                  flag = true;
                 }
-                else if(r>rowIndex)
-                {//当前循环的在当前操作行的下面
-                  if(newRowindex==val)
-                  {
-                    newRowindex++;
-                  }
-                  
-                     thisValue=newRowindex;
-                     newRowindex++;
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else if (r > rowIndex) {
+                //当前循环的在当前操作行的下面
+                if (newRowindex == val) {
+                  newRowindex++;
                 }
-                else 
-                {
-                  thisValue=val;
-                }
-                 sheet.setValue(r, colIndex, thisValue);
-             }
-          
-                
-             
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else {
+                thisValue = val;
+              }
+              sheet.setValue(r, colIndex, thisValue);
             }
           }
-          else 
-          {
-          
-          }
-           sheet.setDataSource(this.tableData[0]);
-            return ;
+        } else {
+        }
+        sheet.setDataSource(this.tableData[0]);
+        return;
       }
       if (
         !currentRow[currentlabel].TotalHours ||
         parseInt(currentRow[currentlabel].TotalHours) <= 0
       ) {
         this.$message.error("该天休息，上班时间为0");
-         
-          sheet.setValue(rowIndex, colIndex, "");
-        
+
+        sheet.setValue(rowIndex, colIndex, "");
+
         return;
       }
-     
+
       let Qty = parseInt(currentRow.OweQty);
       let Capacity = parseInt(currentRow.Capacity);
       let list = [];
@@ -1106,7 +1043,6 @@ sheet.getCell(index, cellIndex).cellType(cellType);
       // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
       this.tableColumns[0].some((x, i) => {
         if (i <= colIndex) {
-          
           list.push(currentRow[x.prop]);
           if (x.prop2 && i != colIndex && currentRow[x.prop]) {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
@@ -1116,7 +1052,7 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         }
       });
       remainNum = Qty - editNum;
- 
+
       if (parseInt(val) > remainNum) {
         this.$message.error(
           "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
@@ -1174,9 +1110,8 @@ sheet.getCell(index, cellIndex).cellType(cellType);
     },
     //////////////////////////////
     async getOrgData() {
-
-        this.getLineData(this.userInfo.WorkFlowInstanceID);
-        return ;
+      this.getLineData(this.userInfo.WorkFlowInstanceID);
+      return;
       this.treeListTmp = [];
       this.treeData = [];
       let form = {
@@ -1236,7 +1171,7 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         );
         this.checkBoxCellTypeLine.items(newData);
         this.checkBoxCellTypeLine.itemHeight(24);
-       // this.formSearchs[0].datas.ControlID="202";
+        // this.formSearchs[0].datas.ControlID="202";
         this.getTableData(this.formSearchs[0].datas, 0);
       } else {
         this.adminLoading = false;
@@ -1288,7 +1223,7 @@ sheet.getCell(index, cellIndex).cellType(cellType);
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
-     // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
       //this.dataSearch(0);
       this.getLineData(data.OrganizeID);
     },
@@ -1303,10 +1238,9 @@ sheet.getCell(index, cellIndex).cellType(cellType);
     // 保存日计划
     async dataSaveDay() {
       let sheet = this.spread.getActiveSheet();
-        if(sheet.isEditing())
-  {
-    sheet.endEdit();
-  }
+      if (sheet.isEditing()) {
+        sheet.endEdit();
+      }
       let newData = sheet.getDirtyRows();
       let submitData = [];
       if (newData.length != 0) {
@@ -1314,10 +1248,10 @@ sheet.getCell(index, cellIndex).cellType(cellType);
           submitData.push(x.item);
         });
       }
-          newData =sheet.getInsertRows();
-          if (newData.length != 0) {
+      newData = sheet.getInsertRows();
+      if (newData.length != 0) {
         newData.forEach((x) => {
-          x.item["dicID"]=this.sysID;
+          x.item["dicID"] = this.sysID;
           submitData.push(x.item);
         });
       }
@@ -1325,7 +1259,7 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         this.$message.error("没修改过任何数据！");
         return;
       }
-       
+
       this.adminLoading = true;
       let res = await SaveMOPlanStep4(submitData);
       const { result, data, count, msg } = res.data;
@@ -1346,41 +1280,41 @@ sheet.getCell(index, cellIndex).cellType(cellType);
         });
       }
     },
-    async suspend(remarkTb, index, parms) 
-    {
+    async suspend(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
       let newData = [];
 
-      this.$confirm("确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？")
+      this.$confirm(
+        "确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？"
+      )
         .then((_) => {
-
-                if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ProductionStatus"] = 24
-            newData.push(obj);
-          });
-        }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-         obj["ProductionStatus"] = 24
-          newData.push(obj2);
-        });
-      }
-           this.adminLoading = true;
+          if (parms && parms.dataName) {
+            if (this[parms.dataName][remarkTb].length == 0) {
+              this.$message.error("请选择需要操作的数据！");
+              return;
+            } else {
+              this[parms.dataName][remarkTb].forEach((x) => {
+                let obj = x;
+                obj["ProductionStatus"] = 24;
+                newData.push(obj);
+              });
+            }
+          } else {
+            this.tableData[remarkTb].forEach((y) => {
+              let obj2 = y;
+              obj["ProductionStatus"] = 24;
+              newData.push(obj2);
+            });
+          }
+          this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
-    }
-    
+    },
+
     // 下拉选择事件
-   , handleCommand(val) {
+    handleCommand(val) {
       if (val == 1 && !this.isOpen) {
         this.isOpen = true;
         this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);

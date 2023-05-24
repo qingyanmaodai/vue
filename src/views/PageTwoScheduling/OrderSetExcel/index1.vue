@@ -4,7 +4,7 @@
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch
-          v-if="labelStatus1 == 0||labelStatus1 == 1||labelStatus1 == 2"
+          v-if="labelStatus1 == 0 || labelStatus1 == 1 || labelStatus1 == 2"
           ref="searchRef"
           :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[0].forms"
@@ -43,25 +43,25 @@
               </el-col>
               <el-col :span="20" class="flex_flex_end">
                 <div v-show="labelStatus1 == 1">
-                  <SPAN  >抓单日期范围：</SPAN>
-                  <el-date-picker 
-                  v-model="ReplyDate" type="daterange"
-            
-                  v-show="labelStatus1 != 4"
-                  size="small"
-                  value-format="yyyy-MM-dd"
-                  placeholder="选择开始时间"
-                  :clearable="false"
-                  :editable="false"
-                >
+                  <SPAN>抓单日期范围：</SPAN>
+                  <el-date-picker
+                    v-model="ReplyDate"
+                    type="daterange"
+                    v-show="labelStatus1 != 4"
+                    size="small"
+                    value-format="yyyy-MM-dd"
+                    placeholder="选择开始时间"
+                    :clearable="false"
+                    :editable="false"
+                  >
                   </el-date-picker>
-                <el-divider direction="vertical"></el-divider>
-              </div>
-              
+                  <el-divider direction="vertical"></el-divider>
+                </div>
+
                 <el-button
                   type="primary"
                   size="mini"
-                  v-show="labelStatus1 ==-1"
+                  v-show="labelStatus1 == -1"
                   @click="MOPlanStep1CalculationPre(0)"
                 >
                   预排运算
@@ -74,7 +74,7 @@
                 >
                   进入分线列表
                 </el-button>
-                 <el-button
+                <el-button
                   v-show="labelStatus1 == 1"
                   type="success"
                   size="mini"
@@ -128,53 +128,57 @@
               </el-col>
             </el-row>
           </div>
-          
-            <div v-show="labelStatus1 <=2">
-              <el-tabs v-model="activeName"  type="border-card" @tab-click="handleClick" class="tabs">
-                <el-tab-pane label="全部" name="all">
-                </el-tab-pane>
-                <el-tab-pane label="主需求" name="first">
-                </el-tab-pane>
-                <el-tab-pane label="辅需求" name="second">
-                </el-tab-pane>
-              </el-tabs>
-              
-            </div>
-            <div v-if="activeName&&labelStatus1 <=2||labelStatus1===4">
-                 <div class="admin_content">
-                  <div class="flex_column" :style="{ height: height }">
-                    <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
-                      <gc-spread-sheets
-                        class="sample-spreadsheets"
-                        @workbookInitialized="initSpread"
-                      >
-                        <gc-worksheet></gc-worksheet>
-                      </gc-spread-sheets>
-                    </div>
-                  </div>
-                  <div class="flex_row_spaceBtn pagination">
-                    <div>
-                      <span @click="toPageSetting" class="primaryColor cursor"
-                        >SysID:{{sysID[tagRemark].ID}}
-                      </span>
-                    </div>
-                    <div class="flex">
-                      <el-pagination
-                        background
-                        @size-change="(val) => pageSize(val, 0)"
-                        :current-page="tablePagination[tagRemark].pageIndex"
-                        :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                        :page-size="tablePagination[tagRemark].pageSize"
-                        :total="tablePagination[tagRemark].pageTotal"
-                        @current-change="(val) => pageChange(val, 0)"
-                        layout="total, sizes, prev, pager, next,jumper"
-                      >
-                      </el-pagination>
-                    </div>
-                  </div>
+
+          <div v-show="labelStatus1 <= 2">
+            <el-tabs
+              v-model="activeName"
+              type="border-card"
+              @tab-click="handleClick"
+              class="tabs"
+            >
+              <el-tab-pane label="全部" name="all"> </el-tab-pane>
+              <el-tab-pane label="主需求" name="first"> </el-tab-pane>
+              <el-tab-pane label="辅需求" name="second"> </el-tab-pane>
+            </el-tabs>
+          </div>
+          <div v-if="(activeName && labelStatus1 <= 2) || labelStatus1 === 4">
+            <div class="admin_content">
+              <div class="flex_column" :style="{ height: height }">
+                <div
+                  class="spreadContainer"
+                  v-loading="tableLoading[tagRemark]"
+                >
+                  <gc-spread-sheets
+                    class="sample-spreadsheets"
+                    @workbookInitialized="initSpread"
+                  >
+                    <gc-worksheet></gc-worksheet>
+                  </gc-spread-sheets>
                 </div>
               </div>
-            <!-- <ComVxeTable
+              <div class="flex_row_spaceBtn pagination">
+                <div>
+                  <span @click="toPageSetting" class="primaryColor cursor"
+                    >SysID:{{ sysID[tagRemark].ID }}
+                  </span>
+                </div>
+                <div class="flex">
+                  <el-pagination
+                    background
+                    @size-change="(val) => pageSize(val, 0)"
+                    :current-page="tablePagination[tagRemark].pageIndex"
+                    :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                    :page-size="tablePagination[tagRemark].pageSize"
+                    :total="tablePagination[tagRemark].pageTotal"
+                    @current-change="(val) => pageChange(val, 0)"
+                    layout="total, sizes, prev, pager, next,jumper"
+                  >
+                  </el-pagination>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <ComVxeTable
               ref="tableRefTwo"
               v-show="labelStatus1 == 3"
               :rowKey="'RowNumber'"
@@ -199,38 +203,45 @@
               @changeline="changeline"
               @sortChange="sortChange"
             /> -->
-            <ComVxeTable
-              ref="tableRefTwo"
-              v-show="labelStatus1 == 3"
-              :rowKey="'RowNumber'"
-              :height="height"
-              :hasSelect="true"
-              :tableData="tableData[1]"
-              :tableHeader="tableColumns[1]"
-              :tableLoading="tableLoading[1]"
-              :remark="1"
-              :sysID="sysID[1].ID"
-              :isEdit="isEdit"
-              :showFooter="true"
-              :includeFields="includeFields"
-              :cellStyle="cellStyle"
-              :tableRowClassName="tableRowClassName"
-              :isClear="isClear[1]"
-              :showPagination="true"
-              :pagination="tablePagination[1]"
-              @pageChange="pageChange"
-              @pageSize="pageSize"
-              @selectfun="selectFun"
-              @changeline="changeline"
-              @sortChange="sortChange"
-            />
-            <div style="color: red; font-weight: bold">{{ resultMsg }}</div>
-          
+          <ComVxeTable
+            ref="tableRefTwo"
+            v-show="labelStatus1 == 3"
+            :rowKey="'RowNumber'"
+            :height="height"
+            :hasSelect="true"
+            :tableData="tableData[1]"
+            :tableHeader="tableColumns[1]"
+            :tableLoading="tableLoading[1]"
+            :remark="1"
+            :sysID="sysID[1].ID"
+            :isEdit="isEdit"
+            :showFooter="true"
+            :includeFields="includeFields"
+            :cellStyle="cellStyle"
+            :tableRowClassName="tableRowClassName"
+            :isClear="isClear[1]"
+            :showPagination="true"
+            :pagination="tablePagination[1]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @selectfun="selectFun"
+            @changeline="changeline"
+            @sortChange="sortChange"
+          />
+          <div style="color: red; font-weight: bold">{{ resultMsg }}</div>
         </div>
       </div>
     </div>
     <!-- 点击齐套率弹框-->
-    <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="供需平衡"
+      :tableDialog="colDialogVisible"
+      :sysID="7968"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -247,13 +258,7 @@ import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComVxeTable from "@/components/ComVxeTable";
 import DialogTable from "@/components/Dialog/dialogTable";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "@/views/PageTwoScheduling/OrderSetExcel/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -278,17 +283,17 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComFormDialog,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
       // 是否匹配拉线
-      hasLineStatus:false,
-      activeName: 'all',
-      dialogSearchForm:{
-        OrderID:'',
+      hasLineStatus: false,
+      activeName: "all",
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
+      colDialogVisible: false,
       includeFields: ["Qty"], // 包含合计的字段
       labelStatus1: 1,
       Status1: [
@@ -313,7 +318,7 @@ export default {
         },
         {
           datas: {
-            OrderControlID:201,
+            OrderControlID: 201,
           },
           forms: [],
         },
@@ -330,17 +335,17 @@ export default {
           Methods: "save",
           Type: "success",
           Icon: "",
-          signName:1,
+          signName: 1,
           Size: "small",
         },
-               {
+        {
           ButtonCode: "save",
           BtnName: "保存",
           isLoading: false,
           Methods: "save4",
           Type: "success",
           Icon: "",
-          signName:3,
+          signName: 3,
           Size: "small",
         },
         // {
@@ -375,10 +380,10 @@ export default {
         //   Icon: "",
         // },
       ],
-      selectionData: [[], [],[],[]],
+      selectionData: [[], [], [], []],
       btnForm: [],
-      tableData: [[], [],[],[]],
-      tableColumns: [[], [],[],[]],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
       tableLoading: [false, false, false, false],
       isClear: [false, false, false, false],
       tablePagination: [
@@ -398,7 +403,11 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7942, AutoDays2: this.AutoDays2 }, { ID: 7943 },{ ID: 7921 }],
+      sysID: [
+        { ID: 7942, AutoDays2: this.AutoDays2 },
+        { ID: 7943 },
+        { ID: 7921 },
+      ],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: [],
@@ -406,7 +415,7 @@ export default {
       NoWorkHour: [],
       LineViewSort: [],
       spread: null,
-      spread2:null,
+      spread2: null,
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
@@ -420,7 +429,7 @@ export default {
     this.getTableHeader();
   },
   activated() {
-    if(this.spread){
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -430,16 +439,16 @@ export default {
     }, 500);
   },
   methods: {
-     handleClick(tab, event) {
+    handleClick(tab, event) {
       console.log(tab.name, event);
-      if(tab.name==='first'){
-        this.formSearchs[this.tagRemark].datas["Extend26"] = 1
-      }else if(tab.name==='second'){
-        this.formSearchs[this.tagRemark].datas["Extend26"] = 0
-      }else{
-        this.formSearchs[this.tagRemark].datas["Extend26"] = ''
+      if (tab.name === "first") {
+        this.formSearchs[this.tagRemark].datas["Extend26"] = 1;
+      } else if (tab.name === "second") {
+        this.formSearchs[this.tagRemark].datas["Extend26"] = 0;
+      } else {
+        this.formSearchs[this.tagRemark].datas["Extend26"] = "";
       }
-      this.dataSearch(this.tagRemark)
+      this.dataSearch(this.tagRemark);
     },
     async subSAP() {
       this.getSelectionData(1);
@@ -454,18 +463,17 @@ export default {
         //   if (m["Extend8"] != "已同步") {
         //     m["Extend8"] = "待同步";
         //   }
-           pushData.push(m);
+        pushData.push(m);
         // }
       });
 
-
       if (pushData.length > 0) {
-        let res = await GetSearch(pushData,'/APSAPI/UpdateOrderStartDate');
+        let res = await GetSearch(pushData, "/APSAPI/UpdateOrderStartDate");
         const { result, data, count, msg } = res.data;
-                this.adminLoading = false;
+        this.adminLoading = false;
         if (result) {
           this.dataSearch(0);
-  
+
           this.$message({
             message: msg,
             type: "success",
@@ -480,7 +488,7 @@ export default {
         }
       } else {
         this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
-                this.adminLoading = false;
+        this.adminLoading = false;
       }
     },
     schedulingPre() {
@@ -508,12 +516,16 @@ export default {
             cellType: this.checkBoxCellTypeLine,
             size: parseInt(x.width),
           });
-        }else if(x.DataType=='datetime'||x.DataType==='varchar'||x.DataType==='nvarchar'){
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//字符串格式
+            formatter: "@", //字符串格式
           });
         } else {
           colInfos.push({
@@ -528,27 +540,26 @@ export default {
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
-      
 
       // 选框
-      if(colInfos.length&&colInfos[0]['name']==='isChecked'){
+      if (colInfos.length && colInfos[0]["name"] === "isChecked") {
         sheet.setCellType(
-        0,
-        0,
-        new HeaderCheckBoxCellType(),
-        GCsheets.SheetArea.colHeader
-      );
-      
-      let checkbox = {
-        name: "isChecked",
-        displayName: "isChecked",
-        cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60,
-      };
-      for (var name in checkbox) {
-        colInfos[0][name] = checkbox[name];
+          0,
+          0,
+          new HeaderCheckBoxCellType(),
+          GCsheets.SheetArea.colHeader
+        );
+
+        let checkbox = {
+          name: "isChecked",
+          displayName: "isChecked",
+          cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
+          size: 60,
+        };
+        for (var name in checkbox) {
+          colInfos[0][name] = checkbox[name];
+        }
       }
-    }
 
       //  colInfos.unshift(checkbox);
       var defaultStyle = new GC.Spread.Sheets.Style();
@@ -582,7 +593,7 @@ export default {
 
       sheet.setDataSource(this.tableData[this.tagRemark]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let colindex = 0;
       for (let m of colInfos) {
@@ -617,18 +628,18 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
         // 齐套列
-        var rowSheet3  = ''
-        if(_this.tableColumns[this.tagRemark].length){
-          for(let i=0;i<_this.tableColumns[this.tagRemark].length;i++){
-            let item = _this.tableColumns[this.tagRemark][i]
-            if(item.name ==="Q1"){
-                 rowSheet3 = sheet.getCell(
-                  index,//行
-                  i,//列
-                  GC.Spread.Sheets.SheetArea.viewport
-                );
-                break
-              }
+        var rowSheet3 = "";
+        if (_this.tableColumns[this.tagRemark].length) {
+          for (let i = 0; i < _this.tableColumns[this.tagRemark].length; i++) {
+            let item = _this.tableColumns[this.tagRemark][i];
+            if (item.name === "Q1") {
+              rowSheet3 = sheet.getCell(
+                index, //行
+                i, //列
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              break;
+            }
           }
         }
 
@@ -637,7 +648,8 @@ export default {
           rowSheet.foreColor("balck");
           rowSheet2.backColor("#A0CFFF");
           rowSheet2.foreColor("balck");
-          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+          if (rowSheet3 && row["Q1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["MFGOrganizeID"] === 162) {
@@ -645,34 +657,35 @@ export default {
           rowSheet.backColor("#FFFF00");
           rowSheet.foreColor("black");
           rowSheet2.backColor("#FFFF00");
-          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+          if (rowSheet3 && row["Q1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
         } else if (row["SchedulingResult"] === "超期") {
           // row.backColor();
           rowSheet.backColor("#C2E7B0");
           rowSheet.foreColor("black");
-          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+          if (rowSheet3 && row["Q1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("red");
           }
-        } 
-        else if (row["DBResult"]&&row["DBResult"].indexOf('错误')>-1) {
-        // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
+        } else if (row["DBResult"] && row["DBResult"].indexOf("错误") > -1) {
+          // else if (row["DBResult"] != "计算成功"&&row["DBResult"]!=""&&row["DBResult"]!=null) {
           // row.backColor();
           // rowSheet.backColor("#C2E7B0");
           // rowSheet.foreColor("red");
           rowSheet.backColor("red");
           rowSheet.foreColor("black");
-          if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+          if (rowSheet3 && row["Q1"] != "100.00%") {
+            //不齐套时字体为红色
             rowSheet3.foreColor("#A0CFFF");
           }
-        } 
-        else if(rowSheet3&&row["Q1"] !="100.00%"){//不齐套时字体为红色
+        } else if (rowSheet3 && row["Q1"] != "100.00%") {
+          //不齐套时字体为红色
           rowSheet.foreColor("black");
           rowSheet2.foreColor("balck");
           rowSheet3.foreColor("red");
-        }
-        else {
+        } else {
           // row.backColor();
           rowSheet.foreColor("black");
           rowSheet.backColor("");
@@ -761,17 +774,14 @@ export default {
         if (cellType instanceof GCsheets.CellTypes.HyperLink) {
         }
       });
-       // 列筛选
+      // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
-      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-      
-      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)
+      var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
 
-
-
+      var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
 
       var insertRowsCopyStyle = {
         canUndo: true,
@@ -905,19 +915,20 @@ export default {
           _this.sheetSelectObj.count = s.rowCount;
         }
       );
-      
+
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if(_this.tableColumns[0].length){
-            _this.tableColumns[0].map((item,index)=>{
-              if(item.name ==="Q1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.AUFNR = _this.tableData[_this.tagRemark][args.row].OrderNo
-                _this.dialogSearchForm.ZQLS = 0
-              }
-            })
-          }
+        if (_this.tableColumns[0].length) {
+          _this.tableColumns[0].map((item, index) => {
+            if (item.name === "Q1" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.AUFNR =
+                _this.tableData[_this.tagRemark][args.row].OrderNo;
+              _this.dialogSearchForm.ZQLS = 0;
+            }
+          });
+        }
       });
 
       //表格编辑事件
@@ -959,7 +970,7 @@ export default {
       this.selectionData[0] = [];
       if (newData.length != 0) {
         newData.forEach((x, y) => {
-          if (x.isChecked&&x.OrderNo) {
+          if (x.isChecked && x.OrderNo) {
             if (!x.ProcessGroupID) {
               resultTag = true;
               this.$message.error("第" + (y + 1) + "行工艺不能为空");
@@ -1172,11 +1183,11 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      if(remarkTb!=2){
+      if (remarkTb != 2) {
         this.formSearchs[remarkTb].datas["ControlID"] =
-        this.userInfo.WorkFlowInstanceID;
-      }else if(remarkTb==2){
-        this.formSearchs[remarkTb].datas["OrderControlID"] ='201'//插件抓单明细固定查询条件
+          this.userInfo.WorkFlowInstanceID;
+      } else if (remarkTb == 2) {
+        this.formSearchs[remarkTb].datas["OrderControlID"] = "201"; //插件抓单明细固定查询条件
       }
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -1187,13 +1198,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -1253,7 +1264,7 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
-        this.formSearchs[1].datas["ProcessPartName"] =['PCB','加工']; //默认待排
+        this.formSearchs[1].datas["ProcessPartName"] = ["PCB", "加工"]; //默认待排
         this.dataSearch(0);
       }
     },
@@ -1289,12 +1300,10 @@ export default {
           this.tableColumns[0] = res.data.Columns[0];
           this.setData();
           this.$set(this.tablePagination[0], "pageTotal", count);
-        }else if(remarkTb == 2){
+        } else if (remarkTb == 2) {
           this.setData();
           this.$set(this.tablePagination[2], "pageTotal", count);
         }
-          
-        
       } else {
         this.$message({
           message: msg,
@@ -1319,10 +1328,10 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-  
+
     tableRowClassName({ row, rowIndex }) {
       let className = "";
-      if (row["DbResult"] && row["DbResult"].indexOf("错误")>-1) {
+      if (row["DbResult"] && row["DbResult"].indexOf("错误") > -1) {
         className += "bgRedColor";
       }
       return className;
@@ -1338,7 +1347,7 @@ export default {
     },
     // 改变状态
     changeStatus(x, index) {
-      this.hasLineStatus = false
+      this.hasLineStatus = false;
       this.labelStatus1 = index;
       if (index == 3) {
         if (this.tableData[1].length == 0) {
@@ -1355,9 +1364,9 @@ export default {
         s = [26];
       } else if (index === 2) {
         s = [21, 22, 23];
-      }else if(index===4){
+      } else if (index === 4) {
         this.dataSearch(2);
-        return
+        return;
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
       this.dataSearch(0);
@@ -1439,7 +1448,7 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (index == 1) {
-          this.labelStatus1 = 3;  
+          this.labelStatus1 = 3;
           this.dataSearch(1);
         } else {
           this.dataSearch(0);
@@ -1483,23 +1492,22 @@ export default {
           .catch(() => {
             // 取消
           });
-        
       }
     },
-           save4() {//在分线列表处保存
+    save4() {
+      //在分线列表处保存
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.adminLoading = true;
-        
-         let submitData = this.selectionData[1]
-    
 
-      if (submitData.length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-      } else {
-        this.dataSave(submitData, 1);
-      }
+        let submitData = this.selectionData[1];
+
+        if (submitData.length == 0) {
+          this.$message.error("请选择需要操作的数据！");
+        } else {
+          this.dataSave(submitData, 1);
+        }
       }
     },
     // 保存
@@ -1521,16 +1529,14 @@ export default {
     },
     //恢复计划
     async recovery(remarkTb) {
-      remarkTb = 2
+      remarkTb = 2;
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        
-        this.selectionData[remarkTb].forEach(m=>{
-          m["ProductionStatus"]=23;
-
+        this.selectionData[remarkTb].forEach((m) => {
+          m["ProductionStatus"] = 23;
         });
-       this.dataSave(this.selectionData[remarkTb],remarkTb);
+        this.dataSave(this.selectionData[remarkTb], remarkTb);
       }
     },
     async dataSave(newData, remarkTb) {
@@ -1640,17 +1646,14 @@ export default {
         }
       }
     },
-    async getOrder()
-    {
-   let submitData = [];
-      
+    async getOrder() {
+      let submitData = [];
 
       if (false) {
-        
       } else {
         this.adminLoading = true;
         let res = await GetSearch(
-          {ReplyDate:this.ReplyDate},
+          { ReplyDate: this.ReplyDate },
           "/APSAPI/GetSMTDemand"
         );
         const { data, forms, result, msg } = res.data;
@@ -1671,7 +1674,7 @@ export default {
         }
       }
     },
-      
+
     //正排倒排计算，匹配拉线
     async MOPlanStep1Calculation() {
       // if (this.selectionData[1].length == 0) {
@@ -1689,7 +1692,10 @@ export default {
         this.$message.error("请选择需要计算的数据！");
       } else {
         this.adminLoading = true;
-        let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1CalculationPCB");
+        let res = await GetSearch(
+          submitData,
+          "/APSAPI/MOPlanStep1CalculationPCB"
+        );
         const { data, forms, result, msg } = res.data;
         if (result) {
           this.$set(this.tableData, 1, data);
@@ -1717,7 +1723,7 @@ export default {
             dangerouslyUseHTMLString: true,
           });
           // 已进行匹配拉线
-          this.hasLineStatus = true
+          this.hasLineStatus = true;
         } else {
           this.adminLoading = false;
           this.$message({
@@ -1777,7 +1783,7 @@ export default {
         return;
       }
       // 先判断是否已匹配拉线
-      if(!this.hasLineStatus){
+      if (!this.hasLineStatus) {
         this.$message.error("请先匹配拉线！");
         return;
       }
@@ -1787,7 +1793,10 @@ export default {
         m["dicID"] = 7960;
       });
       this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan?source=pcb");
+      let res = await GetSearch(
+        submitData,
+        "/APSAPI/MOPlanSaveToDayPlan?source=pcb"
+      );
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(1);
@@ -1797,7 +1806,7 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        this.hasLineStatus = false
+        this.hasLineStatus = false;
         this.$set(this.selectionData, 1, []);
       } else {
         this.adminLoading = false;

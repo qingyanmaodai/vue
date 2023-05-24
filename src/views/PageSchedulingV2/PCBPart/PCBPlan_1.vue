@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1,2, 3, 4]" :key="i" v-show="labelStatus1 == i">
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -85,7 +85,7 @@
             </div>
             <div class="flex">
               <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
-              <span>共{{tablePagination[1].pageTotal}}条</span>
+              <span>共{{ tablePagination[1].pageTotal }}条</span>
               <!-- <el-pagination
                 background
                 @size-change="(val) => pageSize(val, 1)"
@@ -101,7 +101,7 @@
           </div>
         </div>
         <div
-          v-for="item in [0, 2, 3, 4,5]"
+          v-for="item in [0, 2, 3, 4, 5]"
           :key="item"
           v-show="labelStatus1 == item"
         >
@@ -152,13 +152,7 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "@/static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -172,13 +166,12 @@ export default {
   components: {
     ComSearch,
     ComVxeTable,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-      },
-      colDialogVisible:false,
+      dialogSearchForm: {},
+      colDialogVisible: false,
       ////////////////// Search /////////////////
       footerLabel: ["", "", "", "", "", "", ""],
       sysID: [
@@ -194,9 +187,9 @@ export default {
         { label: "PCB总排期", value: 0 },
         { label: "PCB月计划", value: 1 },
         // { label: "SMT待排", value: 2 },
-       // { label: "SMT已排", value: 2 },
+        // { label: "SMT已排", value: 2 },
         // { label: "补焊待排", value: 3 },
-       // { label: "补焊已排", value: 3 },
+        // { label: "补焊已排", value: 3 },
         { label: "已完成", value: 3 },
         { label: "待转入备料", value: 4 },
         { label: "已转入备料", value: 5 },
@@ -222,11 +215,11 @@ export default {
           forms: [],
         },
         {
-          datas: {IsSetPrepare:'未生成'},
+          datas: { IsSetPrepare: "未生成" },
           forms: [],
         },
         {
-          datas: {IsSetPrepare:'已生成'},
+          datas: { IsSetPrepare: "已生成" },
           forms: [],
         },
         {
@@ -301,7 +294,7 @@ export default {
           Params: { ProcessID: "P202009092233201" },
           Icon: "",
         },
-           {
+        {
           ButtonCode: "save",
           BtnName: "插件",
           Type: "primary",
@@ -312,7 +305,7 @@ export default {
           Params: { ProcessID: "P202009092233322" },
           Icon: "",
         },
-           {
+        {
           ButtonCode: "save",
           BtnName: "补焊",
           Type: "primary",
@@ -441,10 +434,9 @@ export default {
     this.judgeBtn();
   },
   activated() {
-      if(this.spread)
-      {
-          this.spread.refresh();
-      }
+    if (this.spread) {
+      this.spread.refresh();
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -469,7 +461,6 @@ export default {
           .catch(() => {
             // 取消
           });
-        
       }
     },
     // 跳转至页面配置
@@ -600,7 +591,7 @@ export default {
       sheet.bindColumns(colInfos);
 
       let cellIndex = 0;
-      
+
       this.tableColumns[1].forEach((m) => {
         //行，start,end
         if (m.isEdit) {
@@ -619,14 +610,13 @@ export default {
           // );
           // cell.foreColor("gray");
         }
-       
 
         cellIndex++;
       });
-      var colindexs = [1,2,3,4,5]
+      var colindexs = [1, 2, 3, 4, 5];
       this.tableData[1].forEach((row, index) => {
         let cellIndex = 0;
-        this.tableColumns[1].forEach((m,num) => {
+        this.tableColumns[1].forEach((m, num) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -642,33 +632,42 @@ export default {
           }
           cellIndex++;
 
-         var rowSheet = sheet.getRange(
+          var rowSheet = sheet.getRange(
             index,
             num,
             1,
             1,
             GC.Spread.Sheets.SheetArea.viewport
-          )
+          );
           // SMT已排、插件已排、补焊已排、测试已排、三防漆已排字段结尾1~5区分，单元格样式动态生成
-        for(let i=0;i<colindexs.length;i++){
-          if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "是") {
-            rowSheet.backColor("#4CD964");
-            rowSheet.foreColor("balck");
-          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "否") {
-            rowSheet.backColor("#FFFF00");
-            rowSheet.foreColor("black");
-          } else if ((m.prop == "IsToPlanDay"+colindexs[i])&&row["IsToPlanDay"+colindexs[i]] == "无补焊") {
-            rowSheet.foreColor("black");
-            rowSheet.backColor("");
+          for (let i = 0; i < colindexs.length; i++) {
+            if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "是"
+            ) {
+              rowSheet.backColor("#4CD964");
+              rowSheet.foreColor("balck");
+            } else if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "否"
+            ) {
+              rowSheet.backColor("#FFFF00");
+              rowSheet.foreColor("black");
+            } else if (
+              m.prop == "IsToPlanDay" + colindexs[i] &&
+              row["IsToPlanDay" + colindexs[i]] == "无补焊"
+            ) {
+              rowSheet.foreColor("black");
+              rowSheet.backColor("");
+            }
           }
-        }
-        rowSheet = sheet.getRange(
-          index,
-          num,
-          1,
-          1,
-          GC.Spread.Sheets.SheetArea.viewport
-        );
+          rowSheet = sheet.getRange(
+            index,
+            num,
+            1,
+            1,
+            GC.Spread.Sheets.SheetArea.viewport
+          );
         });
       });
       /////////////////表格事件/////////////
@@ -687,17 +686,15 @@ export default {
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-        
       });
 
       // 表格单击齐套率弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.tableColumns[1].length) {
           _this.tableColumns[1].map((item, index) => {
-           console.log(item.name)
-           console.log(args.col +'abc'+index)
+            console.log(item.name);
+            console.log(args.col + "abc" + index);
             if (item.name === "FormRate" && args.col === index) {
-             
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
               _this.dialogSearchForm.OrderID =
@@ -711,9 +708,9 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[1] = false;
-      sheet.options.protectionOptions.allowResizeColumns = true;//禁用改变行高
-      sheet.options.isProtected = true;//锁定表格
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      sheet.options.protectionOptions.allowResizeColumns = true; //禁用改变行高
+      sheet.options.isProtected = true; //锁定表格
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.refresh(); //重新定位宽高度
     },
     async ToPlan() {
@@ -842,13 +839,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -944,15 +941,15 @@ export default {
         // this.formSearchs[0].datas["sort"] = "PrepareStatus asc";
         // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
         // this.formSearchs[2].datas["SchedulingStatus"] = "0";
-       // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
+        // this.formSearchs[2].datas["ProcessID"] = "P202009092233201";
         this.formSearchs[2].datas["CompletionStatus"] = "1";
 
         // this.formSearchs[4].datas["ProcessID"] = "P202009092233413";
         // this.formSearchs[4].datas["SchedulingStatus"] = "0";
-      // //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
-      //   this.formSearchs[3].datas["CompletionStatus"] = "1";
-      //   this.formSearchs[4].datas["productionstatus"] = "25";
-        this.formSearchs[1].datas["productionstatus"] =[21,22,23,24,26]
+        // //  this.formSearchs[3].datas["ProcessID"] = "P202009092233413";
+        //   this.formSearchs[3].datas["CompletionStatus"] = "1";
+        //   this.formSearchs[4].datas["productionstatus"] = "25";
+        this.formSearchs[1].datas["productionstatus"] = [21, 22, 23, 24, 26];
         this.getTableData(this.formSearchs[1].datas, 1);
 
         this.adminLoading = false;
@@ -1249,7 +1246,7 @@ export default {
               });
             }
           } else {
-             this.adminLoading = false;
+            this.adminLoading = false;
           }
         }
       }
@@ -1291,10 +1288,10 @@ export default {
     },
     // 备料任务
     async readyTask(remarkTb, index, MOSchedulingType) {
-      let submitData = this.selectionData[remarkTb]
+      let submitData = this.selectionData[remarkTb];
       if (submitData.length != 0) {
         this.adminLoading = true;
-        let url = "/APSAPI/SetPreParePlanV2"
+        let url = "/APSAPI/SetPreParePlanV2";
         let res = await GetSearch(submitData, url);
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -1313,7 +1310,7 @@ export default {
             dangerouslyUseHTMLString: true,
           });
         }
-      }else{
+      } else {
         this.$message.error("请选择需要操作的数据！");
       }
     },

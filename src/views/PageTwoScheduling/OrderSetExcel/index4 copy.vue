@@ -1,18 +1,8 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 2"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 2" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,11 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -46,47 +35,31 @@
           </el-row>
         </div>
         <div v-show="labelStatus1 == 0">
-          <div
-            class="flex_column"
-            :style="{'height':height}"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
-            >
+          <div class="flex_column" :style="{ height: height }">
+            <div class="spreadContainer" v-loading="tableLoading[0]">
               <gc-spread-sheets
                 class="sample-spreadsheets"
                 @workbookInitialized="initSpread"
               >
-                <gc-worksheet :colCount=49></gc-worksheet>
+                <gc-worksheet :colCount="49"></gc-worksheet>
               </gc-spread-sheets>
             </div>
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
-              >SysID:{{sysID[0].ID}}
+              <span @click="toPageSetting" class="primaryColor cursor"
+                >SysID:{{ sysID[0].ID }}
               </span>
             </div>
             <div class="flex">
               <el-pagination
                 background
-                @size-change="val=>pageSize(val,0)"
+                @size-change="(val) => pageSize(val, 0)"
                 :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[
-              200,
-              500,
-              1000,
-              3000,
-              5000,
-              10000
-
-            ]"
+                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
                 :page-size="tablePagination[0].pageSize"
                 :total="tablePagination[0].pageTotal"
-                @current-change="val=>pageChange(val,0)"
+                @current-change="(val) => pageChange(val, 0)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
@@ -122,13 +95,7 @@ import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "./data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 const GCsheets = GC.Spread.Sheets;
 import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
@@ -737,7 +704,7 @@ export default {
       sheet.frozenColumnCount(1);
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;

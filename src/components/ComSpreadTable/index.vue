@@ -50,7 +50,7 @@ const GCsheets = GC.Spread.Sheets;
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import { GetSearchData } from "@/api/Common";
-import { HeaderCheckBoxCellType } from "../../static/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 
 export default {
   components: {},

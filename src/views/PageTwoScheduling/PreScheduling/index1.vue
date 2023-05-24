@@ -1,75 +1,60 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          @btnClick="btnClick"
-        />
-      </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              > </el-col>
-            </el-row>
-          </div>
-          <div
-            class="flex_column"
-            :style="{ height: height }"
-          >
-            <div
-              class="spreadContainer"
-              v-loading="tableLoading[0]"
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
+    </div>
+    <div>
+      <div class="admin_content">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <gc-spread-sheets
-                class="sample-spreadsheets"
-                @workbookInitialized="initSpread"
-              >
-                <gc-worksheet></gc-worksheet>
-              </gc-spread-sheets>
-            </div>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
+          </el-row>
+        </div>
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
+              <gc-worksheet></gc-worksheet>
+            </gc-spread-sheets>
           </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                @click="toPageSetting"
-                class="primaryColor cursor"
+        </div>
+        <div class="flex_row_spaceBtn pagination">
+          <div>
+            <span @click="toPageSetting" class="primaryColor cursor"
               >SysID:6735
-              </span>
-            </div>
-            <div class="flex">
-              <el-pagination
-                background
-                @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex"
-                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize"
-                :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            </span>
+          </div>
+          <div class="flex">
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[0].pageIndex"
+              :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+              :page-size="tablePagination[0].pageSize"
+              :total="tablePagination[0].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -84,13 +69,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "../WeekSet/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -627,7 +606,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(this.colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {

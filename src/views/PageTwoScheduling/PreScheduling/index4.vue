@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,21 +16,14 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
-            > </el-col>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{ height: height }"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[0]"
-          >
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
@@ -47,10 +34,8 @@
         </div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span
-              @click="toPageSetting"
-              class="primaryColor cursor"
-            >SysID:6735
+            <span @click="toPageSetting" class="primaryColor cursor"
+              >SysID:6735
             </span>
           </div>
           <div class="flex">
@@ -84,13 +69,7 @@ GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
-import {
-  HighlightColumnItemsCellType,
-  TopItemsCellType,
-  HeaderCheckBoxCellType,
-  SortHyperlinkCellType,
-  HighlightRowItemsCellType,
-} from "../WeekSet/data.js";
+import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
   GetSearchData,
@@ -130,7 +109,7 @@ export default {
       autoGenerateColumns: true,
       spread: null,
       ////////////////// Search /////////////////
-      title: this.$route.meta.title,//test
+      title: this.$route.meta.title, //test
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -150,7 +129,7 @@ export default {
         //   Icon: "",
         //   Size: "small",
         // },
-               {
+        {
           ButtonCode: "computedmating",
           BtnName: "1.匹配产线",
           isLoading: false,
@@ -170,7 +149,7 @@ export default {
           Size: "small",
           Params: { dataName: "selectionDate" },
         },
- 
+
         //      {
         //   ButtonCode: "computedmating",
         //   BtnName: "倒排计算",
@@ -224,7 +203,7 @@ export default {
   },
   watch: {},
   activated() {
-    if(this.spread){
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -232,7 +211,7 @@ export default {
     _this = this;
     this.adminLoading = true;
     this.judgeBtn();
- 
+
     this.getTableHeader();
   },
   computed: {
@@ -278,7 +257,8 @@ export default {
       let rem =
         document.documentElement.clientHeight -
         headHeight -
-        this.$store.getters.reduceHeight+10;
+        this.$store.getters.reduceHeight +
+        10;
       if (this.$store.getters.reduceHeight == 138) {
         newHeight = rem + "px";
       } else {
@@ -634,7 +614,7 @@ export default {
 
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(this.colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
 
       let cellIndex = 0;
       this.tableColumns[0].forEach((m) => {
@@ -962,38 +942,35 @@ export default {
       let res = await OrderPlanMaterialForm(newData);
       const { data, forms, result, msg } = res.data;
       if (result) {
-       // this.dataSearch(0);
+        // this.dataSearch(0);
 
+        //sheet.setDataSource(data);
+        sheet.bindColumns(this.colInfos);
+        let rowIndex = 0;
+        data.forEach((m) => {
+          // var cell = sheet.getCell(
+          //           rowIndex,
+          //           cellResult,
+          //           GC.Spread.Sheets.SheetArea.viewport
+          //         );
+          if (m.FormResult == "齐套") {
+            cell.foreColor("blue");
+          } else {
+            // cell.foreColor("red");
+            // getRange(row, col, rowCount, colCount, sheetArea);
+            var row = sheet.getRange(
+              rowIndex,
+              -1,
+              1,
+              -1,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            // row.backColor("Red");
+            row.foreColor("red");
+          }
 
-         //sheet.setDataSource(data);
-          sheet.bindColumns(this.colInfos);
-          let rowIndex=0;
-       data.forEach(m=>{
- 
-      // var cell = sheet.getCell(
-      //           rowIndex,
-      //           cellResult,
-      //           GC.Spread.Sheets.SheetArea.viewport
-      //         );
-          if(m.FormResult=='齐套')
-              {
-                cell.foreColor("blue");
-              }
-              else 
-              {
-               // cell.foreColor("red");
-              // getRange(row, col, rowCount, colCount, sheetArea);
-                  var row = sheet.getRange(rowIndex, -1, 1, -1, GC.Spread.Sheets.SheetArea.viewport);
-    // row.backColor("Red");
-     row.foreColor("red");
-     
-              }
-
-
-           
-              rowIndex++;
-
-})
+          rowIndex++;
+        });
         this.adminLoading = false;
         this.$message({
           message: msg,
@@ -1012,7 +989,7 @@ export default {
     },
     //正排倒排计算
     async MOPlanStep1Calculation(t, t2, Type) {
-      this.spread.refresh()
+      this.spread.refresh();
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDataSource();
       let submitData = [];
@@ -1037,7 +1014,7 @@ export default {
           sheet.bindColumns(this.colInfos);
 
           let cellIndex = 0;
-          let cellResult=null;
+          let cellResult = null;
           this.tableColumns[0].forEach((m) => {
             //行，start,end
             if (m.prop == "DbResult") {
@@ -1046,7 +1023,7 @@ export default {
                 cellIndex,
                 GC.Spread.Sheets.SheetArea.viewport
               );
-            cellResult=cellIndex;
+              cellResult = cellIndex;
             } else {
               if (m.isEdit) {
                 sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -1061,35 +1038,33 @@ export default {
             }
             cellIndex++;
           });
-          let rowIndex=0;
-     await data.forEach(m=>{
- 
-      // var cell = sheet.getCell(
-      //           rowIndex,
-      //           cellResult,
-      //           GC.Spread.Sheets.SheetArea.viewport
-      //         );
-          if(m.DbResult=='计算成功')
-              {
-               // cell.foreColor("blue");
-              }
-              else 
-              {
-               // cell.foreColor("red");
+          let rowIndex = 0;
+          await data.forEach((m) => {
+            // var cell = sheet.getCell(
+            //           rowIndex,
+            //           cellResult,
+            //           GC.Spread.Sheets.SheetArea.viewport
+            //         );
+            if (m.DbResult == "计算成功") {
+              // cell.foreColor("blue");
+            } else {
+              // cell.foreColor("red");
               // getRange(row, col, rowCount, colCount, sheetArea);
-                  var row = sheet.getRange(rowIndex, -1, 1, -1, GC.Spread.Sheets.SheetArea.viewport);
-    // row.backColor("Red");
-     row.foreColor("red");
-     
-              }
+              var row = sheet.getRange(
+                rowIndex,
+                -1,
+                1,
+                -1,
+                GC.Spread.Sheets.SheetArea.viewport
+              );
+              // row.backColor("Red");
+              row.foreColor("red");
+            }
 
-
-           
-              rowIndex++;
-
-})
-//不可编辑
-sheet.options.isProtected = true;
+            rowIndex++;
+          });
+          //不可编辑
+          sheet.options.isProtected = true;
           this.adminLoading = false;
           this.$message({
             message: msg,

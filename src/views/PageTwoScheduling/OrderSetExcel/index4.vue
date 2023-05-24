@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div>
         <ComSearch
           ref="searchRef"
@@ -24,11 +18,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -73,12 +66,8 @@ var _this;
 // import "@grapecity/spread-sheets/js/zh.js";
 // GC.Spread.Common.CultureManager.culture("zh-cn");
 // import {
-//   HighlightColumnItemsCellType,
-//   TopItemsCellType,
-//   HeaderCheckBoxCellType,
-//   SortHyperlinkCellType,
-//   HighlightRowItemsCellType,
-// } from "./data.js";
+//   HeaderCheckBoxCellType
+// } from "@/static/data.js";
 // const GCsheets = GC.Spread.Sheets;
 import ComSearch from "@/components/ComSearch";
 import ComAsideTree from "@/components/ComAsideTree";
@@ -279,7 +268,7 @@ export default {
     this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
     this.judgeBtn();
- 
+
     this.getTableHeader();
   },
   mounted() {
@@ -288,33 +277,33 @@ export default {
     }, 300);
   },
   methods: {
-        changenoworkhours(item, value, prop, index, a, b)
-    {
-      if(this.NoWorkHour.findIndex(m=>m.OrderID==item.OrderID)===-1)
-      {
-    
-     this.NoWorkHour.push(item)
-  
+    changenoworkhours(item, value, prop, index, a, b) {
+      if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
+        this.NoWorkHour.push(item);
       }
     },
     changeline(item, value, prop, index, a, b) {
       item.拉线.forEach((m) => {
         if (item.LineID === m.OrganizeID) {
-          let tmp=m;
-          if(this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)==-1)
-          {
+          let tmp = m;
+          if (
+            this.LineViewSort.findIndex(
+              (m2) => m2.OrganizeID === m.OrganizeID
+            ) == -1
+          ) {
             this.LineViewSort.push(tmp);
-          }
-          else 
-          {
-            tmp=this.LineViewSort[this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)];
+          } else {
+            tmp =
+              this.LineViewSort[
+                this.LineViewSort.findIndex(
+                  (m2) => m2.OrganizeID === m.OrganizeID
+                )
+              ];
           }
           item.ViewSort = tmp.ViewSort;
-          tmp.ViewSort=tmp.ViewSort+1
-       
+          tmp.ViewSort = tmp.ViewSort + 1;
         }
       });
-    
     },
     // 获取工艺数据
     async getCategoryData() {
@@ -576,7 +565,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-        //  this.formSearchs[0].datas["ControlID"] = "202";
+          //  this.formSearchs[0].datas["ControlID"] = "202";
           this.dataSearch(0);
         });
       } else {
@@ -607,12 +596,11 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-            this.adminLoading = false;
+      this.adminLoading = false;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
-  
         this.$message({
           message: msg,
           type: "error",
@@ -752,7 +740,7 @@ export default {
       sheet.frozenColumnCount(1);
       sheet.setDataSource(this.tableData[0]);
       sheet.bindColumns(colInfos);
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
       /////////////////表格事件/////////////
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
