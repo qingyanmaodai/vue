@@ -149,6 +149,16 @@ import ComSearch from "@/components/ComSearch";
 import ComSpreadTable from "@/components/ComSpreadTable";
 import ComSpreadTable2 from "@/components/ComSpreadTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  GetSearch,
+  SaveData,
+  GetServerTime,
+  GetOrgData,
+  UpdateOrderBomPOTracker,
+} from "@/api/Common";
 import formatDates from "@/utils/formatDate";
 import XLSX from "xlsx";
 export default {
