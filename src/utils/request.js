@@ -14,9 +14,10 @@ let base_url;
 //http://192.168.128.160          --金羚内网
 //http://jinlingfan.gicp.net:5999 --金羚外网
 //http://10.50.18.130             --佛照内网
-//http://192.168.1.88:9999        --瑞能
+//http://192.168.1.188:9999        --瑞能
+// http://localhost:39331
 
-let apsUrl = ""; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = "http://192.168.1.188:9999"; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 localStorage.setItem("apsurl", apsUrl);
 let _this = this;

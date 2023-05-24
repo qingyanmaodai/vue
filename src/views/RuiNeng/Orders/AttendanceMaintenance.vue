@@ -456,9 +456,6 @@ export default {
       this.adminLoading = true;
       if ($table) {
         updateRecords = $table.getUpdateRecords();
-        updateRecords.forEach(m => {
-          m["OrganizeID"] = m["ID"];
-        });
       }
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
