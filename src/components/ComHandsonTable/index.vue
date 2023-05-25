@@ -2,7 +2,7 @@
 <template>
   <div class="box">
     <div class="subFeeSum" v-loading="contentLoading">
-      <div style="margin-bottom: 10px; overflow: hidden">
+      <!-- <div style="margin-bottom: 10px; overflow: hidden">
         <el-button
           style="float: left"
           type="primary"
@@ -43,7 +43,7 @@
             >确定</el-button
           >
         </div>
-      </div>
+      </div> -->
       <div
         id="subFeeSum-table"
         :style="{ minHeight: height }"
@@ -62,7 +62,7 @@
 // import Vue from 'vue'
 import { HotTable } from "@handsontable/vue";
 
-// import "handsontable/dist/handsontable.full.css";
+import "handsontable/dist/handsontable.full.css";
 import "handsontable/languages/zh-CN";
 
 // import ElementUI from 'element-ui';
@@ -330,7 +330,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .box {
   background-color: #ccc;
   padding: 20px 20px;

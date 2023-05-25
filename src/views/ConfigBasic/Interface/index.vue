@@ -172,6 +172,7 @@
             @toPageSetting="colDialogVisible1=false"
             :hasSelect="true"
             @selectfun="selectFun"
+            @inputParCon="inputParCon"
           />
         </div>    
       </div>
@@ -327,6 +328,77 @@
           <el-button @click="colDialogVisible3 = false">取 消</el-button>
         </span>
       </el-dialog>
+
+      <!-- 参数配置表 -->
+      <el-dialog
+        :visible.sync="colDialogVisible4"
+        width="80%"
+        @closeDialog="colDialogVisible4 = false"
+        :close-on-click-modal="false"
+      >
+       <div>
+        <div
+        class="admin_head"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[4].datas"
+          :searchForm="formSearchs[4].forms"
+          :remark="4"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"><span class="title">参数配置表</span></el-col>
+              <el-col
+                :span="20"
+                class="flex_flex_end"
+              >
+              <el-button
+                type="primary"
+                size="mini"
+                @click="addRow(4)"
+                v-show="isAdd"
+              >新增</el-button>
+              <el-divider direction="vertical"></el-divider>
+              </el-col>
+            </el-row>
+          </div>
+          <ComVxeTable
+            ref="ComVxeTable"
+            :rowKey="'RowNumber'"
+            height="650px"
+            :tableData="tableData[4]"
+            :tableHeader="tableColumns[4]"
+            :tableLoading="tableLoading[4]"
+            :remark="4"
+            :sysID="sysID[4].ID"
+            :isEdit="isEdit"
+            :isClear="isClear[4]"
+            :pagination="tablePagination[4]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @toPageSetting="colDialogVisible4=false"
+            :hasSelect="true"
+            @selectfun="selectFun"
+          />
+        </div>    
+      </div>
+       </div>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button @click="colDialogVisible4 = false">取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </template>
   
@@ -351,11 +423,18 @@
         colDialogVisible2:false,
         // 输出字段表
         colDialogVisible3:false,
+        // 参数配置表
+        colDialogVisible4:false,
         adminLoading: false,
         ////////////////// Search /////////////////
         title: this.$route.meta.title,
         drawer: false,
         formSearchs: [
+          {
+            datas: {},
+            forms: [],
+            required: [], //获取必填项
+          },
           {
             datas: {},
             forms: [],
@@ -399,11 +478,12 @@
             Params: { },
           },
         ],
-        tableData: [[],[],[],[]],
-        tableColumns: [[],[],[],[]],
-        tableLoading: [false,false,false,false],
-        isClear: [false,false,false,false],
+        tableData: [[],[],[],[],[]],
+        tableColumns: [[],[],[],[],[]],
+        tableLoading: [false,false,false,false,false],
+        isClear: [false,false,false,false,false],
         tablePagination: [
+          { pageIndex: 1, pageSize: 50, pageTotal: 0 },
           { pageIndex: 1, pageSize: 50, pageTotal: 0 },
           { pageIndex: 1, pageSize: 50, pageTotal: 0 },
           { pageIndex: 1, pageSize: 50, pageTotal: 0 },
@@ -416,9 +496,9 @@
         isEdit: true,
         isUpdate: true,
         isAdd: false,
-        sysID:[{ID:9030},{ID:9031},{ID:9032},{ID:9033}],
-        selectionData: [[], [], [], [], []],
-        delData: [[],[],[], []],
+        sysID:[{ID:9030},{ID:9031},{ID:9032},{ID:9033},{ID:10119}],
+        selectionData: [[], [], [], [], [], []],
+        delData: [[],[],[], [], []],
       };
     },
     watch: {
@@ -762,6 +842,18 @@
         this.colDialogVisible1 = true
         this.formSearchs[1].datas.FID =row.FID
         this.dataSearch(1)
+      }else{
+        this.$message.error("请先保存数据，再操作！");
+        return
+      }
+        
+    },
+    inputParCon(row){
+      console.log('输出参row',row)
+      if(row.EID){
+        this.colDialogVisible4 = true
+        this.formSearchs[4].datas.EID =row.EID
+        this.dataSearch(4)
       }else{
         this.$message.error("请先保存数据，再操作！");
         return
