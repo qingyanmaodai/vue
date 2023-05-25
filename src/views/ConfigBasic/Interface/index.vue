@@ -814,26 +814,16 @@
     },
     // 新增
     addRow(remarkTb) {
-      let obj = {...this.formSearchs[remarkTb].datas};
-      obj["dicID"] = this.sysID[remarkTb].ID;
-      obj["update"] = true;
-      // 先找表头有没有字段是下拉的性质 ,把数据源名称找出来
-      let Props = [];
-      this.tableColumns[remarkTb].forEach((a) => {
-        if (a.ControlType == "combobox") {
-          if (a.DataSourceID) {
-            Props.push(a.DataSourceID);
-          }
-        }
-      });
-      // 拿到数据源去查找数据
-      if ((Props, length != 0)) {
-        // this.getDataSource(Props)
-      }
+      let obj = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas))
 
       this.tableColumns[remarkTb].forEach((x) => {
         obj[x.prop] = "";
       });
+      if (remarkTb === 4) {
+       obj["EID"] = this.formSearchs[remarkTb].datas.EID;
+      }
+      obj["dicID"] = this.sysID[remarkTb].ID;
+      obj["update"] = true;
       this.tableData[remarkTb].unshift(obj);
     },
     inputPar(row){
