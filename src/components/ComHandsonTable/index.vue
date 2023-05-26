@@ -46,7 +46,7 @@
       </div> -->
       <div
         id="subFeeSum-table"
-        :style="{ minHeight: height }"
+        :style="{ height: height }"
         v-if="subFeeSumShow"
       >
         <hot-table
@@ -55,20 +55,51 @@
           :licenseKey="licenseKey"
         ></hot-table>
       </div>
+      <div class="flex_row_spaceBtn pagination" v-show="spaceBtnShow">
+        <div v-show="sysID > 0">
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
+          </span>
+          <span style="color: red; font-weight: bold; margin-left: 10px">{{
+            Prompt
+          }}</span>
+        </div>
+        <div class="flex">
+          <!-- <div class="footer_label" v-show="multipleSelection.length != 0">
+            已选[<span style="color: red; font-weight: bold">{{
+              multipleSelection.length
+            }}</span
+            >]
+          </div> -->
+          <el-pagination
+            background
+            @size-change="pageSize"
+            :current-page="pagination.pageIndex"
+            :page-sizes="[20, 200, 500, 1000, 2000, 3000, 5000, 10000]"
+            :page-size="pagination.pageSize"
+            :total="pagination.pageTotal"
+            @current-change="pageChange"
+            layout="total, sizes, prev, pager, next,jumper"
+          >
+          </el-pagination>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 // import Vue from 'vue'
 import { HotTable } from "@handsontable/vue";
+// const hot = new Handsontable(document.getElementById("textHot"), options);
 
 import "handsontable/dist/handsontable.full.css";
 import "handsontable/languages/zh-CN";
+import { GetSearchData } from "@/api/Common";
 
 // import ElementUI from 'element-ui';
 // import "element-ui/lib/theme-chalk/index.css";
 
-import { merge, spanMethod } from "./mergeClass";
+// import { merge, spanMethod } from "./mergeClass";
 
 // Vue.component('HotTable', HotTable);
 // Vue.use(ElementUI);
@@ -78,22 +109,76 @@ export default {
   components: {
     HotTable,
   },
+  props: {
+    // 系统id
+    sysID: {
+      type: Number,
+      default: 0,
+    },
+    // 表格的下标
+    remark: {
+      type: Number,
+      required: false,
+    },
+    tableData: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
+    tableColumns: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
+    tableLoading: {
+      type: Boolean,
+      default: false,
+    },
+    //单击是否可编辑
+    isEdit: {
+      type: Boolean,
+      default: false,
+    },
+    spaceBtnShow: {
+      type: Boolean,
+      default: true,
+    },
+    pagination: {
+      type: Object,
+      default() {
+        return {
+          pageIndex: 0,
+          pageSize: 500,
+          pageTotal: 0,
+        };
+      },
+    },
+    // height: {
+    //   type: String,
+    //   default: "600px",
+    // },
+  },
   data() {
     return {
+      tableData1: [],
+      Prompt: null,
       contentLoading: false, //加载
       subFeeSumShow: true, //表格显隐
-      setFixed: false, //是否固定表头
-      height: "400px", //固定高度
+      setFixed: true, //是否固定表头
+      height: "600px", //固定高度
       row: 0, //当前共有多少行数据，计算高度
-      merge: {}, //合并单元格
+      // merge: {}, //合并单元格
       dispalyFiled: [], //隐藏字段集合
       hotSettings: {
-        data: [], // 数据在这个里面,由数据填充表
+        data: [{ typeName: 1, actualMoney: 2 }], // 数据在这个里面,由数据填充表
         minRows: 1, //最小行列
         rowHeaders: true, //就是左边的1,2,3(官方序号)
-        columnHeaderHeight: 45, //表头高度
+        columnHeaderHeight: 30, //表头高度
         stretchH: "all", //last:延伸最后一列,all:延伸所有列,none默认不延伸。
-        rowHeights: 35, //行高
+        rowHeights: 26, //行高 不能设置低于23以下
+        // preventOverflow: 'vertical',//防止溢出
         autoWrapRow: true, //自动换行
         manualColumnResize: true, //可拖动 行表头
         manualRowResize: true, //可拖动 列表头
@@ -102,17 +187,17 @@ export default {
         // startCols: 35, //初始列数
         // minSpareCols: 1, //列留白
         // minSpareRows: 2, //行留白
-        // wordWrap: false, //自动换行（默认为true）
+        wordWrap: false, //自动换行（默认为true）
         language: "zh-CN",
-        colHeaders: [], //自定义列表头or 布尔值
+        colHeaders: true, //自定义列表头or 布尔值
         className: "htCenter htMiddle", //容器单元格的class属性（htCenter，htLeft，htRight，htJustify，htTop，htMiddle，htBottom），默认值undefined，这些属性将作为容器单元格内容的对齐方式
         // currentRowClassName: "currentRow", //为选中行添加类名，可以更改样式
         // currentColClassName: "currentCol", //为选中列添加类名
-        autoColumnSize: true, //自适应列大小
-        manualColumnFreeze: true,
-        manualRowMove: true, //当值为true时，行可拖拽至指定行
+        // autoColumnSize: true, //自适应列大小
+        // manualColumnFreeze: true,
+        // manualRowMove: true, //当值为true时，行可拖拽至指定行
         columnSorting: true, //当值为true时，表示启用排序插件
-        mergeCells: [], //合并单元格
+        // mergeCells: [], //合并单元格
         contextMenu: [
           //菜单
           "row_above",
@@ -131,21 +216,23 @@ export default {
         ],
         //右键效果
         fillHandle: true, //选中拖拽复制 possible values: true, false, "horizontal", "vertical"
+        dropdownMenu: true, //筛选图标
+        filters: true, //筛选功能
         // fixedColumnsLeft: 1, //固定左边列数
         // fixedRowsTop: 1, //固定上边行数
-        nestedHeaders: [
-          //合并
-          ["", { label: "合并表头", colspan: 5 }, ""],
-          [
-            "类别",
-            "内容",
-            "预算金额",
-            "实际金额",
-            "预算合计",
-            "实际合计",
-            "备注",
-          ],
-        ],
+        // nestedHeaders: [
+        //   //合并
+        //   ["", { label: "合并表头", colspan: 5 }, ""],
+        //   [
+        //     "类别",
+        //     "内容",
+        //     "预算金额",
+        //     "实际金额",
+        //     "预算合计",
+        //     "实际合计",
+        //     "备注",
+        //   ],
+        // ],
         columns: [
           //添加每一列的数据类型和一些配置
           // data后面跟的这个字段是上传对应的字段
@@ -228,38 +315,90 @@ export default {
     };
   },
   created() {
-    this.height =
-      this.hotSettings.data.length * this.hotSettings.rowHeights +
-      this.hotSettings.columnHeaderHeight +
-      120 +
-      "px";
-    this.getData();
+    this.getFooterRemark();
+    // this.height =
+    //   this.hotSettings.data.length * this.hotSettings.rowHeights +
+    //   this.hotSettings.columnHeaderHeight +
+    //   120 +
+    //   "px";
+  },
+  mounted() {
+    setTimeout(() => {
+      this.getData();
+    }, 1000);
   },
   watch: {
-    row(newVal, oldVal) {
-      if (!this.setFixed) {
-        this.height =
-          newVal * this.hotSettings.rowHeights +
-          this.hotSettings.columnHeaderHeight +
-          120 +
-          "px";
+    tableData(newData) {
+      // 当父组件中的数据变化时，更新子组件的 hotSettings.data
+      this.hotSettings.data = newData;
+    },
+    // row(newVal, oldVal) {
+    //   if (!this.setFixed) {
+    //     this.height =
+    //       newVal * this.hotSettings.rowHeights +
+    //       this.hotSettings.columnHeaderHeight +
+    //       120 +
+    //       "px";
+    //   }
+    // },
+  },
+  computed: {},
+  methods: {
+    // 跳转至页面配置
+    toPageSetting() {
+      if (this.sysID == 35) {
+        this.$emit("oneselftSysID", 35);
+      } else {
+        this.$router.push({
+          name: "FieldInfo",
+          params: { ID: this.sysID },
+        });
+      }
+      // 解决其他页面弹框状态下跳转到配置表弹框不关闭的bug
+      // this.$emit("toPageSetting");
+    },
+    //显示底部文字动态绑定
+    async getFooterRemark() {
+      let form = {};
+      form["dicID"] = 33;
+      form["page"] = 1;
+      form["rows"] = 0;
+      form["DictionaryID"] = this.sysID;
+      let res = await GetSearchData(form);
+      const { result, data, count, msg } = res.data;
+      if (result) {
+        if (data.length && data[0].Remark1) {
+          this.Prompt = data[0].Remark1;
+        }
       }
     },
-  },
-  methods: {
+    // 选择一页显示多少数据
+    pageSize(val) {
+      this.$emit("pageSize", val, this.remark);
+      this.updateData();
+    },
+    // 分页导航
+    pageChange(val) {
+      this.$emit("pageChange", val, this.remark);
+      this.updateData();
+    },
+    // 模拟更新数据
+    updateData() {
+      this.tableData1 = this.tableData;
+    },
     /**
      * 插入行
      */
     adds() {
       this.hotSettings.data.push({});
       this.row++;
-      if (!this.setFixed) {
-        this.height =
-          this.hotSettings.data.length * this.hotSettings.rowHeights +
-          this.hotSettings.columnHeaderHeight +
-          120 +
-          "px";
-      }
+      // if (!this.setFixed) {
+      //   this.height =
+      //     this.hotSettings.data.length * this.hotSettings.rowHeights +
+      //     this.hotSettings.columnHeaderHeight +
+      //     120 +
+      //     "px";
+      // }
     },
     /**
      * 固定表头
@@ -271,11 +410,11 @@ export default {
       if (this.setFixed) {
         this.height = "400px";
       } else {
-        this.height =
-          this.hotSettings.data.length * this.hotSettings.rowHeights +
-          this.hotSettings.columnHeaderHeight +
-          120 +
-          "px";
+        // this.height =
+        //   this.hotSettings.data.length * this.hotSettings.rowHeights +
+        //   this.hotSettings.columnHeaderHeight +
+        //   120 +
+        //   "px";
       }
       setTimeout(() => {
         this.contentLoading = false;
@@ -298,7 +437,20 @@ export default {
      * 获取数据
      */
     getData() {
-      //this.processing(data)
+      this.hotSettings.data = this.tableData;
+      this.tableColumns.map((item) => {
+        item["title"] = item["label"];
+        item["data"] = item["prop"];
+        if (item["prop"] === "isChecked") {
+          item["type"] = "checkbox";
+        }
+      });
+      this.hotSettings.columns = this.tableColumns;
+      console.log(this.hotSettings.columns, this.hotSettings.data);
+      // hot.selectColumns(this.tableColumns);
+      console.log(this.$refs.textHot, "this.$refs.textHot");
+      this.$refs.textHot.hotInstance.updateSettings(this.hotSettings);
+      // this.processing(data)
     },
     /**
      * 计算合并
@@ -331,16 +483,16 @@ export default {
 };
 </script>
 <style scoped>
-.box {
+/* .box {
   background-color: #ccc;
   padding: 20px 20px;
-}
+} */
 .subFeeSum {
   background-color: #fff;
   width: 100%;
   height: 100%;
-  padding: 20px 20px;
-  box-sizing: border-box;
+  /* padding: 20px 20px; */
+  /* box-sizing: border-box; */
 }
 .subFeeSum #subFeeSum-table {
   overflow: hidden;
@@ -352,12 +504,7 @@ export default {
 .subFeeSum .handsontable .currentCol {
   background-color: #d1dfd7;
 }
-.subFeeSum #hot-display-license-info {
+/* .subFeeSum #hot-display-license-info {
   display: none;
-}
-.subFeeSum .htCore thead th,
-.htCore tbody th {
-  /*background: #FFF;*/
-  vertical-align: middle;
-}
+} */
 </style>
