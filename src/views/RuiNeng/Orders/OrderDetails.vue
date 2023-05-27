@@ -428,6 +428,8 @@ export default {
             //   GC.Spread.Sheets.SheetArea.viewport
             // );
             // cell.foreColor("#2a06ecd9");
+          } else {
+            sheet.getCell(-1, y).foreColor("gray");
           }
           // cellIndex++;
         });
