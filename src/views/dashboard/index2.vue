@@ -124,9 +124,11 @@
               <div class="echartBody">
                 <ComReportTable
                   :isToolbar="false"
+                  :showFooter="false"
                   ref="PurchaseRequisition"
                   :isEdit="false"
                   :remark="0"
+                  :height="'100%'"
                   :row-key="'RowNumber'"
                   :sysID="sysID[0]['ID']"
                   :table-data="tableData[0]"
@@ -138,6 +140,14 @@
                   @sortChange="sortChange"
                 >
                 </ComReportTable>
+                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
+                  <ul class="item">
+                    <li v-for="(item, index) in listData" :key="index">
+                      <span class="title" v-text="item.title"></span>
+                      <span class="date" v-text="item.date"></span>
+                    </li>
+                  </ul>
+                </vue-seamless-scroll> -->
               </div>
             </div>
             <div class="itemCard">
@@ -147,9 +157,11 @@
               <div class="echartBody">
                 <ComReportTable2
                   :isToolbar="false"
+                  :showFooter="false"
                   ref="PurchaseRequisition"
                   :isEdit="false"
                   :remark="1"
+                  :height="'100%'"
                   :row-key="'RowNumber'"
                   :sysID="sysID[1]['ID']"
                   :table-data="tableData[1]"
@@ -207,7 +219,7 @@
                 <el-button-group>
                   <el-button
                     :class="{
-                      select: selected1Index === 0
+                      select: selected1Index === 0,
                     }"
                     size="small"
                     @click="handleConsumeBtnClick(0)"
@@ -216,7 +228,7 @@
                   </el-button>
                   <el-button
                     :class="{
-                      select: selected1Index === 1
+                      select: selected1Index === 1,
                     }"
                     size="small"
                     @click="handleConsumeBtnClick(1)"
@@ -356,7 +368,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "PostMRPAnalysis",
@@ -364,43 +376,39 @@ export default {
     ComSearch,
     ComVxeTable,
     ComReportTable,
-    ComReportTable2
+    ComReportTable2,
   },
   data() {
     return {
       headCard: [
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
           title: "今日库存金额",
           statusNum: "3,841",
           changeNum: "+4500",
-          iconStatus: true
+          iconStatus: true,
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
           title: "今日在途金额",
           statusNum: "2,840",
           changeNum: "-4500",
-          iconStatus: false
+          iconStatus: false,
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
           title: "超订金额",
           statusNum: "45.21%",
           changeNum: "+4500",
-          iconStatus: true
+          iconStatus: true,
         },
         {
-          icon:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
           title: "超订计划金额",
           statusNum: "34.24%",
           changeNum: "+4500",
-          iconStatus: true
-        }
+          iconStatus: true,
+        },
       ],
       ID: 9046,
       isEdit: false,
@@ -417,25 +425,25 @@ export default {
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       sysID: [{ ID: 10113 }, { ID: 10113 }, { ID: 10084 }, { ID: 6751 }],
 
@@ -446,7 +454,7 @@ export default {
       chartOptions: [],
       handleWindowResizeDebounced: null,
       selected1Index: 0,
-      selected2Index: 0
+      selected2Index: 0,
     };
   },
   watch: {},
@@ -461,6 +469,8 @@ export default {
   },
   activated() {},
   async mounted() {
+    // var style = window.getComputedStyle("echartBody");
+    // console.log(style, "style");
     // await this.getEchartsData1();
     // await this.getEchartsData2();
     // await this.getEchartsData3();
@@ -471,7 +481,7 @@ export default {
       this.$refs.chart2,
       this.$refs.chart3,
       this.$refs.chart4,
-      this.$refs.chart5
+      this.$refs.chart5,
     ];
     await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -500,19 +510,19 @@ export default {
             containLabel: true,
             bottom: 0,
             left: fontSize(10),
-            right: fontSize(10)
+            right: fontSize(10),
           },
           tooltip: {
             trigger: "axis",
             axisPointer: {
-              type: "shadow"
-            }
+              type: "shadow",
+            },
           },
           legend: {
             top: "0",
             data: ["未达成", "已达成"],
             itemWidth: fontSize(14),
-            itemHeight: fontSize(14)
+            itemHeight: fontSize(14),
           },
           xAxis: {
             // name: "班级",
@@ -526,54 +536,54 @@ export default {
               "19日",
               "23日",
               "27日",
-              "30日"
+              "30日",
             ],
             axisLabel: {
               interval: 0,
               show: true,
               textStyle: {
-                color: "#000"
-              }
+                color: "#000",
+              },
             },
             axisLine: {
               lineStyle: {
                 show: false,
                 color: "#F3F3F3",
-                width: 2
-              }
-            }
+                width: 2,
+              },
+            },
           },
           yAxis: [
             {
               name: "单位:万",
               type: "value",
               nameTextStyle: {
-                color: "#444444"
+                color: "#444444",
               },
               axisLabel: {
                 interval: 0,
                 show: true,
                 textStyle: {
-                  color: "#444444"
-                }
+                  color: "#444444",
+                },
               },
               axisLine: {
-                show: false
+                show: false,
                 // lineStyle: {
                 //   color: "#F3F3F3",
                 //   width: 2
                 // }
               },
               axisTick: {
-                show: false
+                show: false,
               },
               splitLine: {
                 lineStyle: {
                   type: "dashed",
-                  color: "#E9E9E9"
-                }
-              }
-            }
+                  color: "#E9E9E9",
+                },
+              },
+            },
           ],
           series: [
             {
@@ -582,8 +592,8 @@ export default {
               silent: true,
               itemStyle: {
                 normal: {
-                  color: "#578FFB"
-                }
+                  color: "#578FFB",
+                },
               },
               data: [
                 "45",
@@ -598,8 +608,8 @@ export default {
                 "43",
                 "34",
                 "5",
-                "46"
-              ]
+                "46",
+              ],
             },
             {
               name: "已达成",
@@ -607,8 +617,8 @@ export default {
               silent: true,
               itemStyle: {
                 normal: {
-                  color: "#23CF9C"
-                }
+                  color: "#23CF9C",
+                },
               },
               data: [
                 "23",
@@ -623,10 +633,10 @@ export default {
                 "14",
                 "25",
                 "57",
-                "34"
-              ]
-            }
-          ]
+                "34",
+              ],
+            },
+          ],
         },
         {
           backgroundColor: "#fff",
@@ -653,15 +663,15 @@ export default {
             itemWidth: fontSize(10),
             itemHeight: fontSize(10),
             textStyle: {
-              fontSize: fontSize(12)
+              fontSize: fontSize(12),
             },
             itemStyle: {
-              borderRadius: "50%" // 将图例项的形状设定为圆形
+              borderRadius: "50%", // 将图例项的形状设定为圆形
             },
-            data: ["包装", "自动插件", "焊线装配", "贴片", "灌胶老练", "印刷"]
+            data: ["包装", "自动插件", "焊线装配", "贴片", "灌胶老练", "印刷"],
           },
           grid: {
-            containLabel: true
+            containLabel: true,
           },
           series: [
             {
@@ -674,52 +684,52 @@ export default {
                 "#6E40F2",
                 "#FF61E6",
                 "#E82074",
-                "#FBA806"
+                "#FBA806",
               ],
               center: ["30%", "50%"],
               label: {
                 normal: {
                   position: "inner",
-                  formatter: "{d}%"
+                  formatter: "{d}%",
                 },
                 textStyle: {
                   color: "#fff",
-                  fontSize: fontSize(12)
-                }
+                  fontSize: fontSize(12),
+                },
               },
               labelLine: {
                 normal: {
-                  show: false
-                }
+                  show: false,
+                },
               },
               data: [
                 {
                   value: 3661,
-                  name: "包装"
+                  name: "包装",
                 },
                 {
                   value: 5713,
-                  name: "自动插件"
+                  name: "自动插件",
                 },
                 {
                   value: 9938,
-                  name: "焊线装配"
+                  name: "焊线装配",
                 },
                 {
                   value: 17623,
-                  name: "贴片"
+                  name: "贴片",
                 },
                 {
                   value: 3299,
-                  name: "灌胶老练"
+                  name: "灌胶老练",
                 },
                 {
                   value: 3299,
-                  name: "印刷"
-                }
-              ]
-            }
-          ]
+                  name: "印刷",
+                },
+              ],
+            },
+          ],
         },
         {
           backgroundColor: "#fff",
@@ -746,10 +756,10 @@ export default {
             itemWidth: fontSize(10),
             itemHeight: fontSize(10),
             textStyle: {
-              fontSize: fontSize(12)
+              fontSize: fontSize(12),
             },
             itemStyle: {
-              borderRadius: "50%" // 将图例项的形状设定为圆形
+              borderRadius: "50%", // 将图例项的形状设定为圆形
             },
             data: [
               "回货周期<6天",
@@ -757,11 +767,11 @@ export default {
               "15天<回货周期<30天",
               "回货周期>30天",
               "灌胶老练",
-              "印刷"
-            ]
+              "印刷",
+            ],
           },
           grid: {
-            containLabel: true
+            containLabel: true,
           },
           series: [
             {
@@ -774,7 +784,7 @@ export default {
                 "#6E40F2",
                 "#FF61E6",
                 "#E82074",
-                "#FBA806"
+                "#FBA806",
               ],
               center: ["25%", "50%"],
               label: {
@@ -782,53 +792,53 @@ export default {
                   position: "inner",
                   formatter: "{d}%",
                   fontSize: fontSize(8),
-                  color: "#fff"
-                }
+                  color: "#fff",
+                },
               },
               labelLine: {
                 normal: {
-                  show: false
-                }
+                  show: false,
+                },
               },
               data: [
                 {
                   value: 3661,
-                  name: "回货周期<6天"
+                  name: "回货周期<6天",
                 },
                 {
                   value: 5713,
-                  name: "6天<回货周期<15天"
+                  name: "6天<回货周期<15天",
                 },
                 {
                   value: 9938,
-                  name: "15天<回货周期<30天"
+                  name: "15天<回货周期<30天",
                 },
                 {
                   value: 17623,
-                  name: "回货周期>30天"
-                }
-              ]
-            }
-          ]
+                  name: "回货周期>30天",
+                },
+              ],
+            },
+          ],
         },
         {
           grid: {
             containLabel: true,
             bottom: 0,
             left: fontSize(10),
-            right: fontSize(10)
+            right: fontSize(10),
           },
           tooltip: {
             trigger: "axis",
             axisPointer: {
-              type: "shadow"
-            }
+              type: "shadow",
+            },
           },
           legend: {
             top: "0",
             data: ["未达成", "已达成"],
             itemWidth: fontSize(14),
-            itemHeight: fontSize(14)
+            itemHeight: fontSize(14),
           },
           xAxis: {
             // name: "班级",
@@ -838,48 +848,48 @@ export default {
               interval: 0,
               show: true,
               textStyle: {
-                color: "#000"
-              }
+                color: "#000",
+              },
             },
             axisLine: {
               lineStyle: {
                 show: false,
                 color: "#F3F3F3",
-                width: 2
-              }
-            }
+                width: 2,
+              },
+            },
           },
           yAxis: [
             {
               name: "单位:万",
               type: "value",
               nameTextStyle: {
-                color: "#444444"
+                color: "#444444",
               },
               axisLabel: {
                 interval: 0,
                 show: true,
                 textStyle: {
-                  color: "#444444"
-                }
+                  color: "#444444",
+                },
               },
               axisLine: {
-                show: false
+                show: false,
                 // lineStyle: {
                 //   color: "#F3F3F3",
                 //   width: 2
                 // }
               },
               axisTick: {
-                show: false
+                show: false,
               },
               splitLine: {
                 lineStyle: {
                   type: "dashed",
-                  color: "#E9E9E9"
-                }
-              }
-            }
+                  color: "#E9E9E9",
+                },
+              },
+            },
           ],
           series: [
             {
@@ -889,8 +899,8 @@ export default {
               barWidth: fontSize(14),
               itemStyle: {
                 normal: {
-                  color: "#578FFB"
-                }
+                  color: "#578FFB",
+                },
               },
 
               data: [
@@ -906,8 +916,8 @@ export default {
                 "43",
                 "34",
                 "5",
-                "46"
-              ]
+                "46",
+              ],
             },
             {
               name: "已达成",
@@ -916,8 +926,8 @@ export default {
               barWidth: fontSize(14),
               itemStyle: {
                 normal: {
-                  color: "#23CF9C"
-                }
+                  color: "#23CF9C",
+                },
               },
               data: [
                 "23",
@@ -932,10 +942,10 @@ export default {
                 "14",
                 "25",
                 "57",
-                "34"
-              ]
-            }
-          ]
+                "34",
+              ],
+            },
+          ],
         },
         {
           backgroundColor: "#fff",
@@ -945,22 +955,22 @@ export default {
             "#FFC005",
             "#FF515A",
             "#8B5CFF",
-            "#00CA69"
+            "#00CA69",
           ],
           legend: {
-            top: "0%"
+            top: "0%",
           },
           tooltip: {
             trigger: "axis",
             axisPointer: {
-              type: "shadow"
-            }
+              type: "shadow",
+            },
           },
           grid: {
             left: fontSize(10),
             right: fontSize(10),
             bottom: fontSize(10),
-            containLabel: true
+            containLabel: true,
           },
           xAxis: [
             {
@@ -969,16 +979,16 @@ export default {
               axisLabel: {
                 formatter: "{value}月",
                 textStyle: {
-                  color: "#333"
-                }
+                  color: "#333",
+                },
               },
               axisLine: {
                 lineStyle: {
-                  color: "#D9D9D9"
-                }
+                  color: "#D9D9D9",
+                },
               },
-              data: ["1", "2", "3", "4", "5", "6", "7", "8"]
-            }
+              data: ["1", "2", "3", "4", "5", "6", "7", "8"],
+            },
           ],
           yAxis: [
             {
@@ -986,27 +996,27 @@ export default {
               name: "单位：万",
               axisLabel: {
                 textStyle: {
-                  color: "#666"
-                }
+                  color: "#666",
+                },
               },
               nameTextStyle: {
                 color: "#666",
                 fontSize: 12,
-                lineHeight: 40
+                lineHeight: 40,
               },
               splitLine: {
                 lineStyle: {
                   type: "dashed",
-                  color: "#E9E9E9"
-                }
+                  color: "#E9E9E9",
+                },
               },
               axisLine: {
-                show: false
+                show: false,
               },
               axisTick: {
-                show: false
-              }
-            }
+                show: false,
+              },
+            },
           ],
           series: [
             {
@@ -1026,20 +1036,20 @@ export default {
                     [
                       {
                         offset: 0,
-                        color: "#0090FF30"
+                        color: "#0090FF30",
                       },
                       {
                         offset: 1,
-                        color: "#0090FF10"
-                      }
+                        color: "#0090FF10",
+                      },
                     ],
                     false
                   ),
                   shadowColor: "#0090FF10",
-                  shadowBlur: 10
-                }
+                  shadowBlur: 10,
+                },
               },
-              data: [100, 138, 350, 173, 180, 150, 180, 230]
+              data: [100, 138, 350, 173, 180, 150, 180, 230],
             },
             {
               name: "生产数",
@@ -1058,30 +1068,30 @@ export default {
                     [
                       {
                         offset: 0,
-                        color: "#36CE9E30"
+                        color: "#36CE9E30",
                       },
                       {
                         offset: 1,
-                        color: "#36CE9E10"
-                      }
+                        color: "#36CE9E10",
+                      },
                     ],
                     false
                   ),
                   shadowColor: "#36CE9E10",
-                  shadowBlur: 10
-                }
+                  shadowBlur: 10,
+                },
               },
-              data: [233, 233, 200, 180, 199, 233, 210, 180]
-            }
-          ]
-        }
+              data: [233, 233, 200, 180, 199, 233, 210, 180],
+            },
+          ],
+        },
       ];
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
-        this.chart.map(item => {
+        this.chart.map((item) => {
           echarts.init(item).resize();
         });
       }, 100);
@@ -1219,17 +1229,17 @@ export default {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        this.selectionData[remarkTb].forEach(x => {
+        this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
           obj["ElementDeleteFlag"] = 1;
           newData.push(obj);
         });
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
+        .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -1250,7 +1260,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -1258,7 +1268,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -1279,7 +1289,7 @@ export default {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
+              n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -1290,7 +1300,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -1328,9 +1338,8 @@ export default {
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
       if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] = this.tableColumns[
-          remarkTb
-        ][1]["pageSize"];
+        this.tablePagination[remarkTb]["pageSize"] =
+          this.tableColumns[remarkTb][1]["pageSize"];
       }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
@@ -1343,7 +1352,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -1354,7 +1363,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -1365,7 +1374,7 @@ export default {
           dicID: 9037,
           groupby: "Dept",
           fields: "SUM(DemandQty) as DemandQty,Dept",
-          sort: "DemandQty desc"
+          sort: "DemandQty desc",
         },
         "6E8BF76C6BA5B0D8"
       );
@@ -1375,16 +1384,16 @@ export default {
           (accumulator, current) => accumulator + current.DemandQty,
           0
         );
-        this.chartData1 = data.map(item => ({
+        this.chartData1 = data.map((item) => ({
           value: item.DemandQty,
-          name: item.Dept
+          name: item.Dept,
         }));
         console.log(this.chartData1, "this.chartData2[0]");
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1394,19 +1403,21 @@ export default {
           dicID: 9062,
           sort: "OweQty",
           page: 1,
-          rows: 6
+          rows: 6,
         },
         "6E8BF76C6BA5B0D8"
       );
       const { result, data, msg } = res.data;
       if (result) {
-        this.chartData2[0] = data.map(item => item.MaterialName.split(" ")[0]);
-        this.chartData2[1] = data.map(item => item.OweQty);
+        this.chartData2[0] = data.map(
+          (item) => item.MaterialName.split(" ")[0]
+        );
+        this.chartData2[1] = data.map((item) => item.OweQty);
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1419,8 +1430,8 @@ export default {
         )},${parseInt("0x" + hex.slice(5, 7))},${opacity})`;
       }
       return rgbaColor;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -1686,7 +1697,7 @@ export default {
 
   .echartHead {
     padding: 0px 20px;
-    height: 60px;
+    height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;

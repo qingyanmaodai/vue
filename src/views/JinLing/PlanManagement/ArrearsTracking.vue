@@ -152,7 +152,7 @@
         tableLoading: [false],
         isClear: [false],
         tablePagination: [
-          { pageIndex: 1, pageSize: 200, pageTotal: 0 },
+          { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         ],
         height: "707px",
         showPagination: true,
