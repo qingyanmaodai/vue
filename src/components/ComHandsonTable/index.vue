@@ -323,9 +323,10 @@ export default {
     //   "px";
   },
   mounted() {
-    setTimeout(() => {
-      this.getData();
-    }, 1000);
+    this.hotTableRef();
+    // setTimeout(() => {
+    //   this.getData();
+    // }, 1000);
   },
   watch: {
     tableData(newData) {
@@ -342,8 +343,24 @@ export default {
     //   }
     // },
   },
-  computed: {},
+  computed: {
+    multipleSelection() {
+      let CheckNum = this.tableData.filter(
+        (item) => item["isChecked"] === true
+      );
+      return CheckNum;
+    },
+  },
   methods: {
+    hotTableRef: function () {
+      this.hotTable = this.$refs.textHot;
+      this.$emit(
+        "workbookInitialized",
+        this.hotTable,
+        this.remark,
+        this.hotSettings
+      );
+    },
     // 跳转至页面配置
     toPageSetting() {
       if (this.sysID == 35) {
@@ -446,9 +463,7 @@ export default {
         }
       });
       this.hotSettings.columns = this.tableColumns;
-      console.log(this.hotSettings.columns, this.hotSettings.data);
       // hot.selectColumns(this.tableColumns);
-      console.log(this.$refs.textHot, "this.$refs.textHot");
       this.$refs.textHot.hotInstance.updateSettings(this.hotSettings);
       // this.processing(data)
     },
