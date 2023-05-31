@@ -779,7 +779,7 @@
             },
             // 7日计划配套率
             getWeekRateData(OrganizeIDs) {
-                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5157, DemandDate: [showDate(), showDate(6)], rows: 7, fields:"FORMAT(DemandDate,'MM-dd') AS N1,sum(DemandQty) as S1,sum(DemandQty+OweQty)   as S2,sum(DemandQty+OweQty)/sum(DemandQty)",groupby:'DemandDate',sort:'DemandDate' })
+                axiosPostRequst(`/APSAPI/APSData`, { dicID: 5157, DemandDate: [showDate(), showDate(6)], rows: 7, fields:"FORMAT(DemandDate,'MM-dd') AS N1,sum(DemandQty) as S1,sum(DemandQty+OweQty)   as S2,sum(DemandQty+OweQty)/sum(DemandQty) as S3",groupby:'DemandDate',sort:'DemandDate' })
                     .then(function (res) {
                         _this.weekOptionData = []
 
@@ -795,7 +795,7 @@
                                 _this.weekOption.xAxis[0].data.push(item.N1)
                                 _this.weekOption.series[0].data.push(parseInt(item.S1))
                                 _this.weekOption.series[1].data.push(parseInt(item.S2))
-                                _this.weekOption.series[2].data.push(item.Column1 ? parseFloat(((item.Column1) * 100).toFixed(2)) : 0)
+                                _this.weekOption.series[2].data.push(item.S3 ? parseFloat(((item.S3) * 100).toFixed(2)) : 0)
                             })
 
                             // 动态修改完数据后渲染,需要修改的数据放在渲染方法前完成
