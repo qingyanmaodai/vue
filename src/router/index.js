@@ -48,17 +48,17 @@ export let constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'el-icon-s-shop', affix: true }
-    }]
-  },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [{
+  //     path: 'dashboard',
+  //     name: 'dashboard',
+  //     component: () => import('@/views/dashboard/index'),
+  //     meta: { title: '首页', icon: 'el-icon-s-shop', affix: true }
+  //   }]
+  // },
   {
     path: '/redirect/:path*',
     component: () => import('@/views/redirect/index')
