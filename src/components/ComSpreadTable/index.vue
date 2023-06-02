@@ -1,7 +1,7 @@
 <template>
   <!--  spreadJSform表单控件  -->
 
-  <div class="flex_column" :style="{ 'height': height }">
+  <div class="flex_column">
     <div class="table-container" v-loading="tableLoading">
       <gc-spread-sheets
         class="sample-spreadsheets"
@@ -124,7 +124,7 @@ export default {
   },
   mounted() {
     this.initSpread();
-    console.log(this.height,111111);
+    console.log(this.height, 111111);
   },
   created() {
     this.getFooterRemark();
