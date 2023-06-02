@@ -1443,6 +1443,7 @@ export default {
 .el-main {
   padding: 16px;
   height: calc(100vh - 80px);
+  overflow: hidden;
 
   .firstNode {
     display: flex;
