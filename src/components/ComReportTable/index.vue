@@ -369,7 +369,7 @@
       </vxe-table>
     </div>
 
-    <div class="pagination-container" v-if="showFooter">
+    <div class="flex_shrink" v-if="showFooter">
       <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
           <span @click="toPageSetting" class="primaryColor cursor"
@@ -987,12 +987,5 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-.table-container {
-  flex-grow: 1;
-  overflow-y: auto; /* 添加垂直滚动条 */
-}
-.pagination-container {
-  flex-shrink: 0;
 }
 </style>

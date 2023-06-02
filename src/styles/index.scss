@@ -1,39 +1,40 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
+@import "./variables.scss";
+@import "./mixin.scss";
+@import "./transition.scss";
+@import "./element-ui.scss";
+@import "./sidebar.scss";
 
 /* 好看的背景浅色字体深色文本 */
 .span_bg_color {
   font-weight: 700;
-  padding    : 2px 6px;
-  font-size  : 12px;
+  padding: 2px 6px;
+  font-size: 12px;
   line-height: 16px;
-  max-width  : 84px;
+  max-width: 84px;
 }
 
 .orange_span {
-  color           : #ec8205;
+  color: #ec8205;
   background-color: #ffe9cf;
 }
 
 .blue_span {
-  color           : #055fe6;
+  color: #055fe6;
   background-color: #ddebff;
 }
 
 body {
-  height                 : 100%;
+  height: 100%;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing : antialiased;
-  text-rendering         : optimizeLegibility;
-  font-family            : Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
 }
 
 .el-menu-item,
 .el-submenu__title {
-  height     : 3rem;
+  height: 3rem;
   line-height: 3rem;
 }
 
@@ -42,7 +43,7 @@ label {
 }
 
 html {
-  height    : 100%;
+  height: 100%;
   box-sizing: border-box;
   background: #f3f3f4;
 }
@@ -65,8 +66,8 @@ a:active {
 a,
 a:focus,
 a:hover {
-  cursor         : pointer;
-  color          : inherit;
+  cursor: pointer;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -77,11 +78,11 @@ div:focus {
 .clearfix {
   &:after {
     visibility: hidden;
-    display   : block;
-    font-size : 0;
-    content   : " ";
-    clear     : both;
-    height    : 0;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
   }
 }
 
@@ -91,13 +92,13 @@ div:focus {
 }
 
 .app-main {
-  overflow  : auto;
+  overflow: auto;
   max-height: calc(100% - 48px);
 }
 
 .tree-line {
   .el-tree-node {
-    position    : relative;
+    position: relative;
     padding-left: 15px; // 缩进量
   }
 
@@ -107,14 +108,14 @@ div:focus {
 
   // 竖线
   .el-tree-node::before {
-    content     : "";
-    height      : 100%;
-    width       : 1px;
-    position    : absolute;
-    left        : -3px;
-    top         : -26px;
+    content: "";
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    left: -3px;
+    top: -26px;
     border-width: 1px;
-    border-left : 1px dashed #82858a;
+    border-left: 1px dashed #82858a;
   }
 
   // 当前层最后一个节点的竖线高度固定
@@ -124,22 +125,22 @@ div:focus {
 
   // 横线
   .el-tree-node::after {
-    content     : "";
-    width       : 24px;
-    height      : 20px;
-    position    : absolute;
-    left        : -3px;
-    top         : 12px;
+    content: "";
+    width: 24px;
+    height: 20px;
+    position: absolute;
+    left: -3px;
+    top: 12px;
     border-width: 1px;
-    border-top  : 1px dashed #82858a;
+    border-top: 1px dashed #82858a;
   }
 
   // 去掉最顶层的虚线，放最下面样式才不会被上面的覆盖了
-  &>.el-tree-node::after {
+  & > .el-tree-node::after {
     border-top: none;
   }
 
-  &>.el-tree-node::before {
+  & > .el-tree-node::before {
     border-left: none;
   }
 
@@ -156,18 +157,18 @@ div:focus {
 
 #app {
   // padding: 10px;
-  color           : #606266;
-  height          : 100%;
+  color: #606266;
+  height: 100%;
   background-color: #f3f3f4;
 }
 
 .customClass {
-  position   : fixed;
-  margin-top : 0vh !important;
-  width      : 20% !important;
-  top        : 82px;
-  bottom     : 0;
-  overflow   : scroll;
+  position: fixed;
+  margin-top: 0vh !important;
+  width: 20% !important;
+  top: 82px;
+  bottom: 0;
+  overflow: scroll;
   margin-left: 80%;
 }
 
@@ -181,9 +182,9 @@ input[type="number"] {
 }
 
 .el-scrollbar .el-scrollbar__view .el-select-dropdown__item {
-  height    : auto;
+  height: auto;
   max-height: 274px;
-  overflow  : hidden;
+  overflow: hidden;
   overflow-y: auto;
 }
 
@@ -192,7 +193,7 @@ input[type="number"] {
 }
 
 ul li .el-tree .el-tree-node__content {
-  height : auto;
+  height: auto;
   padding: 0 20px;
 }
 
@@ -201,18 +202,14 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .el-tree .is-current .el-tree-node__label {
-  color      : #409eff;
+  color: #409eff;
   font-weight: 700;
 }
 
 .el-tree .is-current .el-tree-node__children .el-tree-node__label {
-  color      : #606266;
+  color: #606266;
   font-weight: normal;
 }
-
-
-
-
 
 .vxe-table--render-default .vxe-tree-cell {
   padding-left: 0 !important;
@@ -235,33 +232,32 @@ ul li .el-tree .el-tree-node__content {
   padding: 8px;
   width: 100%;
   .admin_left {
-    background  : #fff;
-    width       : 200px;
+    background: #fff;
+    width: 200px;
     margin-right: 10px;
   }
 
-
   .admin_left_2 {
-    background  : #fff;
-    width       : 140px;
+    background: #fff;
+    width: 140px;
     margin-right: 10px;
   }
 
   .admin_left_two {
-    background  : #fff;
-    width       : 340px;
+    background: #fff;
+    width: 340px;
     margin-right: 10px;
   }
 
   .admin_right {
-    background : #fff;
-    width      : 340px;
+    background: #fff;
+    width: 340px;
     margin-left: 10px;
   }
 
   .admin_right_two {
-    background : #fff;
-    width      : 520px;
+    background: #fff;
+    width: 520px;
     margin-left: 10px;
   }
 
@@ -285,7 +281,7 @@ ul li .el-tree .el-tree-node__content {
   }
 
   .up_admin {
-    background   : #fff;
+    background: #fff;
     margin-bottom: 10px;
   }
 
@@ -299,7 +295,7 @@ ul li .el-tree .el-tree-node__content {
 
   .icon_img {
     font-size: 20px;
-    cursor   : pointer;
+    cursor: pointer;
   }
 
   .down_center_admin {
@@ -311,32 +307,31 @@ ul li .el-tree .el-tree-node__content {
   }
 
   .admin_head {
-    background   : #ffffff;
-    padding      : 4px 10px 4px 10px;
+    background: #ffffff;
+    padding: 4px 10px 4px 10px;
     margin-bottom: 6px;
     border-radius: 4px;
   }
 
   .admin_head_2 {
-    background   : #ffffff;
-    padding      : 4px 10px 4px 10px;
+    background: #ffffff;
+    padding: 4px 10px 4px 10px;
     border-radius: 4px;
   }
   .admin_head_3 {
-    background   : #ffffff;
-    padding      : 4px 10px 4px 10px;
+    background: #ffffff;
+    padding: 4px 10px 4px 10px;
     margin-bottom: 6px;
     border-radius: 4px;
   }
   .admin_head_4 {
-    background   : #ffffff;
-    padding      : 4px 10px 4px 10px;
+    background: #ffffff;
+    padding: 4px 10px 4px 10px;
   }
   .admin_head_4,
   .admin_head,
   .admin_head_2,
   .dialog_search {
-
     .el-date-editor.el-input,
     .el-date-editor.el-input__inner {
       width: auto !important;
@@ -347,13 +342,13 @@ ul li .el-tree .el-tree-node__content {
     }
 
     .el-form-item {
-      margin    : auto !important;
+      margin: auto !important;
       // width  : 100%;
-      display   : flex;
+      display: flex;
     }
 
     .el-range-editor.el-input__inner {
-      padding-left : 2px !important;
+      padding-left: 2px !important;
       padding-right: 0 !important;
     }
 
@@ -367,7 +362,7 @@ ul li .el-tree .el-tree-node__content {
 
     .el-form-item__label {
       padding-right: 5px;
-      flex-shrink  : 0;
+      flex-shrink: 0;
     }
 
     .elx-table .is-circle {
@@ -377,7 +372,7 @@ ul li .el-tree .el-tree-node__content {
     .elx-table .el-input--mini .el-input__inner,
     .vxe-table .el-input--mini .el-input__inner {
       line-height: 20px !important;
-      min-height : 20px !important;
+      min-height: 20px !important;
     }
 
     .el-input .el-input--prefix .el-input__inner {
@@ -406,10 +401,10 @@ ul li .el-tree .el-tree-node__content {
   }
 
   .hr-line-dashed {
-    border-top      : 1px dashed #0960bd;
-    color           : #ffffff;
+    border-top: 1px dashed #0960bd;
+    color: #ffffff;
     background-color: #ffffff;
-    height          : 1px;
+    height: 1px;
   }
 
   .tree_Head {
@@ -417,50 +412,47 @@ ul li .el-tree .el-tree-node__content {
   }
 
   .tree_text {
-    position           : relative;
-    display            : flex;
-    padding-left       : 7px;
-    font-size          : 16px;
-    font-weight        : 500;
-    line-height        : 24px;
-    color              : rgba(0, 0, 0, 0.85);
-    cursor             : pointer;
+    position: relative;
+    display: flex;
+    padding-left: 7px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
     -webkit-user-select: none;
-    -moz-user-select   : none;
-    -ms-user-select    : none;
-    user-select        : none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   .admin_content {
-    background   : #fff;
+    background: #fff;
     border-radius: 4px;
-    padding      : 6px;
-    position     : relative;
-    transition   : .5s;
+    padding: 6px;
+    position: relative;
+    transition: 0.5s;
   }
 
-  .el-pagination-tree{
-    .el-pagination{
+  .el-pagination-tree {
+    .el-pagination {
       white-space: normal;
     }
   }
-
 }
 
 .flex_wrap {
-  display        : flex;
-  flex-wrap      : wrap;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-
 }
 
 .list_box {
-  width      : 30%;
-  height     : 60px;
-  margin     : 10px !important;
+  width: 30%;
+  height: 60px;
+  margin: 10px !important;
   font-weight: bold !important;
-  font-size  : 16px;
-
+  font-size: 16px;
 }
 
 .cx_margin_left1 {
@@ -472,8 +464,8 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .text_right {
-  text-align     : right;
-  margin         : auto;
+  text-align: right;
+  margin: auto;
   justify-content: flex-end;
 
   .el-button {
@@ -486,32 +478,31 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .search_up {
-  transform       : rotate(-0deg);
-  display         : inline-block;
-  transition      : all 0.3s ease 0.1s !important;
+  transform: rotate(-0deg);
+  display: inline-block;
+  transition: all 0.3s ease 0.1s !important;
   transform-origin: center center;
 }
 
 .search_down {
-  transform       : rotate(-180deg);
-  display         : inline-block;
-  transition      : all 0.3s ease 0.1s !important;
+  transform: rotate(-180deg);
+  display: inline-block;
+  transition: all 0.3s ease 0.1s !important;
   transform-origin: center center;
-
 }
 
 .table_tag {
-  float      : left;
+  float: left;
   margin-left: 3px;
-  cursor     : pointer;
-  background : #fff;
-  color      : #933ec5;
+  cursor: pointer;
+  background: #fff;
+  color: #933ec5;
 }
 
 .footer_label {
   font-size: 10px;
-  color    : red;
-  margin   : 0 10px;
+  color: red;
+  margin: 0 10px;
 }
 
 // .el-form--inline .el-form-item {
@@ -520,14 +511,14 @@ ul li .el-tree .el-tree-node__content {
 
 /* 滚动条 */
 ::-webkit-scrollbar-thumb {
-  background      : rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6);
   background-color: rgba(144, 147, 153, 0.3);
-  border-radius   : 2px;
-  box-shadow      : inset 0 0 6px rgb(0, 0, 0, 0.2);
+  border-radius: 2px;
+  box-shadow: inset 0 0 6px rgb(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar {
-  width : 10px;
+  width: 10px;
   height: 10px;
 }
 
@@ -560,7 +551,7 @@ ul li .el-tree .el-tree-node__content {
 // }
 
 .flex {
-  display    : flex;
+  display: flex;
   align-items: center;
 }
 
@@ -577,36 +568,35 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .flex_row_end {
-  display        : flex;
+  display: flex;
   justify-content: flex-end;
 }
 
 .flex_row_spaceBtn {
-  display        : flex;
-  align-items    : center;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
 .standStyle {
   font-size: 14px;
-  color    : rgba(0, 0, 0, 0.85);
+  color: rgba(0, 0, 0, 0.85);
 }
 
 .flex_row_spaceRound {
-  display        : flex;
-  align-items    : center;
+  display: flex;
+  align-items: center;
   justify-content: space-around;
 }
 
 .flex_row_center {
-  display        : flex;
-  align-items    : center;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  ;
 }
 
 .flex_column {
-  display       : flex;
+  display: flex;
   flex-direction: column;
 }
 
@@ -626,7 +616,7 @@ ul li .el-tree .el-tree-node__content {
 
 .pagination {
   margin-top: 5px;
-  height    : 28px;
+  height: 28px;
 }
 
 .el-tree-node__content {
@@ -634,14 +624,14 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .flex_flex_end {
-  display        : flex !important;
-  align-items    : center;
+  display: flex !important;
+  align-items: center;
   justify-content: flex-end;
 }
 
 .flex_flex_start {
-  display        : flex !important;
-  align-items    : center;
+  display: flex !important;
+  align-items: center;
   justify-content: flex-start;
 }
 
@@ -650,12 +640,12 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .flex_between {
-  display        : flex;
+  display: flex;
   justify-content: space-between;
 }
 
 .flex_right {
-  display        : flex;
+  display: flex;
   justify-content: flex-end;
 }
 
@@ -680,15 +670,15 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .statusActive {
-  color        : #0960bd;
-  font-weight  : bold;
+  color: #0960bd;
+  font-weight: bold;
   border-bottom: 1px solid #0960bd;
 }
 
 .ant-table-title {
-  height     : 35px;
+  height: 35px;
   line-height: 35px;
-  padding    : 0 0 6px 0 !important;
+  padding: 0 0 6px 0 !important;
 
   .el-row {
     height: 30px !important;
@@ -704,11 +694,11 @@ ul li .el-tree .el-tree-node__content {
   // }
 
   .right_icon {
-    display        : inline-flex;
-    width          : 36px;
-    height         : 30px;
-    cursor         : pointer;
-    align-items    : center;
+    display: inline-flex;
+    width: 36px;
+    height: 30px;
+    cursor: pointer;
+    align-items: center;
     justify-content: center;
 
     .icon_size {
@@ -718,12 +708,12 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .el-row {
-  display    : flex;
+  display: flex;
   align-items: center;
 }
 
 .el-table .el-input__inner {
-  height     : 22px !important;
+  height: 22px !important;
   line-height: 22px;
 }
 
@@ -733,7 +723,7 @@ ul li .el-tree .el-tree-node__content {
 
 .el-table td,
 .el-table th {
-  padding: 0 2px !important
+  padding: 0 2px !important;
 }
 
 .el-table .el-button,
@@ -746,22 +736,22 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .el-table {
-  border-color: #D9D9D9;
+  border-color: #d9d9d9;
 }
 
 .el-table td,
 .el-table th.is-leaf {
-  border-bottom: 1px solid #D9D9D9 !important;
+  border-bottom: 1px solid #d9d9d9 !important;
 }
 
 .el-table--border td,
 .el-table--border th,
-.el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
-  border-right: 1px solid #D9D9D9 !important;
+.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+  border-right: 1px solid #d9d9d9 !important;
 }
 
 .el-table th {
-  font-weight     : normal;
+  font-weight: normal;
   background-color: #f3f3f3;
 }
 
@@ -770,36 +760,35 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .el-table .cell {
-  text-align : left;
-  color      : #000;
-  font-size  : 11px !important;
-  padding    : 0 6px;
-  height     : 26px !important;
+  text-align: left;
+  color: #000;
+  font-size: 11px !important;
+  padding: 0 6px;
+  height: 26px !important;
   line-height: 26px;
 }
 
-
 .el-table td {
-  border-right : 1px solid #BBBBBB;
-  border-bottom: 1px solid #BBBBBB;
+  border-right: 1px solid #bbbbbb;
+  border-bottom: 1px solid #bbbbbb;
 }
 
 .el-table .cell.el-tooltip {
   min-width: 0px;
 }
 
-.el-table__body tr.current-row>td {
+.el-table__body tr.current-row > td {
   background-color: #bedafa;
 }
 
 .el-table__fixed,
 .vxe-table__fixed,
 .elx-table__fixed {
-  height                                               : 100% !important;
-  position                                             : absolute;
+  height: 100% !important;
+  position: absolute;
   /*    // 让固定列的高自适应，且设置 !important覆盖ele-ui的默认样式 bottom:17px;
   // 固定列默认设置了定位， position: absolute;*/
-  bottom                                               : 17px !important;
+  bottom: 17px !important;
   /*    // 改为自动高度后，设置与父容器的底部距离，则高度会动态改变*/
   /*  只需要再设置一下bottom的值，让固定列和父元素的底部出现距离即可*/
 }
@@ -811,30 +800,29 @@ ul li .el-tree .el-tree-node__content {
 .el-pagination.is-background .btn-next,
 .el-pagination.is-background .btn-prev,
 .el-pagination.is-background .el-pager li {
-  margin   : 0 1px;
+  margin: 0 1px;
   min-width: 25px !important;
 }
 
 .el-pagination button,
-.el-pagination span:not([class*=suffix]),
+.el-pagination span:not([class*="suffix"]),
 .el-pager li {
   line-height: 25px !important;
-  height     : 25px !important;
-  font-size  : 11px !important;
-  background : #fff !important;
+  height: 25px !important;
+  font-size: 11px !important;
+  background: #fff !important;
 }
 
 .el-pagination__sizes .el-input .el-input__inner,
 .el-pagination__editor.el-input .el-input__inner {
   line-height: 25px !important;
-  height     : 25px !important;
-  font-size  : 11px !important;
+  height: 25px !important;
+  font-size: 11px !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background: #409EFF !important;
+  background: #409eff !important;
 }
-
 
 /* 弹框样式 */
 .fill_width {
@@ -855,10 +843,10 @@ ul li .el-tree .el-tree-node__content {
 
 .dialogForm {
   .el-form-item {
-    margin-bottom   : 15px !important;
-    padding-right   : 5px;
+    margin-bottom: 15px !important;
+    padding-right: 5px;
     // margin       : auto !important;
-    width           : 100%;
+    width: 100%;
     // display: flex;
   }
 
@@ -868,24 +856,23 @@ ul li .el-tree .el-tree-node__content {
   }
 
   .el-range-editor.el-input__inner {
-    padding-left : 2px !important;
+    padding-left: 2px !important;
     padding-right: 0 !important;
   }
 
   .el-range-editor.el-input__inner {
-    padding-left : 2px !important;
+    padding-left: 2px !important;
     padding-right: 0 !important;
   }
 
   // .el-form-item__content {
   //   width: calc(100% - 100px);
   // }
-
 }
 
 /* 改变第三方样式 */
 .el-drawer__header {
-  color    : #000000d9;
+  color: #000000d9;
   font-size: 16px;
 }
 
@@ -927,34 +914,34 @@ label {
 
 /* 右侧弹框样式 */
 .drawer_body {
-  height  : calc(100% - 60px);
+  height: calc(100% - 60px);
   position: relative;
-  padding : 16px;
+  padding: 16px;
 }
 
 .drawer_footer {
-  height     : 60px;
+  height: 60px;
   line-height: 60px;
-  position   : absolute;
-  bottom     : 0;
-  width      : 100%;
-  padding    : 0 20px 0 20px;
-  text-align : right;
-  background : #fff;
-  z-index    : 99;
-  border-top : 1px solid #d9d9d9;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 20px 0 20px;
+  text-align: right;
+  background: #fff;
+  z-index: 99;
+  border-top: 1px solid #d9d9d9;
 }
 
 .btnTree {
-  height  : calc(100vh - 265px);
+  height: calc(100vh - 265px);
   overflow: scroll;
-  margin  : 10px 0;
+  margin: 10px 0;
 }
 
 .menuTree {
-  height  : calc(100vh - 390px);
+  height: calc(100vh - 390px);
   overflow: scroll;
-  margin  : 10px 0;
+  margin: 10px 0;
 }
 
 .el-menu-item {
@@ -962,17 +949,16 @@ label {
 }
 
 .iconBtn {
-  font-size   : 19px;
-  font-weight : bold !important;
-  color       : #0960bd;
+  font-size: 19px;
+  font-weight: bold !important;
+  color: #0960bd;
   margin-right: 10px;
 }
 
 .iconBtn:hover {
   background: #f5f4f4;
-  cursor    : pointer;
+  cursor: pointer;
 }
-
 
 /* 表格行控制颜色 */
 .purpleBgColor {
@@ -981,9 +967,8 @@ label {
 
 .primaryBgColor {
   background: #0960bd !important;
-  color     : #fff;
+  color: #fff;
 }
-
 
 /* vxe表格 */
 // .vxe-table--render-default.size--mini .vxe-body--column.col--ellipsis,
@@ -997,11 +982,10 @@ label {
   height: 36px !important;
 }
 
-
 .vxe-table--render-default.size--mini .vxe-body--column:not(.col--ellipsis),
 .vxe-table--render-default.size--mini .vxe-footer--column:not(.col--ellipsis),
 .vxe-table--render-default.size--mini .vxe-header--column:not(.col--ellipsis) {
-  padding    : 0 !important;
+  padding: 0 !important;
   line-height: initial !important;
 }
 
@@ -1024,18 +1008,18 @@ label {
 
 .bgFFF {
   background: #fff;
-  height    : calc(100vh - 145px);
+  height: calc(100vh - 145px);
 }
 
 .flex_right {
-  display        : flex;
+  display: flex;
   justify-content: flex-end;
 }
 
 .bgDriver {
-  height    : 10px;
+  height: 10px;
   background: #f3f3f4;
-  width     : 100%;
+  width: 100%;
 }
 
 .margin_top15 {
@@ -1047,22 +1031,22 @@ label {
 }
 
 .padding_lr0 {
-  padding-left : 0 !important;
+  padding-left: 0 !important;
   padding-right: 0 !important;
 }
 
 .margin_lr10 {
-  margin-left : 10px;
+  margin-left: 10px;
   margin-right: 10px;
 }
 
 .margin_lr5 {
-  margin-left : 5px;
+  margin-left: 5px;
   margin-right: 5px;
 }
 
 .margin_tb5 {
-  margin-top   : 5px;
+  margin-top: 5px;
   margin-bottom: 5px;
 }
 
@@ -1071,7 +1055,7 @@ label {
 }
 
 .is-selected {
-  color: #1989FA;
+  color: #1989fa;
 }
 
 .el-calendar {
@@ -1079,9 +1063,9 @@ label {
 }
 
 .arrange_calendar__body .el-calendar__body {
-  height        : calc(100vh - 520px) !important;
-  overflow      : auto !important;
-  padding-top   : 0 !important;
+  height: calc(100vh - 520px) !important;
+  overflow: auto !important;
+  padding-top: 0 !important;
   padding-bottom: 0 !important;
 
   .prev,
@@ -1097,9 +1081,9 @@ label {
 }
 
 .arrange_calendar__body2 .el-calendar__body {
-  height        : calc(100vh - 250px) !important;
-  overflow      : auto !important;
-  padding-top   : 0 !important;
+  height: calc(100vh - 250px) !important;
+  overflow: auto !important;
+  padding-top: 0 !important;
   padding-bottom: 0 !important;
 
   .prev,
@@ -1115,7 +1099,7 @@ label {
 }
 
 .notice {
-  color: #ff9900 !important
+  color: #ff9900 !important;
 }
 
 .text_row {
@@ -1127,13 +1111,13 @@ label {
 }
 
 .dot {
-  width        : 6px;
-  height       : 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  display      : inline-block;
-  position     : absolute;
-  right        : 10px;
-  top          : 39%;
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  top: 39%;
 }
 
 .el-submenu__title {
@@ -1141,104 +1125,101 @@ label {
 }
 
 .el-submenu .el-menu-item {
-  padding : 0 20px !important;
+  padding: 0 20px !important;
   position: relative !important;
 }
 
 .dangerIconBtn {
-  color : rgb(255, 98, 62);
+  color: rgb(255, 98, 62);
   cursor: pointer;
 }
-
 
 .standHeight {
   height: 707px;
 }
 
 .asideTree {
-  height  : 642px;
+  height: 642px;
   overflow: auto;
 }
 
 .asideTree2 {
-  height  : 417px;
+  height: 417px;
   overflow: auto;
 }
 
 .spreadContainer {
   position: relative;
   overflow: hidden;
-  height  : 100%;
-  flex    : 1;
-  border  : 1px solid #ababab;
+  height: 100%;
+  flex: 1;
+  border: 1px solid #ababab;
 }
 
 .sample-spreadsheets {
-  width : 100%;
+  width: 100%;
   height: 100%;
 }
 
 .oneStyle {
-  margin-top  : 9.2vh !important;
-  width       : 100%;
+  margin-top: 9.2vh !important;
+  width: 100%;
   padding-left: 160px;
 }
 
 .twoStyle {
   margin-top: 9.2vh !important;
-  width     : 70%;
+  width: 70%;
 }
-
 
 /* 浮动弹框 */
 .active_box {
-  top    : 83px !important;
+  top: 83px !important;
   opacity: 1;
 }
 
 .error_box {
-  top    : 1000px !important;
+  top: 1000px !important;
   opacity: 0;
 }
 
 .dialog_box {
-  transition      : all .8s ease-out;
-  position        : absolute;
-  width           : 460px;
-  right           : 0;
+  transition: all 0.8s ease-out;
+  position: absolute;
+  width: 460px;
+  right: 0;
   // bottom: 2.56rem;
-  height          : 850px;
-  border          : 1px solid #e4e7ed;
-  border-radius   : 4px;
+  height: 850px;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
   background-color: #fff;
-  color           : #606266 !important;
-  box-shadow      : 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  box-sizing      : border-box;
-  z-index         : 99999;
+  color: #606266 !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  z-index: 99999;
 
   .box_head,
   .box_footer {
-    height     : 40px;
+    height: 40px;
     line-height: 40px;
-    padding    : 0 10px;
+    padding: 0 10px;
   }
 
   .box_content {
-    height  : calc(100% - 80px);
-    width   : 100%;
-    padding : 0 10px;
+    height: calc(100% - 80px);
+    width: 100%;
+    padding: 0 10px;
     overflow: auto;
   }
 
   .red {
-    color      : #ED5736;
+    color: #ed5736;
     font-weight: bold;
-    font-size  : 16px;
-    margin     : auto 0;
-    cursor     : pointer;
+    font-size: 16px;
+    margin: auto 0;
+    cursor: pointer;
   }
 }
-
 
 .newAddDialog {
   z-index: 1998 !important;
@@ -1253,31 +1234,30 @@ label {
 
   .el-dialog__body {
     background: #f3f3f4;
-    padding   : 10px 10px !important;
-    z-index   : 3 !important;
+    padding: 10px 10px !important;
+    z-index: 3 !important;
   }
 
   .el-container {
-    height    : 780px;
-    overflow  : auto;
+    height: 780px;
+    overflow: auto;
     background: #fff;
   }
 
   .dialog_icon {
-    float       : right;
+    float: right;
     margin-right: 30px;
-    margin-top  : 4px;
-    cursor      : pointer;
+    margin-top: 4px;
+    cursor: pointer;
   }
 
-
   .content_head {
-    display   : block;
+    display: block;
     text-align: center;
-    height    : 40px;
-    width     : 100%;
-    font-size : 24px;
-    color     : black;
+    height: 40px;
+    width: 100%;
+    font-size: 24px;
+    color: black;
     margin-top: 5px;
   }
 
@@ -1286,49 +1266,49 @@ label {
   }
 
   .content_main_head {
-    clear      : both;
-    width      : 100%;
-    height     : 40px;
+    clear: both;
+    width: 100%;
+    height: 40px;
     line-height: 40px;
   }
 
   .footer_span {
-    height     : 40px;
-    display    : block;
+    height: 40px;
+    display: block;
     padding-top: 10px;
   }
 
   .footer {
-    background : #f5f5f5;
+    background: #f5f5f5;
     line-height: 70px;
-    text-align : right;
+    text-align: right;
   }
 
   .hr-line-dashed {
-    border-top      : 1px dashed #e7eaec;
-    color           : #ffffff;
+    border-top: 1px dashed #e7eaec;
+    color: #ffffff;
     background-color: #ffffff;
-    height          : 1px;
+    height: 1px;
   }
 
   .orange_btn {
     background: #f7a54a;
-    border    : 1px solid #f7a54a;
-    color     : #fff;
+    border: 1px solid #f7a54a;
+    color: #fff;
   }
 
   .green_btn {
-    background : #21b9bb;
-    border     : 1px solid #21b9bb;
+    background: #21b9bb;
+    border: 1px solid #21b9bb;
     margin-left: 10px;
-    color      : #fff;
+    color: #fff;
   }
 
   .formStyle {
     ::v-deep .el-form-item {
-      width      : 25%;
-      float      : left;
-      display    : flex;
+      width: 25%;
+      float: left;
+      display: flex;
       align-items: center;
     }
   }
@@ -1340,8 +1320,6 @@ label {
       height: 100% !important;
     }
   }
-
-
 }
 
 .margin_auto_0 {
@@ -1363,13 +1341,13 @@ label {
 }
 
 .blueSummaryColor td {
-  background : #2dd8ff !important;
+  background: #2dd8ff !important;
   font-weight: bold;
-  color      : #151515;
+  color: #151515;
 }
 
 .list_content_up {
-  background   : #fff;
+  background: #fff;
   margin-bottom: 10px;
 }
 
@@ -1386,12 +1364,12 @@ label {
 }
 
 .echart_up {
-  width : 100%;
+  width: 100%;
   height: 300px;
 }
 
 .echart {
-  width : 100%;
+  width: 100%;
   height: 100%;
 }
 
@@ -1428,14 +1406,12 @@ label {
   display: none !important;
 }
 
-
 .dialog_table_left {
   width: 60%;
 }
 
-
 .dialog_table_right {
-  width      : 39%;
+  width: 39%;
   margin-left: 1%;
 }
 
@@ -1488,29 +1464,33 @@ label {
 }
 
 .redColorText {
-  height       : 28px;
-  color        : #ED5736;
-  border-bottom: 1px solid #ED5736;
-  min-width    : 60px;
-  line-height  : 28px;
+  height: 28px;
+  color: #ed5736;
+  border-bottom: 1px solid #ed5736;
+  min-width: 60px;
+  line-height: 28px;
 }
 
 .vxe-table--render-default .vxe-cell {
-  padding-left : 4px !important;
+  padding-left: 4px !important;
   padding-right: 0 !important;
-  ;
 }
 
 .vxe-cell--filter {
-  padding: 0.1em .1em 0 .15em !important;
+  padding: 0.1em 0.1em 0 0.15em !important;
 }
 // 选项卡标签页外边距
-.tabs .el-tabs__content{
+.tabs .el-tabs__content {
   padding: 0px;
 }
-.tabs .el-tabs__item{
-  font-weight: bolder
+.tabs .el-tabs__item {
+  font-weight: bolder;
 }
-.flex-start{
+.flex-start {
   align-items: flex-start;
+}
+
+.table-container {
+  flex-grow: 1;
+  overflow: hidden;
 }

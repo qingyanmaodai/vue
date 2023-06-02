@@ -182,12 +182,16 @@ const actions = {
         commit('SET_ROLES', res.data.dev_Account.RoleMap);
         commit('SET_BUTTON', res.data.dev_Account.ButtonMenuRoleMap);
         commit('SET_MENU', res.data.dev_Account.MenuVue);
-        let homeHeight = document.documentElement.clientWidth;
-        if (homeHeight <= 1440) {
-          commit('SET_REDUCEHEIGHT', 138);
-        } else {
-          commit('SET_REDUCEHEIGHT', 183);
-        }
+        // let homeHeight = document.documentElement.clientWidth;
+        // if (homeHeight <= 1440) {
+        //   commit('SET_REDUCEHEIGHT', 138);
+        // } else {
+        //   commit('SET_REDUCEHEIGHT', 183);
+        // }
+
+        const scale = document.documentElement.clientWidth / 1920;
+        commit('SET_REDUCEHEIGHT', 160*scale);
+        
         dispatch('getOrganizeData', { root: true });
         resolve()
       }).catch(error => {

@@ -1,44 +1,42 @@
 <template>
-  <div>
-    <!--  spreadJSform表单控件  -->
+  <!--  spreadJSform表单控件  -->
 
-    <div class="flex_column">
-      <div class="spreadContainer" v-loading="tableLoading">
-        <gc-spread-sheets
-          class="sample-spreadsheets"
-          ref="gcSpreadSheets"
-          :hostStyle="{ height: height }"
-        >
-        </gc-spread-sheets>
+  <div class="flex_column" :style="{ 'height': height }">
+    <div class="table-container" v-loading="tableLoading">
+      <gc-spread-sheets
+        class="sample-spreadsheets"
+        ref="gcSpreadSheets"
+        :hostStyle="{ height: height }"
+      >
+      </gc-spread-sheets>
+    </div>
+    <div class="flex_row_spaceBtn pagination flex_shrink" v-show="spaceBtnShow">
+      <div v-show="sysID > 0">
+        <span @click="toPageSetting" class="primaryColor cursor"
+          >SysID:{{ sysID }}
+        </span>
+        <span style="color: red; font-weight: bold; margin-left: 10px">{{
+          Prompt
+        }}</span>
       </div>
-      <div class="flex_row_spaceBtn pagination" v-show="spaceBtnShow">
-        <div v-show="sysID > 0">
-          <span @click="toPageSetting" class="primaryColor cursor"
-            >SysID:{{ sysID }}
-          </span>
-          <span style="color: red; font-weight: bold; margin-left: 10px">{{
-            Prompt
-          }}</span>
+      <div class="flex">
+        <div class="footer_label" v-show="multipleSelection.length != 0">
+          已选[<span style="color: red; font-weight: bold">{{
+            multipleSelection.length
+          }}</span
+          >]
         </div>
-        <div class="flex">
-          <div class="footer_label" v-show="multipleSelection.length != 0">
-            已选[<span style="color: red; font-weight: bold">{{
-              multipleSelection.length
-            }}</span
-            >]
-          </div>
-          <el-pagination
-            background
-            @size-change="pageSize"
-            :current-page="pagination.pageIndex"
-            :page-sizes="[20, 200, 500, 1000, 2000, 3000, 5000, 10000]"
-            :page-size="pagination.pageSize"
-            :total="pagination.pageTotal"
-            @current-change="pageChange"
-            layout="total, sizes, prev, pager, next,jumper"
-          >
-          </el-pagination>
-        </div>
+        <el-pagination
+          background
+          @size-change="pageSize"
+          :current-page="pagination.pageIndex"
+          :page-sizes="[20, 200, 500, 1000, 2000, 3000, 5000, 10000]"
+          :page-size="pagination.pageSize"
+          :total="pagination.pageTotal"
+          @current-change="pageChange"
+          layout="total, sizes, prev, pager, next,jumper"
+        >
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -58,37 +56,37 @@ export default {
     // 系统id
     sysID: {
       type: Number,
-      default: 0
+      default: 0,
     },
     // 表格的下标
     remark: {
       type: Number,
-      required: false
+      required: false,
     },
     tableData: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
-      }
+      },
     },
     tableColumns: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
-      }
+      },
     },
     tableLoading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     //单击是否可编辑
     isEdit: {
       type: Boolean,
-      default: false
+      default: false,
     },
     spaceBtnShow: {
       type: Boolean,
-      default: true
+      default: true,
     },
     pagination: {
       type: Object,
@@ -96,34 +94,37 @@ export default {
         return {
           pageIndex: 0,
           pageSize: 500,
-          pageTotal: 0
+          pageTotal: 0,
         };
-      }
+      },
     },
     height: {
       type: String,
-      default: "600px"
-    }
+      default: "600px",
+    },
   },
   data() {
     return {
       spread: null,
-      Prompt: null
+      Prompt: null,
     };
   },
   computed: {
     multipleSelection() {
-      let CheckNum = this.tableData.filter(item => item["isChecked"] === true);
+      let CheckNum = this.tableData.filter(
+        (item) => item["isChecked"] === true
+      );
       return CheckNum;
-    }
+    },
   },
   watch: {
     multipleSelection(newValue) {
       this.$emit("selectChanged", newValue, this.remark);
-    }
+    },
   },
   mounted() {
     this.initSpread();
+    console.log(this.height,111111);
   },
   created() {
     this.getFooterRemark();
@@ -136,14 +137,14 @@ export default {
       } else {
         this.$router.push({
           name: "FieldInfo",
-          params: { ID: this.sysID }
+          params: { ID: this.sysID },
         });
       }
       // 解决其他页面弹框状态下跳转到配置表弹框不关闭的bug
       // this.$emit("toPageSetting");
     },
     // 初始化SpreadJS
-    initSpread: function() {
+    initSpread: function () {
       this.spread = this.$refs.gcSpreadSheets.spread;
       this.$emit("workbookInitialized", this.spread, this.remark);
     },
@@ -168,8 +169,19 @@ export default {
           this.Prompt = data[0].Remark1;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  // height: 100%;
+}
+.table-container {
+  flex-grow: 1;
+  overflow: hidden;
+  border: 1px solid #ababab;
+}
+</style>
