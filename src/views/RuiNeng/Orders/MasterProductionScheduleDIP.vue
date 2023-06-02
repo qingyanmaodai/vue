@@ -626,7 +626,7 @@ export default {
       //   return;
       // } else {
       this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/FromOrderDetail");
+      let res = await GetSearch("", "/APSAPI/FromOrderPlanMaterial");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
