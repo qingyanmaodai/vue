@@ -272,10 +272,10 @@ export default {
       Status1: [
         { label: "分配数量", value: -1 },
         { label: "数量+时间+线体", value: 0 },
-        { label: "数量+时间+线体+托盘", value: "" },
-        { label: "综合分析", value: "" },
-        { label: "全部", value: 1 },
-        { label: "业务订单分析", value: 1 },
+        // { label: "数量+时间+线体+托盘", value: "" },
+        // { label: "综合分析", value: "" },
+        // { label: "全部", value: 1 },
+        // { label: "业务订单分析", value: 1 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -620,7 +620,7 @@ export default {
       }
     },
     // 从业务订单更新
-    async updateBusinessOrder(remarkTb, index) {
+    async updatingDueList(remarkTb, index) {
       // if (this.selectionData[remarkTb].length == 0) {
       //   this.$message.error("请选择需要提交的数据！");
       //   return;
