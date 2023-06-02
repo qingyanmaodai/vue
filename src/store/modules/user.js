@@ -190,7 +190,7 @@ const actions = {
         // }
 
         const scale = document.documentElement.clientWidth / 1920;
-        commit('SET_REDUCEHEIGHT', 183*scale);
+        commit('SET_REDUCEHEIGHT', Math.ceil(183 * scale));
         
         dispatch('getOrganizeData', { root: true });
         resolve()
