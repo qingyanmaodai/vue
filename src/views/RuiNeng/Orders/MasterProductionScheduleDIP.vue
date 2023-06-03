@@ -1308,7 +1308,7 @@ export default {
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[7],
-          `/APSAPI/SaveData10124`
+          `/APSAPI/SaveData10123`
         );
         const { result, msg } = res.data;
 
