@@ -353,7 +353,7 @@ export default {
         { ID: 10123 },
         { ID: 10109 },
         { ID: 10109 },
-        { ID: 5646 },
+        { ID: 10124 },
       ],
       userInfo: {},
     };
@@ -1300,7 +1300,7 @@ export default {
         this.newDataDialog = true;
       } else {
         this.selectionData[7].forEach((m) => {
-          m.dicID = 10123;
+          m.dicID = 10124;
           m["SalesOrderDetailPlanID"] = null;
           m["PlanQty"] = m["Qty"];
           m["DataSource"] = "手工";
@@ -1308,7 +1308,7 @@ export default {
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[7],
-          `/APSAPI/SaveData10123`
+          `/APSAPI/SaveData10124`
         );
         const { result, msg } = res.data;
 
