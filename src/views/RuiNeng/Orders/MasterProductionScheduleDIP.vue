@@ -619,7 +619,7 @@ export default {
         }
       }
     },
-    // 从业务订单更新
+    // 从欠料表更新
     async updatingDueList(remarkTb, index) {
       // if (this.selectionData[remarkTb].length == 0) {
       //   this.$message.error("请选择需要提交的数据！");
@@ -1300,8 +1300,8 @@ export default {
         this.newDataDialog = true;
       } else {
         this.selectionData[7].forEach((m) => {
-          m.dicID = 10124;
-          m["SalesOrderDetailPlanID"] = null;
+          m.dicID = 10123;
+          m["ElectronicMainPlanID"] = null;
           m["PlanQty"] = m["Qty"];
           m["DataSource"] = "手工";
         });
