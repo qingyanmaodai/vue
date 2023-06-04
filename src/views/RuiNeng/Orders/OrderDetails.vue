@@ -241,6 +241,10 @@ export default {
     this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
     let RoleMapList = this.$store.getters.userInfo.RoleMap;
+    console.log(
+      this.$store.getters.userInfo,
+      "this.$store.getters.userInfo.RoleMap"
+    );
     if (RoleMapList.length) {
       RoleMapList.forEach((item) => {
         if (item.RoleID === "R2305080001") {
@@ -1004,6 +1008,12 @@ export default {
         this.$message.error("请选择需要删除的数据！");
         return;
       } else {
+        if (this.CreatedBy) {
+          if (this.selectionData[this.tagRemark].length >= 3) {
+            this.$message.error("最多只能删除两行数据");
+            return;
+          }
+        }
         this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
