@@ -36,7 +36,7 @@
                 <img :src="headCard[2]['icon']" />
               </div>
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]['S3'] }}</div>
+                <div class="statusNum">{{ tableData[0][0]["S3"] }}</div>
                 <div class="textHead">
                   <div class="title">{{ headCard[2]["title"] }}</div>
                 </div>
@@ -64,7 +64,7 @@
             <div class="itemCard2">
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">今日工序达成占比</div>
+                  <div class="echartTitle">今日计划任务分布</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -90,7 +90,7 @@
               </div>
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">物料到货情况</div>
+                  <div class="echartTitle">T+3日欠料分布</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -119,7 +119,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">计划配套分析</div>
+                <div class="echartTitle">业务要货汇总</div>
               </div>
               <div class="echartBody">
                 <ComReportTable
@@ -127,14 +127,15 @@
                   :showFooter="false"
                   ref="PurchaseRequisition"
                   :isEdit="false"
-                  :remark="0"
+                  :remark="6"
+                  :IsIndex="false"
                   :height="'100%'"
                   :row-key="'RowNumber'"
-                  :sysID="sysID[0]['ID']"
-                  :table-data="tableData[0]"
-                  :table-header="tableColumns[0]"
-                  :table-loading="tableLoading[0]"
-                  :pagination="tablePagination[0]"
+                  :sysID="sysID[6]['ID']"
+                  :table-data="tableData[6]"
+                  :table-header="tableColumns[6]"
+                  :table-loading="tableLoading[6]"
+                  :pagination="tablePagination[6]"
                   @pageChange="pageChange"
                   @pageSize="pageSize"
                   @sortChange="sortChange"
@@ -152,7 +153,7 @@
             </div>
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">欠料回货追踪</div>
+                <div class="echartTitle">T+3日欠料追踪</div>
               </div>
               <div class="echartBody">
                 <ComReportTable2
@@ -160,14 +161,15 @@
                   :showFooter="false"
                   ref="PurchaseRequisition"
                   :isEdit="false"
-                  :remark="1"
+                  :remark="7"
+                  :IsIndex="false"
                   :height="'100%'"
                   :row-key="'RowNumber'"
-                  :sysID="sysID[1]['ID']"
-                  :table-data="tableData[1]"
-                  :table-header="tableColumns[1]"
-                  :table-loading="tableLoading[1]"
-                  :pagination="tablePagination[1]"
+                  :sysID="sysID[7]['ID']"
+                  :table-data="tableData[7]"
+                  :table-header="tableColumns[7]"
+                  :table-loading="tableLoading[7]"
+                  :pagination="tablePagination[7]"
                   @pageChange="pageChange"
                   @pageSize="pageSize"
                   @sortChange="sortChange"
@@ -187,27 +189,27 @@
                 <div class="xnode">
                   <div class="triangle">产品缺失工艺</div>
                   <div></div>
-                  <div>23</div>
+                  <div>{{ tableData[8][0]["C1"] }}</div>
                 </div>
                 <div class="xnode">
                   <div class="triangle">工艺缺失</div>
                   <div></div>
-                  <div>1,409</div>
+                  <div>{{ tableData[9][0]["C1"] }}</div>
                 </div>
                 <div class="xnode">
                   <div class="triangle">产能缺失</div>
                   <div></div>
-                  <div>9</div>
+                  <div>{{ tableData[10][0]["C1"] }}</div>
                 </div>
                 <div class="xnode">
                   <div class="triangle">排班未配置</div>
                   <div></div>
-                  <div>28</div>
+                  <div>{{ tableData[11][0]["C1"] }}</div>
                 </div>
                 <div class="xnode">
                   <div class="triangle">库存预警</div>
                   <div></div>
-                  <div>531</div>
+                  <div>{{ tableData[12][0]["C1"] }}</div>
                 </div>
               </div>
             </div>
@@ -417,21 +419,61 @@ export default {
       // height: "700px",
       newTag: -1,
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
+      tableData: [
+        [{ S1: "", S2: "", S3: "", S4: "" }],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [{ C1: "" }],
+        [{ C1: "" }],
+        [{ C1: "" }],
+        [{ C1: "" }],
+        [{ C1: "" }],
+      ],
+      tableColumns: [[], [], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 15, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       formSearchs: [
         {
           datas: {
             fields:
               "SUM(Qty) AS S1 ,SUM(ReportQty) AS S2,SUM(OutStockQty) AS S3,SUM(StockQtyDiff) AS S4",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields:
+              "SUM(PlanQty) as S1,sum(HasQty) AS S2,FORMAT(PlanDay,'MM-dd') as PlanDay",
+            groupby: "FORMAT(PlanDay,'MM-dd')",
+            // sort: "PlanDay desc",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "SUM(PlanQty) AS S1,ProcessName",
+            groupby: "ProcessName",
+            // PlanDay: this.currentDate,
           },
           forms: [],
         },
@@ -444,7 +486,57 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,ProcessName",
+            groupby: "ProcessName",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields:
+              "ProductType,InnerModel,SUM(Qty) AS S1 ,SUM(ReportQty) AS S2,SUM(OutStockQty) AS S3,SUM(StockQtyDiff) AS S4",
+            groupby: "ProductType,InnerModel",
+            sort: "InnerModel",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "DemandDate,LineName,WorkShopName,MaterialName,Code,OweQty",
+            OweQty: 0,
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "COUNT(*) AS C1",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "COUNT(*) AS C1",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "COUNT(*) AS C1",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "COUNT(*) AS C1",
+            ConfigInfo: "未配置",
+          },
+          forms: [],
+        },
+        {
+          datas: {
+            fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
+          },
           forms: [],
         },
       ],
@@ -452,14 +544,23 @@ export default {
         {
           ID: 10108,
         },
-        { ID: 10113 },
-        { ID: 10084 },
-        { ID: 6751 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 7804 },
+        { ID: 5170 },
+        { ID: 10108 },
+        { ID: 5157 },
+        { ID: 7844 },
+        { ID: 7920 },
+        { ID: 7776 },
+        { ID: 7922 },
+        { ID: 7804 },
       ],
-
+      currentDate: "",
       //echart部分
-      chartData1: [],
-      chartData2: [[], []],
+      // chartData1: [],
+      // chartData2: [[], []],
       chart: [],
       chartOptions: [],
       handleWindowResizeDebounced: null,
@@ -474,7 +575,7 @@ export default {
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
-    // this.ID = parseInt(routeBtn.meta.dicID);
+    this.currentDate = this.$moment().format("YYYY-MM-DD");
     this.getTableHeader();
   },
   activated() {},
@@ -493,7 +594,6 @@ export default {
       this.$refs.chart4,
       this.$refs.chart5,
     ];
-    await this.getEcharts();
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
@@ -530,26 +630,16 @@ export default {
           },
           legend: {
             top: "0",
-            data: ["未达成", "已达成"],
+            data: ["计划数", "完成数"],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
           },
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: [
-              "1日",
-              "4日",
-              "7日",
-              "11日",
-              "15日",
-              "19日",
-              "23日",
-              "27日",
-              "30日",
-            ],
+            data: this.tableData[1].map((item) => item["PlanDay"]),
             axisLabel: {
-              interval: 0,
+              interval: 1,
               show: true,
               textStyle: {
                 color: "#000",
@@ -597,7 +687,7 @@ export default {
           ],
           series: [
             {
-              name: "未达成",
+              name: "计划数",
               type: "bar",
               silent: true,
               itemStyle: {
@@ -605,24 +695,10 @@ export default {
                   color: "#578FFB",
                 },
               },
-              data: [
-                "45",
-                "23",
-                "65",
-                "45",
-                "54",
-                "45",
-                "56",
-                "54",
-                "67",
-                "43",
-                "34",
-                "5",
-                "46",
-              ],
+              data: this.tableData[1].map((item) => item["S1"]),
             },
             {
-              name: "已达成",
+              name: "完成数",
               type: "bar",
               silent: true,
               itemStyle: {
@@ -630,21 +706,7 @@ export default {
                   color: "#23CF9C",
                 },
               },
-              data: [
-                "23",
-                "44",
-                "24",
-                "34",
-                "23",
-                "23",
-                "23",
-                "15",
-                "5",
-                "14",
-                "25",
-                "57",
-                "34",
-              ],
+              data: this.tableData[1].map((item) => item["S2"]),
             },
           ],
         },
@@ -678,7 +740,7 @@ export default {
             itemStyle: {
               borderRadius: "50%", // 将图例项的形状设定为圆形
             },
-            data: ["包装", "自动插件", "焊线装配", "贴片", "灌胶老练", "印刷"],
+            data: this.tableData[2].map((item) => item["ProcessName"]),
           },
           grid: {
             containLabel: true,
@@ -712,32 +774,12 @@ export default {
                   show: false,
                 },
               },
-              data: [
-                {
-                  value: 3661,
-                  name: "包装",
-                },
-                {
-                  value: 5713,
-                  name: "自动插件",
-                },
-                {
-                  value: 9938,
-                  name: "焊线装配",
-                },
-                {
-                  value: 17623,
-                  name: "贴片",
-                },
-                {
-                  value: 3299,
-                  name: "灌胶老练",
-                },
-                {
-                  value: 3299,
-                  name: "印刷",
-                },
-              ],
+              data: this.tableData[2].map((item) => {
+                return {
+                  value: item["S1"],
+                  name: item["ProcessName"],
+                };
+              }),
             },
           ],
         },
@@ -846,14 +888,14 @@ export default {
           },
           legend: {
             top: "0",
-            data: ["未达成", "已达成"],
+            data: ["计划数", "完成数"],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
           },
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ["注塑", "电焊", "装配", "QC", "电子", "生产"],
+            data: this.tableData[5].map((item) => item["ProcessName"]),
             axisLabel: {
               interval: 0,
               show: true,
@@ -903,7 +945,7 @@ export default {
           ],
           series: [
             {
-              name: "未达成",
+              name: "计划数",
               type: "bar",
               silent: true,
               barWidth: fontSize(14),
@@ -912,25 +954,10 @@ export default {
                   color: "#578FFB",
                 },
               },
-
-              data: [
-                "45",
-                "23",
-                "65",
-                "45",
-                "54",
-                "45",
-                "56",
-                "54",
-                "67",
-                "43",
-                "34",
-                "5",
-                "46",
-              ],
+              data: this.tableData[5].map((item) => item["S1"]),
             },
             {
-              name: "已达成",
+              name: "完成数",
               type: "bar",
               silent: true,
               barWidth: fontSize(14),
@@ -939,21 +966,7 @@ export default {
                   color: "#23CF9C",
                 },
               },
-              data: [
-                "23",
-                "44",
-                "24",
-                "34",
-                "23",
-                "23",
-                "23",
-                "15",
-                "5",
-                "14",
-                "25",
-                "57",
-                "34",
-              ],
+              data: this.tableData[5].map((item) => item["S2"]),
             },
           ],
         },
@@ -1294,69 +1307,153 @@ export default {
 
       if (result) {
         // 获取每个表头
-        datas.some((m, i) => {
-          m.some((n, j) => {
-            // 进行验证
-            this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
-                this.verifyDta(x);
-              });
-            }
-          });
+        // datas.some((m, i) => {
+        //   m.some((n, j) => {
+        //     // 进行验证
+        //     this.verifyDta(n);
+        //     if (n.childrens && n.children.length != 0) {
+        //       n.childrens.forEach((x) => {
+        //         this.verifyDta(x);
+        //       });
+        //     }
+        //   });
 
-          this.$set(this.tableColumns, i, m);
-        });
+        //   this.$set(this.tableColumns, i, m);
+        // });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
-            if (y.prop && y.value) {
-              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-            } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
-            }
-          });
-          this.$set(this.formSearchs[z], "forms", x);
+          if (z === 2) {
+            this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+          }
+          if (z === 5) {
+            this.formSearchs[z].datas["PlanDay"] = this.$moment()
+              .subtract(1, "days")
+              .format("YYYY-MM-DD");
+            // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+          }
+          if (z === 7) {
+            this.formSearchs[z].datas["DemandDate"] = [
+              this.currentDate,
+              this.$moment().add(2, "days").format("YYYY-MM-DD"),
+            ];
+          }
+          // x.forEach((y) => {
+          //   if (y.prop && y.value) {
+          //     this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+          //   } else {
+          //     this.$set(this.formSearchs[z].datas, [y.prop], "");
+          //   }
+          // });
+          // this.$set(this.formSearchs[z], "forms", x);
+          this.getTableData(this.formSearchs[z].datas, z);
+          this.adminLoading = false;
         });
-        this.adminLoading = false;
-        // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-        //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-
-        //   if (tmp.dicID) {
-        //     this.formSearchs[0].datas = tmp;
-        //   }
-        // // }
-        // this.formSearchs[0].datas["dicID"] = this.ID;
-        this.getTableData(this.formSearchs[0].datas, 0);
-        this.getTableData(this.formSearchs[1].datas, 1);
       }
     },
     // 验证数据
-    verifyDta(n) {
-      for (let name in n) {
-        if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
-        ) {
-          n[name] = eval("(" + n[name] + ")");
-        }
-      }
-    },
+    // verifyDta(n) {
+    //   for (let name in n) {
+    //     if (
+    //       (name == "component" && n[name]) ||
+    //       (name == "button" && n[name]) ||
+    //       (name == "active" && n[name])
+    //     ) {
+    //       n[name] = eval("(" + n[name] + ")");
+    //     }
+    //   }
+    // },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0 && remarkTb !== 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      } else {
-        form["rows"] = this.tablePagination[remarkTb].pageSize;
-      }
+      // if (this.tableData[remarkTb].length === 0) {
+      //   this.tablePagination[remarkTb]["pageSize"] =
+      //     this.tableColumns[remarkTb][1]["pageSize"];
+      // } else {
+      form["rows"] = this.tablePagination[remarkTb].pageSize;
+      // }
       // form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
+      if (remarkTb === 6) {
+        this.tableColumns[6] = [
+          {
+            label: "品类",
+            prop: "ProductType",
+            width: 80,
+          },
+          {
+            label: "内部型号",
+            prop: "InnerModel",
+            width: 100,
+          },
+          {
+            label: "数量",
+            prop: "S1",
+            width: 80,
+          },
+          {
+            label: "汇报数",
+            prop: "S2",
+            width: 80,
+          },
+          {
+            label: "出库数",
+            prop: "S3",
+            width: 80,
+          },
+          {
+            label: "库存数",
+            prop: "S4",
+            width: 80,
+          },
+        ];
+        // Columns[0].filter((x) => {
+        //   return Object.keys(data[0]).some((y) => {
+        //     return x['prop'] === y;
+        //   });
+        // });
+      }
+      if (remarkTb === 7) {
+        this.tableColumns[7] = [
+          {
+            label: "需求日期",
+            prop: "DemandDate",
+            width: 80,
+          },
+          {
+            label: "线名",
+            prop: "LineName",
+            width: 60,
+          },
+          {
+            label: "车间",
+            prop: "WorkShopName",
+            width: 60,
+          },
+          {
+            label: "料品名称",
+            prop: "MaterialName",
+            width: 120,
+          },
+          {
+            label: "料号",
+            prop: "Code",
+            width: 100,
+          },
+          {
+            label: "欠数",
+            prop: "OweQty",
+            width: 80,
+          },
+        ];
+        // Columns[0].filter((x) => {
+        //   return Object.keys(data[0]).some((y) => {
+        //     return x['prop'] === y;
+        //   });
+        // });
+      }
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -1367,9 +1464,10 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
-      this.$set(this.tableLoading, remarkTb, false);
-        console.log(this.tableData,11111);
+      await this.getEcharts();
 
+      this.$set(this.tableLoading, remarkTb, false);
+      console.log(this.tableData, 11111);
     },
     // 刷新页面
     refrshPage() {
@@ -1402,7 +1500,6 @@ export default {
           value: item.DemandQty,
           name: item.Dept,
         }));
-        console.log(this.chartData1, "this.chartData2[0]");
       } else {
         this.$message({
           message: msg,

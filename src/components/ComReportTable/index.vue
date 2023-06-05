@@ -33,7 +33,7 @@
         <vxe-column
           type="seq"
           min-width="60"
-          v-show="IsIndex"
+          v-if="IsIndex"
           title="序号"
         ></vxe-column>
         <vxe-column
