@@ -1,4 +1,4 @@
-<!-- 待生产订单 -->
+<!-- 业务订单明细 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -224,6 +224,7 @@ export default {
       ImportParams: "",
       isEdit: true,
       RoleMapStatus: false,
+      BatchDelete: false,
       CreatedBy: "",
     };
   },
@@ -250,6 +251,11 @@ export default {
         if (item.RoleID === "R2305080001") {
           //业务经理
           this.RoleMapStatus = true;
+          return;
+        }
+        if (item.RoleID === "R2306050001") {
+          //业务订单明细批量删除
+          this.BatchDelete = true;
           return;
         }
       });
@@ -1008,12 +1014,13 @@ export default {
         this.$message.error("请选择需要删除的数据！");
         return;
       } else {
-        if (this.CreatedBy) {
+        if (!this.BatchDelete && this.CreatedBy) {
           if (this.selectionData[this.tagRemark].length >= 3) {
-            this.$message.error("最多只能删除两行数据");
+            this.$message.error("一次最多删除两行数据");
             return;
           }
         }
+
         this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
