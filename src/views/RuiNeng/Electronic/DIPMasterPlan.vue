@@ -246,7 +246,7 @@ import {
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "MasterProductionScheduleDIP",
+  name: "DIPMasterPlan",
   components: {
     ComSearch,
     ComAsideTree,
