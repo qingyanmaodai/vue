@@ -676,7 +676,7 @@ export default {
             {
               Days: this.Days,
             },
-            "/APSAPI/TOProcessPlanFromSalesOrder"
+            "/APSAPI/TOProcessPlanFromOrderPlanMaterialForDIP"
           );
           const { datas, forms, result, msg } = res.data;
           console.log(result, "result");
