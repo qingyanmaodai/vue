@@ -248,7 +248,7 @@ export default {
     );
     if (RoleMapList.length) {
       RoleMapList.forEach((item) => {
-        if (item.RoleID === "R2305080001") {
+        if (item.RoleID === "R2305080001" || item.RoleID === "R2306050001") {
           //业务经理
           this.RoleMapStatus = true;
           return;
