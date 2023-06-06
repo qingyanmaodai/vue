@@ -15,10 +15,11 @@ let base_url;
 //http://jinlingfan.gicp.net:5999 --金羚外网
 //http://10.50.18.130             --佛照内网
 //http://192.168.1.188:9999        --瑞能
+//http://172.16.30.213       --tenpao
 
-let apsUrl = ""; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = "http://127.0.0.1"; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
-localStorage.setItem("apsurl", apsUrl);
+localStorage.setItem("apsurl", apsUrl); 
 let _this = this;
 if (process.env.NODE_ENV === "production") {
   base_url = localStorage.getItem("apsurl");
