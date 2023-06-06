@@ -1,4 +1,4 @@
-<!--采购回复-->
+<!--DIP主计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
@@ -287,7 +287,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName:'DIP'
+            ProcessGroupName: "DIP",
           },
           forms: [],
         },
@@ -676,7 +676,7 @@ export default {
             {
               Days: this.Days,
             },
-            "/APSAPI/TOProcessPlanFromSalesOrder"
+            "/APSAPI/TOProcessPlanFromOrderPlanMaterialForDIP"
           );
           const { datas, forms, result, msg } = res.data;
           console.log(result, "result");
@@ -708,10 +708,10 @@ export default {
         return;
       }
       const errorNum1 = this.selectionData[remarkTb].findIndex(
-        (item) => item["DataSource"] === "业务"
+        (item) => item["DataSource"] === "欠料"
       );
       if (errorNum1 !== -1) {
-        this.$message.error(`操作的数据中含有业务订单`);
+        this.$message.error(`操作的数据中含有欠料成品`);
         return;
       }
       this.$confirm(
