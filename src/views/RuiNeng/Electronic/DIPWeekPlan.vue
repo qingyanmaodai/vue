@@ -126,7 +126,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "AssemblyWeekProgram",
+  name: "DIPWeekPlan",
   components: {
     ComSearch,
     ComReportTable,
@@ -165,7 +165,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName: "组装",
+            ProcessGroupName: "DIP",
           },
           forms: [],
         },

@@ -1,4 +1,4 @@
-<!--采购回复-->
+<!--DIP主计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
@@ -246,7 +246,7 @@ import {
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "MasterProductionScheduleDIP",
+  name: "DIPMasterPlan",
   components: {
     ComSearch,
     ComAsideTree,
@@ -286,7 +286,9 @@ export default {
       spread: [[], [], [], [], [], [], [], []],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            ProcessGroupName: "DIP",
+          },
           forms: [],
         },
         {
@@ -353,7 +355,7 @@ export default {
         { ID: 10123 },
         { ID: 10109 },
         { ID: 10109 },
-        { ID: 5646 },
+        { ID: 10124 },
       ],
       userInfo: {},
     };
@@ -619,7 +621,7 @@ export default {
         }
       }
     },
-    // 从业务订单更新
+    // 从欠料表更新
     async updatingDueList(remarkTb, index) {
       // if (this.selectionData[remarkTb].length == 0) {
       //   this.$message.error("请选择需要提交的数据！");
@@ -674,7 +676,7 @@ export default {
             {
               Days: this.Days,
             },
-            "/APSAPI/TOProcessPlanFromSalesOrder"
+            "/APSAPI/TOProcessPlanFromOrderPlanMaterialForDIP"
           );
           const { datas, forms, result, msg } = res.data;
           console.log(result, "result");
@@ -706,10 +708,10 @@ export default {
         return;
       }
       const errorNum1 = this.selectionData[remarkTb].findIndex(
-        (item) => item["DataSource"] === "业务"
+        (item) => item["DataSource"] === "欠料"
       );
       if (errorNum1 !== -1) {
-        this.$message.error(`操作的数据中含有业务订单`);
+        this.$message.error(`操作的数据中含有欠料成品`);
         return;
       }
       this.$confirm(
@@ -1301,7 +1303,7 @@ export default {
       } else {
         this.selectionData[7].forEach((m) => {
           m.dicID = 10123;
-          m["SalesOrderDetailPlanID"] = null;
+          m["ElectronicMainPlanID"] = null;
           m["PlanQty"] = m["Qty"];
           m["DataSource"] = "手工";
         });
