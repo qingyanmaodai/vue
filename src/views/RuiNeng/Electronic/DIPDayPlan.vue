@@ -403,22 +403,22 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let newTree = [];
+        // let newTree = [];
         if (data.length != 0) {
-          let supplierMap = new Map();
+          // let supplierMap = new Map();
           data.forEach((a) => {
-            let currentSum = supplierMap.get(a.LineName) || 0;
-            currentSum += a.Counts;
-            supplierMap.set(a.LineName, currentSum);
-            a["SumCount"] = `${a.LineName}(${currentSum})`;
+            // let currentSum = supplierMap.get(a.LineName) || 0;
+            // currentSum += a.Counts;
+            // supplierMap.set(a.LineName, currentSum);
+            a["SumCount"] = `${a.LineName}(${a.Counts})`;
           });
-          newTree = Array.from(supplierMap.entries()).map(([LineName, sum]) => {
-            const foundItem = data.find((a) => a.LineName === LineName);
-            return {
-              ...foundItem,
-              SumCount: `${foundItem.LineName}(${sum})`,
-            };
-          });
+          // newTree = Array.from(supplierMap.entries()).map(([LineName, sum]) => {
+          //   const foundItem = data.find((a) => a.LineName === LineName);
+          //   return {
+          //     ...foundItem,
+          //     SumCount: `${foundItem.LineName}(${sum})`,
+          //   };
+          // });
         }
         // console.log(newTree, "newTree");
         this.treeData = JSON.parse(JSON.stringify(data));
