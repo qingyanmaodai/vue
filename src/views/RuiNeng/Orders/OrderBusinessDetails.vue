@@ -23,6 +23,7 @@
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
+              <span @click="aaaaaaaaaaaa(labelStatus1)">aaaa</span>
               <!-- <div>
                 <span>选择机台/班组：</span>
                 <el-select
@@ -492,8 +493,32 @@ export default {
             item["type"] = "date";
           } else if (item["ControlType"] === "combobox") {
             item["type"] = "dropdown";
-            item["source"] = item["items"].map((item) => item.value);
-            item["renderer"] = function (
+            item["source"] = item["items"].map((item) => item.label);
+            // item["editor"] = "select";
+            // item["renderer"] = function (
+            //   instance,
+            //   td,
+            //   row,
+            //   col,
+            //   prop,
+            //   value,
+            //   cellProperties
+            // ) {
+            //   Handsontable.renderers.DropdownRenderer.apply(this, arguments);
+            //   console.log(value, "value");
+            //   var selectedOption = item["items"].find(
+            //     (option) => option.value === value
+            //   );
+            //   if (selectedOption) {
+            //     td.innerText = selectedOption.value;
+            //   }
+            // };
+          }
+        });
+        this.hotSettings[remarkTb].cells = (row, col) => {
+          const cellProperties = {};
+          if (row !== 0) {
+            cellProperties.renderer = (
               instance,
               td,
               row,
@@ -501,14 +526,25 @@ export default {
               prop,
               value,
               cellProperties
-            ) {
-              Handsontable.renderers.TextRenderer.apply(this, arguments);
-              if (value) {
-                td.innerText = getColorChineseText(value);
-              }
+            ) => {
+              this.applyTextRenderer(
+                instance,
+                td,
+                row,
+                col,
+                prop,
+                value,
+                cellProperties
+              );
+              this.applyStyles(td, {
+                fontWeight: "bold",
+                color: "green",
+                background: "#CEC",
+              });
             };
           }
-        });
+          return cellProperties;
+        };
         // 冻结固定列
         if (this.tableColumns[remarkTb][0]["FixCount"]) {
           this.hotSettings[remarkTb]["fixedColumnsLeft"] =
@@ -517,6 +553,7 @@ export default {
 
         this.hotSettings[remarkTb].data = this.tableData[remarkTb];
         this.hotSettings[remarkTb].columns = this.tableColumns[remarkTb];
+
         console.log(this.hotTable[remarkTb], "this.hotTable[remarkTb]");
         this.hotTable[remarkTb].hotInstance.updateSettings(
           this.hotSettings[remarkTb]
@@ -527,6 +564,9 @@ export default {
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
+    },
+    aaaaaaaaaaaa(remarkTb) {
+      console.log(this.hotTable[remarkTb].hotInstance.getData(), 11111111111);
     },
     // bindComboBoxToCell(sheet, row, col, dataSourceName) {
     //   // 获取要绑定下拉菜单的单元格对象
@@ -546,6 +586,14 @@ export default {
     //   // 将下拉菜单单元格类型绑定到指定的单元格中
     //   cell.cellType(comboBox);
     // },
+    applyTextRenderer(instance, td, row, col, prop, value, cellProperties) {
+      Handsontable.renderers.TextRenderer.apply(this, arguments);
+    },
+    applyStyles(td, styles) {
+      Object.entries(styles).forEach(([style, value]) => {
+        td.style[style] = value;
+      });
+    },
     async ToPlan() {
       //转入月计划
 
@@ -794,6 +842,10 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
+      if (this.tableData[remarkTb].length === 0) {
+        this.tablePagination[remarkTb]["pageSize"] =
+          this.tableColumns[remarkTb][1]["pageSize"];
+      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);

@@ -349,6 +349,10 @@ export default {
     // 获取表格数据
     async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
+      if (this.tableData[remarkTb].length === 0) {
+        this.tablePagination[remarkTb]["pageSize"] =
+          this.tableColumns[remarkTb][1]["pageSize"];
+      }
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
       params["CreatedBy"] = this.CreatedBy;

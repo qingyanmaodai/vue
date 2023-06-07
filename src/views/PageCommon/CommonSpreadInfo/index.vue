@@ -111,14 +111,14 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "ComSpreadTable" + rand,
   components: {
     ComSearch,
     ComSpreadTable,
-    ComFormDialog
+    ComFormDialog,
   },
   data() {
     return {
@@ -130,8 +130,8 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       headHeight: 0,
       btnForm: [],
@@ -144,7 +144,7 @@ export default {
       isLoading: false,
       ID: 0,
       newTag: -1,
-      selectionData: [[], [], [], []]
+      selectionData: [[], [], [], []],
     };
   },
   //离开的时候保存当前
@@ -156,13 +156,13 @@ export default {
         let dicForm = {
           dicData: this.formSearchs[0].datas,
           dicForm: this.formSearchs[0].forms,
-          tablePagination: this.tablePagination
+          tablePagination: this.tablePagination,
         };
         sessionStorage.setItem("dicIDForm" + this.ID, JSON.stringify(dicForm));
         let dicIDData = {
           dicID: this.ID,
           tableColumns: this.tableColumns[0],
-          tableData: this.tableData[0]
+          tableData: this.tableData[0],
         };
         sessionStorage.setItem(
           "dicIDData" + this.ID,
@@ -184,12 +184,12 @@ export default {
 
   watch: {
     $route: {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         this.ID = parseInt(val.query.dicID);
       },
       // 深度观察监听
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     height() {
@@ -199,7 +199,7 @@ export default {
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       return newHeight;
-    }
+    },
   },
 
   created() {
@@ -244,7 +244,7 @@ export default {
   },
   methods: {
     //获取子组件实例
-    workbookInitialized: function(workbook) {
+    workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
     //获取当前选中行的值
@@ -357,17 +357,17 @@ export default {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        this.selectionData[remarkTb].forEach(x => {
+        this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
           obj["ElementDeleteFlag"] = 1;
           newData.push(obj);
         });
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
+        .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -378,7 +378,7 @@ export default {
         updateRecords = newData;
       } else {
         updateRecords = sheet.getDirtyRows(); //获取修改过的数据
-        updateRecords = updateRecords.map(x => {
+        updateRecords = updateRecords.map((x) => {
           return x["item"];
         });
       }
@@ -394,14 +394,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -422,7 +422,7 @@ export default {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
+              n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -433,7 +433,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -466,9 +466,8 @@ export default {
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
       if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] = this.tableColumns[remarkTb][1][
-          "pageSize"
-        ];
+        this.tablePagination[remarkTb]["pageSize"] =
+          this.tableColumns[remarkTb][1]["pageSize"];
       }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
@@ -482,7 +481,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -493,7 +492,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -554,10 +553,7 @@ export default {
 
         //行，start,end
         if (x.isEdit) {
-          sheet
-            .getCell(-1, y)
-            .locked(false)
-            .foreColor("#2a06ecd9");
+          sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
           // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
           // let cell = sheet.getCell(
           //   -1,
@@ -655,7 +651,7 @@ export default {
 
       // 将下拉菜单单元格类型绑定到指定的单元格中
       cell.cellType(comboBox);
-    }
-  }
+    },
+  },
 };
 </script>

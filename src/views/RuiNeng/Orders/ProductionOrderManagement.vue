@@ -1189,6 +1189,10 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
+      if (this.tableData[remarkTb].length === 0) {
+        this.tablePagination[remarkTb]["pageSize"] =
+          this.tableColumns[remarkTb][1]["pageSize"];
+      }
       if (remarkTb == 0) {
         form["AutoDays2"] = this.AutoDays2;
       }
