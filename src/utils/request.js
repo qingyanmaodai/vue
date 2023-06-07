@@ -4,6 +4,7 @@ import store from "@/store";
 import { getToken } from "@/utils/auth";
 let base_url;
 
+//http://127.0.0.1                --本机
 //http://192.168.1.166:9998       --EK测试地址
 //http://192.168.1.166            --EK生产地址
 //https://aps.eklights.cn         --EK生产地址
@@ -17,7 +18,7 @@ let base_url;
 //http://192.168.1.188:9999        --瑞能
 //http://172.16.30.213       --tenpao
 
-let apsUrl = "http://127.0.0.1"; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = ""; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 
 localStorage.setItem("apsurl", apsUrl); 
 let _this = this;
