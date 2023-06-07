@@ -317,11 +317,6 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
-          m.forEach((n, index) => {
-            if (n.Required) {
-              this.formSearchs[this.tagRemark].required.push(n);
-            }
-          });
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -344,6 +339,18 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+      }
+    },
+    // 验证数据
+    verifyData(n) {
+      for (let name in n) {
+        if (
+          (name == "component" && n[name]) ||
+          (name == "button" && n[name]) ||
+          (name == "active" && n[name])
+        ) {
+          n[name] = eval("(" + n[name] + ")");
+        }
       }
     },
     // 获取表格数据
