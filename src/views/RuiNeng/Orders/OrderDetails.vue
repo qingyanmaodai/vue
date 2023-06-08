@@ -242,10 +242,6 @@ export default {
     this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
     let RoleMapList = this.$store.getters.userInfo.RoleMap;
-    console.log(
-      this.$store.getters.userInfo,
-      "this.$store.getters.userInfo.RoleMap"
-    );
     if (RoleMapList.length) {
       RoleMapList.forEach((item) => {
         if (item.RoleID === "R2305080001" || item.RoleID === "R2306050001") {
@@ -269,10 +265,6 @@ export default {
     }, 500);
   },
   methods: {
-    //初始化SpreadJS
-    // initSpread: function(spread) {
-    //   this.spread = spread;
-    // },
     //获取子组件实例
     workbookInitialized: function (workbook) {
       this.spread = workbook;
@@ -354,25 +346,25 @@ export default {
       }
     },
     // 获取表格数据
-    async getTableData(params, index) {
-      this.$set(this.tableLoading, index, true);
+    async getTableData(form, remarkTb) {
+      this.$set(this.tableLoading, remarkTb, true);
       if (this.tableData[remarkTb].length === 0) {
         this.tablePagination[remarkTb]["pageSize"] =
           this.tableColumns[remarkTb][1]["pageSize"];
       }
-      params["rows"] = this.tablePagination[index].pageSize;
-      params["page"] = this.tablePagination[index].pageIndex;
-      params["CreatedBy"] = this.CreatedBy;
-      let res = await GetSearchData(params);
+      form["rows"] = this.tablePagination[remarkTb].pageSize;
+      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form["CreatedBy"] = this.CreatedBy;
+      let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        this.$set(this.tableData, index, data);
-        this.$set(this.tablePagination[index], "pageTotal", count);
+        this.$set(this.tableData, remarkTb, data);
+        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         // 查询时重新获取列渲染
         if (Columns.length) {
-          this.tableColumns[index] = Columns[0];
+          this.tableColumns[remarkTb] = Columns[0];
         }
-        this.$set(this.tableLoading, index, false);
+        this.$set(this.tableLoading, remarkTb, false);
 
         this.setData();
       } else {

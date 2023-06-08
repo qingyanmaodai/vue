@@ -240,6 +240,7 @@ export default {
               (new Date().getMonth() + 1).toString() +
               "-" +
               new Date().getDate().toString(),
+            ProcessGroupName: "组装",
           },
           forms: [],
         },
@@ -434,7 +435,7 @@ export default {
         );
         if (data.length != 0) {
           this.$nextTick(function () {
-            _this.$refs.asideTree.setCurrentKey(-1);
+            _this.$refs.asideTree.setCurrentKey(0);
           });
         }
       } else {
