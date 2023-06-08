@@ -48,6 +48,7 @@
             :isEdit="isEdit"
             :isClear="isClear[0]"
             :keepSource="true"
+            :showPagination="false"
             :pagination="tablePagination[0]"
             @configprocess="configprocess"
             @pageChange="pageChange"
@@ -447,7 +448,7 @@ export default {
       this.$set(this.tableColumns, remarkTb, [
         {
           label: "类别",
-          prop: "ProductTypeS",
+          prop: "ProductType",
           width: 80,
         },
         {
