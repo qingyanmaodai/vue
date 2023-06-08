@@ -44,11 +44,12 @@
             :tableLoading="tableLoading[0]"
             :remark="0"
             :sysID="sysID[0]['ID']"
-            :hasSelect="true"
-            :isEdit="isEdit"
+            :hasSelect="false"
+            :isEdit="false"
             :isClear="isClear[0]"
             :keepSource="true"
             :showPagination="false"
+            :IsIndex="true"
             :pagination="tablePagination[0]"
             @configprocess="configprocess"
             @pageChange="pageChange"
@@ -449,37 +450,37 @@ export default {
         {
           label: "类别",
           prop: "ProductType",
-          width: 80,
+          width: 200,
         },
         {
           label: "产品型号",
           prop: "InnerModel",
-          width: 100,
+          width: 200,
         },
         {
           label: "订单总量",
           prop: "Qty",
-          width: 80,
+          width: 200,
         },
         {
           label: "已完成",
           prop: "ReportQty",
-          width: 80,
+          width: 200,
         },
         {
           label: "已出货",
           prop: "OutStockQty",
-          width: 80,
+          width: 200,
         },
         {
           label: "可出货",
           prop: "OutStockQtyDiff",
-          width: 80,
+          width: 200,
         },
         {
           label: "未完成",
           prop: "UnfinishQty",
-          width: 80,
+          width: 200,
         },
       ]);
       if (result) {
