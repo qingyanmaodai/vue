@@ -168,7 +168,10 @@ export default {
       formSearchs: [
         {
           datas: {
+            fields:
+              "ProductType,InnerModel,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
             groupby: "ProductType,InnerModel",
+            sort: "ProductType DESC",
           },
           forms: [],
         },
@@ -443,7 +446,6 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
