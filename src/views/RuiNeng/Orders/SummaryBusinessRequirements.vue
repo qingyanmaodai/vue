@@ -167,7 +167,9 @@ export default {
       selectionData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            groupby: "ProductType,InnerModel",
+          },
           forms: [],
         },
       ],
@@ -455,7 +457,7 @@ export default {
         {
           label: "产品型号",
           prop: "InnerModel",
-          width: 200,
+          width: 300,
         },
         {
           label: "订单总量",
