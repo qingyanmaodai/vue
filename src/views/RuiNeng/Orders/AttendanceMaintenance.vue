@@ -489,6 +489,15 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
+          m.forEach(n => {
+            // 进行验证
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach(x => {
+                this.verifyDta(x);
+              });
+            }
+          });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -511,7 +520,7 @@ export default {
       }
     },
     // 验证数据
-    verifyData(n) {
+    verifyDta(n) {
       // if (n.prop == "ShortQty") {
       //   return;
       // }
