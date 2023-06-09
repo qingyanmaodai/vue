@@ -760,6 +760,10 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
+        // 获取每个表头
+        datas.some((m, i) => {
+          this.$set(this.tableColumns, i, m);
+        });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
@@ -799,17 +803,6 @@ export default {
       let res = await GetSearchData(form);
       let { result, data, count, msg, Columns } = res.data;
       if (result) {
-        Columns.some((m, i) => {
-          m.forEach((n) => {
-            // 进行验证
-            this.verifyData(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
-                this.verifyData(x);
-              });
-            }
-          });
-        });
         this.$set(this.Columns, remarkTb, Columns[0]);
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);

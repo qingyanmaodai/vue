@@ -240,6 +240,7 @@ export default {
               (new Date().getMonth() + 1).toString() +
               "-" +
               new Date().getDate().toString(),
+            ProcessGroupName: "组装",
           },
           forms: [],
         },
@@ -434,7 +435,7 @@ export default {
         );
         if (data.length != 0) {
           this.$nextTick(function () {
-            _this.$refs.asideTree.setCurrentKey(-1);
+            _this.$refs.asideTree.setCurrentKey(0);
           });
         }
       } else {
@@ -704,15 +705,6 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
-            // 进行验证
-            this.verifyData(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
-                this.verifyData(x);
-              });
-            }
-          });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮

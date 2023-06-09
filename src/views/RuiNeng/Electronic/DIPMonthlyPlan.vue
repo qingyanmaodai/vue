@@ -323,7 +323,14 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if (this.formSearchs[remarkTb].forms.length) {
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach(element => {
+              if (element.prop === name) {
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            });
+          }
         }
       }
     },
@@ -526,6 +533,19 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
+        // 获取每个表头
+        datas.some((m, i) => {
+          // m.forEach((n) => {
+          //   // 进行验证
+          //   this.verifyData(n);
+          //   if (n.childrens && n.children.length != 0) {
+          //     n.childrens.forEach((x) => {
+          //       this.verifyData(x);
+          //     });
+          //   }
+          // });
+          this.$set(this.tableColumns, i, m);
+        });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
@@ -544,7 +564,7 @@ export default {
       }
     },
     // 验证数据
-    verifyDta(n) {
+    verifyData(n) {
       for (let name in n) {
         if (
           (name == "component" && n[name]) ||

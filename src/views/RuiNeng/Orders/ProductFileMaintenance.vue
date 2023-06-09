@@ -314,7 +314,15 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if (this.formSearchs[remarkTb].forms.length) {
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach(element => {
+              if (element.prop === name) {
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            });
+          }
+          
         }
       }
       // this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
