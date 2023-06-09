@@ -628,7 +628,12 @@ export default {
       //   return;
       // } else {
       this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/FromOrderPlanMaterial");
+      let res = await GetSearch(
+        {
+          ProcessGroupName: "DIP",
+        },
+        "/APSAPI/FromOrderPlanMaterial"
+      );
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -675,8 +680,9 @@ export default {
           let res = await GetSearch(
             {
               Days: this.Days,
+              ProcessGroupName: "DIP",
             },
-            "/APSAPI/TOProcessPlanFromOrderPlanMaterialForDIP"
+            "/APSAPI/TOProcessPlanFromOrderPlanMaterial"
           );
           const { datas, forms, result, msg } = res.data;
           console.log(result, "result");
