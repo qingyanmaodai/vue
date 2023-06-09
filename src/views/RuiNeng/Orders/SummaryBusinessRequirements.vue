@@ -205,7 +205,7 @@ export default {
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
+      tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -428,9 +428,9 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        if (this.tableData[0].length === 0) {
-          this.tablePagination[0]["pageSize"] = datas[0][1]["pageSize"];
-        }
+        // if (this.tableData[0].length === 0) {
+        //   this.tablePagination[0]["pageSize"] = datas[0][1]["pageSize"];
+        // }
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
