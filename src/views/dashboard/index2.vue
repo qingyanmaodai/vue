@@ -173,6 +173,7 @@
                   @pageChange="pageChange"
                   @pageSize="pageSize"
                   @sortChange="sortChange"
+                  :cellStyle="cellStyle7"
                 >
                 </ComReportTable2>
               </div>
@@ -495,16 +496,17 @@ export default {
         {
           datas: {
             fields:
-              "ProductType,InnerModel,SUM(Qty) AS S1 ,SUM(ReportQty) AS S2,SUM(OutStockQty) AS S3,SUM(StockQtyDiff) AS S4",
+              "ProductType,InnerModel,SUM(Qty) AS Qty ,SUM(ReportQty) AS ReportQty,SUM(OutStockQty) AS OutStockQty,SUM(StockQtyDiff) AS StockQtyDiff",
             groupby: "ProductType,InnerModel",
-            sort: "InnerModel",
+            sort: "ProductType,InnerModel",
           },
           forms: [],
         },
         {
           datas: {
-            fields: "DemandDate,LineName,WorkShopName,MaterialName,Code,OweQty",
+            fields: "DemandDate,LineName,ProductName,MaterialName,Code,OweQty",
             OweQty: 0,
+            sort: "DemandDate desc",
           },
           forms: [],
         },
@@ -1376,6 +1378,13 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
+      if(remarkTb === 0){
+        console.log(data,'data');
+        data[0]['S1'] = data[0]['S1'].toLocaleString()
+        data[0]['S2'] = data[0]['S2'].toLocaleString()
+        data[0]['S3'] = data[0]['S3'].toLocaleString()
+        data[0]['S4'] = data[0]['S4'].toLocaleString()
+      }
       if (remarkTb === 6) {
         this.tableColumns[6] = [
           {
@@ -1390,22 +1399,22 @@ export default {
           },
           {
             label: "数量",
-            prop: "S1",
+            prop: "Qty",
             width: 80,
           },
           {
             label: "汇报数",
-            prop: "S2",
+            prop: "ReportQty",
             width: 80,
           },
           {
             label: "出库数",
-            prop: "S3",
+            prop: "OutStockQty",
             width: 80,
           },
           {
             label: "库存数",
-            prop: "S4",
+            prop: "StockQtyDiff",
             width: 80,
           },
         ];
@@ -1418,28 +1427,28 @@ export default {
       if (remarkTb === 7) {
         this.tableColumns[7] = [
           {
-            label: "需求日期",
+            label: "计划日期",
             prop: "DemandDate",
             width: 80,
           },
           {
-            label: "线名",
+            label: "产线",
             prop: "LineName",
             width: 60,
           },
           {
-            label: "车间",
-            prop: "WorkShopName",
-            width: 60,
+            label: "产品型号",
+            prop: "ProductName",
+            width: 100,
           },
           {
-            label: "料品名称",
-            prop: "MaterialName",
-            width: 120,
-          },
-          {
-            label: "料号",
+            label: "物料编码",
             prop: "Code",
+            width: 80,
+          },
+          {
+            label: "物料名称",
+            prop: "MaterialName",
             width: 100,
           },
           {
@@ -1541,6 +1550,16 @@ export default {
         )},${parseInt("0x" + hex.slice(5, 7))},${opacity})`;
       }
       return rgbaColor;
+    },
+    // 行内样式
+    cellStyle7({ row, column }) {
+      if (column.property == "OweQty") {
+        if (row["OweQty"] < 0) {
+          return {
+            color: "red",
+          };
+        }
+      }
     },
   },
 };
@@ -1700,10 +1719,12 @@ export default {
           flex-direction: column;
           margin-right: 10px;
           width: 50%;
+          overflow: hidden;
+
           .echartBody {
             height: calc(100% - 60px);
             overflow: auto;
-            // overflow: hidden;
+            overflow: hidden;
           }
           .echartBody::-webkit-scrollbar {
             display: none;
@@ -1711,6 +1732,7 @@ export default {
         }
         .itemCard:nth-child(2) {
           margin-right: 0px;
+          overflow: hidden;
         }
       }
     }
@@ -1852,7 +1874,8 @@ export default {
     // height: 100%;
   }
   .box:hover,
-  .itemCard:hover {
+  .itemCard:hover,
+  .itemCard1:hover {
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   }
   .container {
