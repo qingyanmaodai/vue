@@ -325,12 +325,12 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        console.log(this.formSearchs[remarkTb].datas,name);
+        console.log(this.formSearchs[remarkTb].datas, name);
 
         if (name != "dicID") {
           this.formSearchs[remarkTb].datas[name] = null;
         }
-        console.log(this.formSearchs[remarkTb].datas,name);
+        console.log(this.formSearchs[remarkTb].datas, name);
       }
       // this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
       //   this.labelStatus1
@@ -457,37 +457,37 @@ export default {
         {
           label: "类别",
           prop: "ProductType",
-          width: 200,
+          width: 60,
         },
         {
           label: "产品型号",
           prop: "InnerModel",
-          width: 300,
+          width: 150,
         },
         {
           label: "订单总量",
           prop: "Qty",
-          width: 200,
+          width: 80,
         },
         {
           label: "已完成",
           prop: "ReportQty",
-          width: 200,
+          width: 80,
         },
         {
           label: "已出货",
           prop: "OutStockQty",
-          width: 200,
+          width: 80,
         },
         {
           label: "可出货",
           prop: "OutStockQtyDiff",
-          width: 200,
+          width: 80,
         },
         {
           label: "未完成",
           prop: "UnfinishQty",
-          width: 200,
+          width: 80,
         },
       ]);
       if (result) {
