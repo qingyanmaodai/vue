@@ -169,8 +169,8 @@ export default {
         {
           datas: {
             fields:
-              "ProductType,InnerModel,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
-            groupby: "ProductType,InnerModel",
+              "ProductType,Model,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
+            groupby: "ProductType,Model",
             sort: "ProductType DESC",
           },
           forms: [],
@@ -461,7 +461,7 @@ export default {
         },
         {
           label: "产品型号",
-          prop: "InnerModel",
+          prop: "Model",
           width: 150,
         },
         {
