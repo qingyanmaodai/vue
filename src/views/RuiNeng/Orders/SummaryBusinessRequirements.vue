@@ -325,9 +325,12 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
+        console.log(this.formSearchs[remarkTb].datas,name);
+
         if (name != "dicID") {
           this.formSearchs[remarkTb].datas[name] = null;
         }
+        console.log(this.formSearchs[remarkTb].datas,name);
       }
       // this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
       //   this.labelStatus1
