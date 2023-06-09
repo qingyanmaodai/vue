@@ -224,9 +224,10 @@ export default {
     }),
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.setHeight();
-    // }, 300);
+   
+    setTimeout(() => {
+      this.setHeight();
+    }, 300);
     this.keyDown();
   },
   methods: {
