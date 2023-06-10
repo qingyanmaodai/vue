@@ -1379,7 +1379,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if(remarkTb === 0){
-        console.log(data,'data');
         data[0]['S1'] = data[0]['S1'].toLocaleString()
         data[0]['S2'] = data[0]['S2'].toLocaleString()
         data[0]['S3'] = data[0]['S3'].toLocaleString()
