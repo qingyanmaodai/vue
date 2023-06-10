@@ -461,6 +461,15 @@ export default {
             if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
               cell.backColor("#FF0000");
             }
+            if (row["ISPOFinish"] === "是" && key === "ReportQty") {
+              cell.backColor("#92d050");
+            }
+            if (row["ISOutStock"] === "出库正常" && key === "OutDate") {
+              cell.backColor("#92d050");
+            }
+            if (row["ISOutStock"] === "出库异常" && key === "OutDate") {
+              cell.backColor("#ff0000");
+            }
           });
         });
         // 列筛选
