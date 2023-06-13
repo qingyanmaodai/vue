@@ -1112,12 +1112,22 @@ export default {
         if (_this.tableColumns[remarkTb].length) {
           _this.tableColumns[remarkTb].map((item, index) => {
             if (item["prop"].indexOf("FormRate") !== -1 && args.col === index) {
-              console.log("OrderID", _this.tableData[_this.tagRemark]);
+              console.log("OrderID", _this.tableData[remarkTb]);
               // 显示ERP供需平衡表
               _this.colDialogVisible = true;
               _this.dialogSearchForm.OrderID =
                 _this.tableData[remarkTb][args.row].OrderID;
               _this.dialogSearchForm.OweQty = 0;
+              if (item["prop"] === "FormRate") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D0"];
+              } else if (item["prop"] === "FormRate1") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D1"];
+              } else if (item["prop"] === "FormRate2") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D2"];
+              }
             }
           });
         }

@@ -927,7 +927,9 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.Prompt = data && data[0].Remark1;
+        if (data && data[0] && data[0].Remark1) {
+          this.Prompt = data[0].Remark1;
+        }
       }
     },
   },
