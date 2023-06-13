@@ -467,7 +467,7 @@ export default {
         { ID: 9033 },
         { ID: 10119 },
       ],
-      DataSourceList: {},
+      DataSourceList: [{}, {}, {}, {}, {}],
       selectionData: [[], [], [], [], [], []],
       delData: [[], [], [], [], []],
     };
@@ -607,11 +607,11 @@ export default {
                 this.verifyDta(x);
               });
             }
-            //获取下拉数据源
+            //从列获取下拉数据源
             if (n.DataSourceID && n.ControlType === "combobox") {
-              this.DataSourceList = {
-                [n.DataSourceName]: [],
-                ...this.DataSourceList,
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
               };
             }
             if (n.Required && n.isEdit) {
@@ -675,18 +675,6 @@ export default {
         });
         this.$set(this.tableLoading, remarkTb, false);
       }
-      // 获取下拉的数据源
-      this.$nextTick(() => {
-        if (this.tableData[remarkTb].length) {
-          for (let key in this.tableData[remarkTb][0]) {
-            for (let obj in this.DataSourceList) {
-              if (obj === key) {
-                this.DataSourceList[obj] = this.tableData[remarkTb][0][key];
-              }
-            }
-          }
-        }
-      });
     },
     // 刷新页面
     refrshPage() {
@@ -810,9 +798,9 @@ export default {
         if (remarkTb === 4) {
           obj["EID"] = this.formSearchs[remarkTb].datas.EID;
         }
-        for (let key in this.DataSourceList) {
+        for (let key in this.DataSourceList[remarkTb]) {
           if (item.DataSourceName === key) {
-            obj[key] = this.DataSourceList[key];
+            obj[key] = this.DataSourceList[remarkTb][key];
           }
         }
       });
