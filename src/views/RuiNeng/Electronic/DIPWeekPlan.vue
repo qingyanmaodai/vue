@@ -165,7 +165,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName: "DIP",
+            SProcessGroupName: "DIP",
           },
           forms: [],
         },
@@ -378,7 +378,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }

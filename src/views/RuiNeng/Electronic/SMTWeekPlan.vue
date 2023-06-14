@@ -1,5 +1,5 @@
 <!--菜单设置-->
-<!-- 四部日计划 -->
+<!-- SMT周计划 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -165,7 +165,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName: "SMT",
+            SProcessGroupName: "SMT",
           },
           forms: [],
         },
@@ -378,7 +378,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
