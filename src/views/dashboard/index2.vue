@@ -374,7 +374,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "PostMRPAnalysis",
+  name: "index2",
   components: {
     ComSearch,
     ComVxeTable,
@@ -506,7 +506,7 @@ export default {
           datas: {
             fields: "DemandDate,LineName,ProductName,MaterialName,Code,OweQty",
             OweQty: 0,
-            sort: "DemandDate desc",
+            sort: "DemandDate",
           },
           forms: [],
         },
@@ -1378,7 +1378,7 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
-      if(remarkTb === 0){
+      if(remarkTb === 0 && res.data){
         data[0]['S1'] = data[0]['S1'].toLocaleString()
         data[0]['S2'] = data[0]['S2'].toLocaleString()
         data[0]['S3'] = data[0]['S3'].toLocaleString()

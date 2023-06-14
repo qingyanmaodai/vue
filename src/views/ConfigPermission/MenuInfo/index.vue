@@ -2,15 +2,8 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :isLoading="isLoading"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
+      <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+        :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
     </div>
     <div>
       <div class="admin_content">
@@ -20,72 +13,34 @@
               <span class="title">{{ title }}</span>
             </el-col>
             <el-col :span="20" class="flex_flex_end">
-              <el-button type="primary" size="mini" @click="openDrawer(1)"
-                >新增菜单</el-button
-              >
+              <el-button type="primary" size="mini" @click="openDrawer(1)">新增菜单</el-button>
               <el-divider direction="vertical"></el-divider>
-              <el-button type="warning" size="mini" @click="openDrawer(2)"
-                >修改菜单/配置按钮</el-button
-              >
+              <el-button type="warning" size="mini" @click="openDrawer(2)">修改菜单/配置按钮</el-button>
               <el-divider direction="vertical"></el-divider>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="刷新"
-                placement="bottom"
-              >
+              <el-tooltip class="item" effect="dark" content="刷新" placement="bottom">
                 <span class="right_icon" @click="refrshPage">
-                  <span
-                    role="img"
-                    aria-label="redo"
-                    class="anticon anticon-redo icon_size"
-                    ><svg
-                      class=""
-                      data-icon="redo"
-                      width="1em"
-                      height="1em"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      viewBox="64 64 896 896"
-                      focusable="false"
-                    >
+                  <span role="img" aria-label="redo" class="anticon anticon-redo icon_size"><svg class="" data-icon="redo"
+                      width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
+                      focusable="false">
                       <path
-                        d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
-                      ></path></svg
-                  ></span>
+                        d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z">
+                      </path>
+                    </svg></span>
                 </span>
               </el-tooltip>
               <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
         </div>
-        <ComUmyTable
-          :rowKey="'RowNumber'"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableHeader="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :isEdit="true"
-          :remark="0"
-          :sysID="sysID[0].ID"
-          :isClear="isClear[0]"
-          :pagination="tablePagination[0]"
-          @handleRowClick="handleRowClick"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-        />
+        <ComUmyTable :rowKey="'RowNumber'" :height="height" :tableData="tableData[0]" :tableHeader="tableColumns[0]"
+          :tableLoading="tableLoading[0]" :isEdit="true" :remark="0" :sysID="sysID[0].ID" :isClear="isClear[0]"
+          :pagination="tablePagination[0]" @handleRowClick="handleRowClick" @pageChange="pageChange" @pageSize="pageSize"
+          @sortChange="sortChange" />
       </div>
     </div>
 
-    <el-drawer
-      :title="drawerTitle"
-      :visible.sync="drawer"
-      direction="rtl"
-      :lock-scroll="false"
-      :modal="false"
-      :size="'40%'"
-    >
+    <el-drawer :title="drawerTitle" :visible.sync="drawer" direction="rtl" :lock-scroll="false" :modal="false"
+      :size="'40%'">
       <div class="drawer_body">
         <el-form label-width="90px">
           <el-row>
@@ -93,43 +48,21 @@
               <el-form-item :label="`${dialogTitle}` + '类型'" prop="">
                 <el-radio-group v-model="Type" size="small">
                   <el-radio-button label="菜单"></el-radio-button>
-                  <el-radio-button
-                    label="按钮"
-                    v-show="tagRremark == 2"
-                  ></el-radio-button>
+                  <el-radio-button label="按钮" v-show="tagRremark == 2"></el-radio-button>
                 </el-radio-group>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-        <el-form
-          v-show="Type == '菜单'"
-          :model="menuForm"
-          :rules="menuRules"
-          ref="menuForm"
-          label-width="90px"
-          class="demo-ruleForm"
-        >
+        <el-form v-show="Type == '菜单'" :model="menuForm" :rules="menuRules" ref="menuForm" label-width="90px"
+          class="demo-ruleForm">
           <el-row>
             <el-col :span="12">
               <el-form-item label="上级菜单" prop="ParentMenuName">
-                <el-select
-                  ref="formRef"
-                  v-model="menuForm.ParentMenuName"
-                  :clearable="true"
-                  @change="clearData"
-                >
-                  <el-option
-                    :value="menuForm.ParentCode"
-                    :label="menuForm.ParentMenuName"
-                  >
-                    <el-tree
-                      ref="selectTree"
-                      :props="treeProps"
-                      :data="treeData"
-                      :expand-on-click-node="false"
-                      @node-click="selectHandleNodeClick"
-                    ></el-tree>
+                <el-select ref="formRef" v-model="menuForm.ParentMenuName" :clearable="true" @change="clearData">
+                  <el-option :value="menuForm.ParentCode" :label="menuForm.ParentMenuName">
+                    <el-tree ref="selectTree" :props="treeProps" :data="treeData" :expand-on-click-node="false"
+                      @node-click="selectHandleNodeClick"></el-tree>
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -182,21 +115,13 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="是否隐藏" prop="Hidden">
-                <el-switch
-                  v-model="menuForm.Hidden"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                >
+                <el-switch v-model="menuForm.Hidden" active-color="#13ce66" inactive-color="#ff4949">
                 </el-switch>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="不缓存" prop="keepAlive">
-                <el-switch
-                  v-model="menuForm.keepAlive"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                >
+                <el-switch v-model="menuForm.keepAlive" active-color="#13ce66" inactive-color="#ff4949">
                 </el-switch>
               </el-form-item>
             </el-col>
@@ -218,24 +143,10 @@
             </el-dropdown>
           </div> -->
           <div>
-            <ComVxeTable
-              ref="ComVxeTable"
-              :row-key="'RowNumber'"
-              :height="height2"
-              :sysID="sysID[1].ID"
-              :tableData="tableData[1]"
-              :isToolbar="false"
-              :isClear="false"
-              :isEdit="true"
-              :remark="1"
-              :table-header="tableColumns[1]"
-              :table-loading="tableLoading[1]"
-              :pagination="tablePagination[1]"
-              @pageChange="pageChange"
-              @pageSize="pageSize"
-              :hasSelect="true"
-              @sortChange="sortChange"
-            />
+            <ComVxeTable ref="ComVxeTable" :row-key="'RowNumber'" :height="height2" :sysID="sysID[1].ID"
+              :tableData="tableData[1]" :isToolbar="false" :isClear="false" :isEdit="true" :remark="1"
+              :table-header="tableColumns[1]" :table-loading="tableLoading[1]" :pagination="tablePagination[1]"
+              @pageChange="pageChange" @pageSize="pageSize" :hasSelect="true" @sortChange="sortChange" />
           </div>
           <!-- <div class="btnTree">
             <el-tree
@@ -254,13 +165,7 @@
       </div>
       <div class="drawer_footer">
         <el-button plain size="small" @click="drawer = false">取消</el-button>
-        <el-button
-          type="primary"
-          size="small"
-          @click="sureAdd"
-          :loading="sureLoading"
-          >确认</el-button
-        >
+        <el-button type="primary" size="small" @click="sureAdd" :loading="sureLoading">确认</el-button>
       </div>
     </el-drawer>
   </div>
@@ -277,14 +182,14 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetMenus
+  GetMenus,
 } from "@/api/Common";
 export default {
   name: "MenuInfo",
   components: {
     ComSearch,
     ComUmyTable,
-    ComVxeTable
+    ComVxeTable,
   },
   data() {
     return {
@@ -298,12 +203,12 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       btnForm: [
         {
@@ -312,7 +217,7 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataTreeSave",
-          Icon: ""
+          Icon: "",
         },
         {
           BtnName: "删除",
@@ -321,8 +226,8 @@ export default {
           Size: "small",
           Methods: "dataDel",
           Icon: "",
-          Params: { dataName: "delData" }
-        }
+          Params: { dataName: "delData" },
+        },
       ],
       sysID: [{ ID: 1 }, { ID: 61 }],
       tableData: [[]],
@@ -332,7 +237,7 @@ export default {
       isClear: [false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
       selectionDefaultData: [[], []],
       selectionData: [[], []],
@@ -357,14 +262,14 @@ export default {
         keepAlive: false,
         ViewSort: 1,
         Ico: "",
-        Status: 1
+        Status: 1,
       },
       menuRules: {
         MenuName: [
-          { required: true, message: "请输入菜单名称", trigger: "blur" }
+          { required: true, message: "请输入菜单名称", trigger: "blur" },
         ],
         Url: [{ required: true, message: "请输入路由地址", trigger: "blur" }],
-        ViewSort: [{ required: true, message: "请输入排序", trigger: "blur" }]
+        ViewSort: [{ required: true, message: "请输入排序", trigger: "blur" }],
       },
       treeProps: { label: "MenuName", children: "children" },
       treeData: [],
@@ -372,11 +277,11 @@ export default {
       isOpen: false,
       btnProps: {
         children: "children",
-        label: "ButtonName"
+        label: "ButtonName",
       },
       isLoading: false,
       initialBtnData: [],
-      tagRremark: 1
+      tagRremark: 1,
     };
   },
   watch: {},
@@ -413,8 +318,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then(_ => {})
-        .catch(_ => {});
+        .then((_) => { })
+        .catch((_) => { });
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -499,7 +404,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -517,7 +422,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.getAllMenu();
         this.dataSearch(remarkTb);
@@ -525,7 +430,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -533,7 +438,7 @@ export default {
     dataTreeSave(remarkTb, index, parms, newData) {
       if (this.tableData[remarkTb].length != 0) {
         let submitData = [];
-        this.tableData[remarkTb].forEach(x => {
+        this.tableData[remarkTb].forEach((x) => {
           if (x.update) {
             x["dicID"] = 1;
             submitData.push(x);
@@ -554,7 +459,7 @@ export default {
     // 递归获取子数据
     getChildrensData(row, submitData) {
       submitData.concat(row.children);
-      row.children.forEach(x => {
+      row.children.forEach((x) => {
         if (x.update) {
           x["dicID"] = 1;
           submitData.push(x);
@@ -573,7 +478,7 @@ export default {
           this.$message.error("请单击需要操作的数据！");
           return;
         } else {
-          this[parms.dataName][remarkTb].forEach(x => {
+          this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
             obj["ElementDeleteFlag"] = 1;
             obj["dicID"] = 1;
@@ -581,17 +486,17 @@ export default {
           });
         }
       } else {
-        this.tableData[remarkTb].forEach(y => {
+        this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
           obj2["ElementDeleteFlag"] = 1;
           newData.push(obj2);
         });
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
+        .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch(_ => {});
+        .catch((_) => { });
     },
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
@@ -603,13 +508,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -626,14 +531,14 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
             }
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach(x => {
+              n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -643,7 +548,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -684,14 +589,14 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.selectionDefaultData[remarkTb] = this.tableData[remarkTb].filter(
-          item => item.isChecked == true
+          (item) => item.isChecked == true
         );
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -707,10 +612,10 @@ export default {
         Name: "",
         Hidden: false,
         IsEnable: 1,
-        keepAlive: true,
+        keepAlive: false,
         ViewSort: 1,
         Ico: "",
-        Status: 1
+        Status: 1,
       };
     },
     // 点击新增菜单或按钮
@@ -750,7 +655,7 @@ export default {
               MenuCode: row.ParentCode,
               dicID: 1,
               IsEnable: 1,
-              rows: 0
+              rows: 0,
             });
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -759,7 +664,7 @@ export default {
               this.$message({
                 message: msg,
                 type: "error",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             }
           }
@@ -775,30 +680,31 @@ export default {
       if (this.Type == "按钮") {
         this.sureLoading = true;
         //将所选的数据和默认的数据做对比
-        this.selectionData[1] = this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
+        this.selectionData[1] =
+          this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
         let sendData = this.selectionDefaultData[1]
-          .map(item => {
+          .map((item) => {
             const findVal = this.selectionData[1].find(
-              val => val.ButtonID === item.ButtonID
+              (val) => val.ButtonID === item.ButtonID
             );
             if (findVal) {
               return item;
             } else {
               return {
                 ...item,
-                ElementDeleteFlag: 1
+                ElementDeleteFlag: 1,
               };
             }
           })
           .concat(
             this.selectionData[1]
               .filter(
-                item =>
+                (item) =>
                   !this.selectionDefaultData[1].some(
-                    val => val.ButtonID === item.ButtonID
+                    (val) => val.ButtonID === item.ButtonID
                   )
               )
-              .map(item => ({ ...item, Status: 1 }))
+              .map((item) => ({ ...item, Status: 1 }))
           );
         if (sendData.length === 0) {
           this.$message.error("请选择需要修改的按钮！");
@@ -808,10 +714,10 @@ export default {
         this.dataSave(1, "", "", sendData);
         this.sureLoading = false;
       } else {
-        this.$refs.menuForm.validate(valid => {
+        this.$refs.menuForm.validate((valid) => {
           if (valid) {
             this.sureLoading = true;
-            this.returnResultData([this.menuForm]).then(res => {
+            this.returnResultData([this.menuForm]).then((res) => {
               const { result, msg } = res.data;
               if (result) {
                 this.dataSearch(0);
@@ -820,13 +726,13 @@ export default {
                 this.$message({
                   message: msg,
                   type: "success",
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 });
               } else {
                 this.$message({
                   message: msg,
                   type: "error",
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 });
               }
               this.sureLoading = false;
@@ -872,7 +778,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -882,7 +788,7 @@ export default {
         dicID: 1,
         MenuCode: null,
         MenuName: "",
-        IsEnable: 1
+        IsEnable: 1,
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -892,7 +798,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -906,7 +812,7 @@ export default {
       if (!val) {
         this.menuForm.ParentCode = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>
