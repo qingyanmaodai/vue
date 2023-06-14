@@ -60,14 +60,15 @@
             :hasSelect="true" :tableData="tableData[2]" :tableHeader="tableColumns[2]" :tableLoading="tableLoading[2]"
             :remark="2" :sysID="sysID[2].ID" :isEdit="isEdit" :showFooter="true" :includeFields="includeFields"
             :isClear="isClear[2]" :showPagination="false" :pagination="tablePagination[2]" @pageChange="pageChange"
-            @pageSize="pageSize" @selectfun="selectFun" @changeline="changeline" @sortChange="sortChange" />
+            :keepSource="true" @pageSize="pageSize" @selectfun="selectFun" @changeline="changeline"
+            @sortChange="sortChange" />
 
           <ComVxeTable ref="tableRefTwo" v-show="labelStatus1 == 4" :rowKey="'RowNumber'" :height="height"
             :hasSelect="true" :tableData="tableData[1]" :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]"
             :remark="1" :sysID="sysID[1].ID" :isEdit="isEdit" :showFooter="true" :includeFields="includeFields"
             :cellStyle="cellStyle" :tableRowClassName="tableRowClassName" :isClear="isClear[1]" :showPagination="true"
             :pagination="tablePagination[1]" @pageChange="pageChange" @pageSize="pageSize" @selectfun="selectFun"
-            @changeline="changeline" @sortChange="sortChange" />
+            :keepSource="true" @changeline="changeline" @sortChange="sortChange" />
           <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
@@ -349,39 +350,58 @@ export default {
             GCsheets.SheetArea.colHeader
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-        } else if (x.prop === "LineID") {
-          let newData = [];
-          let list = null;
-          this.tableData[remarkTb].map((item, index) => {
-            if (item["Lines"]) {
-              newData = item["Lines"];
-              if (newData.length !== 0 && newData) {
-                list = new GCsheets.CellTypes.ComboBox();
-                list.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value
-                );
-                list.editable(true);
-                list.items(newData);
-                list.itemHeight(24);
-                sheet
-                  .getCell(index, y, GCsheets.SheetArea.viewport)
-                  .cellType(list);
-              }
-            } else {
-              item["LineID"] = null;
-            }
-          });
         } else if (
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
         ) {
-          let newData = [];
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
-              newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-              this.bindComboBoxToCell(sheet, index, y, newData);
+              let newData = x['items']; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
             }
           });
+        } else if (x.ControlType === "el-selcet") {
+          this.tableData[remarkTb].map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
+            }
+          });
+        } else if (x.ControlType === "checkbox") {
+          let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          cellType.caption("");
+          cellType.textTrue("");
+          cellType.textFalse("");
+          cellType.textIndeterminate("");
+          cellType.textAlign(
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+          );
+          cellType.isThreeState(false);
+          sheet.getCell(-1, y).cellType(cellType);
         } else if (
           x.DataType == "datetime" ||
           x.DataType === "varchar" ||
@@ -397,16 +417,6 @@ export default {
       });
       //渲染列
       sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
-      sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-      colHeader1.forEach(function (value, index) {
-        sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
-      });
-      sheet.setCellType(
-        0,
-        0,
-        new HeaderCheckBoxCellType(),
-        GCsheets.SheetArea.colHeader
-      );
 
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
@@ -434,8 +444,10 @@ export default {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
-
-      sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
+      if (this.tableColumns[remarkTb][0]["FixCount"]) {
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      }
 
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
 
@@ -461,150 +473,6 @@ export default {
         });
       });
 
-
-      // this.tableData[0].forEach((row, index) => {
-      //   let rowSheet = sheet.getRange(
-      //     index,
-      //     0,
-      //     1,
-      //     colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   let rowSheet2 = sheet.getRange(
-      //     index,
-      //     colindex,
-      //     1,
-      //     colInfos.length - colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   // 齐套列
-      //   let rowSheet3 = "";
-      //   if (_this.tableColumns[0].length) {
-      //     for (let i = 0; i < _this.tableColumns[0].length; i++) {
-      //       let item = _this.tableColumns[0][i];
-      //       if (item.name === "K1") {
-      //         rowSheet3 = sheet.getCell(
-      //           index, //行
-      //           i, //列
-      //           GC.Spread.Sheets.SheetArea.viewport
-      //         );
-      //         break;
-      //       }
-      //     }
-      //   }
-
-      //   if (!row["Code"]) {
-      //     rowSheet.backColor("#A0CFFF");
-      //     rowSheet.foreColor("balck");
-      //     rowSheet2.backColor("#A0CFFF");
-      //     rowSheet2.foreColor("balck");
-      //     if (row["K1"] != "100.00%" && row["K1"]) {
-      //       //不齐套时字体为红色
-      //       rowSheet3.foreColor("red");
-      //     }
-      //   } else if (row["MFGOrganizeID"] === 162 && row["MFGOrganizeID"]) {
-      //     // row.backColor();
-      //     rowSheet.backColor("#FFFF00");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("#FFFF00");
-      //     if (row["K1"] != "100.00%" && row["K1"]) {
-      //       //不齐套时字体为红色
-      //       rowSheet3.foreColor("red");
-      //     }
-      //   } else if (
-      //     row["SchedulingResult"] === "超期" &&
-      //     row["SchedulingResult"]
-      //   ) {
-      //     // row.backColor();
-      //     rowSheet.backColor("#C2E7B0");
-      //     rowSheet.foreColor("black");
-      //     if (row["K1"] != "100.00%" && row["K1"]) {
-      //       //不齐套时字体为红色
-      //       rowSheet3.foreColor("red");
-      //     }
-      //   } else if (
-      //     row["DBResult"] != "计算成功" &&
-      //     row["DBResult"] != "" &&
-      //     row["DBResult"] != null
-      //   ) {
-      //     // row.backColor();
-      //     rowSheet.backColor("#C2E7B0");
-      //     rowSheet.foreColor("red");
-      //     if (row["K1"] != "100.00%" && row["K1"]) {
-      //       //不齐套时字体为红色
-      //       rowSheet3.foreColor("red");
-      //     }
-      //   } else if (row["K1"] != "100.00%" && row["K1"]) {
-      //     //不齐套时字体为红色
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.foreColor("balck");
-      //     rowSheet3.foreColor("red");
-      //   } else {
-      //     // row.backColor();
-      //     rowSheet.foreColor("black");
-      //     rowSheet.backColor("");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("");
-      //   }
-
-      //   //   let cellIndex = 0;
-      //   //   this.tableColumns[0].forEach(m => {
-      //   //     //行，start,end
-      //   //     if (m.DataType == "bit" && m.isEdit) {
-      //   //       var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-      //   //       cellType.caption("");
-      //   //       cellType.textTrue("");
-      //   //       cellType.textFalse("");
-      //   //       cellType.textIndeterminate("");
-      //   //       cellType.textAlign(
-      //   //         GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
-      //   //       );
-      //   //       cellType.isThreeState(false);
-      //   //       sheet.getCell(index, cellIndex).cellType(cellType);
-      //   //     }
-      //   //     if (m.ControlType == "combobox" && m.isEdit) {
-      //   //       var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
-      //   //       cellType.editorValueType(
-      //   //         GC.Spread.Sheets.CellTypes.EditorValueType.value
-      //   //       );
-
-      //   //       //    let newData = [];
-      //   //       // if (row[m.DataSourceName].length != 0) {
-      //   //       //   row[m.DataSourceName].forEach((x) => {
-      //   //       //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-      //   //       //   });
-      //   //       // }
-
-      //   //       cellType.items(row[m.DataSourceName]);
-
-      //   //       sheet.getCell(index, cellIndex).cellType(cellType);
-      //   //     }
-      //   //     cellIndex++;
-      //   //   });
-      // });
-
-      // let cellIndex = 0;
-      // this.tableColumns[0].forEach(m => {
-      //   //行，start,end
-      //   if (m.isEdit) {
-      //     sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-      //     var cell = sheet.getCell(
-      //       -1,
-      //       cellIndex,
-      //       GC.Spread.Sheets.SheetArea.viewport
-      //     );
-      //     cell.foreColor("#2a06ecd9");
-      //   } else {
-      //     var cell = sheet.getCell(
-      //       -1,
-      //       cellIndex,
-      //       GC.Spread.Sheets.SheetArea.viewport
-      //     );
-      //     cell.foreColor("gray");
-      //   }
-
-      //   cellIndex++;
-      // });
       sheet.options.isProtected = true;
       sheet.options.protectionOptions.allowResizeColumns = true;
       sheet.options.protectionOptions.allowInsertRows = true;
@@ -785,27 +653,9 @@ export default {
       });
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
-      this.tableLoading[0] = false;
+      this.tableLoading[remarkTb] = false;
       this.spread[remarkTb].refresh(); //重新定位宽高度
 
-    },
-    bindComboBoxToCell(sheet, row, col, dataSourceName) {
-      // 获取要绑定下拉菜单的单元格对象
-      let cell = sheet.getCell(row, col);
-
-      // 创建下拉菜单单元格类型，并设置其选项数据
-      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-      comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
-      );
-      comboBox.editable(true);
-      // 获取下拉菜单的选项数据
-
-      comboBox.items(dataSourceName);
-      comboBox.itemHeight(24);
-
-      // 将下拉菜单单元格类型绑定到指定的单元格中
-      cell.cellType(comboBox);
     },
     // 监听键盘
     keyDown() {
@@ -842,9 +692,6 @@ export default {
         params: { ID: this.sysID[0].ID }
       });
     },
-    // initSpread: function(spread) {
-    //   this.spread = spread;
-    // },
     changenoworkhours(item, value, prop, index, a, b) {
       if (this.NoWorkHour.findIndex(m => m.OrderID == item.OrderID) === -1) {
         this.NoWorkHour.push(item);
@@ -941,27 +788,6 @@ export default {
         this.fileList.findIndex(item => item.url === file.url),
         1
       );
-    },
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter(y => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
-          }
-        });
-      }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
     },
     // 高度控制
     setHeight() {
@@ -1285,13 +1111,6 @@ export default {
         });
       }
     },
-    // 暂停计划
-    async parseData() {
-      this.SetData(24);
-    },
-    async reData() {
-      this.SetData(26);
-    },
     //恢复计划
     async recovery(remarkTb, index, parms, newData) {
       if (this.selectionData[2].length == 0) {
@@ -1350,7 +1169,6 @@ export default {
         }
       }
     },
-    // save4() {},
     //恢复计划
     async recovery(remarkTb) {
       remarkTb = 2;
@@ -1363,65 +1181,63 @@ export default {
         this.dataSave(this.selectionData[remarkTb], remarkTb);
       }
     },
-    async dataSave(newData, remarkTb) {
-      let res = await GetSearch(newData, "/APSAPI/SaveData");
-      const { result, data, count, msg } = res.data;
-      this.adminLoading = false;
-      if (result) {
-        this.$set(this.selectionData, remarkTb, []);
-        this.NoWorkHour = [];
-        this.dataSearch(remarkTb);
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true
-        });
-        this.adminLoading = false;
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true
-        });
+    // 保存
+    async dataSave(remarkTb, index, parms, newData) {
+      this.adminLoading = true;
+      const sheet = this.spread[remarkTb]?.getActiveSheet();
+
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (sheet.isEditing()) {
+        sheet.endEdit();
       }
-    },
-    async SetData(status) {
-      let submitData = this.selectionData[0];
-      if (submitData.length == 0) {
-        this.$message.error("请选择数据！");
+      // 获取修改记录
+      let updateRecords = [];
+      if (newData) {
+        updateRecords = newData;
+      } else {
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          DeletedRows.forEach((item) => {
+            item["ElementDeleteFlag"] = 1;
+          }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
+      }
+
+      if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
+        this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      submitData.forEach(m => {
-        m.ProductionStatus = status;
-      });
-
-      this.adminLoading = true;
-      let res = await GetSearch(submitData, "/APSAPI/SaveData");
-      const { result, data, count, msg } = res.data;
-      this.adminLoading = false;
+      let res = await SaveMOPlanStep4(updateRecords);
+      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
+      const { datas, forms, result, msg } = res.data;
       if (result) {
-        this.dataSearch(0);
-
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
+        this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
+        this.$set(this, "adminLoading", false);
       }
     },
     // 进入分线列表
     insertList() {
-      // this.getSelectionData(0);
-      if (this.selectionData[0].length == 0) {
+      this.getSelectionData(this.tagRemark);
+      if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
-        return;
       } else {
         // 进入预排计划
 
@@ -1435,14 +1251,14 @@ export default {
       //   return;
       // }
 
-      // let submitData = [];
-      // this.getSelectionData();
+      let submitData = [];
+      this.getSelectionData();
       this.selectionData[0].forEach(x => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
         x["AutoDays2"] = this.AutoDays2;
-        // submitData.push(x);
+        submitData.push(x);
       });
 
       if (this.selectionData[0].length == 0) {
