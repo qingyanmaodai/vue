@@ -1,21 +1,23 @@
 <!--物料点检-->
 <template>
   <div class="container flex_wrap" v-loading="adminLoading">
-    <div ref="content_up" style="width:60%" :class="enlargeType
-      ? 'list_content_down blockClass'
-      : 'list_content_down noneClass'
-      ">
-      <div class="admin_head_2" ref="headRef">
-        <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-          :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
-      </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title" ref="headRef_2">
-            <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col :span="20" class="flex_flex_end">
-                <!-- <div
+
+    <splitpanes class="default-theme">
+      <pane size="50">
+        <div ref="content_up" :class="enlargeType
+          ? 'list_content_down blockClass'
+          : 'list_content_down noneClass'
+          ">
+          <div class="admin_head_2" ref="headRef">
+            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
+          </div>
+          <div class="admin_content">
+            <div class="ant-table-title" ref="headRef_2">
+              <el-row>
+                <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+                <el-col :span="20" class="flex_flex_end">
+                  <!-- <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
@@ -23,109 +25,93 @@
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div> -->
-              </el-col>
-            </el-row>
+                </el-col>
+              </el-row>
+            </div>
+            <ComVxeTable ref="tableRef" :rowKey="'RowNumber'" :height="height" :isToolbar="false" :hasSelect="true"
+              :isEdit="true" :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]"
+              :remark="0" :cellStyle="cellStyle0" :sysID="sysID[0].ID" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
+              :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
+              @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" />
           </div>
-          <ComVxeTable ref="tableRef" :rowKey="'RowNumber'" :height="height" :isToolbar="false" :hasSelect="true"
-            :isEdit="true" :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]"
-            :remark="0" :cellStyle="cellStyle0" :sysID="sysID[0].ID" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
-            :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
-            @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" />
         </div>
-      </div>
-    </div>
+      </pane>
+      <pane size="50">
+        <div ref="content_down" class="list_content_down">
+          <div class="admin_head_2" ref="headRef">
+            <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
+              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
+          </div>
+          <div class="admin_content">
+            <!-- <div class="ant-table-title">
+              <el-row>
+                <el-col :span="1"><span class="title">物料明细</span></el-col>
+                <el-col :span="24" class="flex_flex_end">
+                  <el-select clearable filterable size="small" placeholder="选择出勤情况" v-model="OrderNo"
+                    @change="selectOrderNo">
+                    <el-option v-for="(item, i) in OrderNos" :key="i" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-select clearable filterable size="small" placeholder="选择仓库" style="width:100px"
+                    v-model="warehouseValue" @change="selectWarehouse">
+                    <el-option v-for="(item, i) in warehouses" :key="i" :label="item.WarehouseName"
+                      :value="item.WarehouseID"></el-option>
+                  </el-select>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-button type="danger" size="small" @click="clearShort">清空超领</el-button>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-button type="success" size="small" @click="setAttendance">设置</el-button>
+                  <el-divider direction="vertical"></el-divider>
+                  <div :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status2"
+                    :key="y">
+                    <span @click="changeStatus2(item, y)">{{ item.label }}</span>
+                    <el-divider direction="vertical"></el-divider>
+                  </div>
+                  <el-tooltip class="item" effect="dark" :content="expendCollText" placement="top">
+                    <span class="right_icon">
+                      <img v-show="!expendColl" src="../../../assets/svg/collapse.svg" @click="systolic"
+                        style="width:1.4rem;height:1.4rem" />
+                      <img v-show="expendColl" src="../../../assets/svg/expend.svg" @click="systolic"
+                        style="width:1.4rem;height:1.4rem" />
+                    </span>
+                  </el-tooltip>
+                </el-col>
+              </el-row>
+            </div> -->
 
-    <div ref="content_down" class="list_content_down" style="width:40%">
-      <!-- <div class="admin_head_2" ref="headRef">
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[1].datas"
-          :searchForm="formSearchs[1].forms"
-          :remark="1"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          @btnClick="btnClick"
-          :signName="labelStatus1"
-        />
-      </div> -->
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <!-- <el-col :span="1"><span class="title">物料明细</span></el-col> -->
-            <el-col :span="24" class="flex_flex_end">
-              <el-select clearable filterable size="small" placeholder="选择出勤情况" v-model="OrderNo" @change="selectOrderNo">
-                <el-option v-for="(item, i) in OrderNos" :key="i" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <el-divider direction="vertical"></el-divider>
-              <!-- <el-select
-                  clearable
-                  filterable
-                  size="small"
-                  placeholder="选择仓库"
-                  style="width:100px"
-                  v-model="warehouseValue"
-                  @change="selectWarehouse"
-                >
-                  <el-option
-                    v-for="(item, i) in warehouses"
-                    :key="i"
-                    :label="item.WarehouseName"
-                    :value="item.WarehouseID"
-                  ></el-option>
-                </el-select> -->
-              <!-- <el-divider direction="vertical"></el-divider> -->
-              <!-- <el-button
-                  type="danger"
-                  size="small"
-                  @click="clearShort"
-                >清空超领</el-button>
-                <el-divider direction="vertical"></el-divider> -->
-              <el-button type="success" size="small" @click="setAttendance">设置</el-button>
-              <el-divider direction="vertical"></el-divider>
-              <!-- <div
-                  :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status2"
+            <div class="ant-table-title" ref="headRef_2">
+              <el-row>
+                <el-col :span="4"><span class="title">各科室每天开拉情况</span></el-col>
+                <el-col :span="20" class="flex_flex_end">
+                  <!-- <div
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus2(item, y)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div> -->
-              <!-- <el-tooltip
-                class="item"
-                effect="dark"
-                :content="expendCollText"
-                placement="top"
-              >
-                <span class="right_icon">
-                  <img
-                    v-show="!expendColl"
-                    src="../../../assets/svg/collapse.svg"
-                    @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
-                  />
-                  <img
-                    v-show="expendColl"
-                    src="../../../assets/svg/expend.svg"
-                    @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
-                  />
-                </span>
-              </el-tooltip> -->
-            </el-col>
-          </el-row>
+                </el-col>
+              </el-row>
+            </div>
+            <ComVxeTable :rowKey="'RowNumber'" :isToolbar="false" :height="height2" :isEdit="true"
+              :tableData="tableData[1]" :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]" :remark="1"
+              :hasSelect="true" :cellStyle="cellStyle" :sysID="sysID[1].ID" :checCheckboxkMethod="checCheckboxkMethod"
+              :isClear="isClear[1]" @pageChange="pageChange" @pageSize="pageSize" :pagination="tablePagination[1]"
+              @sortChange="sortChange" @selectfun="selectFun" :keepSource="true" />
+
+
+          </div>
         </div>
-        <ComVxeTable :rowKey="'RowNumber'" :isToolbar="false" :height="height2" :isEdit="true" :tableData="tableData[1]"
-          :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]" :remark="1" :hasSelect="true"
-          :cellStyle="cellStyle" :sysID="sysID[1].ID" :checCheckboxkMethod="checCheckboxkMethod" :isClear="isClear[1]"
-          @pageChange="pageChange" @pageSize="pageSize" :pagination="tablePagination[1]" @sortChange="sortChange"
-          @selectfun="selectFun" :keepSource="true" />
-      </div>
-    </div>
+      </pane>
+    </splitpanes>
   </div>
 </template>
 
 <script>
 var _this;
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
@@ -141,7 +127,9 @@ export default {
   components: {
     ComSearch,
     ComVxeTable,
-    ComReportTable
+    ComReportTable,
+    Splitpanes,
+    Pane
   },
   data() {
     return {
@@ -308,6 +296,7 @@ export default {
       let newHeight = rem + "px";
       let rem2 =
         document.documentElement.clientHeight -
+        headHeight -
         this.$store.getters.reduceHeight;
       let newHeight2 = rem2 + "px";
       this.$set(this, "height", newHeight);

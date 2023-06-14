@@ -255,7 +255,7 @@ export default {
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    console.log(this.btnForm, "this.btnForm");
+    console.log(this.userInfo, "this.btnForm");
 
     this.$common.judgeBtn(this, this.btnForm);
     this.getTableHeader();
@@ -921,6 +921,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z].datas, "Accounts", `,${this.userInfo['Account']},`);
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
