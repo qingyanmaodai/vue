@@ -173,7 +173,7 @@ export default {
         isEdit: true,
         adminLoading: false,
         sysID:[{ID:0}],
-        DataSourceList:{},
+        DataSourceList: [{}],
         selectionData:[[]],
         selectionNoIdData:[[]],
         addNum:1,
@@ -320,9 +320,9 @@ export default {
             if(item.prop==='Status'){
                obj[item.prop]  = 1
             }
-            for(let key in this.DataSourceList){
+            for(let key in this.DataSourceList[remarkTb]){
                 if(item.DataSourceName ===key){
-                    obj[key] = this.DataSourceList[key]
+                    obj[key] = this.DataSourceList[remarkTb][key]
                 }
             }
         })
@@ -460,9 +460,12 @@ export default {
                 this.verifyDta(x);
               });
             }
-            //获取下拉数据源
-            if(n.DataSourceID&&n.ControlType==='combobox'){
-                this.DataSourceList = {[n.DataSourceName]:[],...this.DataSourceList}
+            //从列获取下拉数据源
+            if (n.DataSourceID && n.ControlType === "combobox") {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
             }
             if(n.Required){
                 this.formSearchs[this.tagRemark].required.push(n)
@@ -483,18 +486,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         await this.getTableData(this.formSearchs[0].datas, 0);
-        // 获取下拉的数据源
-        this.$nextTick(()=>{
-            if(this.tableData[this.tagRemark].length){
-            for(let key in this.tableData[this.tagRemark][0]){
-                for(let obj in this.DataSourceList){
-                if(obj === key){
-                    this.DataSourceList[obj] = this.tableData[this.tagRemark][0][key]
-                }
-            }
-            }
-        }
-        })
       }
       this.adminLoading = false;
     },
