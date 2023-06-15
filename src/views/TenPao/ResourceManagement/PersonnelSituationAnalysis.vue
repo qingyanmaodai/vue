@@ -8,7 +8,19 @@
             <div class="echartHead">
               <div class="echartTitle">今日计划任务分布</div>
             </div>
+            <div class="echartBody" ref="chart1"></div>
+          </div>
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">近7天人员出勤情况</div>
+            </div>
             <div class="echartBody" ref="chart2"></div>
+          </div>
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">近7天出勤与计划差异趋势</div>
+            </div>
+            <div class="echartBody" ref="chart3"></div>
           </div>
         </div>
         <div class="leftCard">
@@ -1449,391 +1461,417 @@ export default {
   .firstNode {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     height: 100%;
 
-    .leftCard {
-      width: 66%;
-      margin-right: 10px;
+    .headNode {
       display: flex;
-      flex-direction: column;
+      height: 300px;
+      width: 100%;
 
-      .headCard {
+      .itemCard {
+        height: 100%;
+        border-radius: 4px;
+        width: 40%;
+        background: #ffffff;
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
+        flex-direction: column;
+        margin-right: 10px;
+      }
 
-        .box {
+      .itemCard:nth-child(1) {
+        width: 30%;
+      }
+
+      .itemCard:last-child {
+        margin-right: 0px;
+
+      }
+    }
+  }
+
+  .leftCard {
+    width: 66%;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .headCard {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .box {
+        display: flex;
+        // width: calc(25% - 16px);
+        width: 500px;
+        height: 160px;
+        // border: 1px solid #d5d6ff;
+        background: #ffffff;
+        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
+        border-radius: 4px;
+        margin-right: 10px;
+
+        .icon {
           display: flex;
-          // width: calc(25% - 16px);
-          width: 500px;
-          height: 160px;
-          // border: 1px solid #d5d6ff;
-          background: #ffffff;
-          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-          border-radius: 4px;
-          margin-right: 10px;
+          justify-content: center;
+          align-items: center;
+          width: 40%;
 
-          .icon {
+          img {
+            width: 56px;
+            height: 56px;
+          }
+        }
+
+        .textBox {
+          width: 60%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .textHead {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            width: 40%;
 
-            img {
-              width: 56px;
-              height: 56px;
+            .title {
+              font-weight: 400;
+              font-size: 12px;
+              color: #7d7d7d;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
 
-          .textBox {
-            width: 60%;
+          .headNumber {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            // justify-content: center;
+            align-items: stretch;
+            height: 40px;
+            margin-bottom: 10px;
 
-            .textHead {
+            .statusNum {
+              // text-align: center;
+              font-size: 30px;
+              font-weight: 400;
+              color: #000000;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .content {
               display: flex;
-              justify-content: space-between;
               align-items: center;
 
-              .title {
-                font-weight: 400;
-                font-size: 12px;
-                color: #7d7d7d;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-            }
-
-            .headNumber {
-              display: flex;
-              // justify-content: center;
-              align-items: stretch;
-              height: 40px;
-              margin-bottom: 10px;
-
-              .statusNum {
-                // text-align: center;
-                font-size: 30px;
-                font-weight: 400;
-                color: #000000;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+              img {
+                width: 22px;
+                height: 22px;
+                margin-right: 2px;
               }
 
-              .content {
-                display: flex;
-                align-items: center;
+              .changeNum {
+                font-weight: 400;
+                font-size: 10px;
+                color: #ff878a;
+              }
 
-                img {
-                  width: 22px;
-                  height: 22px;
-                  margin-right: 2px;
-                }
-
-                .changeNum {
-                  font-weight: 400;
-                  font-size: 10px;
-                  color: #ff878a;
-                }
-
-                .loss {
-                  color: #a4ffbd;
-                }
+              .loss {
+                color: #a4ffbd;
               }
             }
           }
-        }
-
-        .box:last-child {
-          margin-right: 0px;
-        }
-
-        .blue {
-          background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
-        }
-
-        .green {
-          background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
-        }
-
-        .purple {
-          background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
-        }
-
-        .red {
-          background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
         }
       }
 
-      .secondCard {
-        width: 100%;
+      .box:last-child {
+        margin-right: 0px;
+      }
+
+      .blue {
+        background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
+      }
+
+      .green {
+        background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
+      }
+
+      .purple {
+        background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
+      }
+
+      .red {
+        background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
+      }
+    }
+
+    .secondCard {
+      width: 100%;
+      height: 335px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .itemCard1 {
+        height: 335px;
+        width: 50%;
+        border-radius: 4px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        margin-right: 10px;
+      }
+
+      .itemCard2 {
+        width: 50%;
         height: 335px;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
 
-        .itemCard1 {
+        .itemCard {
           height: 335px;
-          width: 50%;
           border-radius: 4px;
+          width: 50%;
           background: #ffffff;
           display: flex;
           flex-direction: column;
+        }
+
+        .itemCard:nth-child(1) {
           margin-right: 10px;
         }
-
-        .itemCard2 {
-          width: 50%;
-          height: 335px;
-          display: flex;
-          justify-content: space-between;
-
-          .itemCard {
-            height: 335px;
-            border-radius: 4px;
-            width: 50%;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-          }
-
-          .itemCard:nth-child(1) {
-            margin-right: 10px;
-          }
-        }
       }
+    }
 
-      .thirdCard {
-        flex-grow: 1;
+    .thirdCard {
+      flex-grow: 1;
+      display: flex;
+      // margin-right: 10px;
+      overflow: hidden;
+
+      .itemCard {
+        height: 100%;
+        // flex-grow: 1;
+        border-radius: 4px;
+        background: #ffffff;
         display: flex;
+        flex-direction: column;
         // margin-right: 10px;
+        width: 100%;
         overflow: hidden;
 
-        .itemCard {
-          height: 100%;
-          // flex-grow: 1;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          // margin-right: 10px;
-          width: 100%;
+        .echartBody {
+          height: calc(100% - 60px);
+          overflow: auto;
           overflow: hidden;
+        }
 
-          .echartBody {
-            height: calc(100% - 60px);
-            overflow: auto;
-            overflow: hidden;
-          }
+        .echartBody::-webkit-scrollbar {
+          display: none;
+        }
+      }
 
-          .echartBody::-webkit-scrollbar {
-            display: none;
+      // .itemCard:nth-child(2) {
+      //   margin-right: 0px;
+      //   overflow: hidden;
+      // }
+    }
+  }
+
+  .rightCard {
+    width: 34%;
+    display: flex;
+    flex-direction: column;
+
+    .firstCard {
+      height: 160px;
+      margin-bottom: 10px;
+
+      .box {
+        display: flex;
+        // width: calc(25% - 16px);
+        width: 100%;
+        height: 160px;
+        // border: 1px solid #d5d6ff;
+        background: #ffffff;
+        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
+        border-radius: 4px;
+        margin-right: 10px;
+
+        .icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40%;
+
+          img {
+            width: 56px;
+            height: 56px;
           }
         }
 
-        // .itemCard:nth-child(2) {
-        //   margin-right: 0px;
-        //   overflow: hidden;
-        // }
-      }
-    }
-
-    .rightCard {
-      width: 34%;
-      display: flex;
-      flex-direction: column;
-
-      .firstCard {
-        height: 160px;
-        margin-bottom: 10px;
-
-        .box {
+        .textBox {
+          width: 60%;
           display: flex;
-          // width: calc(25% - 16px);
-          width: 100%;
-          height: 160px;
-          // border: 1px solid #d5d6ff;
-          background: #ffffff;
-          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-          border-radius: 4px;
-          margin-right: 10px;
+          flex-direction: column;
+          justify-content: center;
 
-          .icon {
+          .textHead {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            width: 40%;
 
-            img {
-              width: 56px;
-              height: 56px;
+            .title {
+              font-weight: 400;
+              font-size: 12px;
+              color: #7d7d7d;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
 
-          .textBox {
-            width: 60%;
+          .headNumber {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            // justify-content: center;
+            align-items: stretch;
+            height: 40px;
+            margin-bottom: 10px;
 
-            .textHead {
+            .statusNum {
+              // text-align: center;
+              font-size: 30px;
+              font-weight: 400;
+              color: #000000;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .content {
               display: flex;
-              justify-content: space-between;
               align-items: center;
 
-              .title {
-                font-weight: 400;
-                font-size: 12px;
-                color: #7d7d7d;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-            }
-
-            .headNumber {
-              display: flex;
-              // justify-content: center;
-              align-items: stretch;
-              height: 40px;
-              margin-bottom: 10px;
-
-              .statusNum {
-                // text-align: center;
-                font-size: 30px;
-                font-weight: 400;
-                color: #000000;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+              img {
+                width: 22px;
+                height: 22px;
+                margin-right: 2px;
               }
 
-              .content {
-                display: flex;
-                align-items: center;
+              .changeNum {
+                font-weight: 400;
+                font-size: 10px;
+                color: #ff878a;
+              }
 
-                img {
-                  width: 22px;
-                  height: 22px;
-                  margin-right: 2px;
-                }
-
-                .changeNum {
-                  font-weight: 400;
-                  font-size: 10px;
-                  color: #ff878a;
-                }
-
-                .loss {
-                  color: #a4ffbd;
-                }
+              .loss {
+                color: #a4ffbd;
               }
             }
           }
         }
       }
+    }
 
-      .secondCard {
-        height: 40%;
-        margin-bottom: 10px;
+    .secondCard {
+      height: 40%;
+      margin-bottom: 10px;
 
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
-      }
-
-      .thirdCard {
-        flex-grow: 1;
-
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
+      .itemCard {
+        height: 100%;
+        border-radius: 4px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
       }
     }
-  }
 
-  .echartHead {
-    padding: 0px 20px;
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .thirdCard {
+      flex-grow: 1;
 
-    .echartTitle {
-      padding-left: 10px;
-      position: relative;
-      font-weight: 400;
-      font-size: 14px;
-      color: #333333;
-      font-weight: bold;
-    }
-
-    .el-button {
-      border-radius: 6px !important;
-    }
-
-    .select,
-    .el-button:focus,
-    .el-button:hover {
-      color: #fff;
-      border-color: #5c67fd;
-      background-color: #5c67fd;
+      .itemCard {
+        height: 100%;
+        border-radius: 4px;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
     }
   }
+}
 
-  .echartTitle::before {
-    content: "";
-    /* 伪元素的内容为空 */
-    position: absolute;
-    /* 将伪元素设置为绝对定位 */
-    top: 50%;
-    left: 0;
-    /* 将伪元素向左偏移 50% */
-    transform: translateY(-50%) translateX(-50%);
-    /* 通过 transform 属性向左平移自身宽度的一半 */
-    display: inline-block;
-    /* 将伪元素设置为行内块元素 */
-    width: 4px;
-    height: 20px;
-    background: #8598ff;
-    border-radius: 2px;
-    margin-right: 10px;
+.echartHead {
+  padding: 0px 20px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .echartTitle {
+    padding-left: 10px;
+    position: relative;
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    font-weight: bold;
   }
 
-  .echartBody {
-    // height: 480px;
-    flex-grow: 1;
-    padding: 10px;
-    width: 100%;
-    // height: 100%;
+  .el-button {
+    border-radius: 6px !important;
   }
 
-  .box:hover,
-  .itemCard:hover,
-  .itemCard1:hover {
-    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+  .select,
+  .el-button:focus,
+  .el-button:hover {
+    color: #fff;
+    border-color: #5c67fd;
+    background-color: #5c67fd;
   }
+}
 
-  .container {
-    padding: 0;
-  }
+.echartTitle::before {
+  content: "";
+  /* 伪元素的内容为空 */
+  position: absolute;
+  /* 将伪元素设置为绝对定位 */
+  top: 50%;
+  left: 0;
+  /* 将伪元素向左偏移 50% */
+  transform: translateY(-50%) translateX(-50%);
+  /* 通过 transform 属性向左平移自身宽度的一半 */
+  display: inline-block;
+  /* 将伪元素设置为行内块元素 */
+  width: 4px;
+  height: 20px;
+  background: #8598ff;
+  border-radius: 2px;
+  margin-right: 10px;
+}
 
-  ::v-deep .el-tabs__item {
-    padding: 5px;
-    /* 设置为0或调整合适的数值 */
-  }
+.echartBody {
+  // height: 480px;
+  flex-grow: 1;
+  padding: 10px;
+  width: 100%;
+  // height: 100%;
+}
+
+.box:hover,
+.itemCard:hover,
+.itemCard1:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  padding: 0;
+}
+
+::v-deep .el-tabs__item {
+  padding: 5px;
+  /* 设置为0或调整合适的数值 */
 }
 </style>
