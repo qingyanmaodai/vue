@@ -1238,6 +1238,10 @@ export default {
 
       let Qty = parseInt(currentRow.OweQty);
       let Capacity = parseInt(currentRow.Capacity);
+      if (!Capacity) {
+        this.$message.error("该单据没有产能");
+        return
+      }
       let list = [];
       let editNum = 0;
       let remainNum = 0;

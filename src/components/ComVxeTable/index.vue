@@ -6,7 +6,7 @@
   <!-- :scroll-y="{enable: false, gt: -1}" -->
   <!-- :footer-method="footerMethod" -->
   <!-- show-overflow  show-overflow-->
-  <div div class="flex_column">
+  <div div class="flex_column" style="height: 100%;">
     <div class="table-container">
       <vxe-toolbar
         ref="xToolbar1"
