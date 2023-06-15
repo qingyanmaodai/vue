@@ -952,7 +952,6 @@ export default {
       }
 
       form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["Extend12"] = this.userInfo.Extend2;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       //form["ControlID"] = "205";
       let res = await GetSearchData(form);
