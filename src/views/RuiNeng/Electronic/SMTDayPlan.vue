@@ -1,4 +1,4 @@
-<!--组装日计划-->
+<!--SMT日计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>

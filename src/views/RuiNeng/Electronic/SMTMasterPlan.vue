@@ -1,4 +1,4 @@
-<!--DIP主计划-->
+<!--SMT主计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
@@ -287,7 +287,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName: "SMT",
+            // ProcessGroupName: "SMT",
           },
           forms: [],
         },
@@ -572,7 +572,7 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10123");
+      let res = await GetSearch(updateRecords, "/APSAPI/SaveData10130");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -628,7 +628,12 @@ export default {
       //   return;
       // } else {
       this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/FromOrderPlanMaterial");
+      let res = await GetSearch(
+        {
+          ProcessGroupName: "SMT",
+        },
+        "/APSAPI/FromOrderPlanMaterial"
+      );
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -675,8 +680,9 @@ export default {
           let res = await GetSearch(
             {
               Days: this.Days,
+              ProcessGroupName: "SMT",
             },
-            "/APSAPI/TOProcessPlanFromOrderPlanMaterialForDIP"
+            "/APSAPI/TOProcessPlanFromOrderPlanMaterial"
           );
           const { datas, forms, result, msg } = res.data;
           console.log(result, "result");
@@ -1299,7 +1305,7 @@ export default {
         this.newDataDialog = true;
       } else {
         this.selectionData[7].forEach((m) => {
-          m.dicID = 10123;
+          m.dicID = 10130;
           m["ElectronicMainPlanID"] = null;
           m["PlanQty"] = m["Qty"];
           m["DataSource"] = "手工";
@@ -1307,7 +1313,7 @@ export default {
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[7],
-          `/APSAPI/SaveData10123`
+          `/APSAPI/SaveData10130`
         );
         const { result, msg } = res.data;
 
