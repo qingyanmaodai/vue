@@ -908,6 +908,15 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
+          m.forEach((n) => {
+            // 进行验证
+            this.verifyData(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach((x) => {
+                this.verifyData(x);
+              });
+            }
+          });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -921,7 +930,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z].datas, "Accounts", `,${this.userInfo['Account']},`);
+          // this.$set(this.formSearchs[z].datas, "Accounts", `,${this.userInfo['Account']},`);
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
