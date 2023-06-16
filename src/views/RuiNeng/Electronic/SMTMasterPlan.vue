@@ -316,7 +316,7 @@ export default {
           forms: [],
         },
         {
-          datas: { IsToMainPlan: "未排" },
+          datas: { IsToMainPlan: "未排", SProcessGroupName: "SMT" },
           forms: [],
         },
       ],
