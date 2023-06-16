@@ -1196,7 +1196,7 @@ export default {
       let Capacity = parseInt(currentRow.Capacity);
       if (!Capacity) {
         this.$message.error("该单据没有产能");
-        return
+        return;
       }
       let list = [];
       let editNum = 0;
