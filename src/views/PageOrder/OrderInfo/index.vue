@@ -1,10 +1,7 @@
 <!--生产订单 -->
 <template>
   <div class="container">
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -20,11 +17,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -57,18 +53,10 @@
     </div>
 
     <!-- 工艺配置 -->
-    <el-dialog
-      title="选择工艺"
-      :visible.sync="processDialog"
-      width="16.8%"
-    >
+    <el-dialog title="选择工艺" :visible.sync="processDialog" width="16.8%">
       <el-form label-width="110px">
         <el-form-item label="请选择工艺：">
-          <el-select
-            v-model="ProcessGroupID"
-            clearable
-            filterable
-          >
+          <el-select v-model="ProcessGroupID" clearable filterable>
             <el-option
               v-for="item in processGroupOptions"
               :key="item.ProcessGroupID"
@@ -79,22 +67,13 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="processDialog=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureProcess"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="processDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureProcess" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -164,8 +143,11 @@ export default {
       ProcessGroupID: "",
       Status1: [
         { label: "全部", value: "" },
-        { label: "已下达", value: [21,22,23,24] },
-        { label: "未下达", value: 26 },
+        { label: "已下达", value: 21 },
+        { label: "生产中", value: 22 },
+        { label: "已排产", value: 23 },
+        { label: "暂停", value: 24 },
+        { label: "待排产", value: 26 },
         { label: "已完成", value: 25 },
       ],
       isSelect: false,
@@ -280,9 +262,8 @@ export default {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
-        this.labelStatus1
-      ].value;
+      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+        this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
