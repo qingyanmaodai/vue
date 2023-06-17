@@ -6,7 +6,7 @@
         <div class="headNode">
           <div class="itemCard">
             <div class="echartHead">
-              <div class="echartTitle">今日计划任务分布</div>
+              <div class="echartTitle">人员部门分布情况</div>
             </div>
             <div class="echartBody" ref="chart1"></div>
           </div>
@@ -23,189 +23,21 @@
             <div class="echartBody" ref="chart3"></div>
           </div>
         </div>
-        <div class="leftCard">
-          <div class="headCard">
-            <div class="box">
-              <div class="icon">
-                <img :src="headCard[0]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S2"] }}
-                  </div>
-                  <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]["title"] }}</div>
-                </div>
-              </div>
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">业务要货汇总</div>
+              <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                <el-tab-pane label="白班" name="0"></el-tab-pane>
+                <el-tab-pane label="夜班" name="1"></el-tab-pane>
+              </el-tabs>
             </div>
-            <div class="box">
-              <div class="icon">
-                <img :src="headCard[1]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S1"] }}
-                  </div>
-                  <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box">
-              <div class="icon">
-                <img :src="headCard[2]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S3"] }}
-                  </div>
-                  <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box">
-              <div class="icon">
-                <img :src="headCard[3]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S4"] }}
-                  </div>
-                  <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <!-- <div class="box">
-              <div class="icon">
-                <img :src="headCard[4]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S4"] }}</div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[4]["title"] }}</div>
-                </div>
-              </div>
-            </div> -->
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">业务要货汇总</div>
-                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
-                  <el-tab-pane label="日报表" name="0"></el-tab-pane>
-                  <el-tab-pane label="月报表" name="1"></el-tab-pane>
-                </el-tabs>
-              </div>
-              <div class="echartBody">
-                <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false"
-                  :remark="6" :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[6]['ID']"
-                  :table-data="tableData[6]" :table-header="tableColumns[6]" :table-loading="tableLoading[6]"
-                  :pagination="tablePagination[6]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
-                </ComReportTable>
-                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
-                  <ul class="item">
-                    <li v-for="(item, index) in listData" :key="index">
-                      <span class="title" v-text="item.title"></span>
-                      <span class="date" v-text="item.date"></span>
-                    </li>
-                  </ul>
-                </vue-seamless-scroll> -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="rightCard">
-          <div class="firstCard">
-            <div class="box">
-              <div class="icon">
-                <img :src="headCard[4]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S1"] }}
-                  </div>
-                  <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[4]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">今日生产情况</div>
-              </div>
-              <div class="echartBody" ref="chart5"></div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">昨日计划达成对比</div>
-              </div>
-              <div class="echartBody" ref="chart4"></div>
+            <div class="echartBody">
+              <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false" :remark="4"
+                :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[4]['ID']"
+                :table-data="tableData[4]" :table-header="tableColumns[4]" :table-loading="tableLoading[4]"
+                :pagination="tablePagination[4]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
+              </ComReportTable>
             </div>
           </div>
         </div>
@@ -452,11 +284,11 @@ export default {
     // await this.getEchartsData4();
     //初始化图表;
     this.chart = [
+      this.$refs.chart1,
+      this.$refs.chart2,
+      this.$refs.chart3,
       null,
       null,
-      null,
-      this.$refs.chart4,
-      this.$refs.chart5,
     ];
     this.getEcharts();
 
@@ -482,6 +314,86 @@ export default {
       }
       this.chartOptions = [
         {
+          backgroundColor: "#fff",
+          // title: {
+          //   text: "注册资金",
+          //   subtext: "2016年",
+          //   x: "center",
+          //   y: "center",
+          //   textStyle: {
+          //     fontWeight: "normal",
+          //     fontSize: 16
+          //   }
+          // },
+          // tooltip: {
+          //   show: false,
+          //   trigger: "item",
+          //   formatter: "{b}: {c} ({d}%)"
+          // },
+          legend: {
+            type: "scroll",
+            orient: "vertical",
+            right: "0%",
+            top: "center",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
+            textStyle: {
+              fontSize: fontSize(12),
+            },
+            itemStyle: {
+              borderRadius: "50%", // 将图例项的形状设定为圆形
+            },
+            data: ['1', '2', '3'],
+          },
+          grid: {
+            containLabel: true,
+          },
+          series: [
+            {
+              type: "pie",
+              // selectedMode: "single",
+              radius: ["30%", "60%"],
+              color: [
+                "#23CF9C",
+                "#578FFB",
+                "#6E40F2",
+                "#FF61E6",
+                "#E82074",
+                "#FBA806",
+              ],
+              center: ["30%", "50%"],
+              label: {
+                normal: {
+                  position: "inner",
+                  formatter: "{d}%",
+                },
+                textStyle: {
+                  color: "#fff",
+                  fontSize: fontSize(12),
+                },
+              },
+              labelLine: {
+                normal: {
+                  show: false,
+                },
+              },
+              data: [{
+                value: 10,
+                name: '1',
+              }, {
+                value: 20,
+                name: '2',
+              }, {
+                value: 30,
+                name: '3',
+              }]
+
+
+              ,
+            },
+          ],
+        },
+        {
           grid: {
             containLabel: true,
             bottom: 0,
@@ -503,9 +415,9 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.tableData[1].map((item) => item["PlanDay"]),
+            data: ['1', '2', '3'],
             axisLabel: {
-              interval: 1,
+              interval: 0,
               show: true,
               textStyle: {
                 color: "#000",
@@ -556,96 +468,163 @@ export default {
               name: "计划数",
               type: "bar",
               silent: true,
+              barWidth: fontSize(14),
               itemStyle: {
                 normal: {
                   color: "#578FFB",
                 },
               },
-              data: this.tableData[1].map((item) => item["S1"]),
+              data: [10, 20, 30],
             },
             {
               name: "完成数",
               type: "bar",
               silent: true,
+              barWidth: fontSize(14),
               itemStyle: {
                 normal: {
                   color: "#23CF9C",
                 },
               },
-              data: this.tableData[1].map((item) => item["S2"]),
+              data: [50, 20, 30],
             },
           ],
         },
         {
           backgroundColor: "#fff",
-          // title: {
-          //   text: "注册资金",
-          //   subtext: "2016年",
-          //   x: "center",
-          //   y: "center",
-          //   textStyle: {
-          //     fontWeight: "normal",
-          //     fontSize: 16
-          //   }
-          // },
-          // tooltip: {
-          //   show: false,
-          //   trigger: "item",
-          //   formatter: "{b}: {c} ({d}%)"
-          // },
+          color: [
+            "#0090FF",
+            "#36CE9E",
+            "#FFC005",
+            "#FF515A",
+            "#8B5CFF",
+            "#00CA69",
+          ],
           legend: {
-            type: "scroll",
-            orient: "vertical",
-            right: "0%",
-            top: "center",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12),
+            top: "0%",
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow",
             },
-            itemStyle: {
-              borderRadius: "50%", // 将图例项的形状设定为圆形
-            },
-            data: this.tableData[2].map((item) => item["ProcessName"]),
           },
           grid: {
+            left: fontSize(10),
+            right: fontSize(10),
+            bottom: fontSize(10),
             containLabel: true,
           },
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              axisLabel: {
+                formatter: "{value}月",
+                textStyle: {
+                  color: "#333",
+                },
+              },
+              axisLine: {
+                lineStyle: {
+                  color: "#D9D9D9",
+                },
+              },
+              data: ["1", "2", "3", "4", "5", "6", "7", "8"],
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name: "单位：万",
+              axisLabel: {
+                textStyle: {
+                  color: "#666",
+                },
+              },
+              nameTextStyle: {
+                color: "#666",
+                fontSize: 12,
+                lineHeight: 40,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: "#E9E9E9",
+                },
+              },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+            },
+          ],
           series: [
             {
-              type: "pie",
-              // selectedMode: "single",
-              radius: ["30%", "60%"],
-              color: [
-                "#23CF9C",
-                "#578FFB",
-                "#6E40F2",
-                "#FF61E6",
-                "#E82074",
-                "#FBA806",
-              ],
-              center: ["30%", "50%"],
-              label: {
+              name: "计划数",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,/
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
                 normal: {
-                  position: "inner",
-                  formatter: "{d}%",
-                },
-                textStyle: {
-                  color: "#fff",
-                  fontSize: fontSize(12),
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#0090FF30",
+                      },
+                      {
+                        offset: 1,
+                        color: "#0090FF10",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#0090FF10",
+                  shadowBlur: 10,
                 },
               },
-              labelLine: {
+              data: [100, 138, 350, 173, 180, 150, 180, 230],
+            },
+            {
+              name: "生产数",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
                 normal: {
-                  show: false,
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#36CE9E30",
+                      },
+                      {
+                        offset: 1,
+                        color: "#36CE9E10",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#36CE9E10",
+                  shadowBlur: 10,
                 },
               },
-              data: this.tableData[2].map((item) => {
-                return {
-                  value: item["S1"],
-                  name: item["ProcessName"],
-                };
-              }),
+              data: [233, 233, 200, 180, 199, 233, 210, 180],
             },
           ],
         },
@@ -850,144 +829,7 @@ export default {
             },
           ],
         },
-        {
-          backgroundColor: "#fff",
-          color: [
-            "#0090FF",
-            "#36CE9E",
-            "#FFC005",
-            "#FF515A",
-            "#8B5CFF",
-            "#00CA69",
-          ],
-          legend: {
-            top: "0%",
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow",
-            },
-          },
-          grid: {
-            left: fontSize(10),
-            right: fontSize(10),
-            bottom: fontSize(10),
-            containLabel: true,
-          },
-          xAxis: [
-            {
-              type: "category",
-              boundaryGap: false,
-              axisLabel: {
-                formatter: "{value}月",
-                textStyle: {
-                  color: "#333",
-                },
-              },
-              axisLine: {
-                lineStyle: {
-                  color: "#D9D9D9",
-                },
-              },
-              data: ["1", "2", "3", "4", "5", "6", "7", "8"],
-            },
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "单位：万",
-              axisLabel: {
-                textStyle: {
-                  color: "#666",
-                },
-              },
-              nameTextStyle: {
-                color: "#666",
-                fontSize: 12,
-                lineHeight: 40,
-              },
-              splitLine: {
-                lineStyle: {
-                  type: "dashed",
-                  color: "#E9E9E9",
-                },
-              },
-              axisLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-            },
-          ],
-          series: [
-            {
-              name: "计划数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,/
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#0090FF30",
-                      },
-                      {
-                        offset: 1,
-                        color: "#0090FF10",
-                      },
-                    ],
-                    false
-                  ),
-                  shadowColor: "#0090FF10",
-                  shadowBlur: 10,
-                },
-              },
-              data: [100, 138, 350, 173, 180, 150, 180, 230],
-            },
-            {
-              name: "生产数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#36CE9E30",
-                      },
-                      {
-                        offset: 1,
-                        color: "#36CE9E10",
-                      },
-                    ],
-                    false
-                  ),
-                  shadowColor: "#36CE9E10",
-                  shadowBlur: 10,
-                },
-              },
-              data: [233, 233, 200, 180, 199, 233, 210, 180],
-            },
-          ],
-        },
+
       ];
       this.chart.map((item, index) => {
         if (item) {
@@ -1186,9 +1028,9 @@ export default {
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
-      if (datas.length > 0) {
-        this.tablePagination[0].pageSize = datas[0][1].pageSize;
-      }
+      // if (datas.length > 0) {
+      //   this.tablePagination[0].pageSize = datas[0][1].pageSize;
+      // }
 
       if (result) {
         // 获取每个表头
@@ -1371,58 +1213,6 @@ export default {
         });
       });
     },
-    async getEchartsData1() {
-      let res = await GetSearchData(
-        {
-          dicID: 9037,
-          groupby: "Dept",
-          fields: "SUM(DemandQty) as DemandQty,Dept",
-          sort: "DemandQty desc",
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartTotal1 = data.reduce(
-          (accumulator, current) => accumulator + current.DemandQty,
-          0
-        );
-        this.chartData1 = data.map((item) => ({
-          value: item.DemandQty,
-          name: item.Dept,
-        }));
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    async getEchartsData2() {
-      let res = await GetSearchData(
-        {
-          dicID: 9062,
-          sort: "OweQty",
-          page: 1,
-          rows: 6,
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartData2[0] = data.map(
-          (item) => item.MaterialName.split(" ")[0]
-        );
-        this.chartData2[1] = data.map((item) => item.OweQty);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
     hexToRgba(hex, opacity) {
       let rgbaColor = "";
       let reg = /^#[\da-f]{6}$/i;
@@ -1468,6 +1258,7 @@ export default {
       display: flex;
       height: 300px;
       width: 100%;
+      margin-bottom: 10px;
 
       .itemCard {
         height: 100%;
@@ -1486,162 +1277,6 @@ export default {
       .itemCard:last-child {
         margin-right: 0px;
 
-      }
-    }
-  }
-
-  .leftCard {
-    width: 66%;
-    margin-right: 10px;
-    display: flex;
-    flex-direction: column;
-
-    .headCard {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-
-      .box {
-        display: flex;
-        // width: calc(25% - 16px);
-        width: 500px;
-        height: 160px;
-        // border: 1px solid #d5d6ff;
-        background: #ffffff;
-        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-        border-radius: 4px;
-        margin-right: 10px;
-
-        .icon {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40%;
-
-          img {
-            width: 56px;
-            height: 56px;
-          }
-        }
-
-        .textBox {
-          width: 60%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          .textHead {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .title {
-              font-weight: 400;
-              font-size: 12px;
-              color: #7d7d7d;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .headNumber {
-            display: flex;
-            // justify-content: center;
-            align-items: stretch;
-            height: 40px;
-            margin-bottom: 10px;
-
-            .statusNum {
-              // text-align: center;
-              font-size: 30px;
-              font-weight: 400;
-              color: #000000;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-
-            .content {
-              display: flex;
-              align-items: center;
-
-              img {
-                width: 22px;
-                height: 22px;
-                margin-right: 2px;
-              }
-
-              .changeNum {
-                font-weight: 400;
-                font-size: 10px;
-                color: #ff878a;
-              }
-
-              .loss {
-                color: #a4ffbd;
-              }
-            }
-          }
-        }
-      }
-
-      .box:last-child {
-        margin-right: 0px;
-      }
-
-      .blue {
-        background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
-      }
-
-      .green {
-        background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
-      }
-
-      .purple {
-        background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
-      }
-
-      .red {
-        background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
-      }
-    }
-
-    .secondCard {
-      width: 100%;
-      height: 335px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-
-      .itemCard1 {
-        height: 335px;
-        width: 50%;
-        border-radius: 4px;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        margin-right: 10px;
-      }
-
-      .itemCard2 {
-        width: 50%;
-        height: 335px;
-        display: flex;
-        justify-content: space-between;
-
-        .itemCard {
-          height: 335px;
-          border-radius: 4px;
-          width: 50%;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .itemCard:nth-child(1) {
-          margin-right: 10px;
-        }
       }
     }
 
@@ -1677,129 +1312,6 @@ export default {
       //   margin-right: 0px;
       //   overflow: hidden;
       // }
-    }
-  }
-
-  .rightCard {
-    width: 34%;
-    display: flex;
-    flex-direction: column;
-
-    .firstCard {
-      height: 160px;
-      margin-bottom: 10px;
-
-      .box {
-        display: flex;
-        // width: calc(25% - 16px);
-        width: 100%;
-        height: 160px;
-        // border: 1px solid #d5d6ff;
-        background: #ffffff;
-        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-        border-radius: 4px;
-        margin-right: 10px;
-
-        .icon {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 40%;
-
-          img {
-            width: 56px;
-            height: 56px;
-          }
-        }
-
-        .textBox {
-          width: 60%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          .textHead {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            .title {
-              font-weight: 400;
-              font-size: 12px;
-              color: #7d7d7d;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .headNumber {
-            display: flex;
-            // justify-content: center;
-            align-items: stretch;
-            height: 40px;
-            margin-bottom: 10px;
-
-            .statusNum {
-              // text-align: center;
-              font-size: 30px;
-              font-weight: 400;
-              color: #000000;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-
-            .content {
-              display: flex;
-              align-items: center;
-
-              img {
-                width: 22px;
-                height: 22px;
-                margin-right: 2px;
-              }
-
-              .changeNum {
-                font-weight: 400;
-                font-size: 10px;
-                color: #ff878a;
-              }
-
-              .loss {
-                color: #a4ffbd;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .secondCard {
-      height: 40%;
-      margin-bottom: 10px;
-
-      .itemCard {
-        height: 100%;
-        border-radius: 4px;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-    }
-
-    .thirdCard {
-      flex-grow: 1;
-
-      .itemCard {
-        height: 100%;
-        border-radius: 4px;
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
     }
   }
 }
