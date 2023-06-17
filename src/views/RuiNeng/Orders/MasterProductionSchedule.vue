@@ -2,8 +2,8 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0, 3, 5]" :key="i" v-show="labelStatus2 === i">
               <ComSearch
@@ -241,7 +241,7 @@ import {
   SaveData,
   GetServerTime,
   GetOrgData,
-  UpdateOrderBomPOTracker
+  UpdateOrderBomPOTracker,
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
@@ -254,7 +254,7 @@ export default {
     ComReportTable,
     ComFormDialog,
     ComSpreadTable,
-    ComSpreadTable2
+    ComSpreadTable2,
   },
   data() {
     return {
@@ -275,7 +275,7 @@ export default {
         { label: "数量+时间+线体+托盘", value: "" },
         { label: "综合分析", value: "" },
         { label: "全部", value: 1 },
-        { label: "业务订单分析", value: 1 }
+        { label: "业务订单分析", value: 1 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -287,36 +287,36 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: { IsToMainPlan: "未排" },
-          forms: []
-        }
+          forms: [],
+        },
       ],
       selectionData: [[], [], [], [], [], [], [], []],
       btnForm: [],
@@ -332,7 +332,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -349,13 +349,13 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10075 },
-        { ID: 5615 },
+        { ID: 10136 },
         { ID: 10075 },
         { ID: 10109 },
         { ID: 10109 },
-        { ID: 5646 }
+        { ID: 5646 },
       ],
-      userInfo: {}
+      userInfo: {},
     };
   },
   computed: {},
@@ -374,7 +374,7 @@ export default {
   },
   methods: {
     //获取子组件实例
-    workbookInitialized: function(workbook, remarkTb) {
+    workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
@@ -413,7 +413,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -532,7 +532,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -555,8 +555,8 @@ export default {
         if ($table) {
           updateRecords = $table.getUpdateRecords();
         } else {
-          let DirtyRows = sheet.getDirtyRows().map(row => row.item); //获取修改过的数据
-          let InsertRows = sheet.getInsertRows().map(row => row.item); //获取插入过的数据
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
           // let DeletedRows = sheet.getDeletedRows().map(row => row.item);
           // DeletedRows.forEach(item => {
           //   item["ElementDeleteFlag"] = 1;
@@ -576,7 +576,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -584,7 +584,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -605,7 +605,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
           this.$set(this, "adminLoading", false);
@@ -613,7 +613,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.$set(this, "adminLoading", false);
         }
@@ -632,7 +632,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -640,7 +640,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -665,14 +665,14 @@ export default {
         }</span>的排产数据转入整机月计划中，请确认是否转入`,
         "转月计划提醒",
         {
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(async () => {
           this.adminLoading = true;
           let res = await GetSearch(
             {
-              Days: this.Days
+              Days: this.Days,
             },
             "/APSAPI/TOProcessPlanFromSalesOrder"
           );
@@ -683,7 +683,7 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
             this.dataSearch(remarkTb);
           } else {
@@ -691,7 +691,7 @@ export default {
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
         })
@@ -706,7 +706,7 @@ export default {
         return;
       }
       const errorNum1 = this.selectionData[remarkTb].findIndex(
-        item => item["DataSource"] === "业务"
+        (item) => item["DataSource"] === "业务"
       );
       if (errorNum1 !== -1) {
         this.$message.error(`操作的数据中含有业务订单`);
@@ -715,8 +715,8 @@ export default {
       this.$confirm(
         "确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗"
       )
-        .then(_ => {
-          this.selectionData[remarkTb].forEach(x => {
+        .then((_) => {
+          this.selectionData[remarkTb].forEach((x) => {
             if (x["DataSource"] === "手工" || x["DataSource"] === "拆单") {
               x["ElementDeleteFlag"] = 1;
             }
@@ -724,7 +724,7 @@ export default {
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 通用直接保存
     // async generalSaveData(newData, remarkTb, index) {
@@ -765,7 +765,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -810,7 +810,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -877,10 +877,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -1032,7 +1029,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -1048,21 +1045,21 @@ export default {
         row["JudgeResult"] == "缺采购单"
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "在途不足"
       ) {
         return {
-          background: "#ffced6"
+          background: "#ffced6",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "待复期"
       ) {
         return {
-          background: "#fdfd8f"
+          background: "#fdfd8f",
         };
       } else if (
         (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
@@ -1070,18 +1067,18 @@ export default {
           row["IsReplyStatusName"] == "是")
       ) {
         return {
-          background: "#9fff9f"
+          background: "#9fff9f",
         };
       }
 
       if (column.property == "OnloadQty") {
         return {
-          color: "blue"
+          color: "blue",
         };
       }
       if (column.property == "RealOweQty") {
         return {
-          color: "red"
+          color: "red",
         };
       }
       if (
@@ -1089,7 +1086,7 @@ export default {
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       }
 
@@ -1099,7 +1096,7 @@ export default {
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -1111,7 +1108,7 @@ export default {
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -1122,7 +1119,7 @@ export default {
           parseFloat(row.StockQtyAllocationPrepare)
         ) {
           return {
-            background: "#9fff9f"
+            background: "#9fff9f",
           };
         }
       }
@@ -1133,7 +1130,7 @@ export default {
       let changeColumns = [[]];
       if (index === 0) {
         changeColumns[0] = this.Columns[0].filter(
-          item =>
+          (item) =>
             item["label"] !== "预计生产日期" &&
             item["label"] !== "线体" &&
             item["label"] !== "标准人员" &&
@@ -1145,7 +1142,7 @@ export default {
         this.setData(0);
       } else if (index === 1) {
         changeColumns[0] = this.Columns[0].filter(
-          item =>
+          (item) =>
             item["label"] !== "标准人员" &&
             item["label"] !== "每托数量" &&
             item["label"] !== "托板数"
@@ -1155,7 +1152,7 @@ export default {
         this.setData(0);
       } else if (index === 2) {
         changeColumns[0] = this.Columns[0].filter(
-          item => item["label"] !== "标准人员"
+          (item) => item["label"] !== "标准人员"
         );
         this.$set(this.tableColumns, 0, changeColumns[0]);
         this.labelStatus2 = 0;
@@ -1188,16 +1185,16 @@ export default {
       );
 
       targetColumns = targetColumns.filter(
-        item =>
+        (item) =>
           item.label == "生产订单" ||
           item.label == "分配数" ||
           item.label == "计划数"
       );
       targetColumns.push({
         label: "拆单数量",
-        prop: "SQty"
+        prop: "SQty",
       });
-      targetColumns.map(item => {
+      targetColumns.map((item) => {
         item["width"] = 250;
         if (item.label === "拆单数量") {
           item["isEdit"] = true;
@@ -1215,14 +1212,14 @@ export default {
     async changeEvent(val) {
       if (val === 1) {
         const errorNum1 = this.selectionData[6].findIndex(
-          item => !item["SQty"]
+          (item) => !item["SQty"]
         );
         if (errorNum1 !== -1) {
           this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
           return;
         }
 
-        const errorNum2 = this.selectionData[6].findIndex(item => {
+        const errorNum2 = this.selectionData[6].findIndex((item) => {
           return item["SQty"] > item["PlanQty"];
         });
         if (errorNum2 !== -1) {
@@ -1240,7 +1237,7 @@ export default {
         //每增加一行，需要插入新的一行，后面一行比前面一行多1
         const arr = changedIndices.map((num, index) => num + index);
         //处理脏数据
-        arr.forEach(item => {
+        arr.forEach((item) => {
           this.copyRowFormat(item, sheet);
           console.log(item, "item");
         });
@@ -1272,11 +1269,11 @@ export default {
       );
       let newData = this.tableData[this.labelStatus2][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[6].find(
-        item => item["RowNumber"] === oldData["RowNumber"]
+        (item) => item["RowNumber"] === oldData["RowNumber"]
       );
       //去掉dy前面的值
       const objKeys = Object.keys(newData);
-      objKeys.forEach(key => {
+      objKeys.forEach((key) => {
         if (key.endsWith("dy")) {
           newData[key.replace(/dy$/, "")] = null;
         }
@@ -1299,7 +1296,7 @@ export default {
         this.$message.error("未选择数据！");
         this.newDataDialog = true;
       } else {
-        this.selectionData[7].forEach(m => {
+        this.selectionData[7].forEach((m) => {
           m.dicID = 10075;
           m["SalesOrderDetailPlanID"] = null;
           m["PlanQty"] = m["Qty"];
@@ -1319,7 +1316,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
@@ -1327,12 +1324,12 @@ export default {
             message: msg,
             type: "error",
             dangerouslyUseHTMLString: true,
-            duration: 8000
+            duration: 8000,
           });
         }
         this.newDataDialog = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
