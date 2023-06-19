@@ -1273,38 +1273,6 @@ export default {
     async getOrgData() {
       this.getLineData(this.userInfo.WorkFlowInstanceID);
       return;
-      this.treeListTmp = [];
-      this.treeData = [];
-      let form = {
-        OrganizeIDs: this.userInfo.CenterID,
-        OrganizeTypeID: 5,
-        dicID: 3026,
-        Status: 1,
-      };
-      let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.treeData = JSON.parse(JSON.stringify(data));
-        this.treeListTmp = this.treeData;
-        if (data.length != 0) {
-          this.$nextTick(function () {
-            _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
-          });
-          // this.$set(
-          //   this.formSearchs[0].datas,
-          //   "ControlID",
-          //   data[0].ERPOrderCode
-          // );
-          this.getLineData(this.userInfo.CenterID);
-        }
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     // 获取线别数据
     async getLineData(ERPOrderCode) {
@@ -1403,7 +1371,7 @@ export default {
     // 保存日计划
     async dataSaveDay() {
       let sheet = this.spread[this.labelStatus1].getActiveSheet();
-      if (sheet.isEditing()) {
+      if (sheet && sheet.isEditing()) {
         sheet.endEdit();
       }
       let newData = sheet.getDirtyRows();
