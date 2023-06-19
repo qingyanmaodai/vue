@@ -644,78 +644,70 @@ export default {
             GCsheets.SheetArea.colHeader
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-        } else if (x.prop === "LineID") {
-          let newData = [];
-          let list = null;
-          this.tableData[remarkTb].map((item, index) => {
-            if (item["Lines"]) {
-              newData = item["Lines"];
-              if (newData.length !== 0 && newData) {
-                list = new GCsheets.CellTypes.ComboBox();
-                list.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value
-                );
-                list.editable(true);
-                list.items(newData);
-                list.itemHeight(24);
-                sheet
-                  .getCell(index, y, GCsheets.SheetArea.viewport)
-                  .cellType(list);
-              }
-            } else {
-              item["LineID"] = null;
-            }
-          });
-          // colInfos.push({
-          //   name: x.prop,
-          //   displayName: x.label,
-          //   cellType: "",
-          //   size: parseInt(x.width)
-          // });
         } else if (
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
         ) {
-          // colInfos.push({
-          //   name: x.prop,
-          //   displayName: x.label,
-          //   cellType: "",
-          //   size: parseInt(x.width)
-          // });
-          let newData = [];
-          // let list = null;
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
-              newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-              this.bindComboBoxToCell(sheet, index, y, newData);
+              let newData = x['items']; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
             }
           });
+        } else if (x.ControlType === "el-selcet") {
+          this.tableData[remarkTb].map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
+            }
+          });
+        } else if (x.ControlType === "checkbox") {
+          let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          cellType.caption("");
+          cellType.textTrue("");
+          cellType.textFalse("");
+          cellType.textIndeterminate("");
+          cellType.textAlign(
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+          );
+          cellType.isThreeState(false);
+          sheet.getCell(-1, y).cellType(cellType);
         } else if (
           x.DataType == "datetime" ||
           x.DataType === "varchar" ||
           x.DataType === "nvarchar"
         ) {
           x.formatter = "@";
-          // colInfos.push({
-          //   name: x.prop,
-          //   displayName: x.label,
-          //   size: parseInt(x.width),
-          //   formatter: "@" //字符串格式
-          // });
         }
 
         //行，start,end
         if (x.isEdit) {
           sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
-          // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-          // let cell = sheet.getCell(
-          //   -1,
-          //   cellIndex,
-          //   GC.Spread.Sheets.SheetArea.viewport
-          // );
-          // cell.foreColor("#2a06ecd9");
         }
-        // cellIndex++;
       });
       //渲染列
       sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
