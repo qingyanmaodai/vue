@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>生产计划看板</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./css/common.css" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="./css/proPlan.css" /> -->
+  </head>
+
+  <body style="padding: 0; margin: 0">
+    <div v-cloak id="app">
+      <!-- <div class="loading">
+        <div class="loadbox">
+          <img src="./picture/loading.gif" /> 页面加载中...
+        </div>
+      </div> -->
+      <div class="firstNode">
+        <div class="leftCard">
+          <div class="headCard">
+            <div class="box blue">
+              <div class="icon">
+                <img :src="headCard[0]['icon']" />
+              </div>
+              <div class="textBox">
+                <div class="statusNum">{{ tableData[0][0]["S1"] }}</div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[0]["title"] }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="box green">
+              <div class="icon">
+                <img :src="headCard[1]['icon']" />
+              </div>
+              <div class="textBox">
+                <div class="statusNum">{{ tableData[0][0]["S2"] }}</div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[1]["title"] }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="box purple">
+              <div class="icon">
+                <img :src="headCard[2]['icon']" />
+              </div>
+              <div class="textBox">
+                <div class="statusNum">{{ tableData[0][0]["S3"] }}</div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[2]["title"] }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="box red">
+              <div class="icon">
+                <img :src="headCard[3]['icon']" />
+              </div>
+              <div class="textBox">
+                <div class="statusNum">{{ tableData[0][0]["S4"] }}</div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[3]["title"] }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="secondCard">
+            <div class="itemCard1">
+              <div class="echartHead">
+                <div class="echartTitle">近15日组装计划达成</div>
+              </div>
+              <div class="echartBody" ref="chart1"></div>
+            </div>
+            <div class="itemCard2">
+              <div class="itemCard">
+                <div class="echartHead">
+                  <div class="echartTitle">今日计划任务分布</div>
+                </div>
+                <div class="echartBody" ref="chart2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="thirdCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">业务要货汇总</div>
+              </div>
+              <div class="echartBody">
+                <!-- <ComReportTable
+                  :isToolbar="false"
+                  :showFooter="false"
+                  ref="PurchaseRequisition"
+                  :isEdit="false"
+                  :remark="6"
+                  :IsIndex="false"
+                  :height="'100%'"
+                  :row-key="'RowNumber'"
+                  :sysID="sysID[6]['ID']"
+                  :table-data="tableData[6]"
+                  :table-header="tableColumns[6]"
+                  :table-loading="tableLoading[6]"
+                  :pagination="tablePagination[6]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                >
+                </ComReportTable> -->
+                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
+                  <ul class="item">
+                    <li v-for="(item, index) in listData" :key="index">
+                      <span class="title" v-text="item.title"></span>
+                      <span class="date" v-text="item.date"></span>
+                    </li>
+                  </ul>
+                </vue-seamless-scroll> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rightCard">
+          <div class="firstCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">待办事项清单</div>
+              </div>
+              <div class="echartBody">
+                <div class="xnode">
+                  <div class="triangle">产品缺失工艺</div>
+                  <div></div>
+                  <div>{{ tableData[8][0]["C1"] }}</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">工艺缺失</div>
+                  <div></div>
+                  <div>{{ tableData[9][0]["C1"] }}</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">产能缺失</div>
+                  <div></div>
+                  <div>{{ tableData[10][0]["C1"] }}</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">排班未配置</div>
+                  <div></div>
+                  <div>{{ tableData[11][0]["C1"] }}</div>
+                </div>
+                <div class="xnode">
+                  <div class="triangle">库存预警</div>
+                  <div></div>
+                  <div>{{ tableData[12][0]["C1"] }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="secondCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">常用功能</div>
+              </div>
+              <div class="echartBody">
+                <div
+                  v-for="item,index in gridItems"
+                  class="grid-item"
+                  @click="toPage(index)"
+                >
+                  <img :src="item['icon']" />
+                  <div>{{item['title']}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="thirdCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">系统负责人</div>
+              </div>
+              <div class="echartBody">
+                <div class="left">
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAANuSURBVHgB1Zm9TuNAFIVvnFAipYXK21A7AqR0cXoQ8AZsA+UWPADhBRCU0CztVssK+pgOCVCyLc26gnItQcdP9hzvOHJC7IzH+eNIlp2ZsfP5zp07c8cFMZTruuXn52cHlxudTsfG4RQKhTJ+l1WTAGU+ynj2LMu6ur299cRQBcmolZUVV8Ftx6B0FeA4B/Txzc1NO8uN2qAEBNw+Ll0Zjby5ubmv19fXvk7joaDs4qenpwYuv8kYBNc4en19PWi320Fqu7TKarVqv7y8NHFpy3jlw7r1NOsmgq6urjrv7++EzOqHpvLhu1tJvjsQdAqQkQLA1gfBWv0F7G5A/pTJQ1JlGogM/RU9oBw4E/LJNIUMjuP0GKoHVI1uW6Yvu1Qq7ccLuj6qRvgfmSEhdNWj2axrUUB+lxxaXl6Wk5MTaTabgoeH10tLS5JHaoIJFVpUjfKWGGptbU0ajcbAOpZfXl6KqSKrhhYFpPGss7i4KLu7u4n1e3t7Mj8/L6YC2wbPUddviqHY5QsLC4n1hKzVamIqWHSbEcBSqyHjmJkGGYlWz6EyIoBjwbTmrws9Pj4ObfPw8CB5xO63YFpXcsjzPMbfxHpC3t3dSR6B0bYQAnJNlYQ8PDxMrD89PdWyeprC7AGD4a+MYF5nzOQI5+Ai/P39fQiZ15pKAUE78glkySdRSf4nXJm6nt27s7MTdrduMI/c4eLiwmSmCkpw1ECluVoiII+s4gvxBXkwrtJ/dcW0m+FJO21dX183guwXn0FgXXFvgOHJ172Bi49RKcsLqw0M65fuDXmXbabPCkGRU7PrA50b8qyCcjwraLVaVxYTfxCfyYwKbOc8h3E0S/dPWliQHPMcgqq8xBt2U945Oy7NFZWHHg+jUje5U5tgTZkhvb29fQGnz+tiVIg39LEILiNmVWUGBKMdYRD9iH73zPXwh4MscXVcIgNZ4mU9oIwAaFAXzXA1DinIev825IfVE32CG1UyBViuOwC5FfllXAOXedxNI+wk3UBB1qNR3q/UjVykqTaAm8xZZIyKdbef1CZ14cwb8YAKR6CMSXw2/yMNktL+2EDrFotF7k+5Mhp5AGxwHtdpnPnzDYAduAO3gDazLLgp+iFOZ5y/dQEjZQaNq1Kp1LgvwEOl3XYEr6CYPbTpg4TD8XvY148k/QPLkc9oaWD9mQAAAABJRU5ErkJggg=="
+                  />
+                </div>
+                <div class="right">
+                  <div class="top">陈工</div>
+                  <div class="bottom">13800138000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="./js/vue.js" type="text/javascript"></script>
+  <script src="./js/axios.min.js" type="text/javascript"></script>
+  <script src="./js/token.js?ver=5" type="text/javascript"></script>
+  <!-- <script src="./js/jquery-1.11.0.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="./js/jquery.limarquee.js"></script> -->
+  <script type="text/javascript" src="./js/echarts.min.js"></script>
+  <script type="module">
+    import formatDate from "./js/newFormatDate.js";
+    let _this;
+    var app = new Vue({
+      el: "#app",
+      data() {
+        return {
+          headCard: [
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
+              title: "业务要货总量",
+              statusNum: "3,841",
+              changeNum: "+4500",
+              iconStatus: true,
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
+              title: "已汇报数量",
+              statusNum: "2,840",
+              changeNum: "-4500",
+              iconStatus: false,
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
+              title: "已出库数量",
+              statusNum: "45.21%",
+              changeNum: "+4500",
+              iconStatus: true,
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
+              title: "现有库存数量",
+              statusNum: "34.24%",
+              changeNum: "+4500",
+              iconStatus: true,
+            },
+          ],
+          ID: 9046,
+          gridItems: [
+            {
+              icon: "data:image/png;base64,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",
+              title: "计划管理",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "生产排程",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "车间报工",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "生产计划",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "车间管理",
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVlSURBVHgB5ZvPTxtHFMe/b2ygBJNCqxDIpeZYtRVw6alVza2HSukpPRZ6rgTpH9AYqZVyK0i9piHX9kLUNlUvAY79IQGqqrTqgW0PsQkpoGCbGHt3Mm/8AwNre23vGP/4SMv+mjV+b9+892bmmWAYGTsKA5kIKDihztQxeBvK70ux1Hag94RNZO0tiJ5NGuu3YBCCAWTsUAkcuK6OPsR5QWuElELkGhznHo0NrsFnfFOA3JZDeCk1D4E5SP2GDaCUISgKG+t+WUbDCmiO4Gcg1VVILsMOLDWqiIYUIOOJeRDdaprg58hZBI3030Od1KUA7dhI3lVHEbQEShGSpuuxBoEa0W9dOButIzzD0cXZkI/Vd6uRmixACb+oHplDKyOdBRUtol6be1aAjCWWVX//GO0AYZmuDsx6a+oBGU+xyU+ivdik0YGpao2q+gD95ttPeGZS7iTvVmtUUQEyloy2jdm7ITEjnyS+qtSkbBfQ3h5U8eG2wZE36Vpo0e2WqwJ0nOdQd2EJjs9IHmSJKbc8wb0LkFztGOEZUrKQ7eoPzilAOb2Z/LC1w6CIW6J0qgvkU9xVUwpwkscQA711328Y7grPj8dpfPigcOm0BZA9b0r4p7cfYuez7yGVkG6w8Hx/9/OfYQzuCpd6T2WyRQXk3r65kJe19mHvJmBXUIC+/yQBoziYl9v7Rf8WPLljR9SIyhfHx8I4ZQRlIV2vlwiePaME7ha+dY0TK1jIneZR6e62H+Z/cOdXJH58BL8JffA6hj55G76gfAGNDQzzoe4Ceg7PB+GPfvnPiPBM4odHSP8Zhy8oK8jJXPABQvjS9zPWHkziq3/Qk7YFBUiKoOvQM9YQuXn7Tkx8qhKW+/I1AZFpx6GuP2SSEdUFAhPoVhwxGVT9f5LjgkmCY4M1tXcSKo84TMM8MhxUuX/YpPx9U9dw5evrqJXdT+8jvfEYRiFWgOFhb+af/9X2FBTq8/yMk0gjGzuEcVTmy6lwGAZhYXZmvkOLEq55YaTT6HoFBNEE2BEGRitHAjt+aN7pucAKsGDQD/S/O45Xb7/vqe3eFw+R+ulvNBErqNfaDYZBfqupB395bttUSB5wImSZXPnhKLD35SpaEiW7GgvoLtCdEDYF7OwWupUANpUT7FnjmUKTDN54q2wmePjtH5CJZuT9LmSOt4K8XCTjSQuGIgFHgZfn3qnY5tk3v+MCsGhs2MrlAYJW1AJizeUlXmDP/uzOb2XvJx80NeydQFjjXU4Btn0fJIwogKPABb3hygixrHf8R1dgEg7QPVh0pX+dD0rGAmIR3YKQ0eJh8WLv86VGrYAuGVzY9AteILUz64XTogJomFdMG7OC3vFXYJLASAgNQ7TM3r9weno43KAV9L05iss3zGTVlz+aRN8bo2gQCzK9VHrhXImMLiIQjdcGZX1cxQmohVHyY3FUyBkaCZ2qK3avEYqnVlurFNYXLBodGD970X1GSKZnOyosqmEv5PG02y1XBWgnYcsFdApSREsdXyll5wR1XZ2g9s8NCFEavbRU/nYV2qpI+iweiqa9FUvvJLlosjuLpRmlxSlIWffPUpoOv3kPwjOe1wVoLDSjRoxRtDy06PW3AkxNCyN0tX+BC49bMkRyqAPNK4d3s6bHUAcyth8G9fJUbxgtgVyDzMyWC3WVqGtpjP+RzqqkzaZm4aIovvXQdD3C649Ag2hrCPTNQTozfhVaViUn+CJSx0uldb91fRR8QisCgQgocAumuoaPghc/EgaQu0fvwWGLQASNK8NSX3MFAVopTGP5iREFlKIto6d3ArZOpHgL56tSwmeaWvnoYunlOuFsomdgjYbpXxjkBQ/+ElFeqE99AAAAAElFTkSuQmCC",
+              title: "生产计划",
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAATNSURBVHgB5Zu/b9NOGMafizoEpiIxQAe+7gxS+bEifcMCE6IsDCyEv6BhZECkYmCknRkIAzOFFSRSCVZaJJhrGEoHpGaCsnC8j89uTeok/nWO7X6ki93ETvM+995757v3FCyjv3935NCC1gtydLyi1Kx/HsaVawbeUalN/PnzCY3Gpjp92oVFFCwgRtPgG2LIIg4bmhRXSl/KcxGjj5zJTQC9tTWLZrMjp0tSZmEHV0pXynpenpFZgIIMH2Yg3tUTL1vNKkQmAfTOTkd+xEMUZ/gwrpSuiPAcKUklgB/YnoHBrRy4Uq6k8YYGEuLVOrCB8hhPHPHEDb293Ul4XzIPkH+wIm1vCeVmWTyhG/fi2AKI2/fkcAfVoCci3I1zYSwBpOY3pObPo0povanm5i5MumxiDPBqvmrGE/nN8tufTbpsrADyBV1Ux+2jaEvQfjLugpFNwO/jx95cGbS+J81hJeqjSAH8fp5d3bQGOPnChyylLkSNE0Y1gXeoi/HEPH1GxoNDAkjtt5H9Ca6MtKIGSv80Ad/1WfsO6gibwu/f82p+fhC8NTN0QUfcxUFS9vaAz5+RmGPHgLNnURhsCs0mR7LL+28FJ5kC3+vXwIcPSMX168DlyyiMIS8Ix4AW0gY+ekBafv1CoRx4gUdYgIc4KrCp+3gCeHN4dQ18UYgX+DbvB8HpDXffvjUlCXnEDU7aymRr0ARaqBLb28iMmbFGw4/+Do4ejgyM/mvIAkT1HnXzQqlWQ1ZfFmCDkyeB27fNsaxofb7BF9jg4kXg2jXg/v0yi+DQAxzY4P174Ns3Y3xZRRDb6QF2Hnt//gQePwY+fjTGP3oEnDmDUiG2sxt0YAuK8PKlOT9+PJ4XFCuSk3hhJBE0eMkfdlMIesM4GDfoKSwUrADsCRBu+4wHa2uT72HM+PHDeAHvLUAEewIELk+jXryIdw+NZ9wIRKAnWA6eFMCFDWj4gwfGIMaCuAQiEBpvd67AnZHR0ECiIaxAEdLA8QOhGGw+thDbORR2USZu3gSuXj3oRimCLcR2DoRclAXGjcVFc/70qV3jiVKbM+L+n1AWgnEDm86kLjMPPAFMBlZ5iNNd5oVUfsNfLnJx9HBpuxkHKFWg7KWhzxcjgNavkIW5OVSQHl/CCyO7KHJB9M2b5JOhAZcuAbduIQN0/3mehIfCKzg6dIOTAwGazVUwA7PumITs9eDPfQHUiRP8oDgv4MLoNO41GWRu8Me/y+O7u7OyzreFomLBly/p1gbPnaPHIgUuhjJKD6XIeEkEStUjN+gw7eG84lE5QkySaKFe7Ef+MKMmRJhlWaeASFuuRH0QKYDXRrReRl1Qqjsqk3zklJiXV6dUHcYGXXXq1OqoDyfmClcsSXqYiUnT8ZKld3Y2rC2h2SKvZGkiLsQvSr0tZQr04hhPYk+Liyu1ERpDlxatV+LuFSCJ1gXki5eZeIxydpHMB+5Izd9LclOWTVNlyijtS7mbZtNUtm1zJq+Y6XUOpsPA6+PHdHOTyL5xkt7AjVRat1Hkxkk+ue7trYbzftOQ39bZYJO0XY/IzfAAW5un/5dDG0YQB9ngsHyNE7fSxteRM1YECOM3kQVvIGU2Xzl+VoozdKnrrVPyyOU6bqHXui9R/Sss8hclDLS+u7tlDQAAAABJRU5ErkJggg==",
+              title: "排产进度",
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAUXSURBVHgB7ZtBbxtVEMf/b+1UBBVsV2qaFlVsxAkJSHroCQmcS3tsj9ywOXKp8wmSfACEc4Fj3RPXVJzSS90iLgipDiqIA6gLiFBSKbYLNKiu93Vm7XXWzib27nvr7tr9Sc6uvZu1Z3Zm3rx5swIR81ddmrTJp1JYlIAJCX6fBZytF4teDQjaStSe2dg2gNrZnLAQIQIRQEKzwFekxFUcFjQolhCottu4QcqoQjPaFPCgLrOvGijRBa/Jzh2OAlbGGinjji7LUFbAmATvQ3RcpUKK2FBVhJICHjZlifx0dVyC++BYxNzr4gZCEkoBHNjIx6+Tj+cRDyzbxnIYazAQEL7rKQP3YiQ8Yxr0m3bqsoSABLKA3aYsk7lfQ4yxgfWzGbE26vkjK+DvpqzQ5mMkAIoLFYoLxZHOHeUkEv4ebZaQLGpnMuLCsJOGxoDunU+a8MzS7mN5fdhJxyqAhF9DQszeDwrUBVLC58edc6QLcLSng8f+c1Jo21g5lxNlv2O+CnDGeR7qXlyCo5sG5QkX/PIEXxegMfX2BAnPZAUlbn4HDimA7n4B6jO42CEocfNLlPpcgE2f7z4mUAFdGk9sLCzkRMP9IO09Sn5fkhEJ/8tD4Fd67dSB/acIzdWLwLlTCAvPXDmTXXc/6FlAlIFv8zvgm5+hzOVF4NIiVOmzAm8MyOsWnu/0Z1/rF56vq2BFrhU49BRAvr8Kjez92xGeTV6VwTv/1bfK1+0FQ0cBXMODRt9nf2fh6/9BmUHht2rAj39AlWxX5o4CqLihLd29+xPw5S3g/xaU8RP+1g/QAsW7K7x1FKCruPHnHnDze2hhUPj7v+sTnqF4xxVrpLt1exMaeIOGp+Ky2jDHvHseeOXEwXuOJ+z3mjHr+/LNtKF5qvvOeWiFhf9iS49LDdJqIW+QE6iPrBGyta0nmPoisZSmVGiJHUIVDn731aOzw0fvA6dOdvZ39hAZNi3TpWmSYGqQX1vwY1iRH7zd2d+PwPRdqHZoGnGc9qoG0QBkeRg0Mb2YgRdGJo2XCsCUwwqwML1YhrPWPr00DCmm1wJoEkgWIKdXAZQI1QxaNdlGApmdgTIpVgBtq0gYF99Sqgz3aLWxbXSXiywkBJ4kcWlcAxbL7uQBNBJsIgGw8J9e6i+WKFDlP44CKA7cRMyZPdERPncSWqAqeMXZ8h/uwIx7PsA1Al3CE9bp18Qd3umlwqSAMmIKF0h1ltq4t9Dd7ykgbWNDxQpm9fjlIT7Ja1kO89LgVlv3Td/q8KOmXLVxoJ0gcNn6roYlMA50l9/Tau59sKXPZcSK5/0B9brMtgw8mLDmCC+HOkr7psM5WjGlE9YxobDvD7bJ+PYI7T6Wt2PWCqsD60xGLAx+6FsQoSBRnKRpsug0SS37HfNVAJvJJLkCB/ajOsmPLInN50Q5zrlBANbmM2LjqINDe4WT1CQ9CAlXoSGvOOSc4ew2JfcOTWezNDPXuVDox1LGDd/5UYRnRi6L0wULRsgscZx0M72RnhVgAq0LnM6IdWljJY5DJP8mctOSN80d8f+CE7eOUkraqvQqjuWhKYa/iLMqyhXY1Cy8INy7Pp8Vy2GfHwxlAV66HabceFgY54OT9F3lJzSF9/b9hryWHtyHpLsNlyYiQKfgnmvq59E/8kNyjwLt5qGqDFq4odWrTbKyTbeMpZNIFOCFLWMmhcW2dHqROJkywa4iBhQju4/PwxGYFy1rMzOo5mbFb4iQ5369vtBp5At/AAAAAElFTkSuQmCC",
+              title: "产能配置",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "排班考勤",
+            },
+            {
+              icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVcSURBVHgB5Zs9cBtFFMf/ez7HH4HBZsaFLDI+hc6NY8apUkQMNECRFKYFpaBIAXEaSiJTMQwzyENBQREbSlKYIRMamMgzQJXBdoHL6DwQuYAZC0hsObZueW/1LZ++TivldPrNnO8s7Z1u377d997uW4Euk9qTFp2ihsScBCw+IDABCauqoIBNn2UEYAuBLcfBNp5iKxIRNrqIQBegSnOFrzgCV09VtH1sIZGUBtYiIZGEZrQJIJWSEziDJXriDfp3At3BNgTiThYbujSjYwH0qOK1ZAxg1TnCSqeC6EgAqbRcotMt9K7itSiNmAmJNXjEkwB4YKMbb0uJKPyBjSO86kUbDLSJanWJTR9VnrGoG26m/lQa2RZtaQD9QIJEdgM+xpFYfjks4q2Wb1kADx/JVbLP76IfkFiNhMW1Voq2JIDUI7lJJS+gn5DkRIXFfLNiTccAbvm+qzxD70wNd7tZsYYCoAfE+0bt3RCI7abl542L1KFg4xve3Dc4uBl5SSTcvnIVgApgyNTh2Tk4eqEgiwKreTc/wahzw30EpfIMR58jcB0PTgmAbH0M6DiC8yNRN0epqgsUVJ9b30IQyXeFCHWFTPGjag3IgSVkIahwVxit9mRLGhC4ga8eNVpQ1oCcCm6CXXmmRgvKGpCWKXhU/4OshJ0+QSfMnh9GzyAtIDd5ki+VAHgOrzD4eeLLb//Dxm9H6IQvPnwRU5NtR+feydH8wTmRVL9IUuhfd9crQ7jCJyUAn01u9Iqr/McozNtbGDysdFrOGBQo9F+oq4ljgahpGJijaSRf0Mya6LYUVO8LJvV/32jA2vePG1qTxdfGsfj6ODRimdKH/X9qcuiUSdx5eIw7Px3g7JjAG5fGoAnLLCxU+orri8+dUvd7v2Tx9d3HWLv7BONjBi6/MgINTBgaFi97wpuXRkstz9qgCauHrlfnXJw9A930lQC6wcALwCxkZljwEQ923E2hxr5fxDbVBIHP4BGfjx6QMTgnB4OLPdACoMpvGY7ANgYUzkYz6ZyEZthfZ7/9r30HH3/1D51zaBd2h4seYdEL1E3uENtGJETLRUJfN7BCpqo8w/78O2+dbXrP+KhQPv7MdNn9Zc+v6A7z9cJs2fWdmtBivW1eKmMNgCGx7gBtp5cUuf728+r47Jt/8Te1eiUH2fz/H733QtNwlit6cXYY73+6jyeHtQGKVML95ANNE9cyr/lKlE4O30ED/IL23gnu/HigYvtiBMfq3GosXyz7w6+HePD7kXrOvZ/peucpaYgJXZgGVvlcOS2+Dw3rArUzxKze3PpWGy/vNnbw/fwcfp4G7Mi0iPBF6Wm7e/IWzZDEoQFueT74ZaMLo55emoXAz2AhcOUXNAZCZP5ixdzCsgZwxucIeHFkEJbGSrkCpeGU18pIMgkEHc4gq0iUqLInThYrdPJdbKARG8eqjiWqBKBWTB0sI6BwXnFtmozr6GSn5X2ywlEEi9LIX4mrSyUFOMsySF0hw8nUbl+4CkC5x8HqCvF6meR1nepCXl3/WwXybUj1V+p93dRD6ask6VpaSJpuLVk6LTl3aDCTpRlSoXlaQ/S8LaXn5Fu+aeWZlgPr82ERMzTFCl3FQaLVvQJMWzMLM2GxzInH8KeJ5HdaosH7Zjs3ed405bOM0iTZ+WteNk11tm2O84oNtW3OwrOBW72hmWtG5xsn89rAiYcx9HDjJP1mgsLalcq8Xy9omV5hlCA427S7GqGt4kW0CaCSP/bk5RPWiHz6nYXOsOlYNwXWz4XEBjTTFQFUwpoxJDDHuUjqyAuEu4pVU9SmQ22fl/klq61hmrmdnha76CL/Aw6R+VoborqNAAAAAElFTkSuQmCC",
+              title: "送货计划",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "库存管理",
+            },
+            {
+              icon: "data:image/png;base64,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",
+              title: "产线管理",
+            },
+          ],
+          isEdit: false,
+          isSelect: false,
+          adminLoading: false,
+          // height: "700px",
+          newTag: -1,
+          btnForm: [],
+          tableData: [
+            [{ S1: "", S2: "", S3: "", S4: "" }],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [{ C1: "" }],
+            [{ C1: "" }],
+            [{ C1: "" }],
+            [{ C1: "" }],
+            [{ C1: "" }],
+          ],
+          tableColumns: [[], [], [], [], [], [], [], []],
+          tableLoading: [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+          ],
+          isClear: [false, false, false, false, false, false, false, false],
+          tablePagination: [
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+            { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+          ],
+          formSearchs: [
+            {
+              datas: {
+                fields:
+                  "SUM(Qty) AS S1 ,SUM(ReportQty) AS S2,SUM(OutStockQty) AS S3,SUM(StockQtyDiff) AS S4",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields:
+                  "SUM(PlanQty) as S1,sum(HasQty) AS S2,FORMAT(PlanDay,'MM-dd') as PlanDay",
+                groupby: "FORMAT(PlanDay,'MM-dd')",
+                // sort: "PlanDay desc",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "SUM(PlanQty) AS S1,ProcessName",
+                groupby: "ProcessName",
+                // PlanDay: this.currentDate,
+              },
+              forms: [],
+            },
+            {
+              datas: {},
+              forms: [],
+            },
+            {
+              datas: {},
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,ProcessName",
+                groupby: "ProcessName",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields:
+                  "ProductType,InnerModel,SUM(Qty) AS Qty ,SUM(ReportQty) AS ReportQty,SUM(OutStockQty) AS OutStockQty,SUM(StockQtyDiff) AS StockQtyDiff",
+                groupby: "ProductType,InnerModel",
+                sort: "ProductType,InnerModel",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields:
+                  "DemandDate,LineName,ProductName,MaterialName,Code,OweQty",
+                OweQty: 0,
+                sort: "DemandDate",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "COUNT(*) AS C1",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "COUNT(*) AS C1",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "COUNT(*) AS C1",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "COUNT(*) AS C1",
+                ConfigInfo: "未配置",
+              },
+              forms: [],
+            },
+            {
+              datas: {
+                fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
+              },
+              forms: [],
+            },
+          ],
+          sysID: [
+            {
+              ID: 10108,
+            },
+            { ID: 5170 },
+            { ID: 5170 },
+            { ID: 5170 },
+            { ID: 7804 },
+            { ID: 5170 },
+            { ID: 10108 },
+            { ID: 5157 },
+            { ID: 7844 },
+            { ID: 7920 },
+            { ID: 7776 },
+            { ID: 7922 },
+            { ID: 7804 },
+          ],
+          currentDate: "",
+          //echart部分
+          // chartData1: [],
+          // chartData2: [[], []],
+          chart: [],
+          chartOptions: [],
+          handleWindowResizeDebounced: null,
+          selected1Index: 0,
+          selected2Index: 0,
+        };
+      },
+      watch: {},
+      created() {
+        _this = this;
+        let routeBtn = this.$route;
+        // 获取所有按钮
+        // this.btnForm = this.$route.meta.btns;
+        // this.$common.judgeBtn(this, this.btnForm);
+        // this.currentDate = this.$moment().format("YYYY-MM-DD");
+        // this.getTableHeader();
+        this.getTableData1();
+      },
+      activated() {},
+      async mounted() {
+        // var style = window.getComputedStyle("echartBody");
+        // console.log(style, "style");
+        // await this.getEchartsData1();
+        // await this.getEchartsData2();
+        // await this.getEchartsData3();
+        // await this.getEchartsData4();
+        //初始化图表;
+        this.chart = [this.$refs.chart1, this.$refs.chart2, null, null, null];
+        // 在窗口大小变化时，调用 resize 方法重新渲染图表
+        // this.handleWindowResizeDebounced = debounce(
+        //   this.handleWindowResize,
+        //   200
+        // ); //设置防抖
+        window.addEventListener("resize", this.handleWindowResizeDebounced);
+      },
+      methods: {
+        // 渲染echart图
+        barData(id, option) {
+          // echarts.dispose(id);
+          echarts.init(id).setOption(option);
+        },
+        getEcharts() {
+          //获取屏幕宽度并计算比例
+          function fontSize(res) {
+            let clientWidth =
+              window.innerWidth ||
+              document.documentElement.clientWidth ||
+              document.body.clientWidth;
+            if (!clientWidth) return;
+            return res * (clientWidth / 1920);
+          }
+          this.chartOptions = [
+            {
+              grid: {
+                containLabel: true,
+                bottom: 0,
+                left: fontSize(10),
+                right: fontSize(10),
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "shadow",
+                },
+              },
+              legend: {
+                top: "0",
+                data: ["计划数", "完成数"],
+                itemWidth: fontSize(14),
+                itemHeight: fontSize(14),
+              },
+              xAxis: {
+                // name: "班级",
+                triggerEvent: true,
+                data: this.tableData[1].map((item) => item["PlanDay"]),
+                axisLabel: {
+                  interval: 1,
+                  show: true,
+                  textStyle: {
+                    color: "#000",
+                  },
+                },
+                axisLine: {
+                  lineStyle: {
+                    show: false,
+                    color: "#F3F3F3",
+                    width: 2,
+                  },
+                },
+              },
+              yAxis: [
+                {
+                  name: "单位:万",
+                  type: "value",
+                  nameTextStyle: {
+                    color: "#444444",
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    show: true,
+                    textStyle: {
+                      color: "#444444",
+                    },
+                  },
+                  axisLine: {
+                    show: false,
+                    // lineStyle: {
+                    //   color: "#F3F3F3",
+                    //   width: 2
+                    // }
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      type: "dashed",
+                      color: "#E9E9E9",
+                    },
+                  },
+                },
+              ],
+              series: [
+                {
+                  name: "计划数",
+                  type: "bar",
+                  silent: true,
+                  itemStyle: {
+                    normal: {
+                      color: "#578FFB",
+                    },
+                  },
+                  data: this.tableData[1].map((item) => item["S1"]),
+                },
+                {
+                  name: "完成数",
+                  type: "bar",
+                  silent: true,
+                  itemStyle: {
+                    normal: {
+                      color: "#23CF9C",
+                    },
+                  },
+                  data: this.tableData[1].map((item) => item["S2"]),
+                },
+              ],
+            },
+            {
+              backgroundColor: "#fff",
+              // title: {
+              //   text: "注册资金",
+              //   subtext: "2016年",
+              //   x: "center",
+              //   y: "center",
+              //   textStyle: {
+              //     fontWeight: "normal",
+              //     fontSize: 16
+              //   }
+              // },
+              // tooltip: {
+              //   show: false,
+              //   trigger: "item",
+              //   formatter: "{b}: {c} ({d}%)"
+              // },
+              legend: {
+                type: "scroll",
+                orient: "vertical",
+                right: "0%",
+                top: "center",
+                itemWidth: fontSize(10),
+                itemHeight: fontSize(10),
+                textStyle: {
+                  fontSize: fontSize(12),
+                },
+                itemStyle: {
+                  borderRadius: "50%", // 将图例项的形状设定为圆形
+                },
+                data: this.tableData[2].map((item) => item["ProcessName"]),
+              },
+              grid: {
+                containLabel: true,
+              },
+              series: [
+                {
+                  type: "pie",
+                  // selectedMode: "single",
+                  radius: ["30%", "60%"],
+                  color: [
+                    "#23CF9C",
+                    "#578FFB",
+                    "#6E40F2",
+                    "#FF61E6",
+                    "#E82074",
+                    "#FBA806",
+                  ],
+                  center: ["30%", "50%"],
+                  label: {
+                    normal: {
+                      position: "inner",
+                      formatter: "{d}%",
+                    },
+                    textStyle: {
+                      color: "#fff",
+                      fontSize: fontSize(12),
+                    },
+                  },
+                  labelLine: {
+                    normal: {
+                      show: false,
+                    },
+                  },
+                  data: this.tableData[2].map((item) => {
+                    return {
+                      value: item["S1"],
+                      name: item["ProcessName"],
+                    };
+                  }),
+                },
+              ],
+            },
+            {
+              backgroundColor: "#fff",
+              // title: {
+              //   text: "注册资金",
+              //   subtext: "2016年",
+              //   x: "center",
+              //   y: "center",
+              //   textStyle: {
+              //     fontWeight: "normal",
+              //     fontSize: 16
+              //   }
+              // },
+              // tooltip: {
+              //   show: false,
+              //   trigger: "item",
+              //   formatter: "{b}: {c} ({d}%)"
+              // },
+              legend: {
+                type: "scroll",
+                orient: "vertical",
+                right: "0%",
+                top: "center",
+                itemWidth: fontSize(10),
+                itemHeight: fontSize(10),
+                textStyle: {
+                  fontSize: fontSize(12),
+                },
+                itemStyle: {
+                  borderRadius: "50%", // 将图例项的形状设定为圆形
+                },
+                data: [
+                  "回货周期<6天",
+                  "6天<回货周期<15天",
+                  "15天<回货周期<30天",
+                  "回货周期>30天",
+                  "灌胶老练",
+                  "印刷",
+                ],
+              },
+              grid: {
+                containLabel: true,
+              },
+              series: [
+                {
+                  type: "pie",
+                  // selectedMode: "single",
+                  radius: ["10%", "40%"],
+                  color: [
+                    "#23CF9C",
+                    "#578FFB",
+                    "#6E40F2",
+                    "#FF61E6",
+                    "#E82074",
+                    "#FBA806",
+                  ],
+                  center: ["25%", "50%"],
+                  label: {
+                    normal: {
+                      position: "inner",
+                      formatter: "{d}%",
+                      fontSize: fontSize(8),
+                      color: "#fff",
+                    },
+                  },
+                  labelLine: {
+                    normal: {
+                      show: false,
+                    },
+                  },
+                  data: [
+                    {
+                      value: 3661,
+                      name: "回货周期<6天",
+                    },
+                    {
+                      value: 5713,
+                      name: "6天<回货周期<15天",
+                    },
+                    {
+                      value: 9938,
+                      name: "15天<回货周期<30天",
+                    },
+                    {
+                      value: 17623,
+                      name: "回货周期>30天",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              grid: {
+                containLabel: true,
+                bottom: 0,
+                left: fontSize(10),
+                right: fontSize(10),
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "shadow",
+                },
+              },
+              legend: {
+                top: "0",
+                data: ["计划数", "完成数"],
+                itemWidth: fontSize(14),
+                itemHeight: fontSize(14),
+              },
+              xAxis: {
+                // name: "班级",
+                triggerEvent: true,
+                data: this.tableData[5].map((item) => item["ProcessName"]),
+                axisLabel: {
+                  interval: 0,
+                  show: true,
+                  textStyle: {
+                    color: "#000",
+                  },
+                },
+                axisLine: {
+                  lineStyle: {
+                    show: false,
+                    color: "#F3F3F3",
+                    width: 2,
+                  },
+                },
+              },
+              yAxis: [
+                {
+                  name: "单位:万",
+                  type: "value",
+                  nameTextStyle: {
+                    color: "#444444",
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    show: true,
+                    textStyle: {
+                      color: "#444444",
+                    },
+                  },
+                  axisLine: {
+                    show: false,
+                    // lineStyle: {
+                    //   color: "#F3F3F3",
+                    //   width: 2
+                    // }
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      type: "dashed",
+                      color: "#E9E9E9",
+                    },
+                  },
+                },
+              ],
+              series: [
+                {
+                  name: "计划数",
+                  type: "bar",
+                  silent: true,
+                  barWidth: fontSize(14),
+                  itemStyle: {
+                    normal: {
+                      color: "#578FFB",
+                    },
+                  },
+                  data: this.tableData[5].map((item) => item["S1"]),
+                },
+                {
+                  name: "完成数",
+                  type: "bar",
+                  silent: true,
+                  barWidth: fontSize(14),
+                  itemStyle: {
+                    normal: {
+                      color: "#23CF9C",
+                    },
+                  },
+                  data: this.tableData[5].map((item) => item["S2"]),
+                },
+              ],
+            },
+            {
+              backgroundColor: "#fff",
+              color: [
+                "#0090FF",
+                "#36CE9E",
+                "#FFC005",
+                "#FF515A",
+                "#8B5CFF",
+                "#00CA69",
+              ],
+              legend: {
+                top: "0%",
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "shadow",
+                },
+              },
+              grid: {
+                left: fontSize(10),
+                right: fontSize(10),
+                bottom: fontSize(10),
+                containLabel: true,
+              },
+              xAxis: [
+                {
+                  type: "category",
+                  boundaryGap: false,
+                  axisLabel: {
+                    formatter: "{value}月",
+                    textStyle: {
+                      color: "#333",
+                    },
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      color: "#D9D9D9",
+                    },
+                  },
+                  data: ["1", "2", "3", "4", "5", "6", "7", "8"],
+                },
+              ],
+              yAxis: [
+                {
+                  type: "value",
+                  name: "单位：万",
+                  axisLabel: {
+                    textStyle: {
+                      color: "#666",
+                    },
+                  },
+                  nameTextStyle: {
+                    color: "#666",
+                    fontSize: 12,
+                    lineHeight: 40,
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      type: "dashed",
+                      color: "#E9E9E9",
+                    },
+                  },
+                  axisLine: {
+                    show: false,
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                },
+              ],
+              series: [
+                {
+                  name: "计划数",
+                  type: "line",
+                  smooth: true,
+                  // showSymbol: false,/
+                  symbolSize: 8,
+                  zlevel: 3,
+                  areaStyle: {
+                    normal: {
+                      color: new echarts.graphic.LinearGradient(
+                        0,
+                        0,
+                        0,
+                        1,
+                        [
+                          {
+                            offset: 0,
+                            color: "#0090FF30",
+                          },
+                          {
+                            offset: 1,
+                            color: "#0090FF10",
+                          },
+                        ],
+                        false
+                      ),
+                      shadowColor: "#0090FF10",
+                      shadowBlur: 10,
+                    },
+                  },
+                  data: [100, 138, 350, 173, 180, 150, 180, 230],
+                },
+                {
+                  name: "生产数",
+                  type: "line",
+                  smooth: true,
+                  // showSymbol: false,
+                  symbolSize: 8,
+                  zlevel: 3,
+                  areaStyle: {
+                    normal: {
+                      color: new echarts.graphic.LinearGradient(
+                        0,
+                        0,
+                        0,
+                        1,
+                        [
+                          {
+                            offset: 0,
+                            color: "#36CE9E30",
+                          },
+                          {
+                            offset: 1,
+                            color: "#36CE9E10",
+                          },
+                        ],
+                        false
+                      ),
+                      shadowColor: "#36CE9E10",
+                      shadowBlur: 10,
+                    },
+                  },
+                  data: [233, 233, 200, 180, 199, 233, 210, 180],
+                },
+              ],
+            },
+          ];
+          this.chart.map((item, index) => {
+            this.barData(item, this.chartOptions[index]);
+          });
+          // 调用 resize 方法重新渲染图表
+          setTimeout(() => {
+            this.chart.map((item) => {
+              echarts.init(item).resize();
+            });
+          }, 100);
+        },
+        handleWindowResize() {
+          this.getEcharts();
+        },
+        handleConsumeBtnClick(index) {
+          if (
+            (index === 0 && this.selected1Index === 0) ||
+            (index === 1 && this.selected1Index === 1)
+          ) {
+            // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
+            return;
+          } else {
+            this.selected1Index = index;
+            if (index === 0) {
+              // 调用第一个方法
+              // your code here
+            } else {
+              // 调用第二个方法
+              // your code here
+            }
+          }
+        },
+        handleDayBtnClick(index) {
+          if (
+            (index === 0 && this.selected2Index === 0) ||
+            (index === 1 && this.selected2Index === 1)
+          ) {
+            // 如果用户已经选择了“预计消耗”按钮，那么不做任何操作
+            return;
+          } else {
+            this.selected2Index = index;
+            if (index === 0) {
+              // 调用第一个方法
+              // your code here
+            } else {
+              // 调用第二个方法
+              // your code here
+            }
+          }
+        },
+        // 高度控制
+        setHeight() {
+          let headHeight = this.$refs.headRef.offsetHeight;
+
+          let rem =
+            document.documentElement.clientHeight -
+            headHeight -
+            this.$store.getters.reduceHeight;
+          let newHeight = rem + "px";
+          this.$set(this, "height", newHeight);
+        },
+        // 第几页
+        pageChange(val, remarkTb, filtertb) {
+          this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+          this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        },
+        // 页数
+        pageSize(val, remarkTb, filtertb) {
+          this.$set(this.tablePagination[remarkTb], "pageSize", val);
+          this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        },
+        // 排序
+        sortChange(order, prop, remarkTb, filtertb, row, index) {
+          if (filtertb == -100) {
+            // 改变父表格的行数据
+            this.changeTableRowData(remarkTb, row, index);
+            return;
+          }
+          if (order) {
+            if (order === "desc") {
+              this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+            } else {
+              this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+            }
+          } else {
+            this.formSearchs[remarkTb].datas["sort"] = null;
+          }
+          this.dataSearch(remarkTb);
+        },
+        // 改变父组件表格行数据
+        changeTableRowData(remarkTb, row, index) {
+          for (let name in row) {
+            this.$set(this.tableData[remarkTb][index], name, row[name]);
+          }
+        },
+        // 统一渲染按钮事件
+        btnClick(methods, parms, index, remarkTb) {
+          if (parms) {
+            // 下标 要用的数据 标题 ref
+            this[methods](remarkTb, index, parms);
+          } else {
+            this[methods](remarkTb, index);
+          }
+        },
+        // 查询
+        dataSearch(remarkTb) {
+          this.tagRemark = remarkTb;
+          this.tableData[remarkTb] = [];
+          this.$set(this.tableLoading, remarkTb, true);
+          this.$set(this.isClear, remarkTb, true);
+          this.tablePagination[remarkTb].pageIndex = 1;
+          this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+          setTimeout(() => {
+            this.$set(this.isClear, remarkTb, false);
+          });
+        },
+        // 重置
+        dataReset(remarkTb) {
+          for (let name in this.formSearchs[remarkTb].datas) {
+            if (name != "dicID") {
+              this.formSearchs[remarkTb].datas[name] = null;
+            }
+          }
+        },
+        // 导出
+        async dataExport(remarkTb) {
+          this.adminLoading = true;
+          let form = JSON.parse(
+            JSON.stringify(this.formSearchs[remarkTb].datas)
+          );
+          form["rows"] = 0;
+          let res = await ExportData(form);
+          this.adminLoading = false;
+          this.$store.dispatch("user/exportData", res.data);
+        },
+        selectFun(data, remarkTb, row) {
+          this.selectionData[remarkTb] = data;
+        },
+        // 删除
+        async dataDel(remarkTb, index, parms) {
+          let res = null;
+          let newData = [];
+          if (this.selectionData[remarkTb].length == 0) {
+            this.$message.error("请单击需要操作的数据！");
+            return;
+          } else {
+            this.selectionData[remarkTb].forEach((x) => {
+              let obj = x;
+              obj["ElementDeleteFlag"] = 1;
+              newData.push(obj);
+            });
+          }
+          this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+            .then((_) => {
+              _this.dataSave(remarkTb, index, null, newData);
+            })
+            .catch((_) => {});
+        },
+        // 单击行
+        handleRowClick(row, remarkTb) {
+          this.delData[remarkTb] = [];
+          this.delData[remarkTb].push(row);
+        },
+        // 保存
+        async dataSave(remarkTb, index, parms, newData) {
+          let res = null;
+          this.adminLoading = true;
+          if (newData && newData.length != 0) {
+            res = await SaveData(newData);
+          } else {
+            res = await SaveData(this.tableData[remarkTb]);
+          }
+          const { datas, forms, result, msg } = res.data;
+          if (result) {
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, "adminLoading", false);
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, "adminLoading", false);
+          }
+        },
+        // 获取表头数据
+        async getTableHeader() {
+          let IDs = this.sysID;
+          let res = await GetHeader(IDs);
+          const { datas, forms, result, msg } = res.data;
+          // if (datas.length > 0) {
+          //   this.tablePagination[0].pageSize = datas[0][1].pageSize;
+          // }
+
+          if (result) {
+            // 获取每个表头
+            // datas.some((m, i) => {
+            //   m.some((n, j) => {
+            //     // 进行验证
+            //     this.verifyDta(n);
+            //     if (n.childrens && n.children.length != 0) {
+            //       n.childrens.forEach((x) => {
+            //         this.verifyDta(x);
+            //       });
+            //     }
+            //   });
+
+            //   this.$set(this.tableColumns, i, m);
+            // });
+            // 获取查询的初始化字段 组件 按钮
+            forms.some((x, z) => {
+              this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+              if (z === 2) {
+                this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+              }
+              if (z === 5) {
+                this.formSearchs[z].datas["PlanDay"] = this.$moment()
+                  .subtract(1, "days")
+                  .format("YYYY-MM-DD");
+                // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+              }
+              if (z === 7) {
+                this.formSearchs[z].datas["DemandDate"] = [
+                  this.currentDate,
+                  this.$moment().add(2, "days").format("YYYY-MM-DD"),
+                ];
+              }
+              // x.forEach((y) => {
+              //   if (y.prop && y.value) {
+              //     this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+              //   } else {
+              //     this.$set(this.formSearchs[z].datas, [y.prop], "");
+              //   }
+              // });
+              // this.$set(this.formSearchs[z], "forms", x);
+              this.getTableData(this.formSearchs[z].datas, z);
+              this.adminLoading = false;
+            });
+          }
+        },
+        // 验证数据
+        // verifyDta(n) {
+        //   for (let name in n) {
+        //     if (
+        //       (name == "component" && n[name]) ||
+        //       (name == "button" && n[name]) ||
+        //       (name == "active" && n[name])
+        //     ) {
+        //       n[name] = eval("(" + n[name] + ")");
+        //     }
+        //   }
+        // },
+        // 获取表格数据
+        async getTableData(form, remarkTb) {
+          this.$set(this.tableLoading, remarkTb, true);
+          // if (this.tableData[remarkTb].length === 0) {
+          //   this.tablePagination[remarkTb]["pageSize"] =
+          //     this.tableColumns[remarkTb][1]["pageSize"];
+          // } else {
+          form["rows"] = this.tablePagination[remarkTb].pageSize;
+          // }
+          // form["rows"] = this.tablePagination[remarkTb].pageSize;
+          form["page"] = this.tablePagination[remarkTb].pageIndex;
+          let res = await GetSearchData(form);
+          const { result, data, count, msg, Columns } = res.data;
+          if (remarkTb === 0 && res.data) {
+            data[0]["S1"] = data[0]["S1"].toLocaleString();
+            data[0]["S2"] = data[0]["S2"].toLocaleString();
+            data[0]["S3"] = data[0]["S3"].toLocaleString();
+            data[0]["S4"] = data[0]["S4"].toLocaleString();
+          }
+          if (remarkTb === 6) {
+            this.tableColumns[6] = [
+              {
+                label: "品类",
+                prop: "ProductType",
+                width: 80,
+              },
+              {
+                label: "内部型号",
+                prop: "InnerModel",
+                width: 100,
+              },
+              {
+                label: "数量",
+                prop: "Qty",
+                width: 80,
+              },
+              {
+                label: "汇报数",
+                prop: "ReportQty",
+                width: 80,
+              },
+              {
+                label: "出库数",
+                prop: "OutStockQty",
+                width: 80,
+              },
+              {
+                label: "库存数",
+                prop: "StockQtyDiff",
+                width: 80,
+              },
+            ];
+            // Columns[0].filter((x) => {
+            //   return Object.keys(data[0]).some((y) => {
+            //     return x['prop'] === y;
+            //   });
+            // });
+          }
+          if (remarkTb === 7) {
+            this.tableColumns[7] = [
+              {
+                label: "计划日期",
+                prop: "DemandDate",
+                width: 80,
+              },
+              {
+                label: "产线",
+                prop: "LineName",
+                width: 60,
+              },
+              {
+                label: "产品型号",
+                prop: "ProductName",
+                width: 100,
+              },
+              {
+                label: "物料编码",
+                prop: "Code",
+                width: 80,
+              },
+              {
+                label: "物料名称",
+                prop: "MaterialName",
+                width: 100,
+              },
+              {
+                label: "欠数",
+                prop: "OweQty",
+                width: 80,
+              },
+            ];
+            // Columns[0].filter((x) => {
+            //   return Object.keys(data[0]).some((y) => {
+            //     return x['prop'] === y;
+            //   });
+            // });
+          }
+          if (result) {
+            this.$set(this.tableData, remarkTb, data);
+            this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          await this.getEcharts();
+
+          this.$set(this.tableLoading, remarkTb, false);
+          console.log(this.tableData, 11111);
+        },
+        // 刷新页面
+        refrshPage() {
+          this.$store
+            .dispatch("tagsView/delCachedView", this.$route)
+            .then(() => {
+              const { fullPath } = this.$route;
+              this.$nextTick(() => {
+                this.$router.replace({
+                  path: "/redirect" + fullPath,
+                });
+              });
+            });
+        },
+        async getEchartsData1() {
+          let res = await GetSearchData(
+            {
+              dicID: 9037,
+              groupby: "Dept",
+              fields: "SUM(DemandQty) as DemandQty,Dept",
+              sort: "DemandQty desc",
+            },
+            "6E8BF76C6BA5B0D8"
+          );
+          const { result, data, msg } = res.data;
+          if (result) {
+            this.chartTotal1 = data.reduce(
+              (accumulator, current) => accumulator + current.DemandQty,
+              0
+            );
+            this.chartData1 = data.map((item) => ({
+              value: item.DemandQty,
+              name: item.Dept,
+            }));
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        },
+        async getEchartsData2() {
+          let res = await GetSearchData(
+            {
+              dicID: 9062,
+              sort: "OweQty",
+              page: 1,
+              rows: 6,
+            },
+            "6E8BF76C6BA5B0D8"
+          );
+          const { result, data, msg } = res.data;
+          if (result) {
+            this.chartData2[0] = data.map(
+              (item) => item.MaterialName.split(" ")[0]
+            );
+            this.chartData2[1] = data.map((item) => item.OweQty);
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        },
+        async getTableData1() {
+          axiosPostRequst(`/APSAPI/APSData`, {
+            dicID: 5155,
+            fields: "sum(Qty) As Qty",
+          }).then((res) => {
+            console.log(res);
+          });
+        },
+        // 行内样式
+        cellStyle7({ row, column }) {
+          if (column.property == "OweQty") {
+            if (row["OweQty"] < 0) {
+              return {
+                color: "red",
+              };
+            }
+          }
+        },
+        toPage(index) {
+          if (index === 0) {
+            window.open("/APS/page/order.html");
+          }
+          if (index === 1) {
+            window.open("/APS/page/scheduling.html");
+          }
+        },
+      },
+    });
+  </script>
+</html>
+<style lang="scss" scoped>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    height: 100vh;
+    width: 100vw;
+    background-color: #e6e6e6;
+  }
+
+  #app {
+    padding: 16px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .firstNode {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+
+      .leftCard {
+        width: 66%;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+
+        .headCard {
+          box-sizing: border-box;
+
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          width: 100%;
+
+          .box {
+            display: flex;
+            /* // width: calc(25% - 16px); */
+            width: 25%;
+            height: 100px;
+            /* // border: 1px solid #d5d6ff; */
+            box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
+            border-radius: 4px;
+            margin-right: 10px;
+
+            .icon {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 40%;
+
+              img {
+                width: 56px;
+                height: 56px;
+              }
+            }
+
+            .textBox {
+              width: 60%;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              padding: 16px 0px 22px 0px;
+
+              .textHead {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .title {
+                  font-weight: 400;
+                  font-size: 12px;
+                  color: #ffffff;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+
+                .content {
+                  display: flex;
+                  align-items: center;
+
+                  img {
+                    width: 22px;
+                    height: 22px;
+                    margin-right: 10px;
+                  }
+
+                  .changeNum {
+                    font-weight: 400;
+                    font-size: 10px;
+                    color: #ff878a;
+                  }
+
+                  .loss {
+                    color: #a4ffbd;
+                  }
+                }
+              }
+
+              .statusNum {
+                /* // text-align: center; */
+                font-size: 26px;
+                font-weight: 400;
+                color: #ffffff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+
+          .box:last-child {
+            margin-right: 0px;
+          }
+
+          .blue {
+            background: linear-gradient(
+              276.93deg,
+              #148bbe 2.4%,
+              #26d57b 98.41%
+            );
+          }
+
+          .green {
+            background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
+          }
+
+          .purple {
+            background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
+          }
+
+          .red {
+            background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
+          }
+        }
+
+        .secondCard {
+          width: 100%;
+          height: 335px;
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+
+          .itemCard1 {
+            height: 335px;
+            width: 50%;
+            border-radius: 4px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px;
+          }
+
+          .itemCard2 {
+            width: 50%;
+            height: 335px;
+            display: flex;
+            justify-content: space-between;
+
+            .itemCard {
+              height: 335px;
+              border-radius: 4px;
+              width: 100%;
+              background: #ffffff;
+              display: flex;
+              flex-direction: column;
+            }
+          }
+        }
+
+        .thirdCard {
+          flex-grow: 1;
+          display: flex;
+          /* // margin-right: 10px; */
+          overflow: hidden;
+
+          .itemCard {
+            height: 100%;
+            /* // flex-grow: 1; */
+            border-radius: 4px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            overflow: hidden;
+
+            .echartBody {
+              height: calc(100% - 60px);
+              overflow: auto;
+              overflow: hidden;
+            }
+
+            .echartBody::-webkit-scrollbar {
+              display: none;
+            }
+          }
+
+          .itemCard:nth-child(2) {
+            margin-right: 0px;
+            overflow: hidden;
+          }
+        }
+      }
+
+      .rightCard {
+        width: 34%;
+        display: flex;
+        flex-direction: column;
+
+        .firstCard {
+          height: 30%;
+          margin-bottom: 10px;
+
+          .itemCard {
+            height: 100%;
+            border-radius: 4px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .xnode {
+              width: 100%;
+              height: 20%;
+              padding: 0 20px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              color: #444444;
+              font-size: 12px;
+              /* // .triangle */
+            }
+
+            .xnode div:nth-child(1) {
+              padding-left: 20px;
+              width: 30%;
+              position: relative;
+            }
+
+            .xnode div:nth-child(1)::before {
+              content: "";
+              /* 伪元素的内容为空 */
+              position: absolute;
+              /* 将伪元素设置为绝对定位 */
+              top: 50%;
+              left: 0;
+              /* 将伪元素向左偏移 50% */
+              transform: translateY(-50%) translateX(-50%);
+              /* 通过 transform 属性向左平移自身宽度的一半 */
+              display: inline-block;
+              /* 将伪元素设置为行内块元素 */
+              width: 10px;
+              height: 10px;
+              background: #8598ff;
+              border-radius: 50%;
+            }
+
+            .xnode:nth-child(2) div:nth-child(1)::before {
+              background: #f9921a;
+            }
+
+            .xnode:nth-child(3) div:nth-child(1)::before {
+              background: #43b8fa;
+            }
+
+            .xnode:nth-child(4) div:nth-child(1)::before {
+              background: #fa43f2;
+            }
+
+            .xnode:nth-child(5) div:nth-child(1)::before {
+              background: #2dd87b;
+            }
+
+            .xnode div:nth-child(2) {
+              width: 50%;
+              border: 1px dashed #c0c0c0;
+            }
+
+            .xnode div:nth-child(3) {
+              width: 20%;
+              text-align: right;
+            }
+          }
+        }
+
+        .secondCard {
+          height: 50%;
+          margin-bottom: 10px;
+
+          .itemCard {
+            height: 100%;
+            border-radius: 4px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .echartBody {
+              /* // height: 480px; */
+              flex-grow: 1;
+              padding: 20px;
+              width: 100%;
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              /* 四列，每列宽度相等 */
+              grid-template-rows: repeat(3, 1fr);
+              grid-gap: 10% 10%;
+
+              .grid-item {
+                /* 每个网格单元的样式 */
+                display: grid;
+                /* background-color: #ddd; */
+                /* grid-template-rows: auto 1fr; */
+                align-content: space-between;
+                justify-content: center;
+              }
+              .grid-item div {
+                font-size: 14px;
+                text-align: center;
+              }
+            }
+          }
+        }
+
+        .thirdCard {
+          height: 20%;
+          .itemCard {
+            height: 100%;
+            border-radius: 4px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            .echartBody {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 100%;
+              height: 100%;
+              .left,
+              .right {
+                flex: 1; /* 平分剩余空间 */
+              }
+              .left {
+                display: flex;
+                justify-content: flex-end;
+              }
+              .right {
+                display: flex; /* 使用 Flexbox 布局 */
+                margin-left: 20px;
+                height: 40%;
+                flex-direction: column; /* 垂直方向布局 */
+                justify-content: space-between; /* 上下两个元素之间均匀分布空间 */
+                .top {
+                  font-size: 16px;
+                  color: #000000;
+                }
+                .bottom {
+                  color: #aaaaaa;
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .echartHead {
+      padding: 0px 20px;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .echartTitle {
+        padding-left: 10px;
+        position: relative;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+        font-weight: bold;
+      }
+
+      .el-button {
+        border-radius: 6px !important;
+      }
+
+      .select,
+      .el-button:focus,
+      .el-button:hover {
+        color: #fff;
+        border-color: #5c67fd;
+        background-color: #5c67fd;
+      }
+    }
+
+    .echartTitle::before {
+      content: "";
+      /* 伪元素的内容为空 */
+      position: absolute;
+      /* 将伪元素设置为绝对定位 */
+      top: 50%;
+      left: 0;
+      /* 将伪元素向左偏移 50% */
+      transform: translateY(-50%) translateX(-50%);
+      /* 通过 transform 属性向左平移自身宽度的一半 */
+      display: inline-block;
+      /* 将伪元素设置为行内块元素 */
+      width: 4px;
+      height: 20px;
+      background: #8598ff;
+      border-radius: 2px;
+      margin-right: 10px;
+    }
+
+    .echartBody {
+      /* // height: 480px; */
+      flex-grow: 1;
+      padding: 10px;
+      width: 100%;
+      /* // height: 100%; */
+    }
+
+    .box:hover,
+    .itemCard:hover,
+    .itemCard1:hover {
+      box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+      padding: 0;
+    }
+  }
+</style>
