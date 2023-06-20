@@ -121,47 +121,35 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="box">
-              <div class="icon">
-                <img :src="headCard[4]['icon']" />
-              </div>
+            <div class="box">
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S4"] }}</div>
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
+                </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[4]["title"] }}</div>
+                  <div class="title">{{ headCard[1]["title"] }}</div>
                 </div>
               </div>
-            </div> -->
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">业务要货汇总</div>
-                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
-                  <el-tab-pane label="日报表" name="0"></el-tab-pane>
-                  <el-tab-pane label="月报表" name="1"></el-tab-pane>
-                </el-tabs>
-              </div>
-              <div class="echartBody">
-                <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false"
-                  :remark="6" :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[6]['ID']"
-                  :table-data="tableData[6]" :table-header="tableColumns[6]" :table-loading="tableLoading[6]"
-                  :pagination="tablePagination[6]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
-                </ComReportTable>
-                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
-                  <ul class="item">
-                    <li v-for="(item, index) in listData" :key="index">
-                      <span class="title" v-text="item.title"></span>
-                      <span class="date" v-text="item.date"></span>
-                    </li>
-                  </ul>
-                </vue-seamless-scroll> -->
-              </div>
             </div>
-          </div>
-        </div>
-        <div class="rightCard">
-          <div class="firstCard">
             <div class="box">
               <div class="textBox">
                 <div class="headNumber">
@@ -192,20 +180,30 @@
               </div>
             </div>
           </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">今日生产情况</div>
-              </div>
-              <div class="echartBody" ref="chart5"></div>
-            </div>
-          </div>
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">昨日计划达成对比</div>
+                <div class="echartTitle">业务要货汇总</div>
+                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                  <el-tab-pane label="日报表" name="0"></el-tab-pane>
+                  <el-tab-pane label="月报表" name="1"></el-tab-pane>
+                </el-tabs>
               </div>
-              <div class="echartBody" ref="chart4"></div>
+              <div class="echartBody">
+                <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false"
+                  :remark="6" :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[6]['ID']"
+                  :table-data="tableData[6]" :table-header="tableColumns[6]" :table-loading="tableLoading[6]"
+                  :pagination="tablePagination[6]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
+                </ComReportTable>
+                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
+                  <ul class="item">
+                    <li v-for="(item, index) in listData" :key="index">
+                      <span class="title" v-text="item.title"></span>
+                      <span class="date" v-text="item.date"></span>
+                    </li>
+                  </ul>
+                </vue-seamless-scroll> -->
+              </div>
             </div>
           </div>
         </div>
@@ -230,7 +228,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "PlanReached",
+  name: "SluggishMaterialAnalysis",
   components: {
     ComSearch,
     ComVxeTable,
@@ -1464,7 +1462,7 @@ export default {
     height: 100%;
 
     .leftCard {
-      width: 66%;
+      width: 100%;
       margin-right: 10px;
       display: flex;
       flex-direction: column;
@@ -1498,10 +1496,11 @@ export default {
           }
 
           .textBox {
-            width: 60%;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
 
             .textHead {
               display: flex;
@@ -1520,13 +1519,14 @@ export default {
 
             .headNumber {
               display: flex;
-              // justify-content: center;
-              align-items: stretch;
+              justify-content: flex-start;
+              // align-items: center;
               height: 40px;
               margin-bottom: 10px;
 
               .statusNum {
                 // text-align: center;
+                margin: auto;
                 font-size: 30px;
                 font-weight: 400;
                 color: #000000;
@@ -1535,13 +1535,14 @@ export default {
                 text-overflow: ellipsis;
               }
 
-              .content {
+              .leftContent,
+              .rightContent {
                 display: flex;
                 align-items: center;
 
                 img {
-                  width: 22px;
-                  height: 22px;
+                  width: 12px;
+                  height: 11px;
                   margin-right: 2px;
                 }
 
@@ -1549,6 +1550,7 @@ export default {
                   font-weight: 400;
                   font-size: 10px;
                   color: #a4ffbd;
+
                 }
 
                 .loss {
@@ -1556,28 +1558,16 @@ export default {
 
                 }
               }
+
+              .leftContent {
+                visibility: hidden;
+              }
             }
           }
         }
 
         .box:last-child {
           margin-right: 0px;
-        }
-
-        .blue {
-          background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
-        }
-
-        .green {
-          background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
-        }
-
-        .purple {
-          background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
-        }
-
-        .red {
-          background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
         }
       }
 
@@ -1699,7 +1689,7 @@ export default {
 
               .title {
                 font-weight: 400;
-                font-size: 12px;
+                font-size: 14px;
                 color: #7d7d7d;
                 white-space: nowrap;
                 overflow: hidden;
@@ -1716,7 +1706,7 @@ export default {
 
               .statusNum {
                 // text-align: center;
-                font-size: 30px;
+                font-size: 32px;
                 font-weight: 400;
                 color: #000000;
                 white-space: nowrap;
@@ -1737,13 +1727,11 @@ export default {
                 .changeNum {
                   font-weight: 400;
                   font-size: 10px;
-                  color: #a4ffbd;
-
+                  color: #ff878a;
                 }
 
                 .loss {
-                  color: #ff878a;
-
+                  color: #a4ffbd;
                 }
               }
             }
