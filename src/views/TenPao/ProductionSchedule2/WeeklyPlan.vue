@@ -3,12 +3,13 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
-        <ComSearch v-show="labelStatus1 != 4" ref="searchRef" :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms" :remark="labelStatus1 == 3 ? 2 : 0" :btnForm="btnForm"
+        <ComSearch v-show="labelStatus1 != 4" ref="searchRef" :searchData="formSearchs[3].datas"
+          :searchForm="formSearchs[3].forms" :remark="labelStatus1 == 3 ? 3 : 0" :btnForm="btnForm"
           :signName="labelStatus1" @btnClick="btnClick" />
-        <ComSearch v-show="labelStatus1 == 4" ref="searchRef" :searchData="formSearchs[1].datas"
-          :searchForm="formSearchs[1].forms" :remark="1" :btnForm="btnForm" :signName="labelStatus1"
+        <ComSearch v-show="labelStatus1 == 4" ref="searchRef" :searchData="formSearchs[4].datas"
+          :searchForm="formSearchs[4].forms" :remark="4" :btnForm="btnForm" :signName="labelStatus1"
           @btnClick="btnClick" />
+
       </div>
       <div>
         <div class="admin_content">
@@ -56,19 +57,13 @@
               :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
               @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
           </div>
-          <ComVxeTable ref="tableRefTwo" v-show="labelStatus1 == 3" :rowKey="'RowNumber'" :height="height"
-            :hasSelect="true" :tableData="tableData[2]" :tableHeader="tableColumns[2]" :tableLoading="tableLoading[2]"
-            :remark="2" :sysID="sysID[2].ID" :isEdit="isEdit" :showFooter="true" :includeFields="includeFields"
-            :isClear="isClear[2]" :showPagination="false" :pagination="tablePagination[2]" @pageChange="pageChange"
-            :keepSource="true" @pageSize="pageSize" @selectfun="selectFun" @changeline="changeline"
-            @sortChange="sortChange" />
-
-          <ComVxeTable ref="tableRefTwo" v-show="labelStatus1 == 4" :rowKey="'RowNumber'" :height="height"
-            :hasSelect="true" :tableData="tableData[1]" :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]"
-            :remark="1" :sysID="sysID[1].ID" :isEdit="isEdit" :showFooter="true" :includeFields="includeFields"
-            :cellStyle="cellStyle" :tableRowClassName="tableRowClassName" :isClear="isClear[1]" :showPagination="true"
-            :pagination="tablePagination[1]" @pageChange="pageChange" @pageSize="pageSize" @selectfun="selectFun"
-            :keepSource="true" @changeline="changeline" @sortChange="sortChange" />
+          <div v-for="item in [3, 4]" :key="item" v-show="labelStatus1 == item">
+            <ComVxeTable :rowKey="'RowNumber'" :ref="`tableRef${item}`" :height="height" :tableData="tableData[item]"
+              :hasSelect="true" :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isEdit="isEdit"
+              :remark="item" :cellStyle="cellStyle" :sysID="sysID[item].ID" :showPagination="false"
+              :isClear="isClear[item]" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
+              @selectfun="selectFun" @changeline="changeline" @sortChange="sortChange" />
+          </div>
           <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
@@ -156,7 +151,15 @@ export default {
         {
           datas: {},
           forms: []
-        }
+        },
+        {
+          datas: {},
+          forms: []
+        },
+        {
+          datas: {},
+          forms: []
+        },
       ],
       parmsBtn: [
         {
@@ -211,16 +214,18 @@ export default {
         //   Icon: "",
         // },
       ],
-      selectionData: [[], [], []],
+      selectionData: [[], [], [], [], []],
       btnForm: [],
-      tableData: [[], [], []],
+      tableData: [[], [], [], [], []],
       tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 10000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -234,6 +239,8 @@ export default {
       fileList: [],
       file: [],
       sysID: [
+        { ID: 7961, AutoDays2: this.AutoDays2 },
+        { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7960 },
         { ID: 5585 }
@@ -1021,8 +1028,8 @@ export default {
     changeStatus(x, index) {
       this.labelStatus1 = index;
       if (index == 4) {
-        if (this.tableData[1].length == 0) {
-          this.dataSearch(1);
+        if (this.tableData[4].length == 0) {
+          this.dataSearch(4);
         }
         return;
       }
@@ -1037,8 +1044,8 @@ export default {
         s = [21, 22, 23];
       } else if (index === 3) {
         s = [24];
-        this.formSearchs[2].datas["ProductionStatus"] = s;
-        this.dataSearch(2);
+        this.formSearchs[3].datas["ProductionStatus"] = s;
+        this.dataSearch(3);
         return;
       }
       this.formSearchs[0].datas["ProductionStatus"] = s;
@@ -1052,7 +1059,7 @@ export default {
         this.$message.error("工艺是否不为空！");
         return;
       }
-      let submitData = this.tableData[1]; //this.selectionData[0];
+      let submitData = this.tableData[4]; //this.selectionData[0];
       submitData.forEach(m => {
         m.ReplyDate = this.ReplyDate;
         m["isChecked"] = true;
@@ -1061,7 +1068,7 @@ export default {
       let res = await GetSearch(submitData, "/APSAPI/SchedulingV3");
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.tableData[1] = data;
+        this.tableData[4] = data;
         this.adminLoading = false;
         this.$message({
           message: msg,
@@ -1122,28 +1129,28 @@ export default {
     },
     //恢复计划
     async recovery(remarkTb, index, parms, newData) {
-      if (this.selectionData[2].length == 0) {
+      if (this.selectionData[3].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.selectionData[2].forEach(m => {
+        this.selectionData[3].forEach(m => {
           m["ProductionStatus"] = 23;
         });
-        this.dataSave(this.selectionData[2], 2);
+        this.dataSave(3, this.selectionData[3]);
       }
     },
     // 退回
     backData() {
-      if (this.selectionData[1].length == 0) {
+      if (this.selectionData[4].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.$confirm("确定退回吗？")
           .then(() => {
             // 确定
             this.adminLoading = true;
-            this.selectionData[1].forEach(a => {
+            this.selectionData[4].forEach(a => {
               a["ElementDeleteFlag"] = 1;
             });
-            this.dataSave(this.selectionData[1], 1);
+            this.dataSave(4, this.selectionData[4]);
           })
           .catch(() => {
             // 取消
@@ -1154,12 +1161,12 @@ export default {
     async save(remarkTb, index, parms) {
       if (remarkTb === 4) {
         //在分线列表处保存
-        if (this.selectionData[1].length == 0) {
+        if (this.selectionData[4].length == 0) {
           this.$message.error("请选择需要操作的数据！");
           return;
         } else {
           this.adminLoading = true;
-          this.dataSave(submitData, 1);
+          this.dataSave(4, submitData);
         }
       } else {
         let sheet = this.spread[remarkTb].getActiveSheet();
@@ -1174,7 +1181,7 @@ export default {
         if (submitData.length == 0) {
           this.$message.error("请选择需要操作的数据！");
         } else {
-          this.dataSave(submitData, remarkTb);
+          this.dataSave(remarkTb, submitData);
         }
       }
     },
@@ -1187,14 +1194,13 @@ export default {
         this.selectionData[remarkTb].forEach(m => {
           m["ProductionStatus"] = 23;
         });
-        this.dataSave(this.selectionData[remarkTb], remarkTb);
+        this.dataSave(remarkTb, this.selectionData[remarkTb]);
       }
     },
     // 保存
-    async dataSave(remarkTb, index, parms, newData) {
+    async dataSave(remarkTb, newData, index, parms,) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
-
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (sheet && sheet.isEditing()) {
         sheet.endEdit();
@@ -1298,12 +1304,12 @@ export default {
     },
     //正排倒排计算，匹配拉线
     async MOPlanStep1Calculation() {
-      // if (this.selectionData[1].length == 0) {
+      // if (this.selectionData[4].length == 0) {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
       // }
       // [];
-      let submitData = this.tableData[1].map(x => {
+      let submitData = this.tableData[4].map(x => {
         return {
           ...x,
           Type: 0,
@@ -1312,7 +1318,7 @@ export default {
         };
       });
       const originalSelectionData = JSON.parse(
-        JSON.stringify(this.selectionData[1])
+        JSON.stringify(this.selectionData[4])
       );
       if (submitData.length == 0) {
         this.$message.error("请选择需要计算的数据！");
@@ -1325,13 +1331,13 @@ export default {
           // 清空选中的，把选中的数据重新绑定
 
           this.resultMsg = res.data.resultMsg;
-          let newData = this.tableData[1].filter(a =>
+          let newData = this.tableData[4].filter(a =>
             originalSelectionData.some(b => b.OrderID == a.OrderID)
           );
 
           this.$set(this.selectionData, 1, []);
           if (newData.length != 0) {
-            this.tableData[1].forEach(item1 => {
+            this.tableData[4].forEach(item1 => {
               // 使用some方法查找是否存在匹配的OrdID
               const isMatched = newData.some(
                 item2 => item2.OrderID === item1.OrderID
@@ -1340,7 +1346,7 @@ export default {
               item1.isChecked = isMatched;
             });
           }
-          this.selectionData[1] = this.tableData[1].filter(
+          this.selectionData[4] = this.tableData[4].filter(
             item => item["isChecked"] == true
           );
 
@@ -1363,27 +1369,27 @@ export default {
 
     // 齐套计算
     async dataComputedDate() {
-      // if (this.selectionData[1].length == 0) {
+      // if (this.selectionData[4].length == 0) {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
       // }
       this.adminLoading = true;
-      let res = await OrderPlanMaterialForm(this.tableData[1]);
+      let res = await OrderPlanMaterialForm(this.tableData[4]);
       const { data, forms, result, msg } = res.data;
       if (result) {
         this.adminLoading = false;
         this.$set(this.tableData, 1, data);
-        let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
+        let templateData = JSON.parse(JSON.stringify(this.selectionData[4]));
         this.$set(this.selectionData, 1, []);
         // 清空选中的，把选中的数据重新绑定
-        let newData = this.tableData[1].filter(a =>
+        let newData = this.tableData[4].filter(a =>
           templateData.some(b => b.OrderID == a.OrderID)
         );
         if (newData.length != 0) {
           newData.forEach(c => {
             this.$nextTick(() => {
               _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
-              _this.selectionData[1].push(c);
+              _this.selectionData[4].push(c);
             });
           });
         }
@@ -1404,11 +1410,11 @@ export default {
     },
     // 下达
     async MOPlanSaveToDayPlan() {
-      if (this.selectionData[1].length == 0) {
+      if (this.selectionData[4].length == 0) {
         this.$message.error("请选择需要更新的计划！");
         return;
       }
-      let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
+      let submitData = this.selectionData[4]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
       submitData.forEach(m => {
         m["MOSchedulingType"] = 1;
         m["dicID"] = 7960;
