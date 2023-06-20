@@ -3,13 +3,10 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
-        <ComSearch v-show="labelStatus1 != 4" ref="searchRef" :searchData="formSearchs[3].datas"
-          :searchForm="formSearchs[3].forms" :remark="labelStatus1 == 3 ? 3 : 0" :btnForm="btnForm"
-          :signName="labelStatus1" @btnClick="btnClick" />
-        <ComSearch v-show="labelStatus1 == 4" ref="searchRef" :searchData="formSearchs[4].datas"
-          :searchForm="formSearchs[4].forms" :remark="4" :btnForm="btnForm" :signName="labelStatus1"
-          @btnClick="btnClick" />
-
+        <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+          <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
+            :isLoading="isLoading" :btnForm="btnForm" :signName="i" @btnClick="btnClick" />
+        </div>
       </div>
       <div>
         <div class="admin_content">
@@ -23,7 +20,7 @@
                   placeholder="请选择周期">
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" v-show="labelStatus1 != 4" @click="MOPlanStep1CalculationPre(0)">
+                <el-button type="primary" size="mini" v-show="labelStatus1 == 1" @click="MOPlanStep1CalculationPre(0)">
                   预排运算
                 </el-button>
                 <el-button v-show="labelStatus1 == 1" type="warning" size="mini" @click="insertList">
@@ -51,8 +48,8 @@
               </el-col>
             </el-row>
           </div>
-          <div class="flex_column" v-for="item in [0]" :key="item" v-show="labelStatus1 <= 2">
-            <ComSpreadTable ref="`spreadsheetRef${remarkTb}`" :height="height" :tableData="tableData[item]"
+          <div class="flex_column" v-for="item in [0, 1, 2]" :key="item" v-show="labelStatus1 == item">
+            <ComSpreadTable ref="`spreadsheetRef${item}`" :height="height" :tableData="tableData[item]"
               :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item"
               :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
               @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
@@ -164,26 +161,6 @@ export default {
       parmsBtn: [
         {
           ButtonCode: "save",
-          BtnName: "保存",
-          isLoading: false,
-          Methods: "save",
-          Type: "success",
-          Icon: "",
-          signName: 1,
-          Size: "small"
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          isLoading: false,
-          Methods: "save4",
-          Type: "success",
-          Icon: "",
-          signName: 4,
-          Size: "small"
-        },
-        {
-          ButtonCode: "save",
           BtnName: "恢复",
           isLoading: false,
           Methods: "recovery",
@@ -216,6 +193,7 @@ export default {
       ],
       selectionData: [[], [], [], [], []],
       btnForm: [],
+      isLoading: false,
       tableData: [[], [], [], [], []],
       tableColumns: [[], [], []],
       tableLoading: [false, false, false, false, false],
@@ -242,8 +220,8 @@ export default {
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
-        { ID: 7960 },
-        { ID: 5585 }
+        { ID: 5585 },
+        { ID: 7960 }
       ],
       userInfo: {},
       IsPurchaseBoss: false,
@@ -288,44 +266,32 @@ export default {
       this.selectionData[remarkTb] = newValue;
     },
     async subSAP() {
-      this.getSelectionData(1);
       this.adminLoading = true;
-      let newData = this.selectionData[0];
-      let pushData = [];
-      newData.forEach(m => {
-        m["dicID"] = 7967;
-        // if (m["Extend8"] == "待同步") {
-        //   this.$message.error(m["OrderNo"] + "已经待同步了");
-        // } else {
-        //   if (m["Extend8"] != "已同步") {
-        //     m["Extend8"] = "待同步";
-        //   }
-        pushData.push(m);
-        // }
-      });
-      if (pushData.length > 0) {
-        let res = await GetSearch(pushData, "/APSAPI/UpdateOrderStartDate");
-        const { result, data, count, msg } = res.data;
-        this.adminLoading = false;
-        if (result) {
-          this.dataSearch(0);
-
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true
-          });
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true
-          });
-        }
-      } else {
-        this.$message.error("请选择需要操作的数据,在同步中的不能再次操作");
-        this.adminLoading = false;
+      if (this.selectionData[1].length == 0) {
+        this.$message.error("请选择要提交同步申请的数据");
+        return
       }
+      this.selectionData[1] = this.selectionData[1].forEach(m => {
+        m["dicID"] = 7967;
+      });
+      let res = await GetSearch(this.selectionData[1], "/APSAPI/UpdateOrderStartDate");
+      const { result, data, count, msg } = res.data;
+      this.adminLoading = false;
+      if (result) {
+        this.dataSearch(1);
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true
+        });
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true
+        });
+      }
+
     },
     // schedulingPre() {
     //   this.getSelectionData();
@@ -682,14 +648,12 @@ export default {
     },
     // 获取选中的数据，type:0需要验证工艺，1不需要
     getSelectionData(type) {
-      if (type === 0) {
-        const errorNum = this.tableData[0].findIndex(
-          item => item["isChecked"] && !item["ProcessGroupID"]
-        );
-        if (errorNum !== -1) {
-          this.$message.error(`第${errorNum + 1}行工艺不能为空`);
-          throw new Error("工艺不能为空");
-        }
+      const errorNum = this.tableData[type].findIndex(
+        item => item["isChecked"] && !item["ProcessGroupID"]
+      );
+      if (errorNum !== -1) {
+        this.$message.error(`第${errorNum + 1}行工艺不能为空`);
+        throw new Error("工艺不能为空");
       }
     },
     // 跳转至页面配置
@@ -939,9 +903,8 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
           this.$set(this.formSearchs[z].datas, "Accounts", '$' + `${this.userInfo['Account']}` + '$');
         });
-        //this.formSearchs[0].datas["Extend11"] = "CRTD";
-        this.formSearchs[0].datas["ProductionStatus"] = [26]; //默认待排
-        this.dataSearch(0);
+        this.formSearchs[1].datas["ProductionStatus"] = [26]; //默认待排
+        this.dataSearch(1);
       }
     },
     // 验证数据
@@ -971,15 +934,15 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       //form["ControlID"] = "205";
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       this.adminLoading = false;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if (remarkTb == 0) {
-          this.tableColumns[0] = res.data.Columns[0];
+        if (remarkTb !== 3 && remarkTb !== 4) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+          console.log(this.tableColumns, 'this.tableColumns');
           this.setData(remarkTb);
-          this.$set(this.tablePagination[0], "pageTotal", count);
         }
       } else {
         this.$message({
@@ -1027,30 +990,22 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      if (index == 4) {
-        if (this.tableData[4].length == 0) {
-          this.dataSearch(4);
-        }
-        return;
-      }
       let s = [];
-      this.formSearchs[0].datas["Extend11"] = "";
       if (index === 0) {
         s = [];
       } else if (index === 1) {
-        // this.formSearchs[0].datas["Extend11"] = "CRTD";
         s = [26];
       } else if (index === 2) {
         s = [21, 22, 23];
       } else if (index === 3) {
         s = [24];
-        this.formSearchs[3].datas["ProductionStatus"] = s;
-        this.dataSearch(3);
-        return;
+      } else if (index === 4) {
+        this.dataSearch(4);
+        return
       }
-      this.formSearchs[0].datas["ProductionStatus"] = s;
+      this.formSearchs[index].datas["ProductionStatus"] = s;
+      this.dataSearch(index);
 
-      this.dataSearch(0);
     },
     // 计算排期与匹配拉线
     async computedScheduling() {
@@ -1086,29 +1041,18 @@ export default {
     },
     // 下发周计划
     async setWeekData(index) {
-      try {
-        this.getSelectionData(0);
-      } catch (error) {
-        return;
-      }
-      let submitData = this.selectionData[0];
-      if (submitData.length == 0) {
-        this.$message.error("请选择需要下达的数据！");
-        return;
-      }
       //假如OrdID为空，则不传给后端
-      submitData = submitData.filter(item => item.OrderID);
+      let submitData = this.selectionData[1].filter(item => item.OrderID);
       submitData.forEach(m => {
         m["MOSchedulingType"] = 3;
       });
       this.adminLoading = true;
       let res = await MOPlanStep1(submitData);
-      // let res = await FSLMOPlanStep1(submitData);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (index == 1) {
           this.labelStatus1 = 4;
-          this.dataSearch(1);
+          this.dataSearch(4);
         } else {
           this.dataSearch(0);
         }
@@ -1157,34 +1101,6 @@ export default {
           });
       }
     },
-    // 保存
-    async save(remarkTb, index, parms) {
-      if (remarkTb === 4) {
-        //在分线列表处保存
-        if (this.selectionData[4].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-          return;
-        } else {
-          this.adminLoading = true;
-          this.dataSave(4, submitData);
-        }
-      } else {
-        let sheet = this.spread[remarkTb].getActiveSheet();
-        let newData = sheet.getDirtyRows();
-        let submitData = [];
-        if (newData.length != 0) {
-          newData.forEach(x => {
-            submitData.push(x.item);
-          });
-        }
-
-        if (submitData.length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-        } else {
-          this.dataSave(remarkTb, submitData);
-        }
-      }
-    },
     //恢复计划
     async recovery(remarkTb) {
       remarkTb = 2;
@@ -1228,7 +1144,7 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await SaveMOPlanStep4(updateRecords);
+      let res = await SaveData(updateRecords);
       // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -1250,12 +1166,13 @@ export default {
     },
     // 进入分线列表
     insertList() {
-      this.getSelectionData(this.tagRemark);
-      if (this.selectionData[this.tagRemark].length == 0) {
+      console.log(this.selectionData[1], 'this.selectionData[1]');
+      if (this.selectionData[1].length == 0) {
         this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
+        return
       } else {
+        this.getSelectionData(1);
         // 进入预排计划
-
         this.setWeekData(1);
       }
     },
@@ -1265,23 +1182,18 @@ export default {
       //   this.$message.error("请选择需要批量填写开始日期的数据！");
       //   return;
       // }
-
-      let submitData = [];
-      this.getSelectionData();
-      this.selectionData[0].forEach(x => {
-        x["Type"] = 0;
-        x["dicID"] = 7960;
-        x["isChecked"] = true;
-        x["AutoDays2"] = this.AutoDays2;
-        submitData.push(x);
-      });
-
-      if (this.selectionData[0].length == 0) {
+      if (this.selectionData[4].length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
+        this.selectionData[4].forEach(x => {
+          x["Type"] = 0;
+          x["dicID"] = 7960;
+          x["isChecked"] = true;
+          x["AutoDays2"] = this.AutoDays2;
+        });
         this.adminLoading = true;
         let res = await GetSearch(
-          this.selectionData[0],
+          this.selectionData[4],
           "/APSAPI/MOPlanStep1CalculationV1"
         );
         const { data, forms, result, msg } = res.data;
@@ -1291,7 +1203,7 @@ export default {
             type: "success",
             dangerouslyUseHTMLString: true
           });
-          this.dataSearch(0);
+          this.dataSearch(4);
         } else {
           this.adminLoading = false;
           this.$message({
@@ -1327,7 +1239,7 @@ export default {
         let res = await GetSearch(submitData, "/APSAPI/MOPlanStep1Calculation");
         const { data, forms, result, msg } = res.data;
         if (result) {
-          this.$set(this.tableData, 1, data);
+          this.$set(this.tableData, 4, data);
           // 清空选中的，把选中的数据重新绑定
 
           this.resultMsg = res.data.resultMsg;
@@ -1335,7 +1247,7 @@ export default {
             originalSelectionData.some(b => b.OrderID == a.OrderID)
           );
 
-          this.$set(this.selectionData, 1, []);
+          this.$set(this.selectionData, 4, []);
           if (newData.length != 0) {
             this.tableData[4].forEach(item1 => {
               // 使用some方法查找是否存在匹配的OrdID
@@ -1378,9 +1290,9 @@ export default {
       const { data, forms, result, msg } = res.data;
       if (result) {
         this.adminLoading = false;
-        this.$set(this.tableData, 1, data);
+        this.$set(this.tableData, 4, data);
         let templateData = JSON.parse(JSON.stringify(this.selectionData[4]));
-        this.$set(this.selectionData, 1, []);
+        this.$set(this.selectionData, 4, []);
         // 清空选中的，把选中的数据重新绑定
         let newData = this.tableData[4].filter(a =>
           templateData.some(b => b.OrderID == a.OrderID)
@@ -1424,7 +1336,7 @@ export default {
       let res = await GetSearch(submitData, "/APSAPI/MOPlanSaveToDayPlan");
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.dataSearch(1);
+        this.dataSearch(4);
         this.adminLoading = false;
         this.$message({
           message: msg,
