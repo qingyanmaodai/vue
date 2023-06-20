@@ -563,7 +563,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z].datas, "Accounts", `,${this.userInfo['Account']},`);
+          this.$set(this.formSearchs[z].datas, "Accounts", '$'+`${this.userInfo['Account']}`+'$');
 
         });
         console.log("gettable");
