@@ -536,20 +536,37 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
+      const sheet = this.spread[remarkTb]?.getActiveSheet();
+
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (sheet && sheet.isEditing()) {
+        sheet.endEdit();
+      }
       // 获取修改记录
-      let updateRecords;
+      let updateRecords = [];
       if (newData) {
         updateRecords = newData;
       } else {
-        updateRecords = $table.getUpdateRecords();
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          DeletedRows.forEach((item) => {
+            item["ElementDeleteFlag"] = 1;
+          }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
       }
+
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
       let res = await SaveData(updateRecords);
+      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
