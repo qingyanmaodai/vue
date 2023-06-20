@@ -1300,7 +1300,7 @@ export default {
         if (newData.length != 0) {
           newData.forEach(c => {
             this.$nextTick(() => {
-              _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
+              _this.$refs[`tableRef${_this.labelStatus1}`]?.[0].$refs.vxeTable.setCheckboxRow(c, true);
               _this.selectionData[4].push(c);
             });
           });
