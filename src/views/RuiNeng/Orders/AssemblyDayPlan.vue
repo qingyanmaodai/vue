@@ -8,18 +8,9 @@
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">线别</span>
             </div>
-            <el-tree
-              class="tree-line"
-              :indent="0"
-              ref="asideTree"
-              node-key="LineID"
-              :data="treeData"
-              :props="treeProps"
-              :style="{ height: treeHeight + '', overflow: 'auto' }"
-              highlight-current
-              :expand-on-click-node="false"
-              @node-click="handleNodeClick"
-            ></el-tree>
+            <el-tree class="tree-line" :indent="0" ref="asideTree" node-key="LineID" :data="treeData" :props="treeProps"
+              :style="{ height: treeHeight + '', overflow: 'auto' }" highlight-current :expand-on-click-node="false"
+              @node-click="handleNodeClick"></el-tree>
           </div>
         </div>
       </el-aside>
@@ -27,16 +18,8 @@
         <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0]" :key="i" v-show="true">
-              <ComSearch
-                ref="searchRef"
-                :searchData="formSearchs[i].datas"
-                :searchForm="formSearchs[i].forms"
-                :remark="i"
-                :isLoading="isLoading"
-                :btnForm="btnForm"
-                :signName="labelStatus1"
-                @btnClick="btnClick"
-              />
+              <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
+                :isLoading="isLoading" :btnForm="btnForm" :signName="labelStatus1" @btnClick="btnClick" />
             </div>
           </div>
           <div>
@@ -44,16 +27,8 @@
               <div class="ant-table-title">
                 <el-row>
                   <el-col :span="4">
-                    <i
-                      class="el-icon-d-arrow-left"
-                      v-show="showAside"
-                      @click="showAside = !showAside"
-                    ></i>
-                    <i
-                      class="el-icon-d-arrow-right"
-                      v-show="!showAside"
-                      @click="showAside = !showAside"
-                    ></i>
+                    <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
+                    <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
@@ -94,26 +69,11 @@
                   </el-col>
                 </el-row>
               </div>
-              <div
-                class="flex_column"
-                v-for="item in [0]"
-                :key="item"
-                v-show="true"
-              >
-                <ComSpreadTable
-                  ref="spreadsheetRef"
-                  :height="height"
-                  :tableData="tableData[item]"
-                  :tableColumns="tableColumns[item]"
-                  :tableLoading="tableLoading[item]"
-                  :remark="item"
-                  :sysID="sysID[item]['ID']"
-                  :pagination="tablePagination[item]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @workbookInitialized="workbookInitialized"
-                  @selectChanged="selectChanged"
-                />
+              <div class="flex_column" v-for="item in [0]" :key="item" v-show="true">
+                <ComSpreadTable ref="spreadsheetRef" :height="height" :tableData="tableData[item]"
+                  :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item"
+                  :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange"
+                  @pageSize="pageSize" @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
                 <!-- <ComVxeTable
                   :rowKey="'RowNumber'"
                   :ref="`tableRef${item}`"
@@ -145,21 +105,9 @@
       <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
-          <ComReportTable
-            :rowKey="'RowNumber'"
-            :height="height1"
-            :tableData="tableData[1]"
-            :tableHeader="tableColumns[1]"
-            :tableLoading="tableLoading[1]"
-            :remark="1"
-            :sysID="sysID[1].ID"
-            :isClear="isClear[1]"
-            :showFooter="true"
-            :pagination="tablePagination[1]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-          />
+          <ComReportTable :rowKey="'RowNumber'" :height="height1" :tableData="tableData[1]" :tableHeader="tableColumns[1]"
+            :tableLoading="tableLoading[1]" :remark="1" :sysID="sysID[1].ID" :isClear="isClear[1]" :showFooter="true"
+            :pagination="tablePagination[1]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange" />
         </div>
       </div>
     </el-dialog>
@@ -459,9 +407,9 @@ export default {
       this.$set(this, "height", newHeight);
     },
     // 编辑行
-    editRow(row) {},
+    editRow(row) { },
     // 删除行
-    delRow(row) {},
+    delRow(row) { },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -535,20 +483,37 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      const $table = this.$refs[`tableRef${remarkTb}`][0].$refs.vxeTable;
+      const sheet = this.spread[remarkTb]?.getActiveSheet();
+
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (sheet && sheet.isEditing()) {
+        sheet.endEdit();
+      }
       // 获取修改记录
-      let updateRecords;
+      let updateRecords = [];
       if (newData) {
         updateRecords = newData;
       } else {
-        updateRecords = $table.getUpdateRecords();
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          DeletedRows.forEach((item) => {
+            item["ElementDeleteFlag"] = 1;
+          }); //获取被删除的数据
+          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
       }
+
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
       let res = await SaveData(updateRecords);
+      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1147,7 +1112,7 @@ export default {
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
 
-      function MyContextMenu() {}
+      function MyContextMenu() { }
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
         this.spread[remarkTb]
       );
@@ -1203,7 +1168,7 @@ export default {
 
       this.spread[remarkTb].bind(
         GCsheets.Events.EditStarting,
-        function (e, args) {}
+        function (e, args) { }
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
@@ -1242,13 +1207,13 @@ export default {
       sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {
         console.log(
           info.row +
-            "," +
-            info.col +
-            "," +
-            "由" +
-            info.oldValue +
-            "改变为" +
-            info.newValue
+          "," +
+          info.col +
+          "," +
+          "由" +
+          info.oldValue +
+          "改变为" +
+          info.newValue
         );
         var arr = sheet.getDirtyRows();
         var arr2 = sheet.getInsertRows();
@@ -1528,7 +1493,7 @@ export default {
         if (
           column.property == "SecondReplyDate" &&
           new Date(row.SecondReplyDate).getTime() >
-            new Date(row.LastDate).getTime()
+          new Date(row.LastDate).getTime()
         ) {
           return {
             background: "#ff7b7b",
