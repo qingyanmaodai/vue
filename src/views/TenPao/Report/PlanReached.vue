@@ -6,26 +6,47 @@
         <div class="leftCard">
           <div class="headCard">
             <div class="box">
+              <div class="icon">
+                <img :src="headCard[0]['icon']" />
+              </div>
               <div class="textBox">
                 <div class="headNumber">
-                  <div class="leftContent">
-                    <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <div class="changeNum">
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S2"] }}
+                  </div>
+                  <div class="content">
+                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
+                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      ">
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
+                </div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[0]["title"] }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="box">
+              <div class="icon">
+                <img :src="headCard[1]['icon']" />
+              </div>
+              <div class="textBox">
+                <div class="headNumber">
                   <div class="statusNum">
                     {{ tableData[0][0]["S1"] }}
                   </div>
-                  <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                  <div class="content">
+                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
                     <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
+                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
                       ">
-                      {{ headCard[1]["changeNum"] }}
+                      {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
                 </div>
@@ -35,89 +56,52 @@
               </div>
             </div>
             <div class="box">
+              <div class="icon">
+                <img :src="headCard[2]['icon']" />
+              </div>
               <div class="textBox">
                 <div class="headNumber">
-                  <div class="leftContent">
-                    <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <div class="changeNum">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
                   <div class="statusNum">
-                    {{ tableData[0][0]["S1"] }}
+                    {{ tableData[0][0]["S3"] }}
                   </div>
-                  <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                  <div class="content">
+                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
                     <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
+                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
                       ">
-                      {{ headCard[1]["changeNum"] }}
+                      {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
                 </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
+                  <div class="title">{{ headCard[2]["title"] }}</div>
                 </div>
               </div>
             </div>
             <div class="box">
-              <div class="textBox">
-                <div class="headNumber">
-                  <div class="leftContent">
-                    <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <div class="changeNum">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
-                  <div class="statusNum">
-                    {{ tableData[0][0]["S1"] }}
-                  </div>
-                  <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
-                      {{ headCard[1]["changeNum"] }}
-                    </div>
-                  </div>
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
-                </div>
+              <div class="icon">
+                <img :src="headCard[3]['icon']" />
               </div>
-            </div>
-            <div class="box">
               <div class="textBox">
                 <div class="headNumber">
-                  <div class="leftContent">
-                    <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <div class="changeNum">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
                   <div class="statusNum">
-                    {{ tableData[0][0]["S1"] }}
+                    {{ tableData[0][0]["S4"] }}
                   </div>
-                  <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                  <div class="content">
+                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
                     <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
+                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
                       ">
-                      {{ headCard[1]["changeNum"] }}
+                      {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
                 </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
+                  <div class="title">{{ headCard[3]["title"] }}</div>
                 </div>
               </div>
             </div>
@@ -163,31 +147,27 @@
         <div class="rightCard">
           <div class="firstCard">
             <div class="box">
+              <div class="icon">
+                <img :src="headCard[4]['icon']" />
+              </div>
               <div class="textBox">
                 <div class="headNumber">
-                  <div class="leftContent">
-                    <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <div class="changeNum">
-                      {{ headCard[0]["changeNum"] }}
-                    </div>
-                  </div>
                   <div class="statusNum">
                     {{ tableData[0][0]["S1"] }}
                   </div>
-                  <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                  <div class="content">
+                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
                     <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
+                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
                       ">
-                      {{ headCard[1]["changeNum"] }}
+                      {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
                 </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
+                  <div class="title">{{ headCard[4]["title"] }}</div>
                 </div>
               </div>
             </div>
@@ -1548,12 +1528,11 @@ export default {
                 .changeNum {
                   font-weight: 400;
                   font-size: 10px;
-                  color: #a4ffbd;
+                  color: #ff878a;
                 }
 
                 .loss {
-                  color: #ff878a;
-
+                  color: #a4ffbd;
                 }
               }
             }
@@ -1737,13 +1716,11 @@ export default {
                 .changeNum {
                   font-weight: 400;
                   font-size: 10px;
-                  color: #a4ffbd;
-
+                  color: #ff878a;
                 }
 
                 .loss {
-                  color: #ff878a;
-
+                  color: #a4ffbd;
                 }
               }
             }
