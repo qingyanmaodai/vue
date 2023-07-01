@@ -805,6 +805,9 @@ export default {
           if (row["Capacity"] && column["name"] === "Capacity") {
             cell.foreColor("red");
           }
+          if (row["IsDelay"] && row["IsDelay"] === 1 && column["name"]==="OrderNo") {
+            cell.backColor("#FF0000");
+          }
         });
       });
 
