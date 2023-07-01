@@ -109,7 +109,7 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {},
+          datas: {ProcessName:'SMT'},
           forms: [],
         },
         {
@@ -122,16 +122,16 @@ export default {
         },
       ],
       parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "提交报工",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          signName: 0,
-          Methods: "addData",
-          Icon: "",
-        },
+        // {
+        //   ButtonCode: "save",
+        //   BtnName: "提交报工",
+        //   Type: "success",
+        //   Ghost: true,
+        //   Size: "small",
+        //   signName: 0,
+        //   Methods: "addData",
+        //   Icon: "",
+        // },
         {
           ButtonCode: "save",
           BtnName: "保存",
