@@ -518,42 +518,8 @@ export default {
                 _this.sheetSelectObj.count
               );
             }
-            // Commands.startTransaction(context, options);
-
-            // sheet.suspendPaint();
-
-            // var beforeRowCount = 0;
-
-            //  sheet.suspendPaint();
-
-            // Commands.endTransaction(context, options);
             sheet.resumePaint();
 
-            return true;
-          }
-        }
-      };
-
-      //修改剪切,已经不用
-      var insertRowsCut = {
-        canUndo: true,
-        name: "insertRowsCut",
-        execute: function (context, options, isUndo) {
-          var Commands = GC.Spread.Sheets.Commands;
-          if (isUndo) {
-            Commands.undoTransaction(context, options);
-            return true;
-          } else {
-            context.commandManager().execute(options);
-            this.sheetSelectRows = sheet.getArray(
-              options.selections[0].row,
-              0,
-              options.selections[0].rowCount,
-              sheet.getColumnCount()
-            );
-            this.sheetSelectObj.start = options.selections[0].row;
-
-            this.sheetSelectObj.count = options.selections[0].rowCount;
             return true;
           }
         }
@@ -562,8 +528,6 @@ export default {
       this.spread[remarkTb]
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
-      //修改剪切
-      this.spread[remarkTb].commandManager().register("insertRowsCut", insertRowsCut);
 
       function MyContextMenu() { }
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
@@ -579,10 +543,6 @@ export default {
           if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
             item.command = "insertRowsCopyStyle";
           }
-          //  else if (item && item.name === "gc.spread.cut") {
-
-          //     item.command = "insertRowsCut";
-          //   }
         });
       };
       var contextMenu = new MyContextMenu();

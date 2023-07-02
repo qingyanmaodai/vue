@@ -37,6 +37,18 @@
               <el-row>
                 <el-col :span="4"><span class="title">各科室每天开拉情况</span></el-col>
                 <el-col :span="20" class="flex_flex_end">
+                  <el-select clearable filterable size="small" placeholder="请选择修改值" v-model="OrderNo">
+                    <el-option v-for="(item, i) in OrderNos[1]" :key="i" :label="item.label"
+                      :value="item.value"></el-option>
+                  </el-select>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-input size="small" v-model="OrderNoValue" style="width:160px" placeholder="请输入"
+                    @keyup.enter.native="changeProp(1)"></el-input>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-button type="primary" size="mini" @click="changeProp(1)">
+                    批量修改
+                  </el-button>
+                  <el-divider direction="vertical"></el-divider>
                 </el-col>
               </el-row>
             </div>
@@ -140,31 +152,8 @@ export default {
       parseSearch: false,
       warehouseValue: "",
       OrderNo: "",
+      OrderNoValue: "",
       OrderNos: [
-        {
-          title: "上班",
-          value: "上班",
-          label: "上班",
-          text: "上班"
-        },
-        {
-          title: "请假",
-          value: "请假",
-          label: "请假",
-          text: "请假"
-        },
-        {
-          title: "旷工",
-          value: "旷工",
-          label: "旷工",
-          text: "旷工"
-        },
-        {
-          title: "休息",
-          value: "休息",
-          label: "休息",
-          text: "休息"
-        }
       ],
       Status1: [
         { label: "待确认", value: "未开始" },
@@ -179,7 +168,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 90 }, { ID: 97 }, { ID: 10084 }, { ID: 6751 }],
+      sysID: [{ ID: 126 }, { ID: 97 }, { ID: 10084 }, { ID: 6751 }],
       isEdit: false,
       enlargeType: true,
       rem: "",
@@ -379,6 +368,15 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
+          this.$set(this.OrderNos, i, m)
+
+          this.OrderNos[i] = this.OrderNos[i].filter(item => item.isEdit).map((item) => {
+            return {
+              value: item.prop,
+              label: item.label
+            }
+          })
+          console.log(this.OrderNos, 'this.OrderNo');
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -394,7 +392,7 @@ export default {
         });
 
         // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        this.formSearchs[0].datas["PrepareStatus"] = 1;
+        // this.formSearchs[0].datas["PrepareStatus"] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -512,7 +510,7 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas["PlanNo"] = row.PlanNo;
+      this.formSearchs[1].datas["OrganizeID"] = row.OrganizeID;
       this.dataSearch(1);
     },
     // 清空超领
@@ -618,23 +616,18 @@ export default {
         }
       }
     },
-    // 收缩头部
-    // systolic() {
-    //   this.enlargeType = !this.enlargeType;
-    //   if (this.enlargeType) {
-    //     this.height = this.rem + "px";
-    //   } else {
-    //     this.height = this.rem + 320 + "px";
-    //   }
-    // },
-    // 选择仓库
-    selectWarehouse(val) {
-      this.formSearchs[1].datas["WarehouseID"] = val;
-      this.dataSearch(1);
-    },
-    // 选择工单
-    selectOrderNo(val) {
-      this.formSearchs[1].datas["OrderNo"] = val;
+    changeProp(index) {
+      if (!this.OrderNo) {
+        this.$message.error("请选择需要修改的值");
+        return
+      }
+      if (this.tableData[index].length === 0) {
+        this.$message.error("当前表格无数据");
+        return
+      }
+      this.tableData[index].map((item) => {
+        item[this.OrderNo] = this.OrderNoValue
+      })
     }
   }
 };
