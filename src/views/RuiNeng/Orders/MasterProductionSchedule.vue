@@ -1090,18 +1090,18 @@ export default {
       });
 
       sheet.options.isProtected = true;
-      sheet.options.protectionOptions.allowResizeColumns = true;
-      sheet.options.protectionOptions.allowInsertRows = true;
-      sheet.options.protectionOptions.allowDeleteRows = true;
-      sheet.options.protectionOptions.allowSelectLockedCells = true;
-      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-      sheet.options.protectionOptions.allowDeleteRows = true;
-      sheet.options.protectionOptions.allowDeleteColumns = true;
-      sheet.options.protectionOptions.allowInsertRows = true;
-      sheet.options.protectionOptions.allowInsertColumns = true;
-      sheet.options.protectionOptions.allowDargInsertRows = true;
-      sheet.options.protectionOptions.allowDragInsertColumns = true;
-      sheet.options.allowUserDragDrop = true;
+        sheet.options.protectionOptions.allowResizeColumns = true;
+        sheet.options.protectionOptions.allowInsertRows = true;
+        sheet.options.protectionOptions.allowDeleteRows = true;
+        sheet.options.protectionOptions.allowSelectLockedCells = true;
+        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+        sheet.options.protectionOptions.allowDeleteColumns = true;
+        sheet.options.protectionOptions.allowInsertColumns = true;
+        sheet.options.protectionOptions.allowDargInsertRows = true;
+        sheet.options.protectionOptions.allowDragInsertColumns = true;
+        sheet.options.protectionOptions.allowSort = true;
+        sheet.options.protectionOptions.allowFilter = true;
+        sheet.options.allowUserDragDrop = true;
       /////////////////表格事件/////////////
       this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
