@@ -443,6 +443,8 @@ export default {
           let submitData = sheet.getDataSource();
           submitData.forEach((m) => {
             m["isChecked"] = true;
+            m["ProcessPlanID"] =  m["ProcessPlanID"] ==null ? -1 : m["ProcessPlanID"] ;
+            m["ProcessPartID"] = m["ProcessPartID"] ==null ? -1 : m["ProcessPartID"] ;
           });
           if (submitData.length >= 0) {
             this.adminLoading = true;
