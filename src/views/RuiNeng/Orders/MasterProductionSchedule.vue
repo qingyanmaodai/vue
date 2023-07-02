@@ -979,7 +979,7 @@ export default {
             }
           });
         }
-        else if (x.ControlType === "el-selcet") {
+        else if (x.ControlType === "el-select") {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
               let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
