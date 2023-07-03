@@ -747,7 +747,6 @@ export default {
               _this.colDialogVisible = true;
               _this.dialogSearchForm.OrderID =
                 _this.tableData[_this.tagRemark][args.row].OrderID;
-              _this.dialogSearchForm.OweQty = 0;
             }
           });
         }
