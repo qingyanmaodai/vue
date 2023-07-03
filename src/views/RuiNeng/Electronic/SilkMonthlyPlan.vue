@@ -121,7 +121,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            SProcessGroupName: "SMT",
+            SProcessGroupName: "激光",
           },
           forms: [],
         },
