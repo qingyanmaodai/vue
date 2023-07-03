@@ -1236,42 +1236,25 @@ export default {
       let currentProp = this.tableColumns[this.labelStatus2][colIndex].prop
       let propList = []
       propList = this.tableColumns[this.labelStatus2].map(x => x.prop2 ? x.prop : null).filter(x => x !== null)
-      let allVal = 0
+      // let allVal = 0
       let { PlanQty } = currentRow
-      propList.map((prop) => {
-        if (currentRow[prop]) {
-          allVal += parseInt(currentRow[prop])
-        }
-      })
-      console.log(PlanQty, 'PlanQty', allVal);
+      // propList.map((prop) => {
+      //   if (currentRow[prop]) {
+      //     allVal += parseInt(currentRow[prop])
+      //   }
+      // })
+      console.log(Number.isFinite(val), val, 'PlanQty');
 
-      if (val < 0 || allVal > PlanQty) {
+      if (!Number.isFinite(Number(val)) || Number.isFinite(Number(val)) < 0) {
         sheet.setValue(rowIndex, colIndex, oldval);
-        this.$message.error("输入的值是负数或者总月和大于未完成数");
+        this.$message.error("输入的值是负数或者不是数字类型");
         return
       }
+      oldval = oldval ? oldval : 0 //旧数据如果不存在把null变成0
       let changeIndex = propList.findIndex((item) => currentProp === item)
       let changeVal = parseInt(val) - oldval
       currentRow[propList[changeIndex + 1]] = (currentRow[propList[changeIndex + 1]] - changeVal) <= 0 ? 0 : parseInt(currentRow[propList[changeIndex + 1]]) - changeVal
     },
-    // bindComboBoxToCell(sheet, row, col, dataSourceName) {
-    //   // 获取要绑定下拉菜单的单元格对象
-    //   let cell = sheet.getCell(row, col);
-
-    //   // 创建下拉菜单单元格类型，并设置其选项数据
-    //   let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-    //   comboBox.editorValueType(
-    //     GC.Spread.Sheets.CellTypes.EditorValueType.value
-    //   );
-    //   comboBox.editable(true);
-    //   // 获取下拉菜单的选项数据
-
-    //   comboBox.items(dataSourceName);
-    //   comboBox.itemHeight(24);
-
-    //   // 将下拉菜单单元格类型绑定到指定的单元格中
-    //   cell.cellType(comboBox);
-    // },
     // 刷新页面
     refrshPage() {
       this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
