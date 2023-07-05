@@ -702,6 +702,7 @@ export default {
       this.formSearchs[0].datas["CloseStatus"] = "";
       this.formSearchs[0].datas["RemainreceiveQty"] = "";
       this.formSearchs[0].datas["IsOverTime"] = "";
+      this.formSearchs[0].datas["IsNotReturn"] = "";
       if (this.labelStatus1 === 0) {
         this.formSearchs[0].datas["CloseStatus"] = "未结案"; //未结案
       } else if (this.labelStatus1 === 1) {
@@ -711,10 +712,11 @@ export default {
         this.formSearchs[0].datas["CloseStatus"] = "未结案"; //复期不满足
         this.formSearchs[0].datas["ReplyStatus"] = x.value;
         this.formSearchs[0].datas["IsOverTime"] = 1;
-      } else if (this.labelStatus1 === 3) {
-        this.formSearchs[0].datas["CloseStatus"] = "未结案"; //逾期未回
+      } else if (this.labelStatus1 === 3) { //逾期未回
+        this.formSearchs[0].datas["CloseStatus"] = "未结案"; 
         this.formSearchs[0].datas["ReplyStatus"] = x.value;
         this.formSearchs[0].datas["RemainreceiveQty"] = 0;
+        this.formSearchs[0].datas["IsNotReturn"] = 1;
       } else if (this.labelStatus1 === 4) {
         this.formSearchs[0].datas["CloseStatus"] = x.value; //已结案
       }
