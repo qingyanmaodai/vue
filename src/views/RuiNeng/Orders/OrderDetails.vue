@@ -470,6 +470,9 @@ export default {
             if (row["ISOutStock"] === "出库异常" && key === "OutDate") {
               cell.backColor("#ff0000");
             }
+            if (row["ISCheckWarm"] === 1 && key === "CheckDate") {
+              cell.backColor("#ffff00");
+            }
           });
         });
         // 列筛选

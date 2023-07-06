@@ -109,7 +109,7 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {ProcessName:'SMT'},
+          datas: {ProcessName:'激光'},
           forms: [],
         },
         {
