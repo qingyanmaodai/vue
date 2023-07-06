@@ -726,7 +726,7 @@ export default {
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if (this.labelStatus1 === 3 && this.labelStatus1 === 5) {
+        if (this.labelStatus1 === 3 || this.labelStatus1 === 5) {
           this.setData(remarkTb);
         }
       } else {
@@ -1222,7 +1222,9 @@ export default {
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
-      this.spread[remarkTb].refresh(); //重新定位宽高度
+      setTimeout(() => {
+        this.spread[remarkTb].refresh(); //重新定位宽高度
+      }, 0)
 
     },
     // 自动计算数量

@@ -18,7 +18,7 @@
             </div>
           </div>
           <div class="admin_content" style="flex-grow: 1;overflow: hidden;">
-            <ComVxeTable ref="tableRef" :rowKey="'RowNumber'" height="100%" :isToolbar="false" :hasSelect="true"
+            <ComVxeTable ref="tableRef0" :rowKey="'RowNumber'" height="100%" :isToolbar="false" :hasSelect="true"
               :isEdit="true" :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]"
               :remark="0" :cellStyle="cellStyle0" :sysID="sysID[0].ID" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
               :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
@@ -55,7 +55,7 @@
           </div>
           <div class="admin_content" style="flex-grow: 1;overflow: hidden;">
             <ComVxeTable :rowKey="'RowNumber'" :isToolbar="false" height="100%" :isEdit="true" :tableData="tableData[1]"
-              :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]" :remark="1" :hasSelect="true"
+              ref="tableRef1" :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]" :remark="1" :hasSelect="true"
               :cellStyle="cellStyle" :sysID="sysID[1].ID" :checCheckboxkMethod="checCheckboxkMethod" :isClear="isClear[1]"
               @pageChange="pageChange" @pageSize="pageSize" :pagination="tablePagination[1]" @sortChange="sortChange"
               @selectfun="selectFun" :keepSource="true" />
@@ -319,7 +319,7 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       // console.log(this.tableData[0]);
-      const $table = this.$refs.tableRef.$refs.vxeTable;
+      const $table = this.$refs[`tableRef${remarkTb}`].$refs.vxeTable;
       // 获取修改记录
       let updateRecords = [];
       this.adminLoading = true;
