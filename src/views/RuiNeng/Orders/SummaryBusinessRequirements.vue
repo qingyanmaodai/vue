@@ -455,32 +455,32 @@ export default {
       const { result, data, count, msg } = res.data;
       this.$set(this.tableColumns, remarkTb, [
         {
-          label: "类别",
+          label: "品类",
           prop: "ProductType",
-          width: 60,
+          width: 30,
         },
         {
-          label: "产品型号",
+          label: "内部型号",
           prop: "Model",
           width: 150,
         },
         {
-          label: "订单总量",
+          label: "数量",
           prop: "Qty",
           width: 80,
         },
         {
-          label: "已完成",
+          label: "汇报数",
           prop: "ReportQty",
           width: 80,
         },
         {
-          label: "已出货",
+          label: "出库数",
           prop: "OutStockQty",
           width: 80,
         },
         {
-          label: "可出货",
+          label: "库存数",
           prop: "OutStockQtyDiff",
           width: 80,
         },
