@@ -5,114 +5,178 @@
       <div class="firstNode">
         <div class="leftCard">
           <div class="headCard">
-            <div class="box blue">
-              <div class="icon">
-                <img :src="headCard[0]['icon']" />
-              </div>
+            <div class="box">
               <div class="textBox">
-                <div class="statusNum">
-                  {{ tableData[0][0]["S1"] }}
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]["title"] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box green">
-              <div class="icon">
-                <img :src="headCard[1]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">
-                  {{ tableData[0][0]["S2"] }}
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
                 </div>
                 <div class="textHead">
                   <div class="title">{{ headCard[1]["title"] }}</div>
                 </div>
               </div>
             </div>
-            <div class="box purple">
-              <div class="icon">
-                <img :src="headCard[2]['icon']" />
-              </div>
+            <div class="box">
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S3"] }}</div>
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
+                </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[2]["title"] }}</div>
+                  <div class="title">{{ headCard[1]["title"] }}</div>
                 </div>
               </div>
             </div>
-            <div class="box red">
-              <div class="icon">
-                <img :src="headCard[3]['icon']" />
-              </div>
+            <div class="box">
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S4"] }}</div>
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
+                </div>
                 <div class="textHead">
-                  <div class="title">{{ headCard[3]["title"] }}</div>
+                  <div class="title">{{ headCard[1]["title"] }}</div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard1">
-              <div class="echartHead">
-                <div class="echartTitle">近15日组装计划达成</div>
+            <div class="box">
+              <div class="textBox">
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
+                </div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[1]["title"] }}</div>
+                </div>
               </div>
-              <div class="echartBody" ref="chart1"></div>
             </div>
-            <div class="itemCard2">
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">今日计划任务分布</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
+            <div class="box">
+              <div class="textBox">
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
                 </div>
-                <div class="echartBody" ref="chart2"></div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[1]["title"] }}</div>
+                </div>
               </div>
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">T+3日欠料分布</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
+            </div>
+            <div class="box">
+              <div class="textBox">
+                <div class="headNumber">
+                  <div class="leftContent">
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <div class="changeNum">
+                      {{ headCard[0]["changeNum"] }}
+                    </div>
+                  </div>
+                  <div class="statusNum">
+                    {{ tableData[0][0]["S1"] }}
+                  </div>
+                  <div class="rightContent">
+                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                    <img v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
+                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      ">
+                      {{ headCard[1]["changeNum"] }}
+                    </div>
+                  </div>
                 </div>
-                <div class="echartBody" ref="chart3"></div>
+                <div class="textHead">
+                  <div class="title">{{ headCard[1]["title"] }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -120,29 +184,16 @@
             <div class="itemCard">
               <div class="echartHead">
                 <div class="echartTitle">业务要货汇总</div>
+                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                  <el-tab-pane label="日报表" name="0"></el-tab-pane>
+                  <el-tab-pane label="月报表" name="1"></el-tab-pane>
+                </el-tabs>
               </div>
               <div class="echartBody">
-                <ComReportTable
-                  :isToolbar="false"
-                  :showFooter="true"
-                  :isShowFooter="false"
-                  :isFooterRemark="false"
-                  :includeFields="['Qty','ReportQty','OutStockQty','StockQtyDiff']"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="6"
-                  :IsIndex="false"
-                  :height="'100%'"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[6]['ID']"
-                  :table-data="tableData[6]"
-                  :table-header="tableColumns[6]"
-                  :table-loading="tableLoading[6]"
-                  :pagination="tablePagination[6]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                >
+                <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false"
+                  :remark="6" :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[6]['ID']"
+                  :table-data="tableData[6]" :table-header="tableColumns[6]" :table-loading="tableLoading[6]"
+                  :pagination="tablePagination[6]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
                 </ComReportTable>
                 <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
                   <ul class="item">
@@ -154,210 +205,9 @@
                 </vue-seamless-scroll> -->
               </div>
             </div>
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">T+3日欠料追踪</div>
-              </div>
-              <div class="echartBody">
-                <ComReportTable2
-                  :isToolbar="false"
-                  :showFooter="false"
-                  :isShowFooter="false"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="7"
-                  :IsIndex="false"
-                  :height="'100%'"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[7]['ID']"
-                  :table-data="tableData[7]"
-                  :table-header="tableColumns[7]"
-                  :table-loading="tableLoading[7]"
-                  :pagination="tablePagination[7]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                  :cellStyle="cellStyle7"
-                >
-                </ComReportTable2>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="rightCard">
-          <div class="firstCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">待办事项清单</div>
-              </div>
-              <div class="echartBody">
-                <div class="xnode">
-                  <div class="triangle">产品缺失工艺</div>
-                  <div></div>
-                  <div>{{ tableData[8][0]["C1"] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">工艺缺失</div>
-                  <div></div>
-                  <div>{{ tableData[9][0]["C1"] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">产能缺失</div>
-                  <div></div>
-                  <div>{{ tableData[10][0]["C1"] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">排班未配置</div>
-                  <div></div>
-                  <div>{{ tableData[11][0]["C1"] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">库存预警</div>
-                  <div></div>
-                  <div>{{ tableData[12][0]["C1"] }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">昨日计划达成对比</div>
-                <el-button-group>
-                  <el-button
-                    :class="{
-                      select: selected1Index === 0,
-                    }"
-                    size="small"
-                    @click="handleConsumeBtnClick(0)"
-                  >
-                    预计消耗
-                  </el-button>
-                  <el-button
-                    :class="{
-                      select: selected1Index === 1,
-                    }"
-                    size="small"
-                    @click="handleConsumeBtnClick(1)"
-                  >
-                    预计超额
-                  </el-button>
-                </el-button-group>
-              </div>
-              <div class="echartBody" ref="chart4"></div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">今日生产情况</div>
-              </div>
-              <div class="echartBody" ref="chart5"></div>
-            </div>
           </div>
         </div>
       </div>
-      <!-- <div class="listCard">
-        <div class="container" v-loading="adminLoading">
-          <div class="admin_head" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :btnForm="btnForm"
-              @btnClick="btnClick"
-            />
-          </div>
-          <div>
-            <div class="admin_content">
-              <div class="ant-table-title">
-                <el-row>
-                  <el-col :span="4"
-                    ><span class="title">{{ "表格title" }}</span></el-col
-                  >
-                  <el-col :span="20" class="flex_flex_end">
-                    <el-divider direction="vertical"></el-divider>
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="刷新"
-                      placement="bottom"
-                    >
-                      <span class="right_icon">
-                        <span
-                          @click="refrshPage"
-                          role="img"
-                          aria-label="redo"
-                          class="anticon anticon-redo icon_size"
-                          ><svg
-                            class=""
-                            data-icon="redo"
-                            width="1em"
-                            height="1em"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            viewBox="64 64 896 896"
-                            focusable="false"
-                          >
-                            <path
-                              d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
-                            ></path></svg
-                        ></span>
-                      </span>
-                    </el-tooltip>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-tooltip
-                      effect="dark"
-                      content="列设置"
-                      placement="bottom"
-                    >
-                      <span class="right_icon">
-                        <span
-                          role="img"
-                          aria-label="setting"
-                          class="anticon anticon-setting icon_size"
-                          ><svg
-                            class=""
-                            data-icon="setting"
-                            width="1em"
-                            height="1em"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            viewBox="64 64 896 896"
-                            focusable="false"
-                          >
-                            <path
-                              d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.9-9.4-159 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00159 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM788.3 465.9c2.5 15.1 3.8 30.6 3.8 46.1s-1.3 31-3.8 46.1l-6.6 40.1 74.7 63.9a370.03 370.03 0 01-42.6 73.6L721 702.8l-31.4 25.8c-23.9 19.6-50.5 35-79.3 45.8l-38.1 14.3-17.9 97a377.5 377.5 0 01-85 0l-17.9-97.2-37.8-14.5c-28.5-10.8-55-26.2-78.7-45.7l-31.4-25.9-93.4 33.2c-17-22.9-31.2-47.6-42.6-73.6l75.5-64.5-6.5-40c-2.4-14.9-3.7-30.3-3.7-45.5 0-15.3 1.2-30.6 3.7-45.5l6.5-40-75.5-64.5c11.3-26.1 25.6-50.7 42.6-73.6l93.4 33.2 31.4-25.9c23.7-19.5 50.2-34.9 78.7-45.7l37.9-14.3 17.9-97.2c28.1-3.2 56.8-3.2 85 0l17.9 97 38.1 14.3c28.7 10.8 55.4 26.2 79.3 45.8l31.4 25.8 92.8-32.9c17 22.9 31.2 47.6 42.6 73.6L781.8 426l6.5 39.9zM512 326c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm79.2 255.2A111.6 111.6 0 01512 614c-29.9 0-58-11.7-79.2-32.8A111.6 111.6 0 01400 502c0-29.9 11.7-58 32.8-79.2C454 401.6 482.1 390 512 390c29.9 0 58 11.6 79.2 32.8A111.6 111.6 0 01624 502c0 29.9-11.7 58-32.8 79.2z"
-                            ></path></svg
-                        ></span>
-                      </span>
-                    </el-tooltip>
-                  </el-col>
-                </el-row>
-              </div>
-              <ComVxeTable
-                :rowKey="'RowNumber'"
-                :height="height"
-                :tableData="tableData[0]"
-                :tableHeader="tableColumns[0]"
-                :tableLoading="tableLoading[0]"
-                :remark="0"
-                :sysID="ID"
-                :isEdit="isEdit"
-                :isClear="isClear[0]"
-                :hasSelect="isSelect"
-                :pagination="tablePagination[0]"
-                @selectfun="selectFun"
-                @handleRowClick="handleRowClick"
-                @pageChange="pageChange"
-                @pageSize="pageSize"
-                @sortChange="sortChange"
-              />
-            </div>
-          </div>
-        </div></div
-    > -->
     </el-main>
   </el-container>
 </template>
@@ -378,7 +228,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "index2",
+  name: "SluggishMaterialAnalysis",
   components: {
     ComSearch,
     ComVxeTable,
@@ -389,29 +239,36 @@ export default {
     return {
       headCard: [
         {
-          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASfSURBVHgB5Zo7TBtBEIbH5pWEhxJFwqmhp0oTevogpYyUNj0SXRSlRaJMlD60kahDlQZ6+tCbKAEJCA9jnPl9M2ZZn+3dubWNk08azpzv1vvvzL63RIlpNBolvkw4Ns5WZhvzHq2L3bBdsdVKpdIVJaZECRBRU2zTlImypttgu2S7YLHnlIBCAkXYDGXCkhSWA7wLj56w2DoZMWWqz8LyOGX7YxEanTkWh1B8QoMR5gJxJ7GhG5xJ8doc2yMaLmeUCW2EPBwkkMWhBYTXJuh+AG/+CgnZngJF3FNqb+aHTZDIrgLvsTilp8iOAkdAnNJVZDnvpjQooyAONNsHyXMb5Q4vzdFoiFPQ+M3mfTHu3+CSeEjhXQE6+lUxfN5n25JrLEtsr+ValTQ+U9YtBOWF837JoXrp3rzj1sh6B0EbbIs5322y7VA4L9je59z/wbZO4SJRD3+6faQfovBcUXFgieJY7nB/UX5nmsIY859teVC8N987jWYCn9gqzj2U9B5lIYbwWpfrtGS+4j1flXcO5HNFhOC6Je8seOmHehLTr0P1oivwMV8eBiSwxrbS4ceRQQyMF+m2PvUCdQ3hvEvZAL4qVwh2RW6JhYChHPJxRyC8FxKeX+k2DPyShUAUQGyIAnjzA2UCgS8SGX4VmFbLi806KC1naLfgxjjCUsXBqwhdizgAIR/pNjogaNf5fobCga5J/QBCQlNxuwCEYUWu8Fy3xuBM3q12eWZG0nnppKscUBzNAlGBk+Hv3akHyKz2X71An7ZOYfXoLWUedQvjC8UxjtHNGP+BuJg5Hn4UpYnlhC3JTEj47Ml7aICWA55/zvaOssLfZvtOcaB9ucRIxjLH2xVDOFWoP6DQEKqbZGccITpFNiBshfoL0g/t5POYgEDr2soqDYYivzORtyAbirU7iKVIlJStAlE/FmgwoCpYw3SsTDYGJU4xN2RWgYPmGRmxCrSUaOicLikQaFn3r0Y+jwGBjisthXNKNuoQGLRC7BEj0J3moEUMGdb5WAVeQ6BlTw4CQ0LOF7dG8ejQ0MINBF6TjV5rLinEAcsClnIFgTWysdvjuxTiQMzilc+1etBSD/epc+lixqBj1SLidPnQwg22xJvjUJ4yYakwZk6oYLi2Qf3jDcW32Mo5CzzWftDaR+lCbz9AulZxoLkArALRklrCVDNSpJ7ksUPFCq6uO8FNgfwPVqGsfQ3ApHSb0rBDxSa5oLV87y4bQuw8Fdt7Ryeu+xSxoJpg3SVFQR3qdpq/N4Fp0CwVQ1fDQudxEKbdSpE6p7QWfYEvMIUXFQhFK+su3cOzEIQMoIHCCOUbpRuIt22GtglhkQ8oO3Awihz7x0zapkv8wAUNaWpTkNO8MzSd5oMIIesYdRggJHN7gVyB0m38JttccdBovcvtx//fYyTKP30QSLmHIjHFO0pylEuRPlKPUA4TNCanSQ/juchmKUY7g/YmBB35x0R6YT0QC3EqtN9AGLx2Fuo1l6JHmiEUYYsdqtQeLSRMSXZqV0IXw7ypAulCCOamGEldFRGm9OVYsuwaY2N1Un4D3vWPjelaUE0+41pLIcrlL1wxaqCRnNtbAAAAAElFTkSuQmCC",
-          title: "业务要货总量",
+          icon: "data:image/png;base64,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",
+          title: "制造一部当日达成率",
           statusNum: "3,841",
           changeNum: "+4500",
           iconStatus: true,
         },
         {
-          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPQSURBVHgB5Zo9bxNBEIZfHzYhOAkgJNKHPj+Anp6IFokSlBZBT4tEiUQbQYmUlEj08C/og8SHFDvEdhwzr2832du7OHe7c/7ikcZnTXzRvTezs58NKDMajRpyaTnWFEvErnk/HRo7E+uLDRqNRh/KNKCAEbUi1kYqKvT/jsR6Yici9i8UiBJohK0hFabyshwYXUb0SMQOEUjQQ9UsrIiO2HGI0MoPJ+KYincwHWEuFHdUNXVLP6SJ2obYTcyWLlKhozI/LiVQxLECMmotzAeM5s8yKXulQCPuLvJlftaUEjlR4ByLs1wp8lKBCyDOMlFkUuQ0BWURxJFxfTDPnCO55KYNLIY4C4vfetEfcgLlTaxi9l1BCG3TR2fICDTtbh2Lyy0/Vf0IMnKLlJo+fPa262jaLyZ6awhjR+yR2CZ0OBT7IvYR1WGqdu1I5zyc4rwtl1VU54mxOngvdoDqcCjHAXomRa8jjAeojx2E0bZtcZyipnKGtj03578hfeuhsIk8E9tGHAwcA9azbTAkNYv4gLT9hMJ72e7eIB6+rJ5N0dD09OkinpgX5NJkmibyQXHTnrxOAwavNf7A8tKkwBXoodEPavWlpMUio5meL8TeIhxW5OfQYyxQc2jGt69RAbVIilacl4lrCZacJnR5hbQfYyf7zvO56Vvk20Xaj6qmubbAQ8d8X9Hv2p6v6/miaUhHfw9x7XAPF6WdD9gx332fXeqv4qPopwhnyAiWWiEuSRv5CMT4YjllkdHck2MUbKpp+GI5YwRPocdLse9I0+yT52PK7k3wPTZX1xdLnwIH0IPCNpFd+rC+zSt8W7ioolqcssgwTVloQodsbpHRJqbInMmyxWEiH9wj14zivMCt8PN+kKmhMellu7LdxHYJH1N1a4IvhoxAVlJ2F7Ezi9e46NQ/ez63eBT5ds1Vo8gM7U7wWCDTVNoi317sqjYj5I9QrM9tp/eRLzLbzt9i6dkv7rpoaLGps8gwbXdRnR92O+18NmGKTQfV2Ud9fEV1MsdO/MH2MdJGXiWKB+aeh9Bdut9H9VVtCsucwsgJkVS9gfTAwSLyxz9mkpvwyg9OoDsenBadojM0l83o2RY1x6h1w9QsrB+FAk3B+WVunHfsIYTCad//e4zEstQHgSxzKJKTg98qR7ksZqTjrpfMChaTjuphPBezWcox67SjSUGMWq/KTaEHYinOCq0bCmPUumWj5hJ7pNmezOAOlXZEo4RZ1HaWTOpymLcS8X8phHNTjqT6McIstezsml1jbqza3WNG1x/Yc6REAQPzndeBhiiXf9lhRWO5QrhCAAAAAElFTkSuQmCC",
-          title: "已汇报数量",
+          icon: "data:image/png;base64,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",
+          title: "制造二部当日达成率",
           statusNum: "2,840",
           changeNum: "-4500",
           iconStatus: false,
         },
         {
-          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQOSURBVHgB5Zq9TxtBEMWfDYYQA0oUCVKHOqQmPT30SGnTI+WPiJSe1KGHPj2pQ2roIcqHhJ2AjXHm3e2i5Xz23c7u2Tj8pPHXnU/3bmZnd2e3hsj0+/2avDUcmxWri81kTu0ZuxHriHVrtVoHkakhAkbUvFgTqSjtdftiV2KXIvYvIhAk0AhbRCosysNyoHfp0QsR24MS1U1VLCyPltgfjVDvmxNxDMWnGI8wF4q78A3d0jdpvLYs9hiTpY1UaL/MyaUEijhmQHqtgfsBvfmjTMgWCjTinmEwzU+aUiJHCrzH4iyFIocKnAJxlpEi63k/moQyDeJIkh/MPQ9QH/KnZUyHOAuT31LegQGB8iQWMPmuQEPT9NF3uOPWyO2Oo5w1sQ2xdbHn5jfCvuzE2LHYF8SB7fC720dmBdLNiwiDIraNNUv+50zss7EzhMFBQMt+uRVovLeCMChqB+WFZaG4faRCtXD6dW696Ap8Im8L0PNWbAtxOBTbg55bL7pJZg56dhFPHMy1dqGnabuNRKDJnNrEQs9tIj6b5toaqGvOfiDa0ORNxPRcli3or58kSytQE56rSBNK1WiT1izDtC4vFKeZvNJ7q6geemIb/tB5jeQFOmK2O3YL7RHHGaYqL1LgPPx5jXjeY7/3QezdiHPoxTX4k3hQE57riMO+MbJRcG7R8TwaeQXZMrxAOK64HRQnrFfwp64VqAkXF19xRDOMnKlDR5kGPyxpaMQR1SRAK7AICngjdprzu0acGq3AdsHxI6TVaGZGKzJUXAsKKFBT9y+as71HmoisSHYDoZ47hT89CixVIc5wXHCc7cUVaed3IWF5An+uKVCzJndU4hxXJAltc9/gzw0XJ6/hD8OF7bAom1qRrLmEDO3YJMo81CwderALfxh2ByXPpcjQcau2hJGEKD2oaYcsKxRl0xjYgpQvN1wSr8sLizRaL35C9TD7aiptXAq/7Qe1njg0VhVsBtrwvCOQmVQTpmQPYWW+YfCaH6GjZ1eCE4EmTFUjBQM78piePDDX1HJlP7h1UYpdQdjaO7Ml+zrtZJhNhe069GGd2+W0bOmeKX0JYVDcJvxqNhR2YCw0M+eX7kkkL7qwtPES6fyR5i6+MDN+RToIOEGcLmdgMXRAiIh8hHTDwTTyO7vNZGC6JCdcYjwdeGxaeXtohs0HGcOaMeqkYEjm9gK5Ak238RO6ueK4se0utx9/uNtILP/1RiDLPRTJycGvKFu5LKaPtFsoJwmTSSvqZjwXs1jK0c64vUlB9NqVz5+0G2IpzgqtGgqj19plveYSuqWZQhm2XKGK7dEgYZZou3ZN6HKYNx9wXQrh3JQjqU6IMEsl25LNqjEXVu3qMb07mznN1oK65jPfuzFEufwD3aFHrIhsWHoAAAAASUVORK5CYII=",
-          title: "已出库数量",
+          icon: "data:image/png;base64,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",
+          title: "制造三部当日达成率",
           statusNum: "45.21%",
           changeNum: "+4500",
           iconStatus: true,
         },
         {
-          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARrSURBVHgB5Zo9UBNBFMf/CQmIBPyaIdbY02tPD31mbBlbHUtnoHSkdYZae+zptccaa3FGZYYETEKI+8/tJsdlL7f3dvOlv5nHHbnL5f739t57+1FAYLrdbkFtyjErKSsqW0ic2tF2o6ylrF0oFFoITAEB0KKWlK0gEiW9bldZU9kfJfYKAfASqIVVEAkL8rBi0Lv06IUS24EQ0U2NWZiNurJLidDcN6fEsSk+wGSExaG4i7xN1/kmtdfWlN3FdGkgEtp1OdlJoBLHCEivlTEb0Js/XZpspkAt7hGGw/y0cRI5UuAMizNkikwVOAfiDCNFFm0f6oAyD+JILz7oex6imPKlNcyHOAOD36rtwJBA9SSWMf1UIGFF5+hb3BKo37tVzC/3kk21lDiBngvdNKvKNvW2qj87U3aqt98QDt47y8e6+aAvUHuvgjDwR3a0rWScS5HH2s4Q4LeVloapdPruVB/eV5tl+FODmzAbH7X5wlKu58W4wHX4NU82vzfKnsAPevE1/LzJTvQPerEXZHTk9BX3Fv7i4teqQg51LZod4tM0Q9zQOK7ZiydG4CLkhBZnME1eSokpY0H9oThpYmdAeTbiON+jr4geYCXl+CGipm07/lBvT5AfxpcmPSjt4/EJ10YcZxR7oWxP2UHKOfsYpIg0tiGLyKREgUuQsZVxvKGN2CIi0wGTfTXjWvTsDmSUKVA6tpIl0Hj4qbLdxLEjDPKdyzu8DRllVjKS9LABt8Bia8L02qHe33W8TkWflzc3Fm0jzi48hgze4L7ep/g8ntlEfhaKkLGB/PB9NBUKm20t5/dFqUgqUPJjHxCJ43d38399sgLzwoDyCVG4H1dhYIUCJeP+eV72LxhEzFeQi5MU3x0KdBohFv4Yz3un903KkCLpGF9ToGROzqV0Mt0eBhcm6mRQYfVyCPeH9R35uWEevEZ+eFO88VEl1AEGQSUp7jMG5RvPySqqpUMbLXqwDRlHI47xnaOXTbcn+SDihbVLnXkMGb0mSg9K3kNGxQZG3xA9YwsqTNovETVdl5QhEXjDKfFeHaq6TBzFlvQJa7AnbDYn9iYk1UcS6TjNlRJ4bgTeQTQ9JuE9ZJWNC3z3nkPGOSdLTaJnJJU0U7KHMMN9SUwUltAxM8E9geofjkLVISPEKFjoazbNTrxUu4TciyFFnga4Vt9Ztzq76l1k+Padm0gLPFkwIsc7wlL6g74kKZAeXYf/CgozDLGF7NrTCDtCetpxZWgydEiIZ0S1wREzioyPApxpO0HYd/c8uczE6iklkhOg0pGsaVFX4i6SH6b1B9mGJTXqtGCTtGYBq0CdNn5B1lecNOa9s2aA/3cZieGfXghkmEGR7OL9DrKUy6BzpFlCOU0YTOpBF+PF0ZOlrHYm7U0Koteaeb4kXRBLcUbouKEweq3h6rU4vkuazcoMzlCF9qiXMEOwVbu66bLMW4LfonT2TVmTtnyEGcayLFnPGnNidVH/Br2bXHRkxoLaep/bdghRcf4CDSBerRoxXgcAAAAASUVORK5CYII=",
-          title: "现有库存数量",
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVZSURBVHgB1ZpLTxtXFMfPveNHXJGIQjeEthqrNAgpFKNk0XYTk2UTKY3aLqsmnwDWlSrgE5R8grSbblopSH0si7NoV41qlEUlSGW3scIGWxaggD2Pk3MuDDHgx/j6DpifZBjNjEf37/O45547AgxTKOCge8HNxARO+QgZ/ggBg4BgH7lRQJH+FOl81ZKYc1Gsvj8Sz4FhBBiARXkJLwsSZwViBoEE6Q2miiBylsDl9EjiezBATwKVtRL1OSnErK6oVghAsq7Iybq3mE6niqCJlsAohTUDERdjdf87HaFdC3z2f+1TERMPT0NYI2xR+kEXunXd0AJVnMWdBZAwC2cIDXhpqxZfnE6Lasj7O1PY2LU933pEd2egD1DWrPkzYVy2o0AW56O1Qi5pQx8RVmRbgf0qLiCMyJYC+11cQCeRstlJTijnQRxDhYHtJqxHf9OYm11vKpCz5XkQF0ClYOZS0plveu34iWel+j2S/RDOIZ6Ld8ffTS43njsi8LzEXSs4HrdqienGOTLWeIPry3tkbhsMs/bCg5WnHpTKPpS3UZ17e1jAB7YFH43HYPiikZpfxeOlCy4XIovBucMnq8kcrQIY5pe/HPjtidvy+hCJuzkZUx8j0PJrux5PB1Y8TDI+WPNgmN+fum3FMRWy6E9/OrD+wgcj0NrzwIqK11kUIQsGeVlDJTAsvz5xwBTo41wwbSiBnDlNJ5Z1irvKQbyFYY0sWCqHv78tZMXBlHeDD5VAIcUdMMzaRvcux8nIFJ7vz/H/AxfFLBimtNm9NcrbhuKQoV4Qu6lc33Cyp714bcVuDcxBbjoQ28tI7n5BBJQq3VuwsmMoBg+QljUlfV9kwTCrBZes0f1gjSYahtxUojDvnqmkBF2GBsAYPhXhNBK0wTBXLkuYmbSgW25dj8MbSTNlG0NPGpQnOs6G+OLjBFky/GDfeUvCrWuGyrXX2Pq+FIKZq+GtOHPVuDhFpAJvk8t9ci3e8b7Pydofjnfv0mGIVCBz+3r75RDH683JaMQxcn+XJ1qGBoTWNQMUKcmE6xDrwgvc9TZ16ep/vlp5RAS3+zEPEcHF87c/t6+/uCBYonvK21GIxGpMCsh7Bp/NbQmuSFYLXlvLHf0Owjc/7Kl45DbGFH1MtDEE7TWK9ee7WWFZK9AjPMgf/6iHFtUJFvtlNtGTUEuIrFBN3qRT6GVFwe7Frlgx7Gbcr/n6s6RedUO9mbHRxJsyTc0ZGlZPcVja9IyLY/iZlR3QQ2CO/6l50JJyCXqgrDuIEPCPp4UQqgG8P9HvWo/5BQDQZDe6NK8JFscOdoKVQHZTUqxtxVQyusl6+KJGsYUiFxweflvuxR7oWvHKZctYd/rocyWMDnf/XKfunexsM/9uOPOIuACa8FRR3vJV62GTGkiV7f3+aNCKOD6ZBz8Kl2t8nErSsmlYKquxMJ3sKWj8740mmws0MWWcLVh0aDN0omEz9IiDqykD8T6cV4RYmDi203sigsdGk8tU4vQ0bZwF6MPSWJN3aJqmKFmLsQ9HVoSbB4s7Tnyx2ZWmAtlVHeHdpcMi9D37cdfqxaC2aeof2jOMoyrEbehLTiaV43TMw/0rsrM4pmOZMDGSKpK7zkAfuSsi5MOIY0LVQSzSqsWn+yG7crbcqcdDiWO6LhXWaLNUSuDtbhtOl6rn4v3jr4l0QquA5LhM+PIrpIkVoqdK5dfSVj3xIOwrlI30VCGrBMQvL+zv79tglp6EBRhbArDrWhLvIKjtON1aloXkESXFmfW4F2EBkSzkChvODV9gBnyk3WPBYm04aeEiKCtRxWRBnvbx8tW92KoJUY28AhIzawm7Nj9QAAAAAElFTkSuQmCC",
+          title: "制造四部当日达成率",
+          statusNum: "34.24%",
+          changeNum: "+4500",
+          iconStatus: true,
+        },
+        {
+          icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQdSURBVHgB5Zs9b9NQFIbfexu+WlQsJCrE5AgQQgykCyvhFwADM2GFofyDJjNLWFiBFQa6dG76C9oObaW2ajyB1FbI/RRtY5tzbuzipGnj2E5jm0dK4m/57Tn33HvPPRWIGade19BoFJDLPYZtF+A4BQih0Sm97VKDzhl0zoSUNbpnQdy/X0PMCMSAEmVZRXrRCdplURrCwGIdp0bPmRL5/FfEQCSBSphtv6cXmwgt6iyEMFyxFRJrICShBPZVWCdsu0Iu/yWM0J4FOmtrL+iv+vlChPlhiwpR7tV1Awt0rVamzQkMlip2dipifNwMcnEggSROJ4v9UBExCTSt+SyIy3YV6IqboY+OJBFQ5LkCEyvOI4DIMwUmXpxHF5Gy00EVUNIgjuF3tKwfztxcx6jeUaCKlmkQ5yFEAaOjkx1PtR+gfq5EN3xGGmk0XooHD6b8h1oEpqbdnQW3x+3tcX8f2eqitl1KrTiG3310tGUgcmJBZT3briP9mDTSyXtWzJ0ctu1JROTIoAnA/n7g64du3UJubAwxo7lWrPDOPwuur9ejuOf+zAx+f/rU0z1yZAR36B4xPIyYObGiaoMqckZse3+WltArNln7qN6XVqFB057yRjPICPEcWcOy3vOPJ7CIrEGdP49upLO6WrzwyevFoOH69YJU2a8Bcri4iL4h5eMcdQ9FDJDt799xvLmJG69e9aPLIAs2c5YDg7uKg1oNv969w863b4gVykDIQQ/NtFIJI8Wi2mZr/nz7Fsc0YIgFMh5HUR0DJEejmZtkvdsfPigXtchdd6anERO6REK4pNM4mdph3CRGYL/4LwQayC6GVCs6WYWW57ibmEdWIeNJGs5kVyBQk7yyiqxCxuPB9nxG26FJ2e5ZSV8sLotuWuMvb8JbRUg47dDY2FC/YWjQ0Izv54/lPsM5OFD7kXAclQBWSSd3LaIeZuK7MTmJwxD5mCBcefQIY+UyQmCIu3fzvKHShuymJLJKAsvokWtPnsDa2kI/GKZnh6TmbfgTv6GtmDiOjvLi4UODN0/GoirYRGiLCaLsiWPaB9sfU95lGGS9liqMFoHKirb9BmmFYojfesyp6ZK4d4/DaxpdtUrvfqqGpvN8UMoKuWqaOn+Da2c6negoULnq4eFLpGOuyO3u2VmFQeeXkSwv67h8eQYDTkydQ1NcW7vz070QKLkiu4pjuuZk1APoQUiSu/IkPYA4JlDSST1IynEkI7pWsbsbSBzTeznlykoJQ0O83K3jYjFpcv6mvUykG+EKYrldXr362i2v7DccHbmE8mPQEko/0UqamwGIrVlE/BaNJMwjlqJ0xnVdXgovghcfw2GqAOI4VeztzUYR5hGbQD809Xqq/qWAxfLyXHMFS2+7jIvOTXfENK+ye6a5EIcoP38BijDaHz4AIv8AAAAASUVORK5CYII=",
+          title: "惠州基地当日达成率",
           statusNum: "34.24%",
           changeNum: "+4500",
           iconStatus: true,
@@ -425,7 +282,7 @@ export default {
       newTag: -1,
       btnForm: [],
       tableData: [
-        [{ S1: "", S2: "", S3: "", S4: "" }],
+        [{ S1: "89.2%", S2: "94.2%", S3: "85.3%", S4: "92.4%" }],
         [],
         [],
         [],
@@ -510,7 +367,7 @@ export default {
           datas: {
             fields: "DemandDate,LineName,ProductName,MaterialName,Code,OweQty",
             OweQty: 0,
-            sort: "DemandDate",
+            sort: "DemandDate desc",
           },
           forms: [],
         },
@@ -570,8 +427,7 @@ export default {
       chart: [],
       chartOptions: [],
       handleWindowResizeDebounced: null,
-      selected1Index: 0,
-      selected2Index: 0,
+      selectedIndex: 0,
     };
   },
   watch: {},
@@ -582,9 +438,9 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.$common.judgeBtn(this, this.btnForm);
     this.currentDate = this.$moment().format("YYYY-MM-DD");
-    this.getTableHeader();
+    // this.getTableHeader();
   },
-  activated() {},
+  activated() { },
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     // console.log(style, "style");
@@ -594,12 +450,14 @@ export default {
     // await this.getEchartsData4();
     //初始化图表;
     this.chart = [
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
+      null,
+      null,
+      null,
       this.$refs.chart4,
       this.$refs.chart5,
     ];
+    this.getEcharts();
+
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
@@ -880,99 +738,113 @@ export default {
           ],
         },
         {
-          grid: {
-            containLabel: true,
-            bottom: 0,
-            left: fontSize(10),
-            right: fontSize(10),
+          // title: {
+          //   text: "雷达图",
+          //   top: 10,
+          //   left: "center",
+          //   textStyle: {
+          //     fontSize: 18,
+          //     fontWeight: 400,
+          //   },
+          // },
+          backgroundColor: "#fff", // 背景色，默认无背景。
+          color: ["#ff5e5e"], // 调色盘颜色列表。
+          textStyle: {
+            // 全局字体样式
+            color: "#444444",
+            fontSize: fontSize(14),
           },
+          // legend: {
+          //   bottom: 0,
+          //   left: "center",
+          //   itemBorderRadius: 8,
+          //   data: [
+          //     "Chars Bosh",
+          //   ],
+          // },
           tooltip: {
-            trigger: "axis",
+            // 提示框组件
+            trigger: "item", // 触发类型 可选为：'axis' | 'item' | 'none'
             axisPointer: {
-              type: "shadow",
+              // 坐标轴指示器，坐标轴触发有效
+              type: "line", // 默认为直线，可选为：'line' | 'shadow'
+              shadowStyle: {
+                color: "rgba(204, 214, 235, 0.247059)",
+              },
             },
           },
-          legend: {
-            top: "0",
-            data: ["计划数", "完成数"],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
-          },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
-            data: this.tableData[5].map((item) => item["ProcessName"]),
-            axisLabel: {
-              interval: 0,
-              show: true,
-              textStyle: {
-                color: "#000",
+          radar: {
+            // shape: 'circle',
+            splitNumber: 4,
+            grid: {
+              left: fontSize(10),
+              right: fontSize(10),
+              bottom: fontSize(10),
+              containLabel: true,
+            },
+            splitArea: {
+              show: false,
+            },
+            splitLine: {
+              lineStyle: {
+                color: ["#eae9e9"],
               },
             },
             axisLine: {
               lineStyle: {
-                show: false,
-                color: "#F3F3F3",
-                width: 2,
+                color: "#eae9e9",
               },
             },
+            indicator: [
+              {
+                name: "欠料",
+                max: 100,
+              },
+              {
+                name: "人员不够",
+                max: 100,
+              },
+              {
+                name: "机械故障",
+                max: 100,
+              },
+              {
+                name: "模具异常",
+                max: 100,
+              },
+              {
+                name: "来料不良",
+                max: 100,
+              },
+            ],
           },
-          yAxis: [
-            {
-              name: "单位:万",
-              type: "value",
-              nameTextStyle: {
-                color: "#444444",
-              },
-              axisLabel: {
-                interval: 0,
-                show: true,
-                textStyle: {
-                  color: "#444444",
-                },
-              },
-              axisLine: {
-                show: false,
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
-              },
-              axisTick: {
-                show: false,
-              },
-              splitLine: {
-                lineStyle: {
-                  type: "dashed",
-                  color: "#E9E9E9",
-                },
-              },
-            },
-          ],
           series: [
             {
-              name: "计划数",
-              type: "bar",
-              silent: true,
-              barWidth: fontSize(14),
-              itemStyle: {
+              name: "雷达图",
+              type: "radar",
+              symbol: "none",
+              areaStyle: {
                 normal: {
-                  color: "#578FFB",
+                  opacity: 0.4,
                 },
               },
-              data: this.tableData[5].map((item) => item["S1"]),
-            },
-            {
-              name: "完成数",
-              type: "bar",
-              silent: true,
-              barWidth: fontSize(14),
               itemStyle: {
                 normal: {
-                  color: "#23CF9C",
+                  lineStyle: {
+                    width: 2,
+                  },
+                },
+                emphasis: {
+                  areaStyle: {
+                    opacity: 4,
+                  },
                 },
               },
-              data: this.tableData[5].map((item) => item["S2"]),
+              data: [
+                {
+                  value: [50, 46, 80, 30, 60],
+                },
+              ],
             },
           ],
         },
@@ -1116,7 +988,9 @@ export default {
         },
       ];
       this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
+        if (item) {
+          this.barData(item, this.chartOptions[index]);
+        }
       });
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
@@ -1127,6 +1001,9 @@ export default {
     },
     handleWindowResize() {
       this.getEcharts();
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
     },
     handleConsumeBtnClick(index) {
       if (
@@ -1268,7 +1145,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => {});
+        .catch((_) => { });
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -1382,11 +1259,11 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
-      if(remarkTb === 0 && res.data){
-        data[0]['S1'] = data[0]['S1'].toLocaleString()
-        data[0]['S2'] = data[0]['S2'].toLocaleString()
-        data[0]['S3'] = data[0]['S3'].toLocaleString()
-        data[0]['S4'] = data[0]['S4'].toLocaleString()
+      if (remarkTb === 0) {
+        data[0]["S1"] = data[0]["S1"].toLocaleString();
+        data[0]["S2"] = data[0]["S2"].toLocaleString();
+        data[0]["S3"] = data[0]["S3"].toLocaleString();
+        data[0]["S4"] = data[0]["S4"].toLocaleString();
       }
       if (remarkTb === 6) {
         this.tableColumns[6] = [
@@ -1571,8 +1448,9 @@ export default {
 * {
   box-sizing: border-box;
 }
-.el-container {
-}
+
+.el-container {}
+
 .el-main {
   padding: 16px;
   height: calc(100vh - 80px);
@@ -1582,21 +1460,25 @@ export default {
     display: flex;
     justify-content: space-between;
     height: 100%;
+
     .leftCard {
-      width: 66%;
+      width: 100%;
       margin-right: 10px;
       display: flex;
       flex-direction: column;
+
       .headCard {
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
+
         .box {
           display: flex;
           // width: calc(25% - 16px);
-          width: 25%;
-          height: 100px;
+          width: 500px;
+          height: 160px;
           // border: 1px solid #d5d6ff;
+          background: #ffffff;
           box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
           border-radius: 4px;
           margin-right: 10px;
@@ -1606,80 +1488,96 @@ export default {
             justify-content: center;
             align-items: center;
             width: 40%;
+
             img {
               width: 56px;
               height: 56px;
             }
           }
+
           .textBox {
-            width: 60%;
+            width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 16px 0px 22px 0px;
+            justify-content: center;
+            align-items: center;
+
             .textHead {
               display: flex;
               justify-content: space-between;
               align-items: center;
+
               .title {
                 font-weight: 400;
                 font-size: 12px;
-                color: #ffffff;
+                color: #7d7d7d;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
               }
-              .content {
+            }
+
+            .headNumber {
+              display: flex;
+              justify-content: flex-start;
+              // align-items: center;
+              height: 40px;
+              margin-bottom: 10px;
+
+              .statusNum {
+                // text-align: center;
+                margin: auto;
+                font-size: 30px;
+                font-weight: 400;
+                color: #000000;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .leftContent,
+              .rightContent {
                 display: flex;
                 align-items: center;
+
                 img {
-                  width: 22px;
-                  height: 22px;
-                  margin-right: 10px;
+                  width: 12px;
+                  height: 11px;
+                  margin-right: 2px;
                 }
+
                 .changeNum {
                   font-weight: 400;
                   font-size: 10px;
-                  color: #ff878a;
-                }
-                .loss {
                   color: #a4ffbd;
+
+                }
+
+                .loss {
+                  color: #ff878a;
+
                 }
               }
-            }
-            .statusNum {
-              // text-align: center;
-              font-size: 26px;
-              font-weight: 400;
-              color: #ffffff;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
+
+              .leftContent {
+                visibility: hidden;
+              }
             }
           }
         }
+
         .box:last-child {
           margin-right: 0px;
         }
-        .blue {
-          background: linear-gradient(276.93deg, #148bbe 2.4%, #26d57b 98.41%);
-        }
-        .green {
-          background: linear-gradient(97.22deg, #63a4f1 0%, #5f55d8 100%);
-        }
-        .purple {
-          background: linear-gradient(96.96deg, #9462fe 2.34%, #c4319b 100%);
-        }
-        .red {
-          background: linear-gradient(276.92deg, #e43167 2.93%, #fa68b7 100%);
-        }
       }
+
       .secondCard {
         width: 100%;
         height: 335px;
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
+
         .itemCard1 {
           height: 335px;
           width: 50%;
@@ -1689,11 +1587,13 @@ export default {
           flex-direction: column;
           margin-right: 10px;
         }
+
         .itemCard2 {
           width: 50%;
           height: 335px;
           display: flex;
           justify-content: space-between;
+
           .itemCard {
             height: 335px;
             border-radius: 4px;
@@ -1702,11 +1602,13 @@ export default {
             display: flex;
             flex-direction: column;
           }
+
           .itemCard:nth-child(1) {
             margin-right: 10px;
           }
         }
       }
+
       .thirdCard {
         flex-grow: 1;
         display: flex;
@@ -1720,8 +1622,8 @@ export default {
           background: #ffffff;
           display: flex;
           flex-direction: column;
-          margin-right: 10px;
-          width: 50%;
+          // margin-right: 10px;
+          width: 100%;
           overflow: hidden;
 
           .echartBody {
@@ -1729,84 +1631,118 @@ export default {
             overflow: auto;
             overflow: hidden;
           }
+
           .echartBody::-webkit-scrollbar {
             display: none;
           }
         }
-        .itemCard:nth-child(2) {
-          margin-right: 0px;
-          overflow: hidden;
-        }
+
+        // .itemCard:nth-child(2) {
+        //   margin-right: 0px;
+        //   overflow: hidden;
+        // }
       }
     }
+
     .rightCard {
       width: 34%;
       display: flex;
       flex-direction: column;
+
       .firstCard {
-        height: 30%;
+        height: 160px;
         margin-bottom: 10px;
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
+
+        .box {
           display: flex;
-          flex-direction: column;
+          // width: calc(25% - 16px);
           width: 100%;
-          .xnode {
-            width: 100%;
-            height: 20%;
-            padding: 0 20px;
+          height: 160px;
+          // border: 1px solid #d5d6ff;
+          background: #ffffff;
+          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
+          border-radius: 4px;
+          margin-right: 10px;
+
+          .icon {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            color: #444444;
-            font-size: 12px;
-            // .triangle
-          }
-          .xnode div:nth-child(1) {
-            padding-left: 20px;
-            width: 30%;
-            position: relative;
-          }
-          .xnode div:nth-child(1)::before {
-            content: ""; /* 伪元素的内容为空 */
-            position: absolute; /* 将伪元素设置为绝对定位 */
-            top: 50%;
-            left: 0; /* 将伪元素向左偏移 50% */
-            transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
-            display: inline-block; /* 将伪元素设置为行内块元素 */
-            width: 10px;
-            height: 10px;
-            background: #8598ff;
-            border-radius: 50%;
-          }
-          .xnode:nth-child(2) div:nth-child(1)::before {
-            background: #f9921a;
-          }
-          .xnode:nth-child(3) div:nth-child(1)::before {
-            background: #43b8fa;
-          }
-          .xnode:nth-child(4) div:nth-child(1)::before {
-            background: #fa43f2;
-          }
-          .xnode:nth-child(5) div:nth-child(1)::before {
-            background: #2dd87b;
+            width: 40%;
+
+            img {
+              width: 56px;
+              height: 56px;
+            }
           }
 
-          .xnode div:nth-child(2) {
-            width: 50%;
-            border: 1px dashed #c0c0c0;
-          }
-          .xnode div:nth-child(3) {
-            width: 20%;
-            text-align: right;
+          .textBox {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .textHead {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .title {
+                font-weight: 400;
+                font-size: 14px;
+                color: #7d7d7d;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+
+            .headNumber {
+              display: flex;
+              // justify-content: center;
+              align-items: stretch;
+              height: 40px;
+              margin-bottom: 10px;
+
+              .statusNum {
+                // text-align: center;
+                font-size: 32px;
+                font-weight: 400;
+                color: #000000;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .content {
+                display: flex;
+                align-items: center;
+
+                img {
+                  width: 22px;
+                  height: 22px;
+                  margin-right: 2px;
+                }
+
+                .changeNum {
+                  font-weight: 400;
+                  font-size: 10px;
+                  color: #ff878a;
+                }
+
+                .loss {
+                  color: #a4ffbd;
+                }
+              }
+            }
           }
         }
       }
+
       .secondCard {
-        height: 35%;
+        height: 40%;
         margin-bottom: 10px;
+
         .itemCard {
           height: 100%;
           border-radius: 4px;
@@ -1816,8 +1752,9 @@ export default {
           width: 100%;
         }
       }
+
       .thirdCard {
-        height: 35%;
+        flex-grow: 1;
 
         .itemCard {
           height: 100%;
@@ -1837,6 +1774,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .echartTitle {
       padding-left: 10px;
       position: relative;
@@ -1845,9 +1783,11 @@ export default {
       color: #333333;
       font-weight: bold;
     }
+
     .el-button {
       border-radius: 6px !important;
     }
+
     .select,
     .el-button:focus,
     .el-button:hover {
@@ -1856,19 +1796,26 @@ export default {
       background-color: #5c67fd;
     }
   }
+
   .echartTitle::before {
-    content: ""; /* 伪元素的内容为空 */
-    position: absolute; /* 将伪元素设置为绝对定位 */
+    content: "";
+    /* 伪元素的内容为空 */
+    position: absolute;
+    /* 将伪元素设置为绝对定位 */
     top: 50%;
-    left: 0; /* 将伪元素向左偏移 50% */
-    transform: translateY(-50%) translateX(-50%); /* 通过 transform 属性向左平移自身宽度的一半 */
-    display: inline-block; /* 将伪元素设置为行内块元素 */
+    left: 0;
+    /* 将伪元素向左偏移 50% */
+    transform: translateY(-50%) translateX(-50%);
+    /* 通过 transform 属性向左平移自身宽度的一半 */
+    display: inline-block;
+    /* 将伪元素设置为行内块元素 */
     width: 4px;
     height: 20px;
     background: #8598ff;
     border-radius: 2px;
     margin-right: 10px;
   }
+
   .echartBody {
     // height: 480px;
     flex-grow: 1;
@@ -1876,13 +1823,20 @@ export default {
     width: 100%;
     // height: 100%;
   }
+
   .box:hover,
   .itemCard:hover,
   .itemCard1:hover {
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   }
+
   .container {
     padding: 0;
+  }
+
+  ::v-deep .el-tabs__item {
+    padding: 5px;
+    /* 设置为0或调整合适的数值 */
   }
 }
 </style>
