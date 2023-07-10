@@ -51,38 +51,16 @@
             :showPagination="false"
             :IsIndex="true"
             :pagination="tablePagination[0]"
-            @configprocess="configprocess"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
             @selectfun="selectFun"
+            :showFooter="true"
+            :includeFields="['Qty','ReportQty','OutStockQty','StockQtyDiff']"
           />
         </div>
       </div>
     </div>
-
-    <!-- 工艺配置 -->
-    <el-dialog title="选择工艺" :visible.sync="processDialog" width="16.8%">
-      <el-form label-width="110px">
-        <el-form-item label="请选择工艺：">
-          <el-select v-model="ProcessGroupID" clearable filterable>
-            <el-option
-              v-for="item in processGroupOptions"
-              :key="item.ProcessGroupID"
-              :label="item.ProcessGroupName"
-              :value="item.ProcessGroupID"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="processDialog = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="sureProcess" size="small"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog>
     <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="22%">
       <div class="flex_column" style="padding: 20px">
         <div class="flex_wrap" style="margin-bottom: 20px">
@@ -163,7 +141,6 @@ export default {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
-      Dialog: false,
       selectionData: [[]],
       formSearchs: [
         {
@@ -177,30 +154,6 @@ export default {
         },
       ],
       btnForm: [],
-      parmsBtn: [
-        {
-          ButtonCode: "releasedOrder",
-          BtnName: "下达",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          Methods: "setOrder",
-          Icon: "",
-          isLoading: false,
-          signName: 2,
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "primary",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
-          isLoading: false,
-          signName: "",
-        },
-      ],
       tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
@@ -211,36 +164,10 @@ export default {
       tagRemark: 0,
       isLoading: false,
       labelStatus1: 0,
-      ProcessGroupID: "",
       sysID: [{ ID: 10129 }],
-      Status1: [
-        { label: "全部", value: "" },
-        { label: "已下达", value: [21, 22, 23, 24] },
-        { label: "未下达", value: 26 },
-        { label: "已完成", value: 25 },
-      ],
+      Status1: [{ label: "全部", value: "" }],
       isSelect: false,
       isEdit: true,
-      dialogCurrentRow: "",
-      processGroupOptions: [],
-      processDialog: false,
-      storageProperty: null,
-      palletQuantity: null,
-      otherProperty: null,
-      storagePropertyItems: [
-        {
-          title: "是",
-          value: "是",
-          label: "是",
-          text: "是",
-        },
-        {
-          title: "否",
-          value: "否",
-          label: "否",
-          text: "否",
-        },
-      ],
     };
   },
   watch: {},
@@ -259,7 +186,6 @@ export default {
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
-
       let rem =
         document.documentElement.clientHeight -
         headHeight -
@@ -379,25 +305,6 @@ export default {
         });
       }
     },
-    // 下达
-    // async setOrder(remarkTb, index) {
-    //   let res = await OneStepReleaseByOrder(form);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     this.dataSearch(0);
-    //     this.$message({
-    //       message: msg,
-    //       type: "success",
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   } else {
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   }
-    // },
     // 获取表头数据
     async getTableHeader() {
       let IDs = this.sysID;
@@ -509,75 +416,9 @@ export default {
       this.formSearchs[0].datas["ProductionStatus"] = item.value;
       this.dataSearch(0);
     },
-    // 配置工艺按钮
-    async configprocess(row) {
-      this.dialogCurrentRow = row;
-      let res = await GetSearchData({ dicID: 1175 });
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.ProcessGroupID = row.ProcessGroupID;
-        this.processGroupOptions = data;
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-      this.processDialog = true;
-    },
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-    },
-    // 确定当前工艺
-    async sureProcess() {
-      let obj = {};
-      obj["materialID"] = this.dialogCurrentRow.MaterialID;
-      obj["processGroupID"] = this.ProcessGroupID;
-      let res = await UpdateProcess(obj);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.dataSearch(0);
-        this.processDialog = false;
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    // 批量设置
-    batchSetting() {
-      if (this.selectionData[0].length === 0) {
-        this.$message.error("请选择要批量设置的数据！");
-        return;
-      }
-      this.Dialog = true;
-    },
-    //批量应用
-    async changeDate(val) {
-      if (val === 0) {
-        this.selectionData[0].map((item) => {
-          item["Extend18"] = this.storageProperty;
-          item["Extend18Text"] = this.storageProperty;
-        });
-        let res = await SaveData(this.selectionData[0]);
-        this.storageProperty = null;
-      } else if (val === 1) {
-        this.selectionData[0].map((item) => {
-          item["TrayOfQty"] = this.palletQuantity;
-        });
-        let res = await SaveData(this.selectionData[0]);
-        this.palletQuantity = null;
-      } else if (val === 2) {
-        this.selectionData[0].map((item) => {
-          item["Extend20"] = this.otherProperty;
-        });
-        let res = await SaveData(this.selectionData[0]);
-        this.otherProperty = null;
-      }
     },
   },
 };
