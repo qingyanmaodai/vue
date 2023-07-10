@@ -1152,6 +1152,18 @@ export default {
               } else if (item["prop"] === "FormRate2") {
                 _this.dialogSearchForm.DemandDate =
                   _this.tableData[remarkTb][args.row]["D2"];
+              }else if (item["prop"] === "FormRate3") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D3"];
+              } else if (item["prop"] === "FormRate4") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D4"];
+              } else if (item["prop"] === "FormRate5") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D5"];
+              } else if (item["prop"] === "FormRate6") {
+                _this.dialogSearchForm.DemandDate =
+                  _this.tableData[remarkTb][args.row]["D6"];
               }
             }
           });
