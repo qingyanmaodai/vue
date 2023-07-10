@@ -1001,4 +1001,7 @@ export default {
   flex-direction: column;
   height: 100%;
 }
+::v-deep .vxe-footer--row {
+  height: 35px;
+}
 </style>
