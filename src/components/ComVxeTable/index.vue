@@ -51,7 +51,6 @@
         :span-method="rowspanMethod"
       >
         <vxe-column
-          :reserve-selection="true"
           type="checkbox"
           fixed="left"
           width="45"
@@ -1342,11 +1341,14 @@ export default {
       );
     },
     // 单击行
-    handleRowClick({ row }) {
+    handleRowClick({ row, column }) {
       if (this.isChecked) {
         this.$refs.vxeTable.setCheckboxRow(row, true);
       }
-      this.$emit("handleRowClick", row, this.remark);
+      if (column.type !== "checkbox") {
+        // 如果是勾选框单元格，则取消行点击的触发
+        this.$emit("handleRowClick", row, this.remark);
+      }
     },
     // 双击行
     handleRowdbClick({ row, column }) {

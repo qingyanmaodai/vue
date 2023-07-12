@@ -1,13 +1,7 @@
 <!--属性配置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,12 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComVxeTable
@@ -106,9 +98,9 @@ export default {
     _this = this;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
+    this.judgeBtn(this.btnForm);
     this.getTableHeader();
-    console.log(this.btnForm,'this.btnForm');
+    console.log(this.btnForm, "this.btnForm");
   },
   mounted() {
     setTimeout(() => {
@@ -122,6 +114,16 @@ export default {
       this.formSearchs[0].datas["dicID"] = 35;
       this.$set(this.formSearchs[0].datas, "DictionaryID", val);
       this.dataSearch(0);
+    },
+    //按钮权限
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this, "isEdit", true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
     },
     // 高度控制
     setHeight() {
