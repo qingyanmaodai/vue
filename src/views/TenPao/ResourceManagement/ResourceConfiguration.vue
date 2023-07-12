@@ -55,12 +55,65 @@
             @pageSize="pageSize"
             @sortChange="sortChange"
             @selectfun="selectFun"
-            :showFooter="true"
-            :includeFields="['Qty','ReportQty','OutStockQty','OutStockQtyDiff','UnfinishQty']"
           />
         </div>
       </div>
     </div>
+    <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="22%">
+      <div class="flex_column" style="padding: 20px">
+        <div class="flex_wrap" style="margin-bottom: 20px">
+          <div>
+            存储属性:
+            <el-select
+              clearable
+              filterable
+              size="small"
+              placeholder="请选择存储属性"
+              v-model="storageProperty"
+              style="width: 120px; margin: 0 20px 0 10px"
+            >
+              <el-option
+                v-for="(item, i) in storagePropertyItems"
+                :key="i"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(0)">
+            批量应用
+          </el-button>
+        </div>
+        <div class="flex_wrap" style="margin-bottom: 20px">
+          <div>
+            托盘数量:
+            <el-input
+              type="number"
+              v-model="palletQuantity"
+              size="small"
+              style="width: 120px; margin: 0 20px 0 10px"
+            ></el-input>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(1)">
+            批量应用
+          </el-button>
+        </div>
+        <div class="flex_wrap" style="margin-bottom: 20px">
+          <div>
+            其他属性:
+            <el-input
+              type="number"
+              v-model="otherProperty"
+              size="small"
+              style="width: 120px; margin: 0 20px 0 10px"
+            ></el-input>
+          </div>
+          <el-button type="primary" size="mini" @click="changeDate(2)">
+            批量应用
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,12 +142,7 @@ export default {
       selectionData: [[]],
       formSearchs: [
         {
-          datas: {
-            fields:
-              "ProductType,Model,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
-            groupby: "ProductType,Model",
-            sort: "ProductType DESC",
-          },
+          datas: {},
           forms: [],
         },
       ],

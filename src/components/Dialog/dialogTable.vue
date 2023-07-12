@@ -25,6 +25,7 @@
         :isToolbar="isToolbar"
         :forbidden="forbidden"
         :isEdit="isEdit"
+        :hasSelect="hasSelect"
         :remark="0"
         :row-key="'RowNumber'"
         :height="height"
@@ -129,6 +130,11 @@ export default {
     },
     // 单元格是否支持编辑
     isEdit:{
+      type:Boolean,
+      default:false
+    },
+    // 单元格是否支持编辑
+    hasSelect:{
       type:Boolean,
       default:false
     },
