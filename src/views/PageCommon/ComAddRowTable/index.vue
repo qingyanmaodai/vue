@@ -56,13 +56,13 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "ComAddRowTable",
   components: {
     ComSearch,
-    ComVxeTable
+    ComVxeTable,
   },
   data() {
     return {
@@ -72,7 +72,7 @@ export default {
         {
           datas: {},
           forms: [],
-          required: [],//获取必填项
+          required: [], //获取必填项
         },
       ],
       btnForm: [],
@@ -121,7 +121,7 @@ export default {
       selectionData: [[]],
       selectionNoIdData: [[]],
       addNum: 1,
-    }
+    };
   },
   created() {
     let routeBtn = this.$route;
@@ -161,7 +161,8 @@ export default {
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
-        document.documentElement.clientHeight - headHeight -
+        document.documentElement.clientHeight -
+        headHeight -
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
@@ -220,8 +221,8 @@ export default {
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
-      this.selectionData[remarkTb] = []
-      this.selectionNoIdData[remarkTb] = []
+      this.selectionData[remarkTb] = [];
+      this.selectionNoIdData[remarkTb] = [];
     },
     // 重置
     dataReset(remarkTb) {
@@ -249,40 +250,44 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
+      // 获取修改记录
+      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
       if (!this.addNum) {
-        this.$message.error('请输入需要添加的行数!')
-        return
+        this.$message.error("请输入需要添加的行数!");
+        return;
       }
       // 下拉数据是需要获取数据源
       for (let x = 0; x < this.addNum; x++) {
         let obj = {
           dicID: this.sysID[remarkTb].ID,
-          rowNum: _.uniqueId("rowNum_")
-        }
+          RowNumber: _.uniqueId(),
+        };
         this.tableColumns[remarkTb].map((item) => {
-          obj[item.prop] = null
-          if (item.prop === 'Status') {
-            obj[item.prop] = 1
+          obj[item.prop] = null;
+          obj["update"] = true;
+          if (item.prop === "Status") {
+            obj[item.prop] = 1;
           }
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
-              obj[key] = this.DataSourceList[remarkTb][key]
+              obj[key] = this.DataSourceList[remarkTb][key];
             }
           }
-        })
+        });
 
-        console.log('this.addNum', this.addNum)
+        console.log("this.addNum", this.addNum);
 
-        this.tableData[remarkTb].unshift(obj)
+        this.tableData[remarkTb].unshift(obj);
       }
 
-
-      console.log('this.tableData[remarkTb]', this.tableData[remarkTb])
+      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
     },
     // 删行
     async deleteRow(remarkTb) {
       if (this.selectionData[remarkTb].length) {
-        this.$confirm("确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗？")
+        this.$confirm(
+          "确定要删除的【" + this.selectionData[remarkTb].length + "】数据吗？"
+        )
           .then(async () => {
             this.adminLoading = true;
             let res = await SaveData(this.selectionData[remarkTb]);
@@ -305,22 +310,24 @@ export default {
             }
           })
           .catch((_) => { });
-
       } else {
         // 还未保存到数据库的数据删除前端逻辑删除
         if (this.selectionNoIdData[remarkTb].length) {
           this.selectionNoIdData[remarkTb].forEach((ele) => {
-            this.tableData[remarkTb] = _.filter(this.tableData[remarkTb], function (o) {
-              if (o.rowNum != ele.rowNum) {
-                return o;
+            this.tableData[remarkTb] = _.filter(
+              this.tableData[remarkTb],
+              function (o) {
+                if (o.rowNum != ele.rowNum) {
+                  return o;
+                }
               }
-            })
-          })
+            );
+          });
           // 更新表格数据
           this.$set(this.tableData, remarkTb, this.tableData[remarkTb]);
           this.$nextTick(() => {
-            this.selectionNoIdData[remarkTb] = []
-          })
+            this.selectionNoIdData[remarkTb] = [];
+          });
         } else {
           this.$message.error("请选择需要删除的数据！");
           return;
@@ -329,65 +336,69 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
-      if (this.tableData[remarkTb].length) {
-        if (this.formSearchs[remarkTb].required.length) {
-          // 动态检验必填项
-          for (let i = 0; i < this.tableData[remarkTb].length; i++) {
-            for (let x = 0; x < this.formSearchs[remarkTb].required.length; x++) {
-              // console.log('this.formSearchs[remarkTb].required',this.formSearchs[remarkTb].required)
-              let content = this.tableData[remarkTb][i][this.formSearchs[remarkTb].required[x]['prop']]
-              if (!content && content !== 0 & content !== false) {
-                this.$message.error(`${this.formSearchs[remarkTb].required[x]['label']}不能为空，请选择`)
-                return
-              }
+      // 获取修改记录
+      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+      const updateRecords = $table.getUpdateRecords();
+      if (updateRecords.length == 0) {
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
+      if (this.formSearchs[remarkTb].required.length) {
+        // 动态检验必填项
+        for (let i = 0; i < updateRecords.length; i++) {
+          for (
+            let x = 0;
+            x < this.formSearchs[remarkTb].required.length;
+            x++
+          ) {
+            let content =
+              updateRecords[i][
+              this.formSearchs[remarkTb].required[x]["prop"]
+              ];
+            if (!content && (content !== 0) & (content !== false)) {
+              this.$message.error(
+                `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
+              );
+              return;
             }
           }
         }
-
-        const $table = this.$refs.ComVxeTable.$refs.vxeTable
-        // 获取修改记录
-        const updateRecords = $table.getUpdateRecords()
-        if (updateRecords.length == 0) {
-          this.$message.error("当前数据没做修改，请先修改再保存！");
-          return
-        }
-        this.adminLoading = true;
-        let res = await SaveData(updateRecords);
-        const { datas, forms, result, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(remarkTb);
-          this.adminLoading = false;
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-          this.adminLoading = false;
-        }
-      } else {
-        return
       }
 
+
+      this.adminLoading = true;
+      let res = await SaveData(updateRecords);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.adminLoading = false;
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+        this.adminLoading = false;
+      }
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = []
-      this.selectionNoIdData[remarkTb] = []
-      data.map(item => {
+      this.selectionData[remarkTb] = [];
+      this.selectionNoIdData[remarkTb] = [];
+      data.map((item) => {
         if (item.RowNumber) {
           // 接口删除标识
-          item.ElementDeleteFlag = 1
-          this.selectionData[remarkTb].push(item)
+          item.ElementDeleteFlag = 1;
+          this.selectionData[remarkTb].push(item);
         } else {
-          this.selectionNoIdData[remarkTb].push(item)
+          this.selectionNoIdData[remarkTb].push(item);
         }
-      })
+      });
     },
     // 获取表头数据
     async getTableHeader() {
@@ -413,7 +424,7 @@ export default {
               };
             }
             if (n.Required) {
-              this.formSearchs[this.tagRemark].required.push(n)
+              this.formSearchs[this.tagRemark].required.push(n);
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -464,11 +475,10 @@ export default {
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
-
     },
     // 获取数据源
     async getDataSource(Props) {
-      let form = {}
+      let form = {};
       form["DataSourceID"] = Props;
       let res = await GetSearch(form, "/APSAPI/GetDataSource");
       const { result, data, count, msg } = res.data;
@@ -494,5 +504,5 @@ export default {
       });
     },
   },
-}
+};
 </script>

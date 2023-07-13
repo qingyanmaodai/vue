@@ -1,150 +1,106 @@
 <!--设备与工装汇总-->
 <template>
-  <div
-    class="container flex_column"
-    v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
-  >
+  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
     <splitpanes class="default-theme" horizontal>
       <pane :size="pane[0]">
-        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              @btnClick="btnClick"
-              :signName="labelStatus1"
-            />
+        <div class="flex_column" style="width: 100%; height: 100%">
+          <div class="admin_head" ref="headRef">
+            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
           </div>
-          <div class="admin_content">
-            <div class="ant-table-title" ref="headRef_2">
-              <el-row>
-                <el-col :span="4"
-                  ><span class="title">{{ title }}</span></el-col
-                >
-                <el-col :span="20" class="flex_flex_end"> </el-col>
-              </el-row>
-            </div>
+          <div class="ant-table-title2" ref="headRef_2">
+            <el-row>
+              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+              <el-col :span="20" class="flex_flex_end">
+                <span>新增行数：</span>
+                <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"
+                  size="small"></el-input-number>
+                <el-divider direction="vertical"></el-divider></el-col>
+            </el-row>
           </div>
-          <div class="admin_content" style="flex-grow: 1; overflow: hidden">
-            <ComVxeTable
-              ref="tableRef0"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :hasSelect="true"
-              :isEdit="true"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :cellStyle="cellStyle0"
-              :sysID="sysID[0].ID"
-              :footerLabel="footerLabel[0]"
-              :isClear="isClear[0]"
-              :pagination="tablePagination[0]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              :keepSource="true"
-            />
+          <div v-for="item in [0]" :key="item" class="admin_content" style="flex-grow: 1; overflow: hidden">
+            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
+              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
+              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
+              @sortChange="sortChange" @selectfun="selectFun" @handleRowClick="handleRowClick" />
           </div>
         </div>
       </pane>
       <pane :size="pane[1]">
-        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[1].datas"
-              :searchForm="formSearchs[1].forms"
-              :remark="1"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              @btnClick="btnClick"
-              :signName="labelStatus1"
-            />
+        <div class="flex_column" style="width: 100%; height: 100%">
+          <div class="admin_head" ref="headRef" v-for="item in [1, 2, 3]" :key="item + 'head'"
+            v-show="Number(selectedIndex) === item">
+            <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
+              :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
           </div>
-          <div class="admin_content">
-            <div class="ant-table-title" ref="headRef_2">
-              <el-row>
-                <el-col :span="6"
-                  ><el-tabs
-                    v-model="selectedIndex"
-                    @tab-click="handleClick"
-                    :stretch="true"
-                  >
-                    <el-tab-pane label="关联产品配置" name="0"></el-tab-pane>
-                    <el-tab-pane label="关联产品族" name="1"></el-tab-pane>
-                    <el-tab-pane
-                      label="TPM设备明细"
-                      name="2"
-                    ></el-tab-pane> </el-tabs
-                ></el-col>
-                <el-col :span="18" class="flex_flex_end">
-                  <el-select
-                    clearable
-                    filterable
-                    size="small"
-                    placeholder="请选择修改值"
-                    v-model="OrderNo"
-                  >
-                    <el-option
-                      v-for="(item, i) in OrderNos[1]"
-                      :key="i"
-                      :label="item.label"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-input
-                    size="small"
-                    v-model="OrderNoValue"
-                    style="width: 160px"
-                    placeholder="请输入"
-                    @keyup.enter.native="changeProp(1)"
-                  ></el-input>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-button type="primary" size="mini" @click="changeProp(1)">
-                    批量修改
-                  </el-button>
-                  <el-divider direction="vertical"></el-divider>
-                </el-col>
-              </el-row>
-            </div>
+          <div class="ant-table-title2" ref="headRef_2">
+            <el-row>
+              <el-col :span="6"><el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                  <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
+                  <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
+                  <el-tab-pane label="TPM设备明细" name="3"></el-tab-pane> </el-tabs></el-col>
+              <el-col :span="18" class="flex_flex_end">
+                <el-divider direction="vertical"></el-divider>
+                <el-button type="primary" size="mini" @click="AddEvent(1)" v-show="selectedIndex === '1'">
+                  添加产品
+                </el-button>
+                <el-button type="primary" size="mini" @click="AddEvent(2)" v-show="selectedIndex === '2'">
+                  添加产品族
+                </el-button>
+                <el-button type="primary" size="mini" @click="AddEvent(3)" v-show="selectedIndex === '3'">
+                  添加TPM设备
+                </el-button>
+                <!-- <el-select
+                  clearable
+                  filterable
+                  size="small"
+                  placeholder="请选择修改值"
+                  v-model="OrderNo"
+                >
+                  <el-option
+                    v-for="(item, i) in OrderNos[1]"
+                    :key="i"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+                <el-divider direction="vertical"></el-divider>
+                <el-input
+                  size="small"
+                  v-model="OrderNoValue"
+                  style="width: 160px"
+                  placeholder="请输入"
+                  @keyup.enter.native="changeProp(1)"
+                ></el-input>
+                <el-divider direction="vertical"></el-divider>
+                <el-button type="primary" size="mini" @click="changeProp(1)">
+                  批量修改
+                </el-button> -->
+              </el-col>
+            </el-row>
           </div>
-          <div class="admin_content" style="flex-grow: 1; overflow: hidden">
-            <ComVxeTable
-              :rowKey="'RowNumber'"
-              :isToolbar="false"
-              height="100%"
-              :isEdit="true"
-              :tableData="tableData[1]"
-              ref="tableRef1"
-              :tableHeader="tableColumns[1]"
-              :tableLoading="tableLoading[1]"
-              :remark="1"
-              :hasSelect="true"
-              :cellStyle="cellStyle"
-              :sysID="sysID[1].ID"
-              :checCheckboxkMethod="checCheckboxkMethod"
-              :isClear="isClear[1]"
-              @pageChange="pageChange"
-              @pageSize="pageSize"
-              :pagination="tablePagination[1]"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-            />
+          <div v-for="item in [1, 2, 3]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content"
+            style="flex-grow: 1; overflow: hidden">
+            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
+              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
+              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
+              @sortChange="sortChange" @selectfun="selectFun" />
           </div>
         </div>
       </pane>
     </splitpanes>
+    <!-- 弹框-->
+    <DialogTable title="添加产品" :tableDialog="colDialogVisible4" :sysID="sysID[4]['ID']" width="80%" :hasSelect="true"
+      @closeDialog="colDialogVisible4 = false" :searchForm="formSearchs[4]" :isToolbar="false" :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"></DialogTable>
+    <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
+      @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"></DialogTable>
+    <DialogTable title="添加TPM设备" :tableDialog="colDialogVisible6" :sysID="sysID[6]['ID']" width="80%" :hasSelect="true"
+      @closeDialog="colDialogVisible6 = false" :searchForm="formSearchs[6]" :isToolbar="false" :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"></DialogTable>
   </div>
 </template>
 
@@ -155,6 +111,7 @@ import "splitpanes/dist/splitpanes.css";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
+import DialogTable from "@/components/Dialog/dialogTable";
 import {
   GetHeader,
   GetSearchData,
@@ -170,23 +127,20 @@ export default {
     ComReportTable,
     Splitpanes,
     Pane,
+    DialogTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
       footerLabel: [""],
-      expendColl: false,
-      expendCollText: "收缩",
-      selectionData: [[], []],
+      selectionData: [[], [], [], [], [], [], []],
       title: this.$route.meta.title,
-      height2: "240px",
-      height3: "180px",
-      includeFields: [["ProducedQty", "ConfirmQty"], [], []],
-      drawer: false,
+      includeFields: [[], [], []],
       formSearchs: [
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
@@ -200,39 +154,36 @@ export default {
           datas: {},
           forms: [],
         },
-      ],
-      parmsBtn: [],
-      parmsBtn2: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
-          Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
         },
       ],
       btnForm: [],
-      btnForm2: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
+      tableData: [[], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
       ],
-      // height: "707px",
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
-      parseForm: {},
-      parseSearch: false,
-      warehouseValue: "",
       OrderNo: "",
       OrderNoValue: "",
       OrderNos: [],
@@ -249,13 +200,24 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 126 }, { ID: 97 }, { ID: 10084 }, { ID: 6751 }],
-      isEdit: false,
-      enlargeType: true,
-      rem: "",
-      warehouses: [],
+      sysID: [
+        { ID: 11147 },
+        { ID: 11146 },
+        { ID: 11145 },
+        { ID: 11148 },
+        { ID: 1180 },
+        { ID: 11142 },
+        { ID: 133 },
+      ],
+      isEdit: [false, false, false, false, false, false, false],
       userInfo: {},
-      pane:[100,0]
+      pane: [100, 0],
+      selectedIndex: "1",
+      colDialogVisible4: false,
+      colDialogVisible5: false,
+      colDialogVisible6: false,
+      addNum: 1,
+      DataSourceList: [{}],
     };
   },
   watch: {},
@@ -266,58 +228,19 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
-    // this.getWarehosueData();
+    this.judgeBtn(this.btnForm);
   },
-  mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 600);
-  },
+  mounted() { },
   methods: {
-    // 获取所有仓库
-    // async getWarehosueData() {
-    //   let form = {};
-    //   form["dicID"] = 80;
-    //   form["rows"] = 0;
-    //   let res = await GetSearchData(form);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     this.warehouses = data;
-    //   } else {
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true
-    //     });
-    //   }
-    // },
-    // 高度控制
-    // setHeight() {
-    //   let headHeight =
-    //     this.$refs.content_up.offsetHeight + this.$refs.content_up.offsetTop;
-    //   let headRef_2 = this.$refs.headRef_2.offsetHeight;
-    //   let rem =
-    //     document.documentElement.offsetHeight - headHeight - headRef_2 - 65;
-    //   this.rem = rem;
-    //   let newHeight = rem + "px";
-    //   this.$set(this, "height", newHeight);
-    // },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      let rem2 =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight2 = rem2 + "px";
-      // this.$set(this, "height", newHeight);
-      // this.$set(this, "height2", newHeight2);
+    //按钮权限
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -359,7 +282,7 @@ export default {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
       } else {
-        this[methods](remarkTb, index);
+        this[methods](remarkTb);
       }
     },
     // 查询
@@ -400,36 +323,89 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      // console.log(this.tableData[0]);
-      const $table = this.$refs[`tableRef${remarkTb}`].$refs.vxeTable;
+      this.adminLoading = true;
+      // const sheet = this.spread[remarkTb]?.getActiveSheet();
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      // if (sheet && sheet.isEditing()) {
+      //   sheet.endEdit();
+      // }
       // 获取修改记录
       let updateRecords = [];
-      this.adminLoading = true;
-      if ($table) {
-        updateRecords = $table.getUpdateRecords();
+      if (newData) {
+        updateRecords = newData;
+      } else {
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+          // let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          // let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          // let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          // DeletedRows.forEach((item) => {
+          //   item["ElementDeleteFlag"] = 1;
+          // }); //获取被删除的数据
+          // updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
       }
+      console.log(updateRecords, "updateRecords", this.$refs);
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
+      console.log(updateRecords, 'updateRecords.length');
+      if (updateRecords.length > 0 && remarkTb === 0) {
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          updateRecords.map((item1, index1) => {
+            this.formSearchs[remarkTb].required.map((item2, index2) => {
+              let content = item1[item2['prop']]
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(
+                  `${item2['label']}不能为空，请选择`
+                );
+                this.$set(this, "adminLoading", false);
+                return;
+              }
+            })
+          })
+          // for (let i = 0; i < updateRecords.length; i++) {
+          //   for (
+          //     let x = 0;
+          //     x < this.formSearchs[remarkTb].required.length;
+          //     x++
+          //   ) {
+          //     let content =
+          //       updateRecords[i][
+          //       this.formSearchs[remarkTb].required[x]["prop"]
+          //       ];
+          //     if (!content && (content !== 0) & (content !== false)) {
+          //       this.$message.error(
+          //         `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
+          //       );
+          //       this.$set(this, "adminLoading", false);
+          //       return;
+          //     }
+          //   }
+          // }
+        }
+      }
       let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "success",
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
       } else {
-        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+        this.$set(this, "adminLoading", false);
       }
     },
     // 获取表头数据
@@ -440,13 +416,26 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
               n.childrens.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+            //从列获取下拉数据源
+            if (n.DataSourceID && n.ControlType === "combobox" && i === 0) {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
+            }
+            if (n.Required && i === 0) {
+              this.formSearchs[this.tagRemark].required.push(n);
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -483,9 +472,6 @@ export default {
     },
     // 验证数据
     verifyDta(n) {
-      // if (n.prop == "ShortQty") {
-      //   return;
-      // }
       for (let name in n) {
         if (
           (name == "component" && n[name]) ||
@@ -499,10 +485,6 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
@@ -517,29 +499,6 @@ export default {
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        // if (remarkTb == 0) {
-        //   let num2 = 0;
-        //   let Rate = 0;
-        //   if (data.length != 0) {
-        //     data.forEach(x => {
-        //       if (x.NoInspectStatusCount == 0) {
-        //         num2++;
-        //       }
-        //     });
-        //     if (count != 0) {
-        //       Rate = ((num2 / count) * 100).toFixed(2);
-        //     }
-        //   }
-        //   let StringValue =
-        //     "当前查询结果【共" +
-        //     `${count}` +
-        //     "笔，已完成" +
-        //     `${num2}` +
-        //     "笔，达成率" +
-        //     `${Rate}` +
-        //     "%】";
-        //   this.$set(this.footerLabel, 0, StringValue);
-        // }
       } else {
         this.$message({
           message: msg,
@@ -594,77 +553,30 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.pane = [60,40]
-      this.formSearchs[1].datas["OrganizeID"] = row.OrganizeID;
-      this.dataSearch(1);
-    },
-    // 清空超领
-    clearShort() {
-      if (this.selectionData[1].length == 0) {
-        this.$message.error("请勾选需要清空的数据！");
-      } else {
-        this.$confirm("确定清空选中的吗，会直接保存哟？")
-          .then(() => {
-            let newData = [];
-            _this.selectionData[1].forEach((x) => {
-              x.ShortQty = null;
-              if (parseInt(x.UnIssuedQty) == 0) {
-                x.InspectStatus = 1;
-                if (parseInt(x.OweQty) == 0) {
-                  x.PrepareType = "齐套";
-                } else {
-                  x.PrepareType = "欠料";
-                }
-              } else {
-                x.InspectStatus = 2;
-                x.PrepareType = "异常";
-              }
-              newData.push(x);
-            });
-            _this.generalSaveData(newData, 1);
-          })
-          .catch(() => {});
+      if (this.pane[0] === 100) {
+        this.pane = [60, 40];
       }
+      this.formSearchs[1].datas["RAMID"] = row.RAMID;
+      this.formSearchs[2].datas["RAMID"] = row.RAMID;
+      this.formSearchs[3].datas["RAMID"] = row.RAMID;
+      this.dataSearch(this.selectedIndex);
+
     },
-    // 通用保存数据
-    async generalSaveData(data, remarkTb) {
-      this.adminLoading = true;
-      let res = await SaveData(data);
-      const { result, msg } = res.data;
-      if (result) {
-        _this.dataSearch(remarkTb);
-        _this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        _this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
+    handleClick(tab, event) {
+      console.log(tab, event);
+      this.selectedIndex = tab.name;
+      this.dataSearch(this.selectedIndex);
+    },
+    AddEvent(index) {
+      if (index === 1) {
+        this.colDialogVisible4 = true;
+        this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
-    },
-    // 提交点检
-    async setAttendance() {
-      // 获取有超领的数据
-      // let res = await GetServerTime();
-      // const { result, data, msg } = res.data;
-      // if (result) {
-      //   this.realySubmitChildren(data);
-      // } else {
-      // }
-    },
-    // 控制选框是否能手动勾选
-    checCheckboxkMethod({ row }) {
-      if (row.ShortQty == 0 && row.InspectStatus == 2) {
-        this.$set(row, "Disabled", true);
-        return false;
-      } else {
-        return true;
+      if (index === 2) {
+        this.colDialogVisible5 = true;
+      }
+      if (index === 3) {
+        this.colDialogVisible6 = true;
       }
     },
     // 行内样式
@@ -701,6 +613,38 @@ export default {
         }
       }
     },
+    // 增行
+    addRow(remarkTb) {
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < this.addNum; x++) {
+        let obj = {
+          dicID: this.sysID[remarkTb].ID,
+          rowNum: _.uniqueId("rowNum_"),
+        };
+        this.tableColumns[remarkTb].map((item) => {
+          obj[item.prop] = null;
+          obj["update"] = true;
+          if (item.prop === "Status") {
+            obj[item.prop] = 1;
+          }
+          for (let key in this.DataSourceList[remarkTb]) {
+            if (item.DataSourceName === key) {
+              obj[key] = this.DataSourceList[remarkTb][key];
+            }
+          }
+        });
+
+        console.log("this.addNum", this.addNum);
+
+        this.tableData[remarkTb].unshift(obj);
+      }
+
+      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
+    },
     changeProp(index) {
       if (!this.OrderNo) {
         this.$message.error("请选择需要修改的值");
@@ -713,6 +657,38 @@ export default {
       this.tableData[index].map((item) => {
         item[this.OrderNo] = this.OrderNoValue;
       });
+    },
+    //添加产品机台
+    confirmDialog(data) {
+      let tagNumber = Number(this.selectedIndex);
+      data.map((item) => {
+        item["RAMID"] = this.formSearchs[tagNumber]["datas"]["RAMID"];
+        item["dicID"] = this.sysID[tagNumber]["ID"];
+      });
+      this.colDialogVisible4 = false;
+      this.colDialogVisible5 = false;
+      this.colDialogVisible6 = false;
+      this.dataSave(tagNumber, null, null, data);
+    },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => { });
     },
   },
 };

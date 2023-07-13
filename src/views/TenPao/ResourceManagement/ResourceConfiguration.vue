@@ -1,190 +1,161 @@
-<!--生产订单 -->
+<!--设备与工装汇总-->
 <template>
-  <div class="container">
-    <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus1 == i">
-        <ComSearch
-          ref="searchRef"
-          :searchData="formSearchs[i].datas"
-          :searchForm="formSearchs[i].forms"
-          :remark="i"
-          :isLoading="isLoading"
-          :btnForm="btnForm"
-          :signName="labelStatus1"
-          @btnClick="btnClick"
-        />
+  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
+    <div class="flex_column" style="width: 100%; height: 100%">
+      <div class="admin_head" ref="headRef">
+        <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+          :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
+      </div>
+      <div class="ant-table-title2" ref="headRef_2">
+        <el-row>
+          <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+          <el-col :span="20" class="flex_flex_end"></el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [0]" :key="item" class="admin_content" style="flex-grow: 1; overflow: hidden">
+        <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
+          :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]" :keepSource="true"
+          :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
+          @selectfun="selectFun" />
       </div>
     </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
-            <el-col :span="20" class="flex_flex_end">
-              <!-- <div
-                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item, y) in Status1"
-                :key="y"
-              >
-                <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
-                <el-divider direction="vertical"></el-divider>
-              </div> -->
-            </el-col>
-          </el-row>
-        </div>
-        <div v-for="item in [0]" :key="item" v-show="labelStatus1 == item">
-          <ComVxeTable
-            ref="tableRef"
-            :rowKey="'RowNumber'"
-            :height="height"
-            :tableData="tableData[0]"
-            :tableHeader="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :sysID="sysID[0]['ID']"
-            :hasSelect="false"
-            :isEdit="false"
-            :isClear="isClear[0]"
-            :keepSource="true"
-            :showPagination="false"
-            :IsIndex="true"
-            :pagination="tablePagination[0]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-            @selectfun="selectFun"
-          />
-        </div>
-      </div>
-    </div>
-    <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="22%">
-      <div class="flex_column" style="padding: 20px">
-        <div class="flex_wrap" style="margin-bottom: 20px">
-          <div>
-            存储属性:
-            <el-select
-              clearable
-              filterable
-              size="small"
-              placeholder="请选择存储属性"
-              v-model="storageProperty"
-              style="width: 120px; margin: 0 20px 0 10px"
-            >
-              <el-option
-                v-for="(item, i) in storagePropertyItems"
-                :key="i"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <el-button type="primary" size="mini" @click="changeDate(0)">
-            批量应用
-          </el-button>
-        </div>
-        <div class="flex_wrap" style="margin-bottom: 20px">
-          <div>
-            托盘数量:
-            <el-input
-              type="number"
-              v-model="palletQuantity"
-              size="small"
-              style="width: 120px; margin: 0 20px 0 10px"
-            ></el-input>
-          </div>
-          <el-button type="primary" size="mini" @click="changeDate(1)">
-            批量应用
-          </el-button>
-        </div>
-        <div class="flex_wrap" style="margin-bottom: 20px">
-          <div>
-            其他属性:
-            <el-input
-              type="number"
-              v-model="otherProperty"
-              size="small"
-              style="width: 120px; margin: 0 20px 0 10px"
-            ></el-input>
-          </div>
-          <el-button type="primary" size="mini" @click="changeDate(2)">
-            批量应用
-          </el-button>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+var _this;
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
+import ComReportTable from "@/components/ComReportTable";
+import DialogTable from "@/components/Dialog/dialogTable";
 import {
   GetHeader,
   GetSearchData,
   ExportData,
-  UpdateProcess,
   SaveData,
+  GetServerTime,
 } from "@/api/Common";
-import { OneStepReleaseByOrder } from "@/api/PageOrder";
 export default {
-  name: "SummaryBusinessRequirements",
+  name: "ScheduleDetails",
   components: {
     ComSearch,
     ComVxeTable,
+    ComReportTable,
+    DialogTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
+      footerLabel: [""],
+      selectionData: [[], [], [], [], [], [], []],
       title: this.$route.meta.title,
-      drawer: false,
-      selectionData: [[]],
+      includeFields: [[], [], []],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
         },
       ],
       btnForm: [],
-      tableData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
-      height: "707px",
-      showPagination: true,
+      tableData: [[], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+      ],
       tagRemark: 0,
       isLoading: false,
+      adminLoading: false,
+      OrderNo: "",
+      OrderNoValue: "",
+      OrderNos: [],
+      Status1: [
+        { label: "待确认", value: "未开始" },
+        { label: "已完成", value: "已完成" },
+        { label: "全部", value: "" },
+      ],
+      Status2: [
+        { label: "全部", value: 0 },
+        { label: "未点检", value: 1 },
+        { label: "异常", value: 2 },
+        { label: "已领未点", value: 3 },
+      ],
       labelStatus1: 0,
-      sysID: [{ ID: 10129 }],
-      Status1: [{ label: "全部", value: "" }],
-      isSelect: false,
-      isEdit: true,
+      labelStatus2: 0,
+      sysID: [
+        { ID: 11139 },
+        { ID: 11146 },
+        { ID: 11145 },
+        { ID: 11148 },
+        { ID: 1180 },
+        { ID: 11142 },
+        { ID: 133 },
+      ],
+      isEdit: [false, false, false, false, false, false, false],
+      userInfo: {},
+      pane: [100, 0],
+      selectedIndex: "1",
+      colDialogVisible4: false,
+      colDialogVisible5: false,
+      colDialogVisible6: false,
+      addNum: 1,
+      DataSourceList: [{}],
     };
   },
   watch: {},
   created() {
+    _this = this;
+    this.adminLoading = true;
+    this.userInfo = this.$store.getters.userInfo;
+    this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
-    this.getTableHeader();
+    this.judgeBtn(this.btnForm);
   },
-  mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 450);
-  },
+  mounted() { },
   methods: {
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+    //按钮权限
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -226,7 +197,7 @@ export default {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
       } else {
-        this[methods](remarkTb, index);
+        this[methods](remarkTb);
       }
     },
     // 查询
@@ -244,16 +215,17 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        console.log(this.formSearchs[remarkTb].datas, name);
-
         if (name != "dicID") {
-          this.formSearchs[remarkTb].datas[name] = null;
+          if (this.formSearchs[remarkTb].forms.length) {
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            });
+          }
         }
-        console.log(this.formSearchs[remarkTb].datas, name);
       }
-      // this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
-      //   this.labelStatus1
-      // ].value;
     },
     // 导出
     async dataExport(remarkTb) {
@@ -266,14 +238,56 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      console.log(this.tableData[0]);
-      const $table = this.$refs.tableRef.$refs.vxeTable;
+      if (this.tableData[remarkTb].length && remarkTb === 0) {
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          for (let i = 0; i < this.tableData[remarkTb].length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[remarkTb].required.length;
+              x++
+            ) {
+              let content =
+                this.tableData[remarkTb][i][
+                this.formSearchs[remarkTb].required[x]["prop"]
+                ];
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(
+                  `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
+                );
+                return;
+              }
+            }
+          }
+        }
+      }
+      this.adminLoading = true;
+      // const sheet = this.spread[remarkTb]?.getActiveSheet();
+
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      // if (sheet && sheet.isEditing()) {
+      //   sheet.endEdit();
+      // }
       // 获取修改记录
       let updateRecords = [];
-      this.adminLoading = true;
-      if ($table) {
-        updateRecords = $table.getUpdateRecords();
+      if (newData) {
+        updateRecords = newData;
+      } else {
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+
+          console.log(updateRecords, "");
+        } else {
+          // let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          // let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          // let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          // DeletedRows.forEach((item) => {
+          //   item["ElementDeleteFlag"] = 1;
+          // }); //获取被删除的数据
+          // updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
       }
+      console.log(updateRecords, "updateRecords", this.$refs);
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
@@ -282,20 +296,20 @@ export default {
       let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "success",
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
       } else {
-        this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+        this.$set(this, "adminLoading", false);
       }
     },
     // 获取表头数据
@@ -306,7 +320,7 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
@@ -314,7 +328,32 @@ export default {
                 this.verifyDta(x);
               });
             }
+            //从列获取下拉数据源
+            if (n.DataSourceID && n.ControlType === "combobox" && i === 0) {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
+            }
+            if (n.Required && i === 0) {
+              this.formSearchs[this.tagRemark].required.push(n);
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+            }
           });
+          this.$set(this.tableColumns, i, m);
+          this.$set(this.OrderNos, i, m);
+
+          this.OrderNos[i] = this.OrderNos[i]
+            .filter((item) => item.isEdit)
+            .map((item) => {
+              return {
+                value: item.prop,
+                label: item.label,
+              };
+            });
+          console.log(this.OrderNos, "this.OrderNo");
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -328,10 +367,11 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        // if (this.tableData[0].length === 0) {
-        //   this.tablePagination[0]["pageSize"] = datas[0][1]["pageSize"];
-        // }
+
+        // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
+        // this.formSearchs[0].datas["PrepareStatus"] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
@@ -353,44 +393,14 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-      this.$set(this.tableColumns, remarkTb, [
-        {
-          label: "品类",
-          prop: "ProductType",
-          width: 30,
-        },
-        {
-          label: "内部型号",
-          prop: "Model",
-          width: 150,
-        },
-        {
-          label: "数量",
-          prop: "Qty",
-          width: 80,
-        },
-        {
-          label: "汇报数",
-          prop: "ReportQty",
-          width: 80,
-        },
-        {
-          label: "出库数",
-          prop: "OutStockQty",
-          width: 80,
-        },
-        {
-          label: "库存数",
-          prop: "OutStockQtyDiff",
-          width: 80,
-        },
-        {
-          label: "未完成",
-          prop: "UnfinishQty",
-          width: 80,
-        },
-      ]);
       if (result) {
+        if (remarkTb == 1) {
+          if (data.length != 0) {
+            data.forEach((a) => {
+              this.$set(a, "update", false);
+            });
+          }
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -402,16 +412,102 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
-    ////////////////其他事件///////////////
+    // 刷新页面
+    refrshPage() {
+      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+        const { fullPath } = this.$route;
+        this.$nextTick(() => {
+          this.$router.replace({
+            path: "/redirect" + fullPath,
+          });
+        });
+      });
+    },
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["ProductionStatus"] = item.value;
+      this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
+      this.$set(this.tableData, 1, []);
       this.dataSearch(0);
+    },
+    // 改变状态
+    changeStatus2(item, index) {
+      if (!this.formSearchs[1].datas["SalesOrderDetailID"]) {
+        this.$message.error("请单击上方行数据再查询！");
+        return;
+      }
+      this.labelStatus2 = index;
+      this.formSearchs[1].datas.PrepareType = "";
+      this.formSearchs[1].datas.InspectStatus = "";
+      this.formSearchs[1].datas.UnIssuedQty = "";
+      if (index == 1) {
+        this.formSearchs[1].datas.InspectStatus = 0;
+      } else if (index == 2) {
+        this.formSearchs[1].datas.InspectStatus = 2;
+      } else if (index == 3) {
+        this.formSearchs[1].datas.UnIssuedQty = "0";
+        this.formSearchs[1].datas.InspectStatus = 0;
+      }
+      this.$set(this.tableData, 1, []);
+      this.dataSearch(1);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
+    },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      if (column.property == "IsCompleteInspect") {
+        if (row.IsCompleteInspect == "未开始") {
+          return {
+            backgroundColor: "#ff7b7b",
+          };
+        } else if (row.IsCompleteInspect == "进行中") {
+          return {
+            backgroundColor: "#fdfd8f",
+          };
+        } else if (row.IsCompleteInspect == "已完成") {
+          return {
+            backgroundColor: "#9fff9f",
+          };
+        }
+      }
+    },
+    // 行内样式
+    cellStyle({ row, column }) {
+      if (column.property == "OrderNo") {
+        if (row.InspectStatus == 2) {
+          return {
+            backgroundColor: "#ff7b7b",
+          };
+        } else {
+          if (row.InspectStatus == 1) {
+            return {
+              backgroundColor: "#9fff9f",
+            };
+          }
+        }
+      }
+    },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => { });
     },
   },
 };

@@ -1,57 +1,20 @@
 <!-- 简单表格弹框组件-->
 <template>
-  <el-dialog
-    :title="title"
-    :visible.sync="Dialog"
-    :width="width"
-    :close-on-click-modal="false"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
+  <el-dialog :title="title" :visible.sync="Dialog" :width="width" :close-on-click-modal="false">
+    <div class="admin_head" ref="headRef">
+      <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
+        :btnForm="btnForm" @btnClick="btnClick" />
     </div>
     <div>
-      <ComVxeTable
-        ref="PurchaseRequisition"
-        :isToolbar="isToolbar"
-        :forbidden="forbidden"
-        :isEdit="isEdit"
-        :hasSelect="hasSelect"
-        :remark="0"
-        :row-key="'RowNumber'"
-        :height="height"
-        :sysID="sysID"
-        :table-data="tableData[0]"
-        :table-header="tableColumns[0]"
-        :table-loading="tableLoading[0]"
-        :pagination="tablePagination[0]"
-        @pageChange="pageChange"
-        @pageSize="pageSize"
-        @sortChange="sortChange"
-        @selectfun="selectFun"
-        @toPageSetting="toPageSetting"
-        :cell-style="cellStyle"
-      />
+      <ComVxeTable ref="PurchaseRequisition" :isToolbar="isToolbar" :forbidden="forbidden" :isEdit="isEdit"
+        :hasSelect="hasSelect" :remark="0" :row-key="'RowNumber'" :height="height" :sysID="sysID"
+        :table-data="tableData[0]" :table-header="tableColumns[0]" :table-loading="tableLoading[0]"
+        :pagination="tablePagination[0]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
+        @selectfun="selectFun" @toPageSetting="toPageSetting" :cell-style="cellStyle" />
     </div>
-    <span
-      slot="footer"
-      class="dialog-footer"
-    >
+    <span slot="footer" class="dialog-footer">
       <el-button @click="Dialog = false">取 消</el-button>
-      <el-button
-        v-show="isConfirmBtn"
-        type="primary"
-        @click="confirmDialog"
-      >确 定</el-button>
+      <el-button v-show="isConfirmBtn" type="primary" @click="confirmDialog">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -124,24 +87,24 @@ export default {
       required: false,
     },
     // 是否显示确定按钮
-    isConfirmBtn:{
-      type:Boolean,
-      default:false
+    isConfirmBtn: {
+      type: Boolean,
+      default: false
     },
     // 单元格是否支持编辑
-    isEdit:{
-      type:Boolean,
-      default:false
+    isEdit: {
+      type: Boolean,
+      default: false
     },
     // 单元格是否支持编辑
-    hasSelect:{
-      type:Boolean,
-      default:false
+    hasSelect: {
+      type: Boolean,
+      default: false
     },
     // 是否显示选择框
-    forbidden:{
-      type:Boolean,
-      default:false
+    forbidden: {
+      type: Boolean,
+      default: false
     },
     isToolbar: {
       type: Boolean,
@@ -167,7 +130,7 @@ export default {
       tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
-      selectionData: [],
+      selectionData: [[]],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
     };
   },
@@ -178,13 +141,12 @@ export default {
     tableDialog: {
       handler: function (newValue, oldValue) {
         if (newValue) {
-          
-          this.Dialog = true;
           for (var name in this.searchForm) {
             this.$set(this.formSearchs[0].datas, name, this.searchForm[name]);
           }
           this.getTableData(this.formSearchs[0].datas, 0);
         }
+        this.Dialog = newValue;
       },
       deep: true,
     },
@@ -197,10 +159,10 @@ export default {
       deep: true,
     },
   },
-  mounted() {},
+  mounted() { },
   methods: {
     // 点击系统id先关闭弹框
-    toPageSetting(){
+    toPageSetting() {
       this.Dialog = false
     },
     // 选择数据
@@ -348,6 +310,4 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

@@ -8,146 +8,62 @@
   <!-- show-overflow  show-overflow-->
   <div div class="flex_column" style="height: 100%">
     <div class="table-container">
-      <vxe-toolbar
-        ref="xToolbar1"
-        custom
-        print
-        class="toolbar"
-        v-show="isToolbar"
-      >
+      <vxe-toolbar ref="xToolbar1" custom print class="toolbar" v-show="isToolbar">
       </vxe-toolbar>
-      <vxe-table
-        ref="vxeTable"
-        border
-        highlight-current-row
-        highlight-hover-row
-        id="vxeTable_1"
-        :height="height"
-        size="mini"
-        show-overflow
-        :loading="tableLoading"
-        :cell-class-name="tableCellClassName"
-        :row-class-name="tableRowClassName"
-        :checkbox-config="{
+      <vxe-table ref="vxeTable" border highlight-current-row highlight-hover-row id="vxeTable_1" :height="height"
+        size="mini" show-overflow :loading="tableLoading" :cell-class-name="tableCellClassName"
+        :row-class-name="tableRowClassName" :checkbox-config="{
           checkMethod: checCheckboxkMethod,
           highlight: true,
           checkField: 'isChecked',
-        }"
-        :custom-config="{ storage: true, checkMethod: checkColumnCustomMethod }"
-        :mouse-config="{ selected: true }"
-        :cell-style="cellStyle"
-        auto-resize
-        resizable
-        :print-config="{}"
-        :show-footer="showFooter"
-        :footer-method="footerMethod"
-        @checkbox-change="handleSelectionChange"
-        @checkbox-all="handleSelectionChange"
-        @cell-click="handleRowClick"
-        @cell-dblclick="handleRowdbClick"
-        @sort-change="sortChange"
-        @custom="toolbarCustomEvent"
-        :keep-source="keepSource"
-        :span-method="rowspanMethod"
-      >
-        <vxe-column
-          type="checkbox"
-          fixed="left"
-          width="45"
-          style="height: 27.42px"
-          v-if="hasSelect"
-        ></vxe-column>
-        <vxe-column
-          type="seq"
-          min-width="60"
-          v-if="IsIndex"
-          title="序号"
-        ></vxe-column>
-        <vxe-column
-          v-for="(x, z) in tableHeaderChange"
-          :key="z"
-          :resizable="true"
-          :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
-          :sortable="x.sortable == 'custom' ? true : false"
-          :field="x.prop"
-          :title="x.label"
-          :min-width="x.width"
-          :fixed="x.fix"
-          :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
-          :filter-method="filterMethod"
-          :filter-recover-method="filterRecoverMethod"
-          :align="x.align"
-        >
+        }" :custom-config="{ storage: true, checkMethod: checkColumnCustomMethod }" :mouse-config="{ selected: true }"
+        :cell-style="cellStyle" auto-resize resizable :print-config="{}" :show-footer="showFooter"
+        :footer-method="footerMethod" @checkbox-change="handleSelectionChange" @checkbox-all="handleSelectionChange"
+        @cell-click="handleRowClick" @cell-dblclick="handleRowdbClick" @sort-change="sortChange"
+        @custom="toolbarCustomEvent" :keep-source="keepSource" :span-method="rowspanMethod">
+        <vxe-column type="checkbox" fixed="left" width="45" style="height: 27.42px" v-if="hasSelect"></vxe-column>
+        <vxe-column type="seq" min-width="60" v-if="IsIndex" title="序号"></vxe-column>
+        <vxe-column v-for="(x, z) in tableHeaderChange" :key="z" :resizable="true"
+          :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false" :sortable="x.sortable == 'custom' ? true : false"
+          :field="x.prop" :title="x.label" :min-width="x.width" :fixed="x.fix"
+          :filters="x.filters ? [{ data: '' }] : [{ data: '' }]" :filter-method="filterMethod"
+          :filter-recover-method="filterRecoverMethod" :align="x.align">
           <template #filter="{ $panel, column }">
-            <input
-              class="my-input"
-              type="type"
-              v-for="(option, index) in column.filters"
-              :key="index"
-              v-model.trim="option.data"
-              @input="$panel.changeOption($event, !!option.data, option)"
-              @keyup.enter="$panel.confirmFilter()"
-              placeholder="按回车确认筛选"
-              style="margin: 10px; height: 35px"
-            />
+            <input class="my-input" type="type" v-for="(option, index) in column.filters" :key="index"
+              v-model.trim="option.data" @input="$panel.changeOption($event, !!option.data, option)"
+              @keyup.enter="$panel.confirmFilter()" placeholder="按回车确认筛选" style="margin: 10px; height: 35px" />
           </template>
           <template v-if="x.children">
-            <vxe-column
-              :field="i.prop"
-              :title="i.label"
-              v-for="(i, k) in x.children"
-              :align="i.align"
-              :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
-              :key="k"
-              :fixed="i.fix"
-              :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
-              :filter-method="filterMethod"
-              :filter-recover-method="filterRecoverMethod"
-            >
+            <vxe-column :field="i.prop" :title="i.label" v-for="(i, k) in x.children" :align="i.align"
+              :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false" :key="k" :fixed="i.fix"
+              :filters="x.filters ? [{ data: '' }] : [{ data: '' }]" :filter-method="filterMethod"
+              :filter-recover-method="filterRecoverMethod">
               <template #filter="{ $panel, column }">
-                <input
-                  class="my-input"
-                  type="type"
-                  v-for="(option, index) in column.filters"
-                  :key="index"
-                  v-model="option.data"
-                  @input="$panel.changeOption($event, !!option.data, option)"
-                  @keyup.enter="$panel.confirmFilter()"
-                  placeholder="按回车确认筛选"
-                  style="margin: 10px; height: 35px"
-                />
+                <input class="my-input" type="type" v-for="(option, index) in column.filters" :key="index"
+                  v-model="option.data" @input="$panel.changeOption($event, !!option.data, option)"
+                  @keyup.enter="$panel.confirmFilter()" placeholder="按回车确认筛选" style="margin: 10px; height: 35px" />
               </template>
               <template slot-scope="scope">
                 <span v-if="i.active">
                   <span v-for="(x2, index2) in i.active" :key="index2">
-                    <span
-                      v-show="x2.condition ? x2.condition(scope.row) : true"
-                      size="mini"
-                      :style="{
-                        margin: '0 5px',
-                        color: x2.color,
-                        cursor: 'pointer',
-                      }"
-                      @click.stop="
-                        operation(
-                          x2.methods,
-                          scope.row,
-                          scope.row[i.prop],
-                          i.prop,
-                          scope.$rowIndex
-                        )
-                      "
-                      >{{ x2.name }}</span
-                    >
+                    <span v-show="x2.condition ? x2.condition(scope.row) : true" size="mini" :style="{
+                      margin: '0 5px',
+                      color: x2.color,
+                      cursor: 'pointer',
+                    }" @click.stop="
+  operation(
+    x2.methods,
+    scope.row,
+    scope.row[i.prop],
+    i.prop,
+    scope.$rowIndex
+  )
+  ">{{ x2.name }}</span>
                   </span>
                 </span>
                 <span v-else-if="i.button">
-                  <el-button
-                    v-show="o.condition ? o.condition(scope.row) : true"
-                    v-for="(o, key) in i.button"
-                    :key="key"
-                    plain
-                    @click.stop="
+                  <el-button v-show="o.condition ? o.condition(scope.row) : true" v-for="(o, key) in i.button" :key="key"
+                    plain @click.stop="
                       operation(
                         o.methods,
                         scope.row,
@@ -155,12 +71,7 @@
                         i.prop,
                         scope.$rowIndex
                       )
-                    "
-                    :type="o.type"
-                    :circle="o.circle"
-                    :icon="o.icon"
-                    size="mini"
-                  >
+                      " :type="o.type" :circle="o.circle" :icon="o.icon" size="mini">
                     <template v-show="o.name">
                       {{ o.name }}
                     </template>
@@ -170,14 +81,11 @@
                   i.render(scope.row)
                 }}</span>
                 <span v-else-if="i.routerName">
-                  <a
-                    :style="{
-                      color: theme,
-                      'text-decoration': 'underline',
-                      cursor: 'pointer',
-                    }"
-                    @click="handleActive(scope.row, i.routerName, i.prop)"
-                  >
+                  <a :style="{
+                    color: theme,
+                    'text-decoration': 'underline',
+                    cursor: 'pointer',
+                  }" @click="handleActive(scope.row, i.routerName, i.prop)">
                     <span v-if="!i.format" v-html="scope.row[i.prop]"></span>
                     <span v-else>{{
                       i.format(scope.row[i.prop], scope.row)
@@ -186,16 +94,9 @@
                 </span>
                 <span v-else-if="i.component">
                   <span v-if="scope.row['update']">
-                    <span
-                      v-if="
-                        i.component.type == 'input' && i.component.inputChange
-                      "
-                    >
-                      <el-input
-                        v-model="scope.row[i.prop]"
-                        :type="i.component.inputType || 'text'"
-                        size="mini"
-                        :rows="1"
+                    <span v-if="i.component.type == 'input' && i.component.inputChange
+                      ">
+                      <el-input v-model="scope.row[i.prop]" :type="i.component.inputType || 'text'" size="mini" :rows="1"
                         @change="
                           operation(
                             i.component.inputChange,
@@ -204,13 +105,32 @@
                             i.prop,
                             scope.$rowIndex
                           )
-                        "
-                      >
+                          ">
                       </el-input>
                     </span>
                     <span v-else-if="i.component.inputType == 'number'">
-                      <el-input
-                        v-model="scope.row[i.prop]"
+                      <el-input v-model="scope.row[i.prop]" @input="
+                        operation(
+                          i.component.methods,
+                          scope.row,
+                          scope.row[i.prop],
+                          i.prop,
+                          scope.$rowIndex
+                        )
+                        " @keyup.enter.native="
+    operation2(
+      x.component.methods2,
+      scope.row,
+      scope.row[x.prop],
+      x.prop,
+      scope.$rowIndex
+    )
+    " type="number" size="mini"></el-input>
+                    </span>
+                    <span v-else-if="i.component.type == 'input' &&
+                      i.component.inputType != 'number'
+                      ">
+                      <el-input v-model="scope.row[i.prop]" :type="i.component.inputType || 'text'" size="mini" :rows="1"
                         @input="
                           operation(
                             i.component.methods,
@@ -219,32 +139,12 @@
                             i.prop,
                             scope.$rowIndex
                           )
-                        "
-                        @keyup.enter.native="
-                          operation2(
-                            x.component.methods2,
-                            scope.row,
-                            scope.row[x.prop],
-                            x.prop,
-                            scope.$rowIndex
-                          )
-                        "
-                        type="number"
-                        size="mini"
-                      ></el-input>
+                          "></el-input>
                     </span>
-                    <span
-                      v-else-if="
-                        i.component.type == 'input' &&
-                        i.component.inputType != 'number'
-                      "
-                    >
-                      <el-input
-                        v-model="scope.row[i.prop]"
-                        :type="i.component.inputType || 'text'"
-                        size="mini"
-                        :rows="1"
-                        @input="
+                    <span v-else-if="i.component.type == 'select' && i.component.selectChange
+                      ">
+                      <el-select filterable clearable :multiple="i.component.multiple" value-key="label"
+                        :disabled="i.component.disabled" v-model="scope.row[i.prop]" size="mini" @change="
                           operation(
                             i.component.methods,
                             scope.row,
@@ -252,172 +152,90 @@
                             i.prop,
                             scope.$rowIndex
                           )
-                        "
-                      ></el-input>
-                    </span>
-                    <span
-                      v-else-if="
-                        i.component.type == 'select' && i.component.selectChange
-                      "
-                    >
-                      <el-select
-                        filterable
-                        clearable
-                        :multiple="i.component.multiple"
-                        value-key="label"
-                        :disabled="i.component.disabled"
-                        v-model="scope.row[i.prop]"
-                        size="mini"
-                        @change="
-                          operation(
-                            i.component.methods,
-                            scope.row,
-                            scope.row[i.prop],
-                            i.prop,
-                            scope.$rowIndex
-                          )
-                        "
-                      >
-                        <el-option
-                          v-for="x2 in scope.row[i.component.prop]"
-                          :key="x2.value"
-                          :label="x2.label"
-                          :value="x2.value"
-                        ></el-option>
+                          ">
+                        <el-option v-for="x2 in scope.row[i.component.prop]" :key="x2.value" :label="x2.label"
+                          :value="x2.value"></el-option>
                       </el-select>
                     </span>
                     <span v-else-if="i.component.type == 'select'">
-                      <el-select
-                        filterable
-                        clearable
-                        :multiple="i.component.multiple"
-                        v-model="scope.row[i.prop]"
-                        size="mini"
-                        :disabled="i.component.disabled"
-                        placeholder
-                      >
-                        <el-option
-                          v-for="x2 in scope.row[i.component.prop]"
-                          :key="x2.value"
-                          :label="x2.label"
-                          :value="x2.value"
-                        ></el-option>
+                      <el-select filterable clearable :multiple="i.component.multiple" v-model="scope.row[i.prop]"
+                        size="mini" :disabled="i.component.disabled" placeholder>
+                        <el-option v-for="x2 in scope.row[i.component.prop]" :key="x2.value" :label="x2.label"
+                          :value="x2.value"></el-option>
                       </el-select>
                     </span>
                     <span v-else-if="i.component.type == 'date'">
-                      <el-date-picker
-                        size="mini"
-                        @change="
-                          operation(
-                            i.component.methods,
-                            scope.row,
-                            scope.row[i.prop],
-                            i.prop,
-                            scope.$rowIndex
-                          )
-                        "
-                        v-model="scope.row[i.prop]"
-                        type="date"
-                        editable
-                        clearable
-                        placeholder="选择日期"
-                        :picker-options="getPickerTime(scope.row)"
-                        value-format="yyyy-MM-dd"
-                        style="width: 100%"
-                      ></el-date-picker>
+                      <el-date-picker size="mini" @change="
+                        operation(
+                          i.component.methods,
+                          scope.row,
+                          scope.row[i.prop],
+                          i.prop,
+                          scope.$rowIndex
+                        )
+                        " v-model="scope.row[i.prop]" type="date" editable clearable placeholder="选择日期"
+                        :picker-options="getPickerTime(scope.row)" value-format="yyyy-MM-dd"
+                        style="width: 100%"></el-date-picker>
                     </span>
                     <span v-else-if="i.component.type == 'datetime'">
-                      <el-date-picker
-                        size="mini"
-                        @change="
-                          operation(
-                            i.component.methods,
-                            scope.row,
-                            scope.row[i.prop],
-                            i.prop,
-                            scope.$rowIndex
-                          )
-                        "
-                        v-model="scope.row[i.prop]"
-                        type="datetime"
-                        editable
-                        clearable
-                        placeholder="选择日期"
-                        value-format="yyyy-MM-dd HH:mm:ss"
-                        format="yyyy-MM-dd HH:mm:ss"
-                        style="width: 100%"
-                      ></el-date-picker>
+                      <el-date-picker size="mini" @change="
+                        operation(
+                          i.component.methods,
+                          scope.row,
+                          scope.row[i.prop],
+                          i.prop,
+                          scope.$rowIndex
+                        )
+                        " v-model="scope.row[i.prop]" type="datetime" editable clearable placeholder="选择日期"
+                        value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
+                        style="width: 100%"></el-date-picker>
                     </span>
                     <span v-else-if="i.component.type == 'time'">
-                      <el-time-select
-                        size="mini"
-                        style="width: 100%"
-                        v-model="scope.row[i.prop]"
-                        :picker-options="{
-                          start: '00:00',
-                          step: '00:15',
-                          end: '24:00',
-                        }"
-                        :placeholder="i.placeholder"
-                      >
+                      <el-time-select size="mini" style="width: 100%" v-model="scope.row[i.prop]" :picker-options="{
+                        start: '00:00',
+                        step: '00:15',
+                        end: '24:00',
+                      }" :placeholder="i.placeholder">
                       </el-time-select>
                     </span>
                     <span v-else-if="i.component.type == 'checkbox'">
-                      <el-checkbox
-                        v-model="scope.row[i.prop]"
-                        @change="
-                          operation(
-                            i.component.methods,
-                            scope.row,
-                            scope.row[i.prop],
-                            i.prop,
-                            scope.$rowIndex
-                          )
-                        "
-                      ></el-checkbox>
+                      <el-checkbox v-model="scope.row[i.prop]" @change="
+                        operation(
+                          i.component.methods,
+                          scope.row,
+                          scope.row[i.prop],
+                          i.prop,
+                          scope.$rowIndex
+                        )
+                        "></el-checkbox>
                     </span>
                     <span v-else-if="i.component.type == 'switch'">
-                      <el-switch
-                        v-model="scope.row[i.prop]"
-                        :active-color="i.component.activeColor"
-                        :inactive-color="i.component.inactiveColor"
-                        :active-value="i.component.activeValue"
-                        :inactive-value="i.component.inactiveValue"
-                      ></el-switch>
+                      <el-switch v-model="scope.row[i.prop]" :active-color="i.component.activeColor"
+                        :inactive-color="i.component.inactiveColor" :active-value="i.component.activeValue"
+                        :inactive-value="i.component.inactiveValue"></el-switch>
                     </span>
                     <span v-else-if="i.component.type == 'autocomplete'">
-                      <el-autocomplete
-                        size="mini"
-                        v-model="scope.row[i.prop]"
-                        :fetch-suggestions="
-                          (queryString, cb) => {
-                            fetchsuggertions(
-                              queryString,
-                              cb,
-                              i.component.methods
-                            );
-                          }
-                        "
-                        @select="
-                          (item) => getRemote(row, item, i.component.methods)
-                        "
-                      >
+                      <el-autocomplete size="mini" v-model="scope.row[i.prop]" :fetch-suggestions="(queryString, cb) => {
+                        fetchsuggertions(
+                          queryString,
+                          cb,
+                          i.component.methods
+                        );
+                      }
+                        " @select="(item) => getRemote(row, item, i.component.methods)
+    ">
                         <template slot-scope="{ item }">
                           <div style="border-bottom: 1px dashed #8c8e8e">
                             <el-form label-width="100px" inline>
-                              <el-form-item
-                                style="margin-bottom: 5px"
-                                :label="i.component.label"
-                                ><span style="color: orange">{{
-                                  item[i.component.prop]
-                                }}</span>
+                              <el-form-item style="margin-bottom: 5px" :label="i.component.label"><span
+                                  style="color: orange">{{
+                                    item[i.component.prop]
+                                  }}</span>
                               </el-form-item>
-                              <el-form-item
-                                style="margin-bottom: 5px"
-                                :label="i.component.label2"
-                                ><span style="color: orange">{{
-                                  item[i.component.prop2]
-                                }}</span>
+                              <el-form-item style="margin-bottom: 5px" :label="i.component.label2"><span
+                                  style="color: orange">{{
+                                    item[i.component.prop2]
+                                  }}</span>
                               </el-form-item>
                             </el-form>
                           </div>
@@ -425,12 +243,8 @@
                       </el-autocomplete>
                     </span>
                     <span v-else-if="i.component.type == 'tag'">
-                      <el-tag
-                        class="table_tag"
-                        @click.stop.native="i.component.handleClick(scope.row)"
-                      >
-                        {{ scope.row[i.prop] }}</el-tag
-                      >
+                      <el-tag class="table_tag" @click.stop.native="i.component.handleClick(scope.row)">
+                        {{ scope.row[i.prop] }}</el-tag>
                     </span>
                   </span>
                   <span v-else>{{ scope.row[i.prop] }}</span>
@@ -438,68 +252,39 @@
                 <span v-else-if="i.format">{{
                   i.format(scope.row[i.prop], scope.row)
                 }}</span>
-                <span
-                  v-else
-                  v-html="scope.row[i.propName ? i.propName : i.prop]"
-                ></span>
+                <span v-else v-html="scope.row[i.propName ? i.propName : i.prop]"></span>
               </template>
             </vxe-column>
-            <vxe-column
-              v-if="isEditDel"
-              label="操作"
-              prop=""
-              fixed="right"
-              width="85px"
-            >
+            <vxe-column v-if="isEditDel" label="操作" prop="" fixed="right" width="85px">
               <template slot-scope="scope">
-                <el-button
-                  type="primary"
-                  icon="el-icon-edit"
-                  circle
-                  size="mini"
-                  @click="editRow(scope.row, scope.$rowIndex)"
-                ></el-button>
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  circle
-                  size="mini"
-                  @click="delRow(scope.row, scope.$rowIndex)"
-                ></el-button>
+                <el-button type="primary" icon="el-icon-edit" circle size="mini"
+                  @click="editRow(scope.row, scope.$rowIndex)"></el-button>
+                <el-button type="danger" icon="el-icon-delete" circle size="mini"
+                  @click="delRow(scope.row, scope.$rowIndex)"></el-button>
               </template>
             </vxe-column>
           </template>
           <template slot-scope="scope">
             <span v-if="x.active">
               <span v-for="(x2, index2) in x.active" :key="index2">
-                <span
-                  v-show="x2.condition ? x2.condition(scope.row) : true"
-                  size="mini"
-                  :style="{
-                    margin: '0 5px',
-                    color: x2.color,
-                    cursor: 'pointer',
-                  }"
-                  @click.stop="
-                    operation(
-                      x2.methods,
-                      scope.row,
-                      scope.row[x.prop],
-                      x.prop,
-                      scope.$rowIndex
-                    )
-                  "
-                  >{{ x2.name }}</span
-                >
+                <span v-show="x2.condition ? x2.condition(scope.row) : true" size="mini" :style="{
+                  margin: '0 5px',
+                  color: x2.color,
+                  cursor: 'pointer',
+                }" @click.stop="
+  operation(
+    x2.methods,
+    scope.row,
+    scope.row[x.prop],
+    x.prop,
+    scope.$rowIndex
+  )
+  ">{{ x2.name }}</span>
               </span>
             </span>
             <span v-else-if="x.button">
-              <el-button
-                v-show="o.condition ? o.condition(scope.row) : true"
-                v-for="(o, key) in x.button"
-                :key="key"
-                plain
-                @click.stop="
+              <el-button v-show="o.condition ? o.condition(scope.row) : true" v-for="(o, key) in x.button" :key="key"
+                plain @click.stop="
                   operation(
                     o.methods,
                     scope.row,
@@ -507,12 +292,7 @@
                     x.prop,
                     scope.$rowIndex
                   )
-                "
-                :type="o.type"
-                :circle="o.circle"
-                :icon="o.icon"
-                size="mini"
-              >
+                  " :type="o.type" :circle="o.circle" :icon="o.icon" size="mini">
                 <template v-show="o.name">
                   {{ o.name }}
                 </template>
@@ -520,30 +300,20 @@
             </span>
             <span v-else-if="x.render">{{ x.render(scope.row) }}</span>
             <span v-else-if="x.routerName">
-              <a
-                :style="{
-                  color: theme,
-                  'text-decoration': 'underline',
-                  cursor: 'pointer',
-                }"
-                @click="handleActive(scope.row, x.routerName, x.prop)"
-              >
+              <a :style="{
+                color: theme,
+                'text-decoration': 'underline',
+                cursor: 'pointer',
+              }" @click="handleActive(scope.row, x.routerName, x.prop)">
                 <span v-if="!x.format" v-html="scope.row[x.prop]"></span>
                 <span v-else>{{ x.format(scope.row[x.prop], scope.row) }}</span>
               </a>
             </span>
             <span v-else-if="x.component">
               <span v-if="scope.row['update']">
-                <span
-                  v-if="x.component.type == 'input' && x.component.inputChange"
-                >
-                  <el-input
-                    v-model="scope.row[x.prop]"
-                    :type="x.component.inputType || 'text'"
-                    :disabled="scope.row[x.component.disabled]"
-                    size="mini"
-                    :rows="1"
-                    @input="
+                <span v-if="x.component.type == 'input' && x.component.inputChange">
+                  <el-input v-model="scope.row[x.prop]" :type="x.component.inputType || 'text'"
+                    :disabled="scope.row[x.component.disabled]" size="mini" :rows="1" @input="
                       operation(
                         x.component.methods,
                         scope.row,
@@ -551,57 +321,40 @@
                         x.prop,
                         scope.$rowIndex
                       )
-                    "
-                    @change="
-                      operation(
-                        x.component.inputChange,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                  ></el-input>
+                      " @change="
+    operation(
+      x.component.inputChange,
+      scope.row,
+      scope.row[x.prop],
+      x.prop,
+      scope.$rowIndex
+    )
+    "></el-input>
                 </span>
                 <span v-else-if="x.component.inputType == 'number'">
-                  <el-input
-                    v-model="scope.row[x.prop]"
-                    @input="
-                      operation(
-                        x.component.methods,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                    :disabled="scope.row[x.component.disabled]"
-                    @keyup.enter.native="
-                      operation2(
-                        x.component.methods2,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                    type="number"
-                    size="mini"
-                  ></el-input>
+                  <el-input v-model="scope.row[x.prop]" @input="
+                    operation(
+                      x.component.methods,
+                      scope.row,
+                      scope.row[x.prop],
+                      x.prop,
+                      scope.$rowIndex
+                    )
+                    " :disabled="scope.row[x.component.disabled]" @keyup.enter.native="
+    operation2(
+      x.component.methods2,
+      scope.row,
+      scope.row[x.prop],
+      x.prop,
+      scope.$rowIndex
+    )
+    " type="number" size="mini"></el-input>
                 </span>
-                <span
-                  v-else-if="
-                    x.component.type == 'input' &&
-                    x.component.inputType != 'number'
-                  "
-                >
-                  <el-input
-                    v-model="scope.row[x.prop]"
-                    :type="x.component.inputType || 'text'"
-                    :rows="1"
-                    :disabled="scope.row[x.component.disabled]"
-                    size="mini"
-                    @blur="
+                <span v-else-if="x.component.type == 'input' &&
+                  x.component.inputType != 'number'
+                  ">
+                  <el-input v-model="scope.row[x.prop]" :type="x.component.inputType || 'text'" :rows="1"
+                    :disabled="scope.row[x.component.disabled]" size="mini" @blur="
                       operation(
                         x.component.methods,
                         scope.row,
@@ -609,18 +362,11 @@
                         x.prop,
                         scope.$rowIndex
                       )
-                    "
-                  ></el-input>
+                      "></el-input>
                 </span>
                 <span v-else-if="x.component.selectChange">
-                  <el-select
-                    filterable
-                    clearable
-                    :multiple="x.component.multiple"
-                    :disabled="scope.row[x.component.disabled]"
-                    value-key="label"
-                    v-model="scope.row[x.prop]"
-                    size="mini"
+                  <el-select filterable clearable :multiple="x.component.multiple"
+                    :disabled="scope.row[x.component.disabled]" value-key="label" v-model="scope.row[x.prop]" size="mini"
                     @change="
                       operation(
                         x.component.methods,
@@ -629,152 +375,92 @@
                         x.prop,
                         scope.$rowIndex
                       )
-                    "
-                  >
-                    <el-option
-                      v-for="x2 in scope.row[x.component.prop]"
-                      :key="x2.value"
-                      :label="x2.label"
-                      :value="x2.value"
-                    ></el-option>
+                      ">
+                    <el-option v-for="x2 in scope.row[x.component.prop]" :key="x2.value" :label="x2.label"
+                      :value="x2.value"></el-option>
                   </el-select>
                 </span>
                 <span v-else-if="x.component.type == 'select'">
-                  <el-select
-                    v-model="scope.row[x.prop]"
-                    size="mini"
-                    :multiple="x.component.multiple"
-                    :disabled="scope.row[x.component.disabled]"
-                    filterable
-                    clearable
-                  >
-                    <el-option
-                      v-for="x2 in scope.row[x.component.prop]"
-                      :key="x2.value"
-                      :label="x2.label"
-                      :value="x2.value"
-                    ></el-option>
+                  <el-select v-model="scope.row[x.prop]" size="mini" :multiple="x.component.multiple"
+                    :disabled="scope.row[x.component.disabled]" filterable clearable>
+                    <el-option v-for="x2 in scope.row[x.component.prop]" :key="x2.value" :label="x2.label"
+                      :value="x2.value"></el-option>
                   </el-select>
                 </span>
                 <span v-else-if="x.component.type == 'date'">
-                  <el-date-picker
-                    size="mini"
-                    :disabled="
-                      scope.row[x.component.disabled] ||
-                      scope.row[x.component[x.prop]]
-                        ? true
-                        : false
-                    "
-                    @change="
-                      operation(
-                        x.component.methods,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                    v-model="scope.row[x.prop]"
-                    type="date"
-                    editable
-                    clearable
-                    placeholder="选择日期"
-                    :picker-options="getPickerTime(scope.row)"
-                    value-format="yyyy-MM-dd"
-                    style="width: 100%"
-                  ></el-date-picker>
+                  <el-date-picker size="mini" :disabled="scope.row[x.component.disabled] ||
+                    scope.row[x.component[x.prop]]
+                    ? true
+                    : false
+                    " @change="
+    operation(
+      x.component.methods,
+      scope.row,
+      scope.row[x.prop],
+      x.prop,
+      scope.$rowIndex
+    )
+    " v-model="scope.row[x.prop]" type="date" editable clearable placeholder="选择日期"
+                    :picker-options="getPickerTime(scope.row)" value-format="yyyy-MM-dd"
+                    style="width: 100%"></el-date-picker>
                 </span>
                 <span v-else-if="x.component.type == 'datetime'">
-                  <el-date-picker
-                    size="mini"
-                    @change="
-                      operation(
-                        x.component.methods,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                    v-model="scope.row[x.prop]"
-                    type="datetime"
-                    editable
-                    clearable
-                    :disabled="scope.row[x.component.disabled]"
-                    placeholder="选择日期"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    style="width: 100%"
-                  ></el-date-picker>
+                  <el-date-picker size="mini" @change="
+                    operation(
+                      x.component.methods,
+                      scope.row,
+                      scope.row[x.prop],
+                      x.prop,
+                      scope.$rowIndex
+                    )
+                    " v-model="scope.row[x.prop]" type="datetime" editable clearable
+                    :disabled="scope.row[x.component.disabled]" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss"
+                    format="yyyy-MM-dd HH:mm:ss" style="width: 100%"></el-date-picker>
                 </span>
                 <span v-else-if="x.component.type == 'time'">
-                  <el-time-select
-                    size="mini"
-                    style="width: 100%"
-                    :disabled="scope.row[x.component.disabled]"
-                    v-model="scope.row[x.prop]"
-                    :picker-options="{
+                  <el-time-select size="mini" style="width: 100%" :disabled="scope.row[x.component.disabled]"
+                    v-model="scope.row[x.prop]" :picker-options="{
                       start: '00:00',
                       step: '00:15',
                       end: '24:00',
-                    }"
-                    :placeholder="x.placeholder"
-                  >
+                    }" :placeholder="x.placeholder">
                   </el-time-select>
                 </span>
                 <span v-else-if="x.component.type == 'checkbox'">
-                  <el-checkbox
-                    v-model="scope.row[x.prop]"
-                    @change="
-                      operation(
-                        x.component.methods,
-                        scope.row,
-                        scope.row[x.prop],
-                        x.prop,
-                        scope.$rowIndex
-                      )
-                    "
-                  ></el-checkbox>
+                  <el-checkbox v-model="scope.row[x.prop]" @change="
+                    operation(
+                      x.component.methods,
+                      scope.row,
+                      scope.row[x.prop],
+                      x.prop,
+                      scope.$rowIndex
+                    )
+                    "></el-checkbox>
                 </span>
                 <span v-else-if="x.component.type == 'switch'">
-                  <el-switch
-                    v-model="scope.row[x.prop]"
-                    :active-color="x.component.activeColor"
-                    :inactive-color="x.component.inactiveColor"
-                    :active-value="x.component.activeValue"
-                    :inactive-value="x.component.inactiveValue"
-                  ></el-switch>
+                  <el-switch v-model="scope.row[x.prop]" :active-color="x.component.activeColor"
+                    :inactive-color="x.component.inactiveColor" :active-value="x.component.activeValue"
+                    :inactive-value="x.component.inactiveValue"></el-switch>
                 </span>
                 <span v-else-if="x.component.type == 'autocomplete'">
-                  <el-autocomplete
-                    size="mini"
-                    :disabled="scope.row[x.component.disabled]"
-                    v-model="scope.row[x.prop]"
-                    :fetch-suggestions="
-                      (queryString, cb) => {
-                        fetchsuggertions(queryString, cb, x.component.methods);
-                      }
-                    "
-                    @select="
-                      (item) => getRemote(row, item, x.component.methods)
-                    "
-                  >
+                  <el-autocomplete size="mini" :disabled="scope.row[x.component.disabled]" v-model="scope.row[x.prop]"
+                    :fetch-suggestions="(queryString, cb) => {
+                      fetchsuggertions(queryString, cb, x.component.methods);
+                    }
+                      " @select="(item) => getRemote(row, item, x.component.methods)
+    ">
                     <template slot-scope="{ item }">
                       <div style="border-bottom: 1px dashed #8c8e8e">
                         <el-form label-width="100px" inline>
-                          <el-form-item
-                            style="margin-bottom: 5px"
-                            :label="x.component.label"
-                            ><span style="color: orange">{{
-                              item[x.component.prop]
-                            }}</span>
+                          <el-form-item style="margin-bottom: 5px" :label="x.component.label"><span
+                              style="color: orange">{{
+                                item[x.component.prop]
+                              }}</span>
                           </el-form-item>
-                          <el-form-item
-                            style="margin-bottom: 5px"
-                            :label="x.component.label2"
-                            ><span style="color: orange">{{
-                              item[x.component.prop2]
-                            }}</span>
+                          <el-form-item style="margin-bottom: 5px" :label="x.component.label2"><span
+                              style="color: orange">{{
+                                item[x.component.prop2]
+                              }}</span>
                           </el-form-item>
                         </el-form>
                       </div>
@@ -782,70 +468,36 @@
                   </el-autocomplete>
                 </span>
                 <span v-else-if="x.component.type == 'tag'">
-                  <el-tag
-                    class="table_tag"
-                    @click.stop.native="x.component.handleClick(scope.row)"
-                  >
-                    {{ scope.row[x.prop] }}</el-tag
-                  >
+                  <el-tag class="table_tag" @click.stop.native="x.component.handleClick(scope.row)">
+                    {{ scope.row[x.prop] }}</el-tag>
                 </span>
               </span>
               <span v-else-if="x.component.type == 'checkbox'">
-                <el-tag
-                  v-if="scope.row[x.prop] == true"
-                  size="mini"
-                  effect="light"
-                  >是
+                <el-tag v-if="scope.row[x.prop] == true" size="mini" effect="light">是
                 </el-tag>
-                <el-tag v-else type="info" size="mini" effect="light"
-                  >否
+                <el-tag v-else type="info" size="mini" effect="light">否
                 </el-tag>
               </span>
               <span v-else-if="x.prop == 'Status'">
-                <el-tag v-if="scope.row.Status == 1" size="mini" effect="light"
-                  >启用
+                <el-tag v-if="scope.row.Status == 1" size="mini" effect="light">启用
                 </el-tag>
-                <el-tag v-else type="danger" size="mini" effect="light"
-                  >禁用
+                <el-tag v-else type="danger" size="mini" effect="light">禁用
                 </el-tag>
               </span>
-              <span
-                v-else
-                v-html="scope.row[x.propName ? x.propName : x.prop]"
-              ></span>
+              <span v-else v-html="scope.row[x.propName ? x.propName : x.prop]"></span>
             </span>
             <span v-else-if="x.format">{{
               x.format(scope.row[x.prop], scope.row)
             }}</span>
-            <span
-              v-else
-              v-html="scope.row[x.propName ? x.propName : x.prop]"
-            ></span>
+            <span v-else v-html="scope.row[x.propName ? x.propName : x.prop]"></span>
           </template>
         </vxe-column>
-        <vxe-column
-          v-if="isEditDel"
-          label="操作"
-          prop=""
-          fixed="right"
-          width="85px"
-        >
+        <vxe-column v-if="isEditDel" label="操作" prop="" fixed="right" width="85px">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              icon="el-icon-edit"
-              circle
-              size="mini"
-              @click="editRow(scope.row, scope.$rowIndex)"
-            ></el-button>
-            <el-button
-              v-show="condition ? condition(scope.row) : true"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              size="mini"
-              @click="delRow(scope.row, scope.$rowIndex)"
-            ></el-button>
+            <el-button type="primary" icon="el-icon-edit" circle size="mini"
+              @click="editRow(scope.row, scope.$rowIndex)"></el-button>
+            <el-button v-show="condition ? condition(scope.row) : true" type="danger" icon="el-icon-delete" circle
+              size="mini" @click="delRow(scope.row, scope.$rowIndex)"></el-button>
           </template>
         </vxe-column>
       </vxe-table>
@@ -853,8 +505,7 @@
     <div class="flex_shrink">
       <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span @click="toPageSetting" class="primaryColor cursor"
-            >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor">SysID:{{ sysID }}
           </span>
           <span style="color: red; font-weight: bold; margin-left: 10px">{{
             Prompt
@@ -864,32 +515,22 @@
           <div class="footer_label" v-show="multipleSelection.length != 0">
             已选[<span style="color: red; font-weight: bold">{{
               multipleSelection.length
-            }}</span
-            >]
+            }}</span>]
           </div>
           <div class="margin_right_20">
             {{ footerLabel }}
           </div>
-          <el-pagination
-            background
-            @size-change="pageSize"
-            :current-page="pagination.pageIndex"
-            :page-sizes="[
-              10, 20, 32, 50, 100, 150, 200, 250, 300, 350, 500, 400, 800, 1000,
-              1500, 2000, 3000, 4000, 5000,
-            ]"
-            :page-size="pagination.pageSize"
-            :total="pagination.pageTotal"
-            @current-change="pageChange"
-            layout="total, sizes, prev, pager, next,jumper"
-          >
+          <el-pagination background @size-change="pageSize" :current-page="pagination.pageIndex" :page-sizes="[
+            10, 20, 32, 50, 100, 150, 200, 250, 300, 350, 500, 400, 800, 1000,
+            1500, 2000, 3000, 4000, 5000,
+          ]" :page-size="pagination.pageSize" :total="pagination.pageTotal" @current-change="pageChange"
+            layout="total, sizes, prev, pager, next,jumper">
           </el-pagination>
         </div>
       </div>
       <div v-else class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span @click="toPageSetting" class="primaryColor cursor"
-            >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor">SysID:{{ sysID }}
           </span>
           <span style="color: red; font-weight: bold; margin-left: 10px">{{
             Prompt
@@ -1124,6 +765,7 @@ export default {
       scrollTop: 0,
       theme: "#409EFF",
       isChangeColor: true,
+      previousRowIndex: null,
     };
   },
   methods: {
@@ -1341,13 +983,16 @@ export default {
       );
     },
     // 单击行
-    handleRowClick({ row, column }) {
+    handleRowClick({ row, column, rowIndex }) {
       if (this.isChecked) {
         this.$refs.vxeTable.setCheckboxRow(row, true);
       }
       if (column.type !== "checkbox") {
         // 如果是勾选框单元格，则取消行点击的触发
-        this.$emit("handleRowClick", row, this.remark);
+        if (rowIndex !== this.previousRowIndex) {
+          this.$emit("handleRowClick", row, this.remark);
+        }
+        this.previousRowIndex = rowIndex;
       }
     },
     // 双击行

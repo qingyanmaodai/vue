@@ -370,13 +370,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -425,7 +425,8 @@ export default {
           dangerouslyUseHTMLString: true,
         });
         this.getAllMenu();
-        this.dataSearch(remarkTb);
+        await this.dataSearch(remarkTb);
+       
       } else {
         this.$message({
           message: msg,
@@ -679,13 +680,15 @@ export default {
         }
       }
     },
-    // 弹框确定添加
-    sureAdd() {
+    async sureAdd() {
+      // 弹框确定添加
       if (this.Type == "按钮") {
-        this.sureLoading = true;
+        this.$set(this, 'sureLoading', true);
         //将所选的数据和默认的数据做对比
+
         this.selectionData[1] =
           this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
+          console.log(this.selectionData[1],'this.selectionData[1]');
         let sendData = this.selectionDefaultData[1]
           .map((item) => {
             const findVal = this.selectionData[1].find(
@@ -712,11 +715,13 @@ export default {
           );
         if (sendData.length === 0) {
           this.$message.error("请选择需要修改的按钮！");
-          this.sureLoading = false;
+        this.$set(this, 'sureLoading', false);
           return;
         }
-        this.dataSave(1, "", "", sendData);
-        this.sureLoading = false;
+        await this.dataSave(1, "", "", sendData);
+        console.log(2);
+
+       this.sureLoading = false;
       } else {
         this.$refs.menuForm.validate((valid) => {
           if (valid) {
