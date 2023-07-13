@@ -1227,47 +1227,47 @@ export default {
       if (!currentRow[currentlabel]) {
         //不是天日的数量
         currentlabel = this.tableColumns[0][colIndex].prop;
-        if (currentlabel == "ViewSort") {
-          val = currentRow[currentlabel];
-          if (val) {
-            let newRowindex = 1;
-            let flag = false;
-            let lineID = currentRow["LineID"];
-            //循环上面
-            for (var r = 0; r < dataSource.length - 1; r++) {
-              let row = dataSource[r];
-              if (lineID != row["LineID"]) {
-                continue;
-              }
-              let thisValue = newRowindex; //row[currentlabel];
-              if (row["Code"] == null || row["Code"] == "") {
-                break;
-              }
-              if (r < rowIndex) {
-                //当前循环的在当前操作行的上面
-                if (thisValue >= val && flag === false) {
-                  newRowindex = val + 1;
-                  flag = true;
-                }
+        // if (currentlabel == "ViewSort") {
+        //   val = currentRow[currentlabel];
+        //   if (val) {
+        //     let newRowindex = 1;
+        //     let flag = false;
+        //     let lineID = currentRow["LineID"];
+        //     //循环上面
+        //     for (var r = 0; r < dataSource.length - 1; r++) {
+        //       let row = dataSource[r];
+        //       if (lineID != row["LineID"]) {
+        //         continue;
+        //       }
+        //       let thisValue = newRowindex; //row[currentlabel];
+        //       if (row["Code"] == null || row["Code"] == "") {
+        //         break;
+        //       }
+        //       if (r < rowIndex) {
+        //         //当前循环的在当前操作行的上面
+        //         if (thisValue >= val && flag === false) {
+        //           newRowindex = val + 1;
+        //           flag = true;
+        //         }
 
-                thisValue = newRowindex;
-                newRowindex++;
-              } else if (r > rowIndex) {
-                //当前循环的在当前操作行的下面
-                if (newRowindex == val) {
-                  newRowindex++;
-                }
+        //         thisValue = newRowindex;
+        //         newRowindex++;
+        //       } else if (r > rowIndex) {
+        //         //当前循环的在当前操作行的下面
+        //         if (newRowindex == val) {
+        //           newRowindex++;
+        //         }
 
-                thisValue = newRowindex;
-                newRowindex++;
-              } else {
-                thisValue = val;
-              }
-              sheet.setValue(r, colIndex, thisValue);
-            }
-          }
-        } else {
-        }
+        //         thisValue = newRowindex;
+        //         newRowindex++;
+        //       } else {
+        //         thisValue = val;
+        //       }
+        //       sheet.setValue(r, colIndex, thisValue);
+        //     }
+        //   }
+        // } else {
+        // }
         sheet.setDataSource(this.tableData[this.labelStatus1]);
         return;
       }
