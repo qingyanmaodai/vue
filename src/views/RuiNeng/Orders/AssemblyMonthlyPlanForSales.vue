@@ -546,6 +546,34 @@ export default {
       // }
     },
 
+ // 更新组装月计划开始时间
+ async UpdateMonthPlanStartDate(remarkTb, index) {
+      // if (this.selectionData[remarkTb].length == 0) {
+      //   this.$message.error("请选择需要提交的数据！");
+      //   return;
+      // } else {
+      this.adminLoading = true;
+      let res = await GetSearch("", "/APSAPI/UpdateMonthPlanStartDate");
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, "adminLoading", false);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, "adminLoading", false);
+      }
+      // }
+    },
+
     // 单击行
     handleRowClick(row, remarkTb) {
       this.delData[remarkTb] = [];
