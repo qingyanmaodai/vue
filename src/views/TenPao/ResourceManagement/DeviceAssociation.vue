@@ -1,43 +1,43 @@
 <!--物料点检-->
 <template>
-  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
+  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px);background-color: #fff;">
     <splitpanes class="default-theme">
-      <pane :size="pane[0]">
-        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
+      <pane :size="60">
+        <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
             <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
           </div>
-          <div class="ant-table-title2" ref="headRef_2">
+          <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
-                <!-- <div
+                <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                 :key="y"
                 >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
-                </div> -->
+                </div>
               </el-col>
             </el-row>
-          </div>
-          <div v-for="item in [0]" :key="item" class="admin_content" style="flex-grow: 1; overflow: hidden">
+          </div> -->
+          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
             <ComVxeTable ref="tableRef" :rowKey="'RowNumber'" height="100%" :isToolbar="false" :isEdit="isEdit[0]"
               :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]" :remark="0"
               :cellStyle="cellStyle0" :sysID="sysID[0]['ID']" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
               :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
-              @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" />
+              @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" :footerContent="false" />
           </div>
         </div>
       </pane>
-      <pane :size="pane[1]">
-        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
-          <div class="admin_head_2" ref="headRef">
+      <pane :size="40">
+        <div class="flex_column fullScreen">
+          <!-- <div class="admin_head_2" ref="headRef">
             <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
-          </div>
+          </div> -->
           <div class="ant-table-title2" ref="headRef_2">
             <el-row>
               <el-col :span="4">
@@ -55,13 +55,12 @@
               </el-col>
             </el-row>
           </div>
-          <div v-for="item in [1, 2]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content"
-            style="flex-grow: 1; overflow: hidden">
+          <div v-for="item in [1, 2]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content flex_grow">
             <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
               :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
               :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
               :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" />
+              @sortChange="sortChange" @selectfun="selectFun" :footerContent="false" />
           </div>
         </div>
       </pane>
@@ -111,7 +110,6 @@ export default {
       title: this.$route.meta.title,
       includeFields: [["ProducedQty", "ConfirmQty"], [], []],
       drawer: false,
-      pane: [100, 0],
       formSearchs: [
         {
           datas: {},
@@ -452,9 +450,6 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      if (this.pane[0] === 100) {
-        this.pane = [60, 40];
-      }
       this.formSearchs[1].datas["MachineMouldID"] =
         row.MachineMouldID;
       this.formSearchs[2].datas["MachineMouldID"] =

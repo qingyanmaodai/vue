@@ -6,8 +6,8 @@
   <!-- :scroll-y="{enable: false, gt: -1}" -->
   <!-- :footer-method="footerMethod" -->
   <!-- show-overflow  show-overflow-->
-  <div div class="flex_column" style="height: 100%">
-    <div class="table-container">
+  <div div class="flex_column" style="height: 100%;border: 1px solid #b9b9b9">
+    <div class="flex_grow">
       <vxe-toolbar ref="xToolbar1" custom print class="toolbar" v-show="isToolbar">
       </vxe-toolbar>
       <vxe-table ref="vxeTable" border highlight-current-row highlight-hover-row id="vxeTable_1" :height="height"
@@ -502,7 +502,7 @@
         </vxe-column>
       </vxe-table>
     </div>
-    <div class="flex_shrink">
+    <div class="flex_shrink bgWhite" v-if="footerContent">
       <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
           <span @click="toPageSetting" class="primaryColor cursor">SysID:{{ sysID }}
@@ -552,6 +552,11 @@ export default {
     showFooter: {
       type: Boolean,
       default: false,
+    },
+    // 是否显示底部内容
+    footerContent: {
+      type: Boolean,
+      default: true,
     },
     // 合计包含哪些字段
     includeFields: {
@@ -1292,4 +1297,23 @@ export default {
 ::v-deep .vxe-footer--row {
   height: 35px;
 }
-</style>
+::v-deep .vxe-header--column{
+  font-family: “Microsoft YaHei” !important;
+}
+::v-deep .vxe-header--row {
+  background-color: #ececec;
+}
+
+// ::v-deep .vxe-header--row {
+//   background-color: #D1F1EE;
+// }
+
+::v-deep .vxe-body--column {
+  border-left: 1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+}
+
+::v-deep th.vxe-header--column {
+  border-left: 1px solid #b9b9b9 !important;
+  border-bottom: 2px solid #b9b9b9 !important;
+}</style>

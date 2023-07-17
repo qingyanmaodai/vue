@@ -23,18 +23,18 @@
               :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
               :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
               :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" @handleRowClick="handleRowClick" :footerContent="false" />
+              @sortChange="sortChange" @selectfun="selectFun" @handleRowClick="handleRowClick" />
           </div>
         </div>
       </pane>
       <pane :size="40">
         <div class="flex_column" style="width: 100%; height: 100%">
-          <!-- <div class="admin_head" ref="headRef" v-for="item in [1, 2, 3]" :key="item + 'head'"
+          <div class="admin_head" ref="headRef" v-for="item in [1, 2, 3]" :key="item + 'head'"
             v-show="Number(selectedIndex) === item">
             <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
               :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
-          </div> -->
-          <div class="ant-table-title2" ref="headRef_2">
+          </div>
+          <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
               <el-col :span="6"><el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
                   <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
@@ -51,7 +51,7 @@
                 <el-button type="primary" size="mini" @click="AddEvent(3)" v-show="selectedIndex === '3'">
                   添加TPM设备
                 </el-button>
-                <!-- <el-select
+                <el-select
                   clearable
                   filterable
                   size="small"
@@ -76,30 +76,30 @@
                 <el-divider direction="vertical"></el-divider>
                 <el-button type="primary" size="mini" @click="changeProp(1)">
                   批量修改
-                </el-button> -->
+                </el-button>
               </el-col>
             </el-row>
-          </div>
-          <div v-for="item in [1, 2, 3]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content flex_grow">
+          </div> -->
+          <div v-for="item in [1]" :key="item" class="admin_content flex_grow">
             <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
               :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
               :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
               :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" :footerContent="false" />
+              @sortChange="sortChange" @selectfun="selectFun" />
           </div>
         </div>
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable title="添加产品" :tableDialog="colDialogVisible4" :sysID="sysID[4]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible4 = false" :searchForm="formSearchs[4]" :isToolbar="false" :isConfirmBtn="true"
+    <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
+      @closeDialog="colDialogVisible2 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
       @confirmDialog="confirmDialog"></DialogTable>
-    <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
+    <!-- <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
       @confirmDialog="confirmDialog"></DialogTable>
     <DialogTable title="添加TPM设备" :tableDialog="colDialogVisible6" :sysID="sysID[6]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible6 = false" :searchForm="formSearchs[6]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
+      @confirmDialog="confirmDialog"></DialogTable> -->
   </div>
 </template>
 
@@ -119,7 +119,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "ScheduleDetails",
+  name: "ProductionSchedulingManagement",
   components: {
     ComSearch,
     ComVxeTable,
@@ -200,8 +200,8 @@ export default {
       labelStatus1: 0,
       labelStatus2: 0,
       sysID: [
-        { ID: 11147 },
-        { ID: 11146 },
+        { ID: 11150 },
+        { ID: 11149 },
         { ID: 11145 },
         { ID: 11148 },
         { ID: 1180 },
@@ -211,7 +211,7 @@ export default {
       isEdit: [false, false, false, false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
-      colDialogVisible4: false,
+      colDialogVisible2: false,
       colDialogVisible5: false,
       colDialogVisible6: false,
       addNum: 1,
@@ -452,7 +452,22 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y) => {
+          if (z === 0) {
+            x = [{
+              "type": null,
+              "label": "日期",
+              "width": null,
+              "prop": "Days",
+              "placeholder": "请输入日期",
+              "methods": null,
+              "options": null,
+              "dicID": "11150",
+              "icon": null,
+              "multiple": false,
+              "value": ""
+            }].concat(x)
+          }
+          x.forEach((y, n) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -461,9 +476,6 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-
-        // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        // this.formSearchs[0].datas["PrepareStatus"] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -551,9 +563,7 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas["RAMID"] = row.RAMID;
-      this.formSearchs[2].datas["RAMID"] = row.RAMID;
-      this.formSearchs[3].datas["RAMID"] = row.RAMID;
+      this.formSearchs[1].datas["CustomerID"] = row.CustomerID;
       this.dataSearch(this.selectedIndex);
 
     },
@@ -564,7 +574,7 @@ export default {
     },
     AddEvent(index) {
       if (index === 1) {
-        this.colDialogVisible4 = true;
+        this.colDialogVisible2 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
@@ -660,7 +670,7 @@ export default {
         item["RAMID"] = this.formSearchs[tagNumber]["datas"]["RAMID"];
         item["dicID"] = this.sysID[tagNumber]["ID"];
       });
-      this.colDialogVisible4 = false;
+      this.colDialogVisible2 = false;
       this.colDialogVisible5 = false;
       this.colDialogVisible6 = false;
       this.dataSave(tagNumber, null, null, data);

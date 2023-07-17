@@ -1,7 +1,7 @@
 <template>
   <!-- 只查看的表格 -->
   <div class="container">
-    <div class="table-container">
+    <div class="flex_grow">
       <vxe-toolbar
         ref="xToolbar1"
         custom

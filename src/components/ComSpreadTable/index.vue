@@ -2,7 +2,7 @@
   <!--  spreadJSform表单控件  -->
 
   <div class="flex_column">
-    <div class="table-container" v-loading="tableLoading">
+    <div class="flex_grow" v-loading="tableLoading">
       <gc-spread-sheets
         class="sample-spreadsheets"
         ref="gcSpreadSheets"
@@ -179,7 +179,7 @@ export default {
   flex-direction: column;
   // height: 100%;
 }
-.table-container {
+.flex_grow {
   flex-grow: 1;
   overflow: hidden;
   border: 1px solid #ababab;

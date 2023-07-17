@@ -6,13 +6,13 @@
         <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
           :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
       </div>
-      <div class="ant-table-title2" ref="headRef_2">
+      <!-- <div class="ant-table-title2 gray" ref="headRef_2">
         <el-row>
           <el-col :span="4"><span class="title">{{ title }}</span></el-col>
           <el-col :span="20" class="flex_flex_end"></el-col>
         </el-row>
-      </div>
-      <div v-for="item in [0]" :key="item" class="admin_content" style="flex-grow: 1; overflow: hidden">
+      </div> -->
+      <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
         <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
           :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
           :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]" :keepSource="true"
