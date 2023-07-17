@@ -464,7 +464,7 @@ export default {
               "dicID": "11150",
               "icon": null,
               "multiple": false,
-              "value": []
+              "value": [this.$moment().format('YYYY-MM-DD'), this.$moment().add(30, "days").format("YYYY-MM-DD")]
             }].concat(x)
           }
           x.forEach((y, n) => {
