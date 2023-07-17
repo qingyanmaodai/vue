@@ -454,7 +454,7 @@ export default {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           if (z === 0) {
             x = [{
-              "type": null,
+              "type": 'Daterange',
               "label": "日期",
               "width": null,
               "prop": "Days",
@@ -464,7 +464,7 @@ export default {
               "dicID": "11150",
               "icon": null,
               "multiple": false,
-              "value": ""
+              "value": []
             }].concat(x)
           }
           x.forEach((y, n) => {
