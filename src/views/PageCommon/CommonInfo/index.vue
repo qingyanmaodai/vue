@@ -203,7 +203,7 @@ export default {
     let routeBtn = this.$route;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
+    this.judgeBtn(this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
 
     if (sessionStorage.getItem("dicIDForm" + this.ID)) {
@@ -241,6 +241,15 @@ export default {
     }, 450);
   },
   methods: {
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
+    },
     // 同步供需平衡表
     async syncBalance() {
       this.adminLoading = true;

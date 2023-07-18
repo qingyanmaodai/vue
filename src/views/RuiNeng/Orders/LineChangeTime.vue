@@ -240,7 +240,7 @@ export default {
   created() {
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
+    this.judgeBtn(this.btnForm);
     this.getTableHeader();
   },
   mounted() {
@@ -249,6 +249,15 @@ export default {
     }, 450);
   },
   methods: {
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
+    },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;

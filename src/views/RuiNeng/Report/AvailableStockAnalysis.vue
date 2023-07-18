@@ -221,7 +221,7 @@ export default {
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
+    this.judgeBtn(this.btnForm);
     this.getTableHeader();
   },
   mounted() {
@@ -230,6 +230,15 @@ export default {
     }, 500);
   },
   methods: {
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
+    },
     //获取子组件实例
     workbookInitialized: function (workbook) {
       this.spread = workbook;

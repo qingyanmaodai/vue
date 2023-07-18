@@ -29,12 +29,10 @@ import './assets/icon/iconfont.css'
 
 import 'lib-flexible'
 import '../rem'
-import common from './utils/common'
 import moment from 'moment'
 import _ from 'lodash'
 Vue.prototype.$moment = moment
 Vue.prototype.$_ = _
-Vue.prototype.$common = common
 
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)

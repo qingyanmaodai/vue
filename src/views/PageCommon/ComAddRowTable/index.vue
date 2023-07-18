@@ -334,39 +334,43 @@ export default {
         }
       }
     },
-    // 保存
-    async dataSave(remarkTb, index) {
-      // 获取修改记录
+     // 保存
+     async dataSave(remarkTb, index, parms, newData) {
+      this.adminLoading = true;
       const $table = this.$refs.ComVxeTable.$refs.vxeTable;
-      const updateRecords = $table.getUpdateRecords();
+      // 获取修改记录
+      let updateRecords = [];
+      if (newData) {
+        updateRecords = newData;
+      } else {
+        if ($table) {
+          updateRecords = $table.getUpdateRecords();
+        } else {
+        }
+      }
       if (updateRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      if (this.formSearchs[remarkTb].required.length) {
-        // 动态检验必填项
-        for (let i = 0; i < updateRecords.length; i++) {
-          for (
-            let x = 0;
-            x < this.formSearchs[remarkTb].required.length;
-            x++
-          ) {
-            let content =
-              updateRecords[i][
-              this.formSearchs[remarkTb].required[x]["prop"]
-              ];
-            if (!content && (content !== 0) & (content !== false)) {
-              this.$message.error(
-                `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
-              );
-              return;
-            }
-          }
+      console.log(updateRecords, 'updateRecords.length');
+      if (updateRecords.length > 0) {
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          updateRecords.map((item1, index1) => {
+            this.formSearchs[remarkTb].required.map((item2, index2) => {
+              let content = item1[item2['prop']]
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(
+                  `${item2['label']}不能为空，请选择`
+                );
+                this.$set(this, "adminLoading", false);
+                return;
+              }
+            })
+          })
         }
       }
-
-
-      this.adminLoading = true;
       let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -376,14 +380,14 @@ export default {
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.adminLoading = false;
+        this.$set(this, "adminLoading", false);
       } else {
         this.$message({
           message: msg,
           type: "error",
           dangerouslyUseHTMLString: true,
         });
-        this.adminLoading = false;
+        this.$set(this, "adminLoading", false);
       }
     },
     // 选择数据

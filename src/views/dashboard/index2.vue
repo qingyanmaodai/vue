@@ -580,7 +580,7 @@ export default {
     let routeBtn = this.$route;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    this.$common.judgeBtn(this, this.btnForm);
+    this.judgeBtn(this.btnForm);
     this.currentDate = this.$moment().format("YYYY-MM-DD");
     this.getTableHeader();
   },
@@ -605,6 +605,16 @@ export default {
     window.addEventListener("resize", this.handleWindowResizeDebounced);
   },
   methods: {
+     //按钮权限
+     judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == "save") {
+            this.$set(this.isEdit, index, true);
+          }
+        });
+      this.$set(this, "btnForm", routeBtn);
+    },
     // 渲染echart图
     barData(id, option) {
       // echarts.dispose(id);
