@@ -197,7 +197,7 @@ export default {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this.isEdit, index, true);
+            this.$set(this, "isEdit", true);
           }
         });
       this.$set(this, "btnForm", routeBtn);
