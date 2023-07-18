@@ -20,7 +20,7 @@
               :signName="0"
             />
           </div>
-          <!-- <div class="ant-table-title2" ref="headRef_2">
+          <!-- <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
@@ -75,7 +75,7 @@
               :signName="item"
             />
           </div>
-          <!-- <div class="ant-table-title2" ref="headRef_2">
+          <!-- <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="6"><el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
                   <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
@@ -148,59 +148,89 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <el-dialog
-      :title="'计划调整'"
-      :visible.sync="colDialogVisible2"
-      width="70%"
-    >
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="6"
-            ><span class="title">销售订单：888888888 </span></el-col
-          >
-          <el-col :span="6"
-            ><span class="title">行项目：99999910 </span></el-col
-          >
-          <el-col :span="6"
-            ><span class="title">交期：2023-10-09 </span></el-col
-          >
-          <el-col :span="6"
-            ><span class="title">前置期：2023-10-06 </span></el-col
-          >
-        </el-row>
+    <el-dialog :title="'计划调整'" :visible.sync="colDialogVisible2" width="70%"
+      ><div
+        style="
+          height: 60vh;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="6"
+              ><span class="title">销售订单：{{ SalesOrderNo }}</span></el-col
+            >
+            <el-col :span="6"
+              ><span class="title">行项目：{{ SalesLineNum }} </span></el-col
+            >
+            <el-col :span="6"
+              ><span class="title">交期：{{ SalesDeliveryDate }} </span></el-col
+            >
+            <el-col :span="6"
+              ><span class="title"
+                >前置期： {{ FrontDate }}
+              </span></el-col
+            >
+          </el-row>
+        </div>
+        <div v-for="item in [2]" :key="item" class="flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :tableData="tableData[item]"
+            :tableHeader="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :isToolbar="false"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :hasSelect="true"
+            :isEdit="isEdit[item]"
+            :isClear="isClear[item]"
+            :keepSource="true"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+          />
+        </div>
+        <div style="height: 40px; margin-top: 6px">
+          <el-row>
+            <el-col :span="6">
+              <div>
+                原因:
+                <el-input
+                  size="small"
+                  v-model="ChangeReason"
+                  style="width: 160px"
+                  placeholder="请输入原因"
+                ></el-input></div
+            ></el-col>
+            <el-col :span="6"
+              ><span class="title">
+                <div>
+                  备注:
+                  <el-input
+                    size="small"
+                    v-model="Extend1"
+                    style="width: 160px"
+                    placeholder="请输入备注"
+                  ></el-input>
+                </div> </span
+            ></el-col>
+          </el-row>
+        </div>
       </div>
-      <div v-for="item in [2]" :key="item">
-        <ComVxeTable
-          :ref="`tableRef${item}`"
-          :rowKey="'RowNumber'"
-          height="100%"
-          :tableData="tableData[item]"
-          :tableHeader="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :isToolbar="false"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :hasSelect="true"
-          :isEdit="isEdit[item]"
-          :isClear="isClear[item]"
-          :keepSource="true"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-          @selectfun="selectFun"
-        />
-      </div>
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="12"
-            ><span class="title">销售订单：888888888 </span></el-col
-          >
-          <el-col :span="12"
-            ><span class="title">行项目：99999910 </span></el-col
-          >
-        </el-row>
-      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false"
+          >重算排期</el-button
+        >
+        <el-button type="primary" @click="dataSave(2)">确定</el-button>
+        <el-button @click="dialogVisible2 = false">取消</el-button>
+      </span>
     </el-dialog>
     <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible2 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
@@ -313,13 +343,13 @@ export default {
       sysID: [
         { ID: 11150 },
         { ID: 11149 },
-        { ID: 11145 },
+        { ID: 5139 },
         { ID: 11148 },
         { ID: 1180 },
         { ID: 11142 },
         { ID: 133 },
       ],
-      isEdit: [false, false, false, false, false, false, false],
+      isEdit: [false, false, true, false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible2: false,
@@ -327,6 +357,12 @@ export default {
       colDialogVisible6: false,
       addNum: 1,
       DataSourceList: [{}],
+      ChangeReason: null,
+      Extend1: null,
+      SalesOrderNo: null,
+      SalesLineNum: null,
+      SalesDeliveryDate: null,
+      FrontDate: null,
     };
   },
   watch: {},
@@ -401,13 +437,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -502,7 +538,21 @@ export default {
           // }
         }
       }
-      let res = await SaveData(updateRecords);
+      let res;
+      if (remarkTb === 2) {
+        console.log(updateRecords,'updateRecords1');
+        updateRecords.forEach((item) => {
+          console.log(item,'item');
+          item["ChangeReason"] = this.ChangeReason;
+          item["Status"] = 0;
+          item["Extend1"] = this.Extend1;
+          item["dicID"] = 5644;
+        });
+        console.log(updateRecords,'updateRecords2');
+        res = await SaveData(updateRecords);
+      } else {
+        res = await SaveData(updateRecords);
+      }
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -640,7 +690,16 @@ export default {
       if (result) {
         // 获取每个表头
         Columns.some((m, i) => {
-          this.$set(this.tableColumns, remarkTb, m);
+          m.forEach((n, index) => {
+            // 进行验证
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach((x) => {
+                this.verifyDta(x);
+              });
+            }
+            this.$set(this.tableColumns, remarkTb, m);
+          });
         });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -829,9 +888,22 @@ export default {
         })
         .catch((_) => {});
     },
-    //双击事件 
+    //双击事件
     async handleRowdbClick(row, remarkTb) {
-      
+      if (remarkTb === 1) {
+        this.colDialogVisible2 = true;
+        this.formSearchs[2].datas["SalesOrderDetailID"] =
+          row.SalesOrderDetailID;
+        this.formSearchs[2].datas["LineNum"] = row.LineNum;
+        await this.dataSearch(2);
+        if (this.tableData[2] && this.tableData[2][0]) {
+          let row = this.tableData[2][0];
+          this.SalesLineNum = row["SalesLineNum"];
+          this.SalesDeliveryDate = row["SalesDeliveryDate"];
+          this.FrontDate = row["FrontDate"];
+          this.SalesOrderNo = row["SalesOrderNo"];
+        }
+      }
     },
   },
 };

@@ -20,7 +20,7 @@
               :signName="labelStatus1"
             />
           </div>
-          <!-- <div class="ant-table-title2" ref="headRef_2">
+          <!-- <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
@@ -67,7 +67,7 @@
             <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
           </div> -->
-          <div class="ant-table-title2" ref="headRef_2">
+          <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="4">
                 <el-tabs
