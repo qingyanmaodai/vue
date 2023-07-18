@@ -1,12 +1,24 @@
 <!--设备与工装汇总-->
 <template>
-  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
+  <div
+    class="container flex_column"
+    v-loading="adminLoading"
+    style="height: calc(100vh - 80px)"
+  >
     <splitpanes class="default-theme" horizontal>
       <pane :size="60">
         <div class="flex_column" style="width: 100%; height: 100%">
           <div class="admin_head" ref="headRef">
-            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[0].datas"
+              :searchForm="formSearchs[0].forms"
+              :remark="0"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="0"
+            />
           </div>
           <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
@@ -19,11 +31,28 @@
             </el-row>
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
-              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" @handleRowClick="handleRowClick" :footerContent="false" />
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isToolbar="false"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :hasSelect="true"
+              :isEdit="isEdit[item]"
+              :isClear="isClear[item]"
+              :keepSource="true"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              @handleRowClick="handleRowClick"
+              :footerContent="false"
+            />
           </div>
         </div>
       </pane>
@@ -36,19 +65,43 @@
           </div> -->
           <div class="ant-table-title2" ref="headRef_2">
             <el-row>
-              <el-col :span="6"><el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+              <el-col :span="6"
+                ><el-tabs
+                  v-model="selectedIndex"
+                  @tab-click="handleClick"
+                  :stretch="true"
+                >
                   <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
                   <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
-                  <el-tab-pane label="TPM设备明细" name="3"></el-tab-pane> </el-tabs></el-col>
+                  <el-tab-pane
+                    label="TPM设备明细"
+                    name="3"
+                  ></el-tab-pane> </el-tabs
+              ></el-col>
               <el-col :span="18" class="flex_flex_end">
                 <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" @click="AddEvent(1)" v-show="selectedIndex === '1'">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="AddEvent(1)"
+                  v-show="selectedIndex === '1'"
+                >
                   添加产品
                 </el-button>
-                <el-button type="primary" size="mini" @click="AddEvent(2)" v-show="selectedIndex === '2'">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="AddEvent(2)"
+                  v-show="selectedIndex === '2'"
+                >
                   添加产品族
                 </el-button>
-                <el-button type="primary" size="mini" @click="AddEvent(3)" v-show="selectedIndex === '3'">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="AddEvent(3)"
+                  v-show="selectedIndex === '3'"
+                >
                   添加TPM设备
                 </el-button>
                 <!-- <el-select
@@ -80,26 +133,74 @@
               </el-col>
             </el-row>
           </div>
-          <div v-for="item in [1, 2, 3]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content flex_grow">
-            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
-              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" :footerContent="false" />
+          <div
+            v-for="item in [1, 2, 3]"
+            :key="item"
+            v-show="Number(selectedIndex) === item"
+            class="admin_content flex_grow"
+          >
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isToolbar="false"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :hasSelect="true"
+              :isEdit="isEdit[item]"
+              :isClear="isClear[item]"
+              :keepSource="true"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              :footerContent="false"
+            />
           </div>
         </div>
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable title="添加产品" :tableDialog="colDialogVisible4" :sysID="sysID[4]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible4 = false" :searchForm="formSearchs[4]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
-    <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
-    <DialogTable title="添加TPM设备" :tableDialog="colDialogVisible6" :sysID="sysID[6]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible6 = false" :searchForm="formSearchs[6]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
+    <DialogTable
+      title="添加产品"
+      :tableDialog="colDialogVisible4"
+      :sysID="sysID[4]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible4 = false"
+      :searchForm="formSearchs[4]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
+    <DialogTable
+      title="添加产品族"
+      :tableDialog="colDialogVisible5"
+      :sysID="sysID[5]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible5 = false"
+      :searchForm="formSearchs[5]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
+    <DialogTable
+      title="添加TPM设备"
+      :tableDialog="colDialogVisible6"
+      :sysID="sysID[6]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible6 = false"
+      :searchForm="formSearchs[6]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
   </div>
 </template>
 
@@ -171,6 +272,7 @@ export default {
       tableColumns: [[], [], [], [], [], [], []],
       tableLoading: [false, false, false, false, false, false, false],
       isClear: [false, false, false, false, false, false, false],
+      isEdit: [false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
@@ -208,7 +310,6 @@ export default {
         { ID: 11142 },
         { ID: 133 },
       ],
-      isEdit: [false, false, false, false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible4: false,
@@ -228,14 +329,20 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() { },
+  mounted() {},
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this.isEdit, index, true);
+            if (!item["signName"] || item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);
@@ -350,22 +457,20 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      console.log(updateRecords, 'updateRecords.length');
+      console.log(updateRecords, "updateRecords.length");
       if (updateRecords.length > 0 && remarkTb === 0) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
           updateRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2['prop']]
+              let content = item1[item2["prop"]];
               if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(
-                  `${item2['label']}不能为空，请选择`
-                );
+                this.$message.error(`${item2["label"]}不能为空，请选择`);
                 this.$set(this, "adminLoading", false);
                 return;
               }
-            })
-          })
+            });
+          });
           // for (let i = 0; i < updateRecords.length; i++) {
           //   for (
           //     let x = 0;
@@ -555,7 +660,6 @@ export default {
       this.formSearchs[2].datas["RAMID"] = row.RAMID;
       this.formSearchs[3].datas["RAMID"] = row.RAMID;
       this.dataSearch(this.selectedIndex);
-
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -683,7 +787,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
   },
 };

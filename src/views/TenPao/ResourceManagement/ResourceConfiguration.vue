@@ -152,7 +152,13 @@ export default {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this.isEdit, index, true);
+            if (!item["signName"] || item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);

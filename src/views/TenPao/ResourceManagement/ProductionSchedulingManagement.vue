@@ -1,12 +1,24 @@
 <!--设备与工装汇总-->
 <template>
-  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
+  <div
+    class="container flex_column"
+    v-loading="adminLoading"
+    style="height: calc(100vh - 80px)"
+  >
     <splitpanes class="default-theme" horizontal>
       <pane :size="60">
         <div class="flex_column" style="width: 100%; height: 100%">
           <div class="admin_head" ref="headRef">
-            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[0].datas"
+              :searchForm="formSearchs[0].forms"
+              :remark="0"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="0"
+            />
           </div>
           <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
@@ -19,20 +31,49 @@
             </el-row>
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
-              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" @handleRowClick="handleRowClick" />
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isToolbar="false"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :hasSelect="true"
+              :isEdit="isEdit[item]"
+              :isClear="isClear[item]"
+              :keepSource="true"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              @handleRowClick="handleRowClick"
+            />
           </div>
         </div>
       </pane>
       <pane :size="40">
         <div class="flex_column" style="width: 100%; height: 100%">
-          <div class="admin_head" ref="headRef" v-for="item in [1, 2, 3]" :key="item + 'head'"
-            v-show="Number(selectedIndex) === item">
-            <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
-              :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
+          <div
+            class="admin_head"
+            ref="headRef"
+            v-for="item in [1, 2, 3]"
+            :key="item + 'head'"
+            v-show="Number(selectedIndex) === item"
+          >
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[item].datas"
+              :searchForm="formSearchs[item].forms"
+              :remark="item"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="item"
+            />
           </div>
           <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
@@ -81,19 +122,89 @@
             </el-row>
           </div> -->
           <div v-for="item in [1]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
-              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" />
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isToolbar="false"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :hasSelect="true"
+              :isEdit="isEdit[item]"
+              :isClear="isClear[item]"
+              :keepSource="true"
+              :pagination="tablePagination[item]"
+              @handleRowdbClick="handleRowdbClick"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+            />
           </div>
         </div>
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
+    <el-dialog
+      :title="'计划调整'"
+      :visible.sync="colDialogVisible2"
+      width="70%"
+    >
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="6"
+            ><span class="title">销售订单：888888888 </span></el-col
+          >
+          <el-col :span="6"
+            ><span class="title">行项目：99999910 </span></el-col
+          >
+          <el-col :span="6"
+            ><span class="title">交期：2023-10-09 </span></el-col
+          >
+          <el-col :span="6"
+            ><span class="title">前置期：2023-10-06 </span></el-col
+          >
+        </el-row>
+      </div>
+      <div v-for="item in [2]" :key="item">
+        <ComVxeTable
+          :ref="`tableRef${item}`"
+          :rowKey="'RowNumber'"
+          height="100%"
+          :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :isToolbar="false"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :hasSelect="true"
+          :isEdit="isEdit[item]"
+          :isClear="isClear[item]"
+          :keepSource="true"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+        />
+      </div>
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="12"
+            ><span class="title">销售订单：888888888 </span></el-col
+          >
+          <el-col :span="12"
+            ><span class="title">行项目：99999910 </span></el-col
+          >
+        </el-row>
+      </div>
+    </el-dialog>
+    <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible2 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
+      @confirmDialog="confirmDialog"></DialogTable> -->
     <!-- <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
       @confirmDialog="confirmDialog"></DialogTable>
@@ -228,14 +339,20 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() { },
+  mounted() {},
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this.isEdit, index, true);
+            if (!item["signName"] || item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);
@@ -350,22 +467,20 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      console.log(updateRecords, 'updateRecords.length');
+      console.log(updateRecords, "updateRecords.length");
       if (updateRecords.length > 0 && remarkTb === 0) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
           updateRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2['prop']]
+              let content = item1[item2["prop"]];
               if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(
-                  `${item2['label']}不能为空，请选择`
-                );
+                this.$message.error(`${item2["label"]}不能为空，请选择`);
                 this.$set(this, "adminLoading", false);
                 return;
               }
-            })
-          })
+            });
+          });
           // for (let i = 0; i < updateRecords.length; i++) {
           //   for (
           //     let x = 0;
@@ -436,7 +551,6 @@ export default {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
             }
           });
-          this.$set(this.tableColumns, i, m);
           this.$set(this.OrderNos, i, m);
 
           this.OrderNos[i] = this.OrderNos[i]
@@ -453,19 +567,43 @@ export default {
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           if (z === 0) {
-            x = [{
-              "type": 'Daterange',
-              "label": "日期",
-              "width": null,
-              "prop": "Days",
-              "placeholder": "请输入日期",
-              "methods": null,
-              "options": null,
-              "dicID": "11150",
-              "icon": null,
-              "multiple": false,
-              "value": [this.$moment().format('YYYY-MM-DD'), this.$moment().add(30, "days").format("YYYY-MM-DD")]
-            }].concat(x)
+            x = [
+              {
+                type: "Daterange",
+                label: "日期",
+                width: null,
+                prop: "Days",
+                placeholder: "请输入日期",
+                methods: null,
+                options: null,
+                dicID: "11150",
+                icon: null,
+                multiple: false,
+                value: [
+                  this.$moment().format("YYYY-MM-DD"),
+                  this.$moment().add(30, "days").format("YYYY-MM-DD"),
+                ],
+              },
+            ].concat(x);
+          } else if (z === 1) {
+            x = [
+              {
+                type: "Daterange",
+                label: "日期",
+                width: null,
+                prop: "Days",
+                placeholder: "请输入日期",
+                methods: null,
+                options: null,
+                dicID: "11149",
+                icon: null,
+                multiple: false,
+                value: [
+                  this.$moment().format("YYYY-MM-DD"),
+                  this.$moment().add(30, "days").format("YYYY-MM-DD"),
+                ],
+              },
+            ].concat(x);
           }
           x.forEach((y, n) => {
             if (y.prop && y.value) {
@@ -498,15 +636,12 @@ export default {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (remarkTb == 1) {
-          if (data.length != 0) {
-            data.forEach((a) => {
-              this.$set(a, "update", false);
-            });
-          }
-        }
+        // 获取每个表头
+        Columns.some((m, i) => {
+          this.$set(this.tableColumns, remarkTb, m);
+        });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -565,7 +700,6 @@ export default {
     handleRowClick(row, remarkTb) {
       this.formSearchs[1].datas["CustomerID"] = row.CustomerID;
       this.dataSearch(this.selectedIndex);
-
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -693,7 +827,11 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
+    },
+    //双击事件 
+    async handleRowdbClick(row, remarkTb) {
+      
     },
   },
 };

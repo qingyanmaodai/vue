@@ -1,12 +1,24 @@
 <!--物料点检-->
 <template>
-  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px);background-color: #fff;">
+  <div
+    class="container flex_column"
+    v-loading="adminLoading"
+    style="height: calc(100vh - 80px); background-color: #fff"
+  >
     <splitpanes class="default-theme">
       <pane :size="60">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
-            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[0].datas"
+              :searchForm="formSearchs[0].forms"
+              :remark="0"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="labelStatus1"
+            />
           </div>
           <!-- <div class="ant-table-title2" ref="headRef_2">
             <el-row>
@@ -24,11 +36,28 @@
             </el-row>
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable ref="tableRef" :rowKey="'RowNumber'" height="100%" :isToolbar="false" :isEdit="isEdit[0]"
-              :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]" :remark="0"
-              :cellStyle="cellStyle0" :sysID="sysID[0]['ID']" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
-              :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
-              @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" :footerContent="false" />
+            <ComVxeTable
+              ref="tableRef"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :isToolbar="false"
+              :isEdit="isEdit[0]"
+              :tableData="tableData[0]"
+              :tableHeader="tableColumns[0]"
+              :tableLoading="tableLoading[0]"
+              :remark="0"
+              :cellStyle="cellStyle0"
+              :sysID="sysID[0]['ID']"
+              :footerLabel="footerLabel[0]"
+              :isClear="isClear[0]"
+              :pagination="tablePagination[0]"
+              @pageChange="pageChange"
+              @handleRowClick="handleRowClick"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              :keepSource="true"
+              :footerContent="false"
+            />
           </div>
         </div>
       </pane>
@@ -41,37 +70,91 @@
           <div class="ant-table-title2" ref="headRef_2">
             <el-row>
               <el-col :span="4">
-                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                <el-tabs
+                  v-model="selectedIndex"
+                  @tab-click="handleClick"
+                  :stretch="true"
+                >
                   <el-tab-pane label="机台" name="1"></el-tab-pane>
-                  <el-tab-pane label="产品" name="2"></el-tab-pane></el-tabs></el-col>
+                  <el-tab-pane label="产品" name="2"></el-tab-pane></el-tabs
+              ></el-col>
               <el-col :span="20" class="flex_flex_end">
                 <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" @click="AddEvent(1)" v-show="selectedIndex === '1'">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="AddEvent(1)"
+                  v-show="selectedIndex === '1'"
+                >
                   添加机台
                 </el-button>
-                <el-button type="primary" size="mini" @click="AddEvent(2)" v-show="selectedIndex === '2'">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="AddEvent(2)"
+                  v-show="selectedIndex === '2'"
+                >
                   添加产品
                 </el-button>
               </el-col>
             </el-row>
           </div>
-          <div v-for="item in [1, 2]" :key="item" v-show="Number(selectedIndex) === item" class="admin_content flex_grow">
-            <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-              :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]"
-              :keepSource="true" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @sortChange="sortChange" @selectfun="selectFun" :footerContent="false" />
+          <div
+            v-for="item in [1, 2]"
+            :key="item"
+            v-show="Number(selectedIndex) === item"
+            class="admin_content flex_grow"
+          >
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isToolbar="false"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :hasSelect="true"
+              :isEdit="isEdit[item]"
+              :isClear="isClear[item]"
+              :keepSource="true"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              :footerContent="false"
+            />
           </div>
         </div>
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable title="添加机台" :tableDialog="colDialogVisible3" :sysID="sysID[3]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible3 = false" :searchForm="formSearchs[3]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
-    <DialogTable title="添加产品" :tableDialog="colDialogVisible4" :sysID="sysID[4]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible4 = false" :searchForm="formSearchs[4]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
+    <DialogTable
+      title="添加机台"
+      :tableDialog="colDialogVisible3"
+      :sysID="sysID[3]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible3 = false"
+      :searchForm="formSearchs[3]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
+    <DialogTable
+      title="添加产品"
+      :tableDialog="colDialogVisible4"
+      :sysID="sysID[4]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible4 = false"
+      :searchForm="formSearchs[4]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
   </div>
 </template>
 
@@ -186,7 +269,13 @@ export default {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this.isEdit, index, true);
+            if (!item["signName"] && item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);
@@ -298,8 +387,8 @@ export default {
         });
         this.dataSave(2, data);
       }
-      this.colDialogVisible3 = false
-      this.colDialogVisible4 = false
+      this.colDialogVisible3 = false;
+      this.colDialogVisible4 = false;
     },
     // 保存
     async dataSave(remarkTb, newData, index, parms) {
@@ -450,10 +539,8 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas["MachineMouldID"] =
-        row.MachineMouldID;
-      this.formSearchs[2].datas["MachineMouldID"] =
-        row.MachineMouldID;
+      this.formSearchs[1].datas["MachineMouldID"] = row.MachineMouldID;
+      this.formSearchs[2].datas["MachineMouldID"] = row.MachineMouldID;
       this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
