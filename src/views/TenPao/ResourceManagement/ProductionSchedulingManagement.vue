@@ -225,7 +225,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Reschedule()">重算排期</el-button>
         <el-button type="primary" @click="dataSave(2)">确定</el-button>
-        <el-button @click="dialogVisible2 = false">取消</el-button>
+        <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
     <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
@@ -921,8 +921,10 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        this.tableData[2] = [];
-        this.tableData[2] = data;
+        if (data) {
+          this.tableData[2] = [];
+          this.$set(this.tableData, 2, data);
+        }
       } else {
         this.$message({
           message: msg,
