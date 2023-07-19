@@ -613,6 +613,11 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(
+            this.formSearchs[z].datas,
+            "Account",
+            this.userInfo.Account
+          );
           if (z === 0) {
             x = [
               {
