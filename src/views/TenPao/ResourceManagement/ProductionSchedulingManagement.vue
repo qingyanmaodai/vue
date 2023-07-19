@@ -889,6 +889,8 @@ export default {
     async handleRowdbClick(row, remarkTb) {
       if (remarkTb === 1) {
         this.colDialogVisible2 = true;
+        this.formSearchs[2].datas["OrderID"] = "";
+        this.formSearchs[2].datas["SalesOrderDetailID"] = "";
         if (!row.SalesOrderDetailID) {
           this.formSearchs[2].datas["OrderID"] = row.OrderID;
         } else {
