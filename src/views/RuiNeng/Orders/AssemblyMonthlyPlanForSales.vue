@@ -558,29 +558,83 @@ export default {
 
  // 更新组装月计划开始时间
  async UpdateMonthPlanStartDate(remarkTb, index) {
+  if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.$confirm(
+        "确定要退回的【" +
+        this.selectionData[remarkTb].length +
+        "】数据吗，如果已经报工则无法退回？"
+      )
+        .then(async(_) => {
+           this.selectionData[remarkTb].forEach((m) => {
+            m["isChecked"] = true;
+            m["ProcessPlanID"] =  m["ProcessPlanID"] ==null ? -1 : m["ProcessPlanID"] ;
+            m["ProcessPartID"] = m["ProcessPartID"] ==null ? -1 : m["ProcessPartID"] ;
+          });
+          console.log(11111, this.selectionData);
+          if (this.selectionData.length > 0) {
+            this.adminLoading = true;
+            let res = await GetSearch(
+              this.selectionData,
+              "/APSAPI/RNMOPlanSaveToDayPlan?isPlan=1"
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.dataSearch(0);
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "success",
+                dangerouslyUseHTMLString: true,
+              });
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: "error",
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          } else {
+            this.$message({
+              message: "未有数据",
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
+          // this.selectionData[remarkTb].forEach((x) => {
+          //   x["ElementDeleteFlag"] = 1;
+          // });
+          //this.adminLoading = true;
+          // _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+        })
+        .catch((_) => { });
+
       // if (this.selectionData[remarkTb].length == 0) {
       //   this.$message.error("请选择需要提交的数据！");
       //   return;
       // } else {
-      this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/UpdateMonthPlanStartDate");
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-        this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-        this.$set(this, "adminLoading", false);
-      }
+      // this.adminLoading = true;
+      // let res = await GetSearch("", "/APSAPI/UpdateMonthPlanStartDate");
+      // const { datas, forms, result, msg } = res.data;
+      // if (result) {
+      //   this.$message({
+      //     message: msg,
+      //     type: "success",
+      //     dangerouslyUseHTMLString: true,
+      //   });
+      //   this.dataSearch(remarkTb);
+      //   this.$set(this, "adminLoading", false);
+      // } else {
+      //   this.$message({
+      //     message: msg,
+      //     type: "error",
+      //     dangerouslyUseHTMLString: true,
+      //   });
+      //   this.$set(this, "adminLoading", false);
+      // }
       // }
     },
 
