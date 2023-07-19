@@ -535,7 +535,7 @@ export default {
               };
             }
             if (n.Required && i === 0) {
-              this.formSearchs[this.tagRemark].required.push(n);
+              this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
