@@ -573,12 +573,12 @@ export default {
             m["ProcessPlanID"] =  m["ProcessPlanID"] ==null ? -1 : m["ProcessPlanID"] ;
             m["ProcessPartID"] = m["ProcessPartID"] ==null ? -1 : m["ProcessPartID"] ;
           });
-          console.log(11111, this.selectionData);
-          if (this.selectionData.length > 0) {
+          // console.log(11111, this.selectionData);
+          if (this.selectionData[remarkTb].length > 0) {
             this.adminLoading = true;
             let res = await GetSearch(
-              this.selectionData,
-              "/APSAPI/RNMOPlanSaveToDayPlan?isPlan=1"
+              this.selectionData[remarkTb],
+              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
             );
             const { result, data, count, msg } = res.data;
             if (result) {
