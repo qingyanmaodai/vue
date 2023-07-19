@@ -717,8 +717,8 @@
             m.forEach((n) => {
               // 进行验证
               this.verifyData(n);
-              if (n.childrens && n.children.length != 0) {
-                n.childrens.forEach((x) => {
+              if (n.children && n.children.length != 0) {
+                n.children.forEach((x) => {
                   this.verifyData(x);
                 });
               }

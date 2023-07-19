@@ -522,8 +522,8 @@ export default {
           m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+            if (n.children && n.children.length != 0) {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -535,7 +535,7 @@ export default {
               };
             }
             if (n.Required && i === 0) {
-              this.formSearchs[this.tagRemark].required.push(n);
+              this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];

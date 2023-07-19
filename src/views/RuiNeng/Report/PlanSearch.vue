@@ -1,11 +1,32 @@
 <!--组装日计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading" style="height: calc(100vh - 80px)">
-    <div class="flex_column" v-show="showAside" style="width: auto">
+    <div class="flex_column" v-if="showAside" style="width: auto">
       <div class="admin_left_2 border-b-1" style="overflow: hidden;height:50%">
         <div>
           <div class="flex px-2 py-1.5 border-b-1 tree_Head">
-            <span class="tree_text">线别</span>
+            <span class="tree_text">车间</span>
+            <div class="flex_flex_end flex-1">
+            <el-input
+              size="mini"
+              clearable
+              v-model="OrganizeName"
+              placeholder="搜索"
+              suffix-icon="el-icon-search"
+              class="w2/3 cx_margin_right1"
+              @input="searchTree(OrganizeName,'treeData','treeListTmp','OrganizeName')"
+            ></el-input>
+            <el-dropdown
+              @command="handleCommand"
+              class="flex_inline"
+            >
+              <img src="../../../assets/svg/dot.svg" />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="1">展开全部</el-dropdown-item>
+                <el-dropdown-item command="2">折叠全部</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
           </div>
           <el-tree class="tree-line" :indent="0" ref="asideTree" node-key="LineID" :data="treeData" :props="treeProps"
             :style="{ height: treeHeight + '', overflow: 'auto' }" highlight-current :expand-on-click-node="false"
@@ -16,10 +37,31 @@
         <div>
           <div class="flex px-2 py-1.5 border-b-1 tree_Head">
             <span class="tree_text">线别</span>
+            <div class="flex_flex_end flex-1">
+            <el-input
+              size="mini"
+              clearable
+              v-model="OrganizeName"
+              placeholder="搜索"
+              suffix-icon="el-icon-search"
+              class="w2/3 cx_margin_right1"
+              @input="searchTree(OrganizeName,'treeData','treeListTmp','OrganizeName')"
+            ></el-input>
+            <el-dropdown
+              @command="handleCommand"
+              class="flex_inline"
+            >
+              <img src="../../../assets/svg/dot.svg" />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="1">展开全部</el-dropdown-item>
+                <el-dropdown-item command="2">折叠全部</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
-          <el-tree class="tree-line" :indent="0" ref="asideTree" node-key="LineID" :data="treeData" :props="treeProps"
+          </div>
+          <el-tree class="tree-line" :indent="0" ref="asideTree" node-key="LineID" :data="treeData1" :props="treeProps1"
             :style="{ height: treeHeight + '', overflow: 'auto' }" highlight-current :expand-on-click-node="false"
-            @node-click="handleNodeClick"></el-tree>
+            @node-click="handleNodeClick1"></el-tree>
         </div>
       </div>
     </div>
@@ -34,12 +76,18 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4">
-                <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
+              <el-col :span="8">
+                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                  <el-tab-pane label="月计划" name="0"></el-tab-pane>
+                  <el-tab-pane label="周计划" name="1"></el-tab-pane>
+                  <el-tab-pane label="日计划" name="2"></el-tab-pane>
+                  <el-tab-pane label="生产任务清单" name="3"></el-tab-pane>
+                </el-tabs>
+                <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
-                <span class="title">{{ title }}</span>
+                <span class="title">{{ title }}</span> -->
               </el-col>
-              <el-col :span="20" class="flex_flex_end">
+              <el-col :span="16" class="flex_flex_end">
                 <!-- <el-divider direction="vertical"></el-divider>
                     <div class="flex">
                       复期:
@@ -167,10 +215,15 @@ export default {
       showAside: true,
       ReplyDate: "",
       treeProps: {
+        label: "OrganizeName",
+        children: "children",
+      },
+      treeProps1: {
         label: "SumCount",
         children: "children",
       },
       treeData: [],
+      treeData1: [],
       treeListTmp: [],
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
@@ -348,32 +401,32 @@ export default {
     },
     // 获取供应商数据
     async getSupplierData() {
-      this.treeData = [];
+      this.treeData1 = [];
       this.treeListTmp = [];
       let form = {
-        dicID: 10128,
+        dicID: 5143,
         // OrganizeTypeID: 6
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         let newTree = [];
-        if (data.length != 0) {
-          let supplierMap = new Map();
-          data.forEach((a) => {
-            let currentSum = supplierMap.get(a.LineName) || 0;
-            currentSum += a.Counts;
-            supplierMap.set(a.LineName, currentSum);
-            a["SumCount"] = `${a.LineName}(${currentSum})`;
-          });
-          newTree = Array.from(supplierMap.entries()).map(([LineName, sum]) => {
-            const foundItem = data.find((a) => a.LineName === LineName);
-            return {
-              ...foundItem,
-              SumCount: `${foundItem.LineName}(${sum})`,
-            };
-          });
-        }
+        // if (data.length != 0) {
+        //   let supplierMap = new Map();
+        //   data.forEach((a) => {
+        //     let currentSum = supplierMap.get(a.OrganizeName) || 0;
+        //     currentSum += a.LineCount;
+        //     supplierMap.set(a.OrganizeName, currentSum);
+        //     a["SumCount"] = `${a.OrganizeName}(${currentSum})`;
+        //   });
+        //   newTree = Array.from(supplierMap.entries()).map(([OrganizeName, sum]) => {
+        //     const foundItem = data.find((a) => a.OrganizeName === OrganizeName);
+        //     return {
+        //       ...foundItem,
+        //       SumCount: `${foundItem.OrganizeName}(${sum})`,
+        //     };
+        //   });
+        // }
         // console.log(newTree, "newTree");
         this.treeData = JSON.parse(JSON.stringify(data));
         // this.treeData.unshift({
@@ -382,10 +435,10 @@ export default {
         //   SupplierNameCount: "全部" + "(" + num + ")",
         // });
         this.treeListTmp = this.treeData;
-        this.getTableData(
-          this.formSearchs[this.labelStatus1].datas,
-          this.labelStatus1
-        );
+        // this.getTableData(
+        //   this.formSearchs[this.labelStatus1].datas,
+        //   this.labelStatus1
+        // );
         if (data.length != 0) {
           this.$nextTick(function () {
             _this.$refs.asideTree.setCurrentKey(0);
@@ -1388,6 +1441,15 @@ export default {
       );
       this.dataSearch(this.labelStatus1);
     },
+    // 单击线体
+    handleNodeClick1(data, node) {
+      this.$set(
+        this.formSearchs[this.labelStatus1].datas,
+        "LineID",
+        data.LineName == "所有" ? "" : data.LineID
+      );
+      this.dataSearch(this.labelStatus1);
+    },
     // 刷新页面
     refrshPage() {
       this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
@@ -1524,6 +1586,11 @@ export default {
       // if (this.tableData[index].length == 0) {
       this.dataSearch(0);
       // }
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
+      this.selectedIndex = tab.name;
+      this.dataSearch(this.selectedIndex);
     },
     // 改变状态
     // changeStatus(x, index) {

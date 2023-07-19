@@ -169,9 +169,7 @@
               ><span class="title">交期：{{ SalesDeliveryDate }} </span></el-col
             >
             <el-col :span="6"
-              ><span class="title"
-                >前置期： {{ FrontDate }}
-              </span></el-col
+              ><span class="title">前置期： {{ FrontDate }} </span></el-col
             >
           </el-row>
         </div>
@@ -225,11 +223,9 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false"
-          >重算排期</el-button
-        >
+        <el-button type="primary" @click="Reschedule()">重算排期</el-button>
         <el-button type="primary" @click="dataSave(2)">确定</el-button>
-        <el-button @click="dialogVisible2 = false">取消</el-button>
+        <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
     <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
@@ -258,6 +254,7 @@ import {
   ExportData,
   SaveData,
   GetServerTime,
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "ProductionSchedulingManagement",
@@ -540,15 +537,15 @@ export default {
       }
       let res;
       if (remarkTb === 2) {
-        console.log(updateRecords,'updateRecords1');
+        console.log(updateRecords, "updateRecords1");
         updateRecords.forEach((item) => {
-          console.log(item,'item');
+          console.log(item, "item");
           item["ChangeReason"] = this.ChangeReason;
           item["Status"] = 0;
           item["Extend1"] = this.Extend1;
           item["dicID"] = 5644;
         });
-        console.log(updateRecords,'updateRecords2');
+        console.log(updateRecords, "updateRecords2");
         res = await SaveData(updateRecords);
       } else {
         res = await SaveData(updateRecords);
@@ -616,6 +613,11 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(
+            this.formSearchs[z].datas,
+            "Account",
+            this.userInfo.Account
+          );
           if (z === 0) {
             x = [
               {
@@ -892,8 +894,14 @@ export default {
     async handleRowdbClick(row, remarkTb) {
       if (remarkTb === 1) {
         this.colDialogVisible2 = true;
-        this.formSearchs[2].datas["SalesOrderDetailID"] =
-          row.SalesOrderDetailID;
+        this.formSearchs[2].datas["OrderID"] = "";
+        this.formSearchs[2].datas["SalesOrderDetailID"] = "";
+        if (!row.SalesOrderDetailID) {
+          this.formSearchs[2].datas["OrderID"] = row.OrderID;
+        } else {
+          this.formSearchs[2].datas["SalesOrderDetailID"] =
+            row.SalesOrderDetailID;
+        }
         this.formSearchs[2].datas["LineNum"] = row.LineNum;
         await this.dataSearch(2);
         if (this.tableData[2] && this.tableData[2][0]) {
@@ -903,6 +911,31 @@ export default {
           this.FrontDate = row["FrontDate"];
           this.SalesOrderNo = row["SalesOrderNo"];
         }
+      }
+    },
+    //重算
+    async Reschedule() {
+      let res = await GetSearch(
+        this.tableData[2],
+        "/APSAPI/CalculationStartDate"
+      );
+      const { data, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        if (data) {
+          this.tableData[2] = [];
+          this.$set(this.tableData, 2, data);
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
   },

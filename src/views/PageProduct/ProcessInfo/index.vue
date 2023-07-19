@@ -831,8 +831,8 @@ export default {
           m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+            if (n.children && n.children.length != 0) {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -874,8 +874,8 @@ export default {
           m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
+            if (n.children && n.children.length != 0) {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
