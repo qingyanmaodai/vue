@@ -148,7 +148,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <el-dialog :title="'计划调整'" :visible.sync="colDialogVisible2" width="70%"
+    <el-dialog :title="'计划调整'" :visible.sync="colDialogVisible2" width="70%" :modal="false" :close-on-click-modal="false"
       ><div
         style="
           height: 60vh;
@@ -864,7 +864,7 @@ export default {
       let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
+        this.$message.error("请选择需要操作的数据！");
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
@@ -881,7 +881,7 @@ export default {
     },
     async dataSave2(remarkTb, index, parms) {
       if (this.selectionData[2].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
+        this.$message.error("请选择需要操作的数据！");
         return;
       }
       let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
@@ -892,7 +892,7 @@ export default {
         item["Extend1"] = this.Extend1;
         item["dicID"] = 5644;
       });
-      res = await SaveData(updateRecords);
+      let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -900,7 +900,8 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        this.dataSearch(remarkTb);
+        this.colDialogVisible2 = false;
+        // this.dataSearch(remarkTb);
       } else {
         this.$message({
           message: msg,
