@@ -224,7 +224,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Reschedule()">重算排期</el-button>
-        <el-button type="primary" @click="dataSave(2)">确定</el-button>
+        <el-button type="primary" @click="dataSave2()">确定</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
@@ -536,20 +536,9 @@ export default {
         }
       }
       let res;
-      if (remarkTb === 2) {
-        console.log(updateRecords, "updateRecords1");
-        updateRecords.forEach((item) => {
-          console.log(item, "item");
-          item["ChangeReason"] = this.ChangeReason;
-          item["Status"] = 0;
-          item["Extend1"] = this.Extend1;
-          item["dicID"] = 5644;
-        });
-        console.log(updateRecords, "updateRecords2");
-        res = await SaveData(updateRecords);
-      } else {
-        res = await SaveData(updateRecords);
-      }
+
+      res = await SaveData(updateRecords);
+
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -889,6 +878,36 @@ export default {
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
+    },
+    async dataSave2(remarkTb, index, parms) {
+      if (this.selectionData[2].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      }
+      let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
+      updateRecords.forEach((item) => {
+        console.log(item, "item");
+        item["ChangeReason"] = this.ChangeReason;
+        item["Status"] = 0;
+        item["Extend1"] = this.Extend1;
+        item["dicID"] = 5644;
+      });
+      res = await SaveData(updateRecords);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
     },
     //双击事件
     async handleRowdbClick(row, remarkTb) {
