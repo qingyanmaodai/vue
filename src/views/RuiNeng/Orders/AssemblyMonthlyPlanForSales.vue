@@ -995,7 +995,9 @@ export default {
           }
           if (
             row["StartDate"] &&
-            this.$moment(row["StartDate"]).isBefore(this.$moment()) &&
+            this.$moment(row["StartDate"].startOf("day")).isBefore(
+              this.$moment().startOf("day")
+            ) &&
             column["prop"] == "StartDate"
           ) {
             cell.backColor("#FDD0CB");
