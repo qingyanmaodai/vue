@@ -124,7 +124,7 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="8">
+              <el-col :span="4">
                 <el-tabs
                   v-model="selectedIndex"
                   @tab-click="handleClick"
@@ -1382,3 +1382,9 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-tabs__item {
+  padding: 5px;
+  /* 设置为0或调整合适的数值 */
+}
+</style>
