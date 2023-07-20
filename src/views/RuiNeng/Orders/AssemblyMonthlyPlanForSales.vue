@@ -16,9 +16,9 @@
               <span class="title" style="margin-left: 20px;">{{ title2 }}</span>
             </el-col>
             <el-col :span="16" class="flex_flex_end"><el-divider direction="vertical"></el-divider>
-              <el-button type="primary" size="mini" @click="changeEvent(0)">
+              <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button>
+              </el-button> -->
             </el-col>
           </el-row>
         </div>
@@ -563,9 +563,9 @@ export default {
         return;
       }
       this.$confirm(
-        "确定要退回的【" +
+        "确定要重排的【" +
         this.selectionData[remarkTb].length +
-        "】数据吗，如果已经报工则无法退回？"
+        "】数据吗"
       )
         .then(async(_) => {
            this.selectionData[remarkTb].forEach((m) => {
@@ -573,7 +573,7 @@ export default {
             m["ProcessPlanID"] =  m["ProcessPlanID"] ==null ? -1 : m["ProcessPlanID"] ;
             m["ProcessPartID"] = m["ProcessPartID"] ==null ? -1 : m["ProcessPartID"] ;
           });
-          // console.log(11111, this.selectionData);
+  
           if (this.selectionData[remarkTb].length > 0) {
             this.adminLoading = true;
             let res = await GetSearch(
