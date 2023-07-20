@@ -148,7 +148,12 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <el-dialog :title="'计划调整'" :visible.sync="colDialogVisible2" width="70%" :modal="false" :close-on-click-modal="false"
+    <el-dialog
+      :title="'计划调整'"
+      :visible.sync="colDialogVisible2"
+      width="70%"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
       ><div
         style="
           height: 60vh;
@@ -961,3 +966,9 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+  color: #fff !important;
+}
+</style>
