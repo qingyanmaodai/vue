@@ -305,7 +305,7 @@ export default {
         },
         {
           datas: {
-            PlanWeeks: 35,
+            PlanWeeks: 12,
           },
           forms: [],
         },

@@ -26,9 +26,9 @@
             </el-col>
             <el-col :span="16" class="flex_flex_end"
               ><el-divider direction="vertical"></el-divider>
-              <el-button type="primary" size="mini" @click="changeEvent(0)">
+              <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button>
+              </el-button> -->
             </el-col>
           </el-row>
         </div>
@@ -995,7 +995,7 @@ export default {
           }
           if (
             row["StartDate"] &&
-            this.$moment(row["StartDate"].startOf("day")).isBefore(
+            this.$moment(row["StartDate"]).startOf("day").isBefore(
               this.$moment().startOf("day")
             ) &&
             column["prop"] == "StartDate"
