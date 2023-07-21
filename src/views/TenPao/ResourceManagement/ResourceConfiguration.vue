@@ -37,7 +37,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "ScheduleDetails",
+  name: "ResourceConfiguration",
   components: {
     ComSearch,
     ComVxeTable,

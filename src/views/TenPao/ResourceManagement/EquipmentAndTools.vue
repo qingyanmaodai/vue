@@ -220,7 +220,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "ScheduleDetails",
+  name: "EquipmentAndTools",
   components: {
     ComSearch,
     ComVxeTable,
@@ -288,17 +288,6 @@ export default {
       OrderNo: "",
       OrderNoValue: "",
       OrderNos: [],
-      Status1: [
-        { label: "待确认", value: "未开始" },
-        { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" },
-      ],
-      Status2: [
-        { label: "全部", value: 0 },
-        { label: "未点检", value: 1 },
-        { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 },
-      ],
       labelStatus1: 0,
       labelStatus2: 0,
       sysID: [
@@ -317,6 +306,7 @@ export default {
       colDialogVisible6: false,
       addNum: 1,
       DataSourceList: [{}],
+      clickRow: null,
     };
   },
   watch: {},
@@ -656,6 +646,7 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
+      this.clickRow = row;
       this.formSearchs[1].datas["RAMID"] = row.RAMID;
       this.formSearchs[2].datas["RAMID"] = row.RAMID;
       this.formSearchs[3].datas["RAMID"] = row.RAMID;
@@ -667,6 +658,10 @@ export default {
       this.dataSearch(this.selectedIndex);
     },
     AddEvent(index) {
+      if (!this.clickRow) {
+        this.$message.error("请点击需要绑定的数据！");
+        return;
+      }
       if (index === 1) {
         this.colDialogVisible4 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
@@ -792,3 +787,18 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-tabs__item {
+  padding: 5px;
+  /* 设置为0或调整合适的数值 */
+}
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
+}
+</style>

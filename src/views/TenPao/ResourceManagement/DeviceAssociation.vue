@@ -48,7 +48,6 @@
               :remark="0"
               :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
-              :footerLabel="footerLabel[0]"
               :isClear="isClear[0]"
               :pagination="tablePagination[0]"
               @pageChange="pageChange"
@@ -174,7 +173,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "PullAndLoad",
+  name: "DeviceAssociation",
   components: {
     ComSearch,
     ComVxeTable,
@@ -186,13 +185,9 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      footerLabel: [""],
-      expendColl: false,
-      expendCollText: "收缩",
       selectionData: [[], []],
       title: this.$route.meta.title,
-      includeFields: [["ProducedQty", "ConfirmQty"], [], []],
-      drawer: false,
+      includeFields: [[], [], []],
       formSearchs: [
         {
           datas: {},
@@ -216,7 +211,6 @@ export default {
         },
       ],
       btnForm: [],
-      btnForm2: [],
       tableData: [[], [], [], []],
       tableColumns: [[], [], [], []],
       tableLoading: [false, false, false, false],
@@ -228,7 +222,6 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       height: "707px",
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
@@ -238,14 +231,13 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      labelStatus2: 0,
       sysID: [{ ID: 108 }, { ID: 110 }, { ID: 112 }, { ID: 90 }, { ID: 1180 }],
-      isEdit: [false, false, false, false],
-      enlargeType: true,
+      isEdit: false,
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible3: false,
       colDialogVisible4: false,
+      clickRow: null,
     };
   },
   watch: {},
@@ -259,9 +251,9 @@ export default {
     this.judgeBtn(this.btnForm);
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 600);
+    // setTimeout(() => {
+    //   this.setHeight();
+    // }, 600);
   },
   methods: {
     //按钮权限
@@ -539,6 +531,7 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
+      this.clickRow = row;
       this.formSearchs[1].datas["MachineMouldID"] = row.MachineMouldID;
       this.formSearchs[2].datas["MachineMouldID"] = row.MachineMouldID;
       this.dataSearch(this.selectedIndex);
@@ -549,6 +542,10 @@ export default {
       this.dataSearch(this.selectedIndex);
     },
     AddEvent(index) {
+      if (!this.clickRow) {
+        this.$message.error("请点击需要绑定的数据！");
+        return;
+      }
       if (index === 1) {
         this.colDialogVisible3 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
@@ -598,5 +595,14 @@ export default {
 ::v-deep .el-tabs__item {
   padding: 5px;
   /* 设置为0或调整合适的数值 */
+}
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
 }
 </style>
