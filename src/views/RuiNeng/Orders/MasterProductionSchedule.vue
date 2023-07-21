@@ -1095,6 +1095,9 @@ export default {
           }
           if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
           }
+          if (!row["MOQty"]) {
+            cell.backColor("#FFFF00");
+          }
         });
       });
 

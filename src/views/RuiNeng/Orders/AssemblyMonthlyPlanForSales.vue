@@ -769,23 +769,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        //给月计划赋值当月订单总数
-        let res = await GetSearchData({
-          dicID: 5170,
-          fields: "SUM(PlanQty) As PlanQty",
-          ProcessName: "组装",
-          CompletionStatus: 0,
-          PlanDay: [
-            this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().endOf("month").format("YYYY-MM-DD"),
-          ],
-        });
-        const {
-          data: [{ PlanQty }],
-        } = res.data;
-        this.title2 = `${this.$moment().format(
-          "YYYY年M月"
-        )} 订单总数：${PlanQty}`;
+
         // this.getOrgData();
         this.dataSearch(0);
       }
@@ -824,6 +808,23 @@ export default {
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        //给月计划赋值当月订单总数
+        let res = await GetSearchData({
+          dicID: 5170,
+          fields: "SUM(PlanQty) As PlanQty",
+          ProcessName: "组装",
+          CompletionStatus: 0,
+          PlanDay: [
+            this.$moment().startOf("month").format("YYYY-MM-DD"),
+            this.$moment().endOf("month").format("YYYY-MM-DD"),
+          ],
+        });
+        const {
+          data: [{ PlanQty }],
+        } = res.data;
+        this.title2 = `${this.$moment().format(
+          "YYYY年M月"
+        )} 订单总数：${PlanQty}`;
       } else {
         this.$message({
           message: msg,
@@ -995,9 +996,9 @@ export default {
           }
           if (
             row["StartDate"] &&
-            this.$moment(row["StartDate"]).startOf("day").isBefore(
-              this.$moment().startOf("day")
-            ) &&
+            this.$moment(row["StartDate"])
+              .startOf("day")
+              .isBefore(this.$moment().startOf("day")) &&
             column["prop"] == "StartDate"
           ) {
             cell.backColor("#FDD0CB");
