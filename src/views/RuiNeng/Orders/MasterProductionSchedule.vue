@@ -20,14 +20,14 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <el-input-number v-model="Days" type="number" v-show="labelStatus1 != 3 || labelStatus1 != 5"
+                    <!-- <el-input-number v-model="Days" type="number" v-show="labelStatus1 != 3 || labelStatus1 != 5"
                       size="small" placeholder="请选择周期">
                     </el-input-number>
                     <el-divider direction="vertical"></el-divider>
                     <el-button type="warning" size="mini" v-show="labelStatus1 != 3 || labelStatus1 != 5"
                       @click="transferMonthlyPlan">
                       转入月计划
-                    </el-button>
+                    </el-button> -->
                     <!-- <el-divider direction="vertical"></el-divider>
 
                     <el-button
