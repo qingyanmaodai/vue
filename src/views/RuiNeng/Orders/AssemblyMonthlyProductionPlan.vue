@@ -16,9 +16,9 @@
               <span class="title" style="margin-left: 20px;">{{ title2 }}</span>
             </el-col>
             <el-col :span="16" class="flex_flex_end"><el-divider direction="vertical"></el-divider>
-              <el-button type="primary" size="mini" @click="changeEvent(0)">
+              <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button>
+              </el-button> -->
             </el-col>
           </el-row>
         </div>
@@ -193,7 +193,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 6734 }, { ID: 6734 }],
+      sysID: [{ ID: 7945 }, { ID: 7945 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
