@@ -204,14 +204,22 @@
           <el-row>
             <el-col :span="6">
               <div>
-                原因:
-                <el-input
+                原因:<el-select
+                  clearable
+                  filterable
                   size="small"
+                  placeholder="请选择原因"
                   v-model="ChangeReason"
-                  style="width: 160px"
-                  placeholder="请输入原因"
-                ></el-input></div
-            ></el-col>
+                >
+                  <el-option
+                    v-for="(item, i) in ChangeReasonArray"
+                    :key="i"
+                    :label="item.value"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </div>
+            </el-col>
             <el-col :span="6"
               ><span class="title">
                 <div>
@@ -228,6 +236,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
+        <el-checkbox v-model="IgnoreSunday" border style="margin-right: 10px;">忽略周日</el-checkbox>
         <el-button type="primary" @click="Reschedule()">重算排期</el-button>
         <el-button type="primary" @click="dataSave2()">确定</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
@@ -360,11 +369,13 @@ export default {
       addNum: 1,
       DataSourceList: [{}],
       ChangeReason: null,
+      ChangeReasonArray: [],
       Extend1: null,
       SalesOrderNo: null,
       SalesLineNum: null,
       SalesDeliveryDate: null,
       FrontDate: null,
+      IgnoreSunday: false,
     };
   },
   watch: {},
@@ -918,6 +929,21 @@ export default {
     //双击事件
     async handleRowdbClick(row, remarkTb) {
       if (remarkTb === 1) {
+        let res = await GetSearch(
+          { DataSourceID: "D2307210001" },
+          "/APSAPI/GetDataSource"
+        );
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.ChangeReasonArray = data;
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+
         this.colDialogVisible2 = true;
         this.formSearchs[2].datas["OrderID"] = "";
         this.formSearchs[2].datas["SalesOrderDetailID"] = "";
@@ -940,8 +966,15 @@ export default {
     },
     //重算
     async Reschedule() {
+      if (this.selectionData[2].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.selectionData[2].forEach((item) => {
+        item["IgnoreSunday"] = this.IgnoreSunday;
+      });
       let res = await GetSearch(
-        this.tableData[2],
+        this.selectionData[2],
         "/APSAPI/CalculationStartDate"
       );
       const { data, result, msg } = res.data;
@@ -951,10 +984,10 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        if (data) {
-          this.tableData[2] = [];
-          this.$set(this.tableData, 2, data);
-        }
+        // if (data) {
+        //   this.tableData[2] = [];
+        //   this.$set(this.tableData, 2, data);
+        // }
       } else {
         this.$message({
           message: msg,
@@ -969,6 +1002,11 @@ export default {
 <style lang="scss" scoped>
 ::v-deep .el-dialog__header {
   background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
   color: #fff !important;
 }
 </style>
