@@ -236,7 +236,9 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-checkbox v-model="IgnoreSunday" border style="margin-right: 10px;">忽略周日</el-checkbox>
+        <el-checkbox v-model="IgnoreSunday" border style="margin-right: 10px"
+          >忽略周日</el-checkbox
+        >
         <el-button type="primary" @click="Reschedule()">重算排期</el-button>
         <el-button type="primary" @click="dataSave2()">确定</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
@@ -896,10 +898,21 @@ export default {
         .catch((_) => {});
     },
     async dataSave2(remarkTb, index, parms) {
+      this.selectionData[2] = this.tableData[2].filter(
+        (item) => item["isChecked"] === true
+      );
       if (this.selectionData[2].length == 0) {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
+      const HasData = this.selectionData[2].some(
+        (row) => !row.NewStartDate || !row.NewEndDate
+      );
+      if (HasData) {
+        this.$message.error("选择保存的数据中没有变更日期");
+        return;
+      }
+
       let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
       updateRecords.forEach((item) => {
         console.log(item, "item");
@@ -928,6 +941,7 @@ export default {
     },
     //双击事件
     async handleRowdbClick(row, remarkTb) {
+      //获取原因数据源
       if (remarkTb === 1) {
         let res = await GetSearch(
           { DataSourceID: "D2307210001" },
@@ -955,6 +969,7 @@ export default {
         }
         this.formSearchs[2].datas["LineNum"] = row.LineNum;
         await this.dataSearch(2);
+        this.selectionData[2] = [];
         if (this.tableData[2] && this.tableData[2][0]) {
           let row = this.tableData[2][0];
           this.SalesLineNum = row["SalesLineNum"];
@@ -984,10 +999,17 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        // if (data) {
-        //   this.tableData[2] = [];
-        //   this.$set(this.tableData, 2, data);
-        // }
+        if (data) {
+          // 对应匹配并更新表格数据
+          data.forEach((newData) => {
+            const rowIndex = this.tableData[2].findIndex(
+              (row) => row.OrderID === newData.OrderID
+            );
+            if (rowIndex !== -1) {
+              this.tableData[2].splice(rowIndex, 1, newData);
+            }
+          });
+        }
       } else {
         this.$message({
           message: msg,
