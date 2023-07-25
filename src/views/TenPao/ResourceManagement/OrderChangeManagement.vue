@@ -546,6 +546,18 @@ export default {
       });
       await this.dataSave(remarkTb, index, null, this.selectionData[0]);
     },
+    //提交变更
+    async CommitChanges(remarkTb, index, parms) {
+      if (this.selectionData[0].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      let res = await GetSearch(
+        this.selectionData[0],
+        "/APSAPI/"
+      );
+      await this.dataSave(remarkTb, index, null, this.selectionData[0]);
+    },
   },
 };
 </script>

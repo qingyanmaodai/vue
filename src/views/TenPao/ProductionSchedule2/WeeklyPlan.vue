@@ -4,8 +4,16 @@
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
-          <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
-            :isLoading="isLoading" :btnForm="btnForm" :signName="i" @btnClick="btnClick" />
+          <ComSearch
+            ref="searchRef"
+            :searchData="formSearchs[i].datas"
+            :searchForm="formSearchs[i].forms"
+            :remark="i"
+            :isLoading="isLoading"
+            :btnForm="btnForm"
+            :signName="i"
+            @btnClick="btnClick"
+          />
         </div>
       </div>
       <div>
@@ -16,50 +24,120 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-                <el-input-number v-model="AutoDays2" type="number" v-show="labelStatus1 != 4" size="small"
-                  placeholder="请选择周期">
+                <el-input-number
+                  v-model="AutoDays2"
+                  type="number"
+                  v-show="labelStatus1 != 4"
+                  size="small"
+                  placeholder="请选择周期"
+                >
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" v-show="labelStatus1 == 1" @click="MOPlanStep1CalculationPre(0)">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  v-show="labelStatus1 == 1"
+                  @click="MOPlanStep1CalculationPre(0)"
+                >
                   预排运算
                 </el-button>
-                <el-button v-show="labelStatus1 == 1" type="warning" size="mini" @click="insertList">
+                <el-button
+                  v-show="labelStatus1 == 1"
+                  type="warning"
+                  size="mini"
+                  @click="insertList"
+                >
                   进入分线列表
                 </el-button>
-                <el-button v-show="labelStatus1 == 1" type="warning" size="mini" @click="subSAP">
+                <el-button
+                  v-show="labelStatus1 == 1"
+                  type="warning"
+                  size="mini"
+                  @click="subSAP"
+                >
                   提交同步申请
                 </el-button>
-                <el-button v-show="labelStatus1 == 4" type="primary" size="mini" @click="MOPlanStep1Calculation">
+                <el-button
+                  v-show="labelStatus1 == 4"
+                  type="primary"
+                  size="mini"
+                  @click="MOPlanStep1Calculation"
+                >
                   1.匹配拉线
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button v-show="labelStatus1 == 4" type="warning" size="mini" @click="dataComputedDate">
+                <el-button
+                  v-show="labelStatus1 == 4"
+                  type="warning"
+                  size="mini"
+                  @click="dataComputedDate"
+                >
                   2.配套计算
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <el-button v-show="labelStatus1 == 4" type="success" size="mini" @click="MOPlanSaveToDayPlan">
+                <el-button
+                  v-show="labelStatus1 == 4"
+                  type="success"
+                  size="mini"
+                  @click="MOPlanSaveToDayPlan"
+                >
                   3.更新计划
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
-                <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
+                <div
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
+                  :key="y"
+                >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
             </el-row>
           </div>
-          <div class="flex_column" v-for="item in [0, 1, 2]" :key="item" v-show="labelStatus1 == item">
-            <ComSpreadTable ref="`spreadsheetRef${item}`" :height="height" :tableData="tableData[item]"
-              :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item"
-              :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
+          <div
+            class="flex_column"
+            v-for="item in [0, 1, 2]"
+            :key="item"
+            v-show="labelStatus1 == item"
+          >
+            <ComSpreadTable
+              ref="`spreadsheetRef${item}`"
+              :height="height"
+              :tableData="tableData[item]"
+              :tableColumns="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @workbookInitialized="workbookInitialized"
+              @selectChanged="selectChanged"
+            />
           </div>
           <div v-for="item in [3, 4]" :key="item" v-show="labelStatus1 == item">
-            <ComVxeTable :rowKey="'RowNumber'" :ref="`tableRef${item}`" :height="height" :tableData="tableData[item]"
-              :hasSelect="true" :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isEdit="isEdit"
-              :remark="item" :cellStyle="cellStyle" :sysID="sysID[item].ID" :showPagination="false"
-              :isClear="isClear[item]" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-              @selectfun="selectFun" @changeline="changeline" @sortChange="sortChange" />
+            <ComVxeTable
+              :rowKey="'RowNumber'"
+              :ref="`tableRef${item}`"
+              :height="height"
+              :tableData="tableData[item]"
+              :hasSelect="true"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :isEdit="isEdit"
+              :remark="item"
+              :cellStyle="cellStyle"
+              :sysID="sysID[item].ID"
+              :showPagination="false"
+              :isClear="isClear[item]"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @selectfun="selectFun"
+              @changeline="changeline"
+              @sortChange="sortChange"
+            />
           </div>
           <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
@@ -67,8 +145,15 @@
     </div>
 
     <!-- 点击齐套率弹框-->
-    <DialogTable title="供需平衡" :tableDialog="colDialogVisible" :sysID="7968" width="80%"
-      @closeDialog="colDialogVisible = false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="供需平衡"
+      :tableDialog="colDialogVisible"
+      :sysID="7968"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -93,19 +178,19 @@ import {
   ExportData,
   SaveData,
   GetSearch,
-  GetOrgData
+  GetOrgData,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
   MOPlanStep1,
   MOPlanStep1Calculation,
-  FSLMOPlanStep1
+  FSLMOPlanStep1,
 } from "@/api/wjApi";
 
 import {
   SaveMOPlanStep4,
   SaveMOPlanStep2,
-  OrderPlanMaterialForm
+  OrderPlanMaterialForm,
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
@@ -116,12 +201,12 @@ export default {
     ComVxeTable,
     ComFormDialog,
     DialogTable,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
       dialogSearchForm: {
-        OrderID: ""
+        OrderID: "",
       },
       colDialogVisible: false,
       includeFields: ["Qty"], // 包含合计的字段
@@ -131,7 +216,7 @@ export default {
         { label: "待排产", value: 0 },
         { label: "已排产", value: 1 },
         { label: "暂停", value: 2 },
-        { label: "分线列表", value: 4 }
+        { label: "分线列表", value: 4 },
       ],
       title: this.$route.meta.title,
       resultMsg: "",
@@ -139,23 +224,23 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
       ],
       parmsBtn: [
@@ -168,7 +253,7 @@ export default {
           signName: 3,
           Icon: "",
           Size: "small",
-          Params: { dataName: "selectionData", remarkTb: 2 }
+          Params: { dataName: "selectionData", remarkTb: 2 },
         },
         {
           ButtonCode: "save",
@@ -178,8 +263,8 @@ export default {
           signName: 4,
           Size: "small",
           Methods: "backData",
-          Icon: ""
-        }
+          Icon: "",
+        },
         // {
         //   ButtonCode: "save",
         //   BtnName: "返回",
@@ -221,7 +306,7 @@ export default {
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 5585 },
-        { ID: 7960 }
+        { ID: 7960 },
       ],
       userInfo: {},
       IsPurchaseBoss: false,
@@ -231,7 +316,7 @@ export default {
       LineViewSort: [],
       spread: [],
       sheetSelectRows: [],
-      sheetSelectObj: { start: 0, end: 0, count: 0 }
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   computed: {},
@@ -276,12 +361,15 @@ export default {
       this.adminLoading = true;
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择要提交同步申请的数据");
-        return
+        return;
       }
-      this.selectionData[1] = this.selectionData[1].forEach(m => {
+      this.selectionData[1] = this.selectionData[1].forEach((m) => {
         m["dicID"] = 7967;
       });
-      let res = await GetSearch(this.selectionData[1], "/APSAPI/UpdateOrderStartDate");
+      let res = await GetSearch(
+        this.selectionData[1],
+        "/APSAPI/UpdateOrderStartDate"
+      );
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
       if (result) {
@@ -289,16 +377,15 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
-
     },
     // schedulingPre() {
     //   this.getSelectionData();
@@ -336,7 +423,7 @@ export default {
         ) {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
-              let newData = x['items']; // 设置列表每行下拉菜单
+              let newData = x["items"]; // 设置列表每行下拉菜单
               // 获取要绑定下拉菜单的单元格对象
               let cell = sheet.getCell(index, y);
               // 创建下拉菜单单元格类型，并设置其选项数据
@@ -440,14 +527,14 @@ export default {
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
             cell.foreColor("balck");
-          } else if (row["MFGOrganizeID"] === 162) {
-            cell.backColor("#FFFF00");
-            cell.foreColor("black");
           } else {
             cell.foreColor("black");
             cell.backColor("#FFFFFF");
           }
           if (row["Capacity"] && column["name"] === "Capacity") {
+            cell.foreColor("red");
+          }
+          if (row["SchedulingStatus"] !== "OK") {
             cell.foreColor("red");
           }
         });
@@ -529,14 +616,14 @@ export default {
 
             return true;
           }
-        }
+        },
       };
 
       this.spread[remarkTb]
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
 
-      function MyContextMenu() { }
+      function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
         this.spread[remarkTb]
       );
@@ -555,21 +642,21 @@ export default {
       var contextMenu = new MyContextMenu();
       this.spread[remarkTb].contextMenu = contextMenu;
       // 剪贴板事件绑定
-      sheet.bind(GC.Spread.Sheets.Events.ClipboardChanged, function (
-        sender,
-        args
-      ) {
-        let s = sheet.getSelections()[0];
-        _this.sheetSelectRows = sheet.getArray(
-          s.row,
-          0,
-          s.rowCount,
-          _this.tableColumns[remarkTb].length
-        );
-        _this.sheetSelectObj.start = s.row;
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[remarkTb].length
+          );
+          _this.sheetSelectObj.start = s.row;
 
-        _this.sheetSelectObj.count = s.rowCount;
-      });
+          _this.sheetSelectObj.count = s.rowCount;
+        }
+      );
 
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
@@ -588,18 +675,22 @@ export default {
       });
 
       //表格编辑事件
-      this.spread[remarkTb].bind(GCsheets.Events.EditStarting, function (e, args) { });
-      this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
-      });
+      this.spread[remarkTb].bind(
+        GCsheets.Events.EditStarting,
+        function (e, args) {}
+      );
+      this.spread[remarkTb].bind(
+        GCsheets.Events.EditEnded,
+        function (e, args) {}
+      );
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
       this.spread[remarkTb].refresh(); //重新定位宽高度
-
     },
     // 监听键盘
     keyDown() {
-      document.onkeydown = e => {
+      document.onkeydown = (e) => {
         //事件对象兼容
         let e1 =
           e || event || window.event || arguments.callee.caller.arguments[0];
@@ -616,7 +707,7 @@ export default {
     // 获取选中的数据，type:0需要验证工艺，1不需要
     getSelectionData(type) {
       const errorNum = this.tableData[type].findIndex(
-        item => item["isChecked"] && !item["ProcessGroupID"]
+        (item) => item["isChecked"] && !item["ProcessGroupID"]
       );
       if (errorNum !== -1) {
         this.$message.error(`第${errorNum + 1}行工艺不能为空`);
@@ -627,27 +718,31 @@ export default {
     toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: this.sysID[0].ID }
+        params: { ID: this.sysID[0].ID },
       });
     },
     changenoworkhours(item, value, prop, index, a, b) {
-      if (this.NoWorkHour.findIndex(m => m.OrderID == item.OrderID) === -1) {
+      if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
         this.NoWorkHour.push(item);
       }
     },
     changeline(item, value, prop, index, a, b) {
-      item.拉线.forEach(m => {
+      item.拉线.forEach((m) => {
         if (item.LineID === m.OrganizeID) {
           let tmp = m;
           if (
-            this.LineViewSort.findIndex(m2 => m2.OrganizeID === m.OrganizeID) ==
-            -1
+            this.LineViewSort.findIndex(
+              (m2) => m2.OrganizeID === m.OrganizeID
+            ) == -1
           ) {
             this.LineViewSort.push(tmp);
           } else {
-            tmp = this.LineViewSort[
-              this.LineViewSort.findIndex(m2 => m2.OrganizeID === m.OrganizeID)
-            ];
+            tmp =
+              this.LineViewSort[
+                this.LineViewSort.findIndex(
+                  (m2) => m2.OrganizeID === m.OrganizeID
+                )
+              ];
           }
           item.ViewSort = tmp.ViewSort;
           tmp.ViewSort = tmp.ViewSort + 1;
@@ -668,12 +763,12 @@ export default {
       }
       let newarr = [];
       if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach(element => {
+        arr.forEach((element) => {
           if (element.SupplierName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
             const obj = {
               ...element,
-              children: element.children
+              children: element.children,
             };
             newarr.push(obj);
           } else {
@@ -681,7 +776,7 @@ export default {
               const ab = this.rebuildData(value, element.children);
               const obj = {
                 ...element,
-                children: ab
+                children: ab,
               };
               if (ab && ab.length > 0) {
                 newarr.push(obj);
@@ -723,7 +818,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -740,9 +835,9 @@ export default {
       this.$set(this, "height", newHeight);
     },
     // 编辑行
-    editRow(row) { },
+    editRow(row) {},
     // 删除行
-    delRow(row) { },
+    delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -793,9 +888,8 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.formSearchs[remarkTb].datas[
-        "ControlID"
-      ] = this.userInfo.WorkFlowInstanceID;
+      this.formSearchs[remarkTb].datas["ControlID"] =
+        this.userInfo.WorkFlowInstanceID;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
@@ -807,7 +901,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -827,14 +921,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -860,7 +954,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -868,7 +962,11 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z].datas, "Accounts", '$' + `${this.userInfo['Account']}` + '$');
+          this.$set(
+            this.formSearchs[z].datas,
+            "Accounts",
+            "$" + `${this.userInfo["Account"]}` + "$"
+          );
         });
         this.formSearchs[1].datas["ProductionStatus"] = [26]; //默认待排
         this.dataSearch(1);
@@ -908,14 +1006,14 @@ export default {
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         if (remarkTb !== 3 && remarkTb !== 4) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
-          console.log(this.tableColumns, 'this.tableColumns');
+          console.log(this.tableColumns, "this.tableColumns");
           this.setData(remarkTb);
         }
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -926,7 +1024,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -940,7 +1038,7 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要批量填写开始日期的数据！");
       } else {
-        this.selectionData[0].forEach(a => {
+        this.selectionData[0].forEach((a) => {
           a.StartDate = this.ReplyDate;
         });
       }
@@ -953,7 +1051,7 @@ export default {
       return className;
     },
     // 行内列样式
-    cellStyle({ row, column }) { },
+    cellStyle({ row, column }) {},
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
@@ -968,11 +1066,10 @@ export default {
         s = [24];
       } else if (index === 4) {
         this.dataSearch(4);
-        return
+        return;
       }
       this.formSearchs[index].datas["ProductionStatus"] = s;
       this.dataSearch(index);
-
     },
     // 计算排期与匹配拉线
     async computedScheduling() {
@@ -982,7 +1079,7 @@ export default {
         return;
       }
       let submitData = this.tableData[4]; //this.selectionData[0];
-      submitData.forEach(m => {
+      submitData.forEach((m) => {
         m.ReplyDate = this.ReplyDate;
         m["isChecked"] = true;
       });
@@ -995,22 +1092,22 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
     // 下发周计划
     async setWeekData(index) {
       //假如OrdID为空，则不传给后端
-      let submitData = this.selectionData[1].filter(item => item.OrderID);
-      submitData.forEach(m => {
+      let submitData = this.selectionData[1].filter((item) => item.OrderID);
+      submitData.forEach((m) => {
         m["MOSchedulingType"] = 3;
       });
       this.adminLoading = true;
@@ -1027,14 +1124,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1043,7 +1140,7 @@ export default {
       if (this.selectionData[3].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.selectionData[3].forEach(m => {
+        this.selectionData[3].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
         this.dataSave(3, this.selectionData[3]);
@@ -1058,7 +1155,7 @@ export default {
           .then(() => {
             // 确定
             this.adminLoading = true;
-            this.selectionData[4].forEach(a => {
+            this.selectionData[4].forEach((a) => {
               a["ElementDeleteFlag"] = 1;
             });
             this.dataSave(4, this.selectionData[4]);
@@ -1074,14 +1171,14 @@ export default {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.selectionData[remarkTb].forEach(m => {
+        this.selectionData[remarkTb].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
         this.dataSave(remarkTb, this.selectionData[remarkTb]);
       }
     },
     // 保存
-    async dataSave(remarkTb, newData, index, parms,) {
+    async dataSave(remarkTb, newData, index, parms) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
@@ -1133,10 +1230,10 @@ export default {
     },
     // 进入分线列表
     insertList() {
-      console.log(this.selectionData[1], 'this.selectionData[1]');
+      console.log(this.selectionData[1], "this.selectionData[1]");
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择要进入分线列表的数据（确认选好工艺）！");
-        return
+        return;
       } else {
         this.getSelectionData(1);
         // 进入预排计划
@@ -1152,7 +1249,7 @@ export default {
       if (this.selectionData[4].length == 0) {
         this.$message.error("请选择需要计算的数据！");
       } else {
-        this.selectionData[4].forEach(x => {
+        this.selectionData[4].forEach((x) => {
           x["Type"] = 0;
           x["dicID"] = 7960;
           x["isChecked"] = true;
@@ -1168,7 +1265,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(4);
         } else {
@@ -1176,7 +1273,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -1188,12 +1285,12 @@ export default {
       //   return;
       // }
       // [];
-      let submitData = this.tableData[4].map(x => {
+      let submitData = this.tableData[4].map((x) => {
         return {
           ...x,
           Type: 0,
           dicID: 7960,
-          isChecked: true
+          isChecked: true,
         };
       });
       const originalSelectionData = JSON.parse(
@@ -1210,37 +1307,37 @@ export default {
           // 清空选中的，把选中的数据重新绑定
 
           this.resultMsg = res.data.resultMsg;
-          let newData = this.tableData[4].filter(a =>
-            originalSelectionData.some(b => b.OrderID == a.OrderID)
+          let newData = this.tableData[4].filter((a) =>
+            originalSelectionData.some((b) => b.OrderID == a.OrderID)
           );
 
           this.$set(this.selectionData, 4, []);
           if (newData.length != 0) {
-            this.tableData[4].forEach(item1 => {
+            this.tableData[4].forEach((item1) => {
               // 使用some方法查找是否存在匹配的OrdID
               const isMatched = newData.some(
-                item2 => item2.OrderID === item1.OrderID
+                (item2) => item2.OrderID === item1.OrderID
               );
               // 根据匹配结果设置IsChecked属性
               item1.isChecked = isMatched;
             });
           }
           this.selectionData[4] = this.tableData[4].filter(
-            item => item["isChecked"] == true
+            (item) => item["isChecked"] == true
           );
 
           this.adminLoading = false;
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -1261,13 +1358,15 @@ export default {
         let templateData = JSON.parse(JSON.stringify(this.selectionData[4]));
         this.$set(this.selectionData, 4, []);
         // 清空选中的，把选中的数据重新绑定
-        let newData = this.tableData[4].filter(a =>
-          templateData.some(b => b.OrderID == a.OrderID)
+        let newData = this.tableData[4].filter((a) =>
+          templateData.some((b) => b.OrderID == a.OrderID)
         );
         if (newData.length != 0) {
-          newData.forEach(c => {
+          newData.forEach((c) => {
             this.$nextTick(() => {
-              _this.$refs[`tableRef${_this.labelStatus1}`]?.[0].$refs.vxeTable.setCheckboxRow(c, true);
+              _this.$refs[
+                `tableRef${_this.labelStatus1}`
+              ]?.[0].$refs.vxeTable.setCheckboxRow(c, true);
               _this.selectionData[4].push(c);
             });
           });
@@ -1275,14 +1374,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       // }
@@ -1294,7 +1393,7 @@ export default {
         return;
       }
       let submitData = this.selectionData[4]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
-      submitData.forEach(m => {
+      submitData.forEach((m) => {
         m["MOSchedulingType"] = 1;
         m["dicID"] = 7960;
       });
@@ -1308,17 +1407,17 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
