@@ -178,7 +178,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "DailyPersonnelSituation",
+  name: "QuotaAbnormalAnalysis",
   components: {
     ComSearch,
     ComVxeTable,

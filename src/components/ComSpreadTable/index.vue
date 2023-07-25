@@ -1,7 +1,7 @@
 <template>
   <!--  spreadJSform表单控件  -->
 
-  <div class="flex_column">
+  <div class="flex_column" style="height: 100%; border: 1px solid #b9b9b9">
     <div class="flex_grow" v-loading="tableLoading">
       <gc-spread-sheets
         class="sample-spreadsheets"

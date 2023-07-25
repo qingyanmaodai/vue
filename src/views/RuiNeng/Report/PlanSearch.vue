@@ -11,8 +11,8 @@
       style="width: 160px; border: 1px solid #b9b9b9"
     >
       <div
-        class="admin_left_2 border-b-1"
-        style="overflow: hidden; height: 50%; width: 100%"
+        class="admin_left_2 border-b-1 flex_column"
+        style="height: 50%; width: 100%"
       >
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
           <span class="tree_text">车间</span>
@@ -33,31 +33,31 @@
                 )
               "
             ></el-input>
-            <el-dropdown @command="handleCommand" class="flex_inline">
+            <!-- <el-dropdown @command="handleCommand" class="flex_inline">
               <img src="../../../assets/svg/dot.svg" />
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">展开全部</el-dropdown-item>
                 <el-dropdown-item command="2">折叠全部</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
           </div>
         </div>
         <el-tree
-          class="tree-line"
+          class="tree-line flex_grow"
           :indent="0"
           ref="asideTree"
-          node-key="LineID"
+          node-key="OrganizeID"
+          style="overflow: auto"
           :data="treeData"
           :props="treeProps"
-          :style="{ height: treeHeight + '', overflow: 'auto' }"
           highlight-current
           :expand-on-click-node="false"
           @node-click="handleNodeClick"
         ></el-tree>
       </div>
       <div
-        class="admin_left_2 border-b-1"
-        style="overflow: hidden; height: 50%; width: 100%"
+        class="admin_left_2 border-b-1 flex_column"
+        style="height: 50%; width: 100%"
       >
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
           <span class="tree_text">线别</span>
@@ -78,30 +78,30 @@
                 )
               "
             ></el-input>
-            <el-dropdown @command="handleCommand" class="flex_inline">
+            <!-- <el-dropdown @command="handleCommand" class="flex_inline">
               <img src="../../../assets/svg/dot.svg" />
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">展开全部</el-dropdown-item>
                 <el-dropdown-item command="2">折叠全部</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
           </div>
         </div>
         <el-tree
-          class="tree-line"
+          class="tree-line flex_grow"
           :indent="0"
-          ref="asideTree"
-          node-key="LineID"
+          ref="asideTree1"
+          node-key="OrganizeID"
+          style="overflow: auto"
           :data="treeData1"
           :props="treeProps"
-          :style="{ height: treeHeight + '', overflow: 'auto' }"
           highlight-current
           :expand-on-click-node="false"
           @node-click="handleNodeClick1"
         ></el-tree>
       </div>
     </div>
-    <div class="admin_container_2" style="flex-grow: 0">
+    <div class="admin_container_2 flex_column" style="flex-grow: 0">
       <div class="admin_head" ref="headRef">
         <div
           v-for="i in [0, 1, 2, 3]"
@@ -120,27 +120,26 @@
           />
         </div>
       </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="4">
-                <el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  :stretch="true"
-                >
-                  <el-tab-pane label="月计划" name="0"></el-tab-pane>
-                  <el-tab-pane label="周计划" name="1"></el-tab-pane>
-                  <el-tab-pane label="日计划" name="2"></el-tab-pane>
-                  <el-tab-pane label="生产任务清单" name="3"></el-tab-pane>
-                </el-tabs>
-                <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
+      <div class="admin_content flex_column flex_grow">
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="4">
+              <el-tabs
+                v-model="selectedIndex"
+                @tab-click="handleClick"
+                :stretch="true"
+              >
+                <el-tab-pane label="月计划" name="0"></el-tab-pane>
+                <el-tab-pane label="周计划" name="1"></el-tab-pane>
+                <el-tab-pane label="日计划" name="2"></el-tab-pane>
+                <el-tab-pane label="生产任务清单" name="3"></el-tab-pane>
+              </el-tabs>
+              <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
                 <span class="title">{{ title }}</span> -->
-              </el-col>
-              <el-col :span="16" class="flex_flex_end">
-                <!-- <el-divider direction="vertical"></el-divider>
+            </el-col>
+            <el-col :span="16" class="flex_flex_end">
+              <!-- <el-divider direction="vertical"></el-divider>
                     <div class="flex">
                       复期:
                       <el-date-picker
@@ -162,7 +161,7 @@
                       批量指定日期
                     </el-button>
                     <el-divider direction="vertical"></el-divider> -->
-                <!-- <div
+              <!-- <div
                       :class="
                         labelStatus1 == y ? 'statusActive cursor' : 'cursor'
                       "
@@ -174,51 +173,29 @@
                       }}</span>
                       <el-divider direction="vertical"></el-divider>
                     </div> -->
-              </el-col>
-            </el-row>
-          </div>
-          <div
-            class="flex_column"
-            v-for="item in [0, 1, 2, 3]"
-            :key="item"
-            v-show="Number(selectedIndex) === item"
-          >
-            <ComSpreadTable
-              ref="spreadsheetRef"
-              :height="height"
-              :tableData="tableData[item]"
-              :tableColumns="tableColumns[item]"
-              :tableLoading="tableLoading[item]"
-              :remark="item"
-              :sysID="sysID[item]['ID']"
-              :pagination="tablePagination[item]"
-              @pageChange="pageChange"
-              @pageSize="pageSize"
-              @workbookInitialized="workbookInitialized"
-              @selectChanged="selectChanged"
-            />
-            <!-- <ComVxeTable
-                  :rowKey="'RowNumber'"
-                  :ref="`tableRef${item}`"
-                  :height="height"
-                  :tableData="tableData[item]"
-                  :tableHeader="tableColumns[item]"
-                  :tableLoading="tableLoading[item]"
-                  :isEdit="isEdit"
-                  :hasSelect="hasSelect[item]"
-                  :remark="item"
-                  :cellStyle="cellStyle"
-                  :sysID="sysID[item].ID"
-                  :isClear="isClear[item]"
-                  :footerLabel="footerLabel[item]"
-                  :pagination="tablePagination[item]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @selectfun="selectFun"
-                  @sortChange="sortChange"
-                  :keepSource="true"
-                /> -->
-          </div>
+            </el-col>
+          </el-row>
+        </div>
+        <div
+          class="flex_column flex_grow"
+          v-for="item in [0, 1, 2, 3]"
+          :key="item"
+          v-show="Number(selectedIndex) === item"
+        >
+          <ComSpreadTable
+            ref="spreadsheetRef"
+            :height="'100%'"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @workbookInitialized="workbookInitialized"
+            @selectChanged="selectChanged"
+          />
         </div>
       </div>
     </div>
@@ -497,19 +474,20 @@ export default {
         // console.log(newTree, "newTree");
         this.treeData = JSON.parse(JSON.stringify(data));
         // this.treeData.unshift({
-        //   SupplierID: -1,
-        //   SupplierName: "",
-        //   SupplierNameCount: "全部" + "(" + num + ")",
+        //   OrganizeID: -1,
+        //   OrganizeName: "全部",
         // });
+        console.log(this.treeData, "this.treeData");
         this.treeListTmp = this.treeData;
         // this.getTableData(
-        //   this.formSearchs[this.labelStatus1].datas,
-        //   this.labelStatus1
+        //   this.formSearchs[this.selectedIndex].datas,
+        //   Number(this.selectedIndex)
         // );
         if (data.length != 0) {
           this.$nextTick(function () {
-            _this.$refs.asideTree.setCurrentKey(0);
+            _this.$refs.asideTree.setCurrentKey(data[0].OrganizeID);
           });
+          this.handleNodeClick(data[0]);
         }
       } else {
         this.$message({
@@ -521,7 +499,7 @@ export default {
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      // this.treeHeight = document.documentElement.clientHeight - 150 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
       let rem =
         document.documentElement.clientHeight -
@@ -1164,7 +1142,7 @@ export default {
       this.tableLoading[remarkTb] = false;
       setTimeout(() => {
         this.spread[remarkTb].refresh(); //重新定位宽高度
-      }, 0);
+      });
     },
     // 单击线体
     handleNodeClick(data, node) {
@@ -1172,7 +1150,7 @@ export default {
       this.formSearchs[this.selectedIndex].datas["WorkShopID"] =
         data.OrganizeID;
       this.dataSearch(this.selectedIndex);
-      this.getLineData(data.OrganizeID);
+      this.getLineData(data.OrganizeID === -1 ? "" : data.OrganizeID);
     },
     // 获取线别数据
     async getLineData(OrganizeIDs) {
