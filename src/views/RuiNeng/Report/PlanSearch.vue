@@ -129,10 +129,10 @@
                 @tab-click="handleClick"
                 :stretch="true"
               >
-                <el-tab-pane label="月计划" name="0"></el-tab-pane>
-                <el-tab-pane label="周计划" name="1"></el-tab-pane>
-                <el-tab-pane label="日计划" name="2"></el-tab-pane>
-                <el-tab-pane label="生产任务清单" name="3"></el-tab-pane>
+                <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
+                <el-tab-pane label="月计划" name="1"></el-tab-pane>
+                <el-tab-pane label="周计划" name="2"></el-tab-pane>
+                <el-tab-pane label="日计划" name="3"></el-tab-pane>
               </el-tabs>
               <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
@@ -244,7 +244,7 @@ export default {
       selectedIndex: "0",
       CurrentSendQty: "",
       isLoading: false,
-      hasSelect: [true, true, true, true, true],
+      hasSelect: [true, true, true, true],
       footerLabel: [""],
       dialogShow: false,
       EditDisabled: false,
@@ -275,6 +275,10 @@ export default {
       delData: [[]],
       formSearchs: [
         {
+          datas: {},
+          forms: [],
+        },
+        {
           datas: {
             PlanMonths: 8,
           },
@@ -292,23 +296,14 @@ export default {
           },
           forms: [],
         },
-        {
-          datas: {},
-          forms: [],
-        },
-        {
-          datas: {},
-          forms: [],
-        },
       ],
-      selectionData: [[], [], [], [], []],
+      selectionData: [[], [], [], []],
       btnForm: [],
-      tableData: [[], [], [], [], []],
-      tableColumns: [[], [], [], [], []],
-      tableLoading: [false, false, false, false, false],
-      isClear: [false, false, false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -316,7 +311,6 @@ export default {
       ],
       height: "707px",
       treeHeight: "765px",
-      showPagination: true,
       tagRemark: 0,
       isEdit: false,
       clickData: {},
@@ -327,13 +321,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [
-        { ID: 7908 },
-        { ID: 7915 },
-        { ID: 7910 },
-        { ID: 7833 },
-        { ID: 9053 },
-      ],
+      sysID: [{ ID: 7833 }, { ID: 7908 }, { ID: 7915 }, { ID: 7910 }],
       userInfo: {},
       spread: [],
     };
@@ -793,13 +781,6 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          // if (z !== 0) {
-          //   this.$set(
-          //     this.formSearchs[z].datas,
-          //     "Account",
-          //     this.userInfo.Account
-          //   );
-          // }
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
@@ -810,7 +791,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.getSupplierData();
-        this.formSearchs[3].datas["PlanDay"] =
+        this.formSearchs[0].datas["PlanDay"] =
           this.$moment().format("YYYY-MM-DD");
       }
     },
