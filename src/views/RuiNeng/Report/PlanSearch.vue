@@ -777,7 +777,11 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
-          this.$set(this.formSearchs[i], "datas", this.userInfo.Account);
+          this.$set(
+            this.formSearchs[i]["datas"],
+            "Account",
+            this.userInfo.Account
+          );
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
