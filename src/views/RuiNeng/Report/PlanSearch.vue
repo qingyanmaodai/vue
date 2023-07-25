@@ -796,8 +796,8 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.getSupplierData();
-        this.formSearchs[0].datas["PlanDay"] =
-          this.$moment().format("YYYY-MM-DD");
+        // this.formSearchs[0].datas["PlanDay"] =
+        //   this.$moment().format("YYYY-MM-DD");
       }
     },
     // 验证数据
