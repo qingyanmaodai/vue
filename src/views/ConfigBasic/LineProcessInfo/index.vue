@@ -1,14 +1,11 @@
-
 <template>
   <div
     class="container flex_flex"
     v-loading="adminLoading"
+    style="height: calc(100vh - 80px)"
   >
-    <div class="admin_container_two">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+    <div class="admin_container_two flex_column">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -18,64 +15,58 @@
           @btnClick="btnClick"
         />
       </div>
-      <div>
-        <div class="admin_content">
-          <div class="ant-table-title">
-            <el-row>
-              <el-col :span="8"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="16"
-                class="flex_flex_end"
-              >
-                <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status1"
-                  :key="y"
-                >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-          <ComUmyTable
-            ref="orgRef"
-            :rowKey="'RowNumber'"
-            :height="height"
-            :tableData="tableData[0]"
-            :tableHeader="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :expandAll="true "
-            :hasSelect="hasSelect"
-            :sysID="3026"
-            :isEdit="isEdit"
-            :isClear="isClear[0]"
-            :pagination="tablePagination[0]"
-            @handleRowClick="handleRowClick"
-            @lookBom="lookBom"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @selectfun="selectFun"
-            @sortChange="sortChange"
-          />
-        </div>
+      <div class="ant-table-title pd-6">
+        <el-row>
+          <el-col :span="8"
+            ><span class="title">{{ title }}</span></el-col
+          >
+          <el-col :span="16" class="flex_flex_end">
+            <div
+              :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+              v-for="(item, y) in Status1"
+              :key="y"
+            >
+              <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+              <el-divider direction="vertical"></el-divider>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+        <ComVxeTable
+          ref="orgRef"
+          :rowKey="'RowNumber'"
+          :height="height"
+          :tableData="tableData[0]"
+          :tableHeader="tableColumns[0]"
+          :tableLoading="tableLoading[0]"
+          :remark="0"
+          :hasSelect="hasSelect"
+          :sysID="3026"
+          :isEdit="isEdit"
+          :isClear="isClear[0]"
+          :pagination="tablePagination[0]"
+          @handleRowClick="handleRowClick"
+          @lookBom="lookBom"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @selectfun="selectFun"
+          @sortChange="sortChange"
+        />
       </div>
     </div>
-    <div class="admin_right_two">
+    <div class="admin_right_two flex_column">
       <div class="ant-table-title margin_lr5">
         <el-row>
           <el-col :span="6"><span class="title">可做工序</span></el-col>
-          <el-col
-            :span="18"
-            class="flex_flex_end"
-          >
+          <el-col :span="18" class="flex_flex_end">
             <el-button
               type="primary"
               size="mini"
               @click="sureConfig"
               :disabled="!isEdit"
-            >保存关联工序</el-button>
+              >保存关联工序</el-button
+            >
             <el-divider direction="vertical"></el-divider>
             <el-button
               v-show="labelStatus1 == 1"
@@ -83,38 +74,38 @@
               size="mini"
               @click="delConfig"
               :disabled="!isEdit"
-            >删除关联工序</el-button>
+              >删除关联工序</el-button
+            >
           </el-col>
         </el-row>
       </div>
-      <div :style="{'height':'300px','over-flow':'auto','border':'1px solid #D9D9D9','margin':'0 5px 0 5px','padding':'0 10px'}">
-        <div
-          v-for="(item,i) in childrens"
-          :key="i"
-        >
+      <div
+        :style="{
+          height: '300px',
+          overflow: 'auto',
+          border: '1px solid #D9D9D9',
+          margin: '0 5px 0 5px',
+          padding: '0 10px',
+        }"
+      >
+        <div v-for="(item, i) in childrens" :key="i">
           <div class="flex_row_spaceBtn margin_lr5">
-            <span>{{item.ProcessName}}</span>
+            <span>{{ item.ProcessName }}</span>
             <i
               class="iconshanchu dangerIconBtn"
-              @click="delProcess(item,i)"
+              @click="delProcess(item, i)"
             ></i>
           </div>
           <div class="margin_tb5 hr-line-dashed"></div>
         </div>
       </div>
       <div class="flex_row_center">
-        <i
-          class="icon07jiantouxiangshangfill icon_img"
-          @click="addProcess"
-        ></i>
+        <i class="icon07jiantouxiangshangfill icon_img" @click="addProcess"></i>
       </div>
       <div class="ant-table-title margin_lr5">
         <el-row>
           <el-col :span="6"><span class="title">工序列表</span></el-col>
-          <el-col
-            :span="18"
-            class="flex_flex_end"
-          >
+          <el-col :span="18" class="flex_flex_end">
             <el-input
               v-model="formSearchs[1].datas.ProcessName"
               placeholder="工序名称"
@@ -123,41 +114,39 @@
             >
             </el-input>
             <el-divider direction="vertical"></el-divider>
-            <el-button
-              type="primary"
-              size="mini"
-              @click="dataSearch(1)"
-            >查询</el-button>
+            <el-button type="primary" size="mini" @click="dataSearch(1)"
+              >查询</el-button
+            >
           </el-col>
         </el-row>
       </div>
-      <ComUmyTable
-        class="margin_lr5"
-        :rowKey="'RowNumber'"
-        :height="height2"
-        :tableData="tableData[1]"
-        :tableHeader="tableColumns[1]"
-        :tableLoading="tableLoading[1]"
-        :remark="1"
-        :sysID="14"
-        :hasSelect="true"
-        :isClear="isClear[1]"
-        :pagination="tablePagination[1]"
-        @pageChange="pageChange"
-        @pageSize="pageSize"
-        @selectfun="selectFun"
-        @sortChange="sortChange"
-      />
-
+      <div v-for="item in [1]" :key="item" class="margin_lr5 flex_grow">
+        <ComVxeTable
+          class="margin_lr5 flex_grow"
+          :rowKey="'RowNumber'"
+          :height="'100%'"
+          :tableData="tableData[1]"
+          :tableHeader="tableColumns[1]"
+          :tableLoading="tableLoading[1]"
+          :remark="1"
+          :sysID="14"
+          :hasSelect="true"
+          :isClear="isClear[1]"
+          :pagination="tablePagination[1]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @selectfun="selectFun"
+          @sortChange="sortChange"
+        />
+      </div>
     </div>
-
   </div>
 </template>
 
 <script>
 var _this;
 import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
+import ComVxeTable from "@/components/ComVxeTable";
 import {
   GetHeader,
   GetSearchData,
@@ -171,7 +160,7 @@ export default {
   name: "LineProcessInfo",
   components: {
     ComSearch,
-    ComUmyTable,
+    ComVxeTable,
     ComFormDialog,
   },
   data() {
@@ -590,7 +579,7 @@ export default {
     // 保存关联工序
     sureConfig() {
       let newData = [];
-      debugger
+      debugger;
       if (this.labelStatus1 == 0) {
         if (this.delData[0].length == 0) {
           this.$message.error("请单击需要关联的组织！");
@@ -905,7 +894,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.$refs.orgRef.$refs.plxTable.clearSelection();
+      this.$refs.orgRef[0].$refs.vxeTable.clearCheckboxRow();
       this.childrens = [];
       if (index == 0) {
         this.hasSelect = false;

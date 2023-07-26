@@ -39,6 +39,11 @@
         auto-resize
         resizable
         :print-config="{}"
+        :tree-config="{
+          children: 'children',
+          iconOpen: 'vxe-icon-square-minus-fill',
+          iconClose: 'vxe-icon-square-plus-fill',
+        }"
         :show-footer="showFooter"
         :footer-method="footerMethod"
         @checkbox-change="handleSelectionChange"
@@ -1097,7 +1102,7 @@ export default {
     },
     isToolbar: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     // 懒加载
     keepSource: {
@@ -1129,7 +1134,7 @@ export default {
       scrollTop: 0,
       theme: "#409EFF",
       isChangeColor: true,
-      previousRowIndex: null,
+      lastClickedRow: null,
     };
   },
   methods: {
@@ -1234,7 +1239,6 @@ export default {
         let prevRow = visibleData[rowIndex - 1];
         let nextRow = visibleData[rowIndex + 1];
         if (prevRow && prevRow[column.property] === cellValue) {
-          console.log({ rowspan: 0, colspan: 0 });
           return { rowspan: 0, colspan: 0 };
         } else {
           let countRowspan = 1;
@@ -1353,10 +1357,10 @@ export default {
       }
       if (column.type !== "checkbox") {
         // 如果是勾选框单元格，则取消行点击的触发
-        if (rowIndex !== this.previousRowIndex) {
+        if (row !== this.lastClickedRow) {
           this.$emit("handleRowClick", row, this.remark);
+          this.lastClickedRow = row;
         }
-        this.previousRowIndex = rowIndex;
       }
     },
     // 双击行
@@ -1653,12 +1657,16 @@ export default {
   right: -150px !important;
 }
 
+//表位行高
 ::v-deep .vxe-footer--row {
   height: 35px;
 }
+
+//表头微软雅黑字体
 ::v-deep .vxe-header--column {
   font-family: “Microsoft YaHei” !important;
 }
+//表头底色
 ::v-deep .vxe-header--row {
   background-color: #ececec;
 }
@@ -1667,6 +1675,7 @@ export default {
 //   background-color: #D1F1EE;
 // }
 
+//边框线
 ::v-deep .vxe-body--column {
   border-left: 1px solid #ccc !important;
   border-bottom: 1px solid #ccc !important;
@@ -1675,5 +1684,10 @@ export default {
 ::v-deep th.vxe-header--column {
   border-left: 1px solid #b9b9b9 !important;
   border-bottom: 2px solid #b9b9b9 !important;
+}
+
+//树状图图标位置
+::v-deep .vxe-cell--tree-node .vxe-tree-cell {
+  padding-left: 1.5em !important;
 }
 </style>
