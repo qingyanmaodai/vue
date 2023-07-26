@@ -2,11 +2,8 @@
   <!-- :keyboard-config="{isArrow: true, isDel: false, isEnter: true, isTab: true, isEdit: true}" -->
   <!-- :custom-config="{storage: true, checkMethod: checkColumnMethod}" -->
   <!-- :span-method="arraySpanMethod" -->
-  <!-- :scroll-x="{enable: false, gt: -1}" -->
-  <!-- :scroll-y="{enable: false, gt: -1}" -->
   <!-- :footer-method="footerMethod" -->
-  <!-- show-overflow  show-overflow-->
-  <div div class="flex_column" style="height: 100%; border: 1px solid #b9b9b9">
+  <div div class="flex_column" style="height: 100%">
     <div class="flex_grow">
       <vxe-toolbar
         ref="xToolbar1"
@@ -34,7 +31,6 @@
           checkField: 'isChecked',
         }"
         :custom-config="{ storage: true, checkMethod: checkColumnCustomMethod }"
-        :mouse-config="{ selected: true }"
         :cell-style="cellStyle"
         auto-resize
         resizable
@@ -1432,14 +1428,11 @@ export default {
         }
       }
     },
-    // // 行样式控制
-    // tableRowClassName({ row, rowIndex }) {
-    //   let className = "";
-    //   if (row["IsAdd"]) {
-    //     className += "purpleBgColor";
-    //   }
-    //   return className;
-    // },
+    // 行样式控制
+    tableRowClassName({ row, rowIndex }) {
+      // let className = "";
+      // return className;
+    },
     //可编辑列加背景颜色
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
       let className = "";
@@ -1656,36 +1649,38 @@ export default {
 ::v-deep .vxe-toolbar .vxe-custom--option-wrapper {
   right: -150px !important;
 }
-
 //表位行高
 ::v-deep .vxe-footer--row {
   height: 35px;
 }
-
-//表头微软雅黑字体
-::v-deep .vxe-header--column {
-  font-family: “Microsoft YaHei” !important;
-}
+// //表头微软雅黑字体
+// ::v-deep .vxe-header--column {
+//   font-family: “Microsoft YaHei” !important;
+// }
 //表头底色
 ::v-deep .vxe-header--row {
   background-color: #ececec;
 }
-
-// ::v-deep .vxe-header--row {
-//   background-color: #D1F1EE;
-// }
-
-//边框线
-::v-deep .vxe-body--column {
-  border-left: 1px solid #ccc !important;
-  border-bottom: 1px solid #ccc !important;
+//表头底部线
+::v-deep .vxe-table--header-border-line {
+  border-bottom: 1px solid #b9b9b9 !important;
 }
-
-::v-deep th.vxe-header--column {
-  border-left: 1px solid #b9b9b9 !important;
-  border-bottom: 2px solid #b9b9b9 !important;
+//列表边框线宽度和颜色
+::v-deep .vxe-table--render-default.border--full .vxe-body--column {
+  background-image: linear-gradient(#ccc, #ccc), linear-gradient(#ccc, #ccc);
+  // background-size: 2px 100%, 100% 2px;
 }
-
+//列表表头表尾线宽度和颜色
+::v-deep .vxe-table--render-default.border--full .vxe-header--column,
+.vxe-table--render-default.border--full .vxe-footer--column {
+  background-image: linear-gradient(#b9b9b9, #b9b9b9),
+    linear-gradient(#b9b9b9, #b9b9b9);
+  // background-size: 2px 100%, 100% 2px;
+}
+//外边框线
+::v-deep .vxe-table--render-default {
+  border: 1px solid #b9b9b9 !important;
+}
 //树状图图标位置
 ::v-deep .vxe-cell--tree-node .vxe-tree-cell {
   padding-left: 1.5em !important;
