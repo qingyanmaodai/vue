@@ -210,20 +210,6 @@
                 </div>
               </VueSeamlessScroll>
             </div>
-            <!-- <el-table
-              :data="tableData"
-              height="200px"
-              border
-              style="width: 100%"
-            >
-              <el-table-column prop="DemandDate" label="需求日期" width="85">
-              </el-table-column>
-              <el-table-column prop="Code" label="物料编码" width="85">
-              </el-table-column>
-              <el-table-column prop="MaterialName" label="名称" width="50">
-              </el-table-column>
-              <el-table-column prop="OweQty" label="欠料数"> </el-table-column>
-            </el-table> -->
           </div>
         </div>
       </el-aside>
