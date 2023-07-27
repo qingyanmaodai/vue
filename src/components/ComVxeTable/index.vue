@@ -1429,10 +1429,10 @@ export default {
       }
     },
     // 行样式控制
-    tableRowClassName({ row, rowIndex }) {
+    // tableRowClassName({ row, rowIndex }) {
       // let className = "";
       // return className;
-    },
+    // },
     //可编辑列加背景颜色
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
       let className = "";
@@ -1653,10 +1653,6 @@ export default {
 ::v-deep .vxe-footer--row {
   height: 35px;
 }
-// //表头微软雅黑字体
-// ::v-deep .vxe-header--column {
-//   font-family: “Microsoft YaHei” !important;
-// }
 //表头底色
 ::v-deep .vxe-header--row {
   background-color: #ececec;
@@ -1681,8 +1677,7 @@ export default {
 ::v-deep .vxe-table--render-default {
   border: 1px solid #b9b9b9 !important;
 }
-//树状图图标位置
-::v-deep .vxe-cell--tree-node .vxe-tree-cell {
-  padding-left: 1.5em !important;
+.el-select{
+  width: 100%;
 }
 </style>

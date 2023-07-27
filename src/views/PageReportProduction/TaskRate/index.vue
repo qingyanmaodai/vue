@@ -383,7 +383,8 @@ export default {
     cellStyle({ row, column }) {
       if (!row["PlanDay"]) {
         return {
-          background: "#EAEFFD",
+          background: "#2dd8ff",
+          color: "#151515",
         };
       }
       if (

@@ -211,10 +211,6 @@ ul li .el-tree .el-tree-node__content {
   font-weight: normal;
 }
 
-.vxe-table--render-default .vxe-tree-cell {
-  padding-left: 0 !important;
-}
-
 .el-input .el-input__inner {
   padding: 0 5px !important;
 }
@@ -982,12 +978,6 @@ label {
 }
 
 /* vxe表格 */
-// .vxe-table--render-default.size--mini .vxe-body--column.col--ellipsis,
-// .vxe-table--render-default.size--mini .vxe-footer--column.col--ellipsis,
-// .vxe-table--render-default.size--mini .vxe-header--column.col--ellipsis,
-// .vxe-table--render-default.vxe-editable.size--mini .vxe-body--column {
-//   height: 26px !important;
-// }
 
 .vxe-header--row {
   height: 36px !important;
@@ -998,6 +988,12 @@ label {
 .vxe-table--render-default.size--mini .vxe-header--column:not(.col--ellipsis) {
   padding: 0 !important;
   line-height: initial !important;
+}
+
+
+.vxe-table--render-default .vxe-cell {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
 }
 
 .vxe-header--column {
@@ -1437,15 +1433,6 @@ label {
   border-bottom: 1px solid #ed5736;
   min-width: 60px;
   line-height: 28px;
-}
-
-.vxe-table--render-default .vxe-cell {
-  padding-left: 4px !important;
-  padding-right: 0 !important;
-}
-
-.vxe-cell--filter {
-  padding: 0.1em 0.1em 0 0.15em !important;
 }
 // 选项卡标签页外边距
 .tabs .el-tabs__content {

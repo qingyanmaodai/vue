@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div class="up_admin">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -22,23 +16,22 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="openCategory"
-                >新增工艺</el-button>
+              <el-col :span="20" class="flex_flex_end">
+                <el-button type="primary" size="mini" @click="openCategory"
+                  >新增工艺</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y, 1)">{{
+                    item.label
+                  }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -66,54 +59,49 @@
       </div>
     </div>
 
-    <div
-      class="down_admin"
-      ref="down_admin"
-    >
+    <div class="down_admin" ref="down_admin">
       <div>
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title2 }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title2 }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <span v-show="labelStatus2 == 1">
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="openProcess"
-                  >新增工序</el-button>
+                  <el-button type="primary" size="mini" @click="openProcess"
+                    >新增工序</el-button
+                  >
                   <el-divider direction="vertical"></el-divider>
                   <el-button
                     type="warning"
                     size="mini"
                     @click="saveGroupProcess"
-                  >保存工艺工序</el-button>
+                    >保存工艺工序</el-button
+                  >
                 </span>
                 <span v-show="labelStatus2 == 2">
                   <el-radio
                     v-model="loseCategory"
                     :label="0"
                     @click.native.prevent="clickitem(1)"
-                  >缺失工艺</el-radio>
+                    >缺失工艺</el-radio
+                  >
                   <el-divider direction="vertical"></el-divider>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="setContact"
-                  >建立关联</el-button>
+                  <el-button type="primary" size="mini" @click="setContact"
+                    >建立关联</el-button
+                  >
                 </span>
                 <span v-show="labelStatus2 == 3">
-                  <el-button
-                    type="primary"
-                    size="mini"
-                  >保存</el-button>
+                  <el-button type="primary" size="mini">保存</el-button>
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <div
-                  :class="labelStatus2 == item.value ? 'statusActive cursor' : 'cursor'"
+                  :class="
+                    labelStatus2 == item.value
+                      ? 'statusActive cursor'
+                      : 'cursor'
+                  "
                   v-for="(item, y) in Status2"
                   :key="y"
                 >
@@ -125,17 +113,6 @@
           </div>
           <div class="fill_width">
             <div v-show="labelStatus2 == 1">
-              <div class="admin_head">
-                <ComSearch
-                  ref="searchRef1"
-                  :searchData="formSearchs[4].datas"
-                  :searchForm="formSearchs[4].forms"
-                  :remark="4"
-                  :isLoading="isLoading[4]"
-                  :btnForm="btnForm[4]"
-                  @btnClick="btnClick"
-                />
-              </div>
               <div class="flex">
                 <div class="down_right_admin">
                   <ComUmyTable
@@ -164,6 +141,17 @@
                   ></i>
                 </div>
                 <div class="down_left_admin">
+                  <div class="admin_head">
+                    <ComSearch
+                      ref="searchRef1"
+                      :searchData="formSearchs[4].datas"
+                      :searchForm="formSearchs[4].forms"
+                      :remark="4"
+                      :isLoading="isLoading[4]"
+                      :btnForm="btnForm[4]"
+                      @btnClick="btnClick"
+                    />
+                  </div>
                   <ComUmyTable
                     :rowKey="'RowNumber'"
                     :height="'281px'"
@@ -923,9 +911,8 @@ export default {
               }
 
               if (a.ProcessConcatLevelTwoIDs) {
-                a.ProcessConcatLevelTwoIDs = a.ProcessConcatLevelTwoIDs.split(
-                  ","
-                );
+                a.ProcessConcatLevelTwoIDs =
+                  a.ProcessConcatLevelTwoIDs.split(",");
               } else {
                 a.ProcessConcatLevelTwoIDs = [];
               }
@@ -934,7 +921,7 @@ export default {
         }
 
         this.$set(this.tableData, remarkTb, data);
-       
+
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -1067,9 +1054,9 @@ export default {
     // 保存工艺工序
     saveGroupProcess() {
       let childrens = [];
-    console.log( this.tableData[1]);
+      console.log(this.tableData[1]);
       this.tableData[1].forEach((x) => {
-      //  if (x.IsAdd) 
+        //  if (x.IsAdd)
         {
           childrens.push(x);
         }
@@ -1146,4 +1133,4 @@ export default {
     },
   },
 };
-</script>    
+</script>
