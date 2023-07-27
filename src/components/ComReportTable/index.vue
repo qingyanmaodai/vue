@@ -967,7 +967,7 @@ export default {
   },
   computed: {},
   created() {
-    if (isFooterRemark) {
+    if (this.isFooterRemark) {
       this.getFooterRemark();
     }
   },

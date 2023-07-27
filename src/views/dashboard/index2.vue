@@ -144,14 +144,6 @@
                   @sortChange="sortChange"
                 >
                 </ComReportTable>
-                <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
-                  <ul class="item">
-                    <li v-for="(item, index) in listData" :key="index">
-                      <span class="title" v-text="item.title"></span>
-                      <span class="date" v-text="item.date"></span>
-                    </li>
-                  </ul>
-                </vue-seamless-scroll> -->
               </div>
             </div>
             <div class="itemCard">
@@ -1317,25 +1309,25 @@ export default {
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
-      if (datas.length > 0) {
-        this.tablePagination[0].pageSize = datas[0][1].pageSize;
-      }
 
       if (result) {
         // 获取每个表头
-        // datas.some((m, i) => {
-        //   m.some((n, j) => {
-        //     // 进行验证
-        //     this.verifyDta(n);
-        //     if (n.children && n.children.length != 0) {
-        //       n.children.forEach((x) => {
-        //         this.verifyDta(x);
-        //       });
-        //     }
-        //   });
+        datas.some((m, i) => {
+          m.some((n, j) => {
+            // 进行验证
+            // this.verifyDta(n);
+            // if (n.children && n.children.length != 0) {
+            //   n.children.forEach((x) => {
+            //     this.verifyDta(x);
+            //   });
+            // }
+            // if (j === 1 && ) {
+            //   this.tablePagination[i]["pageSize"] = n["pageSize"];
+            // }
+          });
 
-        //   this.$set(this.tableColumns, i, m);
-        // });
+          this.$set(this.tableColumns, i, m);
+        });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);

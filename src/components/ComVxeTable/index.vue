@@ -35,11 +35,6 @@
         auto-resize
         resizable
         :print-config="{}"
-        :tree-config="{
-          children: 'children',
-          iconOpen: 'vxe-icon-square-minus-fill',
-          iconClose: 'vxe-icon-square-plus-fill',
-        }"
         :show-footer="showFooter"
         :footer-method="footerMethod"
         @checkbox-change="handleSelectionChange"
@@ -1430,8 +1425,8 @@ export default {
     },
     // 行样式控制
     // tableRowClassName({ row, rowIndex }) {
-      // let className = "";
-      // return className;
+    // let className = "";
+    // return className;
     // },
     //可编辑列加背景颜色
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
@@ -1620,10 +1615,10 @@ export default {
   },
   created() {
     this.getFooterRemark();
-    this.$nextTick(() => {
-      // 手动将表格和工具栏进行关联
-      this.$refs.vxeTable.connect(this.$refs.xToolbar1);
-    });
+    // this.$nextTick(() => {
+    //   // 手动将表格和工具栏进行关联
+    //   this.$refs.vxeTable.connect(this.$refs.xToolbar1);
+    // });
   },
 };
 </script>
@@ -1677,7 +1672,7 @@ export default {
 ::v-deep .vxe-table--render-default {
   border: 1px solid #b9b9b9 !important;
 }
-.el-select{
+.el-select {
   width: 100%;
 }
 </style>
