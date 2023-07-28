@@ -737,9 +737,9 @@ export default {
           // },
           legend: {
             type: "scroll",
-            orient: "vertical",
+            orient: "horizontal",
             right: "0%",
-            top: "center",
+            bottom: "0",
             itemWidth: fontSize(10),
             itemHeight: fontSize(10),
             textStyle: {
@@ -757,7 +757,7 @@ export default {
             {
               type: "pie",
               // selectedMode: "single",
-              radius: ["30%", "60%"],
+              radius: ["40%", "70%"],
               color: [
                 "#23CF9C",
                 "#578FFB",
@@ -766,7 +766,7 @@ export default {
                 "#E82074",
                 "#FBA806",
               ],
-              center: ["30%", "50%"],
+              center: ["50%", "50%"],
               label: {
                 normal: {
                   position: "inner",
@@ -1326,7 +1326,7 @@ export default {
             // }
           });
 
-          this.$set(this.tableColumns, i, m);
+          // this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -1374,13 +1374,7 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      // if (this.tableData[remarkTb].length === 0) {
-      //   this.tablePagination[remarkTb]["pageSize"] =
-      //     this.tableColumns[remarkTb][1]["pageSize"];
-      // } else {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
-      // }
-      // form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
