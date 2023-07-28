@@ -33,7 +33,7 @@
                 >
                 </el-input-number>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
+                <!-- <el-button
                   type="primary"
                   size="mini"
                   v-show="labelStatus1 == 1"
@@ -56,8 +56,8 @@
                   @click="subSAP"
                 >
                   提交同步申请
-                </el-button>
-                <el-button
+                </el-button> -->
+                <!-- <el-button
                   v-show="labelStatus1 == 4"
                   type="primary"
                   size="mini"
@@ -83,7 +83,7 @@
                 >
                   3.更新计划
                 </el-button>
-                <el-divider direction="vertical"></el-divider>
+                <el-divider direction="vertical"></el-divider> -->
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
@@ -361,6 +361,8 @@ export default {
       this.adminLoading = true;
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择要提交同步申请的数据");
+        this.adminLoading = false;
+
         return;
       }
       this.selectionData[1] = this.selectionData[1].forEach((m) => {
