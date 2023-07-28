@@ -210,7 +210,6 @@ export default {
     }),
   },
   beforeRouteEnter(to, form, next) {
-    //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
 
     next();
   },

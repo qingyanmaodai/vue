@@ -1206,13 +1206,6 @@ export default {
         if (this.newTag != -1) {
           this.tableColumns.splice(this.newTag, 1);
         }
-        // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-        //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-
-        //   if (tmp.dicID) {
-        //     this.formSearchs[0].datas = tmp;
-        //   }
-        // }
         this.formSearchs[0].datas["dicID"] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
