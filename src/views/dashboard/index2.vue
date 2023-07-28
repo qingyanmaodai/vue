@@ -722,26 +722,25 @@ export default {
           //     fontSize: 16
           //   }
           // },
-          // tooltip: {
-          //   show: false,
-          //   trigger: "item",
-          //   formatter: "{b}: {c} ({d}%)"
-          // },
-          legend: {
-            type: "scroll",
-            orient: "horizontal",
-            right: "0%",
-            bottom: "0",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12),
-            },
-            itemStyle: {
-              borderRadius: "50%", // 将图例项的形状设定为圆形
-            },
-            data: this.tableData[2].map((item) => item["ProcessName"]),
+          tooltip: {
+            trigger: "item",
+            formatter: "{b}:({d}%)",
           },
+          // legend: {
+          //   type: "scroll",
+          //   orient: "horizontal",
+          //   right: "0%",
+          //   bottom: "0",
+          //   itemWidth: fontSize(10),
+          //   itemHeight: fontSize(10),
+          //   textStyle: {
+          //     fontSize: fontSize(12),
+          //   },
+          //   itemStyle: {
+          //     borderRadius: "50%", // 将图例项的形状设定为圆形
+          //   },
+          //   data: this.tableData[2].map((item) => item["ProcessName"]),
+          // },
           grid: {
             containLabel: true,
           },
@@ -763,6 +762,27 @@ export default {
                 normal: {
                   position: "inner",
                   formatter: "{d}%",
+                  show: true,
+          fontSize: fontSize(14),
+          lineHeight: 15,
+          formatter: function (params) {
+            // var percent = 0;
+            // var total = 0;
+            // for (var i = 0; i < this.tableData[2].length; i++) {
+            //   total += scaleData[i].value;
+            // }
+            // percent = ((params.value / total) * 100).toFixed(0);
+            if (params.name !== "") {
+              // return params.name + '\n' + params.data.data;
+              if (params.name.length > 4) {
+                return params.name.slice(0, 3) + "\n" + params.name.slice(3);
+              } else {
+                return params.name;
+              }
+            } else {
+              return "";
+            }
+          },
                 },
                 textStyle: {
                   color: "#fff",
