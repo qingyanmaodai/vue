@@ -52,6 +52,12 @@
           @pageSize="pageSize"
           @selectfun="selectFun"
           @sortChange="sortChange"
+          :treeConfig="{
+            transform: true,
+            children: 'children',
+            iconOpen: 'vxe-icon-square-plus-fill',
+            iconClose: 'vxe-icon-square-minus-fill',
+          }"
         />
       </div>
     </div>

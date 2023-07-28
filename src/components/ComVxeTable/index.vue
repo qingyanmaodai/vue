@@ -30,6 +30,7 @@
           highlight: true,
           checkField: 'isChecked',
         }"
+        :tree-config="treeConfig"
         :custom-config="{ storage: true, checkMethod: checkColumnCustomMethod }"
         :cell-style="cellStyle"
         auto-resize
@@ -785,6 +786,15 @@
                     {{ scope.row[x.prop] }}</el-tag
                   >
                 </span>
+                <span
+                  class="flex"
+                  v-else-if="x.component.type == 'ColorPicker'"
+                >
+                  <el-color-picker
+                    size="mini"
+                    v-model="scope.row[x.prop]"
+                  ></el-color-picker>
+                </span>
               </span>
               <span v-else-if="x.component.type == 'checkbox'">
                 <el-tag
@@ -1029,6 +1039,12 @@ export default {
     rowKey: {
       type: String,
       required: true,
+    },
+    treeConfig: {
+      type: Object,
+      default() {
+        return null;
+      },
     },
     // 选框禁用或显示操作
     // 是否显示选框

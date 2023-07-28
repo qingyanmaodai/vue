@@ -215,7 +215,7 @@
             <div class="itemCard">
               <div class="echartHead">
                 <div class="echartTitle">昨日计划达成对比</div>
-                <el-button-group>
+                <!-- <el-button-group>
                   <el-button
                     :class="{
                       select: selected1Index === 0,
@@ -234,7 +234,7 @@
                   >
                     预计超额
                   </el-button>
-                </el-button-group>
+                </el-button-group> -->
               </div>
               <div class="echartBody" ref="chart4"></div>
             </div>
@@ -452,8 +452,6 @@ export default {
       formSearchs: [
         {
           datas: {
-            fields:
-              "SUM(Qty) AS S1 ,SUM(ReportQty) AS S2,SUM(OutStockQty) AS S3,SUM(StockQtyDiff) AS S4",
           },
           forms: [],
         },
@@ -491,18 +489,12 @@ export default {
         },
         {
           datas: {
-            fields:
-              "ProductType,InnerModel,SUM(Qty) AS Qty ,SUM(ReportQty) AS ReportQty,SUM(OutStockQty) AS OutStockQty,SUM(StockQtyDiff) AS StockQtyDiff",
-            groupby: "ProductType,InnerModel",
-            sort: "ProductType,InnerModel",
           },
           forms: [],
         },
         {
           datas: {
-            fields: "DemandDate,LineName,ProductName,MaterialName,Code,OweQty",
             OweQty: 0,
-            sort: "DemandDate",
           },
           forms: [],
         },
@@ -540,15 +532,15 @@ export default {
       ],
       sysID: [
         {
-          ID: 10108,
+          ID: 7917,
         },
         { ID: 5170 },
         { ID: 5170 },
         { ID: 5170 },
         { ID: 7804 },
         { ID: 5170 },
-        { ID: 10108 },
-        { ID: 5157 },
+        { ID: 7918 },
+        { ID: 7919 },
         { ID: 7844 },
         { ID: 7920 },
         { ID: 7776 },
@@ -1372,7 +1364,7 @@ export default {
     //   }
     // },
     // 获取表格数据
-    async getTableData(form, remarkTb) {
+    async getTableData(form, remarkTb) {+-
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
@@ -1385,77 +1377,42 @@ export default {
         data[0]['S4'] = data[0]['S4'].toLocaleString()
       }
       if (remarkTb === 6) {
-        this.tableColumns[6] = [
-          {
-            label: "品类",
-            prop: "ProductType",
-            width: 80,
-          },
-          {
-            label: "内部型号",
-            prop: "InnerModel",
-            width: 100,
-          },
-          {
-            label: "数量",
-            prop: "Qty",
-            width: 80,
-          },
-          {
-            label: "汇报数",
-            prop: "ReportQty",
-            width: 80,
-          },
-          {
-            label: "出库数",
-            prop: "OutStockQty",
-            width: 80,
-          },
-          {
-            label: "库存数",
-            prop: "StockQtyDiff",
-            width: 80,
-          },
-        ];
-        // Columns[0].filter((x) => {
-        //   return Object.keys(data[0]).some((y) => {
-        //     return x['prop'] === y;
-        //   });
-        // });
+        // this.tableColumns[6] = [
+        //   {
+        //     label: "品类",
+        //     prop: "ProductType",
+        //     width: 80,
+        //   },
+        //   {
+        //     label: "内部型号",
+        //     prop: "InnerModel",
+        //     width: 100,
+        //   },
+        //   {
+        //     label: "数量",
+        //     prop: "Qty",
+        //     width: 80,
+        //   },
+        //   {
+        //     label: "汇报数",
+        //     prop: "ReportQty",
+        //     width: 80,
+        //   },
+        //   {
+        //     label: "出库数",
+        //     prop: "OutStockQty",
+        //     width: 80,
+        //   },
+        //   {
+        //     label: "库存数",
+        //     prop: "StockQtyDiff",
+        //     width: 80,
+        //   },
+        // ];
+        this.tableColumns[6] = Columns[0]
       }
       if (remarkTb === 7) {
-        this.tableColumns[7] = [
-          {
-            label: "计划日期",
-            prop: "DemandDate",
-            width: 80,
-          },
-          {
-            label: "产线",
-            prop: "LineName",
-            width: 60,
-          },
-          {
-            label: "产品型号",
-            prop: "ProductName",
-            width: 100,
-          },
-          {
-            label: "物料编码",
-            prop: "Code",
-            width: 80,
-          },
-          {
-            label: "物料名称",
-            prop: "MaterialName",
-            width: 100,
-          },
-          {
-            label: "欠数",
-            prop: "OweQty",
-            width: 80,
-          },
-        ];
+        this.tableColumns[7] = Columns[0]
         // Columns[0].filter((x) => {
         //   return Object.keys(data[0]).some((y) => {
         //     return x['prop'] === y;
