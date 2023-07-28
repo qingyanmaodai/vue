@@ -11,7 +11,7 @@
               </div>
               <div class="textBox">
                 <div class="statusNum">
-                  {{ tableData[0][0]["S1"] }}
+                  {{ tableData[0][0]["Prop"] }}
                 </div>
                 <div class="textHead">
                   <div class="title">{{ headCard[0]["title"] }}</div>
@@ -24,7 +24,7 @@
               </div>
               <div class="textBox">
                 <div class="statusNum">
-                  {{ tableData[0][0]["S2"] }}
+                  {{ tableData[0][1]["Prop"] }}
                 </div>
                 <div class="textHead">
                   <div class="title">{{ headCard[1]["title"] }}</div>
@@ -36,7 +36,7 @@
                 <img :src="headCard[2]['icon']" />
               </div>
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S3"] }}</div>
+                <div class="statusNum">{{ tableData[0][2]["Prop"] }}</div>
                 <div class="textHead">
                   <div class="title">{{ headCard[2]["title"] }}</div>
                 </div>
@@ -47,7 +47,7 @@
                 <img :src="headCard[3]['icon']" />
               </div>
               <div class="textBox">
-                <div class="statusNum">{{ tableData[0][0]["S4"] }}</div>
+                <div class="statusNum">{{ tableData[0][3]["Prop"] }}</div>
                 <div class="textHead">
                   <div class="title">{{ headCard[3]["title"] }}</div>
                 </div>
@@ -417,7 +417,7 @@ export default {
       newTag: -1,
       btnForm: [],
       tableData: [
-        [{ S1: "", S2: "", S3: "", S4: "" }],
+        [{ Prop:null},{Prop:null},{ Prop:null },{ Prop:null }],
         [],
         [],
         [],
@@ -1371,10 +1371,15 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if(remarkTb === 0 && res.data){
-        data[0]['S1'] = data[0]['S1'].toLocaleString()
-        data[0]['S2'] = data[0]['S2'].toLocaleString()
-        data[0]['S3'] = data[0]['S3'].toLocaleString()
-        data[0]['S4'] = data[0]['S4'].toLocaleString()
+        data.map((item,index)=>{
+          this.headCard[index]['title'] = item['Label']
+        })
+        // data[0]['Prop'] = data[0]['Prop'].toLocaleString()
+        // data[1]['Prop'] = data[1]['Prop'].toLocaleString()
+        // data[2]['Prop'] = data[2]['Prop'].toLocaleString()
+        // data[3]['Prop'] = data[3]['Prop'].toLocaleString()
+
+        // headCard[0]['title'] = data
       }
       if (remarkTb === 6) {
         // this.tableColumns[6] = [
