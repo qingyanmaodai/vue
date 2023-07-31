@@ -528,7 +528,7 @@ export default {
         },
         {
           datas: {
-            fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
+            // fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
           },
           forms: [],
         },
@@ -540,7 +540,7 @@ export default {
         { ID: 5170 },
         { ID: 5170 },
         { ID: 5170 },
-        { ID: 7804 },
+        { ID: 5170 },
         { ID: 5170 },
         { ID: 7918 },
         { ID: 7919 },
@@ -548,12 +548,10 @@ export default {
         { ID: 7920 },
         { ID: 7776 },
         { ID: 7922 },
-        { ID: 7804 },
+        { ID: 5170 },
       ],
       currentDate: "",
       //echart部分
-      // chartData1: [],
-      // chartData2: [[], []],
       chart: [],
       chartOptions: [],
       handleWindowResizeDebounced: null,
