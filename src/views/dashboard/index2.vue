@@ -127,7 +127,12 @@
                   :showFooter="true"
                   :isShowFooter="false"
                   :isFooterRemark="false"
-                  :includeFields="['Qty','ReportQty','OutStockQty','StockQtyDiff']"
+                  :includeFields="[
+                    'Qty',
+                    'ReportQty',
+                    'OutStockQty',
+                    'StockQtyDiff',
+                  ]"
                   ref="PurchaseRequisition"
                   :isEdit="false"
                   :remark="6"
@@ -417,7 +422,7 @@ export default {
       newTag: -1,
       btnForm: [],
       tableData: [
-        [{ Prop:null},{Prop:null},{ Prop:null },{ Prop:null }],
+        [{ Prop: null }, { Prop: null }, { Prop: null }, { Prop: null }],
         [],
         [],
         [],
@@ -451,8 +456,7 @@ export default {
       ],
       formSearchs: [
         {
-          datas: {
-          },
+          datas: {},
           forms: [],
         },
         {
@@ -488,8 +492,7 @@ export default {
           forms: [],
         },
         {
-          datas: {
-          },
+          datas: {},
           forms: [],
         },
         {
@@ -589,8 +592,8 @@ export default {
     window.addEventListener("resize", this.handleWindowResizeDebounced);
   },
   methods: {
-     //按钮权限
-     judgeBtn(routeBtn) {
+    //按钮权限
+    judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
@@ -763,26 +766,34 @@ export default {
                   position: "inner",
                   formatter: "{d}%",
                   show: true,
-          fontSize: fontSize(14),
-          lineHeight: 15,
-          formatter: function (params) {
-            // var percent = 0;
-            // var total = 0;
-            // for (var i = 0; i < this.tableData[2].length; i++) {
-            //   total += scaleData[i].value;
-            // }
-            // percent = ((params.value / total) * 100).toFixed(0);
-            if (params.name !== "") {
-              // return params.name + '\n' + params.data.data;
-              if (params.name.length > 4) {
-                return params.name.slice(0, 3) + "\n" + params.name.slice(3);
-              } else {
-                return params.name;
-              }
-            } else {
-              return "";
-            }
-          },
+                  fontSize: fontSize(14),
+                  lineHeight: 15,
+                  formatter: function (params) {
+                    // let percent = 0;
+                    // let total = 0;
+                    // for (var i = 0; i < this.tableData[2].length; i++) {
+                    //   total += scaleData[i].value;
+                    // }
+                    // percent = ((params.value / total) * 100).toFixed(0);
+                    console.log(params, "params");
+                    if (params.name !== "") {
+                      // return params.name + '\n' + params.data.data;
+                      if (params.name.length > 4) {
+                        return (
+                          params.name.slice(0, Math.ceil(params.name.length / 2)) +
+                          "\n" +
+                          params.name.slice(Math.ceil(params.name.length / 2)) +
+                          "\n" +
+                          params.percent +
+                          "%"
+                        );
+                      } else {
+                        return params.name + params.percent + "%";
+                      }
+                    } else {
+                      return "";
+                    }
+                  },
                 },
                 textStyle: {
                   color: "#fff",
@@ -1384,16 +1395,16 @@ export default {
     //   }
     // },
     // 获取表格数据
-    async getTableData(form, remarkTb) {+-
-      this.$set(this.tableLoading, remarkTb, true);
+    async getTableData(form, remarkTb) {
+      +-this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
-      if(remarkTb === 0 && res.data){
-        data.map((item,index)=>{
-          this.headCard[index]['title'] = item['Label']
-        })
+      if (remarkTb === 0 && res.data) {
+        data.map((item, index) => {
+          this.headCard[index]["title"] = item["Label"];
+        });
         // data[0]['Prop'] = data[0]['Prop'].toLocaleString()
         // data[1]['Prop'] = data[1]['Prop'].toLocaleString()
         // data[2]['Prop'] = data[2]['Prop'].toLocaleString()
@@ -1434,10 +1445,10 @@ export default {
         //     width: 80,
         //   },
         // ];
-        this.tableColumns[6] = Columns[0]
+        this.tableColumns[6] = Columns[0];
       }
       if (remarkTb === 7) {
-        this.tableColumns[7] = Columns[0]
+        this.tableColumns[7] = Columns[0];
         // Columns[0].filter((x) => {
         //   return Object.keys(data[0]).some((y) => {
         //     return x['prop'] === y;
