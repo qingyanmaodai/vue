@@ -424,7 +424,7 @@ export default {
               if (!content && (content !== 0) & (content !== false)) {
                 this.$message.error(`${item2["label"]}不能为空，请选择`);
                 this.$set(this, "adminLoading", false);
-                return;
+                throw new Error('报错了')
               }
             });
           });

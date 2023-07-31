@@ -429,6 +429,15 @@
                         {{ scope.row[i.prop] }}</el-tag
                       >
                     </span>
+                    <span
+                      class="flex"
+                      v-else-if="i.component.type == 'ColorPicker'"
+                    >
+                      <el-color-picker
+                        size="mini"
+                        v-model="scope.row[i.prop]"
+                      ></el-color-picker>
+                    </span>
                   </span>
                   <span v-else>{{ scope.row[i.prop] }}</span>
                 </span>
