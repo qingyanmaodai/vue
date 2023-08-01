@@ -167,7 +167,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            PlanQty: 0,
+          //   PlanQty: 0,
           },
           forms: [],
         },
@@ -810,13 +810,14 @@ export default {
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
         //给月计划赋值当月订单总数
         let res = await GetSearchData({
-          dicID: 5170,
-          fields: "SUM(PlanQty) As PlanQty",
-          ProcessName: "组装",
-          CompletionStatus: 0,
-          PlanDay: [
+          dicID: 5154,
+          fields: "SUM(MainPlanQty) As PlanQty",
+          // ProcessName: "组装",
+          // CompletionStatus: 0,
+          Extend1:"虚拟计划",
+          MainPlanDate: [
             this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().endOf("month").format("YYYY-MM-DD"),
+            this.$moment().add(1,"month").endOf("month").format("YYYY-MM-DD"),
           ],
         });
         const {
@@ -824,7 +825,7 @@ export default {
         } = res.data;
         this.title2 = `${this.$moment().format(
           "YYYY年M月"
-        )} 订单总数：${PlanQty}`;
+        )+"~"+this.$moment().add(1,"month").format( "M月") }  订单总数：${PlanQty}`;
       } else {
         this.$message({
           message: msg,
