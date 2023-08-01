@@ -247,6 +247,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
+      accountsValue: null,
     };
   },
   watch: {},
@@ -257,6 +258,8 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
+    const params = new URLSearchParams(this.$route.meta.TargetFor);
+    this.accountsValue = params.get("accounts");
   },
   // activated() {
   //   if (this.spread) {
