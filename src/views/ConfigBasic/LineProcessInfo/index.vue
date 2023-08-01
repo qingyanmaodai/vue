@@ -54,8 +54,8 @@
           @sortChange="sortChange"
           :treeConfig="{
             children: 'children',
-            iconOpen: 'vxe-icon-square-plus-fill',
-            iconClose: 'vxe-icon-square-minus-fill',
+            iconOpen: 'vxe-icon-square-minus-fill',
+            iconClose: 'vxe-icon-square-plus-fill',
           }"
         />
       </div>
