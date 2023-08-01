@@ -383,7 +383,7 @@ export default {
       SalesLineNum: null,
       SalesDeliveryDate: null,
       FrontDate: null,
-      IgnoreSunday: false,
+      IgnoreSunday: true,
     };
   },
   watch: {},

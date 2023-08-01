@@ -621,7 +621,12 @@ export default {
           this.$set(
             this.formSearchs[z].datas,
             "Accounts",
-            "$" + `${this.userInfo["Account"]}` + "$"
+            this.accountsValue
+              ? [
+                  "$" + `${this.userInfo["Account"]}` + "$",
+                  "$" + `${this.accountsValue}` + "$",
+                ]
+              : ["$" + `${this.userInfo["Account"]}` + "$"]
           );
         });
         console.log("gettable");
