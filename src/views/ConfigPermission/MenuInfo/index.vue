@@ -332,7 +332,7 @@ export default {
       isClear: [false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 100, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       selectionDefaultData: [[], []],
       selectionData: [[], []],
@@ -626,7 +626,7 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             if (n.prop == "MenuCode" || n.prop == "MenuName") {
               this.$set(n, "treeNode", true);
@@ -636,6 +636,9 @@ export default {
               n.children.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -671,10 +674,6 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res;
