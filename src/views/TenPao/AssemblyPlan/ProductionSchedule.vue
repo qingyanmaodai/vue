@@ -126,7 +126,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "DayPlan",
+  name: "ProductionSchedule",
   components: {
     ComSearch,
     ComReportTable,

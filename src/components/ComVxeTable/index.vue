@@ -64,7 +64,7 @@
           v-for="(x, z) in tableHeaderChange"
           :key="z"
           :resizable="true"
-          :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
+          :tree-node="x.treeNode ? x.treeNode : false"
           :sortable="x.sortable == 'custom' ? true : false"
           :field="x.prop"
           :title="x.label"
@@ -94,7 +94,7 @@
               :title="i.label"
               v-for="(i, k) in x.children"
               :align="i.align"
-              :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
+              :tree-node="x.treeNode ? x.treeNode : false"
               :key="k"
               :fixed="i.fix"
               :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
@@ -428,6 +428,15 @@
                       >
                         {{ scope.row[i.prop] }}</el-tag
                       >
+                    </span>
+                    <span
+                      class="flex"
+                      v-else-if="i.component.type == 'ColorPicker'"
+                    >
+                      <el-color-picker
+                        size="mini"
+                        v-model="scope.row[i.prop]"
+                      ></el-color-picker>
                     </span>
                   </span>
                   <span v-else>{{ scope.row[i.prop] }}</span>

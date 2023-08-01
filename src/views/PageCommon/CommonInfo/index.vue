@@ -101,7 +101,7 @@
 </template>
 <script>
 var _this;
-let rand = Math.random();
+// let rand = Math.random();
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComFormDialog from "@/components/ComFormDialog";
@@ -113,7 +113,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "CommonInfo" + rand,
+  name: "CommonInfo",
   components: {
     ComSearch,
     ComVxeTable,
@@ -152,71 +152,72 @@ export default {
     };
   },
   //离开的时候保存当前
-  beforeRouteLeave(to, form, next) {
-    // this.$store.state.tagsView.viewDataCached;
+  // beforeRouteLeave(to, form, next) {
+  //   // this.$store.state.tagsView.viewDataCached;
 
-    // this.$store.dispatch("user/login", this.loginForm);
-    let status =
-      this.$store.state.tagsView.viewDataCached["dicIDStatus" + this.ID];
-    //判断需要缓存情况下再判断是否操作右键快捷刷新、关闭功能
-    if (!this.$route.meta.noCache) {
-      if (!status) {
-        let dicForm = {
-          dicData: this.formSearchs[0].datas,
-          dicForm: this.formSearchs[0].forms,
-          tablePagination: this.tablePagination,
-        };
-        this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID] =
-          JSON.stringify(dicForm);
-        // sessionStorage.setItem("dicIDForm" + this.ID, JSON.stringify(dicForm));
-        let dicIDData = {
-          dicID: this.ID,
-          tableColumns: this.tableColumns[0],
-          tableData: this.tableData[0],
-        };
-        this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID] =
-          JSON.stringify(dicIDData);
-        console.log(
-          this.$store.state.tagsView.viewDataCached,
-          "this.$store.state.tagsView.viewDataCached"
-        );
-        // sessionStorage.setItem(
-        //   "dicIDData" + this.ID,
-        //   JSON.stringify(dicIDData)
-        // );
-        // sessionStorage.setItem(
-        //   "isSelect" + this.ID,
-        //   JSON.stringify(this.isSelect)
-        // );
-        delete this.$store.state.tagsView.viewDataCached[
-          "dicIDStatus" + this.ID
-        ];
-      } else {
-        // 在tag操作右键快捷方法后都需要重新渲染清除缓存状态，防止切换tag一直不缓存 导致一直刷新请求。
-        delete this.$store.state.tagsView.viewDataCached[
-          "dicIDStatus" + this.ID
-        ];
-      }
-    }
-    next();
-  },
+  //   // this.$store.dispatch("user/login", this.loginForm);
+  //   let status =
+  //     this.$store.state.tagsView.viewDataCached["dicIDStatus" + this.ID];
+  //   //判断需要缓存情况下再判断是否操作右键快捷刷新、关闭功能
+  //   if (!this.$route.meta.noCache) {
+  //     if (!status) {
+  //       let dicForm = {
+  //         dicData: this.formSearchs[0].datas,
+  //         dicForm: this.formSearchs[0].forms,
+  //         tablePagination: this.tablePagination,
+  //       };
+  //       this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID] =
+  //         JSON.stringify(dicForm);
+  //       // sessionStorage.setItem("dicIDForm" + this.ID, JSON.stringify(dicForm));
+  //       let dicIDData = {
+  //         dicID: this.ID,
+  //         tableColumns: this.tableColumns[0],
+  //         tableData: this.tableData[0],
+  //       };
+  //       this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID] =
+  //         JSON.stringify(dicIDData);
+  //       console.log(
+  //         this.$store.state.tagsView.viewDataCached,
+  //         "this.$store.state.tagsView.viewDataCached"
+  //       );
+  //       // sessionStorage.setItem(
+  //       //   "dicIDData" + this.ID,
+  //       //   JSON.stringify(dicIDData)
+  //       // );
+  //       // sessionStorage.setItem(
+  //       //   "isSelect" + this.ID,
+  //       //   JSON.stringify(this.isSelect)
+  //       // );
+  //       delete this.$store.state.tagsView.viewDataCached[
+  //         "dicIDStatus" + this.ID
+  //       ];
+  //     } else {
+  //       // 在tag操作右键快捷方法后都需要重新渲染清除缓存状态，防止切换tag一直不缓存 导致一直刷新请求。
+  //       delete this.$store.state.tagsView.viewDataCached[
+  //         "dicIDStatus" + this.ID
+  //       ];
+  //     }
+  //   }
+  //   next();
+  // },
 
-  beforeRouteEnter(to, form, next) {
-    next();
-  },
+  // beforeRouteEnter(to, form, next) {
+  //   next();
+  // },
 
-  watch: {
-    $route: {
-      handler: function (val, oldVal) {
-        this.ID = parseInt(val.query.dicID);
-        // this.tableColumns[0] = [];
-        // this.tableData[0] = [];
-        // this.getTableHeader(this.ID);
-      },
-      // 深度观察监听
-      deep: true,
-    },
-  },
+  // watch: {
+  //   $route: {
+  //     handler: function (val, oldVal) {
+  //       debugger
+  //       this.ID = parseInt(val.query.dicID);
+  //       // this.tableColumns[0] = [];
+  //       // this.tableData[0] = [];
+  //       // this.getTableHeader(this.ID);
+  //     },
+  //     // 深度观察监听
+  //     deep: true,
+  //   },
+  // },
   created() {
     _this = this;
     let routeBtn = this.$route;
@@ -224,20 +225,22 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
-    if (this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]) {
-      let tmp = JSON.parse(
-        this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]
-      );
-      if (tmp) {
-        this.$set(this.formSearchs[0], "datas", tmp.dicData);
-        this.$set(this.formSearchs[0], "forms", tmp.dicForm);
-        this.$set(this.formSearchs[0].datas, "dicID", this.ID);
+    this.getTableHeader();
 
-        if (tmp.tablePagination) {
-          this.tablePagination = tmp.tablePagination;
-        }
-      }
-    }
+    // if (this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]) {
+    //   let tmp = JSON.parse(
+    //     this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]
+    //   );
+    //   if (tmp) {
+    //     this.$set(this.formSearchs[0], "datas", tmp.dicData);
+    //     this.$set(this.formSearchs[0], "forms", tmp.dicForm);
+    //     this.$set(this.formSearchs[0].datas, "dicID", this.ID);
+
+    //     if (tmp.tablePagination) {
+    //       this.tablePagination = tmp.tablePagination;
+    //     }
+    //   }
+    // }
     // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
     //   this.isSelect = JSON.parse(sessionStorage.getItem("isSelect" + this.ID));
     //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
@@ -251,25 +254,24 @@ export default {
     //     }
     //   }
     // }
-    if (this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]) {
-      let showTag = JSON.parse(
-        this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]
-      );
-      if (
-        showTag &&
-        showTag.tableColumns.length != 0 &&
-        !this.$route.meta.noCache
-      ) {
-        let newData = showTag;
-        this.$set(this.tableColumns, 0, newData.tableColumns);
-        this.$nextTick(() => {
-          this.$set(this.tableData, 0, newData.tableData);
-        });
-      }
-    } else {
-      this.adminLoading = true;
-      this.getTableHeader();
-    }
+    // if (this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]) {
+    //   let showTag = JSON.parse(
+    //     this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]
+    //   );
+    //   if (
+    //     showTag &&
+    //     showTag.tableColumns.length != 0 &&
+    //     !this.$route.meta.noCache
+    //   ) {
+    //     let newData = showTag;
+    //     this.$set(this.tableColumns, 0, newData.tableColumns);
+    //     this.$nextTick(() => {
+    //       this.$set(this.tableData, 0, newData.tableData);
+    //     });
+    //   }
+    // } else {
+    //   this.adminLoading = true;
+    // }
   },
   mounted() {
     setTimeout(() => {

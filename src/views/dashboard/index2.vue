@@ -773,7 +773,6 @@ export default {
                     //   total += scaleData[i].value;
                     // }
                     // percent = ((params.value / total) * 100).toFixed(0);
-                    console.log(params, "params");
                     if (params.name !== "") {
                       // return params.name + '\n' + params.data.data;
                       if (params.name.length > 4) {

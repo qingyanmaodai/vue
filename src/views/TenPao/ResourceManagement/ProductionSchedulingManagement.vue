@@ -41,7 +41,7 @@
               :isToolbar="false"
               :remark="item"
               :sysID="sysID[item]['ID']"
-              :hasSelect="true"
+              :hasSelect="hasSelect[item]"
               :isEdit="isEdit[item]"
               :isClear="isClear[item]"
               :keepSource="true"
@@ -132,7 +132,7 @@
               :isToolbar="false"
               :remark="item"
               :sysID="sysID[item]['ID']"
-              :hasSelect="true"
+              :hasSelect="hasSelect[item]"
               :isEdit="isEdit[item]"
               :isClear="isClear[item]"
               :keepSource="true"
@@ -142,6 +142,11 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
+              :treeConfig="{
+                children: 'children',
+                iconOpen: 'vxe-icon-square-minus-fill',
+                iconClose: 'vxe-icon-square-plus-fill',
+              }"
             />
           </div>
         </div>
@@ -325,6 +330,7 @@ export default {
       tableColumns: [[], [], [], [], [], [], []],
       tableLoading: [false, false, false, false, false, false, false],
       isClear: [false, false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
@@ -397,6 +403,7 @@ export default {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
+            //假如signName为空，则所有表都显示保存按钮而且全部可编辑，假如不为空，则控制哪个表才可以编辑
             if (!item["signName"] || item["signName"].length === 0) {
               this.isEdit.fill(true);
             } else if (item["signName"] && item["signName"].length > 0) {
@@ -603,6 +610,7 @@ export default {
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n['IsSelect']
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -623,7 +631,7 @@ export default {
           this.$set(
             this.formSearchs[z].datas,
             "Account",
-            this.userInfo.Account
+            `$${this.userInfo.Account}$`
           );
           if (z === 0) {
             x = [
@@ -919,6 +927,8 @@ export default {
         item["ChangeReason"] = this.ChangeReason;
         item["Status"] = 0;
         item["Extend1"] = this.Extend1;
+        item["StartDate"] = this.ERPStartDate;
+        item["EndDate"] = this.ERPEndDate;
         item["dicID"] = 5644;
       });
       let res = await SaveData(updateRecords);

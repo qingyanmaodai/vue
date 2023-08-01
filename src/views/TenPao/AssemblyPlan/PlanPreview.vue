@@ -194,7 +194,7 @@ import {
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
-  name: "WeeklyPlan",
+  name: "PlanPreview",
   components: {
     ComSearch,
     ComAsideTree,
@@ -317,6 +317,7 @@ export default {
       spread: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
+      accountsValue: null,
     };
   },
   computed: {},
@@ -327,6 +328,8 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
+    const params = new URLSearchParams(this.$route.meta.TargetFor);
+    this.accountsValue = params.get("accounts");
   },
   // activated() {
   //   if (this.spread[remarkTb]) {
@@ -967,7 +970,12 @@ export default {
           this.$set(
             this.formSearchs[z].datas,
             "Accounts",
-            "$" + `${this.userInfo["Account"]}` + "$"
+            this.accountsValue
+              ? [
+                  "$" + `${this.userInfo["Account"]}` + "$",
+                  "$" + `${this.accountsValue}` + "$",
+                ]
+              : ["$" + `${this.userInfo["Account"]}` + "$"]
           );
         });
         this.formSearchs[1].datas["ProductionStatus"] = [26]; //默认待排

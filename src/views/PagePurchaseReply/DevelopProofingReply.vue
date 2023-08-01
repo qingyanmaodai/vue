@@ -2,8 +2,8 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
@@ -92,7 +92,7 @@
       </el-main>
     </el-container>
     <el-dialog title="复期变更记录" :visible.sync="orderDialog" width="70%">
-      <div class="container" style="background-color: #f0f2f5;">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           复期变更记录
           <ComReportTable
@@ -128,7 +128,7 @@ import {
   ExportData,
   SaveData,
   GetServerTime,
-  UpdateOrderBomPOTracker
+  UpdateOrderBomPOTracker,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
@@ -138,7 +138,7 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComReportTable,
-    ComFormDialog
+    ComFormDialog,
   },
   data() {
     return {
@@ -153,7 +153,7 @@ export default {
         { label: "未复期", value: "未复期" },
         { label: "复期不满足", value: "已复期" },
         { label: "逾期未回", value: "已复期" },
-        { label: "已结案", value: "已结案" }
+        { label: "已结案", value: "已结案" },
         // { label: "全部", value: "" },
         // { label: "待复期", value: 0 },
         // { label: "复期超时", value: 5 },
@@ -167,7 +167,7 @@ export default {
       ReplyDate: "",
       treeProps: {
         label: "SupplierNameCount",
-        children: "children"
+        children: "children",
       },
       treeData: [],
       treeListTmp: [],
@@ -177,12 +177,12 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       parmsBtn: [
         {
@@ -192,7 +192,7 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "allSave",
-          Icon: ""
+          Icon: "",
         },
         {
           ButtonCode: "noPass",
@@ -203,7 +203,7 @@ export default {
           Methods: "cancelSave",
           Icon: "",
           Params: { val: "已结案" },
-          signName: [0, 1, 2, 3]
+          signName: [0, 1, 2, 3],
         },
         {
           ButtonCode: "noPass",
@@ -214,8 +214,8 @@ export default {
           Methods: "cancelSave",
           Icon: "",
           Params: { val: "未结案" },
-          signName: 4
-        }
+          signName: 4,
+        },
       ],
       parmsBtn2: [
         {
@@ -226,7 +226,7 @@ export default {
           Size: "small",
           Methods: "changeDate",
           Icon: "",
-          Params: { val: 0 }
+          Params: { val: 0 },
         },
         // {
         //   ButtonCode: "save",
@@ -245,8 +245,8 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "refreshPOTraker",
-          Icon: ""
-        }
+          Icon: "",
+        },
       ],
       selectionData: [[], []],
       btnForm: [],
@@ -256,7 +256,7 @@ export default {
       isClear: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 500, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 500, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -273,7 +273,8 @@ export default {
       userInfo: {},
       IsPurchaseBoss: false,
       footerLabel: [""],
-      RoleMapStatus: false
+      RoleMapStatus: false,
+      MaterialPeople: false,
     };
   },
   computed: {},
@@ -283,10 +284,15 @@ export default {
     this.judgeBtn();
     let RoleMapList = this.$store.getters.userInfo.RoleMap;
     if (RoleMapList.length) {
-      RoleMapList.forEach(item => {
+      RoleMapList.forEach((item) => {
         if (item.RoleID === "R2106240002") {
           //采购主管
           this.RoleMapStatus = true;
+          return;
+        }
+        if (item.RoleID === "R2308010001") {
+          //采购主管
+          this.MaterialPeople = true;
           return;
         }
       });
@@ -329,7 +335,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -340,17 +346,17 @@ export default {
       let permission = false;
       let newBtn2 = [];
       if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
+        routeBtn.forEach((x) => {
           if (x.ButtonCode == "edit") {
             permission = true;
           }
-          let newData = this.parmsBtn.filter(y => {
+          let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
           });
           if (newData.length != 0) {
             newBtn = newBtn.concat(newData);
           }
-          let newData2 = this.parmsBtn2.filter(y => {
+          let newData2 = this.parmsBtn2.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
           });
           if (newData2.length != 0) {
@@ -438,7 +444,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -460,7 +466,7 @@ export default {
           this.$message.error("当前数据没做修改，请先修改再保存！");
           return;
         }
-        updateRecords.forEach(x => {
+        updateRecords.forEach((x) => {
           submitData.push(x);
         });
         _this.generalSaveData(submitData, 0);
@@ -491,14 +497,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -510,11 +516,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          if (!this.MaterialPeople) {
+            m = m.filter((item) => {
+              return (
+                item["prop"] !== "MaterialStatus" && item["prop"] !== "Reason"
+              );
+            });
+          }
+          m.forEach((n) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyData(x);
               });
             }
@@ -524,7 +537,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -559,14 +572,14 @@ export default {
       let { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
-          data.forEach(x => {
+          data.forEach((x) => {
             // if (!x.ReplyDate) {
             //   this.$set(x, "tag_1", 1);
             // }
             // if (!x.ReplyDateM2&&!x.ReplyDateM2) {
             //   this.$set(x, "tag_2", 1);
             // }
-            this.tableColumns[0].forEach(item => {
+            this.tableColumns[0].forEach((item) => {
               if (!this.RoleMapStatus) {
                 if (
                   item["prop"] === "ReplyDate" ||
@@ -612,7 +625,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -623,7 +636,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -638,7 +651,7 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要批量填写日期的数据！");
       } else {
-        this.selectionData[0].forEach(a => {
+        this.selectionData[0].forEach((a) => {
           // 没禁用的才赋值
           if (!a.disabled2) {
             //复期
@@ -678,7 +691,7 @@ export default {
     cellStyle({ row, column }) {
       if (column.property == "IsOverdue" && row["IsOverdue"] == "未超期") {
         return {
-          background: "#00b0f0"
+          background: "#00b0f0",
         };
       } else if (
         (column.property == "IsOverdue" && row["IsOverdue"] == "超期") ||
@@ -687,11 +700,11 @@ export default {
         (column.property == "IsUrgency" && row["IsUrgency"] == "是")
       ) {
         return {
-          background: "#ff0000"
+          background: "#ff0000",
         };
       } else if (column.property == "Analysis" && row["Analysis"] == "采购足") {
         return {
-          background: "#00b050"
+          background: "#00b050",
         };
       }
     },
@@ -712,8 +725,9 @@ export default {
         this.formSearchs[0].datas["CloseStatus"] = "未结案"; //复期不满足
         this.formSearchs[0].datas["ReplyStatus"] = x.value;
         this.formSearchs[0].datas["IsOverTime"] = 1;
-      } else if (this.labelStatus1 === 3) { //逾期未回
-        this.formSearchs[0].datas["CloseStatus"] = "未结案"; 
+      } else if (this.labelStatus1 === 3) {
+        //逾期未回
+        this.formSearchs[0].datas["CloseStatus"] = "未结案";
         this.formSearchs[0].datas["ReplyStatus"] = x.value;
         this.formSearchs[0].datas["RemainreceiveQty"] = 0;
         this.formSearchs[0].datas["IsNotReturn"] = 1;
@@ -743,14 +757,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -761,17 +775,17 @@ export default {
         return;
       } else {
         this.$confirm(`确定${parms.val == "已结案" ? "结案" : "取消结案"}吗？`)
-          .then(async _ => {
-            _this.selectionData[remarkTb].map(item => {
+          .then(async (_) => {
+            _this.selectionData[remarkTb].map((item) => {
               // 取消/取消结案修改状态
               item["CloseStatus"] = parms.val;
             });
             let newData = _this.selectionData[remarkTb];
             _this.generalSaveData(newData, remarkTb);
           })
-          .catch(_ => {});
+          .catch((_) => {});
       }
-    }
-  }
+    },
+  },
 };
 </script>
