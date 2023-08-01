@@ -142,6 +142,11 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
+              :treeConfig="{
+                children: 'children',
+                iconOpen: 'vxe-icon-square-minus-fill',
+                iconClose: 'vxe-icon-square-plus-fill',
+              }"
             />
           </div>
         </div>
@@ -623,7 +628,7 @@ export default {
           this.$set(
             this.formSearchs[z].datas,
             "Account",
-            this.userInfo.Account
+            `$+${this.userInfo.Account}+$`
           );
           if (z === 0) {
             x = [
