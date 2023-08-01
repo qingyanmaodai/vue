@@ -21,13 +21,13 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <!-- 新增行所需组件 -->
-              <div v-if="addCom">
+              <div v-if="addNum">
                 <span>新增行数：</span>
                 <el-input-number
                   v-model.trim="addNum"
                   :min="1"
                   :max="100"
-                  :step="10"
+                  :step="addStep"
                   placeholder="请输入"
                 ></el-input-number>
               </div>
@@ -160,9 +160,9 @@ export default {
       selectionData: [[]],
       isData: false,
       isEdit: false,
-      addNum: 1,
+      addNum: null,
+      addStep: 10,
       DataSourceList: [{}],
-      addCom: false,
     };
   },
 
@@ -190,7 +190,8 @@ export default {
     _this = this;
     let routeBtn = this.$route;
     const params = new URLSearchParams(this.$route.meta.TargetFor);
-    this.addCom = params.get("addCom");
+    this.addNum = params.get("addNum");
+    this.addStep = params.get("addStep");
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);

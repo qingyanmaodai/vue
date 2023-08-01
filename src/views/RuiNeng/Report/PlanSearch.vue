@@ -313,7 +313,7 @@ export default {
       treeHeight: "765px",
       tagRemark: 0,
       isEdit: false,
-      clickData: {},
+      clickData: [{}, {}],
       LineName: "",
       OrganizeName: "",
       isUpdate: true,
@@ -796,8 +796,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.getSupplierData();
-        // this.formSearchs[0].datas["PlanDay"] =
-        //   this.$moment().format("YYYY-MM-DD");
       }
     },
     // 验证数据
@@ -1132,9 +1130,10 @@ export default {
     },
     // 单击线体
     handleNodeClick(data, node) {
-      this.clickData = data;
+      this.clickData[0] = data;
       this.formSearchs[this.selectedIndex].datas["WorkShopID"] =
         data.OrganizeID;
+      this.formSearchs[this.selectedIndex].datas["LineID"] = "";
       this.dataSearch(this.selectedIndex);
       this.getLineData(data.OrganizeID === -1 ? "" : data.OrganizeID);
     },
@@ -1177,6 +1176,7 @@ export default {
     },
     // 单击线体
     handleNodeClick1(data, node) {
+      this.clickData[1] = data;
       this.$set(
         this.formSearchs[this.selectedIndex].datas,
         "LineID",
@@ -1323,6 +1323,10 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
+      this.formSearchs[this.selectedIndex].datas["WorkShopID"] =
+        this.clickData[0]?.OrganizeID;
+      this.formSearchs[this.selectedIndex].datas["LineID"] =
+        this.clickData[1]?.OrganizeID;
       this.selectedIndex = tab.name;
       this.dataSearch(this.selectedIndex);
     },

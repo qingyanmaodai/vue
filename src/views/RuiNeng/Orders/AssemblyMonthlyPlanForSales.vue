@@ -167,7 +167,7 @@ export default {
       formSearchs: [
         {
           datas: {
-          //   PlanQty: 0,
+            //   PlanQty: 0,
           },
           forms: [],
         },
@@ -814,18 +814,20 @@ export default {
           fields: "SUM(MainPlanQty) As PlanQty",
           // ProcessName: "组装",
           // CompletionStatus: 0,
-          Extend1:"虚拟计划",
+          Extend1: "虚拟计划",
           MainPlanDate: [
             this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().add(1,"month").endOf("month").format("YYYY-MM-DD"),
+            this.$moment().add(1, "month").endOf("month").format("YYYY-MM-DD"),
           ],
         });
         const {
           data: [{ PlanQty }],
         } = res.data;
-        this.title2 = `${this.$moment().format(
-          "YYYY年M月"
-        )+"~"+this.$moment().add(1,"month").format( "M月") }  订单总数：${PlanQty}`;
+        this.title2 = `${
+          this.$moment().format("YYYY年M月") +
+          "~" +
+          this.$moment().add(1, "month").format("M月")
+        }  订单总数：${PlanQty}`;
       } else {
         this.$message({
           message: msg,
@@ -981,16 +983,12 @@ export default {
         this.tableColumns[remarkTb].forEach((column, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);
-
-          if (row["Code"] == null) {
-            cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
-          } else if (row["MFGOrganizeID"] === 162) {
-            cell.backColor("#FFFF00");
-            cell.foreColor("black");
-          } else {
-            cell.foreColor("black");
-            cell.backColor("#FFFFFF");
+          if (
+            (column["prop"] === "PlanMonthStatus" &&
+              row["PlanMonthStatus"] !== "正常") ||
+            (column["prop"] === "MOStatus" && row["MOStatus"] !== "正常")
+          ) {
+            cell.backColor("#FDD0CB");
           }
           if (row["Capacity"] && column["name"] === "Capacity") {
             cell.foreColor("red");
@@ -1004,6 +1002,17 @@ export default {
           ) {
             cell.backColor("#FDD0CB");
           }
+          if (row["Code"] == null) {
+            cell.backColor("#A0CFFF");
+            cell.foreColor("balck");
+          } else if (row["MFGOrganizeID"] === 162) {
+            cell.backColor("#FFFF00");
+            cell.foreColor("black");
+          }
+          //  else {
+          //   cell.foreColor("black");
+          //   cell.backColor("#FFFFFF");
+          // }
         });
       });
 
