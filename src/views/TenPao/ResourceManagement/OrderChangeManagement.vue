@@ -105,6 +105,7 @@ export default {
       tableColumns: [[], []],
       tableLoading: [false, false],
       isClear: [false, false],
+      hasSelect: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
@@ -359,6 +360,7 @@ export default {
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -554,9 +556,26 @@ export default {
       }
       let res = await GetSearch(
         this.selectionData[0],
-        "/APSAPI/"
+        "/APSAPI/UpdateSAPOrderStartDate"
       );
-      await this.dataSave(remarkTb, index, null, this.selectionData[0]);
+      const { data, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        if (data) {
+          // 对应匹配并更新表格数据
+          await this.dataSave(remarkTb, index, null, this.selectionData[0]);
+        }
+      } else {
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
     },
   },
 };

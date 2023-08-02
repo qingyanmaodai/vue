@@ -610,7 +610,7 @@ export default {
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n['IsSelect']
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -927,14 +927,11 @@ export default {
         item["ChangeReason"] = this.ChangeReason;
         item["Status"] = 0;
         item["Extend1"] = this.Extend1;
-        item["StartDate"] = item['ERPStartDate'];
-        item["EndDate"] = item['ERPEndDate'];
+        item["StartDate"] = item["ERPStartDate"];
+        item["EndDate"] = item["ERPEndDate"];
         item["dicID"] = 5644;
       });
-      let res = await GetSearch(
-          updateRecords,
-          "/APSAPI/UpdateSAPOrderStartDate"
-        );
+      let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1014,13 +1011,10 @@ export default {
         });
         if (data) {
           // 对应匹配并更新表格数据
-          data.forEach((newData) => {
-            const rowIndex = this.tableData[2].findIndex(
-              (row) => row.OrderID === newData.OrderID
-            );
-            if (rowIndex !== -1) {
-              this.tableData[2].splice(rowIndex, 1, newData);
-            }
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
           });
         }
       } else {
