@@ -380,7 +380,7 @@ export default {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           this.$set(
             this.formSearchs[z].datas,
-            "Account",
+            "Accounts",
             this.userInfo.Account
           );
           if (z === 0) {
