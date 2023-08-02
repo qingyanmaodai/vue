@@ -1600,9 +1600,9 @@ export default {
         // this.$refs.vxeTable.reloadData(this.tableData);//加载数据并清除所有状态,使用这个调用后端筛选、排序接口后条件被清空
         this.$refs.vxeTable.loadData(this.tableData); //加载数据
       }
-      if (this.tableData && this.isSpanMethods) {
-        this.info();
-      }
+      // if (this.tableData && this.isSpanMethods) {
+      //   this.info();
+      // }
     },
     isClear: {
       handler(newValue, oldValue) {

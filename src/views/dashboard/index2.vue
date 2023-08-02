@@ -57,14 +57,14 @@
           <div class="secondCard">
             <div class="itemCard1">
               <div class="echartHead">
-                <div class="echartTitle">近15日组装计划达成</div>
+                <div class="echartTitle">{{ label[1]["label"] }}</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
             </div>
             <div class="itemCard2">
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">今日计划任务分布</div>
+                  <div class="echartTitle">{{ label[2]["label"] }}</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -90,7 +90,7 @@
               </div>
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">T+3日欠料分布</div>
+                  <div class="echartTitle">{{ label[3]["label"] }}</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -119,7 +119,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">业务要货汇总</div>
+                <div class="echartTitle">{{ label[4]["label"] }}</div>
               </div>
               <div class="echartBody">
                 <ComReportTable
@@ -135,15 +135,15 @@
                   ]"
                   ref="PurchaseRequisition"
                   :isEdit="false"
-                  :remark="6"
+                  :remark="4"
                   :IsIndex="false"
                   :height="'100%'"
                   :row-key="'RowNumber'"
-                  :sysID="sysID[6]['ID']"
-                  :table-data="tableData[6]"
-                  :table-header="tableColumns[6]"
-                  :table-loading="tableLoading[6]"
-                  :pagination="tablePagination[6]"
+                  :sysID="sysID[4]['ID']"
+                  :table-data="tableData[4]"
+                  :table-header="tableColumns[4]"
+                  :table-loading="tableLoading[4]"
+                  :pagination="tablePagination[4]"
                   @pageChange="pageChange"
                   @pageSize="pageSize"
                   @sortChange="sortChange"
@@ -153,7 +153,7 @@
             </div>
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">T+3日欠料追踪</div>
+                <div class="echartTitle">{{ label[5]["label"] }}</div>
               </div>
               <div class="echartBody">
                 <ComReportTable2
@@ -162,15 +162,15 @@
                   :isShowFooter="false"
                   ref="PurchaseRequisition"
                   :isEdit="false"
-                  :remark="7"
+                  :remark="5"
                   :IsIndex="false"
                   :height="'100%'"
                   :row-key="'RowNumber'"
-                  :sysID="sysID[7]['ID']"
-                  :table-data="tableData[7]"
-                  :table-header="tableColumns[7]"
-                  :table-loading="tableLoading[7]"
-                  :pagination="tablePagination[7]"
+                  :sysID="sysID[5]['ID']"
+                  :table-data="tableData[5]"
+                  :table-header="tableColumns[5]"
+                  :table-loading="tableLoading[5]"
+                  :pagination="tablePagination[5]"
                   @pageChange="pageChange"
                   @pageSize="pageSize"
                   @sortChange="sortChange"
@@ -185,7 +185,7 @@
           <div class="firstCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">待办事项清单</div>
+                <div class="echartTitle">{{ label[6]["label"] }}</div>
               </div>
               <div class="echartBody">
                 <div class="xnode">
@@ -219,7 +219,7 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">昨日计划达成对比</div>
+                <div class="echartTitle">{{ label[7]["label"] }}</div>
                 <!-- <el-button-group>
                   <el-button
                     :class="{
@@ -247,7 +247,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">今日生产情况</div>
+                <div class="echartTitle">{{ label[8]["label"] }}</div>
               </div>
               <div class="echartBody" ref="chart5"></div>
             </div>
@@ -486,8 +486,7 @@ export default {
         },
         {
           datas: {
-            fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,ProcessName",
-            groupby: "ProcessName",
+            OweQty: 0,
           },
           forms: [],
         },
@@ -497,7 +496,8 @@ export default {
         },
         {
           datas: {
-            OweQty: 0,
+            fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,ProcessName",
+            groupby: "ProcessName",
           },
           forms: [],
         },
@@ -534,21 +534,34 @@ export default {
         },
       ],
       sysID: [
-        {
-          ID: 7917,
-        },
-        { ID: 5170 },
-        { ID: 5170 },
+        { ID: 7917 },
         { ID: 5170 },
         { ID: 5170 },
         { ID: 5170 },
         { ID: 7918 },
         { ID: 7919 },
-        { ID: 7844 },
-        { ID: 7920 },
-        { ID: 7776 },
-        { ID: 7922 },
         { ID: 5170 },
+        { ID: 5170 },
+        // { ID: 7844 },
+        // { ID: 7920 },
+        // { ID: 7776 },
+        // { ID: 7922 },
+        // { ID: 5170 },
+      ],
+      label: [
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
+        { label: null },
       ],
       currentDate: "",
       //echart部分
@@ -777,7 +790,10 @@ export default {
                       // return params.name + '\n' + params.data.data;
                       if (params.name.length > 4) {
                         return (
-                          params.name.slice(0, Math.ceil(params.name.length / 2)) +
+                          params.name.slice(
+                            0,
+                            Math.ceil(params.name.length / 2)
+                          ) +
                           "\n" +
                           params.name.slice(Math.ceil(params.name.length / 2)) +
                           "\n" +
@@ -923,7 +939,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.tableData[5].map((item) => item["ProcessName"]),
+            data: this.tableData[7].map((item) => item["ProcessName"]),
             axisLabel: {
               interval: 0,
               show: true,
@@ -982,7 +998,7 @@ export default {
                   color: "#578FFB",
                 },
               },
-              data: this.tableData[5].map((item) => item["S1"]),
+              data: this.tableData[7].map((item) => item["S1"]),
             },
             {
               name: "完成数",
@@ -994,7 +1010,7 @@ export default {
                   color: "#23CF9C",
                 },
               },
-              data: this.tableData[5].map((item) => item["S2"]),
+              data: this.tableData[7].map((item) => item["S2"]),
             },
           ],
         },
@@ -1326,8 +1342,25 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = this.sysID;
-      let res = await GetHeader(IDs);
+      // let IDs = this.sysID;
+      let rea = await GetSearchData({
+        dicID: 7914,
+        rows: 0,
+        page: 1,
+      });
+      const { data: data1, result: result1, msg: msg1 } = rea.data;
+
+      console.log(data1, "data1");
+
+      if (result1) {
+        this.sysID = data1.map((item) => {
+          return { ID: item.sysID };
+        });
+        this.label = data1.map((item) => {
+          return { label: item.label };
+        });
+      }
+      let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
@@ -1349,31 +1382,24 @@ export default {
           // this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
+        console.log(this.sysID, "this.sysID");
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, "dicID", this.sysID[z].ID);
           if (z === 2) {
             this.formSearchs[z].datas["PlanDay"] = this.currentDate;
           }
-          if (z === 5) {
+          if (z === 7) {
             this.formSearchs[z].datas["PlanDay"] = this.$moment()
               .subtract(1, "days")
               .format("YYYY-MM-DD");
             // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
           }
-          if (z === 7) {
+          if (z === 5) {
             this.formSearchs[z].datas["DemandDate"] = [
               this.currentDate,
               this.$moment().add(2, "days").format("YYYY-MM-DD"),
             ];
           }
-          // x.forEach((y) => {
-          //   if (y.prop && y.value) {
-          //     this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-          //   } else {
-          //     this.$set(this.formSearchs[z].datas, [y.prop], "");
-          //   }
-          // });
-          // this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
           this.adminLoading = false;
         });
@@ -1409,7 +1435,7 @@ export default {
 
         // headCard[0]['title'] = data
       }
-      if (remarkTb === 6) {
+      if (remarkTb === 4) {
         // this.tableColumns[6] = [
         //   {
         //     label: "品类",
@@ -1442,10 +1468,10 @@ export default {
         //     width: 80,
         //   },
         // ];
-        this.tableColumns[6] = Columns[0];
+        this.tableColumns[4] = Columns[0];
       }
-      if (remarkTb === 7) {
-        this.tableColumns[7] = Columns[0];
+      if (remarkTb === 5) {
+        this.tableColumns[5] = Columns[0];
         // Columns[0].filter((x) => {
         //   return Object.keys(data[0]).some((y) => {
         //     return x['prop'] === y;

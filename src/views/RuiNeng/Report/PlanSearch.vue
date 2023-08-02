@@ -123,22 +123,25 @@
       <div class="admin_content flex_column flex_grow">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4">
-              <el-tabs
-                v-model="selectedIndex"
-                @tab-click="handleClick"
-                :stretch="true"
-              >
-                <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
-                <el-tab-pane label="月计划" name="1"></el-tab-pane>
-                <el-tab-pane label="周计划" name="2"></el-tab-pane>
-                <el-tab-pane label="日计划" name="3"></el-tab-pane>
-              </el-tabs>
+            <el-col :span="12">
+              <div class="flex">
+                <el-tabs
+                  v-model="selectedIndex"
+                  @tab-click="handleClick"
+                  stretch
+                  ty
+                >
+                  <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
+                  <el-tab-pane label="月计划" name="1"></el-tab-pane>
+                  <el-tab-pane label="周计划" name="2"></el-tab-pane>
+                  <el-tab-pane label="日计划" name="3"></el-tab-pane>
+                </el-tabs>
+              </div>
               <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
                 <span class="title">{{ title }}</span> -->
             </el-col>
-            <el-col :span="16" class="flex_flex_end">
+            <el-col :span="12" class="flex_flex_end">
               <!-- <el-divider direction="vertical"></el-divider>
                     <div class="flex">
                       复期:
@@ -1352,7 +1355,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 ::v-deep .el-tabs__item {
-  padding: 5px;
+  padding: 5px !important;
   /* 设置为0或调整合适的数值 */
 }
 </style>
