@@ -470,8 +470,8 @@ export default {
         },
         {
           datas: {
-            fields: "SUM(PlanQty) AS S1,ProcessName",
-            groupby: "ProcessName",
+            fields: "SUM(PlanQty) AS S1,WorkShopName",
+            groupby: "WorkShopName",
             // PlanDay: this.currentDate,
           },
           forms: [],
@@ -805,7 +805,7 @@ export default {
               data: this.tableData[2].map((item) => {
                 return {
                   value: item["S1"],
-                  name: item["ProcessName"],
+                  name: item["WorkShopName"],
                 };
               }),
             },

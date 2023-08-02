@@ -554,6 +554,14 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
+      let errorStatus = this.selectionData[0].findIndex((item) => {
+        return item["Status"] !== 0;
+      });
+      if (errorStatus !== -1) {
+        this.$message.error(`第${errorStatus + 1}行数据已经提交`);
+        return;
+      }
+      this.adminLoading = true;
       let res = await GetSearch(
         this.selectionData[0],
         "/APSAPI/UpdateSAPOrderStartDate"
@@ -565,10 +573,9 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        if (data) {
-          // 对应匹配并更新表格数据
-          await this.dataSave(remarkTb, index, null, this.selectionData[0]);
-        }
+        // 对应匹配并更新表格数据
+        await this.dataSearch(remarkTb);
+        this.adminLoading = false;
       } else {
         this.$message({
           message: msg,

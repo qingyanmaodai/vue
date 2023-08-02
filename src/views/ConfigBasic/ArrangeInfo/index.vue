@@ -616,7 +616,7 @@ export default {
     },
     cicleName(val, tag) {
       let index = 8;
-      if (this.largeOrSmall == "大周") {
+      if (this.largeOrSmall == "小周") {
         index = 7;
       } else {
         index = 6;
@@ -649,7 +649,7 @@ export default {
         return x.WorkingTimesID == val;
       });
       let index = 0;
-      if (this.largeOrSmall == "大周") {
+      if (this.largeOrSmall == "小周") {
         index = 7;
       } else {
         index = 6;
