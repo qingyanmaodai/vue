@@ -927,11 +927,14 @@ export default {
         item["ChangeReason"] = this.ChangeReason;
         item["Status"] = 0;
         item["Extend1"] = this.Extend1;
-        item["StartDate"] = this.ERPStartDate;
-        item["EndDate"] = this.ERPEndDate;
+        item["StartDate"] = item['ERPStartDate'];
+        item["EndDate"] = item['ERPEndDate'];
         item["dicID"] = 5644;
       });
-      let res = await SaveData(updateRecords);
+      let res = await GetSearch(
+          updateRecords,
+          "/APSAPI/UpdateSAPOrderStartDate"
+        );
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
