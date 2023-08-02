@@ -63,22 +63,21 @@
             <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
               :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
           </div> -->
-          <div class="ant-table-title bgWhite" ref="headRef_2">
+          <div class="ant-table-title bgWhite pd-6" ref="headRef_2">
             <el-row>
-              <el-col :span="6"
-                ><el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  :stretch="true"
-                >
-                  <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
-                  <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
-                  <el-tab-pane
-                    label="TPM设备明细"
-                    name="3"
-                  ></el-tab-pane> </el-tabs
+              <el-col :span="18">
+                <div style="width: 50%">
+                  <el-tabs
+                    v-model="selectedIndex"
+                    @tab-click="handleClick"
+                    :stretch="true"
+                  >
+                    <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
+                    <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
+                    <el-tab-pane label="TPM设备明细" name="3"></el-tab-pane>
+                  </el-tabs></div
               ></el-col>
-              <el-col :span="18" class="flex_flex_end">
+              <el-col :span="6" class="flex_flex_end">
                 <el-divider direction="vertical"></el-divider>
                 <el-button
                   type="primary"

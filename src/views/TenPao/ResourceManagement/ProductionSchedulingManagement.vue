@@ -1011,10 +1011,13 @@ export default {
         });
         if (data) {
           // 对应匹配并更新表格数据
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
+          data.forEach((newData) => {
+            const rowIndex = this.tableData[2].findIndex(
+              (row) => row.OrderID === newData.OrderID
+            );
+            if (rowIndex !== -1) {
+              this.tableData[2].splice(rowIndex, 1, newData);
+            }
           });
         }
       } else {
