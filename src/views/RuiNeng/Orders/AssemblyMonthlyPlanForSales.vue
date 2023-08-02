@@ -817,16 +817,14 @@ export default {
           Extend1: "虚拟计划",
           MainPlanDate: [
             this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().add(1, "month").endOf("month").format("YYYY-MM-DD"),
+            this.$moment().endOf("month").format("YYYY-MM-DD"),
           ],
         });
         const {
           data: [{ PlanQty }],
         } = res.data;
         this.title2 = `${
-          this.$moment().format("YYYY年M月") +
-          "~" +
-          this.$moment().add(1, "month").format("M月")
+          this.$moment().format("YYYY年M月")
         }  订单总数：${PlanQty}`;
       } else {
         this.$message({
