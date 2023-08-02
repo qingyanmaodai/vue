@@ -610,7 +610,7 @@ export default {
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n['IsSelect']
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -927,14 +927,11 @@ export default {
         item["ChangeReason"] = this.ChangeReason;
         item["Status"] = 0;
         item["Extend1"] = this.Extend1;
-        item["StartDate"] = item['ERPStartDate'];
-        item["EndDate"] = item['ERPEndDate'];
+        item["StartDate"] = item["ERPStartDate"];
+        item["EndDate"] = item["ERPEndDate"];
         item["dicID"] = 5644;
       });
-      let res = await GetSearch(
-          updateRecords,
-          "/APSAPI/UpdateSAPOrderStartDate"
-        );
+      let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
