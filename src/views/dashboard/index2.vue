@@ -156,7 +156,7 @@
                 <div class="echartTitle">{{ label[5]["label"] }}</div>
               </div>
               <div class="echartBody">
-                <ComReportTable2
+                <ComReportTable
                   :isToolbar="false"
                   :showFooter="false"
                   :isShowFooter="false"
@@ -176,7 +176,7 @@
                   @sortChange="sortChange"
                   :cellStyle="cellStyle7"
                 >
-                </ComReportTable2>
+                </ComReportTable>
               </div>
             </div>
           </div>
@@ -191,7 +191,7 @@
                 <div class="xnode">
                   <div class="triangle">产品缺失工艺</div>
                   <div></div>
-                  <div>{{ tableData[8][0]["C1"] }}</div>
+                  <div>{{ tableData[9][0]["C1"] }}</div>
                 </div>
                 <div class="xnode">
                   <div class="triangle">工艺缺失</div>
@@ -364,7 +364,6 @@ let _this;
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
-import ComReportTable2 from "@/components/ComReportTable";
 import * as echarts from "echarts";
 import { debounce } from "lodash";
 import {
@@ -380,7 +379,6 @@ export default {
     ComSearch,
     ComVxeTable,
     ComReportTable,
-    ComReportTable2,
   },
   data() {
     return {
@@ -423,6 +421,7 @@ export default {
       btnForm: [],
       tableData: [
         [{ Prop: null }, { Prop: null }, { Prop: null }, { Prop: null }],
+        [],
         [],
         [],
         [],
@@ -496,42 +495,46 @@ export default {
         },
         {
           datas: {
-            fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,ProcessName",
-            groupby: "ProcessName",
+            fields: "SUM(PlanQty) AS S1,SUM(HasQty) as S2,WorkShopName",
+            groupby: "WorkShopName",
           },
           forms: [],
         },
         {
-          datas: {
-            fields: "COUNT(*) AS C1",
-          },
+          datas: {},
           forms: [],
         },
-        {
-          datas: {
-            fields: "COUNT(*) AS C1",
-          },
-          forms: [],
-        },
-        {
-          datas: {
-            fields: "COUNT(*) AS C1",
-          },
-          forms: [],
-        },
-        {
-          datas: {
-            fields: "COUNT(*) AS C1",
-            ConfigInfo: "未配置",
-          },
-          forms: [],
-        },
-        {
-          datas: {
-            // fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
-          },
-          forms: [],
-        },
+        // {
+        //   datas: {
+        //     fields: "COUNT(*) AS C1",
+        //   },
+        //   forms: [],
+        // },
+        // {
+        //   datas: {
+        //     fields: "COUNT(*) AS C1",
+        //   },
+        //   forms: [],
+        // },
+        // {
+        //   datas: {
+        //     fields: "COUNT(*) AS C1",
+        //   },
+        //   forms: [],
+        // },
+        // {
+        //   datas: {
+        //     fields: "COUNT(*) AS C1",
+        //     ConfigInfo: "未配置",
+        //   },
+        //   forms: [],
+        // },
+        // {
+        //   datas: {
+        //     // fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
+        //   },
+        //   forms: [],
+        // },
       ],
       sysID: [
         { ID: 7917 },
@@ -540,6 +543,7 @@ export default {
         { ID: 5170 },
         { ID: 7918 },
         { ID: 7919 },
+        { ID: 5170 },
         { ID: 5170 },
         { ID: 5170 },
         // { ID: 7844 },
@@ -939,7 +943,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.tableData[7].map((item) => item["ProcessName"]),
+            data: this.tableData[7].map((item) => item["WorkShopName"]),
             axisLabel: {
               interval: 0,
               show: true,
