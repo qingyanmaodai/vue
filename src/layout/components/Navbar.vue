@@ -129,13 +129,13 @@ export default {
       dialogShow: false,
       formData: {
         Account: "",
-        Pwd: "",
+        // Pwd: "",
         NewPwd: "",
         SurePwd: "",
       },
       formController: [
         { label: "账号", prop: "Account", type: "input", disabled: true },
-        { label: "密码", prop: "Pwd", type: "input", disabled: true },
+        // { label: "密码", prop: "Pwd", type: "input", disabled: true },
         {
           label: "新密码",
           prop: "NewPwd",
@@ -200,7 +200,7 @@ export default {
     // 修改密码
     editPwd() {
       this.formData.Account = this.userInfo.Account;
-      this.formData.Pwd = this.userInfo.Pwd;
+      // this.formData.Pwd = this.userInfo.Pwd;
       this.dialogShow = true;
     },
     // 确定修改密码
@@ -213,7 +213,7 @@ export default {
         } else {
         }
         obj["Account"] = this.formData.Account;
-        obj["Pwd"] = this.formData.NewPwd;
+        // obj["Pwd"] = this.formData.NewPwd;
         obj["dicID"] = 25;
         newData.push(obj);
         let res = await SaveData(newData);
