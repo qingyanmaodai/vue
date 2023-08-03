@@ -1,9 +1,8 @@
 <!--设备与工装汇总-->
 <template>
   <div
-    class="container flex_column"
+    class="container flex_column content_height"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
   >
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">
@@ -18,7 +17,7 @@
           :signName="0"
         />
       </div>
-      <div class="ant-table-title pd-6" ref="headRef_2">
+      <div class="ant-table-title pd-6-6-0" ref="headRef_2">
         <el-row>
           <el-col :span="4"
             ><span class="title">{{ title }}</span></el-col

@@ -1,9 +1,8 @@
 <!--设备与工装汇总-->
 <template>
   <div
-    class="container flex_column"
+    class="container flex_column content_height"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
   >
     <splitpanes class="default-theme" horizontal>
       <pane :size="60">
@@ -63,7 +62,7 @@
             <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
               :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
           </div> -->
-          <div class="ant-table-title bgWhite pd-6" ref="headRef_2">
+          <div class="ant-table-title bgWhite pd-6-6-0" ref="headRef_2">
             <el-row>
               <el-col :span="18">
                 <div style="width: 50%">

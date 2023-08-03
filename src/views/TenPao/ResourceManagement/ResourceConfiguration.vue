@@ -1,6 +1,6 @@
 <!--设备与工装汇总-->
 <template>
-  <div class="container flex_column" v-loading="adminLoading" style="height: calc(100vh - 80px)">
+  <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"

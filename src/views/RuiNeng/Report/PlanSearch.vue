@@ -1,9 +1,8 @@
 <!--组装日计划-->
 <template>
   <div
-    class="container flex_flex"
+    class="container flex_flex content_height"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
   >
     <div
       class="flex_column"

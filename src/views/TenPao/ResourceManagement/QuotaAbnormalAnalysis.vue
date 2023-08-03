@@ -1,9 +1,8 @@
 <!--设备与工装汇总-->
 <template>
   <div
-    class="container flex_column"
+    class="container flex_column content_height"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
   >
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">

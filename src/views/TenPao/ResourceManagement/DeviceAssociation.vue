@@ -1,9 +1,8 @@
 <!--物料点检-->
 <template>
   <div
-    class="container flex_column"
+    class="container flex_column content_height bgWhite"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px); background-color: #fff"
   >
     <splitpanes class="default-theme">
       <pane :size="60">

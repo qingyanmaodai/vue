@@ -1,8 +1,7 @@
 <template>
   <div
-    class="container flex_flex"
+    class="container flex_flex content_height"
     v-loading="adminLoading"
-    style="height: calc(100vh - 80px)"
   >
     <div class="admin_container_two flex_column">
       <div class="admin_head" ref="headRef">
@@ -15,7 +14,7 @@
           @btnClick="btnClick"
         />
       </div>
-      <div class="ant-table-title pd-6">
+      <div class="ant-table-title pd-6-6-0">
         <el-row>
           <el-col :span="8"
             ><span class="title">{{ title }}</span></el-col

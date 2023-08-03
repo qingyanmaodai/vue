@@ -613,9 +613,9 @@ export default {
         return;
       }
       this.$confirm(
-        "确定要退回的【" +
+        "确定要重排的【" +
           this.selectionData[remarkTb].length +
-          "】数据吗，如果已经报工则无法退回？"
+          "】数据吗？"
       )
         .then(async (_) => {
           this.selectionData[remarkTb].forEach((m) => {
