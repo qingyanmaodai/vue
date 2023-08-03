@@ -1695,7 +1695,7 @@ export default {
 }
 //外边框线
 // ::v-deep .vxe-table--render-default {
-//   // border: 1px solid #b9b9b9 !important;
+//   border: 1px solid #b9b9b9 !important;
 // }
 .el-select {
   width: 100%;

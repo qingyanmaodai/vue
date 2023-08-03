@@ -1,17 +1,13 @@
 <!--组装日计划-->
 <template>
   <div class="container flex_flex content_height" v-loading="adminLoading">
-    <div
-      class="flex_column"
-      v-if="showAside"
-      style="width: 160px; border: 1px solid #b9b9b9"
-    >
+    <div class="flex_column aside" v-if="showAside">
       <div
         class="admin_left_2 border-b-1 flex_column"
-        style="height: 50%; width: 100%"
+        style="height: 100%; width: 100%"
       >
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
-          <span class="tree_text">车间</span>
+          <span class="tree_text">异常分类</span>
           <div class="flex_flex_end flex-1">
             <el-input
               size="mini"
@@ -20,14 +16,6 @@
               placeholder="搜索"
               suffix-icon="el-icon-search"
               class="w2/3 cx_margin_right1"
-              @input="
-                searchTree(
-                  OrganizeName,
-                  'treeData',
-                  'treeListTmp',
-                  'OrganizeName'
-                )
-              "
             ></el-input>
             <!-- <el-dropdown @command="handleCommand" class="flex_inline">
               <img src="../../../assets/svg/dot.svg" />
@@ -42,58 +30,14 @@
           class="tree-line flex_grow"
           :indent="0"
           ref="asideTree"
-          node-key="OrganizeID"
+          node-key="AbnormalType"
           style="overflow: auto"
           :data="treeData"
           :props="treeProps"
           highlight-current
           :expand-on-click-node="false"
           @node-click="handleNodeClick"
-        ></el-tree>
-      </div>
-      <div
-        class="admin_left_2 border-b-1 flex_column"
-        style="height: 50%; width: 100%"
-      >
-        <div class="flex px-2 py-1.5 border-b-1 tree_Head">
-          <span class="tree_text">线别</span>
-          <div class="flex_flex_end flex-1">
-            <el-input
-              size="mini"
-              clearable
-              v-model="LineName"
-              placeholder="搜索"
-              suffix-icon="el-icon-search"
-              class="w2/3 cx_margin_right1"
-              @input="
-                searchTree(
-                  LineName,
-                  'treeData1',
-                  'treeListTmp1',
-                  'OrganizeName'
-                )
-              "
-            ></el-input>
-            <!-- <el-dropdown @command="handleCommand" class="flex_inline">
-              <img src="../../../assets/svg/dot.svg" />
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="1">展开全部</el-dropdown-item>
-                <el-dropdown-item command="2">折叠全部</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown> -->
-          </div>
-        </div>
-        <el-tree
-          class="tree-line flex_grow"
-          :indent="0"
-          ref="asideTree1"
-          node-key="OrganizeID"
-          style="overflow: auto"
-          :data="treeData1"
-          :props="treeProps"
-          highlight-current
-          :expand-on-click-node="false"
-          @node-click="handleNodeClick1"
+          :filter-node-method="filterNode"
         ></el-tree>
       </div>
     </div>
@@ -116,86 +60,31 @@
           />
         </div>
       </div>
-      <div class="admin_content flex_column flex_grow">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="12">
-              <div class="flex">
-                <el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  stretch
-                  ty
-                >
-                  <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
-                  <el-tab-pane label="月计划" name="1"></el-tab-pane>
-                  <el-tab-pane label="周计划" name="2"></el-tab-pane>
-                  <el-tab-pane label="日计划" name="3"></el-tab-pane>
-                </el-tabs>
-              </div>
-              <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
-                <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
-                <span class="title">{{ title }}</span> -->
-            </el-col>
-            <el-col :span="12" class="flex_flex_end">
-              <!-- <el-divider direction="vertical"></el-divider>
-                    <div class="flex">
-                      复期:
-                      <el-date-picker
-                        v-model="PODeliveryDate"
-                        type="date"
-                        size="small"
-                        value-format="yyyy-MM-dd"
-                        style="flex: 1;"
-                        placeholder="请输入复期"
-                      >
-                      </el-date-picker>
-                    </div>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button
-                      type="primary"
-                      size="mini"
-                      @click="changeDate(0)"
-                    >
-                      批量指定日期
-                    </el-button>
-                    <el-divider direction="vertical"></el-divider> -->
-              <!-- <div
-                      :class="
-                        labelStatus1 == y ? 'statusActive cursor' : 'cursor'
-                      "
-                      v-for="(item, y) in Status1"
-                      :key="y"
-                    >
-                      <span @click="changeStatus(item, y)">{{
-                        item.label
-                      }}</span>
-                      <el-divider direction="vertical"></el-divider>
-                    </div> -->
-            </el-col>
-          </el-row>
-        </div>
-        <div
-          class="flex_column flex_grow"
-          v-for="item in [0, 1, 2, 3]"
-          :key="item"
-          v-show="Number(selectedIndex) === item"
-        >
-          <ComSpreadTable
-            ref="spreadsheetRef"
-            :height="'100%'"
-            :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @workbookInitialized="workbookInitialized"
-            @selectChanged="selectChanged"
-          />
-        </div>
+      <div
+        class="admin_content flex_grow"
+        v-for="item in [0, 1, 2, 3]"
+        :key="item"
+        v-show="Number(selectedIndex) === item"
+      >
+        <ComVxeTable
+          :ref="`tableRef${item}`"
+          :rowKey="'RowNumber'"
+          height="100%"
+          :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :hasSelect="hasSelect[item]"
+          :isEdit="isEdit[item]"
+          :isClear="isClear[item]"
+          :keepSource="true"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+        />
       </div>
     </div>
   </div>
@@ -224,11 +113,10 @@ import {
   SaveData,
   GetServerTime,
   GetOrgData,
-  UpdateOrderBomPOTracker,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "AssemblyDayPlan",
+  name: "ExceptionCauseConfiguration",
   components: {
     ComSearch,
     ComAsideTree,
@@ -259,17 +147,12 @@ export default {
       showAside: true,
       ReplyDate: "",
       treeProps: {
-        label: "OrganizeName",
-        children: "children",
-      },
-      treeProps1: {
-        label: "SumCount",
+        label: "AbnormalType",
         children: "children",
       },
       treeData: [],
       treeData1: [],
       treeListTmp: [],
-      treeListTmp1: [],
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       delData: [[]],
@@ -321,7 +204,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7833 }, { ID: 7908 }, { ID: 7915 }, { ID: 7910 }],
+      sysID: [{ ID: 7770 }, { ID: 7908 }, { ID: 7915 }, { ID: 7910 }],
       userInfo: {},
       spread: [],
     };
@@ -335,6 +218,12 @@ export default {
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
   },
+  watch: {
+    OrganizeName(val) {
+      this.$refs.asideTree.filter(val);
+    },
+  },
+
   mounted() {
     setTimeout(() => {
       this.setHeight();
@@ -351,52 +240,52 @@ export default {
       this.$set(this, "btnForm", routeBtn);
     },
     //获取子组件实例
-    workbookInitialized: function (workbook, remarkTb) {
-      this.spread[remarkTb] = workbook;
-    },
-    //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
-    },
-    searchTree(msg, dataName, dataName2, valueName) {
-      this[dataName] = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
+    // workbookInitialized: function (workbook, remarkTb) {
+    //   this.spread[remarkTb] = workbook;
+    // },
+    // //获取当前选中行的值
+    // selectChanged(newValue, remarkTb) {
+    //   // 在子组件计算属性发生变化时，更新父组件的计算属性
+    //   this.selectionData[remarkTb] = newValue;
+    // },
+    searchTree(msg) {
+      this.treeData = [];
+      let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));
       let tmp = msg
-        ? this.rebuildData(msg, treeListTmp, valueName)
+        ? this.rebuildData(msg, treeListTmp)
         : JSON.parse(JSON.stringify(treeListTmp));
-      this[dataName].push(...tmp);
+      this.treeData.push(...tmp);
     },
-    rebuildData(value, arr, valueName) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach((element) => {
-          if (element[valueName].indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children,
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children, valueName);
-              const obj = {
-                ...element,
-                children: ab,
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
-    },
+    // rebuildData(value, arr) {
+    //   if (!arr) {
+    //     return [];
+    //   }
+    //   let newarr = [];
+    //   if (Object.prototype.toString.call(arr) === "[object Array]") {
+    //     arr.forEach((element) => {
+    //       if (element.SupplierName.indexOf(value) > -1) {
+    //         // const ab = this.rebuildData(value, element.children);
+    //         const obj = {
+    //           ...element,
+    //           children: element.children,
+    //         };
+    //         newarr.push(obj);
+    //       } else {
+    //         if (element.children && element.children.length > 0) {
+    //           const ab = this.rebuildData(value, element.children);
+    //           const obj = {
+    //             ...element,
+    //             children: ab,
+    //           };
+    //           if (ab && ab.length > 0) {
+    //             newarr.push(obj);
+    //           }
+    //         }
+    //       }
+    //     });
+    //   }
+    //   return newarr;
+    // },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
@@ -437,12 +326,12 @@ export default {
       this.treeData = [];
       this.treeListTmp = [];
       let form = {
-        dicID: 5143,
+        dicID: 7911,
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let newTree = [];
+        // let newTree = [];
         // if (data.length != 0) {
         //   let supplierMap = new Map();
         //   data.forEach((a) => {
@@ -473,7 +362,7 @@ export default {
         // );
         if (data.length != 0) {
           this.$nextTick(function () {
-            _this.$refs.asideTree.setCurrentKey(data[0].OrganizeID);
+            _this.$refs.asideTree.setCurrentKey(data[0].AbnormalType);
           });
           this.handleNodeClick(data[0]);
         }
@@ -673,6 +562,10 @@ export default {
         }
       }
     },
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.AbnormalType.indexOf(value) !== -1;
+    },
     //批量设置日期
     async changeDate(val) {
       if (val == 0) {
@@ -772,8 +665,20 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           m.forEach((n, index) => {
+            if (n.prop == "Operation" || n.label == "操作") {
+              this.newTag = index;
+              return true;
+            }
+            // 进行验证
+            this.verifyData(n);
+            if (n.children && n.children.length != 0) {
+              n.children.forEach((x) => {
+                this.verifyData(x);
+              });
+            }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -826,7 +731,7 @@ export default {
         });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        this.setData(remarkTb);
+        // this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -1131,57 +1036,8 @@ export default {
     // 单击线体
     handleNodeClick(data, node) {
       this.clickData[0] = data;
-      this.formSearchs[this.selectedIndex].datas["WorkShopID"] =
-        data.OrganizeID;
-      this.formSearchs[this.selectedIndex].datas["LineID"] = "";
-      this.dataSearch(this.selectedIndex);
-      this.getLineData(data.OrganizeID === -1 ? "" : data.OrganizeID);
-    },
-    // 获取线别数据
-    async getLineData(OrganizeIDs) {
-      this.lines = [];
-      let res = await GetSearchData({
-        dicID: 36,
-        OrganizeTypeID: 6,
-        OrganizeIDs: OrganizeIDs,
-      });
-      const { data, forms, result, msg } = res.data;
-      if (result) {
-        let newData = [];
-        this.treeData1 = data;
-        this.treeListTmp1 = data;
-        // this.adminLoading = false;
-        // if (data.length != 0) {
-        //   data.forEach((x) => {
-        //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-        //   });
-        // }
-        // this.lineOptions = data;
-        // this.lines = newData;
-        // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        // this.checkBoxCellTypeLine.editorValueType(
-        //   GC.Spread.Sheets.CellTypes.EditorValueType.value
-        // );
-        // this.checkBoxCellTypeLine.items(newData);
-        // this.checkBoxCellTypeLine.itemHeight(24);
-        // this.getTableData(this.formSearchs[0].datas, 0);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    // 单击线体
-    handleNodeClick1(data, node) {
-      this.clickData[1] = data;
-      this.$set(
-        this.formSearchs[this.selectedIndex].datas,
-        "LineID",
-        data.OrganizeID
-      );
+      this.formSearchs[this.selectedIndex].datas["AbnormalType"] =
+        data.AbnormalType === "全部" ? "" : data.AbnormalType;
       this.dataSearch(this.selectedIndex);
     },
     // 刷新页面
@@ -1354,5 +1210,9 @@ export default {
 ::v-deep .el-tabs__item {
   padding: 5px !important;
   /* 设置为0或调整合适的数值 */
+}
+.aside {
+  width: 160px;
+  border: 1px solid #b9b9b9;
 }
 </style>

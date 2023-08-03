@@ -478,7 +478,6 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           m.some((n, index) => {
-            this.isSelect = n.IsSelect;
             if (n.prop == "Operation" || n.label == "操作") {
               this.newTag = index;
               return true;
