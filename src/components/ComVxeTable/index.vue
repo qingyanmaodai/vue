@@ -1694,9 +1694,9 @@ export default {
   // background-size: 2px 100%, 100% 2px;
 }
 //外边框线
-::v-deep .vxe-table--render-default {
-  border: 1px solid #b9b9b9 !important;
-}
+// ::v-deep .vxe-table--render-default {
+//   // border: 1px solid #b9b9b9 !important;
+// }
 .el-select {
   width: 100%;
 }
