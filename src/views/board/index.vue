@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <div class="el-header">
+    <div
+      class="el-header"
+      :style="{
+        backgroundImage: `url(${headBg})`,
+      }"
+    >
       <div class="logo"></div>
       <h1>JG-APS物料采购看板</h1>
       <div class="showTime">{{ todayDate }}</div>
@@ -8,7 +13,12 @@
     <div class="mainbox">
       <div class="row1">
         <div class="panel two line">
-          <div class="chartHead">
+          <div
+            class="chartHead"
+            :style="{
+              backgroundImage: `url(${chartHead})`,
+            }"
+          >
             <h2>待生产订单</h2>
           </div>
           <div
@@ -21,7 +31,12 @@
           <div class="panel-footer"></div>
         </div>
         <div class="panel two pie">
-          <div class="chartHead">
+          <div
+            class="chartHead"
+            :style="{
+              backgroundImage: `url(${chartHead})`,
+            }"
+          >
             <h2>物料需求汇总</h2>
           </div>
           <div
@@ -36,21 +51,36 @@
       </div>
       <div class="row2">
         <div class="panel three circle">
-          <div class="chartHead">
+          <div
+            class="chartHead"
+            :style="{
+              backgroundImage: `url(${chartHead})`,
+            }"
+          >
             <h2>物料需求车间</h2>
           </div>
           <div class="chart2" ref="chart1"></div>
           <div class="panel-footer"></div>
         </div>
         <div class="panel three circle">
-          <div class="chartHead">
+          <div
+            class="chartHead"
+            :style="{
+              backgroundImage: `url(${chartHead})`,
+            }"
+          >
             <h2>缺料TOP6</h2>
           </div>
           <div class="chart2" ref="chart2"></div>
           <div class="panel-footer"></div>
         </div>
         <div class="panel three bar1">
-          <div class="chartHead">
+          <div
+            class="chartHead"
+            :style="{
+              backgroundImage: `url(${chartHead})`,
+            }"
+          >
             <h2>采购申请概览</h2>
           </div>
           <div
@@ -71,11 +101,15 @@
 var _this;
 import * as echarts from "echarts";
 import { debounce } from "lodash";
+import chartHead from "@/assets/imgs/chartHead.png";
+import headBg from "@/assets/imgs/headBg.png";
 import { GetSearchData } from "@/api/Common";
 export default {
   name: "Board",
   data() {
     return {
+      chartHead: chartHead,
+      headBg: headBg,
       handleWindowResizeDebounced: null,
       tableLoading: [false, false, false], //每个表加载
       formSearchs: [
@@ -487,7 +521,7 @@ export default {
 .el-header {
   position: relative;
   height: 90px;
-  background: url(./headBg.png) no-repeat top center;
+  // background: url(headBg) no-repeat top center;
   background-size: 100% 100%;
   .logo {
     position: absolute;
@@ -495,7 +529,7 @@ export default {
     width: 131px;
     left: 104px;
     top: 20px;
-    background: url(./FSZM.png) no-repeat;
+    // background: url(./FSZM.png) no-repeat;
     background-size: 100% 100%;
   }
   h1 {
@@ -586,7 +620,7 @@ export default {
   }
   .chartHead {
     width: 100%;
-    background: url(./chartHead.png) no-repeat;
+    // background: url(../../assets/imgs/chartHead.png) no-repeat;
     height: 55px;
     background-size: 100% 100%;
   }
