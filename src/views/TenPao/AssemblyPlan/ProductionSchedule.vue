@@ -826,8 +826,10 @@ export default {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
-
-      sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      if (this.tableColumns[remarkTb][0]["FixCount"]) {
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      }
 
       // 列筛选
       // 参数2 开始列
