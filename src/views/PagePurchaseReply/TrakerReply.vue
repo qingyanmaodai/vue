@@ -1,18 +1,9 @@
 <!--采购回复-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-aside
-        v-show="showAside"
-        style="width:auto"
-      >
-        <div
-          class="admin_left_2"
-          style="height:100%;overflow:hidden"
-        >
+      <el-aside v-show="showAside" style="width: auto">
+        <div class="admin_left_2" style="height: 100%; overflow: hidden">
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">供应商</span>
@@ -32,15 +23,9 @@
           </div>
         </div>
       </el-aside>
-      <el-main style="padding:0;margin:0">
-        <div
-          class="admin_container_2"
-          style="width:100%"
-        >
-          <div
-            class="admin_head"
-            ref="headRef"
-          >
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
+          <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
@@ -67,11 +52,8 @@
                     ></i>
                     <span class="title">{{ title }}</span>
                   </el-col>
-                  <el-col
-                    :span="20"
-                    class="flex_flex_end"
-                  >
-                    <span>采购员：{{formSearchs[0].datas["POTracker"]}}</span>
+                  <el-col :span="20" class="flex_flex_end">
+                    <span>采购员：{{ formSearchs[0].datas["POTracker"] }}</span>
                     <el-divider direction="vertical"></el-divider>
                     <el-date-picker
                       v-model="ReplyDate"
@@ -107,11 +89,15 @@
                     </el-button>
                     <el-divider direction="vertical"></el-divider>
                     <div
-                      :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                      :class="
+                        labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                      "
                       v-for="(item, y) in Status1"
                       :key="y"
                     >
-                      <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                      <span @click="changeStatus(item, y)">{{
+                        item.label
+                      }}</span>
                       <el-divider direction="vertical"></el-divider>
                     </div>
                   </el-col>
@@ -126,6 +112,7 @@
                 :remark="0"
                 :sysID="sysID[0].ID"
                 :hasSelect="true"
+                :isToolbar="true"
                 :isEdit="isEdit"
                 :cellStyle="cellStyle"
                 :tableRowClassName="tableRowClassName"
@@ -143,15 +130,8 @@
         </div>
       </el-main>
     </el-container>
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
           <ComReportTable
@@ -564,13 +544,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -947,17 +927,16 @@ export default {
       this.labelStatus1 = index;
       // this.formSearchs[0].datas["Remark6"] = x.label+"，";
       this.formSearchs[0].datas["ReplyStatus"] = x.label;
-      if(x.label=="全部")
-      {
-              // this.formSearchs[0].datas["Remark6"] = "";
-          this.formSearchs[0].datas["ReplyStatus"] = "";
+      if (x.label == "全部") {
+        // this.formSearchs[0].datas["Remark6"] = "";
+        this.formSearchs[0].datas["ReplyStatus"] = "";
       }
       this.dataSearch(0);
     },
     // 可用量查询
     usingSearch(row, prop) {
       this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-     // this.formSearchs[1].datas["Remark1"] = "送货";
+      // this.formSearchs[1].datas["Remark1"] = "送货";
       this.dataSearch(1);
       this.dialogShow = true;
     },

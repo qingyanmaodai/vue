@@ -30,7 +30,9 @@
             ></el-input-number>
           </div>
           <el-divider direction="vertical"></el-divider>
-          <el-tooltip
+
+          <vxe-toolbar ref="xToolbar" custom print> </vxe-toolbar>
+          <!-- <el-tooltip
             class="item"
             effect="dark"
             content="刷新"
@@ -80,7 +82,7 @@
                   ></path></svg
               ></span>
             </span>
-          </el-tooltip>
+          </el-tooltip> -->
         </el-col>
       </el-row>
     </div>
@@ -289,6 +291,11 @@ export default {
     // }
   },
   mounted() {
+    this.$nextTick(() => {
+      // 手动将表格和工具栏进行关联
+      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+      $table.connect(this.$refs.xToolbar);
+    });
     setTimeout(() => {
       this.setHeight();
     }, 450);
@@ -571,7 +578,6 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
-      debugger;
       // 获取修改记录
       const $table = this.$refs.ComVxeTable.$refs.vxeTable;
       if (!this.addNum) {
