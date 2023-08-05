@@ -30,6 +30,12 @@
           highlight: true,
           checkField: 'isChecked',
         }"
+        :scroll-x="{
+          enabled: scrollEnable,
+        }"
+        :scroll-y="{
+          enabled: scrollEnable,
+        }"
         :tree-config="treeConfig"
         :custom-config="{ storage: true, checkMethod: checkColumnCustomMethod }"
         :cell-style="cellStyle"
@@ -70,7 +76,7 @@
           :title="x.label"
           :min-width="x.width"
           :fixed="x.fix"
-          :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
+          :filters="x.filters ? null : null"
           :filter-method="filterMethod"
           :filter-recover-method="filterRecoverMethod"
           :align="x.align"
@@ -1120,6 +1126,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    //虚拟滚动
+    scrollEnable: {
+      default: true,
+    },
     // 懒加载
     keepSource: {
       type: Boolean,
@@ -1675,7 +1685,7 @@ export default {
 }
 //表头底色
 ::v-deep .vxe-header--row {
-  background-color: #ececec;
+  background-color: #d5e1f5;
 }
 //表头底部线
 ::v-deep .vxe-table--header-border-line {

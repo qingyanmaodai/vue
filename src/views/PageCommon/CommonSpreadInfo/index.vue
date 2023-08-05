@@ -356,6 +356,7 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
+      console.log(remarkTb, index, parms, "parms");
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       if (sheet.isEditing()) {
@@ -542,7 +543,7 @@ export default {
         });
         // this.tableData[remarkTb].unshift(obj);
         sheet.addRows(0, 1, GC.Spread.Sheets.SheetArea.viewport);
-        sheet.getDataSource()[0] = obj;
+        this.$set(sheet.getDataSource(), "0", obj);
       }
       // 渲染列
       this.spread[remarkTb].suspendPaint();
@@ -636,25 +637,6 @@ export default {
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
         ) {
-          this.tableData[remarkTb].map((item, index) => {
-            if (x.DataSourceID && x.DataSourceName) {
-              let newData = x["items"]; // 设置列表每行下拉菜单
-              // 获取要绑定下拉菜单的单元格对象
-              let cell = sheet.getCell(index, y);
-              // 创建下拉菜单单元格类型，并设置其选项数据
-              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-              comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              comboBox.editable(true);
-              // 获取下拉菜单的选项数据
-              comboBox.items(newData);
-              comboBox.itemHeight(24);
-              // 将下拉菜单单元格类型绑定到指定的单元格中
-              cell.cellType(comboBox);
-            }
-          });
-        } else if (x.ControlType === "el-select") {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
               let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单

@@ -101,6 +101,7 @@
         :hasSelect="hasSelect[0]"
         :pagination="tablePagination[0]"
         :keepSource="true"
+        :scrollEnable="scrollEnable"
         @selectfun="selectFun"
         @handleRowClick="handleRowClick"
         @pageChange="pageChange"
@@ -162,6 +163,7 @@ export default {
       selectionData: [[], [], [], []],
       addNum: null,
       addStep: 10,
+      scrollEnable: true,
       DataSourceList: [{}],
     };
   },
@@ -238,6 +240,7 @@ export default {
     const params = new URLSearchParams(this.$route.meta.TargetFor);
     this.addNum = params.get("addNum");
     this.addStep = Number(params.get("addStep"));
+    this.scrollEnable = params.get("scrollEnable");
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);

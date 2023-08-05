@@ -848,27 +848,38 @@ export default {
           //   trigger: "item",
           //   formatter: "{b}: {c} ({d}%)"
           // },
+          // legend: {
+          //   type: "scroll",
+          //   orient: "vertical",
+          //   right: "0%",
+          //   top: "center",
+          //   itemWidth: fontSize(10),
+          //   itemHeight: fontSize(10),
+          //   textStyle: {
+          //     fontSize: fontSize(12),
+          //   },
+          //   itemStyle: {
+          //     borderRadius: "50%", // 将图例项的形状设定为圆形
+          //   },
+          //   data: [
+          //     "回货周期<6天",
+          //     "6天<回货周期<15天",
+          //     "15天<回货周期<30天",
+          //     "回货周期>30天",
+          //     "灌胶老练",
+          //     "印刷",
+          //   ],
+          // },
           legend: {
-            type: "scroll",
-            orient: "vertical",
-            right: "0%",
-            top: "center",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
+            top: "5%",
+            left: "center",
+            // doesn't perfectly work with our tricks, disable it
+            // selectedMode: false,
             textStyle: {
               fontSize: fontSize(12),
             },
-            itemStyle: {
-              borderRadius: "50%", // 将图例项的形状设定为圆形
-            },
-            data: [
-              "回货周期<6天",
-              "6天<回货周期<15天",
-              "15天<回货周期<30天",
-              "回货周期>30天",
-              "灌胶老练",
-              "印刷",
-            ],
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
           },
           grid: {
             containLabel: true,
@@ -877,7 +888,7 @@ export default {
             {
               type: "pie",
               // selectedMode: "single",
-              radius: ["10%", "40%"],
+              radius: ["20%", "60%"],
               color: [
                 "#23CF9C",
                 "#578FFB",
@@ -886,12 +897,12 @@ export default {
                 "#E82074",
                 "#FBA806",
               ],
-              center: ["25%", "50%"],
+              center: ["50%", "60%"],
               label: {
                 normal: {
                   position: "inner",
                   formatter: "{d}%",
-                  fontSize: fontSize(8),
+                  fontSize: fontSize(10),
                   color: "#fff",
                 },
               },
@@ -1599,7 +1610,7 @@ export default {
     justify-content: space-between;
     height: 100%;
     .leftCard {
-      width: 66%;
+      width: 70%;
       margin-right: 10px;
       display: flex;
       flex-direction: column;
@@ -1756,7 +1767,7 @@ export default {
       }
     }
     .rightCard {
-      width: 34%;
+      width: 30%;
       display: flex;
       flex-direction: column;
       .firstCard {

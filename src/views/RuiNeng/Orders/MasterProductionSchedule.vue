@@ -6,8 +6,16 @@
         <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0, 3, 5]" :key="i" v-show="labelStatus2 === i">
-              <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
-                :isLoading="isLoading" :btnForm="btnForm" :signName="i" @btnClick="btnClick" />
+              <ComSearch
+                ref="searchRef"
+                :searchData="formSearchs[i].datas"
+                :searchForm="formSearchs[i].forms"
+                :remark="i"
+                :isLoading="isLoading"
+                :btnForm="btnForm"
+                :signName="i"
+                @btnClick="btnClick"
+              />
             </div>
           </div>
           <div>
@@ -15,8 +23,16 @@
               <div class="ant-table-title">
                 <el-row>
                   <el-col :span="4">
-                    <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
-                    <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
+                    <i
+                      class="el-icon-d-arrow-left"
+                      v-show="showAside"
+                      @click="showAside = !showAside"
+                    ></i>
+                    <i
+                      class="el-icon-d-arrow-right"
+                      v-show="!showAside"
+                      @click="showAside = !showAside"
+                    ></i>
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
@@ -46,8 +62,13 @@
                       拆分订单
                     </el-button> -->
                     <el-divider direction="vertical"></el-divider>
-                    <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'
-                      " v-for="(item, y) in Status1" :key="y">
+                    <div
+                      :class="
+                        labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                      "
+                      v-for="(item, y) in Status1"
+                      :key="y"
+                    >
                       <span @click="changeStatus(item, y)">{{
                         item.label
                       }}</span>
@@ -56,11 +77,26 @@
                   </el-col>
                 </el-row>
               </div>
-              <div class="flex_column" v-for="item in [0, 3, 5]" :key="item" v-show="item === labelStatus2">
-                <ComSpreadTable ref="`spreadsheetRef${remarkTb}`" :height="height" :tableData="tableData[item]"
-                  :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item"
-                  :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange"
-                  @pageSize="pageSize" @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
+              <div
+                class="flex_column"
+                v-for="item in [0, 3, 5]"
+                :key="item"
+                v-show="item === labelStatus2"
+              >
+                <ComSpreadTable
+                  ref="`spreadsheetRef${remarkTb}`"
+                  :height="height"
+                  :tableData="tableData[item]"
+                  :tableColumns="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :remark="item"
+                  :sysID="sysID[item]['ID']"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @workbookInitialized="workbookInitialized"
+                  @selectChanged="selectChanged"
+                />
               </div>
             </div>
           </div>
@@ -70,8 +106,11 @@
     <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="50%">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="4"><span class="title">拆分编辑完请保存 </span></el-col>
-          <el-col :span="24" class="flex_flex_end"><el-divider direction="vertical"></el-divider>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="24" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
             <el-button type="primary" size="mini" @click="changeEvent(1)">
               确定拆分
             </el-button>
@@ -79,25 +118,55 @@
         </el-row>
       </div>
       <div v-for="item in [6]" :key="item">
-        <ComSpreadTable2 ref="spreadsheetRef" height="600px" :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item" :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" :spaceBtnShow="false" />
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          height="600px"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
       </div>
     </el-dialog>
     <el-dialog title="新增排程" :visible.sync="newDataDialog" width="80%">
       <div v-for="item in [7]" :key="item">
-        <ComSearch class="margin_bottom_10 dialog_search" ref="searchRef" :searchData="formSearchs[item].datas"
-          :searchForm="formSearchs[item].forms" :remark="item" :isLoading="isLoading[item]" :btnForm="btnForm"
-          @btnClick="btnClick" />
-        <ComSpreadTable2 ref="spreadsheetRef" height="500px" :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item" :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
+        <ComSearch
+          class="margin_bottom_10 dialog_search"
+          ref="searchRef"
+          :searchData="formSearchs[item].datas"
+          :searchForm="formSearchs[item].forms"
+          :remark="item"
+          :isLoading="isLoading[item]"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          height="500px"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="newDataDialog = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="sureAddNewData" size="small">确 定</el-button>
+        <el-button type="primary" @click="sureAddNewData" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 导入文件 -->
@@ -278,7 +347,7 @@ export default {
         { ID: 5646 },
       ],
       userInfo: {},
-      oldval: null
+      oldval: null,
     };
   },
   computed: {},
@@ -590,8 +659,10 @@ export default {
       const month2 = date2.getMonth() + 1; // 月份从0开始，需要加1
       const day2 = date2.getDate();
       this.$confirm(
-        `当前日期<span style="color: #2f8acb;">${year}-${month}-${day}</span>,转单范围为<span style="color: red;">+${this.Days
-        }天</span>，即<span style="color: red;">${year2}-${month2}-${day2}</span>，确认将会把主计划<span style="color: red;">${month === month2 ? month + "月" : month + "月~" + month2 + "月"
+        `当前日期<span style="color: #2f8acb;">${year}-${month}-${day}</span>,转单范围为<span style="color: red;">+${
+          this.Days
+        }天</span>，即<span style="color: red;">${year2}-${month2}-${day2}</span>，确认将会把主计划<span style="color: red;">${
+          month === month2 ? month + "月" : month + "月~" + month2 + "月"
         }</span>的排产数据转入整机月计划中，请确认是否转入`,
         "转月计划提醒",
         {
@@ -654,7 +725,7 @@ export default {
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 通用直接保存
     // async generalSaveData(newData, remarkTb, index) {
@@ -964,31 +1035,10 @@ export default {
             GCsheets.SheetArea.colHeader
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-        }
-        else if (
+        } else if (
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
         ) {
-          this.tableData[remarkTb].map((item, index) => {
-            if (x.DataSourceID && x.DataSourceName) {
-              let newData = x['items']; // 设置列表每行下拉菜单
-              // 获取要绑定下拉菜单的单元格对象
-              let cell = sheet.getCell(index, y);
-              // 创建下拉菜单单元格类型，并设置其选项数据
-              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-              comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              comboBox.editable(true);
-              // 获取下拉菜单的选项数据
-              comboBox.items(newData);
-              comboBox.itemHeight(24);
-              // 将下拉菜单单元格类型绑定到指定的单元格中
-              cell.cellType(comboBox);
-            }
-          });
-        }
-        else if (x.ControlType === "el-select") {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
               let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
@@ -1007,8 +1057,7 @@ export default {
               cell.cellType(comboBox);
             }
           });
-        }
-        else if (x.ControlType === "checkbox") {
+        } else if (x.ControlType === "checkbox") {
           let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
           cellType.caption("");
           cellType.textTrue("");
@@ -1035,7 +1084,6 @@ export default {
       //渲染列
       sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
 
-
       // 列筛选
       // 参数2 开始列
       // 参数3
@@ -1046,9 +1094,7 @@ export default {
         -1,
         this.tableColumns[remarkTb].length
       );
-      let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-        cellrange
-      );
+      let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
       sheet.rowFilter(hideRowFilter);
 
       var defaultStyle = new GC.Spread.Sheets.Style();
@@ -1179,14 +1225,14 @@ export default {
 
             return true;
           }
-        }
+        },
       };
 
       this.spread[remarkTb]
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
 
-      function MyContextMenu() { }
+      function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
         this.spread[remarkTb]
       );
@@ -1205,29 +1251,32 @@ export default {
       var contextMenu = new MyContextMenu();
       this.spread[remarkTb].contextMenu = contextMenu;
       // 剪贴板事件绑定
-      sheet.bind(GC.Spread.Sheets.Events.ClipboardChanged, function (
-        sender,
-        args
-      ) {
-        let s = sheet.getSelections()[0];
-        _this.sheetSelectRows = sheet.getArray(
-          s.row,
-          0,
-          s.rowCount,
-          _this.tableColumns[remarkTb].length
-        );
-        _this.sheetSelectObj.start = s.row;
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[remarkTb].length
+          );
+          _this.sheetSelectObj.start = s.row;
 
-        _this.sheetSelectObj.count = s.rowCount;
-      });
+          _this.sheetSelectObj.count = s.rowCount;
+        }
+      );
 
       //表格编辑事件
-      this.spread[remarkTb].bind(GCsheets.Events.EditStarting, function (e, args) {
-        // 自动计算数量
-        let currentRow = _this.tableData[remarkTb][args.row];
-        let currentProp = _this.tableColumns[remarkTb][args.col]['prop']
-        _this.oldval = parseInt(currentRow[currentProp])
-      });
+      this.spread[remarkTb].bind(
+        GCsheets.Events.EditStarting,
+        function (e, args) {
+          // 自动计算数量
+          let currentRow = _this.tableData[remarkTb][args.row];
+          let currentProp = _this.tableColumns[remarkTb][args.col]["prop"];
+          _this.oldval = parseInt(currentRow[currentProp]);
+        }
+      );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         _this.computedNum(args.row, args.col, args.editingText, _this.oldval);
       });
@@ -1236,38 +1285,42 @@ export default {
       this.tableLoading[remarkTb] = false;
       setTimeout(() => {
         this.spread[remarkTb].refresh(); //重新定位宽高度
-      }, 0)
-
+      }, 0);
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val, oldval) {
       if (!this.tableColumns[0][colIndex].prop2) {
-        return
+        return;
       }
       let sheet = this.spread[this.labelStatus2].getActiveSheet();
       let dataSource = sheet.getDataSource();
       let currentRow = dataSource[rowIndex];
-      let currentProp = this.tableColumns[this.labelStatus2][colIndex].prop
-      let propList = []
-      propList = this.tableColumns[this.labelStatus2].map(x => x.prop2 ? x.prop : null).filter(x => x !== null)
+      let currentProp = this.tableColumns[this.labelStatus2][colIndex].prop;
+      let propList = [];
+      propList = this.tableColumns[this.labelStatus2]
+        .map((x) => (x.prop2 ? x.prop : null))
+        .filter((x) => x !== null);
       // let allVal = 0
-      let { PlanQty } = currentRow
+      let { PlanQty } = currentRow;
       // propList.map((prop) => {
       //   if (currentRow[prop]) {
       //     allVal += parseInt(currentRow[prop])
       //   }
       // })
-      console.log(Number.isFinite(val), val, 'PlanQty');
+      console.log(Number.isFinite(val), val, "PlanQty");
 
       if (!Number.isFinite(Number(val)) || Number.isFinite(Number(val)) < 0) {
         sheet.setValue(rowIndex, colIndex, oldval);
         this.$message.error("输入的值是负数或者不是数字类型");
-        return
+        return;
       }
-      oldval = oldval ? oldval : 0 //旧数据如果不存在把null变成0
-      let changeIndex = propList.findIndex((item) => currentProp === item)
-      let changeVal = parseInt(val) - oldval
-      currentRow[propList[changeIndex + 1]] = (currentRow[propList[changeIndex + 1]] - changeVal) <= 0 ? 0 : parseInt(currentRow[propList[changeIndex + 1]]) - changeVal
+      oldval = oldval ? oldval : 0; //旧数据如果不存在把null变成0
+      let changeIndex = propList.findIndex((item) => currentProp === item);
+      let changeVal = parseInt(val) - oldval;
+      currentRow[propList[changeIndex + 1]] =
+        currentRow[propList[changeIndex + 1]] - changeVal <= 0
+          ? 0
+          : parseInt(currentRow[propList[changeIndex + 1]]) - changeVal;
     },
     // 刷新页面
     refrshPage() {
@@ -1351,7 +1404,7 @@ export default {
         if (
           column.property == "SecondReplyDate" &&
           new Date(row.SecondReplyDate).getTime() >
-          new Date(row.LastDate).getTime()
+            new Date(row.LastDate).getTime()
         ) {
           return {
             background: "#ff7b7b",

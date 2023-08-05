@@ -613,9 +613,7 @@ export default {
         return;
       }
       this.$confirm(
-        "确定要重排的【" +
-          this.selectionData[remarkTb].length +
-          "】数据吗？"
+        "确定要重排的【" + this.selectionData[remarkTb].length + "】数据吗？"
       )
         .then(async (_) => {
           this.selectionData[remarkTb].forEach((m) => {
@@ -823,9 +821,9 @@ export default {
         const {
           data: [{ PlanQty }],
         } = res.data;
-        this.title2 = `${
-          this.$moment().format("YYYY年M月")
-        }  订单总数：${PlanQty}`;
+        this.title2 = `${this.$moment().format(
+          "YYYY年M月"
+        )}  订单总数：${PlanQty}`;
       } else {
         this.$message({
           message: msg,
@@ -867,25 +865,6 @@ export default {
           x.ControlType === "comboboxMultiple" ||
           x.ControlType === "combobox"
         ) {
-          this.tableData[remarkTb].map((item, index) => {
-            if (x.DataSourceID && x.DataSourceName) {
-              let newData = x["items"]; // 设置列表每行下拉菜单
-              // 获取要绑定下拉菜单的单元格对象
-              let cell = sheet.getCell(index, y);
-              // 创建下拉菜单单元格类型，并设置其选项数据
-              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-              comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              comboBox.editable(true);
-              // 获取下拉菜单的选项数据
-              comboBox.items(newData);
-              comboBox.itemHeight(24);
-              // 将下拉菜单单元格类型绑定到指定的单元格中
-              cell.cellType(comboBox);
-            }
-          });
-        } else if (x.ControlType === "el-select") {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
               let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
