@@ -246,7 +246,7 @@ export default {
     Object.keys(variableMappings).forEach((key) => {
       const value = params.get(key);
       if (value !== null) {
-        this[variableMappings[key]] =
+        this[key] =
           typeof variableMappings[key] === "function"
             ? variableMappings[key](value)
             : value;

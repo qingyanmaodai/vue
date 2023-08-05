@@ -1128,6 +1128,7 @@ export default {
     },
     //虚拟滚动
     scrollEnable: {
+      type: Boolean,
       default: true,
     },
     // 懒加载
