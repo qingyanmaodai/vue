@@ -238,9 +238,21 @@ export default {
     _this = this;
     let routeBtn = this.$route;
     const params = new URLSearchParams(this.$route.meta.TargetFor);
-    this.addNum = params.get("addNum");
-    this.addStep = Number(params.get("addStep"));
-    this.scrollEnable = params.get("scrollEnable");
+    const variableMappings = {
+      addNum: (value) => Number(value),
+      addStep: (value) => Number(value),
+      scrollEnable: (value) => JSON.parse(value),
+    };
+    Object.keys(variableMappings).forEach((key) => {
+      const value = params.get(key);
+      if (value !== null) {
+        this[variableMappings[key]] =
+          typeof variableMappings[key] === "function"
+            ? variableMappings[key](value)
+            : value;
+      }
+    });
+
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
