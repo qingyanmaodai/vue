@@ -744,21 +744,22 @@ export default {
             trigger: "item",
             formatter: "{b}:({d}%)",
           },
-          // legend: {
-          //   type: "scroll",
-          //   orient: "horizontal",
-          //   right: "0%",
-          //   bottom: "0",
-          //   itemWidth: fontSize(10),
-          //   itemHeight: fontSize(10),
-          //   textStyle: {
-          //     fontSize: fontSize(12),
-          //   },
-          //   itemStyle: {
-          //     borderRadius: "50%", // 将图例项的形状设定为圆形
-          //   },
-          //   data: this.tableData[2].map((item) => item["ProcessName"]),
-          // },
+          legend: {
+            top: "0",
+            left: "center",
+            orient: "horizontal",
+            // right: "0%",
+            // bottom: "0",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
+            textStyle: {
+              fontSize: fontSize(12),
+            },
+            itemStyle: {
+              borderRadius: "50%", // 将图例项的形状设定为圆形
+            },
+            data: this.tableData[2].map((item) => item["WorkShopName"]),
+          },
           grid: {
             containLabel: true,
           },
@@ -766,7 +767,7 @@ export default {
             {
               type: "pie",
               // selectedMode: "single",
-              radius: ["40%", "70%"],
+              radius: ["30%", "60%"],
               color: [
                 "#23CF9C",
                 "#578FFB",
@@ -775,13 +776,13 @@ export default {
                 "#E82074",
                 "#FBA806",
               ],
-              center: ["50%", "50%"],
+              center: ["50%", "60%"],
               label: {
                 normal: {
                   position: "inner",
                   formatter: "{d}%",
                   show: true,
-                  fontSize: fontSize(14),
+                  fontSize: fontSize(10),
                   lineHeight: 15,
                   formatter: function (params) {
                     // let percent = 0;
@@ -871,7 +872,7 @@ export default {
           //   ],
           // },
           legend: {
-            top: "5%",
+            top: "0",
             left: "center",
             // doesn't perfectly work with our tricks, disable it
             // selectedMode: false,
@@ -880,6 +881,9 @@ export default {
             },
             itemWidth: fontSize(10),
             itemHeight: fontSize(10),
+            itemStyle: {
+              borderRadius: "50%", // 将图例项的形状设定为圆形
+            },
           },
           grid: {
             containLabel: true,
@@ -888,7 +892,7 @@ export default {
             {
               type: "pie",
               // selectedMode: "single",
-              radius: ["20%", "60%"],
+              radius: ["30%", "60%"],
               color: [
                 "#23CF9C",
                 "#578FFB",
@@ -1400,9 +1404,9 @@ export default {
         console.log(this.sysID, "this.sysID");
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", this.sysID[z].ID);
-          if (z === 2) {
-            this.formSearchs[z].datas["PlanDay"] = this.currentDate;
-          }
+          // if (z === 2) {
+          //   this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+          // }
           if (z === 7) {
             this.formSearchs[z].datas["PlanDay"] = this.$moment()
               .subtract(1, "days")
