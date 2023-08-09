@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">
-      <pane :size="60">
+      <pane :size="70">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
             <ComSearch
@@ -54,48 +54,47 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               :keepSource="true"
-              :footerContent="false"
+              :footerContent="true"
             />
           </div>
         </div>
       </pane>
-      <pane :size="40">
+      <pane :size="30">
         <div class="flex_column fullScreen">
           <!-- <div class="admin_head_2" ref="headRef">
             <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
           </div> -->
-          <div class="ant-table-title" ref="headRef_2">
-            <el-row>
-              <el-col :span="4">
-                <el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  :stretch="true"
-                >
-                  <el-tab-pane label="机台" name="1"></el-tab-pane>
-                  <el-tab-pane label="产品" name="2"></el-tab-pane></el-tabs
-              ></el-col>
-              <el-col :span="20" class="flex_flex_end">
-                <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="AddEvent(1)"
-                  v-show="selectedIndex === '1'"
-                >
-                  添加机台
-                </el-button>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="AddEvent(2)"
-                  v-show="selectedIndex === '2'"
-                >
-                  添加产品
-                </el-button>
-              </el-col>
-            </el-row>
+          <div class="ant-table-title pd-6-6-0 flex_row_spaceBtn" ref="headRef_2">
+            <div >
+              <el-tabs
+                v-model="selectedIndex"
+                @tab-click="handleClick"
+                :stretch="true"
+              >
+                <el-tab-pane label="机台" name="1"></el-tab-pane>
+                <el-tab-pane label="产品" name="2"></el-tab-pane
+              ></el-tabs>
+            </div>
+            <div class="flex_flex_end">
+              <el-divider direction="vertical"></el-divider>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="AddEvent(1)"
+                v-show="selectedIndex === '1'"
+              >
+                添加机台
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="AddEvent(2)"
+                v-show="selectedIndex === '2'"
+              >
+                添加产品
+              </el-button>
+            </div>
           </div>
           <div
             v-for="item in [1, 2]"
@@ -122,7 +121,7 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
-              :footerContent="false"
+              :footerContent="true"
             />
           </div>
         </div>
@@ -260,7 +259,7 @@ export default {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            if (!item["signName"] && item["signName"].length === 0) {
+            if (!item["signName"] || item["signName"].length === 0) {
               this.isEdit.fill(true);
             } else if (item["signName"] && item["signName"].length > 0) {
               item["signName"].map((item) => {

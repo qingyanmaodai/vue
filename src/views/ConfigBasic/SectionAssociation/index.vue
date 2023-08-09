@@ -1,10 +1,13 @@
-<!--设备与工装汇总-->
+<!--物料点检-->
 <template>
-  <div class="container flex_column content_height" v-loading="adminLoading">
-    <splitpanes class="default-theme" horizontal>
-      <pane :size="60">
-        <div class="flex_column" style="width: 100%; height: 100%">
-          <div class="admin_head" ref="headRef">
+  <div
+    class="container flex_column content_height bgWhite"
+    v-loading="adminLoading"
+  >
+    <splitpanes class="default-theme">
+      <pane :size="70">
+        <div class="flex_column fullScreen">
+          <div class="admin_head_2" ref="headRef">
             <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
@@ -13,54 +16,72 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="0"
+              :signName="labelStatus1"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="4"><span class="title">{{ title }}</span></el-col>
               <el-col :span="20" class="flex_flex_end">
-                <span>新增行数：</span>
-                <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"
-                  size="small"></el-input-number>
-                <el-divider direction="vertical"></el-divider></el-col>
+                <div
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  v-for="(item, y) in Status1"
+                :key="y"
+                >
+                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <el-divider direction="vertical"></el-divider>
+                </div>
+              </el-col>
             </el-row>
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
-              :ref="`tableRef${item}`"
+              ref="tableRef"
               :rowKey="'RowNumber'"
               height="100%"
-              :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]"
-              :tableLoading="tableLoading[item]"
               :isToolbar="false"
-              :remark="item"
-              :sysID="sysID[item]['ID']"
-              :hasSelect="true"
-              :isEdit="isEdit[item]"
-              :isClear="isClear[item]"
-              :keepSource="true"
-              :pagination="tablePagination[item]"
+              :isEdit="isEdit[0]"
+              :tableData="tableData[0]"
+              :tableHeader="tableColumns[0]"
+              :tableLoading="tableLoading[0]"
+              :remark="0"
+              :cellStyle="cellStyle0"
+              :sysID="sysID[0]['ID']"
+              :isClear="isClear[0]"
+              :hasSelect="hasSelect[item]"
+              :pagination="tablePagination[0]"
               @pageChange="pageChange"
+              @handleRowClick="handleRowClick"
               @pageSize="pageSize"
               @sortChange="sortChange"
-              @selectfun="selectFun"
-              @handleRowClick="handleRowClick"
-              :footerContent="false"
+              :keepSource="true"
+              :footerContent="true"
             />
           </div>
         </div>
       </pane>
-      <pane :size="40">
-        <div class="flex_column" style="width: 100%; height: 100%">
-          <!-- <div class="admin_head" ref="headRef" v-for="item in [1, 2, 3]" :key="item + 'head'"
-            v-show="Number(selectedIndex) === item">
-            <ComSearch ref="searchRef" :searchData="formSearchs[item].datas" :searchForm="formSearchs[item].forms"
-              :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
-          </div> -->
-          <div
-            class="ant-table-title bgWhite pd-6-6-0 flex_row_spaceBtn"
+      <pane :size="30">
+        <div class="flex_column fullScreen">
+          <div class="admin_head" ref="headRef">
+            <div
+              v-for="i in [1, 2]"
+              :key="i"
+              v-show="Number(selectedIndex) === i"
+            >
+              <ComSearch
+                ref="searchRef"
+                :searchData="formSearchs[i].datas"
+                :searchForm="formSearchs[i].forms"
+                :remark="i"
+                :isLoading="isLoading"
+                :btnForm="btnForm"
+                :signName="labelStatus1"
+                @btnClick="btnClick"
+              />
+            </div>
+          </div>
+          <!-- <div
+            class="ant-table-title pd-6-6-0 flex_row_spaceBtn"
             ref="headRef_2"
           >
             <div>
@@ -69,10 +90,9 @@
                 @tab-click="handleClick"
                 :stretch="true"
               >
-                <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
-                <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
-                <el-tab-pane label="TPM设备明细" name="3"></el-tab-pane>
-              </el-tabs>
+                <el-tab-pane label="机台" name="1"></el-tab-pane>
+                <el-tab-pane label="产品" name="2"></el-tab-pane
+              ></el-tabs>
             </div>
             <div class="flex_flex_end">
               <el-divider direction="vertical"></el-divider>
@@ -82,7 +102,7 @@
                 @click="AddEvent(1)"
                 v-show="selectedIndex === '1'"
               >
-                添加产品
+                添加机台
               </el-button>
               <el-button
                 type="primary"
@@ -90,20 +110,12 @@
                 @click="AddEvent(2)"
                 v-show="selectedIndex === '2'"
               >
-                添加产品族
-              </el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(3)"
-                v-show="selectedIndex === '3'"
-              >
-                添加TPM设备
+                添加产品
               </el-button>
             </div>
-          </div>
+          </div> -->
           <div
-            v-for="item in [1, 2, 3]"
+            v-for="item in [1, 2]"
             :key="item"
             v-show="Number(selectedIndex) === item"
             class="admin_content flex_grow"
@@ -118,7 +130,7 @@
               :isToolbar="false"
               :remark="item"
               :sysID="sysID[item]['ID']"
-              :hasSelect="true"
+              :hasSelect="hasSelect[item]"
               :isEdit="isEdit[item]"
               :isClear="isClear[item]"
               :keepSource="true"
@@ -127,7 +139,7 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
-              :footerContent="false"
+              :footerContent="true"
             />
           </div>
         </div>
@@ -135,6 +147,18 @@
     </splitpanes>
     <!-- 弹框-->
     <DialogTable
+      title="添加机台"
+      :tableDialog="colDialogVisible3"
+      :sysID="sysID[3]['ID']"
+      width="80%"
+      :hasSelect="true"
+      @closeDialog="colDialogVisible3 = false"
+      :searchForm="formSearchs[3]"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      @confirmDialog="confirmDialog"
+    ></DialogTable>
+    <!-- <DialogTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
       :sysID="sysID[4]['ID']"
@@ -145,31 +169,7 @@
       :isToolbar="false"
       :isConfirmBtn="true"
       @confirmDialog="confirmDialog"
-    ></DialogTable>
-    <DialogTable
-      title="添加产品族"
-      :tableDialog="colDialogVisible5"
-      :sysID="sysID[5]['ID']"
-      width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible5 = false"
-      :searchForm="formSearchs[5]"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"
-    ></DialogTable>
-    <DialogTable
-      title="添加TPM设备"
-      :tableDialog="colDialogVisible6"
-      :sysID="sysID[6]['ID']"
-      width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible6 = false"
-      :searchForm="formSearchs[6]"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"
-    ></DialogTable>
+    ></DialogTable> -->
   </div>
 </template>
 
@@ -189,7 +189,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "EquipmentAndTools",
+  name: "SectionAssociation",
   components: {
     ComSearch,
     ComVxeTable,
@@ -201,20 +201,10 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      footerLabel: [""],
-      selectionData: [[], [], [], [], [], [], []],
+      selectionData: [[], []],
       title: this.$route.meta.title,
       includeFields: [[], [], []],
       formSearchs: [
-        {
-          datas: {},
-          forms: [],
-          required: [], //获取必填项
-        },
-        {
-          datas: {},
-          forms: [],
-        },
         {
           datas: {},
           forms: [],
@@ -237,45 +227,35 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], [], [], [], []],
-      tableColumns: [[], [], [], [], [], [], []],
-      tableLoading: [false, false, false, false, false, false, false],
-      isClear: [false, false, false, false, false, false, false],
-      isEdit: [false, false, false, false, false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
+      height: "707px",
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
-      OrderNo: "",
-      OrderNoValue: "",
-      OrderNos: [],
-      labelStatus1: 0,
-      labelStatus2: 0,
-      sysID: [
-        { ID: 11147 },
-        { ID: 11146 },
-        { ID: 11145 },
-        { ID: 11148 },
-        { ID: 1180 },
-        { ID: 11142 },
-        { ID: 133 },
+      Status1: [
+        { label: "待确认", value: "未开始" },
+        { label: "已完成", value: "已完成" },
+        { label: "全部", value: "" },
       ],
+      labelStatus1: 0,
+      sysID: [{ ID: 14 }, { ID: 11160 }, { ID: 112 }, { ID: 90 }],
+      isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",
+      colDialogVisible3: false,
       colDialogVisible4: false,
-      colDialogVisible5: false,
-      colDialogVisible6: false,
-      addNum: 1,
-      DataSourceList: [{}],
       clickRow: null,
+      linkTableData: [],
+      hasSelect: [false, false],
     };
   },
   watch: {},
@@ -288,7 +268,11 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() {},
+  mounted() {
+    // setTimeout(() => {
+    //   this.setHeight();
+    // }, 600);
+  },
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
@@ -305,6 +289,16 @@ export default {
           }
         });
       this.$set(this, "btnForm", routeBtn);
+    },
+    // 高度控制
+    setHeight() {
+      let headHeight = this.$refs.headRef.offsetHeight;
+      let rem =
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
+      let newHeight = rem + "px";
+      this.$set(this, "height", newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -346,17 +340,17 @@ export default {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
       } else {
-        this[methods](remarkTb);
+        this[methods](remarkTb, index);
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -385,73 +379,89 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
     },
+    //添加产品机台
+    confirmDialog(data) {
+      if (Number(this.selectedIndex) === 1) {
+        console.log(this.formSearchs[1]["MachineMouldID"], "1");
+        data.map((item) => {
+          item["MachineMouldID"] =
+            this.formSearchs[1]["datas"]["MachineMouldID"];
+          item["dicID"] = 110;
+        });
+        this.dataSave(1, data);
+      } else if (Number(this.selectedIndex) === 2) {
+        data.map((item) => {
+          item["MachineMouldID"] =
+            this.formSearchs[2]["datas"]["MachineMouldID"];
+          item["dicID"] = 112;
+        });
+        this.dataSave(2, data);
+      }
+      this.colDialogVisible3 = false;
+      this.colDialogVisible4 = false;
+    },
     // 保存
-    async dataSave(remarkTb, index, parms, newData) {
+    async dataSave(remarkTb, newData, index, parms) {
       this.adminLoading = true;
       // const sheet = this.spread[remarkTb]?.getActiveSheet();
+
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       // if (sheet && sheet.isEditing()) {
       //   sheet.endEdit();
       // }
+      if (remarkTb === 1) {
+        let newData1 = this.linkTableData.filter(
+          (x) =>
+            !this.selectionData[1].some(
+              (y) => y.LevelTwoProcessID === x.LevelTwoProcessID
+            )
+        );
+        newData1.forEach((newDataItem) => {
+          const matchingRow = this.tableData[1].find(
+            (tableDataRow) =>
+              tableDataRow.LevelTwoProcessID === newDataItem.LevelTwoProcessID
+          );
+          if (matchingRow) {
+            matchingRow.ProcessName = null;
+          }
+        });
+
+        let newData2 = this.selectionData[1].filter(
+          (c) =>
+            !this.linkTableData.some(
+              (z) => c.LevelTwoProcessID == z.LevelTwoProcessID
+            )
+        );
+        newData2.forEach((newDataItem) => {
+          const matchingRow = this.tableData[1].find(
+            (tableDataRow) =>
+              tableDataRow.LevelTwoProcessID === newDataItem.LevelTwoProcessID
+          );
+          if (matchingRow) {
+            matchingRow.ProcessName = this.clickRow["ProcessName"];
+          }
+        });
+      }
       // 获取修改记录
-      let updateRecords = [];
+      let changeRecords = [];
       if (newData) {
-        updateRecords = newData;
+        changeRecords = newData;
       } else {
         if ($table) {
-          updateRecords = $table.getUpdateRecords();
+          const { insertRecords, updateRecords, removeRecords } =
+            $table.getRecordset();
+          changeRecords = insertRecords.concat(updateRecords, removeRecords);
         } else {
-          // let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
-          // let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
-          // let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
-          // DeletedRows.forEach((item) => {
-          //   item["ElementDeleteFlag"] = 1;
-          // }); //获取被删除的数据
-          // updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-      console.log(updateRecords, "updateRecords", this.$refs);
-      if (updateRecords.length == 0) {
+
+      if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      console.log(updateRecords, "updateRecords.length");
-      if (updateRecords.length > 0 && remarkTb === 0) {
-        if (this.formSearchs[remarkTb].required.length) {
-          // 动态检验必填项
-          updateRecords.map((item1, index1) => {
-            this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2["prop"]];
-              if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(`${item2["label"]}不能为空，请选择`);
-                this.$set(this, "adminLoading", false);
-                return;
-              }
-            });
-          });
-          // for (let i = 0; i < updateRecords.length; i++) {
-          //   for (
-          //     let x = 0;
-          //     x < this.formSearchs[remarkTb].required.length;
-          //     x++
-          //   ) {
-          //     let content =
-          //       updateRecords[i][
-          //       this.formSearchs[remarkTb].required[x]["prop"]
-          //       ];
-          //     if (!content && (content !== 0) & (content !== false)) {
-          //       this.$message.error(
-          //         `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
-          //       );
-          //       this.$set(this, "adminLoading", false);
-          //       return;
-          //     }
-          //   }
-          // }
-        }
-      }
-      let res = await SaveData(updateRecords);
+      let res = await SaveData(changeRecords);
+      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -486,32 +496,13 @@ export default {
                 this.verifyDta(x);
               });
             }
-            //从列获取下拉数据源
-            if (n.DataSourceID && n.ControlType === "combobox" && i === 0) {
-              this.DataSourceList[i] = {
-                [n.DataSourceName]: n.items,
-                ...this.DataSourceList[i],
-              };
-            }
-            if (n.Required && i === 0) {
-              this.formSearchs[i].required.push(n);
-            }
+
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.tableColumns, i, m);
-          this.$set(this.OrderNos, i, m);
-
-          this.OrderNos[i] = this.OrderNos[i]
-            .filter((item) => item.isEdit)
-            .map((item) => {
-              return {
-                value: item.prop,
-                label: item.label,
-              };
-            });
-          console.log(this.OrderNos, "this.OrderNo");
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -526,8 +517,6 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
 
-        // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        // this.formSearchs[0].datas["PrepareStatus"] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -553,11 +542,14 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (remarkTb == 1) {
-          if (data.length != 0) {
-            data.forEach((a) => {
-              this.$set(a, "update", false);
-            });
-          }
+          data.forEach((item) => {
+            if (item["ProcessName"] === this.clickRow["ProcessName"]) {
+              item["isChecked"] = true;
+            }
+          });
+          this.linkTableData = data.filter((item) => {
+            return item["isChecked"];
+          });
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -581,45 +573,14 @@ export default {
         });
       });
     },
-    // 改变状态
-    changeStatus(item, index) {
-      this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
-      this.$set(this.tableData, 1, []);
-      this.dataSearch(0);
-    },
-    // 改变状态
-    changeStatus2(item, index) {
-      if (!this.formSearchs[1].datas["SalesOrderDetailID"]) {
-        this.$message.error("请单击上方行数据再查询！");
-        return;
-      }
-      this.labelStatus2 = index;
-      this.formSearchs[1].datas.PrepareType = "";
-      this.formSearchs[1].datas.InspectStatus = "";
-      this.formSearchs[1].datas.UnIssuedQty = "";
-      if (index == 1) {
-        this.formSearchs[1].datas.InspectStatus = 0;
-      } else if (index == 2) {
-        this.formSearchs[1].datas.InspectStatus = 2;
-      } else if (index == 3) {
-        this.formSearchs[1].datas.UnIssuedQty = "0";
-        this.formSearchs[1].datas.InspectStatus = 0;
-      }
-      this.$set(this.tableData, 1, []);
-      this.dataSearch(1);
-    },
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
     // 单击获取明细
-    handleRowClick(row, remarkTb) {
+    async handleRowClick(row, remarkTb) {
       this.clickRow = row;
-      this.formSearchs[1].datas["RAMID"] = row.RAMID;
-      this.formSearchs[2].datas["RAMID"] = row.RAMID;
-      this.formSearchs[3].datas["RAMID"] = row.RAMID;
-      this.dataSearch(this.selectedIndex);
+      await this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -632,14 +593,11 @@ export default {
         return;
       }
       if (index === 1) {
-        this.colDialogVisible4 = true;
+        this.colDialogVisible3 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
-        this.colDialogVisible5 = true;
-      }
-      if (index === 3) {
-        this.colDialogVisible6 = true;
+        this.colDialogVisible4 = true;
       }
     },
     // 行内样式
@@ -675,83 +633,6 @@ export default {
           }
         }
       }
-    },
-    // 增行
-    addRow(remarkTb) {
-      if (!this.addNum) {
-        this.$message.error("请输入需要添加的行数!");
-        return;
-      }
-      // 下拉数据是需要获取数据源
-      for (let x = 0; x < this.addNum; x++) {
-        let obj = {
-          dicID: this.sysID[remarkTb].ID,
-          rowNum: _.uniqueId("rowNum_"),
-        };
-        this.tableColumns[remarkTb].map((item) => {
-          obj[item.prop] = null;
-          obj["update"] = true;
-          if (item.prop === "Status") {
-            obj[item.prop] = 1;
-          }
-          for (let key in this.DataSourceList[remarkTb]) {
-            if (item.DataSourceName === key) {
-              obj[key] = this.DataSourceList[remarkTb][key];
-            }
-          }
-        });
-
-        console.log("this.addNum", this.addNum);
-
-        this.tableData[remarkTb].unshift(obj);
-      }
-
-      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
-    },
-    changeProp(index) {
-      if (!this.OrderNo) {
-        this.$message.error("请选择需要修改的值");
-        return;
-      }
-      if (this.tableData[index].length === 0) {
-        this.$message.error("当前表格无数据");
-        return;
-      }
-      this.tableData[index].map((item) => {
-        item[this.OrderNo] = this.OrderNoValue;
-      });
-    },
-    //添加产品机台
-    confirmDialog(data) {
-      let tagNumber = Number(this.selectedIndex);
-      data.map((item) => {
-        item["RAMID"] = this.formSearchs[tagNumber]["datas"]["RAMID"];
-        item["dicID"] = this.sysID[tagNumber]["ID"];
-      });
-      this.colDialogVisible4 = false;
-      this.colDialogVisible5 = false;
-      this.colDialogVisible6 = false;
-      this.dataSave(tagNumber, null, null, data);
-    },
-    // 删除
-    async dataDel(remarkTb, index, parms) {
-      let res = null;
-      let newData = [];
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
-        return;
-      } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj["ElementDeleteFlag"] = 1;
-          newData.push(obj);
-        });
-      }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then((_) => {
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
     },
   },
 };

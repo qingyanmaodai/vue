@@ -27,7 +27,7 @@
             </el-row>
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <!-- <ComSpreadTable
+            <ComVxeTable
               :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
               height="100%"
@@ -47,8 +47,8 @@
               @sortChange="sortChange"
               @selectfun="selectFun"
               @handleRowClick="handleRowClick"
-            /> -->
-            <ComSpreadTable
+            />
+            <!-- <ComSpreadTable
               ref="spreadsheetRef"
               height="100%"
               :tableData="tableData[0]"
@@ -61,7 +61,7 @@
               @pageSize="pageSize"
               @workbookInitialized="workbookInitialized"
               @selectChanged="selectChanged"
-            />
+            /> -->
           </div>
         </div>
       </pane>

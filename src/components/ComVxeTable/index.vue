@@ -1395,8 +1395,6 @@ export default {
     // 双击行
     handleRowdbClick({ row, column }) {
       if (this.isEdit && !row.update) {
-        debugger;
-
         this.$set(row, "update", true);
       }
       this.$emit("handleRowdbClick", row, this.remark);

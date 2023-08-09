@@ -2,7 +2,7 @@
 <template>
   <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch
+      <ComMoreSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
         :searchForm="formSearchs[0].forms"
@@ -114,7 +114,7 @@
 <script>
 var _this;
 // let rand = Math.random();
-import ComSearch from "@/components/ComSearch";
+import ComMoreSearch from "@/components/ComMoreSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
@@ -127,7 +127,7 @@ import {
 export default {
   name: "CommonInfo",
   components: {
-    ComSearch,
+    ComMoreSearch,
     ComVxeTable,
     ComFormDialog,
   },
@@ -393,8 +393,9 @@ export default {
     },
     // 重置
     dataReset(remarkTb) {
+      console.log(this.formSearchs[remarkTb].datas,'this.formSearchs[remarkTb].datas');
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != "dicID" || name != "QueryParams") {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }

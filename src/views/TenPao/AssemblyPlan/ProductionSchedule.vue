@@ -18,19 +18,19 @@
     </div>
     <div>
       <div class="admin_content">
-        <div class="ant-table-title">
+        <!-- <div class="ant-table-title">
           <el-row>
             <el-col :span="4"
               ><span class="title">{{ title }}</span></el-col
             >
             <el-col :span="20" class="flex_flex_end">
-              <!-- <el-divider direction="vertical"></el-divider>
+              <el-divider direction="vertical"></el-divider>
               <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button> -->
+              </el-button>
             </el-col>
           </el-row>
-        </div>
+        </div> -->
         <div
           class="flex_column"
           v-for="item in [0]"
