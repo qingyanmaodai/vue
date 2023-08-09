@@ -24,11 +24,11 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <a
-                style="color: #052a51;margin-right: 10px;"
+                style="color: #ec0d1f;margin-right: 30px;"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
                 target="_blank"
                 class="font_size_1"
-                >逻辑说明文档</a
+                >【逻辑说明文档】</a
               >
               <a
                 style="color: #0960bd"
