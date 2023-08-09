@@ -24,23 +24,23 @@
       </div>
       <div>
         <div class="admin_content">
-          <div class="ant-table-title" ref="headRef_2">
+          <!-- <div class="ant-table-title" ref="headRef_2">
             <el-row>
               <el-col :span="4"
                 ><span class="title">{{ title }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
-                <!-- <div
+                <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
-                </div> -->
+                </div>
               </el-col>
             </el-row>
-          </div>
+          </div> -->
           <ComVxeTable
             ref="tableRef"
             :rowKey="'RowNumber'"
