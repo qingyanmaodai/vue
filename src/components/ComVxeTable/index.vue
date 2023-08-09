@@ -76,23 +76,24 @@
           :title="x.label"
           :min-width="x.width"
           :fixed="x.fix"
-          :filters="x.filters ? null : null"
+          :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
           :filter-method="filterMethod"
           :filter-recover-method="filterRecoverMethod"
           :align="x.align"
         >
           <template #filter="{ $panel, column }">
-            <input
-              class="my-input"
-              type="type"
-              v-for="(option, index) in column.filters"
-              :key="index"
-              v-model.trim="option.data"
-              @input="$panel.changeOption($event, !!option.data, option)"
-              @keyup.enter="$panel.confirmFilter()"
-              placeholder="按回车确认筛选"
-              style="margin: 10px; height: 35px"
-            />
+            <template v-for="(option, index) in column.filters">
+              <input
+                class="my-input"
+                type="type"
+                :key="index"
+                v-model="option.data"
+                @input="$panel.changeOption($event, !!option.data, option)"
+                @keyup.enter="$panel.confirmFilter()"
+                placeholder="按回车确认筛选"
+                style="margin: 10px; height: 35px"
+              />
+            </template>
           </template>
           <template v-if="x.children">
             <vxe-column
@@ -108,17 +109,18 @@
               :filter-recover-method="filterRecoverMethod"
             >
               <template #filter="{ $panel, column }">
-                <input
-                  class="my-input"
-                  type="type"
-                  v-for="(option, index) in column.filters"
-                  :key="index"
-                  v-model="option.data"
-                  @input="$panel.changeOption($event, !!option.data, option)"
-                  @keyup.enter="$panel.confirmFilter()"
-                  placeholder="按回车确认筛选"
-                  style="margin: 10px; height: 35px"
-                />
+                <template v-for="(option, index) in column.filters">
+                  <input
+                    class="my-input"
+                    type="type"
+                    :key="index"
+                    v-model="option.data"
+                    @input="$panel.changeOption($event, !!option.data, option)"
+                    @keyup.enter="$panel.confirmFilter()"
+                    placeholder="按回车确认筛选"
+                    style="margin: 10px; height: 35px"
+                  />
+                </template>
               </template>
               <template slot-scope="scope">
                 <span v-if="i.active">
@@ -1393,6 +1395,8 @@ export default {
     // 双击行
     handleRowdbClick({ row, column }) {
       if (this.isEdit && !row.update) {
+        debugger;
+
         this.$set(row, "update", true);
       }
       this.$emit("handleRowdbClick", row, this.remark);
@@ -1686,7 +1690,7 @@ export default {
 }
 //表头底色
 ::v-deep .vxe-header--row {
-  background-color: #d5e1f5;
+  background-color: #f3f3f3;
 }
 //表头底部线
 ::v-deep .vxe-table--header-border-line {

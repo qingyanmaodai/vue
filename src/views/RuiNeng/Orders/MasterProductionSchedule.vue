@@ -1163,110 +1163,6 @@ export default {
       /////////////////表格事件/////////////
       //绑定表格事件前，需清除之前的绑定事件
       this.spread[remarkTb].unbindAll();
-      this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
-        const { sheet, row, col } = args;
-        const cellType = sheet.getCellType(row, col);
-        if (cellType instanceof GCsheets.CellTypes.Button) {
-        }
-        if (cellType instanceof GCsheets.CellTypes.CheckBox) {
-        }
-        if (cellType instanceof GCsheets.CellTypes.HyperLink) {
-        }
-      });
-
-      var insertRowsCopyStyle = {
-        canUndo: true,
-        name: "insertRowsCopyStyle",
-        execute: function (context, options, isUndo) {
-          var Commands = GC.Spread.Sheets.Commands;
-          if (isUndo) {
-            Commands.undoTransaction(context, options);
-            return true;
-          } else {
-            sheet.suspendPaint();
-            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-            //删除旧行
-            if (_this.sheetSelectObj.start > options.activeRow) {
-              //说明从下面插入上面
-              sheet.copyTo(
-                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                0,
-                options.activeRow,
-                0,
-                _this.sheetSelectRows.length,
-                sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.style
-              );
-              sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-              sheet.deleteRows(
-                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                _this.sheetSelectObj.count
-              );
-              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
-            } else {
-              //从上面往下面插入
-              sheet.copyTo(
-                _this.sheetSelectObj.start,
-                0,
-                options.activeRow,
-                0,
-                _this.sheetSelectRows.length,
-                sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.all
-              );
-              sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-              sheet.deleteRows(
-                _this.sheetSelectObj.start,
-                _this.sheetSelectObj.count
-              );
-            }
-            sheet.resumePaint();
-
-            return true;
-          }
-        },
-      };
-
-      this.spread[remarkTb]
-        .commandManager()
-        .register("insertRowsCopyStyle", insertRowsCopyStyle);
-
-      function MyContextMenu() {}
-      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-        this.spread[remarkTb]
-      );
-      MyContextMenu.prototype.onOpenMenu = function (
-        menuData,
-        itemsDataForShown,
-        hitInfo,
-        spread
-      ) {
-        itemsDataForShown.forEach(function (item, index) {
-          if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
-            item.command = "insertRowsCopyStyle";
-          }
-        });
-      };
-      var contextMenu = new MyContextMenu();
-      this.spread[remarkTb].contextMenu = contextMenu;
-      // 剪贴板事件绑定
-      sheet.bind(
-        GC.Spread.Sheets.Events.ClipboardChanged,
-        function (sender, args) {
-          let s = sheet.getSelections()[0];
-          _this.sheetSelectRows = sheet.getArray(
-            s.row,
-            0,
-            s.rowCount,
-            _this.tableColumns[remarkTb].length
-          );
-          _this.sheetSelectObj.start = s.row;
-
-          _this.sheetSelectObj.count = s.rowCount;
-        }
-      );
-
       //表格编辑事件
       this.spread[remarkTb].bind(
         GCsheets.Events.EditStarting,
@@ -1317,6 +1213,9 @@ export default {
       oldval = oldval ? oldval : 0; //旧数据如果不存在把null变成0
       let changeIndex = propList.findIndex((item) => currentProp === item);
       let changeVal = parseInt(val) - oldval;
+      if (!currentRow[propList[changeIndex + 1]]) {
+        currentRow[propList[changeIndex + 1]] = 0;
+      }
       currentRow[propList[changeIndex + 1]] =
         currentRow[propList[changeIndex + 1]] - changeVal <= 0
           ? 0

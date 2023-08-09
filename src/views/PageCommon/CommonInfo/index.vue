@@ -630,3 +630,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.vxe-toolbar {
+  padding: 0;
+}
+</style>
