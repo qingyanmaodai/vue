@@ -1690,7 +1690,7 @@ export default {
 }
 //表头底色
 ::v-deep .vxe-header--row {
-  background-color: #d5e1f5;
+  background-color: #f3f3f3;
 }
 //表头底部线
 ::v-deep .vxe-table--header-border-line {

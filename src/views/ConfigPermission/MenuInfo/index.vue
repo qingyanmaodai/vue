@@ -59,7 +59,7 @@
             </el-col>
           </el-row>
         </div>
-        <ComUmyTable
+        <ComVxeTable
           :rowKey="'RowNumber'"
           :height="height"
           :tableData="tableData[0]"
@@ -74,6 +74,11 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          :treeConfig="{
+            children: 'children',
+            iconOpen: 'vxe-icon-square-minus-fill',
+            iconClose: 'vxe-icon-square-plus-fill',
+          }"
         />
       </div>
     </div>
