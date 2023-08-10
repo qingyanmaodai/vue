@@ -417,7 +417,7 @@ export default {
         dicID: 1175,
       },
       formData2: {
-        PorcessName: "",
+        ProcessName: "",
         ProcessID: "",
         SchedulingType: "",
         IsScheduling: true,
