@@ -191,7 +191,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "SectionAssociation",
+  name: "ProcessConfiguration",
   components: {
     ComMoreSearch,
     ComVxeTable,
@@ -254,7 +254,7 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 14 }, { ID: 11162 }, { ID: 112 }, { ID: 90 }],
+      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }, { ID: 90 }],
       isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",

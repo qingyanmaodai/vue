@@ -213,7 +213,7 @@
                 @change="handleChange($event, y)"
               >
                 <el-option
-                  v-for="x in searchForm"
+                  v-for="x in searchMoreForm"
                   :label="x.label"
                   :value="x['prop']"
                   :key="x['prop']"
@@ -380,6 +380,12 @@ export default {
         return [];
       },
     },
+    searchMoreForm: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
     btnForm: {
       type: Array,
       default: function () {
@@ -451,17 +457,10 @@ export default {
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
-        console.log("searchForm", this.searchForm);
-        this.row = this.searchForm.length <= 6 ? 0 : 1;
-        this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
-        this.tag = this.searchForm.length % 7;
-        this.col = 24 - 3 * this.tag;
-        if (this.searchForm.length == 7 || this.circle >= 2) {
-          this.isSpread = true;
-          this.tagRemark = 0;
-        }
+        // console.log("searchForm", this.searchForm);
+        // console.log("searchMoreForm", this.searchMoreForm);
+
         // 检查并赋值给 searchData["QueryParams"]
-        // if (this.searchData["QueryParams"] && val.length > 0) {
         this.$set(this.searchData, "QueryParams", []);
         this.$set(this.searchData["QueryParams"], 0, {
           type: null,
@@ -478,25 +477,17 @@ export default {
           queryType: null,
           queryTypeValue: null,
         });
-        // }
       },
       // 深度观察监听
       immediate: true,
       deep: true,
     },
-    // searchData: {
-    //   handler: function (val, oldVal) {
-    //     //给searchData赋值，由于父组件没有传过来
-    //     // this.$nextTick(() => {
-    //     if (!this.searchData["QueryParams"]) {
-    //       this.$set(this.searchData, "QueryParams", this.searchForm);
-    //     }
-    //     // });
-    //   },
-    //   // 深度观察监听
-    //   immediate: true,
-    //   deep: true,
-    // },
+    searchData: {
+      handler: function (val, oldVal) {},
+      // 深度观察监听
+      immediate: true,
+      deep: true,
+    },
     isLoading: {
       handler: function (val, oldVal) {
         this.isLoading = val;
@@ -531,21 +522,21 @@ export default {
       this.$emit("btnClick", "dataExport", "", 0, remarkTb);
     },
     handleChange(value, y) {
-      let objIndex = this.searchForm.findIndex((item) => {
+      let objIndex = this.searchMoreForm.findIndex((item) => {
         return item["prop"] === value;
       });
       console.log(value, objIndex, "objIndex");
 
       if (objIndex !== -1) {
-        // this.form[y]["queryType"] = this.searchForm[objIndex]["queryType"];
-        // this.searchForm[objIndex][] = this.form[y]["value"];
+        // this.form[y]["queryType"] = this.searchMoreForm[objIndex]["queryType"];
+        // this.searchMoreForm[objIndex][] = this.form[y]["value"];
         // this.$set(this.searchData);
         this.$set(
           this.searchData["QueryParams"],
           y,
-          JSON.parse(JSON.stringify(this.searchForm[objIndex]))
+          JSON.parse(JSON.stringify(this.searchMoreForm[objIndex]))
         );
-        this.searchForm[objIndex]["queryTypeValue"] = "0";
+        this.searchMoreForm[objIndex]["queryTypeValue"] = "0";
         console.log(
           this.searchData["QueryParams"],
           'this.searchData["QueryParams"]'

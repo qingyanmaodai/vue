@@ -747,9 +747,9 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        if (remarkTb === 0) {
-          this.setData(remarkTb);
-        }
+        // if (remarkTb === 0) {
+        //   this.setData(remarkTb);
+        // }
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({

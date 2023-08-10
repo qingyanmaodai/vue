@@ -6,6 +6,7 @@
         ref="searchRef"
         :searchData="formSearchs[0].datas"
         :searchForm="formSearchs[0].forms"
+        :searchMoreForm="formSearchs[0].formsAll"
         :remark="0"
         :isLoading="isLoading"
         :btnForm="btnForm"
@@ -144,6 +145,7 @@ export default {
           datas: {},
           forms: [],
           required: [], //获取必填项
+          formsAll: [],
         },
       ],
       btnForm: [],
@@ -393,10 +395,26 @@ export default {
     },
     // 重置
     dataReset(remarkTb) {
-      console.log(this.formSearchs[remarkTb].datas,'this.formSearchs[remarkTb].datas');
+      console.log(
+        this.formSearchs[remarkTb].datas,
+        "this.formSearchs[remarkTb].datas"
+      );
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID" || name != "QueryParams") {
           this.formSearchs[remarkTb].datas[name] = null;
+        }
+      }
+    },
+    // 重置
+    dataReset(remarkTb) {
+      for (let name in this.formSearchs[remarkTb].datas) {
+        if (this.formSearchs[remarkTb].forms.length) {
+          // 判断是否是页面显示的查询条件，是的字段才清空
+          this.formSearchs[remarkTb].forms.forEach((element) => {
+            if (element["prop"] === name) {
+              this.formSearchs[remarkTb].datas[name] = null;
+            }
+          });
         }
       }
     },
@@ -496,7 +514,7 @@ export default {
     async getTableHeader() {
       let IDs = [{ ID: this.ID }];
       let res = await GetHeader(IDs);
-      const { datas, forms, result, msg } = res.data;
+      const { datas, forms, result, msg, formsAll } = res.data;
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
@@ -541,6 +559,7 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], "formsAll", formsAll[z]);
         });
         this.adminLoading = false;
         if (this.newTag != -1) {
