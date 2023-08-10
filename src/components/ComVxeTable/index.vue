@@ -898,8 +898,8 @@
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
             :page-sizes="[
-              10, 20, 32, 50, 100, 150, 200, 250, 300, 350, 500, 400, 800, 1000,
-              1500, 2000, 3000, 4000, 5000,
+              0, 10, 20, 32, 50, 100, 150, 200, 250, 300, 350, 500, 400, 800,
+              1000, 1500, 2000, 3000, 4000, 5000,
             ]"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"

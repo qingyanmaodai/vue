@@ -17,7 +17,6 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="labelStatus1"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -148,18 +147,6 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable
-      title="添加机台"
-      :tableDialog="colDialogVisible3"
-      :sysID="sysID[3]['ID']"
-      width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible3 = false"
-      :searchForm="formSearchs[3]"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"
-    ></DialogTable>
     <!-- <DialogTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
@@ -205,23 +192,8 @@ export default {
       ////////////////// Search /////////////////
       selectionData: [[], []],
       title: this.$route.meta.title,
-      includeFields: [[], [], []],
+      includeFields: [[], []],
       formSearchs: [
-        {
-          datas: {},
-          forms: [],
-          formsAll: [],
-        },
-        {
-          datas: {},
-          forms: [],
-          formsAll: [],
-        },
-        {
-          datas: {},
-          forms: [],
-          formsAll: [],
-        },
         {
           datas: {},
           forms: [],
@@ -234,15 +206,13 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
+      tableData: [[], []],
+      tableColumns: [[], []],
+      tableLoading: [false, false],
+      isClear: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       height: "707px",
       tagRemark: 0,
@@ -254,7 +224,7 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 14 }, { ID: 11162 }, { ID: 112 }, { ID: 90 }],
+      sysID: [{ ID: 14 }, { ID: 11162 }],
       isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",
@@ -416,30 +386,36 @@ export default {
       // }
       if (remarkTb === 1) {
         let newData1 = this.linkTableData.filter(
-          (x) => !this.selectionData[1].some((y) => y.ProcessID === x.ProcessID)
+          (x) => !this.selectionData[1].some((y) => y.ProcessChildID === x.ProcessChildID)
         );
+        console.log(this.linkTableData, this.selectionData[1]);
         newData1.forEach((newDataItem) => {
           const matchingRow = this.tableData[1].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+            (tableDataRow) =>
+              tableDataRow.ProcessChildID === newDataItem.ProcessChildID
           );
           if (matchingRow) {
             matchingRow.ProcessName = null;
             matchingRow.ProcessID = null;
           }
         });
-
+        console.log(newData1, "newData1");
         let newData2 = this.selectionData[1].filter(
-          (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
+          (c) => !this.linkTableData.some((z) => c.ProcessChildID == z.ProcessChildID)
         );
         newData2.forEach((newDataItem) => {
           const matchingRow = this.tableData[1].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+            (tableDataRow) =>
+              tableDataRow.ProcessChildID === newDataItem.ProcessChildID
           );
           if (matchingRow) {
             matchingRow.ProcessName = this.clickRow["ProcessName"];
             matchingRow.ProcessID = this.clickRow["ProcessID"];
           }
         });
+        console.log(newData2, "newData2");
+
+        // newData = [].concat(newData1, newData2);
       }
       // 获取修改记录
       let changeRecords = [];
@@ -544,7 +520,8 @@ export default {
         if (remarkTb === 1) {
           data.forEach((item) => {
             if (item["ProcessID"] === this.clickRow["ProcessID"]) {
-              item["isChecked"] = true;
+              // item["isChecked"] = true;
+              this.$set(item, "isChecked", true);
             }
           });
           this.linkTableData = data.filter((item) => {
@@ -580,7 +557,7 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
-      await this.dataSearch(this.selectedIndex);
+      await this.dataSearch(Number(this.selectedIndex));
     },
     handleClick(tab, event) {
       console.log(tab, event);
