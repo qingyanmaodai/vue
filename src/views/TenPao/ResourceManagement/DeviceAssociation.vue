@@ -45,6 +45,7 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
+              :hasSelect="hasSelect[0]"
               :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
@@ -65,8 +66,11 @@
             <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
           </div> -->
-          <div class="ant-table-title pd-6-6-0 flex_row_spaceBtn" ref="headRef_2">
-            <div >
+          <div
+            class="ant-table-title pd-6-6-0 flex_row_spaceBtn"
+            ref="headRef_2"
+          >
+            <div>
               <el-tabs
                 v-model="selectedIndex"
                 @tab-click="handleClick"
@@ -85,6 +89,14 @@
                 v-show="selectedIndex === '1'"
               >
                 添加机台
+              </el-button>
+              <el-divider direction="vertical"></el-divider>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="dataDel(Number(selectedIndex))"
+              >
+                移除
               </el-button>
               <el-button
                 type="primary"
@@ -112,7 +124,7 @@
               :isToolbar="false"
               :remark="item"
               :sysID="sysID[item]['ID']"
-              :hasSelect="true"
+              :hasSelect="hasSelect[item]"
               :isEdit="isEdit[item]"
               :isClear="isClear[item]"
               :keepSource="true"
@@ -133,7 +145,7 @@
       :tableDialog="colDialogVisible3"
       :sysID="sysID[3]['ID']"
       width="80%"
-      :hasSelect="true"
+      :hasSelect="hasSelect[3]"
       @closeDialog="colDialogVisible3 = false"
       :searchForm="formSearchs[3]"
       :isToolbar="false"
@@ -145,7 +157,7 @@
       :tableDialog="colDialogVisible4"
       :sysID="sysID[4]['ID']"
       width="80%"
-      :hasSelect="true"
+      :hasSelect="hasSelect[4]"
       @closeDialog="colDialogVisible4 = false"
       :searchForm="formSearchs[4]"
       :isToolbar="false"
@@ -186,6 +198,7 @@ export default {
       selectionData: [[], []],
       title: this.$route.meta.title,
       includeFields: [[], [], []],
+      hasSelect: [false, false, false, false, false],
       formSearchs: [
         {
           datas: {},
@@ -216,6 +229,7 @@ export default {
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
@@ -440,13 +454,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -512,6 +531,26 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, newData, index, null);
+        })
+        .catch((_) => {});
+    },
     // 刷新页面
     refrshPage() {
       this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
@@ -546,7 +585,7 @@ export default {
       }
       if (index === 1) {
         this.colDialogVisible3 = true;
-        this.formSearchs[3]["MachineTypeID"] = "M20230614001";
+        // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
         this.colDialogVisible4 = true;

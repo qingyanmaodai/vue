@@ -9,14 +9,18 @@
       :cell-class-name="tableCellClassName"
       :row-class-name="tableRowClassName"
       widthResize
-      :checkbox-config="{ checkMethod: selectInit, highlight: true,showHeader:isMultiple }"
+      :checkbox-config="{
+        checkMethod: selectInit,
+        highlight: true,
+        showHeader: isMultiple,
+      }"
       :tree-config="{
         children: 'children',
         iconOpen: 'el-icon-arrow-down',
         iconClose: 'el-icon-arrow-right',
-        expandAll:expandAll
+        expandAll: expandAll,
       }"
-      :edit-config="{trigger: 'click', mode: 'row'}"
+      :edit-config="{ trigger: 'click', mode: 'row' }"
       @table-body-scroll="scroll"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
@@ -31,21 +35,21 @@
         type="checkbox"
         width="45"
         fixed="left"
-        :key="Math.random()+'-1F'+Math.random()"
+        :key="Math.random() + '-1F' + Math.random()"
         v-if="hasSelect"
       ></ux-table-column>
       <ux-table-column
         type="index"
         min-width="60"
         v-if="IsIndex"
-        :key="Math.random()+'-2A'+Math.random()"
+        :key="Math.random() + '-2A' + Math.random()"
         title="序号"
       ></ux-table-column>
       <ux-table-column
-        v-for="(x, z) in tableHeader"
-        :key="Math.random()+z+Math.random()"
+        v-for="(x, z) in tableHeaderChange"
+        :key="Math.random() + z + Math.random()"
         :resizable="true"
-        :tree-node="z==0?true:x.treeNode?x.treeNode:false"
+        :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
         :sortable="x.sortable == 'custom' ? true : false"
         :field="x.prop"
         :title="x.label"
@@ -56,7 +60,7 @@
           <ux-table-column
             :field="i.prop"
             :title="i.label"
-            :tree-node="z==0?true:x.treeNode?x.treeNode:false"
+            :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
             v-for="(i, k) in x.children"
             :align="i.align"
             :show-overflow-tooltip="i.tooltip"
@@ -67,10 +71,7 @@
           >
             <template slot-scope="scope">
               <span v-if="i.active">
-                <span
-                  v-for="(x2, index2) in i.active"
-                  :key="index2"
-                >
+                <span v-for="(x2, index2) in i.active" :key="index2">
                   <span
                     v-show="x2.condition ? x2.condition(scope.row) : true"
                     size="mini"
@@ -88,7 +89,8 @@
                         scope.$rowIndex
                       )
                     "
-                  >{{ x2.name }}</span>
+                    >{{ x2.name }}</span
+                  >
                 </span>
               </span>
               <span v-else-if="i.button">
@@ -128,10 +130,7 @@
                   }"
                   @click="handleActive(scope.row, i.routerName)"
                 >
-                  <span
-                    v-if="!i.format"
-                    v-html="scope.row[i.prop]"
-                  ></span>
+                  <span v-if="!i.format" v-html="scope.row[i.prop]"></span>
                   <span v-else>{{
                     i.format(scope.row[i.prop], scope.row)
                   }}</span>
@@ -139,9 +138,11 @@
               </span>
               <span v-else-if="i.component">
                 <span v-if="scope.row['update']">
-                  <span v-if="
+                  <span
+                    v-if="
                       i.component.type == 'input' && i.component.inputChange
-                    ">
+                    "
+                  >
                     <el-input
                       v-model="scope.row[i.prop]"
                       :type="i.component.inputType || 'text'"
@@ -175,10 +176,12 @@
                       size="mini"
                     ></el-input>
                   </span>
-                  <span v-else-if="
+                  <span
+                    v-else-if="
                       i.component.type == 'input' &&
                       i.component.inputType != 'number'
-                    ">
+                    "
+                  >
                     <el-input
                       v-model="scope.row[i.prop]"
                       :type="i.component.inputType || 'text'"
@@ -186,9 +189,11 @@
                       :rows="1"
                     ></el-input>
                   </span>
-                  <span v-else-if="
+                  <span
+                    v-else-if="
                       i.component.type == 'select' && i.component.selectChange
-                    ">
+                    "
+                  >
                     <el-select
                       filterable
                       clearable
@@ -278,13 +283,13 @@
                   <span v-else-if="i.component.type == 'time'">
                     <el-time-select
                       size="mini"
-                      style="width:100%"
+                      style="width: 100%"
                       v-model="scope.row[i.prop]"
                       :picker-options="{
-    start: '00:00',
-    step: '00:15',
-    end: '24:00'
-  }"
+                        start: '00:00',
+                        step: '00:15',
+                        end: '24:00',
+                      }"
                       :placeholder="i.placeholder"
                     >
                     </el-time-select>
@@ -320,21 +325,18 @@
                     >
                       <template slot-scope="{ item }">
                         <div style="border-bottom: 1px dashed #8c8e8e">
-                          <el-form
-                            label-width="100px"
-                            inline
-                          >
+                          <el-form label-width="100px" inline>
                             <el-form-item
                               style="margin-bottom: 5px"
                               :label="i.component.label"
-                            ><span style="color: orange">{{
+                              ><span style="color: orange">{{
                                 item[i.component.prop]
                               }}</span>
                             </el-form-item>
                             <el-form-item
                               style="margin-bottom: 5px"
                               :label="i.component.label2"
-                            ><span style="color: orange">{{
+                              ><span style="color: orange">{{
                                 item[i.component.prop2]
                               }}</span>
                             </el-form-item>
@@ -348,7 +350,8 @@
                       class="table_tag"
                       @click.stop.native="i.component.handleClick(scope.row)"
                     >
-                      {{ scope.row[i.prop] }}</el-tag>
+                      {{ scope.row[i.prop] }}</el-tag
+                    >
                   </span>
                 </span>
                 <span
@@ -378,7 +381,7 @@
                 icon="el-icon-edit"
                 circle
                 size="mini"
-                @click="editRow(scope.row,scope.$rowIndex)"
+                @click="editRow(scope.row, scope.$rowIndex)"
               ></el-button>
               <el-button
                 v-show="condition ? condition(scope.row) : true"
@@ -386,17 +389,14 @@
                 icon="el-icon-delete"
                 circle
                 size="mini"
-                @click="delRow(scope.row,scope.$rowIndex)"
+                @click="delRow(scope.row, scope.$rowIndex)"
               ></el-button>
             </template>
           </ux-table-column>
         </template>
         <template slot-scope="scope">
           <span v-if="x.active">
-            <span
-              v-for="(x2, index2) in x.active"
-              :key="index2"
-            >
+            <span v-for="(x2, index2) in x.active" :key="index2">
               <span
                 v-show="x2.condition ? x2.condition(scope.row) : true"
                 size="mini"
@@ -414,7 +414,8 @@
                     scope.$rowIndex
                   )
                 "
-              >{{ x2.name }}</span>
+                >{{ x2.name }}</span
+              >
             </span>
           </span>
           <span v-else-if="x.button">
@@ -452,16 +453,15 @@
               }"
               @click="handleActive(scope.row, x.routerName)"
             >
-              <span
-                v-if="!x.format"
-                v-html="scope.row[x.prop]"
-              ></span>
+              <span v-if="!x.format" v-html="scope.row[x.prop]"></span>
               <span v-else>{{ x.format(scope.row[x.prop], scope.row) }}</span>
             </a>
           </span>
           <span v-else-if="x.component">
             <span v-if="scope.row['update']">
-              <span v-if="x.component.type == 'input' && x.component.inputChange">
+              <span
+                v-if="x.component.type == 'input' && x.component.inputChange"
+              >
                 <el-input
                   v-model="scope.row[x.prop]"
                   :type="x.component.inputType || 'text'"
@@ -494,10 +494,12 @@
                   size="mini"
                 ></el-input>
               </span>
-              <span v-else-if="
+              <span
+                v-else-if="
                   x.component.type == 'input' &&
                   x.component.inputType != 'number'
-                ">
+                "
+              >
                 <el-input
                   v-model="scope.row[x.prop]"
                   :type="x.component.inputType || 'text'"
@@ -594,13 +596,13 @@
               <span v-else-if="x.component.type == 'time'">
                 <el-time-select
                   size="mini"
-                  style="width:100%"
+                  style="width: 100%"
                   v-model="scope.row[x.prop]"
                   :picker-options="{
-    start: '00:00',
-    step: '00:15',
-    end: '24:00'
-  }"
+                    start: '00:00',
+                    step: '00:15',
+                    end: '24:00',
+                  }"
                   :placeholder="x.placeholder"
                 >
                 </el-time-select>
@@ -630,21 +632,18 @@
                 >
                   <template slot-scope="{ item }">
                     <div style="border-bottom: 1px dashed #8c8e8e">
-                      <el-form
-                        label-width="100px"
-                        inline
-                      >
+                      <el-form label-width="100px" inline>
                         <el-form-item
                           style="margin-bottom: 5px"
                           :label="x.component.label"
-                        ><span style="color: orange">{{
+                          ><span style="color: orange">{{
                             item[x.component.prop]
                           }}</span>
                         </el-form-item>
                         <el-form-item
                           style="margin-bottom: 5px"
                           :label="x.component.label2"
-                        ><span style="color: orange">{{
+                          ><span style="color: orange">{{
                             item[x.component.prop2]
                           }}</span>
                         </el-form-item>
@@ -658,42 +657,30 @@
                   class="table_tag"
                   @click.stop.native="x.component.handleClick(scope.row)"
                 >
-                  {{ scope.row[x.prop] }}</el-tag>
+                  {{ scope.row[x.prop] }}</el-tag
+                >
               </span>
             </span>
-            <span v-else-if="x.component.type=='checkbox'">
+            <span v-else-if="x.component.type == 'checkbox'">
               <el-tag
                 v-if="scope.row[x.prop] == true"
                 size="mini"
                 effect="light"
-              >是
+                >是
               </el-tag>
-              <el-tag
-                v-else
-                type="info"
-                size="mini"
-                effect="light"
-              >否
-              </el-tag>
+              <el-tag v-else type="info" size="mini" effect="light">否 </el-tag>
             </span>
             <span v-else-if="x.prop == 'Status'">
-              <el-tag
-                v-if="scope.row.Status == 1"
-                size="mini"
-                effect="light"
-              >启用
+              <el-tag v-if="scope.row.Status == 1" size="mini" effect="light"
+                >启用
               </el-tag>
-              <el-tag
-                v-else
-                type="danger"
-                size="mini"
-                effect="light"
-              >禁用
+              <el-tag v-else type="danger" size="mini" effect="light"
+                >禁用
               </el-tag>
             </span>
             <span
               v-else
-              v-html="scope.row[x.propName ?x.propName:x.prop]"
+              v-html="scope.row[x.propName ? x.propName : x.prop]"
             ></span>
           </span>
           <span v-else-if="x.format">{{
@@ -701,7 +688,7 @@
           }}</span>
           <span
             v-else
-            v-html="scope.row[x.propName ?x.propName:x.prop]"
+            v-html="scope.row[x.propName ? x.propName : x.prop]"
           ></span>
         </template>
       </ux-table-column>
@@ -718,7 +705,7 @@
             icon="el-icon-edit"
             circle
             size="mini"
-            @click="editRow(scope.row,scope.$rowIndex)"
+            @click="editRow(scope.row, scope.$rowIndex)"
           ></el-button>
           <el-button
             v-show="condition ? condition(scope.row) : true"
@@ -726,51 +713,34 @@
             icon="el-icon-delete"
             circle
             size="mini"
-            @click="delRow(scope.row,scope.$rowIndex)"
+            @click="delRow(scope.row, scope.$rowIndex)"
           ></el-button>
         </template>
       </ux-table-column>
     </ux-grid>
     <div>
-      <div
-        v-if="showPagination"
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
-          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
+          <span style="color: red; font-weight: bold; margin-left: 10px">{{
+            Prompt
+          }}</span>
         </div>
         <div class="flex">
-          <div
-            class="footer_label"
-            v-show="multipleSelection.length != 0"
-          >
+          <div class="footer_label" v-show="multipleSelection.length != 0">
             已选[<span style="color: red; font-weight: bold">{{
               multipleSelection.length
-            }}</span>]
+            }}</span
+            >]
           </div>
           <el-pagination
             background
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
             :page-sizes="[
-              32,
-              50,
-              100,
-              150,
-              200,
-              250,
-              300,
-              350,
-              400,
-              800,
-              1000,
-              1500,
-              2000,
+              32, 50, 100, 150, 200, 250, 300, 350, 400, 800, 1000, 1500, 2000,
             ]"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"
@@ -780,17 +750,14 @@
           </el-pagination>
         </div>
       </div>
-      <div
-        v-else
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-else class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
-          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
+          <span style="color: red; font-weight: bold; margin-left: 10px">{{
+            Prompt
+          }}</span>
         </div>
         <div>
           <span>共{{ pagination.pageTotal }}条数据</span>
@@ -957,14 +924,14 @@ export default {
       default: false,
     },
     // 懒加载
-    keepSource:{
+    keepSource: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
-      Prompt:'',
+      Prompt: "",
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
@@ -1295,24 +1262,25 @@ export default {
         return false;
       }
     },
-    async getFooterRemark(){
-      let form = {}
-      form['dicID'] = 33
-      form['page'] = 1
-      form['rows'] = 0
-      form['DictionaryID'] = this.sysID
-      let res = await GetSearchData(form)
+    async getFooterRemark() {
+      let form = {};
+      form["dicID"] = 33;
+      form["page"] = 1;
+      form["rows"] = 0;
+      form["DictionaryID"] = this.sysID;
+      let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.Prompt = data&&data[0].Remark1
+        this.Prompt = data && data[0].Remark1;
       }
-    }
+    },
   },
   mounted() {
     this.$refs.plxTable.doLayout(); //解决表格错位
   },
   watch: {
     tableHeader() {
+      // this.tableHeader = this.tableHeader.filter((item) => item["width"] != 0);
       if ((this.isSpanMethods || this.fixSpanMethods) && this.tableHeader) {
         this.header();
       }
@@ -1346,9 +1314,26 @@ export default {
       deep: true,
     },
   },
-  computed: {},
+  computed: {
+    tableHeaderChange() {
+      //如果hasSelect值存在的话
+      if (this.hasSelect) {
+        //删除带有选择的一列
+        let isChecked = this.tableHeader.findIndex(
+          (item) => item.prop == "isChecked"
+        );
+        if (isChecked !== -1) {
+          this.tableHeader.splice(isChecked, 1);
+        }
+      }
+      this.tableHeader = this.tableHeader.filter((item) => {
+        return item["width"] != 0;
+      });
+      return this.tableHeader;
+    },
+  },
   created() {
-    this.getFooterRemark()
+    this.getFooterRemark();
   },
 };
 </script>

@@ -108,22 +108,22 @@
               v-if="defaultShow"
               >查询</el-button
             >
-              <el-button
+            <el-button
               type="primary"
               size="small"
               @click="OpenMoreSearch()"
-              v-if="defaultShow"
+              v-if="defaultMoreShow"
               >高级查询</el-button
             >
             <el-button
               type="info"
               size="small"
               @click="btnClick('dataReset')"
-              v-if="defaultShow"
+              v-if="defaultResetShow"
               >重置</el-button
             >
             <el-button
-              v-if="defaultShow && exportList.length == 0"
+              v-if="defaultExportShow && exportList.length == 0"
               type="warning"
               size="small"
               @click="btnClick('dataExport')"
@@ -135,7 +135,7 @@
               split-button
               type="primary"
               @command="handleCommand"
-              v-else-if="defaultShow && exportList.length > 0"
+              v-else-if="defaultExportShow && exportList.length > 0"
             >
               导出
               <el-dropdown-menu slot="dropdown">
@@ -288,18 +288,18 @@
               type="primary"
               size="small"
               @click="OpenMoreSearch()"
-              v-if="defaultShow"
+              v-if="defaultMoreShow"
               >高级查询</el-button
             >
             <el-button
               type="info"
               size="small"
               @click="btnClick('dataReset')"
-              v-if="defaultShow"
+              v-if="defaultResetShow"
               >重置</el-button
             >
             <el-button
-              v-if="defaultShow && exportList.length == 0"
+              v-if="defaultExportShow && exportList.length == 0"
               type="warning"
               size="small"
               @click="btnClick('dataExport')"
@@ -311,7 +311,7 @@
               split-button
               type="primary"
               @command="handleCommand"
-              v-else-if="defaultShow && exportList.length > 0"
+              v-else-if="defaultExportShow && exportList.length > 0"
             >
               导出
               <el-dropdown-menu slot="dropdown">
@@ -638,7 +638,23 @@ export default {
       type: Number,
       required: false,
     },
+    //默认显示查询按钮
     defaultShow: {
+      type: Boolean,
+      default: true,
+    },
+    //默认关闭高级查询按钮
+    defaultMoreShow: {
+      type: Boolean,
+      default: false,
+    },
+    //默认显示重置按钮
+    defaultResetShow: {
+      type: Boolean,
+      default: true,
+    },
+    //默认显示导出按钮
+    defaultExportShow: {
       type: Boolean,
       default: true,
     },
