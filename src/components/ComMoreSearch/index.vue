@@ -106,13 +106,6 @@
           >查询</el-button
         >
         <el-button
-          type="primary"
-          size="small"
-          @click="OpenMoreSearch()"
-          v-if="defaultShow"
-          >高级查询</el-button
-        >
-        <el-button
           type="info"
           size="small"
           @click="btnClick('dataReset')"
@@ -181,168 +174,6 @@
             </el-button> -->
       </div>
     </el-form>
-    <el-dialog
-      :title="'高级查询'"
-      :visible.sync="colDialogVisible2"
-      width="50%"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-      ><div class="diaBody">
-        <div>
-          <el-form
-            ref="searchData"
-            :model="searchData"
-            class="Seach"
-            size="small"
-            inline
-            label-width=""
-            label-position="left"
-            @submit.native.prevent
-          >
-            <div
-              v-for="(x, y) in searchData['QueryParams']"
-              :key="y"
-              class="flex_row_center"
-            >
-              <el-select
-                class="innerDiv"
-                v-model="x['prop']"
-                filterable
-                size="small"
-                clearable
-                @change="handleChange($event, y)"
-              >
-                <el-option
-                  v-for="x in searchMoreForm"
-                  :label="x.label"
-                  :value="x['prop']"
-                  :key="x['prop']"
-                ></el-option>
-              </el-select>
-              <el-select
-                class="innerDiv"
-                v-model="x['queryTypeValue']"
-                filterable
-                size="small"
-                clearable
-              >
-                <el-option
-                  v-for="x1 in x['queryType']"
-                  :label="x1.label"
-                  :value="x1['value']"
-                  :key="x1['value']"
-                ></el-option>
-              </el-select>
-              <el-form-item :name="x.prop" class="dialogContent">
-                <el-input
-                  class="full-width"
-                  v-if="x.type === null"
-                  v-model="x[x.prop]"
-                  size="small"
-                  type="number"
-                  @keyup.enter.native="btnClick('dataSearch')"
-                ></el-input>
-                <!-- 输入框 -->
-                <el-input
-                  class="full-width"
-                  v-if="x.type === 'Input'"
-                  v-model="x[x.prop]"
-                  size="small"
-                  type="text"
-                  @keyup.enter.native="btnClick('dataSearch')"
-                ></el-input>
-                <!-- 下拉框 -->
-                <el-select
-                  class="full-width"
-                  v-if="x.type === 'Select'"
-                  filterable
-                  :multiple="x.multiple"
-                  v-model="x[x.prop]"
-                  size="small"
-                  clearable
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="op in x.options"
-                    :label="op.label"
-                    :value="op.value"
-                    :key="op.value"
-                  ></el-option>
-                </el-select>
-                <!-- 日期 -->
-                <el-date-picker
-                  class="full-width"
-                  style="width: 100%"
-                  v-if="x.type === 'Daterange'"
-                  v-model="x[x.prop]"
-                  format="MM-dd"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                >
-                </el-date-picker>
-                <el-date-picker
-                  class="full-width"
-                  v-if="x.type === 'Date'"
-                  v-model="x[x.prop]"
-                ></el-date-picker>
-                <!-- 日期时间 -->
-                <el-date-picker
-                  class="full-width"
-                  v-if="x.type === 'DateTime'"
-                  type="datetime"
-                  v-model="x[x.prop]"
-                  :disabled="x.disable && x.disable(x[x.prop])"
-                ></el-date-picker>
-                <el-date-picker
-                  class="full-width"
-                  v-if="x.type === 'month'"
-                  v-model="x[x.prop]"
-                  value-format="yyyy-MM"
-                  type="month"
-                >
-                </el-date-picker>
-                <!-- 月份范围 -->
-                <el-date-picker
-                  class="full-width"
-                  v-if="x.type === 'monthrange'"
-                  v-model="x[x.prop]"
-                  type="monthrange"
-                  range-separator="至"
-                  start-placeholder="开始月份"
-                  end-placeholder="结束月份"
-                >
-                </el-date-picker>
-                <!-- 年份 -->
-                <el-date-picker
-                  class="full-width"
-                  v-if="x.type === 'year'"
-                  v-model="x[x.prop]"
-                  type="year"
-                  placeholder="选择年"
-                >
-                </el-date-picker>
-              </el-form-item>
-              <i class="el-icon-plus innerDiv" @click="addSearch"></i>
-              <i
-                class="el-icon-delete innerDiv"
-                v-show="searchData['QueryParams'].length > 1"
-                :disabled="searchData['QueryParams'].length === 1"
-                @click="removeSearch(y)"
-              ></i>
-            </div>
-          </el-form>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="btnClick('dataSearch')"
-          >查询</el-button
-        >
-        <el-button type="info" @click="resetEvent()">重置</el-button>
-        <el-button @click="colDialogVisible2 = false">取消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -380,12 +211,6 @@ export default {
         return [];
       },
     },
-    searchMoreForm: {
-      type: Array,
-      default: function () {
-        return [];
-      },
-    },
     btnForm: {
       type: Array,
       default: function () {
@@ -416,8 +241,6 @@ export default {
       text: "展开",
       row: 0,
       colDialogVisible2: false,
-      selectValue1: null,
-      selectValue2: null,
       form: [
         {
           type: null,
@@ -521,60 +344,7 @@ export default {
       let remarkTb = this.exportList[index].value;
       this.$emit("btnClick", "dataExport", "", 0, remarkTb);
     },
-    handleChange(value, y) {
-      let objIndex = this.searchMoreForm.findIndex((item) => {
-        return item["prop"] === value;
-      });
-      console.log(value, objIndex, "objIndex");
-
-      if (objIndex !== -1) {
-        // this.form[y]["queryType"] = this.searchMoreForm[objIndex]["queryType"];
-        // this.searchMoreForm[objIndex][] = this.form[y]["value"];
-        // this.$set(this.searchData);
-        this.$set(
-          this.searchData["QueryParams"],
-          y,
-          JSON.parse(JSON.stringify(this.searchMoreForm[objIndex]))
-        );
-        this.searchMoreForm[objIndex]["queryTypeValue"] = "0";
-        console.log(
-          this.searchData["QueryParams"],
-          'this.searchData["QueryParams"]'
-        );
-        // if (this.searchData.hasOwnProperty(value)) {
-        //   this.searchData["QueryParams"][y][value] = this.searchData[value];
-        // }
-      }
-    },
-    addSearch() {
-      this.searchData["QueryParams"].push(JSON.parse(JSON.stringify(this.obj)));
-    },
-    //单行条件移除
-    removeSearch(y) {
-      this.searchData["QueryParams"].splice(y, 1);
-    },
-    resetEvent() {
-      this.searchData["QueryParams"] = JSON.parse(
-        JSON.stringify([
-          {
-            type: null,
-            label: null,
-            width: null,
-            prop: null,
-            placeholder: null,
-            methods: null,
-            options: null,
-            dicID: null,
-            icon: null,
-            multiple: null,
-            value: null,
-          },
-        ])
-      );
-    },
-    OpenMoreSearch() {
-      this.colDialogVisible2 = true;
-    },
+    
   },
 };
 </script>

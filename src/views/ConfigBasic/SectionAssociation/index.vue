@@ -64,7 +64,7 @@
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
             <div
-              v-for="i in [1, 2]"
+              v-for="i in [1]"
               :key="i"
               v-show="Number(selectedIndex) === i"
             >
@@ -116,7 +116,7 @@
             </div>
           </div> -->
           <div
-            v-for="item in [1, 2]"
+            v-for="item in [1]"
             :key="item"
             v-show="Number(selectedIndex) === item"
             class="admin_content flex_grow"

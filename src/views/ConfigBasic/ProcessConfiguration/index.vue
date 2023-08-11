@@ -17,7 +17,6 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="labelStatus1"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -55,6 +54,7 @@
               @handleRowClick="handleRowClick"
               @pageSize="pageSize"
               @sortChange="sortChange"
+              @selectfun="selectFun"
               :keepSource="true"
               :footerContent="true"
             />
@@ -77,7 +77,6 @@
                 :remark="i"
                 :isLoading="isLoading"
                 :btnForm="btnForm"
-                :signName="labelStatus1"
                 @btnClick="btnClick"
               />
             </div>
@@ -117,7 +116,7 @@
             </div>
           </div> -->
           <div
-            v-for="item in [1, 2]"
+            v-for="item in [1]"
             :key="item"
             v-show="Number(selectedIndex) === item"
             class="admin_content flex_grow"
@@ -148,30 +147,40 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable
+    <dialogOptTable
       title="添加机台"
-      :tableDialog="colDialogVisible3"
-      :sysID="sysID[3]['ID']"
+      :tableDialog="colDialogVisible2"
+      :sysID="sysID[2]['ID']"
+      :isEdit="isEdit[2]"
+      :remark="2"
       width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible3 = false"
-      :searchForm="formSearchs[3]"
+      :hasSelect="hasSelect[2]"
+      @closeDialog="colDialogVisible2 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[2]"
+      :btnForm="btnForm"
       :isToolbar="false"
       :isConfirmBtn="true"
+      :table-data="tableData[2]"
+      :table-header="tableColumns[2]"
+      :table-loading="tableLoading[2]"
+      :table-pagination="tablePagination[2]"
       @confirmDialog="confirmDialog"
-    ></DialogTable>
-    <!-- <DialogTable
-      title="添加产品"
-      :tableDialog="colDialogVisible4"
-      :sysID="sysID[4]['ID']"
-      width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible4 = false"
-      :searchForm="formSearchs[4]"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"
-    ></DialogTable> -->
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></dialogOptTable>
+
+    <ComFormDialog
+      ref="processForm"
+      :title="'新增工序'"
+      :dialogShow="processDialog1"
+      :formData="formData1"
+      :formRules="formRules1"
+      :formController="formController1"
+      @dialogBtnClick="dialogBtnClick1"
+    />
   </div>
 </template>
 
@@ -182,7 +191,8 @@ import "splitpanes/dist/splitpanes.css";
 import ComMoreSearch from "@/components/ComMoreSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
-import DialogTable from "@/components/Dialog/dialogTable";
+import dialogOptTable from "@/components/Dialog/dialogOptTable ";
+import ComFormDialog from "@/components/ComFormDialog";
 import {
   GetHeader,
   GetSearchData,
@@ -198,14 +208,65 @@ export default {
     ComReportTable,
     Splitpanes,
     Pane,
-    DialogTable,
+    ComFormDialog,
+    dialogOptTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
-      selectionData: [[], []],
+      selectionData: [[], [], []],
+      processDialog1: false,
       title: this.$route.meta.title,
       includeFields: [[], [], []],
+      formData1: {
+        ProcessName: "",
+        ProcessID: "",
+        SchedulingType: "",
+        IsScheduling: true,
+        IsAcquisition: true,
+        Status: 1,
+        dicID: 1182,
+      },
+      formRules1: {
+        ProcessGroupName: [
+          { required: true, message: "工序名称为必填项", trigger: "blur" },
+        ],
+        SchedulingType: [
+          { required: true, message: "排产方式为必填项", trigger: "change" },
+        ],
+      },
+      formController1: [
+        { label: "工序名称", prop: "ProcessName", type: "input" },
+        {
+          label: "排产方式",
+          prop: "SchedulingType",
+          type: "select",
+          select: [
+            { label: "产线", value: "产线" },
+            { label: "机台", value: "机台" },
+            { label: "机模", value: "机模" },
+          ],
+        },
+        {
+          label: "是否排产",
+          prop: "IsScheduling",
+          type: "switch",
+        },
+        {
+          label: "是否采集",
+          prop: "IsAcquisition",
+          type: "switch",
+        },
+        {
+          label: "状态",
+          prop: "Status",
+          type: "radioGroupLabel",
+          radioGroups: [
+            { label: "启用", value: 1 },
+            { label: "禁用", value: 0 },
+          ],
+        },
+      ],
       formSearchs: [
         {
           datas: {},
@@ -258,11 +319,11 @@ export default {
       isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",
-      colDialogVisible3: false,
+      colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
       linkTableData: [],
-      hasSelect: [false, false],
+      hasSelect: [false, false, false],
     };
   },
   watch: {},
@@ -273,6 +334,7 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
+    console.log(this.btnForm, "this.btnForm");
     this.judgeBtn(this.btnForm);
   },
   mounted() {
@@ -350,6 +412,26 @@ export default {
         this[methods](remarkTb, index);
       }
     },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, newData, index, null);
+        })
+        .catch((_) => {});
+    },
     // 查询
     async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -385,24 +467,23 @@ export default {
       this.$store.dispatch("user/exportData", res.data);
     },
     //添加产品机台
-    confirmDialog(data) {
-      if (Number(this.selectedIndex) === 1) {
-        console.log(this.formSearchs[1]["MachineMouldID"], "1");
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[1]["datas"]["MachineMouldID"];
-          item["dicID"] = 110;
-        });
-        this.dataSave(1, data);
-      } else if (Number(this.selectedIndex) === 2) {
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[2]["datas"]["MachineMouldID"];
-          item["dicID"] = 112;
-        });
-        this.dataSave(2, data);
-      }
-      this.colDialogVisible3 = false;
+    async confirmDialog(data) {
+       this.selectionData[2].forEach((item) => {
+        item["ProcessGroupID"] = this.formSearchs[1]["datas"]["ProcessGroupID"];
+        item["dicID"] = 1186;
+      });
+
+      await this.dataSave(1, this.selectionData[2]);
+
+      // else if (Number(this.selectedIndex) === 2) {
+      //   data.map((item) => {
+      //     item["MachineMouldID"] =
+      //       this.formSearchs[2]["datas"]["MachineMouldID"];
+      //     item["dicID"] = 112;
+      //   });
+      //   this.dataSave(2, data);
+      // }
+      this.colDialogVisible2 = false;
       this.colDialogVisible4 = false;
     },
     // 保存
@@ -414,33 +495,33 @@ export default {
       // if (sheet && sheet.isEditing()) {
       //   sheet.endEdit();
       // }
-      if (remarkTb === 1) {
-        let newData1 = this.linkTableData.filter(
-          (x) => !this.selectionData[1].some((y) => y.ProcessID === x.ProcessID)
-        );
-        newData1.forEach((newDataItem) => {
-          const matchingRow = this.tableData[1].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-          );
-          if (matchingRow) {
-            matchingRow.ProcessName = null;
-            matchingRow.ProcessID = null;
-          }
-        });
+      // if (remarkTb === 1) {
+      //   let newData1 = this.linkTableData.filter(
+      //     (x) => !this.selectionData[1].some((y) => y.ProcessID === x.ProcessID)
+      //   );
+      //   newData1.forEach((newDataItem) => {
+      //     const matchingRow = this.tableData[1].find(
+      //       (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+      //     );
+      //     if (matchingRow) {
+      //       matchingRow.ProcessName = null;
+      //       matchingRow.ProcessID = null;
+      //     }
+      //   });
 
-        let newData2 = this.selectionData[1].filter(
-          (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
-        );
-        newData2.forEach((newDataItem) => {
-          const matchingRow = this.tableData[1].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-          );
-          if (matchingRow) {
-            matchingRow.ProcessName = this.clickRow["ProcessName"];
-            matchingRow.ProcessID = this.clickRow["ProcessID"];
-          }
-        });
-      }
+      //   let newData2 = this.selectionData[1].filter(
+      //     (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
+      //   );
+      //   newData2.forEach((newDataItem) => {
+      //     const matchingRow = this.tableData[1].find(
+      //       (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+      //     );
+      //     if (matchingRow) {
+      //       matchingRow.ProcessName = this.clickRow["ProcessName"];
+      //       matchingRow.ProcessID = this.clickRow["ProcessID"];
+      //     }
+      //   });
+      // }
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -580,6 +661,7 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
+      this.formSearchs[1].datas["ProcessGroupID"] = row["ProcessGroupID"];
       await this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
@@ -587,13 +669,21 @@ export default {
       this.selectedIndex = tab.name;
       this.dataSearch(this.selectedIndex);
     },
+    addRow(remarkTb) {
+      if (remarkTb === 1) {
+        this.colDialogVisible2 = true;
+        this.dataSearch(2);
+      } else if (remarkTb === 2) {
+        this.processDialog1 = true;
+      }
+    },
     AddEvent(index) {
       if (!this.clickRow) {
         this.$message.error("请点击需要绑定的数据！");
         return;
       }
       if (index === 1) {
-        this.colDialogVisible3 = true;
+        this.colDialogVisible2 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
@@ -616,6 +706,31 @@ export default {
             backgroundColor: "#9fff9f",
           };
         }
+      }
+    },
+    // 工序弹框确定添加
+    async dialogBtnClick1(val) {
+      if (val) {
+        let res = await SaveData([this.formData1]);
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+          this.dataSearch(2);
+        } else {
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.processDialog1 = false;
+      } else {
+        _this.$refs.processForm.$refs.formData.resetFields();
+        _this.processDialog1 = false;
       }
     },
     // 行内样式

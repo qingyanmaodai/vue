@@ -73,6 +73,7 @@
           :tree-node="x.treeNode ? x.treeNode : false"
           :sortable="x.sortable == 'custom' ? true : false"
           :field="x.prop"
+          :visible="x.visible"
           :title="x.label"
           :min-width="x.width"
           :fixed="x.fix"
