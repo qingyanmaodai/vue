@@ -2,7 +2,7 @@
 <template>
   <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComMoreSearch
+      <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
         :searchForm="formSearchs[0].forms"
@@ -115,7 +115,7 @@
 <script>
 var _this;
 // let rand = Math.random();
-import ComMoreSearch from "@/components/ComMoreSearch";
+import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
@@ -128,7 +128,7 @@ import {
 export default {
   name: "CommonInfo",
   components: {
-    ComMoreSearch,
+    ComSearch,
     ComVxeTable,
     ComFormDialog,
   },
