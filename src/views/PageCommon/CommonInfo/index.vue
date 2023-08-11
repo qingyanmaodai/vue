@@ -476,7 +476,7 @@ export default {
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      if (changeRecords.length > 0) {
+      if (changeRecords.length > 0 && !newData) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
           changeRecords.map((item1, index1) => {

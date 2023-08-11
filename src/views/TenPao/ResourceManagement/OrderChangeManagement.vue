@@ -1,9 +1,6 @@
 <!--设备与工装汇总-->
 <template>
-  <div
-    class="container flex_column content_height"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch
@@ -574,7 +571,6 @@ export default {
         });
         // 对应匹配并更新表格数据
         await this.dataSearch(remarkTb);
-        this.adminLoading = false;
       } else {
         this.$message({
           message: msg,
@@ -582,6 +578,7 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
+      this.adminLoading = false;
     },
   },
 };
