@@ -382,20 +382,20 @@ export default {
             this.formSearchs[1]["datas"]["MachineMouldID"];
           item["dicID"] = 110;
         });
-        this.dataSave(1, data);
+        this.dataSave(1, null, null, data);
       } else if (Number(this.selectedIndex) === 2) {
         data.map((item) => {
           item["MachineMouldID"] =
             this.formSearchs[2]["datas"]["MachineMouldID"];
           item["dicID"] = 112;
         });
-        this.dataSave(2, data);
+        this.dataSave(2, null, null, data);
       }
       this.colDialogVisible3 = false;
       this.colDialogVisible4 = false;
     },
     // 保存
-    async dataSave(remarkTb, newData, index, parms) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       // const sheet = this.spread[remarkTb]?.getActiveSheet();
 
@@ -547,7 +547,7 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          _this.dataSave(remarkTb, newData, index, null);
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },

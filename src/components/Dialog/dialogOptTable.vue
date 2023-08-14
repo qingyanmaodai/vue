@@ -13,7 +13,7 @@
         :searchForm="formSearchs['forms']"
         :remark="remark"
         :btnForm="btnForm"
-        :signname="remark"
+        :signName="remark"
         @btnClick="btnClick"
       />
     </div>

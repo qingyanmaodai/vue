@@ -1147,7 +1147,7 @@ export default {
         this.selectionData[3].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
-        this.dataSave(3, this.selectionData[3]);
+        this.dataSave(3, null, null, this.selectionData[3]);
       }
     },
     // 退回
@@ -1162,7 +1162,7 @@ export default {
             this.selectionData[4].forEach((a) => {
               a["ElementDeleteFlag"] = 1;
             });
-            this.dataSave(4, this.selectionData[4]);
+            this.dataSave(4, null, null, this.selectionData[4]);
           })
           .catch(() => {
             // 取消
@@ -1178,11 +1178,11 @@ export default {
         this.selectionData[remarkTb].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
-        this.dataSave(remarkTb, this.selectionData[remarkTb]);
+        this.dataSave(remarkTb, null, null, this.selectionData[remarkTb]);
       }
     },
     // 保存
-    async dataSave(remarkTb, newData, index, parms) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;

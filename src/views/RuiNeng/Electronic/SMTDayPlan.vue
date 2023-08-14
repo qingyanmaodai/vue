@@ -901,26 +901,7 @@ export default {
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
-
-      // // 选框
-      // let checkbox = {
-      //   name: "isChecked",
-      //   displayName: "isChecked",
-      //   cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-      //   size: 60
-      // };
-      // if (colInfos[0]["displayName"] === "选择") {
-      //   for (var name in checkbox) {
-      //     colInfos[0][name] = checkbox[name];
-      //   }
-      //   sheet.setCellType(
-      //     0,
-      //     0,
-      //     new HeaderCheckBoxCellType(),
-      //     GCsheets.SheetArea.colHeader
-      //   );
-      // }
-
+      
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
         "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";

@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">
-      <pane :size="60">
+      <pane :size="40">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
             <ComSearch
@@ -15,6 +15,7 @@
               :searchMoreForm="formSearchs[0].formsAll"
               :remark="0"
               :isLoading="isLoading"
+              :signName="0"
               :btnForm="btnForm"
               @btnClick="btnClick"
             />
@@ -36,7 +37,7 @@
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
-              ref="tableRef"
+              :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
               height="100%"
               :isToolbar="false"
@@ -61,20 +62,17 @@
           </div>
         </div>
       </pane>
-      <pane :size="40">
+      <pane :size="60">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
-            <div
-              v-for="i in [1, 2]"
-              :key="i"
-              v-show="Number(selectedIndex) === i"
-            >
+            <div v-for="i in [1]" :key="i" v-show="Number(selectedIndex) === i">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
                 :searchForm="formSearchs[i].forms"
                 :searchMoreForm="formSearchs[i].formsAll"
                 :remark="i"
+                :signName="i"
                 :isLoading="isLoading"
                 :btnForm="btnForm"
                 @btnClick="btnClick"
@@ -271,38 +269,30 @@ export default {
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
           formsAll: [],
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
           formsAll: [],
         },
         {
           datas: {},
           forms: [],
-          formsAll: [],
-        },
-        {
-          datas: {},
-          forms: [],
-          formsAll: [],
-        },
-        {
-          datas: {},
-          forms: [],
+          required: [], //获取必填项
           formsAll: [],
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
+      tableData: [[], [], []],
+      tableColumns: [[], [], []],
+      tableLoading: [false, false, false],
+      isClear: [false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       height: "707px",
@@ -315,8 +305,8 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }, { ID: 90 }],
-      isEdit: [false, false],
+      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }],
+      isEdit: [false, false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible2: false,
@@ -324,6 +314,8 @@ export default {
       clickRow: null,
       linkTableData: [],
       hasSelect: [false, false, false],
+      addNum: 1,
+      DataSourceList: [{}, {}, {}],
     };
   },
   watch: {},
@@ -334,7 +326,6 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    console.log(this.btnForm, "this.btnForm");
     this.judgeBtn(this.btnForm);
   },
   mounted() {
@@ -428,7 +419,7 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          _this.dataSave(remarkTb, newData, index, null);
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
@@ -467,13 +458,44 @@ export default {
       this.$store.dispatch("user/exportData", res.data);
     },
     //添加产品机台
-    async confirmDialog(data) {
-       this.selectionData[2].forEach((item) => {
-        item["ProcessGroupID"] = this.formSearchs[1]["datas"]["ProcessGroupID"];
-        item["dicID"] = 1186;
-      });
+    async confirmDialog(remarkTb) {
+      let newData;
+      if (remarkTb === 2) {
+        let newData1 = this.linkTableData.filter(
+          (x) => !this.selectionData[2].some((y) => y.ProcessID === x.ProcessID)
+        );
+        newData1.forEach((newDataItem) => {
+          const matchingRow = this.tableData[1].find(
+            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+          );
+          if (matchingRow) {
+            newDataItem["ElementDeleteFlag"] = 1;
+            newDataItem["dicID"] = 1186;
+            newDataItem['ProcessGroupInfoID'] = matchingRow['ProcessGroupInfoID']
+          }
+        });
+        let newData2 = this.selectionData[2].filter(
+          (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
+        );
+        newData2.forEach((newDataItem) => {
+          const matchingRow = this.tableData[2].find(
+            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
+          );
+          if (matchingRow) {
+            newDataItem["ProcessGroupID"] =
+              this.formSearchs[1]["datas"]["ProcessGroupID"];
+            newDataItem["dicID"] = 1186;
+          }
+        });
+        newData = [].concat(newData1, newData2);
+      }
 
-      await this.dataSave(1, this.selectionData[2]);
+      // this.selectionData[2].forEach((item) => {
+      //   item["ProcessGroupID"] = this.formSearchs[1]["datas"]["ProcessGroupID"];
+      //   item["dicID"] = 1186;
+      // });
+
+      await this.dataSave(1, null, null, newData);
 
       // else if (Number(this.selectedIndex) === 2) {
       //   data.map((item) => {
@@ -487,41 +509,9 @@ export default {
       this.colDialogVisible4 = false;
     },
     // 保存
-    async dataSave(remarkTb, newData, index, parms) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      // const sheet = this.spread[remarkTb]?.getActiveSheet();
-
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      // if (sheet && sheet.isEditing()) {
-      //   sheet.endEdit();
-      // }
-      // if (remarkTb === 1) {
-      //   let newData1 = this.linkTableData.filter(
-      //     (x) => !this.selectionData[1].some((y) => y.ProcessID === x.ProcessID)
-      //   );
-      //   newData1.forEach((newDataItem) => {
-      //     const matchingRow = this.tableData[1].find(
-      //       (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-      //     );
-      //     if (matchingRow) {
-      //       matchingRow.ProcessName = null;
-      //       matchingRow.ProcessID = null;
-      //     }
-      //   });
-
-      //   let newData2 = this.selectionData[1].filter(
-      //     (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
-      //   );
-      //   newData2.forEach((newDataItem) => {
-      //     const matchingRow = this.tableData[1].find(
-      //       (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-      //     );
-      //     if (matchingRow) {
-      //       matchingRow.ProcessName = this.clickRow["ProcessName"];
-      //       matchingRow.ProcessID = this.clickRow["ProcessID"];
-      //     }
-      //   });
-      // }
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -534,11 +524,25 @@ export default {
         } else {
         }
       }
-
       if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
+      }
+      if (changeRecords.length > 0 && !newData) {
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          changeRecords.map((item1, index1) => {
+            this.formSearchs[remarkTb].required.map((item2, index2) => {
+              let content = item1[item2["prop"]];
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(`${item2["label"]}不能为空，请选择`);
+                this.$set(this, "adminLoading", false);
+                throw new Error("报错了");
+              }
+            });
+          });
+        }
       }
       let res = await SaveData(changeRecords);
       // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
@@ -576,7 +580,16 @@ export default {
                 this.verifyDta(x);
               });
             }
-
+            //从列获取下拉数据源
+            if (n.DataSourceID && n.ControlType === "combobox") {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
+            }
+            if (n.Required) {
+              this.formSearchs[i].required.push(n);
+            }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
@@ -622,12 +635,16 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb === 1) {
-          data.forEach((item) => {
-            if (item["ProcessID"] === this.clickRow["ProcessID"]) {
-              item["isChecked"] = true;
-            }
-          });
+        if (remarkTb === 2) {
+          data
+            .filter((item2) => {
+              return this.tableData[1].some(
+                (item1) => item2["ProcessID"] === item1["ProcessID"]
+              );
+            })
+            .forEach((item2) => {
+              item2["isChecked"] = true;
+            });
           this.linkTableData = data.filter((item) => {
             return item["isChecked"];
           });
@@ -670,12 +687,48 @@ export default {
       this.dataSearch(this.selectedIndex);
     },
     addRow(remarkTb) {
-      if (remarkTb === 1) {
+      if (remarkTb == 0 || remarkTb === 2) {
+        const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+        if (!this.addNum) {
+          this.$message.error("请输入需要添加的行数!");
+          return;
+        }
+        // 下拉数据是需要获取数据源
+        for (let x = 0; x < this.addNum; x++) {
+          let obj = {
+            dicID: this.sysID[remarkTb]["ID"],
+            RowNumber: _.uniqueId(),
+          };
+          this.tableColumns[remarkTb].map((item) => {
+            obj[item.prop] = null;
+            obj["update"] = true;
+            if (item.prop === "Status") {
+              obj[item.prop] = 1;
+            }
+            if (item.prop === "RowNumber") {
+              obj["RowNumber"] = _.uniqueId();
+            }
+            for (let key in this.DataSourceList[remarkTb]) {
+              if (item.DataSourceName === key) {
+                obj[key] = this.DataSourceList[remarkTb][key];
+              }
+            }
+          });
+          $table.insert(obj);
+
+          // this.tableData[remarkTb].unshift(obj);
+        }
+      } else if (remarkTb == 1) {
+        if (!this.clickRow) {
+          this.$message.error("请点击需要绑定的数据！");
+          return;
+        }
         this.colDialogVisible2 = true;
         this.dataSearch(2);
-      } else if (remarkTb === 2) {
-        this.processDialog1 = true;
       }
+      //  else if (remarkTb === 2) {
+      //   this.processDialog1 = true;
+      // }
     },
     AddEvent(index) {
       if (!this.clickRow) {
@@ -684,7 +737,6 @@ export default {
       }
       if (index === 1) {
         this.colDialogVisible2 = true;
-        this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
         this.colDialogVisible4 = true;

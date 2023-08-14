@@ -403,7 +403,7 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          _this.dataSave(remarkTb, newData, index, null);
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
@@ -414,11 +414,11 @@ export default {
         item.ProcessName = this.clickRow["ProcessName"];
         item.ProcessID = this.clickRow["ProcessID"];
       });
-      this.dataSave(1, this.selectionData[remark]);
+      this.dataSave(1, null, null, this.selectionData[remark]);
       this.colDialogVisible2 = false;
     },
     // 保存
-    async dataSave(remarkTb, newData, index, parms) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       // const sheet = this.spread[remarkTb]?.getActiveSheet();
 
@@ -465,6 +465,7 @@ export default {
 
       //   // newData = [].concat(newData1, newData2);
       // }
+      console.log(newData, "newData");
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -670,7 +671,6 @@ export default {
     addRow(remarkTb) {
       // 获取修改记录
       if (remarkTb == 0) {
-        console.log(this.$refs, "this.$refs");
         const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
         if (!this.addNum) {
           this.$message.error("请输入需要添加的行数!");
