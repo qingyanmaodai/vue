@@ -5,10 +5,10 @@
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">
-      <pane :size="70">
+      <pane :size="60">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
-            <ComMoreSearch
+            <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
               :searchForm="formSearchs[0].forms"
@@ -61,7 +61,7 @@
           </div>
         </div>
       </pane>
-      <pane :size="30">
+      <pane :size="40">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
             <div
@@ -69,7 +69,7 @@
               :key="i"
               v-show="Number(selectedIndex) === i"
             >
-              <ComMoreSearch
+              <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
                 :searchForm="formSearchs[i].forms"
@@ -147,7 +147,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <dialogOptTable
+    <DialogOptTable
       title="添加机台"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -170,7 +170,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></dialogOptTable>
+    ></DialogOptTable>
 
     <ComFormDialog
       ref="processForm"
@@ -188,10 +188,10 @@
 var _this;
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
-import ComMoreSearch from "@/components/ComMoreSearch";
+import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
-import dialogOptTable from "@/components/Dialog/dialogOptTable ";
+import DialogOptTable from "@/components/Dialog/DialogOptTable ";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
   GetHeader,
@@ -203,13 +203,13 @@ import {
 export default {
   name: "ProcessConfiguration",
   components: {
-    ComMoreSearch,
+    ComSearch,
     ComVxeTable,
     ComReportTable,
     Splitpanes,
     Pane,
     ComFormDialog,
-    dialogOptTable,
+    DialogOptTable,
   },
   data() {
     return {

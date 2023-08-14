@@ -16,7 +16,7 @@
         @btnClick="btnClick"
       />
     </div>
-    <div>
+    <div class="admin_content flex_grow">
       <ComVxeTable
         ref="PurchaseRequisition"
         :isToolbar="isToolbar"
@@ -129,7 +129,7 @@ export default {
     //表格高度
     height: {
       type: String,
-      default: "600px",
+      default: "100%",
     },
     // 选中的数据
     checkData: {
@@ -353,4 +353,11 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped></style>
+<style lang="scss" scoped>
+::v-deep .el-dialog__body {
+  height: 70vh !important;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+</style>

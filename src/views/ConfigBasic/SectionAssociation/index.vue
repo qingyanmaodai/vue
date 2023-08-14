@@ -5,10 +5,10 @@
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">
-      <pane :size="70">
+      <pane :size="50">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
-            <ComMoreSearch
+            <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
               :searchForm="formSearchs[0].forms"
@@ -36,7 +36,7 @@
           </div> -->
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
-              ref="tableRef"
+              :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
               height="100%"
               :isToolbar="false"
@@ -60,15 +60,11 @@
           </div>
         </div>
       </pane>
-      <pane :size="30">
+      <pane :size="50">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
-            <div
-              v-for="i in [1]"
-              :key="i"
-              v-show="Number(selectedIndex) === i"
-            >
-              <ComMoreSearch
+            <div v-for="i in [1]" :key="i" v-show="Number(selectedIndex) === i">
+              <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
                 :searchForm="formSearchs[i].forms"
@@ -147,6 +143,30 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
+    <DialogOptTable
+      title="添加机台"
+      :tableDialog="colDialogVisible2"
+      :sysID="sysID[2]['ID']"
+      :isEdit="isEdit[2]"
+      :remark="2"
+      width="80%"
+      :hasSelect="hasSelect[2]"
+      @closeDialog="colDialogVisible2 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[2]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :table-data="tableData[2]"
+      :table-header="tableColumns[2]"
+      :table-loading="tableLoading[2]"
+      :table-pagination="tablePagination[2]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
     <!-- <DialogTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
@@ -166,10 +186,11 @@
 var _this;
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
-import ComMoreSearch from "@/components/ComMoreSearch";
+import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
 import DialogTable from "@/components/Dialog/dialogTable";
+import DialogOptTable from "@/components/Dialog/DialogOptTable ";
 import {
   GetHeader,
   GetSearchData,
@@ -180,38 +201,53 @@ import {
 export default {
   name: "SectionAssociation",
   components: {
-    ComMoreSearch,
+    ComSearch,
     ComVxeTable,
     ComReportTable,
     Splitpanes,
     Pane,
     DialogTable,
+    DialogOptTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
-      selectionData: [[], []],
+      selectionData: [[], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], []],
+      includeFields: [[], [], []],
+      colDialogVisible2: false,
       formSearchs: [
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
           formsAll: [],
         },
         {
-          datas: {},
+          datas: {
+            IsConfig: '是',
+          },
           forms: [],
+          required: [], //获取必填项
+          formsAll: [],
+        },
+        {
+          datas: {
+            IsConfig: '否',
+          },
+          forms: [],
+          required: [], //获取必填项
           formsAll: [],
         },
       ],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false, false],
-      isClear: [false, false],
+      tableData: [[], [], []],
+      tableColumns: [[], [], []],
+      tableLoading: [false, false, false],
+      isClear: [false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
@@ -224,15 +260,17 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 14 }, { ID: 11162 }],
+      sysID: [{ ID: 1182 }, { ID: 11162 }, { ID: 11162 }],
       isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible3: false,
       colDialogVisible4: false,
       clickRow: null,
+      addNum: 1,
       linkTableData: [],
-      hasSelect: [false, false],
+      hasSelect: [false, false, false],
+      DataSourceList: [{}, {}, {}],
     };
   },
   watch: {},
@@ -335,13 +373,8 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (this.formSearchs[remarkTb].forms.length) {
-          // 判断是否是页面显示的查询条件，是的字段才清空
-          this.formSearchs[remarkTb].forms.forEach((element) => {
-            if (element["prop"] === name) {
-              this.formSearchs[remarkTb].datas[name] = null;
-            }
-          });
+        if (name != "dicID" || name != "QueryParams") {
+          this.formSearchs[remarkTb].datas[name] = null;
         }
       }
     },
@@ -386,7 +419,10 @@ export default {
       // }
       if (remarkTb === 1) {
         let newData1 = this.linkTableData.filter(
-          (x) => !this.selectionData[1].some((y) => y.ProcessChildID === x.ProcessChildID)
+          (x) =>
+            !this.selectionData[1].some(
+              (y) => y.ProcessChildID === x.ProcessChildID
+            )
         );
         console.log(this.linkTableData, this.selectionData[1]);
         newData1.forEach((newDataItem) => {
@@ -401,7 +437,10 @@ export default {
         });
         console.log(newData1, "newData1");
         let newData2 = this.selectionData[1].filter(
-          (c) => !this.linkTableData.some((z) => c.ProcessChildID == z.ProcessChildID)
+          (c) =>
+            !this.linkTableData.some(
+              (z) => c.ProcessChildID == z.ProcessChildID
+            )
         );
         newData2.forEach((newDataItem) => {
           const matchingRow = this.tableData[1].find(
@@ -434,6 +473,21 @@ export default {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
+      }
+      if (changeRecords.length > 0 && !newData) {
+        if (this.formSearchs[remarkTb].required.length) {
+          // 动态检验必填项
+          changeRecords.map((item1, index1) => {
+            this.formSearchs[remarkTb].required.map((item2, index2) => {
+              let content = item1[item2["prop"]];
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(`${item2["label"]}不能为空，请选择`);
+                this.$set(this, "adminLoading", false);
+                throw new Error("报错了");
+              }
+            });
+          });
+        }
       }
       let res = await SaveData(changeRecords);
       // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
@@ -471,7 +525,16 @@ export default {
                 this.verifyDta(x);
               });
             }
-
+            //从列获取下拉数据源
+            if (n.DataSourceID && n.ControlType === "combobox") {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
+            }
+            if (n.Required) {
+              this.formSearchs[i].required.push(n);
+            }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
@@ -517,17 +580,17 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb === 1) {
-          data.forEach((item) => {
-            if (item["ProcessID"] === this.clickRow["ProcessID"]) {
-              // item["isChecked"] = true;
-              this.$set(item, "isChecked", true);
-            }
-          });
-          this.linkTableData = data.filter((item) => {
-            return item["isChecked"];
-          });
-        }
+        // if (remarkTb === 1) {
+        //   data.forEach((item) => {
+        //     if (item["ProcessID"] === this.clickRow["ProcessID"]) {
+        //       // item["isChecked"] = true;
+        //       this.$set(item, "isChecked", true);
+        //     }
+        //   });
+        //   this.linkTableData = data.filter((item) => {
+        //     return item["isChecked"];
+        //   });
+        // }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -557,6 +620,9 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
+      if (remarkTb === 0) {
+        this.formSearchs[1].datas['ProcessID'] = row["ProcessID"];
+      }
       await this.dataSearch(Number(this.selectedIndex));
     },
     handleClick(tab, event) {
@@ -570,8 +636,8 @@ export default {
         return;
       }
       if (index === 1) {
-        this.colDialogVisible3 = true;
-        this.formSearchs[3]["MachineTypeID"] = "M20230614001";
+        this.colDialogVisible2 = true;
+        // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
         this.colDialogVisible4 = true;
@@ -594,6 +660,47 @@ export default {
           };
         }
       }
+    },
+    // 增行
+    addRow(remarkTb) {
+      // 获取修改记录
+
+      if (remarkTb == 0) {
+        console.log(this.$refs, "this.$refs");
+        const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+        if (!this.addNum) {
+          this.$message.error("请输入需要添加的行数!");
+          return;
+        }
+        // 下拉数据是需要获取数据源
+        for (let x = 0; x < this.addNum; x++) {
+          let obj = {
+            dicID: this.sysID[remarkTb]["ID"],
+            RowNumber: _.uniqueId(),
+          };
+          this.tableColumns[remarkTb].map((item) => {
+            obj[item.prop] = null;
+            obj["update"] = true;
+            if (item.prop === "Status") {
+              obj[item.prop] = 1;
+            }
+            console.log(this.DataSourceList, "this.DataSourceList");
+            for (let key in this.DataSourceList[remarkTb]) {
+              if (item.DataSourceName === key) {
+                obj[key] = this.DataSourceList[remarkTb][key];
+              }
+            }
+          });
+          $table.insert(obj);
+
+          // this.tableData[remarkTb].unshift(obj);
+        }
+      } else if (remarkTb == 1) {
+        this.colDialogVisible2 = true;
+        this.dataSearch(2);
+      }
+
+      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
     },
     // 行内样式
     cellStyle({ row, column }) {
