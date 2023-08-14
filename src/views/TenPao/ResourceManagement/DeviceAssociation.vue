@@ -90,14 +90,6 @@
               >
                 添加机台
               </el-button>
-              <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="dataDel(Number(selectedIndex))"
-              >
-                移除
-              </el-button>
               <el-button
                 type="primary"
                 size="mini"
@@ -105,6 +97,14 @@
                 v-show="selectedIndex === '2'"
               >
                 添加产品
+              </el-button>
+              <el-divider direction="vertical"></el-divider>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="dataDel(Number(selectedIndex))"
+              >
+                移除
               </el-button>
             </div>
           </div>
