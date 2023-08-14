@@ -9,10 +9,11 @@
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
+        :searchData="formSearchs['datas']"
+        :searchForm="formSearchs['forms']"
         :remark="remark"
         :btnForm="btnForm"
+        :signname="remark"
         @btnClick="btnClick"
       />
     </div>
@@ -84,6 +85,15 @@ export default {
     tableLoading: {
       type: Boolean,
       default: false,
+    },
+    formSearchs: {
+      type: Object,
+      default: function () {
+        return {
+          datas: {},
+          forms: [],
+        };
+      },
     },
 
     //是否显示弹框
@@ -217,12 +227,6 @@ export default {
   },
   data() {
     return {
-      formSearchs: [
-        {
-          datas: {},
-          forms: [],
-        },
-      ],
       Dialog: false,
       selectionData: [[]],
     };
@@ -234,9 +238,9 @@ export default {
     tableDialog: {
       handler: function (newValue, oldValue) {
         if (newValue) {
-          for (var name in this.searchForm) {
-            this.$set(this.formSearchs[0].datas, name, this.searchForm[name]);
-          }
+          // for (var name in this.searchForm) {
+          //   this.$set(this.formSearchs[0].datas, name, this.searchForm[name]);
+          // }
           // this.getTableData(this.formSearchs[0].datas, 0);
         }
         this.Dialog = newValue;
@@ -268,7 +272,7 @@ export default {
     },
     // 确定
     confirmDialog() {
-      this.$emit("confirmDialog", this.selectionData[0]);
+      this.$emit("confirmDialog", this.remark);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {

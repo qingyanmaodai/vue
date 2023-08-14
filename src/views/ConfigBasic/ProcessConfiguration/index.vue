@@ -147,7 +147,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogOptTable
+    <dialogOptTable
       title="添加机台"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -170,7 +170,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></DialogOptTable>
+    ></dialogOptTable>
 
     <ComFormDialog
       ref="processForm"
@@ -191,7 +191,7 @@ import "splitpanes/dist/splitpanes.css";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
-import DialogOptTable from "@/components/Dialog/DialogOptTable ";
+import dialogOptTable from "@/components/Dialog/dialogOptTable";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
   GetHeader,
@@ -209,7 +209,7 @@ export default {
     Splitpanes,
     Pane,
     ComFormDialog,
-    DialogOptTable,
+    dialogOptTable,
   },
   data() {
     return {

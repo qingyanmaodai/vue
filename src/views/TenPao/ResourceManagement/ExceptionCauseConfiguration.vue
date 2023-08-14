@@ -496,6 +496,9 @@ export default {
           if (item.prop === "Status") {
             obj[item.prop] = 1;
           }
+          if (item.prop === "RowNumber") {
+            obj["RowNumber"] = _.uniqueId();
+          }
           console.log(this.DataSourceList, "this.DataSourceList");
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {

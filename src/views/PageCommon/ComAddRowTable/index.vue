@@ -326,6 +326,9 @@ export default {
           if (item.prop === "Status") {
             obj[item.prop] = 1;
           }
+          if (item.prop === "RowNumber") {
+            obj["RowNumber"] = _.uniqueId();
+          }
           console.log(this.DataSourceList, "this.DataSourceList");
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
@@ -424,7 +427,7 @@ export default {
               if (!content && (content !== 0) & (content !== false)) {
                 this.$message.error(`${item2["label"]}不能为空，请选择`);
                 this.$set(this, "adminLoading", false);
-                throw new Error('报错了')
+                throw new Error("报错了");
               }
             });
           });

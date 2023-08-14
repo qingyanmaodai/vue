@@ -17,6 +17,7 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               @btnClick="btnClick"
+              :signName="0"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -72,7 +73,7 @@
                 :remark="i"
                 :isLoading="isLoading"
                 :btnForm="btnForm"
-                :signName="labelStatus1"
+                :signName="i"
                 @btnClick="btnClick"
               />
             </div>
@@ -143,7 +144,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogOptTable
+    <dialogOptTable
       title="添加机台"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -166,7 +167,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></DialogOptTable>
+    ></dialogOptTable>
     <!-- <DialogTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
@@ -190,7 +191,7 @@ import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
 import DialogTable from "@/components/Dialog/dialogTable";
-import DialogOptTable from "@/components/Dialog/DialogOptTable ";
+import dialogOptTable from "@/components/Dialog/dialogOptTable";
 import {
   GetHeader,
   GetSearchData,
@@ -207,7 +208,7 @@ export default {
     Splitpanes,
     Pane,
     DialogTable,
-    DialogOptTable,
+    dialogOptTable,
   },
   data() {
     return {
@@ -225,7 +226,7 @@ export default {
         },
         {
           datas: {
-            IsConfig: '是',
+            IsConfig: "是",
           },
           forms: [],
           required: [], //获取必填项
@@ -233,7 +234,7 @@ export default {
         },
         {
           datas: {
-            IsConfig: '否',
+            IsConfig: "否",
           },
           forms: [],
           required: [], //获取必填项
@@ -261,7 +262,7 @@ export default {
       ],
       labelStatus1: 0,
       sysID: [{ ID: 1182 }, { ID: 11162 }, { ID: 11162 }],
-      isEdit: [false, false],
+      isEdit: [false, false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible3: false,
@@ -387,26 +388,34 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
     },
-    //添加产品机台
-    confirmDialog(data) {
-      if (Number(this.selectedIndex) === 1) {
-        console.log(this.formSearchs[1]["MachineMouldID"], "1");
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[1]["datas"]["MachineMouldID"];
-          item["dicID"] = 110;
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj["ElementDeleteFlag"] = 1;
+          newData.push(obj);
         });
-        this.dataSave(1, data);
-      } else if (Number(this.selectedIndex) === 2) {
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[2]["datas"]["MachineMouldID"];
-          item["dicID"] = 112;
-        });
-        this.dataSave(2, data);
       }
-      this.colDialogVisible3 = false;
-      this.colDialogVisible4 = false;
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, newData, index, null);
+        })
+        .catch((_) => {});
+    },
+    //添加产品机台
+    confirmDialog(remark) {
+      console.log(remark, this.selectionData);
+      this.selectionData[remark].forEach((item) => {
+        item.ProcessName = this.clickRow["ProcessName"];
+        item.ProcessID = this.clickRow["ProcessID"];
+      });
+      this.dataSave(1, this.selectionData[remark]);
+      this.colDialogVisible2 = false;
     },
     // 保存
     async dataSave(remarkTb, newData, index, parms) {
@@ -417,45 +426,45 @@ export default {
       // if (sheet && sheet.isEditing()) {
       //   sheet.endEdit();
       // }
-      if (remarkTb === 1) {
-        let newData1 = this.linkTableData.filter(
-          (x) =>
-            !this.selectionData[1].some(
-              (y) => y.ProcessChildID === x.ProcessChildID
-            )
-        );
-        console.log(this.linkTableData, this.selectionData[1]);
-        newData1.forEach((newDataItem) => {
-          const matchingRow = this.tableData[1].find(
-            (tableDataRow) =>
-              tableDataRow.ProcessChildID === newDataItem.ProcessChildID
-          );
-          if (matchingRow) {
-            matchingRow.ProcessName = null;
-            matchingRow.ProcessID = null;
-          }
-        });
-        console.log(newData1, "newData1");
-        let newData2 = this.selectionData[1].filter(
-          (c) =>
-            !this.linkTableData.some(
-              (z) => c.ProcessChildID == z.ProcessChildID
-            )
-        );
-        newData2.forEach((newDataItem) => {
-          const matchingRow = this.tableData[1].find(
-            (tableDataRow) =>
-              tableDataRow.ProcessChildID === newDataItem.ProcessChildID
-          );
-          if (matchingRow) {
-            matchingRow.ProcessName = this.clickRow["ProcessName"];
-            matchingRow.ProcessID = this.clickRow["ProcessID"];
-          }
-        });
-        console.log(newData2, "newData2");
+      // if (remarkTb === 1) {
+      //   let newData1 = this.linkTableData.filter(
+      //     (x) =>
+      //       !this.selectionData[1].some(
+      //         (y) => y.ProcessChildID === x.ProcessChildID
+      //       )
+      //   );
+      //   console.log(this.linkTableData, this.selectionData[1]);
+      //   newData1.forEach((newDataItem) => {
+      //     const matchingRow = this.tableData[1].find(
+      //       (tableDataRow) =>
+      //         tableDataRow.ProcessChildID === newDataItem.ProcessChildID
+      //     );
+      //     if (matchingRow) {
+      //       matchingRow.ProcessName = null;
+      //       matchingRow.ProcessID = null;
+      //     }
+      //   });
+      //   console.log(newData1, "newData1");
+      //   let newData2 = this.selectionData[1].filter(
+      //     (c) =>
+      //       !this.linkTableData.some(
+      //         (z) => c.ProcessChildID == z.ProcessChildID
+      //       )
+      //   );
+      //   newData2.forEach((newDataItem) => {
+      //     const matchingRow = this.tableData[1].find(
+      //       (tableDataRow) =>
+      //         tableDataRow.ProcessChildID === newDataItem.ProcessChildID
+      //     );
+      //     if (matchingRow) {
+      //       matchingRow.ProcessName = this.clickRow["ProcessName"];
+      //       matchingRow.ProcessID = this.clickRow["ProcessID"];
+      //     }
+      //   });
+      //   console.log(newData2, "newData2");
 
-        // newData = [].concat(newData1, newData2);
-      }
+      //   // newData = [].concat(newData1, newData2);
+      // }
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -621,7 +630,7 @@ export default {
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
       if (remarkTb === 0) {
-        this.formSearchs[1].datas['ProcessID'] = row["ProcessID"];
+        this.formSearchs[1].datas["ProcessID"] = row["ProcessID"];
       }
       await this.dataSearch(Number(this.selectedIndex));
     },
@@ -631,17 +640,13 @@ export default {
       this.dataSearch(this.selectedIndex);
     },
     AddEvent(index) {
-      if (!this.clickRow) {
-        this.$message.error("请点击需要绑定的数据！");
-        return;
-      }
       if (index === 1) {
         this.colDialogVisible2 = true;
         // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
-      if (index === 2) {
-        this.colDialogVisible4 = true;
-      }
+      // if (index === 2) {
+      //   this.colDialogVisible4 = true;
+      // }
     },
     // 行内样式
     cellStyle0({ row, column }) {
@@ -664,7 +669,6 @@ export default {
     // 增行
     addRow(remarkTb) {
       // 获取修改记录
-
       if (remarkTb == 0) {
         console.log(this.$refs, "this.$refs");
         const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
@@ -684,7 +688,9 @@ export default {
             if (item.prop === "Status") {
               obj[item.prop] = 1;
             }
-            console.log(this.DataSourceList, "this.DataSourceList");
+            if (item.prop === "RowNumber") {
+              obj["RowNumber"] = _.uniqueId();
+            }
             for (let key in this.DataSourceList[remarkTb]) {
               if (item.DataSourceName === key) {
                 obj[key] = this.DataSourceList[remarkTb][key];
@@ -696,11 +702,13 @@ export default {
           // this.tableData[remarkTb].unshift(obj);
         }
       } else if (remarkTb == 1) {
+        if (!this.clickRow) {
+          this.$message.error("请点击需要绑定的数据！");
+          return;
+        }
         this.colDialogVisible2 = true;
         this.dataSearch(2);
       }
-
-      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
     },
     // 行内样式
     cellStyle({ row, column }) {
