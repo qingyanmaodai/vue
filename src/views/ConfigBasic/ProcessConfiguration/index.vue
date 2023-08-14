@@ -58,6 +58,7 @@
               @selectfun="selectFun"
               :keepSource="true"
               :footerContent="true"
+              @toPage="productSearch"
             />
           </div>
         </div>
@@ -146,7 +147,7 @@
     </splitpanes>
     <!-- 弹框-->
     <dialogOptTable
-      title="添加机台"
+      title="关联工段"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
@@ -163,6 +164,31 @@
       :table-header="tableColumns[2]"
       :table-loading="tableLoading[2]"
       :table-pagination="tablePagination[2]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></dialogOptTable>
+    <!-- 弹框-->
+    <dialogOptTable
+      title="关联产品"
+      :tableDialog="colDialogVisible3"
+      :sysID="sysID[3]['ID']"
+      :isEdit="isEdit[3]"
+      :remark="3"
+      width="80%"
+      :hasSelect="hasSelect[3]"
+      @closeDialog="colDialogVisible3 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[3]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :table-data="tableData[3]"
+      :table-header="tableColumns[3]"
+      :table-loading="tableLoading[3]"
+      :table-pagination="tablePagination[3]"
       @confirmDialog="confirmDialog"
       @pageChangeCall="pageChange"
       @pageSizeCall="pageSize"
@@ -212,10 +238,10 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      selectionData: [[], [], []],
+      selectionData: [[], [], [], []],
       processDialog1: false,
       title: this.$route.meta.title,
-      includeFields: [[], [], []],
+      includeFields: [[], [], [], []],
       formData1: {
         ProcessName: "",
         ProcessID: "",
@@ -284,15 +310,22 @@ export default {
           required: [], //获取必填项
           formsAll: [],
         },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+          formsAll: [],
+        },
       ],
       btnForm: [],
-      tableData: [[], [], []],
-      tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       height: "707px",
@@ -305,17 +338,17 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }],
-      isEdit: [false, false, false],
+      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }, { ID: 1180 }],
+      isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
       colDialogVisible2: false,
-      colDialogVisible4: false,
+      colDialogVisible3: false,
       clickRow: null,
       linkTableData: [],
-      hasSelect: [false, false, false],
+      hasSelect: [false, false, false, false],
       addNum: 1,
-      DataSourceList: [{}, {}, {}],
+      DataSourceList: [{}, {}, {}, {}],
     };
   },
   watch: {},
@@ -471,7 +504,8 @@ export default {
           if (matchingRow) {
             newDataItem["ElementDeleteFlag"] = 1;
             newDataItem["dicID"] = 1186;
-            newDataItem['ProcessGroupInfoID'] = matchingRow['ProcessGroupInfoID']
+            newDataItem["ProcessGroupInfoID"] =
+              matchingRow["ProcessGroupInfoID"];
           }
         });
         let newData2 = this.selectionData[2].filter(
@@ -800,6 +834,12 @@ export default {
           }
         }
       }
+    },
+    // 产品查询
+    productSearch(row, prop) {
+      this.formSearchs[3].datas["ProcessGroupID"] = row.ProcessGroupID;
+      this.dataSearch(3);
+      this.colDialogVisible3 = true;
     },
   },
 };
