@@ -1,7 +1,7 @@
 <!--菜单设置-->
 <!-- 四部日计划 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
@@ -16,45 +16,41 @@
         />
       </div>
     </div>
-    <div>
-      <div class="admin_content">
-        <!-- <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
-            <el-col :span="20" class="flex_flex_end">
-              <el-divider direction="vertical"></el-divider>
-              <el-button type="primary" size="mini" @click="changeEvent(0)">
-                拆分订单
-              </el-button>
-            </el-col>
-          </el-row>
-        </div> -->
-        <div
-          class="flex_column"
-          v-for="item in [0]"
-          :key="item"
-          v-show="labelStatus1 === item"
+    <!-- <div class="ant-table-title pd-6-6-0">
+      <el-row>
+        <el-col :span="4"
+          ><span class="title">{{ title }}</span></el-col
         >
-          <ComSpreadTable
-            ref="spreadsheetRef"
-            :height="height"
-            :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @workbookInitialized="workbookInitialized"
-            @selectChanged="selectChanged"
-          />
-        </div>
-      </div>
+        <el-col :span="20" class="flex_flex_end">
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="primary" size="mini" @click="changeEvent(0)">
+            拆分订单
+          </el-button>
+        </el-col>
+      </el-row>
+    </div> -->
+    <div
+      class="admin_content flex_grow"
+      v-for="item in [0]"
+      :key="item"
+      v-show="labelStatus1 === item"
+    >
+      <ComSpreadTable
+        ref="spreadsheetRef"
+        height="100%"
+        :tableData="tableData[item]"
+        :tableColumns="tableColumns[item]"
+        :tableLoading="tableLoading[item]"
+        :remark="item"
+        :sysID="sysID[item]['ID']"
+        :pagination="tablePagination[item]"
+        @pageChange="pageChange"
+        @pageSize="pageSize"
+        @workbookInitialized="workbookInitialized"
+        @selectChanged="selectChanged"
+      />
     </div>
-    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
+    <!-- <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
       <div class="ant-table-title">
         <el-row>
           <el-col :span="4"
@@ -85,7 +81,7 @@
           :spaceBtnShow="false"
         />
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 弹框-->
     <DialogTable
       title="全局欠料"
@@ -164,7 +160,7 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: { MFGOrganizeID: 1222 },
           forms: [],
         },
         {
@@ -184,47 +180,32 @@ export default {
           Size: "small",
         },
         {
-          ButtonCode: "save",
-          BtnName: "暂停",
-          isLoading: false,
-          Methods: "suspend",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData" },
-        },
-        {
-          ButtonCode: "save",
+          ButtonCode: "returnOrder",
           BtnName: "退回",
           isLoading: false,
           Methods: "dataDel",
           Type: "danger",
           Icon: "",
           Size: "small",
-          Params: { dataName: "selectionData" },
+          Params: {
+            dataName: "selectionData",
+          },
         },
         {
-          ButtonCode: "SyncSAP",
-          BtnName: "同步SAP",
-          isLoading: false,
-          Methods: "updateSAP",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData" },
-        },
-        {
-          ButtonCode: "save",
+          ButtonCode: "reset",
           BtnName: "重排",
           isLoading: false,
           Methods: "resetScheduling",
           Type: "danger",
           Icon: "",
           Size: "small",
-          Params: { dataName: "resetScheduling" },
+          Params: {
+            dataName: "resetScheduling",
+          },
         },
       ],
       tableData: [[], []],
+      hasSelect: [false, false],
       tableColumns: [[], []],
       tableLoading: [false],
       isClear: [false, false],
@@ -238,7 +219,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 7956 }, { ID: 6734 }],
+      sysID: [{ ID: 9016 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -253,7 +234,7 @@ export default {
   watch: {},
   created() {
     _this = this;
-    this.adminLoading = true;
+    // this.adminLoading = true;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
@@ -272,9 +253,9 @@ export default {
     }),
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 300);
+    // setTimeout(() => {
+    //   this.setHeight();
+    // }, 300);
     this.keyDown();
   },
   methods: {
@@ -313,21 +294,21 @@ export default {
       this.selectionData[remarkTb] = newValue;
     },
     // 高度控制
-    setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let newHeight = "";
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem + "px";
-      } else {
-        newHeight = rem + "px";
-      }
-      this.$set(this, "height", newHeight);
-    },
+    // setHeight() {
+    //   this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+    //   let headHeight = this.$refs.headRef.offsetHeight;
+    //   let newHeight = "";
+    //   let rem =
+    //     document.documentElement.clientHeight -
+    //     headHeight -
+    //     this.$store.getters.reduceHeight;
+    //   if (this.$store.getters.reduceHeight == 138) {
+    //     newHeight = rem + "px";
+    //   } else {
+    //     newHeight = rem + "px";
+    //   }
+    //   this.$set(this, "height", newHeight);
+    // },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -535,10 +516,10 @@ export default {
         .catch((_) => {});
     },
     // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
+    // handleRowClick(row, remarkTb) {
+    //   this.delData[remarkTb] = [];
+    //   this.delData[remarkTb].push(row);
+    // },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
@@ -572,7 +553,6 @@ export default {
         return;
       }
       let res = await SaveMOPlanStep4(updateRecords);
-      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -599,15 +579,19 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          // m.forEach((n) => {
-          //   // 进行验证
-          //   this.verifyData(n);
-          //   if (n.children && n.children.length != 0) {
-          //     n.children.forEach((x) => {
-          //       this.verifyData(x);
-          //     });
-          //   }
-          // });
+          m.forEach((n, index) => {
+            // 进行验证
+            // this.verifyData(n);
+            // if (n.children && n.children.length != 0) {
+            //   n.children.forEach((x) => {
+            //     this.verifyData(x);
+            //   });
+            // }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+            }
+          });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -632,44 +616,38 @@ export default {
               : ["$" + `${this.userInfo["Account"]}` + "$"]
           );
         });
-        console.log("gettable");
-        this.getOrgData();
-        // this.dataSearch(0);
+
+        await this.getTableData(this.formSearchs[0].datas, 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
-    verifyData(n) {
-      for (let name in n) {
-        if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
-        ) {
-          n[name] = eval("(" + n[name] + ")");
-        }
-      }
-    },
+    // verifyData(n) {
+    //   for (let name in n) {
+    //     if (
+    //       (name == "component" && n[name]) ||
+    //       (name == "button" && n[name]) ||
+    //       (name == "active" && n[name])
+    //     ) {
+    //       n[name] = eval("(" + n[name] + ")");
+    //     }
+    //   }
+    // },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID[remarkTb]["ID"];
-      form["ControlID"] = this.userInfo.WorkFlowInstanceID;
-      form["weekDays"] = 7;
       let res = await GetSearchData(form);
 
       // console.log(res.data);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
-        Columns.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
-        });
+        // Columns.some((m, i) => {
+        //   this.$set(this.tableColumns, i, m);
+        // });
+
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -692,8 +670,6 @@ export default {
       sheet.defaults.colHeaderRowHeight = 23;
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
-      // let colInfos = [];
-      console.log(this.checkBoxCellTypeLine);
       sheet.setDataSource(this.tableData[remarkTb]);
 
       // 渲染列
@@ -837,16 +813,17 @@ export default {
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
             cell.foreColor("balck");
-          } else if (row["MFGOrganizeID"] === 162) {
-            cell.backColor("#FFFF00");
-            cell.foreColor("black");
-          } else {
-            cell.foreColor("black");
-            cell.backColor("#FFFFFF");
           }
-          if (row["Capacity"] && column["name"] === "Capacity") {
-            cell.foreColor("red");
-          }
+          //  else if (row["MFGOrganizeID"] === 162) {
+          //   cell.backColor("#FFFF00");
+          //   cell.foreColor("black");
+          // } else {
+          //   cell.foreColor("black");
+          //   cell.backColor("#FFFFFF");
+          // }
+          // if (row["Capacity"] && column["name"] === "Capacity") {
+          //   cell.foreColor("red");
+          // }
         });
       });
 
@@ -1107,24 +1084,24 @@ export default {
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.tableColumns[remarkTb].length) {
           _this.tableColumns[remarkTb].map((item, index) => {
-            if (item["prop"].indexOf("FormRate") !== -1 && args.col === index) {
-              console.log("OrderID", _this.tableData[remarkTb]);
-              // 显示ERP供需平衡表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.OrderID =
-                _this.tableData[remarkTb][args.row].OrderID;
-              _this.dialogSearchForm.OweQty = 0;
-              if (item["prop"] === "FormRate") {
-                _this.dialogSearchForm.DemandDate =
-                  _this.tableData[remarkTb][args.row]["D0"];
-              } else if (item["prop"] === "FormRate1") {
-                _this.dialogSearchForm.DemandDate =
-                  _this.tableData[remarkTb][args.row]["D1"];
-              } else if (item["prop"] === "FormRate2") {
-                _this.dialogSearchForm.DemandDate =
-                  _this.tableData[remarkTb][args.row]["D2"];
-              }
-            }
+            // if (item["prop"].indexOf("FormRate") !== -1 && args.col === index) {
+            //   console.log("OrderID", _this.tableData[remarkTb]);
+            //   // 显示ERP供需平衡表
+            //   _this.colDialogVisible = true;
+            //   _this.dialogSearchForm.OrderID =
+            //     _this.tableData[remarkTb][args.row].OrderID;
+            //   _this.dialogSearchForm.OweQty = 0;
+            //   if (item["prop"] === "FormRate") {
+            //     _this.dialogSearchForm.DemandDate =
+            //       _this.tableData[remarkTb][args.row]["D0"];
+            //   } else if (item["prop"] === "FormRate1") {
+            //     _this.dialogSearchForm.DemandDate =
+            //       _this.tableData[remarkTb][args.row]["D1"];
+            //   } else if (item["prop"] === "FormRate2") {
+            //     _this.dialogSearchForm.DemandDate =
+            //       _this.tableData[remarkTb][args.row]["D2"];
+            //   }
+            // }
           });
         }
       });
@@ -1148,25 +1125,9 @@ export default {
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
-      this.spread[remarkTb].refresh(); //重新定位宽高度
-    },
-    bindComboBoxToCell(sheet, row, col, dataSourceName) {
-      // 获取要绑定下拉菜单的单元格对象
-      let cell = sheet.getCell(row, col);
-
-      // 创建下拉菜单单元格类型，并设置其选项数据
-      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-      comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
-      );
-      comboBox.editable(true);
-      // 获取下拉菜单的选项数据
-
-      comboBox.items(dataSourceName);
-      comboBox.itemHeight(24);
-
-      // 将下拉菜单单元格类型绑定到指定的单元格中
-      cell.cellType(comboBox);
+      setTimeout(() => {
+        this.spread[remarkTb].refresh(); //重新定位宽高度
+      });
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
@@ -1311,97 +1272,97 @@ export default {
       });
     },
     //////////////////////////////
-    async getOrgData() {
-      this.getLineData(this.userInfo.WorkFlowInstanceID);
-      return;
-    },
+    // async getOrgData() {
+    //   this.getLineData(this.userInfo.WorkFlowInstanceID);
+    //   return;
+    // },
     // 获取线别数据
-    async getLineData(ERPOrderCode) {
-      this.lines = [];
-      let res = await GetSearchData({
-        dicID: 36,
-        OrganizeTypeID: 6,
-        ERPOrderCode: ERPOrderCode,
-      });
-      const { data, forms, result, msg } = res.data;
-      if (result) {
-        let newData = [];
-        // this.treeData2 = data;
-        // this.treeListTmp2 = data;
-        this.adminLoading = false;
-        // if (data.length != 0) {
-        //   data.forEach(x => {
-        //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-        //   });
-        // }
-        // this.lines = newData;
-        // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        // this.checkBoxCellTypeLine.editorValueType(
-        //   GC.Spread.Sheets.CellTypes.EditorValueType.value
-        // );
-        // this.checkBoxCellTypeLine.items(newData);
-        // this.checkBoxCellTypeLine.itemHeight(24);
-        // this.formSearchs[0].datas.ControlID="202";
-        this.getTableData(this.formSearchs[0].datas, 0);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    searchTree(msg, dataName, dataName2, valueName) {
-      this[dataName] = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-      let tmp = msg
-        ? this.rebuildData(msg, treeListTmp, valueName)
-        : JSON.parse(JSON.stringify(treeListTmp));
-      this[dataName].push(...tmp);
-    },
-    rebuildData(value, arr, valueName) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach((element) => {
-          if (element[valueName].indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children,
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children, valueName);
-              const obj = {
-                ...element,
-                children: ab,
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
-    },
+    // async getLineData(ERPOrderCode) {
+    //   this.lines = [];
+    //   let res = await GetSearchData({
+    //     dicID: 36,
+    //     OrganizeTypeID: 6,
+    //     ERPOrderCode: ERPOrderCode,
+    //   });
+    //   const { data, forms, result, msg } = res.data;
+    //   if (result) {
+    //     let newData = [];
+    //     // this.treeData2 = data;
+    //     // this.treeListTmp2 = data;
+    //     this.adminLoading = false;
+    //     // if (data.length != 0) {
+    //     //   data.forEach(x => {
+    //     //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
+    //     //   });
+    //     // }
+    //     // this.lines = newData;
+    //     // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+    //     // this.checkBoxCellTypeLine.editorValueType(
+    //     //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+    //     // );
+    //     // this.checkBoxCellTypeLine.items(newData);
+    //     // this.checkBoxCellTypeLine.itemHeight(24);
+    //     // this.formSearchs[0].datas.ControlID="202";
+    //     this.getTableData(this.formSearchs[0].datas, 0);
+    //   } else {
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "error",
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   }
+    // },
+    // searchTree(msg, dataName, dataName2, valueName) {
+    //   this[dataName] = [];
+    //   let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
+    //   let tmp = msg
+    //     ? this.rebuildData(msg, treeListTmp, valueName)
+    //     : JSON.parse(JSON.stringify(treeListTmp));
+    //   this[dataName].push(...tmp);
+    // },
+    // rebuildData(value, arr, valueName) {
+    //   if (!arr) {
+    //     return [];
+    //   }
+    //   let newarr = [];
+    //   if (Object.prototype.toString.call(arr) === "[object Array]") {
+    //     arr.forEach((element) => {
+    //       if (element[valueName].indexOf(value) > -1) {
+    //         // const ab = this.rebuildData(value, element.children);
+    //         const obj = {
+    //           ...element,
+    //           children: element.children,
+    //         };
+    //         newarr.push(obj);
+    //       } else {
+    //         if (element.children && element.children.length > 0) {
+    //           const ab = this.rebuildData(value, element.children, valueName);
+    //           const obj = {
+    //             ...element,
+    //             children: ab,
+    //           };
+    //           if (ab && ab.length > 0) {
+    //             newarr.push(obj);
+    //           }
+    //         }
+    //       }
+    //     });
+    //   }
+    //   return newarr;
+    // },
     // 单击出来组织人员
-    handleNodeClick(data, node) {
-      this.clickData = data;
-      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-      //this.dataSearch(0);
-      this.getLineData(data.OrganizeID);
-    },
+    // handleNodeClick(data, node) {
+    //   this.clickData = data;
+    //   // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
+    //   //this.dataSearch(0);
+    //   this.getLineData(data.OrganizeID);
+    // },
     // 单击出来线别
-    handleNodeClick2(data, node) {
-      this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-      this.dataSearch(0);
-    },
+    // handleNodeClick2(data, node) {
+    //   this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
+    //   this.dataSearch(0);
+    // },
     changeStatus(item, index) {
       this.labelStatus1 = index;
     },
@@ -1410,50 +1371,50 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     // 保存日计划
-    async dataSaveDay() {
-      let sheet = this.spread[this.labelStatus1].getActiveSheet();
-      if (sheet && sheet.isEditing()) {
-        sheet.endEdit();
-      }
-      let newData = sheet.getDirtyRows();
-      let submitData = [];
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          submitData.push(x.item);
-        });
-      }
-      newData = sheet.getInsertRows();
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          x.item["dicID"] = this.sysID[this.labelStatus1]["ID"];
-          submitData.push(x.item);
-        });
-      }
-      if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据！");
-        return;
-      }
+    // async dataSaveDay() {
+    //   let sheet = this.spread[this.labelStatus1].getActiveSheet();
+    //   if (sheet && sheet.isEditing()) {
+    //     sheet.endEdit();
+    //   }
+    //   let newData = sheet.getDirtyRows();
+    //   let submitData = [];
+    //   if (newData.length != 0) {
+    //     newData.forEach((x) => {
+    //       submitData.push(x.item);
+    //     });
+    //   }
+    //   newData = sheet.getInsertRows();
+    //   if (newData.length != 0) {
+    //     newData.forEach((x) => {
+    //       x.item["dicID"] = this.sysID[this.labelStatus1]["ID"];
+    //       submitData.push(x.item);
+    //     });
+    //   }
+    //   if (submitData.length == 0) {
+    //     this.$message.error("没修改过任何数据！");
+    //     return;
+    //   }
 
-      this.adminLoading = true;
-      let res = await SaveMOPlanStep4(submitData);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.dataSearch(0);
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
+    //   this.adminLoading = true;
+    //   let res = await SaveMOPlanStep4(submitData);
+    //   const { result, data, count, msg } = res.data;
+    //   if (result) {
+    //     this.dataSearch(0);
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "success",
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   } else {
+    //     this.adminLoading = false;
+    //     this.$message({
+    //       message: msg,
+    //       type: "error",
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   }
+    // },
     async suspend(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
@@ -1488,28 +1449,28 @@ export default {
     },
 
     // 下拉选择事件
-    handleCommand(val) {
-      if (val == 1 && !this.isOpen) {
-        this.isOpen = true;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      } else if (val == 2 && this.isOpen) {
-        // 改变每个节点的状态
-        this.isOpen = false;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      }
-    },
+    // handleCommand(val) {
+    //   if (val == 1 && !this.isOpen) {
+    //     this.isOpen = true;
+    //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
+    //   } else if (val == 2 && this.isOpen) {
+    //     // 改变每个节点的状态
+    //     this.isOpen = false;
+    //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
+    //   }
+    // },
     // 改变节点状态
-    changeTreeNodeStatus(node) {
-      node.expanded = this.isOpen;
-      for (let i = 0; i < node.childNodes.length; i++) {
-        // 改变节点的自身expanded状态
-        node.childNodes[i].expanded = this.isOpen;
-        // 遍历子节点
-        if (node.childNodes[i].childNodes.length > 0) {
-          this.changeTreeNodeStatus(node.childNodes[i]);
-        }
-      }
-    },
+    // changeTreeNodeStatus(node) {
+    //   node.expanded = this.isOpen;
+    //   for (let i = 0; i < node.childNodes.length; i++) {
+    //     // 改变节点的自身expanded状态
+    //     node.childNodes[i].expanded = this.isOpen;
+    //     // 遍历子节点
+    //     if (node.childNodes[i].childNodes.length > 0) {
+    //       this.changeTreeNodeStatus(node.childNodes[i]);
+    //     }
+    //   }
+    // },
     //在该行数据下面增加新的一行
     copyRowFormat(rowNumber, sheet) {
       sheet.addRows(rowNumber + 1, 1);

@@ -3,7 +3,7 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
-        <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+        <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
           <ComSearch
             ref="searchRef"
             :searchData="formSearchs[i].datas"
@@ -24,7 +24,7 @@
                 <span class="title">{{ title }}</span>
               </el-col>
               <el-col :span="20" class="flex_flex_end">
-                <el-input-number
+                <!-- <el-input-number
                   v-model="AutoDays2"
                   type="number"
                   v-show="labelStatus1 != 4"
@@ -32,7 +32,7 @@
                   placeholder="请选择周期"
                 >
                 </el-input-number>
-                <el-divider direction="vertical"></el-divider>
+                <el-divider direction="vertical"></el-divider> -->
                 <!-- <el-button
                   type="primary"
                   size="mini"
@@ -84,26 +84,26 @@
                   3.更新计划
                 </el-button>
                 <el-divider direction="vertical"></el-divider> -->
-                <div
+                <!-- <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
                   <span @click="changeStatus(item, y)">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
-                </div>
+                </div> -->
               </el-col>
             </el-row>
           </div>
           <div
             class="flex_column"
-            v-for="item in [0, 1, 2]"
+            v-for="item in [0]"
             :key="item"
             v-show="labelStatus1 == item"
           >
             <ComSpreadTable
               ref="`spreadsheetRef${item}`"
-              :height="height"
+              height="100%"
               :tableData="tableData[item]"
               :tableColumns="tableColumns[item]"
               :tableLoading="tableLoading[item]"
@@ -116,7 +116,7 @@
               @selectChanged="selectChanged"
             />
           </div>
-          <div v-for="item in [3, 4]" :key="item" v-show="labelStatus1 == item">
+          <!-- <div v-for="item in [3, 4]" :key="item" v-show="labelStatus1 == item">
             <ComVxeTable
               :rowKey="'RowNumber'"
               :ref="`tableRef${item}`"
@@ -138,7 +138,7 @@
               @changeline="changeline"
               @sortChange="sortChange"
             />
-          </div>
+          </div> -->
           <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
@@ -302,7 +302,7 @@ export default {
       fileList: [],
       file: [],
       sysID: [
-        { ID: 7961, AutoDays2: this.AutoDays2 },
+        { ID: 9016, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 5585 },
@@ -939,13 +939,17 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyData(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -972,7 +976,7 @@ export default {
               : ["$" + `${this.userInfo["Account"]}` + "$"]
           );
         });
-        this.formSearchs[1].datas["ProductionStatus"] = [26]; //默认待排
+        // this.formSearchs[1].datas["ProductionStatus"] = [26]; //默认待排
         this.dataSearch(1);
       }
     },
@@ -991,13 +995,9 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      }
-      if (remarkTb == 0) {
-        form["AutoDays2"] = this.AutoDays2;
-      }
+      // if (remarkTb == 0) {
+      //   form["AutoDays2"] = this.AutoDays2;
+      // }
 
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
@@ -1008,11 +1008,11 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if (remarkTb !== 3 && remarkTb !== 4) {
-          this.$set(this.tableColumns, remarkTb, Columns[0]);
-          console.log(this.tableColumns, "this.tableColumns");
-          this.setData(remarkTb);
-        }
+        // if (remarkTb !== 3 && remarkTb !== 4) {
+        //   this.$set(this.tableColumns, remarkTb, Columns[0]);
+        //   console.log(this.tableColumns, "this.tableColumns");
+        //   this.setData(remarkTb);
+        // }
       } else {
         this.$message({
           message: msg,
@@ -1046,13 +1046,6 @@ export default {
           a.StartDate = this.ReplyDate;
         });
       }
-    },
-    tableRowClassName({ row, rowIndex }) {
-      let className = "";
-      if (row.DbResult != "" && row.DbResult != "计算成功") {
-        className += "bgRedColor";
-      }
-      return className;
     },
     // 行内列样式
     cellStyle({ row, column }) {},
