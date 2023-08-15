@@ -248,7 +248,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit:false
+      isEdit: false,
     };
   },
   watch: {},
@@ -388,7 +388,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -833,7 +833,11 @@ export default {
           if (row["Capacity"] && column["name"] === "Capacity") {
             cell.foreColor("red");
           }
-          if (row["IsDelay"] && row["IsDelay"] === 1 && column["name"]==="OrderNo") {
+          if (
+            row["IsDelay"] &&
+            row["IsDelay"] === 1 &&
+            column["name"] === "OrderNo"
+          ) {
             cell.backColor("#FF0000");
           }
         });
@@ -1246,7 +1250,7 @@ export default {
       let Capacity = parseInt(currentRow.Capacity);
       if (!Capacity) {
         this.$message.error("该单据没有产能");
-        return
+        return;
       }
       let list = [];
       let editNum = 0;
@@ -1259,7 +1263,11 @@ export default {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
           }
         } else {
-          list.push("");
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
         }
       });
       remainNum = Qty - editNum;
@@ -1276,22 +1284,24 @@ export default {
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          let label = this.tableColumns[0][j].prop + "dy";
-          let obj = currentRow[label];
-          remainNum = remainNum - parseInt(val);
-          let maxNum =
-            (Capacity * obj.TotalHours * obj.DayCapacity) /
-            currentRow.StandardPeoples;
-          maxNum = parseInt(maxNum);
-          if (remainNum <= 0) {
-            list[j] = null;
-          } else {
-            if (remainNum <= maxNum) {
-              list[j] = remainNum;
-              break;
+          if (this.tableColumns[0][j]["prop2"]) {
+            let label = this.tableColumns[0][j].prop + "dy";
+            let obj = currentRow[label];
+            remainNum = remainNum - parseInt(val);
+            let maxNum =
+              (Capacity * obj.TotalHours * obj.DayCapacity) /
+              currentRow.StandardPeoples;
+            maxNum = parseInt(maxNum);
+            if (remainNum <= 0) {
+              list[j] = null;
             } else {
-              list[j] = maxNum;
-              remainNum -= maxNum;
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                remainNum -= maxNum;
+              }
             }
           }
         }

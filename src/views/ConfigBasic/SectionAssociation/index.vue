@@ -145,12 +145,12 @@
     </splitpanes>
     <!-- 弹框-->
     <dialogOptTable
-      title="添加机台"
+      title="关联工艺"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
       :remark="2"
-      width="80%"
+      width="50%"
       :hasSelect="hasSelect[2]"
       @closeDialog="colDialogVisible2 = false"
       @btnClickCall="btnClick"

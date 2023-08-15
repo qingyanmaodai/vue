@@ -960,7 +960,11 @@ export default {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
           }
         } else {
-          list.push("");
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
         }
       });
       remainNum = Qty - editNum;
@@ -977,38 +981,40 @@ export default {
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          // 有白夜班，特殊处理prop，截取日期部分
-          let label = this.tableColumns[0][j].prop.substring(0, 5) + "dy";
-          let obj = currentRow[label];
-          let maxNum = 0;
-          if (parseInt(val) > remainNum) {
-            //到最后剩余数量直接赋值
-            remainNum = remainNum;
-          } else {
-            remainNum = remainNum - parseInt(val);
-          }
-          // 如果产能为空会出现NaN情况的判断
-          if (Capacity) {
-            // 最多可排产数量=产能/人/H*人数*每天上班小时
-            maxNum = Number(Capacity) * Number(obj.TotalHours);
-            // maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-          } else {
-            maxNum = Number(obj.TotalHours) * Number(obj.Peoples);
-            // maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
-          }
-          //最大可排数量，有小数向上取整。
-          maxNum = Math.ceil(maxNum);
-          if (remainNum <= 0) {
-            list[j] = null;
-          } else {
-            if (remainNum <= maxNum) {
-              list[j] = remainNum;
-              val = remainNum;
-              break;
+          if (this.tableColumns[0][j]["prop2"]) {
+            // 有白夜班，特殊处理prop，截取日期部分
+            let label = this.tableColumns[0][j].prop.substring(0, 5) + "dy";
+            let obj = currentRow[label];
+            let maxNum = 0;
+            if (parseInt(val) > remainNum) {
+              //到最后剩余数量直接赋值
+              remainNum = remainNum;
             } else {
-              list[j] = maxNum;
-              // remainNum -= maxNum;
-              val = maxNum; //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
+              remainNum = remainNum - parseInt(val);
+            }
+            // 如果产能为空会出现NaN情况的判断
+            if (Capacity) {
+              // 最多可排产数量=产能/人/H*人数*每天上班小时
+              maxNum = Number(Capacity) * Number(obj.TotalHours);
+              // maxNum = parseInt(Capacity) * parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+            } else {
+              maxNum = Number(obj.TotalHours) * Number(obj.Peoples);
+              // maxNum = parseInt(obj.TotalHours) * parseInt(obj.DayCapacity);
+            }
+            //最大可排数量，有小数向上取整。
+            maxNum = Math.ceil(maxNum);
+            if (remainNum <= 0) {
+              list[j] = null;
+            } else {
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                val = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                // remainNum -= maxNum;
+                val = maxNum; //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
+              }
             }
           }
         }

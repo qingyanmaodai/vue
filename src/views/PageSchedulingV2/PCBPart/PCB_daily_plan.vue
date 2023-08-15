@@ -896,6 +896,7 @@ export default {
       );
 
       /////////////////表格事件/////////////
+      this.spread.unbindAll();
       this.spread.bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
         const cellType = sheet.getCellType(row, col);
@@ -1062,7 +1063,11 @@ export default {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
           }
         } else {
-          list.push("");
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
         }
       });
       remainNum = Qty - editNum;
@@ -1079,31 +1084,33 @@ export default {
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          let label = this.tableColumns[0][j].prop + "dy";
-          let obj = currentRow[label];
-          // remainNum = remainNum - parseInt(val);
-          if (parseInt(val) > remainNum) {
-            //到最后剩余数量直接赋值
-            remainNum = remainNum;
-          } else {
-            remainNum = remainNum - parseInt(val);
-          }
-          let maxNum =
-            parseInt(Capacity) *
-            parseInt(obj.TotalHours) *
-            parseInt(obj.DayCapacity);
-          // parseInt(obj.StandardPeoples)
-          if (remainNum <= 0) {
-            list[j] = null;
-          } else {
-            if (remainNum <= maxNum) {
-              list[j] = remainNum;
-              val = remainNum;
-              break;
+          if (this.tableColumns[0][j]["prop2"]) {
+            let label = this.tableColumns[0][j].prop + "dy";
+            let obj = currentRow[label];
+            // remainNum = remainNum - parseInt(val);
+            if (parseInt(val) > remainNum) {
+              //到最后剩余数量直接赋值
+              remainNum = remainNum;
             } else {
-              list[j] = maxNum;
-              // remainNum -= maxNum;
-              val = maxNum; //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
+              remainNum = remainNum - parseInt(val);
+            }
+            let maxNum =
+              parseInt(Capacity) *
+              parseInt(obj.TotalHours) *
+              parseInt(obj.DayCapacity);
+            // parseInt(obj.StandardPeoples)
+            if (remainNum <= 0) {
+              list[j] = null;
+            } else {
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                val = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                // remainNum -= maxNum;
+                val = maxNum; //得到当前单元格的值，执行下一个单元格=剩余的数量-上一个单元格赋的值
+              }
             }
           }
         }

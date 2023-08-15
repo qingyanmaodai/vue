@@ -1219,7 +1219,11 @@ export default {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
           }
         } else {
-          list.push("");
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
         }
       });
       remainNum = Qty - editNum;
@@ -1236,22 +1240,24 @@ export default {
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          let label = this.tableColumns[0][j].prop + "dy";
-          let obj = currentRow[label];
-          remainNum = remainNum - parseInt(val);
-          let maxNum =
-            (Capacity * obj.TotalHours * obj.DayCapacity) /
-            currentRow.StandardPeoples;
-          maxNum = parseInt(maxNum);
-          if (remainNum <= 0) {
-            list[j] = null;
-          } else {
-            if (remainNum <= maxNum) {
-              list[j] = remainNum;
-              break;
+          if (this.tableColumns[0][j]["prop2"]) {
+            let label = this.tableColumns[0][j].prop + "dy";
+            let obj = currentRow[label];
+            remainNum = remainNum - parseInt(val);
+            let maxNum =
+              (Capacity * obj.TotalHours * obj.DayCapacity) /
+              currentRow.StandardPeoples;
+            maxNum = parseInt(maxNum);
+            if (remainNum <= 0) {
+              list[j] = null;
             } else {
-              list[j] = maxNum;
-              remainNum -= maxNum;
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                remainNum -= maxNum;
+              }
             }
           }
         }

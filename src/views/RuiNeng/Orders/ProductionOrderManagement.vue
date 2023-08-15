@@ -212,19 +212,19 @@ import {
   ExportData,
   SaveData,
   GetSearch,
-  GetOrgData
+  GetOrgData,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 import {
   MOPlanStep1,
   MOPlanStep1Calculation,
-  FSLMOPlanStep1
+  FSLMOPlanStep1,
 } from "@/api/wjApi";
 
 import {
   SaveMOPlanStep4,
   SaveMOPlanStep2,
-  OrderPlanMaterialForm
+  OrderPlanMaterialForm,
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
@@ -235,12 +235,12 @@ export default {
     ComVxeTable,
     ComFormDialog,
     DialogTable,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
       dialogSearchForm: {
-        OrderID: ""
+        OrderID: "",
       },
       colDialogVisible: false,
       includeFields: ["Qty"], // 包含合计的字段
@@ -250,7 +250,7 @@ export default {
         { label: "待排产", value: 0 },
         { label: "已排产", value: 1 },
         { label: "暂停", value: 2 },
-        { label: "分线列表", value: 4 }
+        { label: "分线列表", value: 4 },
       ],
       title: this.$route.meta.title,
       resultMsg: "",
@@ -258,16 +258,16 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       parmsBtn: [
         {
@@ -278,7 +278,7 @@ export default {
           Type: "success",
           Icon: "",
           signName: 1,
-          Size: "small"
+          Size: "small",
         },
         {
           ButtonCode: "save",
@@ -288,7 +288,7 @@ export default {
           Type: "success",
           Icon: "",
           signName: 4,
-          Size: "small"
+          Size: "small",
         },
         {
           ButtonCode: "save",
@@ -299,7 +299,7 @@ export default {
           signName: 3,
           Icon: "",
           Size: "small",
-          Params: { dataName: "selectionData", remarkTb: 2 }
+          Params: { dataName: "selectionData", remarkTb: 2 },
         },
         {
           ButtonCode: "save",
@@ -309,8 +309,8 @@ export default {
           signName: 4,
           Size: "small",
           Methods: "backData",
-          Icon: ""
-        }
+          Icon: "",
+        },
         // {
         //   ButtonCode: "save",
         //   BtnName: "返回",
@@ -331,7 +331,7 @@ export default {
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 10000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -347,7 +347,7 @@ export default {
       sysID: [
         { ID: 7961, AutoDays2: this.AutoDays2 },
         { ID: 7960 },
-        { ID: 5585 }
+        { ID: 5585 },
       ],
       userInfo: {},
       IsPurchaseBoss: false,
@@ -357,7 +357,7 @@ export default {
       LineViewSort: [],
       spread: null,
       sheetSelectRows: [],
-      sheetSelectObj: { start: 0, end: 0, count: 0 }
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   computed: {},
@@ -390,7 +390,7 @@ export default {
       this.$set(this, "btnForm", routeBtn);
     },
     //获取子组件实例
-    workbookInitialized: function(workbook, remarkTb) {
+    workbookInitialized: function (workbook, remarkTb) {
       this.spread = workbook;
     },
     //获取当前选中行的值
@@ -453,13 +453,13 @@ export default {
       let colHeader1 = [];
       let colInfos = [];
 
-      this.tableColumns[0].forEach(x => {
+      this.tableColumns[0].forEach((x) => {
         if (x.prop == "LineID") {
           colInfos.push({
             name: x.prop,
             displayName: "线别",
             cellType: this.checkBoxCellTypeLine,
-            size: parseInt(x.width)
+            size: parseInt(x.width),
           });
         } else if (
           x.DataType == "datetime" ||
@@ -470,19 +470,19 @@ export default {
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: "@" //字符串格式
+            formatter: "@", //字符串格式
           });
         } else {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
-            size: parseInt(x.width)
+            size: parseInt(x.width),
           });
         }
         colHeader1.push(x.label);
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-      colHeader1.forEach(function(value, index) {
+      colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
       sheet.setCellType(
@@ -497,7 +497,7 @@ export default {
         name: "isChecked",
         displayName: "isChecked",
         cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
-        size: 60
+        size: 60,
       };
       for (var name in checkbox) {
         colInfos[0][name] = checkbox[name];
@@ -640,7 +640,7 @@ export default {
         }
 
         let cellIndex = 0;
-        this.tableColumns[0].forEach(m => {
+        this.tableColumns[0].forEach((m) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
@@ -676,7 +676,7 @@ export default {
       });
 
       let cellIndex = 0;
-      this.tableColumns[0].forEach(m => {
+      this.tableColumns[0].forEach((m) => {
         //行，start,end
         if (m.isEdit) {
           sheet.getRange(-1, cellIndex, 1, 1).locked(false);
@@ -725,7 +725,7 @@ export default {
       var insertRowsCopyStyle = {
         canUndo: true,
         name: "insertRowsCopyStyle",
-        execute: function(context, options, isUndo) {
+        execute: function (context, options, isUndo) {
           var Commands = GC.Spread.Sheets.Commands;
           if (isUndo) {
             Commands.undoTransaction(context, options);
@@ -782,14 +782,14 @@ export default {
 
             return true;
           }
-        }
+        },
       };
 
       //修改剪切,已经不用
       var insertRowsCut = {
         canUndo: true,
         name: "insertRowsCut",
-        execute: function(context, options, isUndo) {
+        execute: function (context, options, isUndo) {
           var Commands = GC.Spread.Sheets.Commands;
           if (isUndo) {
             Commands.undoTransaction(context, options);
@@ -807,7 +807,7 @@ export default {
             this.sheetSelectObj.count = options.selections[0].rowCount;
             return true;
           }
-        }
+        },
       };
 
       this.spread
@@ -820,13 +820,13 @@ export default {
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
         this.spread
       );
-      MyContextMenu.prototype.onOpenMenu = function(
+      MyContextMenu.prototype.onOpenMenu = function (
         menuData,
         itemsDataForShown,
         hitInfo,
         spread
       ) {
-        itemsDataForShown.forEach(function(item, index) {
+        itemsDataForShown.forEach(function (item, index) {
           if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
             item.command = "insertRowsCopyStyle";
           }
@@ -839,24 +839,24 @@ export default {
       var contextMenu = new MyContextMenu();
       this.spread.contextMenu = contextMenu;
       // 剪贴板事件绑定
-      sheet.bind(GC.Spread.Sheets.Events.ClipboardChanged, function(
-        sender,
-        args
-      ) {
-        let s = sheet.getSelections()[0];
-        _this.sheetSelectRows = sheet.getArray(
-          s.row,
-          0,
-          s.rowCount,
-          _this.tableColumns[0].length
-        );
-        _this.sheetSelectObj.start = s.row;
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[0].length
+          );
+          _this.sheetSelectObj.start = s.row;
 
-        _this.sheetSelectObj.count = s.rowCount;
-      });
+          _this.sheetSelectObj.count = s.rowCount;
+        }
+      );
 
       // 表格单击齐套率弹框事件
-      this.spread.bind(GCsheets.Events.CellClick, function(e, args) {
+      this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.tableColumns[0].length) {
           _this.tableColumns[0].map((item, index) => {
             if (item.name === "K1" && args.col === index) {
@@ -872,14 +872,8 @@ export default {
       });
 
       //表格编辑事件
-      this.spread.bind(GCsheets.Events.EditStarting, function(e, args) {});
-      this.spread.bind(GCsheets.Events.EditEnded, function(e, args) {
-        // 自动计算数量
-        // _this.computedNum(args.row, args.col, args.editingText);
-        // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-        //   sheet.setArray(args.row, i, [2021]);
-        // }
-      });
+      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
+      this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {});
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
@@ -887,7 +881,7 @@ export default {
     },
     // 监听键盘
     keyDown() {
-      document.onkeydown = e => {
+      document.onkeydown = (e) => {
         //事件对象兼容
         let e1 =
           e || event || window.event || arguments.callee.caller.arguments[0];
@@ -905,7 +899,7 @@ export default {
     getSelectionData(type) {
       if (type === 0) {
         const errorNum = this.tableData[0].findIndex(
-          item => item["isChecked"] && !item["ProcessGroupID"]
+          (item) => item["isChecked"] && !item["ProcessGroupID"]
         );
         if (errorNum !== -1) {
           this.$message.error(`第${errorNum + 1}行工艺不能为空`);
@@ -917,30 +911,34 @@ export default {
     toPageSetting() {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: this.sysID[0].ID }
+        params: { ID: this.sysID[0].ID },
       });
     },
     // initSpread: function(spread) {
     //   this.spread = spread;
     // },
     changenoworkhours(item, value, prop, index, a, b) {
-      if (this.NoWorkHour.findIndex(m => m.OrderID == item.OrderID) === -1) {
+      if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
         this.NoWorkHour.push(item);
       }
     },
     changeline(item, value, prop, index, a, b) {
-      item.拉线.forEach(m => {
+      item.拉线.forEach((m) => {
         if (item.LineID === m.OrganizeID) {
           let tmp = m;
           if (
-            this.LineViewSort.findIndex(m2 => m2.OrganizeID === m.OrganizeID) ==
-            -1
+            this.LineViewSort.findIndex(
+              (m2) => m2.OrganizeID === m.OrganizeID
+            ) == -1
           ) {
             this.LineViewSort.push(tmp);
           } else {
-            tmp = this.LineViewSort[
-              this.LineViewSort.findIndex(m2 => m2.OrganizeID === m.OrganizeID)
-            ];
+            tmp =
+              this.LineViewSort[
+                this.LineViewSort.findIndex(
+                  (m2) => m2.OrganizeID === m.OrganizeID
+                )
+              ];
           }
           item.ViewSort = tmp.ViewSort;
           tmp.ViewSort = tmp.ViewSort + 1;
@@ -961,12 +959,12 @@ export default {
       }
       let newarr = [];
       if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach(element => {
+        arr.forEach((element) => {
           if (element.SupplierName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
             const obj = {
               ...element,
-              children: element.children
+              children: element.children,
             };
             newarr.push(obj);
           } else {
@@ -974,7 +972,7 @@ export default {
               const ab = this.rebuildData(value, element.children);
               const obj = {
                 ...element,
-                children: ab
+                children: ab,
               };
               if (ab && ab.length > 0) {
                 newarr.push(obj);
@@ -1016,7 +1014,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -1086,9 +1084,8 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.formSearchs[remarkTb].datas[
-        "ControlID"
-      ] = this.userInfo.WorkFlowInstanceID;
+      this.formSearchs[remarkTb].datas["ControlID"] =
+        this.userInfo.WorkFlowInstanceID;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
@@ -1100,7 +1097,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -1120,14 +1117,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1144,7 +1141,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -1200,7 +1197,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -1211,7 +1208,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -1225,7 +1222,7 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要批量填写开始日期的数据！");
       } else {
-        this.selectionData[0].forEach(a => {
+        this.selectionData[0].forEach((a) => {
           a.StartDate = this.ReplyDate;
         });
       }
@@ -1275,7 +1272,7 @@ export default {
         return;
       }
       let submitData = this.tableData[1]; //this.selectionData[0];
-      submitData.forEach(m => {
+      submitData.forEach((m) => {
         m.ReplyDate = this.ReplyDate;
         m["isChecked"] = true;
       });
@@ -1288,14 +1285,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1312,8 +1309,8 @@ export default {
         return;
       }
       //假如OrdID为空，则不传给后端
-      submitData = submitData.filter(item => item.OrderID);
-      submitData.forEach(m => {
+      submitData = submitData.filter((item) => item.OrderID);
+      submitData.forEach((m) => {
         m["MOSchedulingType"] = 3;
       });
       this.adminLoading = true;
@@ -1331,14 +1328,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1354,7 +1351,7 @@ export default {
       if (this.selectionData[2].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.selectionData[2].forEach(m => {
+        this.selectionData[2].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
         this.dataSave(this.selectionData[2], 2);
@@ -1369,7 +1366,7 @@ export default {
           .then(() => {
             // 确定
             this.adminLoading = true;
-            this.selectionData[1].forEach(a => {
+            this.selectionData[1].forEach((a) => {
               a["ElementDeleteFlag"] = 1;
             });
             this.dataSave(this.selectionData[1], 1);
@@ -1395,7 +1392,7 @@ export default {
         let newData = sheet.getDirtyRows();
         let submitData = [];
         if (newData.length != 0) {
-          newData.forEach(x => {
+          newData.forEach((x) => {
             submitData.push(x.item);
           });
         }
@@ -1414,7 +1411,7 @@ export default {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        this.selectionData[remarkTb].forEach(m => {
+        this.selectionData[remarkTb].forEach((m) => {
           m["ProductionStatus"] = 23;
         });
         this.dataSave(this.selectionData[remarkTb], remarkTb);
@@ -1431,7 +1428,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
       } else {
@@ -1439,7 +1436,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1449,7 +1446,7 @@ export default {
         this.$message.error("请选择数据！");
         return;
       }
-      submitData.forEach(m => {
+      submitData.forEach((m) => {
         m.ProductionStatus = status;
       });
 
@@ -1463,13 +1460,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1494,7 +1491,7 @@ export default {
 
       // let submitData = [];
       // this.getSelectionData();
-      this.selectionData[0].forEach(x => {
+      this.selectionData[0].forEach((x) => {
         x["Type"] = 0;
         x["dicID"] = 7960;
         x["isChecked"] = true;
@@ -1515,7 +1512,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
         } else {
@@ -1523,7 +1520,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -1535,12 +1532,12 @@ export default {
       //   return;
       // }
       // [];
-      let submitData = this.tableData[1].map(x => {
+      let submitData = this.tableData[1].map((x) => {
         return {
           ...x,
           Type: 0,
           dicID: 7960,
-          isChecked: true
+          isChecked: true,
         };
       });
       const originalSelectionData = JSON.parse(
@@ -1557,37 +1554,37 @@ export default {
           // 清空选中的，把选中的数据重新绑定
 
           this.resultMsg = res.data.resultMsg;
-          let newData = this.tableData[1].filter(a =>
-            originalSelectionData.some(b => b.OrderID == a.OrderID)
+          let newData = this.tableData[1].filter((a) =>
+            originalSelectionData.some((b) => b.OrderID == a.OrderID)
           );
 
           this.$set(this.selectionData, 1, []);
           if (newData.length != 0) {
-            this.tableData[1].forEach(item1 => {
+            this.tableData[1].forEach((item1) => {
               // 使用some方法查找是否存在匹配的OrdID
               const isMatched = newData.some(
-                item2 => item2.OrderID === item1.OrderID
+                (item2) => item2.OrderID === item1.OrderID
               );
               // 根据匹配结果设置IsChecked属性
               item1.isChecked = isMatched;
             });
           }
           this.selectionData[1] = this.tableData[1].filter(
-            item => item["isChecked"] == true
+            (item) => item["isChecked"] == true
           );
 
           this.adminLoading = false;
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -1608,11 +1605,11 @@ export default {
         let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
         this.$set(this.selectionData, 1, []);
         // 清空选中的，把选中的数据重新绑定
-        let newData = this.tableData[1].filter(a =>
-          templateData.some(b => b.OrderID == a.OrderID)
+        let newData = this.tableData[1].filter((a) =>
+          templateData.some((b) => b.OrderID == a.OrderID)
         );
         if (newData.length != 0) {
-          newData.forEach(c => {
+          newData.forEach((c) => {
             this.$nextTick(() => {
               _this.$refs.tableRefTwo.$refs.vxeTable.setCheckboxRow(c, true);
               _this.selectionData[1].push(c);
@@ -1622,14 +1619,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       // }
@@ -1641,7 +1638,7 @@ export default {
         return;
       }
       let submitData = this.selectionData[1]; //this.selectionData[1];这里有错误，如果取selection，获取到的是旧数据（没有匹配拉线前的）
-      submitData.forEach(m => {
+      submitData.forEach((m) => {
         m["MOSchedulingType"] = 1;
         m["dicID"] = 7960;
       });
@@ -1655,17 +1652,17 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

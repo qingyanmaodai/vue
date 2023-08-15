@@ -4,37 +4,65 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
-        <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
-          :isLoading="isLoading" :btnForm="btnForm" :signName="i" @btnClick="btnClick" />
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="i"
+          @btnClick="btnClick"
+        />
       </div>
     </div>
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="8"><span class="title">{{ title }}</span>
-              <span class="title" style="margin-left: 20px;">{{ title2 }}</span>
+            <el-col :span="8"
+              ><span class="title">{{ title }}</span>
+              <span class="title" style="margin-left: 20px">{{ title2 }}</span>
             </el-col>
-            <el-col :span="16" class="flex_flex_end"><el-divider direction="vertical"></el-divider>
+            <el-col :span="16" class="flex_flex_end"
+              ><el-divider direction="vertical"></el-divider>
               <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
               </el-button> -->
             </el-col>
           </el-row>
         </div>
-        <div class="flex_column" v-for="item in [0]" :key="item" v-show="labelStatus1 === item">
-          <ComSpreadTable ref="spreadsheetRef" :height="height" :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item"
-            :sysID="sysID[item]['ID']" :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-            @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" />
+        <div
+          class="flex_column"
+          v-for="item in [0]"
+          :key="item"
+          v-show="labelStatus1 === item"
+        >
+          <ComSpreadTable
+            ref="spreadsheetRef"
+            :height="height"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @workbookInitialized="workbookInitialized"
+            @selectChanged="selectChanged"
+          />
         </div>
       </div>
     </div>
     <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="4"><span class="title">拆分编辑完请保存 </span></el-col>
-          <el-col :span="24" class="flex_flex_end"><el-divider direction="vertical"></el-divider>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="24" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
             <el-button type="primary" size="mini" @click="changeEvent(1)">
               确定拆分
             </el-button>
@@ -42,15 +70,33 @@
         </el-row>
       </div>
       <div v-for="item in [1]" :key="item">
-        <ComSpreadTable2 ref="spreadsheetRef" :height="height" :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]" :tableLoading="tableLoading[item]" :remark="item" :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized" @selectChanged="selectChanged" :spaceBtnShow="false" />
+        <ComSpreadTable2
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
       </div>
     </el-dialog>
     <!-- 弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%"
-      @closeDialog="colDialogVisible = false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="全局欠料"
+      :tableDialog="colDialogVisible"
+      :sysID="5165"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
 
@@ -202,7 +248,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit:false
+      isEdit: false,
     };
   },
   watch: {},
@@ -381,8 +427,8 @@ export default {
       }
       this.$confirm(
         "确定要退回的【" +
-        this.selectionData[remarkTb].length +
-        "】数据吗，如果已经报工则无法退回？"
+          this.selectionData[remarkTb].length +
+          "】数据吗，如果已经报工则无法退回？"
       )
         .then((_) => {
           this.selectionData[remarkTb].forEach((x) => {
@@ -391,7 +437,7 @@ export default {
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     updateSAP(remarkTb, index, parms) {
       let res = null;
@@ -417,8 +463,8 @@ export default {
       }
       this.$confirm(
         "确定要同步的【" +
-        newData.length +
-        "】数据吗，如果已经同步过则无法再次同步"
+          newData.length +
+          "】数据吗，如果已经同步过则无法再次同步"
       )
         .then(async (_) => {
           this.adminLoading = true;
@@ -442,7 +488,7 @@ export default {
             });
           }
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     resetScheduling() {
       this.$confirm("确定要重新排全部数据吗？")
@@ -453,8 +499,10 @@ export default {
           let submitData = sheet.getDataSource();
           submitData.forEach((m) => {
             m["isChecked"] = true;
-            m["ProcessPlanID"] =  m["ProcessPlanID"] ==null ? -1 : m["ProcessPlanID"] ;
-            m["ProcessPartID"] = m["ProcessPartID"] ==null ? -1 : m["ProcessPartID"] ;
+            m["ProcessPlanID"] =
+              m["ProcessPlanID"] == null ? -1 : m["ProcessPlanID"];
+            m["ProcessPartID"] =
+              m["ProcessPartID"] == null ? -1 : m["ProcessPartID"];
           });
           if (submitData.length >= 0) {
             this.adminLoading = true;
@@ -487,7 +535,7 @@ export default {
             });
           }
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
 
     // 生成丝印计划
@@ -637,18 +685,21 @@ export default {
         });
         //给月计划赋值当月订单总数
         let res = await GetSearchData({
-          dicID: 5170, fields:
-            "SUM(PlanQty) As PlanQty",
-          ProcessName: '组装',
+          dicID: 5170,
+          fields: "SUM(PlanQty) As PlanQty",
+          ProcessName: "组装",
           CompletionStatus: 0,
-          PlanDay: [this.$moment().startOf('month').format('YYYY-MM-DD'), this.$moment().endOf('month').format('YYYY-MM-DD')]
-        })
+          PlanDay: [
+            this.$moment().startOf("month").format("YYYY-MM-DD"),
+            this.$moment().endOf("month").format("YYYY-MM-DD"),
+          ],
+        });
         const {
-          data: [{
-            PlanQty
-          }]
+          data: [{ PlanQty }],
         } = res.data;
-        this.title2 = `${this.$moment().format('YYYY年M月')} 订单总数：${PlanQty}`
+        this.title2 = `${this.$moment().format(
+          "YYYY年M月"
+        )} 订单总数：${PlanQty}`;
         // this.getOrgData();
         this.dataSearch(0);
       }
@@ -1057,7 +1108,7 @@ export default {
         .commandManager()
         .register("insertRowsCopyStyle", insertRowsCopyStyle);
 
-      function MyContextMenu() { }
+      function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
         this.spread[remarkTb]
       );
@@ -1113,7 +1164,7 @@ export default {
 
       this.spread[remarkTb].bind(
         GCsheets.Events.EditStarting,
-        function (e, args) { }
+        function (e, args) {}
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
@@ -1143,7 +1194,7 @@ export default {
               } else if (item["prop"] === "FormRate2") {
                 _this.dialogSearchForm.DemandDate =
                   _this.tableData[remarkTb][args.row]["D2"];
-              }else if (item["prop"] === "FormRate3") {
+              } else if (item["prop"] === "FormRate3") {
                 _this.dialogSearchForm.DemandDate =
                   _this.tableData[remarkTb][args.row]["D3"];
               } else if (item["prop"] === "FormRate4") {
@@ -1164,13 +1215,13 @@ export default {
       sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {
         console.log(
           info.row +
-          "," +
-          info.col +
-          "," +
-          "由" +
-          info.oldValue +
-          "改变为" +
-          info.newValue
+            "," +
+            info.col +
+            "," +
+            "由" +
+            info.oldValue +
+            "改变为" +
+            info.newValue
         );
         var arr = sheet.getDirtyRows();
         var arr2 = sheet.getInsertRows();
@@ -1290,7 +1341,11 @@ export default {
             editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
           }
         } else {
-          list.push("");
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
         }
       });
       remainNum = Qty - editNum;
@@ -1307,22 +1362,24 @@ export default {
       } else {
         // 接着计算下面每一个空格该有的数
         for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          let label = this.tableColumns[0][j].prop + "dy";
-          let obj = currentRow[label];
-          remainNum = remainNum - parseInt(val);
-          let maxNum =
-            (Capacity * obj.TotalHours * obj.DayCapacity) /
-            currentRow.StandardPeoples;
-          maxNum = parseInt(maxNum);
-          if (remainNum <= 0) {
-            list[j] = null;
-          } else {
-            if (remainNum <= maxNum) {
-              list[j] = remainNum;
-              break;
+          if (this.tableColumns[0][j]["prop2"]) {
+            let label = this.tableColumns[0][j].prop + "dy";
+            let obj = currentRow[label];
+            remainNum = remainNum - parseInt(val);
+            let maxNum =
+              (Capacity * obj.TotalHours * obj.DayCapacity) /
+              currentRow.StandardPeoples;
+            maxNum = parseInt(maxNum);
+            if (remainNum <= 0) {
+              list[j] = null;
             } else {
-              list[j] = maxNum;
-              remainNum -= maxNum;
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                remainNum -= maxNum;
+              }
             }
           }
         }
@@ -1399,7 +1456,7 @@ export default {
           });
         }
         this.lines = newData;
-        console.log(newData,'newData');
+        console.log(newData, "newData");
         this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
         this.checkBoxCellTypeLine.editorValueType(
           GC.Spread.Sheets.CellTypes.EditorValueType.value
@@ -1548,7 +1605,7 @@ export default {
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
 
     // 下拉选择事件
