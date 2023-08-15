@@ -75,110 +75,48 @@
           flex-direction: column;
         "
       >
-        <div class="admin_head_2 flex" ref="headRef">
-          <div v-for="i in [1, 2]" :key="i" style="width: 50%; height: 100%">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[i].datas"
-              :searchForm="formSearchs[i].forms"
-              :remark="i"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              :signName="i"
-              @btnClick="btnClick"
-            />
-          </div>
-        </div>
-        <div class="flex flex_grow">
-          <div
-            v-for="item in [1, 2]"
-            :key="item"
-            class="flex_grow"
-            style="width: 50%; height: 100%"
-          >
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]"
-              :tableLoading="tableLoading[item]"
-              :isToolbar="false"
-              :remark="item"
-              :sysID="sysID[item]['ID']"
-              :hasSelect="true"
-              :isEdit="isEdit[item]"
-              :isClear="isClear[item]"
-              :keepSource="true"
-              :pagination="tablePagination[item]"
-              @pageChange="pageChange"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-            />
-          </div>
-        </div>
+        <splitpanes class="default-theme">
+          <pane :size="50" v-for="item in [1, 2]" :key="item">
+            <div class="flex_column" style="width: 100%; height: 100%">
+              <div class="admin_head_2" ref="headRef">
+                <ComSearch
+                  ref="searchRef"
+                  :searchData="formSearchs[item].datas"
+                  :searchForm="formSearchs[item].forms"
+                  :remark="item"
+                  :isLoading="isLoading"
+                  :btnForm="btnForm"
+                  :signName="item"
+                  @btnClick="btnClick"
+                />
+              </div>
+              <div class="flex_grow">
+                <ComVxeTable
+                  :ref="`tableRef${item}`"
+                  :rowKey="'RowNumber'"
+                  height="100%"
+                  :tableData="tableData[item]"
+                  :tableHeader="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :isToolbar="false"
+                  :remark="item"
+                  :sysID="sysID[item]['ID']"
+                  :hasSelect="true"
+                  :isEdit="isEdit[item]"
+                  :isClear="isClear[item]"
+                  :keepSource="true"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                  @selectfun="selectFun"
+                />
+              </div>
+            </div>
+          </pane>
+        </splitpanes>
       </div>
     </el-dialog>
-    <!-- <dialogOptTable
-      title="关联工段"
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
-      width="80%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></dialogOptTable> -->
-    <!-- 弹框-->
-    <!-- <dialogOptTable
-      title="关联产品"
-      :tableDialog="colDialogVisible3"
-      :sysID="sysID[3]['ID']"
-      :isEdit="isEdit[3]"
-      :remark="3"
-      width="80%"
-      :hasSelect="hasSelect[3]"
-      @closeDialog="colDialogVisible3 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[3]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[3]"
-      :table-header="tableColumns[3]"
-      :table-loading="tableLoading[3]"
-      :table-pagination="tablePagination[3]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></dialogOptTable> -->
-
-    <ComFormDialog
-      ref="processForm"
-      :title="'新增工序'"
-      :dialogShow="processDialog1"
-      :formData="formData1"
-      :formRules="formRules1"
-      :formController="formController1"
-      @dialogBtnClick="dialogBtnClick1"
-    />
   </div>
 </template>
 
@@ -188,9 +126,6 @@ import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import dialogOptTable from "@/components/Dialog/dialogOptTable";
-import ComFormDialog from "@/components/ComFormDialog";
 import {
   GetHeader,
   GetSearchData,
@@ -203,68 +138,15 @@ export default {
   components: {
     ComSearch,
     ComVxeTable,
-    ComReportTable,
     Splitpanes,
     Pane,
-    ComFormDialog,
-    dialogOptTable,
   },
   data() {
     return {
       ////////////////// Search /////////////////
       selectionData: [[], [], []],
-      processDialog1: false,
       title: this.$route.meta.title,
       includeFields: [[], [], []],
-      formData1: {
-        ProcessName: "",
-        ProcessID: "",
-        SchedulingType: "",
-        IsScheduling: true,
-        IsAcquisition: true,
-        Status: 1,
-        dicID: 1182,
-      },
-      formRules1: {
-        ProcessGroupName: [
-          { required: true, message: "工序名称为必填项", trigger: "blur" },
-        ],
-        SchedulingType: [
-          { required: true, message: "排产方式为必填项", trigger: "change" },
-        ],
-      },
-      formController1: [
-        { label: "工序名称", prop: "ProcessName", type: "input" },
-        {
-          label: "排产方式",
-          prop: "SchedulingType",
-          type: "select",
-          select: [
-            { label: "产线", value: "产线" },
-            { label: "机台", value: "机台" },
-            { label: "机模", value: "机模" },
-          ],
-        },
-        {
-          label: "是否排产",
-          prop: "IsScheduling",
-          type: "switch",
-        },
-        {
-          label: "是否采集",
-          prop: "IsAcquisition",
-          type: "switch",
-        },
-        {
-          label: "状态",
-          prop: "Status",
-          type: "radioGroupLabel",
-          radioGroups: [
-            { label: "启用", value: 1 },
-            { label: "禁用", value: 0 },
-          ],
-        },
-      ],
       formSearchs: [
         {
           datas: {},
@@ -635,20 +517,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb === 2) {
-          data
-            .filter((item2) => {
-              return this.tableData[1].some(
-                (item1) => item2["ProcessID"] === item1["ProcessID"]
-              );
-            })
-            .forEach((item2) => {
-              item2["isChecked"] = true;
-            });
-          this.linkTableData = data.filter((item) => {
-            return item["isChecked"];
-          });
-        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -726,9 +594,6 @@ export default {
         this.colDialogVisible2 = true;
         this.dataSearch(2);
       }
-      //  else if (remarkTb === 2) {
-      //   this.processDialog1 = true;
-      // }
     },
     AddEvent(index) {
       if (!this.clickRow) {
@@ -760,31 +625,6 @@ export default {
         }
       }
     },
-    // 工序弹框确定添加
-    async dialogBtnClick1(val) {
-      if (val) {
-        let res = await SaveData([this.formData1]);
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(2);
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-        this.processDialog1 = false;
-      } else {
-        _this.$refs.processForm.$refs.formData.resetFields();
-        _this.processDialog1 = false;
-      }
-    },
     // 行内样式
     cellStyle({ row, column }) {
       if (column.property == "OrderNo") {
@@ -803,8 +643,8 @@ export default {
     },
     // 产品查询
     productSearch(row, prop) {
-      this.formSearchs[1].datas["ProcessGroupID"] = row.ProcessGroupID;
-      this.formSearchs[2].datas["ProcessGroupID"] = row.ProcessGroupID;
+      this.formSearchs[1].datas["Code"] = row.Code;
+      this.formSearchs[2].datas["Code"] = row.Code;
       this.dataSearch(1);
       this.dataSearch(2);
       this.colDialogVisible1 = true;
