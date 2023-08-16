@@ -678,6 +678,7 @@ export default {
             }
           });
           this.$set(this.OrderNos, i, m);
+          this.$set(this.tableColumns, remarkTb, m);
 
           this.OrderNos[i] = this.OrderNos[i]
             .filter((item) => item.isEdit)
@@ -739,6 +740,7 @@ export default {
         //   });
         // });
         this.$set(this.tableData, remarkTb, data);
+        console.log(this.tableData, "this.tableData");
         // if (remarkTb === 0) {
         //   this.setData(remarkTb);
         // }
@@ -765,9 +767,9 @@ export default {
     },
     // 改变状态
     changeStatus(item, index) {
-      this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
-      this.$set(this.tableData, 1, []);
+      // this.labelStatus1 = index;
+      // this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
+      // this.$set(this.tableData, 1, []);
       this.dataSearch(0);
     },
     // 选择数据
@@ -832,38 +834,39 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
-      if (!this.addNum) {
-        this.$message.error("请输入需要添加的行数!");
-        return;
+      if (remarkTb === 1) {
+        this.colDialogVisible2 = true;
       }
-      // 下拉数据是需要获取数据源
-      for (let x = 0; x < this.addNum; x++) {
-        let obj = {
-          dicID: this.sysID[remarkTb].ID,
-          rowNum: _.uniqueId("rowNum_"),
-        };
-        this.tableColumns[remarkTb].map((item) => {
-          obj[item.prop] = null;
-          obj["update"] = true;
-          if (item.prop === "Status") {
-            obj[item.prop] = 1;
-          }
-          if (item.prop === "RowNumber") {
-            obj["RowNumber"] = _.uniqueId();
-          }
-          for (let key in this.DataSourceList[remarkTb]) {
-            if (item.DataSourceName === key) {
-              obj[key] = this.DataSourceList[remarkTb][key];
-            }
-          }
-        });
+      // if (!this.addNum) {
+      //   this.$message.error("请输入需要添加的行数!");
+      //   return;
+      // }
+      // // 下拉数据是需要获取数据源
+      // for (let x = 0; x < this.addNum; x++) {
+      //   let obj = {
+      //     dicID: this.sysID[remarkTb].ID,
+      //     rowNum: _.uniqueId("rowNum_"),
+      //   };
+      //   this.tableColumns[remarkTb].map((item) => {
+      //     obj[item.prop] = null;
+      //     obj["update"] = true;
+      //     if (item.prop === "Status") {
+      //       obj[item.prop] = 1;
+      //     }
+      //     if (item.prop === "RowNumber") {
+      //       obj["RowNumber"] = _.uniqueId();
+      //     }
+      //     for (let key in this.DataSourceList[remarkTb]) {
+      //       if (item.DataSourceName === key) {
+      //         obj[key] = this.DataSourceList[remarkTb][key];
+      //       }
+      //     }
+      //   });
 
-        console.log("this.addNum", this.addNum);
+      //   console.log("this.addNum", this.addNum);
 
-        this.tableData[remarkTb].unshift(obj);
-      }
-
-      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
+      //   this.tableData[remarkTb].unshift(obj);
+      // }
     },
     changeProp(index) {
       if (!this.OrderNo) {
