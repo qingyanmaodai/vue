@@ -19,7 +19,7 @@ let base_url;
 //http://172.16.30.213       --tenpao
 //http://10.8.0.18:9998       --金星徽
 
-let apsUrl = "http://10.8.0.18:9998"; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+let apsUrl = ""; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
 apsUrl = apsUrl.trim();
 localStorage.setItem("apsurl", apsUrl);
 let _this = this;
