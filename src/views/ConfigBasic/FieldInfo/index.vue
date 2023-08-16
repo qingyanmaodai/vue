@@ -28,6 +28,7 @@
           :tableData="tableData[0]"
           :tableHeader="tableColumns[0]"
           :tableLoading="tableLoading[0]"
+          :hasSelect="hasSelect[0]"
           :remark="0"
           :sysID="35"
           :isEdit="isEdit"
@@ -78,6 +79,7 @@ export default {
       isLoading: false,
       isEdit: true,
       isUpdate: true,
+      hasSelect: [false],
     };
   },
   watch: {
@@ -286,13 +288,17 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
             }
           });
           this.$set(this.tableColumns, i, m);
