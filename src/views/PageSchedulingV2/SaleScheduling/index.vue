@@ -36,11 +36,7 @@
                 {{ item1.BtnName }}
               </el-button>
               <el-divider direction="vertical"></el-divider>
-              <div
-                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item2, y) in Status1"
-                :key="y"
-              >
+              <div v-for="(item2, y) in Status1" :key="y">
                 <span @click="changeStatus(item2, y, 1)">{{
                   item2.label
                 }}</span>

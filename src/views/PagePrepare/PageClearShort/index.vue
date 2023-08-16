@@ -24,12 +24,12 @@
                 清空超领
               </el-button>
               <el-divider direction="vertical"></el-divider>
-              <div
-                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item, y) in Status1"
-                :key="y"
-              >
-                <span @click="changeStatus(item, y)">{{ item.Label }}</span>
+              <div v-for="(item, y) in Status1" :key="y">
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.Label }}</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>

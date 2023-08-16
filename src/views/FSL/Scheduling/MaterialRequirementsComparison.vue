@@ -9,7 +9,7 @@
         :remark="0"
         :isLoading="isLoading"
         :btnForm="btnForm"
-        :signName="labelStatus"
+        :signName="labelStatus1"
         @btnClick="btnClick"
       />
     </div>
@@ -21,12 +21,12 @@
               <span class="title">{{ title }}</span>
             </el-col>
             <el-col :span="20" class="flex_flex_end">
-              <div
-                :class="labelStatus == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item, y) in Status1"
-                :key="y"
-              >
-                <span @click="changeStatus(item, y)">{{ item.label }}</span>
+              <div v-for="(item, y) in Status1" :key="y">
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.label }}</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
@@ -120,7 +120,7 @@ export default {
         { label: "已推", value: 1 },
       ],
       title: this.$route.meta.title,
-      labelStatus: 0,
+      labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,
       checkdBtnCodes: [],
@@ -662,7 +662,7 @@ export default {
     },
     // 改变状态
     changeStatus(item, index) {
-      this.labelStatus = index;
+      this.labelStatus1 = index;
       this.formSearchs[0].datas["IsPush"] = item.value;
       this.dataSearch(0);
     },

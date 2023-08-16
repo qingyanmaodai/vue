@@ -22,14 +22,14 @@
                 ><span class="title">{{ title }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
-                <div
-                  :class="currentIndex == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status1"
-                  :key="y"
-                >
-                  <span @click="changeStatus(item, y, 1)">{{
-                    item.label
-                  }}</span>
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -102,7 +102,7 @@ export default {
       title: this.$route.meta.title, //表名
       height: "740px",
       adminLoading: false, //加载状态
-      currentIndex: 0, //当前表下标
+      labelStatus1: 0, //当前表下标
       tabStatus: 0,
       btnForm: [], //拥有的按钮权限
       parmsBtn: [],
@@ -307,7 +307,7 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
 
-        sheet.setDataSource(this.tableData[this.currentIndex]);
+        sheet.setDataSource(this.tableData[this.labelStatus1]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
@@ -361,7 +361,7 @@ export default {
     },
     // 切换状态
     changeStatus(item, index) {
-      this.currentIndex = index;
+      this.labelStatus1 = index;
       this.dataSearch(index);
     },
   },

@@ -20,14 +20,14 @@
                 ><span class="title">{{ title }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
-                <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status1"
-                  :key="y"
-                >
-                  <span @click="changeStatus(item, y, 1)">{{
-                    item.label
-                  }}</span>
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -95,16 +95,14 @@
                 ><span class="title">{{ title2 }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
-                <div
-                  :class="
-                    labelStatus2 == item.value
-                      ? 'statusActive cursor'
-                      : 'cursor'
-                  "
-                  v-for="(item, y) in Status2"
-                  :key="y"
-                >
-                  <span @click="changeStatus2(item, y)">{{ item.label }}</span>
+                <div v-for="(item, y) in Status2" :key="y">
+                  <span
+                    @click="changeStatus2(item, y)"
+                    :class="
+                      labelStatus2 == y ? 'statusActive cursor' : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>

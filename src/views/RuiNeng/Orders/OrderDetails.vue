@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus === i">
+      <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -188,7 +188,7 @@ export default {
       machineCycle: "",
       title: this.$route.meta.title, //表名
       adminLoading: false, //加载状态
-      labelStatus: 0,
+      labelStatus1: 0,
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       // 表头添加动态按钮
@@ -641,7 +641,7 @@ export default {
     //     ? "是"
     //     : "否";
     //   console.log("item", this.formSearchs[0]["datas"]);
-    //   // this.labelStatus = index;
+    //   // this.labelStatus1 = index;
     //   this.dataSearch(0);
     // },
     // 保存

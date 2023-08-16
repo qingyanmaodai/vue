@@ -29,14 +29,12 @@
                 <el-button type="primary" size="mini">保存</el-button>
               </span>
               <el-divider direction="vertical"></el-divider>
-              <div
-                :class="
-                  labelStatus2 == item.value ? 'statusActive cursor' : 'cursor'
-                "
-                v-for="(item, y) in Status2"
-                :key="y"
-              >
-                <span @click="changeStatus2(item, y)">{{ item.label }}</span>
+              <div v-for="(item, y) in Status2" :key="y">
+                <span
+                  @click="changeStatus2(item, y)"
+                  :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.label }}</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>

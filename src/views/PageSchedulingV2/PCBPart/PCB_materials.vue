@@ -27,7 +27,11 @@
                 :class="tabStatus == y ? 'statusActive cursor' : 'cursor'"
                 :key="y"
               >
-                <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.label }}</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>

@@ -31,11 +31,11 @@
                 >
                 <el-col :span="20" class="flex_flex_end">
                   <!-- <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y)" :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div> -->
                 </el-col>
@@ -81,7 +81,6 @@
             />
           </div>
           <div class="admin_content">
-
             <div class="ant-table-title" ref="headRef_2">
               <el-row>
                 <el-col :span="4"
@@ -89,11 +88,11 @@
                 >
                 <el-col :span="20" class="flex_flex_end">
                   <!-- <div
-                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y)" :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'">{{ item.label }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div> -->
                 </el-col>

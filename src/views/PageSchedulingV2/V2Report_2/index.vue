@@ -27,12 +27,12 @@
                 >清除退补</el-button
               >
               <el-divider direction="vertical"></el-divider>
-              <div
-                :class="labelStatus3 == y ? 'statusActive cursor' : 'cursor'"
-                v-for="(item, y) in Status3"
-                :key="y"
-              >
-                <span @click="changeStatus3(item, y)">{{ item.label }}</span>
+              <div v-for="(item, y) in Status3" :key="y">
+                <span
+                  @click="changeStatus3(item, y)"
+                  :class="labelStatus3 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.label }}</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
@@ -90,7 +90,13 @@
                     v-for="(item, y) in Status1"
                     :key="y"
                   >
-                    <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                    <span
+                      @click="changeStatus(item, y)"
+                      :class="
+                        labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                      "
+                      >{{ item.label }}</span
+                    >
                     <el-divider direction="vertical"></el-divider>
                   </div>
                 </el-col>
@@ -193,16 +199,14 @@
                     >导出</el-button
                   >
                   <el-divider direction="vertical"></el-divider>
-                  <div
-                    :class="
-                      labelStatus2 == y ? 'statusActive cursor' : 'cursor'
-                    "
-                    v-for="(item, y) in Status2"
-                    :key="y"
-                  >
-                    <span @click="changeStatus2(item, y)">{{
-                      item.label
-                    }}</span>
+                  <div v-for="(item, y) in Status2" :key="y">
+                    <span
+                      @click="changeStatus2(item, y)"
+                      :class="
+                        labelStatus2 == y ? 'statusActive cursor' : 'cursor'
+                      "
+                      >{{ item.label }}</span
+                    >
                     <el-divider direction="vertical"></el-divider>
                   </div>
                 </el-col>
