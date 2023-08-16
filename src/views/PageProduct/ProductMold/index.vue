@@ -1,13 +1,7 @@
 <!--产品关联模具-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div>
         <ComSearch
           ref="searchRef"
@@ -24,17 +18,17 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div>
                 <el-radio
                   v-model="losePrepareDate"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >未配置模具</el-radio>
+                  >未配置模具</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
                 <el-select
                   clearable
@@ -43,7 +37,7 @@
                   v-model="MachineMouldID"
                 >
                   <el-option
-                    v-for="(item,i) in molds"
+                    v-for="(item, i) in molds"
                     :key="i"
                     :label="item.MoldName"
                     :value="item.MachineMouldID"
@@ -51,11 +45,7 @@
                   </el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="changeMold"
-                >
+                <el-button type="primary" size="mini" @click="changeMold">
                   配置模具
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
@@ -87,33 +77,20 @@
       </div>
     </div>
 
-    <el-dialog
-      title="提示"
-      :visible.sync="showDialog"
-      width="30%"
-    >
+    <el-dialog title="提示" :visible.sync="showDialog" width="30%">
       <span>您选中的数据存在已配置模具的产品</span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="showDialog = false"
-          size="small"
-        >取 消</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDialog = false" size="small">取 消</el-button>
         <!-- <el-button
           @click="btnClick_1"
           size="small"
           type="danger"
         >作废旧的并添加</el-button> -->
-        <el-button
-          type="primary"
-          size="small"
-          @click="btnClick_2"
-        >直接替换</el-button>
+        <el-button type="primary" size="small" @click="btnClick_2"
+          >直接替换</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -570,7 +547,7 @@ export default {
       this.dataSearch(0);
     },
     // 禁用正在生产的产品，不可更改绑定模具信息
-    checCheckboxkMethod({row}) {
+    checCheckboxkMethod({ row }) {
       if (row["IsChange"]) {
         return false;
       } else {

@@ -17,10 +17,10 @@ let base_url;
 //http://10.50.18.130             --佛照内网
 //http://192.168.1.188:9999        --瑞能
 //http://172.16.30.213       --tenpao
-//http://10.8.0.18:9998       --tenpao
+//http://10.8.0.18:9998       --金星徽
 
-let apsUrl = "http://192.168.1.166 "; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
-apsUrl = apsUrl.trim()
+let apsUrl = "http://10.8.0.18:9998"; //isgo 外网 http://3nr9908182.zicp.vip  qf http://a493486951.wocp.fun
+apsUrl = apsUrl.trim();
 localStorage.setItem("apsurl", apsUrl);
 let _this = this;
 if (process.env.NODE_ENV === "production") {
@@ -33,12 +33,12 @@ if (process.env.NODE_ENV === "production") {
 // create an axios instance
 const service = axios.create({
   baseURL: base_url, // api 的 base_url
-  timeout: 20 * 60 * 1000 // request timeout
+  timeout: 20 * 60 * 1000, // request timeout
 });
 
 // 请求拦截器
 service.interceptors.request.use(
-  config => {
+  (config) => {
     if (config.url == "/Login/CheckAccount") {
       config.url = config.url + "?eipaulg=" + config.data.eipaulg;
     }
@@ -53,7 +53,7 @@ service.interceptors.request.use(
     }
     return config;
   },
-  error => {
+  (error) => {
     // do something with request error
     // console.log(error) // for debug
     return Promise.reject(error);
@@ -62,7 +62,7 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-  response => {
+  (response) => {
     if (response.statusText == "OK") {
       return response;
     } else {
@@ -75,12 +75,12 @@ service.interceptors.response.use(
       return Promise.reject(response.data.msg);
     }
   },
-  error => {
+  (error) => {
     if (error.response.status == 401) {
       Message({
         message: "登录信息失效，请重新登录！",
         type: "error",
-        duration: 5 * 1000
+        duration: 5 * 1000,
       });
       this.$router.push("/login");
     }

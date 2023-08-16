@@ -24,7 +24,7 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <a
-                style="color: #ec0d1f;margin-right: 30px;"
+                style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
                 target="_blank"
                 class="font_size_1"

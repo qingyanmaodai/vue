@@ -1,17 +1,8 @@
 <!--插件周计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_container"
-      style="width:100%"
-    >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_container" style="width: 100%">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           v-show="labelStatus1 != 4"
           ref="searchRef"
@@ -40,10 +31,7 @@
               <el-col :span="4">
                 <span class="title">{{ title }}</span>
               </el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
+              <el-col :span="20" class="flex_flex_end">
                 <el-date-picker
                   v-model="ReplyDate"
                   type="date"
@@ -156,7 +144,7 @@
             @selectfun="selectFun"
             @sortChange="sortChange"
           />
-          <div style="color:red;font-weight:bold">{{this.resultMsg}}</div>
+          <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
     </div>
@@ -207,7 +195,7 @@ export default {
         { label: "分线列表", value: 4 },
       ],
       title: this.$route.meta.title,
-      resultMsg:'',
+      resultMsg: "",
       delData: [[]],
       formSearchs: [
         {
@@ -250,7 +238,7 @@ export default {
         //   Methods: "parseData",
         //   Icon: "",
         // },
-            {
+        {
           ButtonCode: "save",
           BtnName: "保存",
           isLoading: false,
@@ -546,7 +534,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-      //  this.formSearchs[0].datas["Extend11"] = "CRTD";
+        //  this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = 26; //默认待排
         this.dataSearch(0);
       }
@@ -680,12 +668,12 @@ export default {
       let resultTag = false;
       if (newData.length != 0) {
         if (tag == 0) {
-          newData.forEach((x,y) => {
+          newData.forEach((x, y) => {
             x.isChecked = true;
 
             if (!x.ProcessGroupID) {
               resultTag = true;
-               this.$message.error((y+1)+"工艺不能为空");
+              this.$message.error(y + 1 + "工艺不能为空");
             } else {
             }
           });
@@ -710,7 +698,7 @@ export default {
         this.$message.error("请选择需要下达的数据！");
         return;
       }
-         
+
       submitData.forEach((m) => {
         m["MOSchedulingType"] = 3;
       });
@@ -763,19 +751,15 @@ export default {
           .catch(() => {
             // 取消
           });
-        
       }
     },
-       // 保存
+    // 保存
     async save(remarkTb, index, parms, newData) {
-        if (this.selectionData[0].length == 0) {
+      if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-     
-       this.dataSave(this.selectionData[remarkTb],0);
+        this.dataSave(this.selectionData[remarkTb], 0);
       }
-       
- 
     },
     async dataSave(newData, remarkTb) {
       let res = await GetSearch(newData, "/APSAPI/SaveData");
@@ -833,7 +817,6 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择要进入分线列表的数据！");
       } else {
-   
         // 进入预排计划
 
         this.setWeekData(1);
@@ -862,8 +845,8 @@ export default {
         if (result) {
           this.$set(this.tableData, 1, data);
           // 清空选中的，把选中的数据重新绑定
-          
-          this.resultMsg=res.data.resultMsg
+
+          this.resultMsg = res.data.resultMsg;
 
           let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
           this.$set(this.selectionData, 1, []);
@@ -878,7 +861,7 @@ export default {
               });
             });
           }
-         // console.log(this.selectionData[1]);
+          // console.log(this.selectionData[1]);
           this.adminLoading = false;
           this.$message({
             message: msg,

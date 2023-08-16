@@ -1,64 +1,62 @@
 <!--组织汇总-->
 <style type="text/css">
-
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
- 
-td,th {
-    padding: 0;
+
+td,
+th {
+  padding: 0;
 }
- 
+
 .pure-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    empty-cells: show;
-    border: 1px solid #cbcbcb;
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  border: 1px solid #cbcbcb;
 }
- 
+
 .pure-table caption {
-    color: #000;
-    font: italic 85%/1 arial,sans-serif;
-    padding: 1em 0;
-    text-align: center;
+  color: #000;
+  font: italic 85%/1 arial, sans-serif;
+  padding: 1em 0;
+  text-align: center;
 }
- 
-.pure-table td,.pure-table th {
-    border-left: 2px solid #cbcbcb;
-    border-width: 0 0 0 1px;
-    font-size: inherit;
-    margin: 0;
-    overflow: visible;
-    padding: 3px 15px
+
+.pure-table td,
+.pure-table th {
+  border-left: 2px solid #cbcbcb;
+  border-width: 0 0 0 1px;
+  font-size: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 3px 15px;
 }
- 
+
 .pure-table thead {
-    background-color: #e0e0e0;
-    color: #000;
-    text-align: left;
-    vertical-align: bottom;
+  background-color: #e0e0e0;
+  color: #000;
+  text-align: left;
+  vertical-align: bottom;
 }
- 
+
 .pure-table td {
-    background-color: transparent;
-    height: 18px;
+  background-color: transparent;
+  height: 18px;
 }
- 
+
 .pure-table-bordered td {
-    border-bottom: 1px solid #cbcbcb;
+  border-bottom: 1px solid #cbcbcb;
 }
- 
-.pure-table-bordered tbody>tr:last-child>td {
-    border-bottom-width: 0;
+
+.pure-table-bordered tbody > tr:last-child > td {
+  border-bottom-width: 0;
 }
 </style>
 <template>
-  <div class="container"     v-loading="adminLoading">
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -71,13 +69,10 @@ td,th {
       />
     </div>
     <div>
-      <div class="admin_content" v-html="content">
-      </div>
+      <div class="admin_content" v-html="content"></div>
     </div>
 
     <!-- 导出多级表头的虚拟表 -->
-    
-
   </div>
 </template>
 
@@ -87,7 +82,7 @@ import XLSX from "xlsx";
 import FileSaver from "file-saver";
 import ComSearch from "@/components/ComSearch";
 import ComSpanTable from "@/components/ComSpanTable";
-import { GetHeader, GetSearchData, ExportData,GetSearch } from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
 export default {
   name: "DayPlan",
   components: {
@@ -102,7 +97,7 @@ export default {
       generalExportHeader: [],
       title: this.$route.meta.title,
       drawer: false,
-      content:'数据加载中',
+      content: "数据加载中",
       formSearchs: [
         {
           datas: {},
@@ -119,7 +114,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      adminLoading:false
+      adminLoading: false,
     };
   },
   watch: {},
@@ -136,10 +131,11 @@ export default {
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
-      
+
       let rem =
-        document.documentElement.clientHeight - headHeight - 
- this.$store.getters.reduceHeight;
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
@@ -215,18 +211,18 @@ export default {
       debugger;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 导出多级表头
     async exportmoreExcel(remarkTb) {
-   this.adminLoading = true;
+      this.adminLoading = true;
       debugger;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
       form["rows"] = 0;
       debugger;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 导出多级表头
     exportMoreData(wb, title) {
@@ -305,17 +301,16 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = 0;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearch(form,'/APSAPI/GetDayPlanReport');
-      const { result, data, count, msg,content } = res.data;
+      let res = await GetSearch(form, "/APSAPI/GetDayPlanReport");
+      const { result, data, count, msg, content } = res.data;
       if (result) {
- 
-        this.content=content;
+        this.content = content;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },

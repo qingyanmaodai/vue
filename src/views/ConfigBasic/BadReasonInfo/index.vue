@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,16 +16,13 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="openDrawer"
-              >新增异常</el-button>
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="primary" size="mini" @click="openDrawer"
+                >新增异常</el-button
+              >
               <el-divider direction="vertical"></el-divider>
               <el-tooltip
                 class="item"
@@ -45,7 +36,7 @@
                     role="img"
                     aria-label="redo"
                     class="anticon anticon-redo icon_size"
-                  ><svg
+                    ><svg
                       class=""
                       data-icon="redo"
                       width="1em"
@@ -55,8 +46,10 @@
                       viewBox="64 64 896 896"
                       focusable="false"
                     >
-                      <path d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"></path>
-                    </svg></span>
+                      <path
+                        d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
+                      ></path></svg
+                  ></span>
                 </span>
               </el-tooltip>
               <el-divider direction="vertical"></el-divider>
@@ -82,23 +75,13 @@
       </div>
     </div>
 
-    <el-drawer
-      :title="drawerTitle"
-      :visible.sync="dialogShow"
-      direction="rtl"
-    >
+    <el-drawer :title="drawerTitle" :visible.sync="dialogShow" direction="rtl">
       <div class="drawer_body">
         <el-form label-width="90px">
           <el-row>
             <el-col :span="24">
-              <el-form-item
-                label="类型"
-                prop=""
-              >
-                <el-radio-group
-                  v-model="Type"
-                  size="small"
-                >
+              <el-form-item label="类型" prop="">
+                <el-radio-group v-model="Type" size="small">
                   <el-radio-button label="生产异常"></el-radio-button>
                   <el-radio-button label="达成异常"></el-radio-button>
                 </el-radio-group>
@@ -116,10 +99,7 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="编码"
-                prop="AbnormalCode"
-              >
+              <el-form-item label="编码" prop="AbnormalCode">
                 <el-input
                   v-model="abnormalForm[0].AbnormalCode"
                   type="text"
@@ -127,10 +107,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="异常名称"
-                prop="AbnormalReason"
-              >
+              <el-form-item label="异常名称" prop="AbnormalReason">
                 <el-input
                   v-model="abnormalForm[0].AbnormalReason"
                   type="text"
@@ -140,10 +117,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="APS工序"
-                prop="ProcessID"
-              >
+              <el-form-item label="APS工序" prop="ProcessID">
                 <el-select
                   ref="formRef"
                   v-model="abnormalForm[0].ProcessID"
@@ -152,7 +126,7 @@
                   multiple
                 >
                   <el-option
-                    v-for="(item,x) in processData"
+                    v-for="(item, x) in processData"
                     :key="x"
                     :value="item.ProcessID"
                     :label="item.ProcessName"
@@ -162,10 +136,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="细分工序"
-                prop="TinyProcessID"
-              >
+              <el-form-item label="细分工序" prop="TinyProcessID">
                 <el-select
                   ref="formRef"
                   v-model="abnormalForm[0].TinyProcessID"
@@ -174,7 +145,7 @@
                   multiple
                 >
                   <el-option
-                    v-for="(item,x) in tinyProcessData"
+                    v-for="(item, x) in tinyProcessData"
                     :key="x"
                     :value="item.TinyProcessID"
                     :label="item.TinyProcessName"
@@ -186,10 +157,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="备注"
-                prop="Remark1"
-              >
+              <el-form-item label="备注" prop="Remark1">
                 <el-input
                   v-model="abnormalForm[1].Remark1"
                   type="textarea"
@@ -208,10 +176,7 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="编码"
-                prop="AbnormalCode"
-              >
+              <el-form-item label="编码" prop="AbnormalCode">
                 <el-input
                   v-model="abnormalForm[1].AbnormalCode"
                   type="text"
@@ -219,10 +184,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="异常名称"
-                prop="AbnormalReason"
-              >
+              <el-form-item label="异常名称" prop="AbnormalReason">
                 <el-input
                   v-model="abnormalForm[1].AbnormalReason"
                   type="text"
@@ -232,10 +194,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item
-                label="大类"
-                prop="BigType"
-              >
+              <el-form-item label="大类" prop="BigType">
                 <el-input
                   v-model="abnormalForm[1].BigType"
                   type="text"
@@ -243,10 +202,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                label="备注"
-                prop="Remark1"
-              >
+              <el-form-item label="备注" prop="Remark1">
                 <el-input
                   v-model="abnormalForm[1].Remark1"
                   type="textarea"
@@ -257,20 +213,18 @@
         </el-form>
       </div>
       <div class="drawer_footer">
-        <el-button
-          plain
-          size="small"
-          @click="dialogShow = false"
-        >取消</el-button>
+        <el-button plain size="small" @click="dialogShow = false"
+          >取消</el-button
+        >
         <el-button
           type="primary"
           size="small"
           @click="sureAdd"
           :loading="sureLoading"
-        >确认</el-button>
+          >确认</el-button
+        >
       </div>
     </el-drawer>
-
   </div>
 </template>
 

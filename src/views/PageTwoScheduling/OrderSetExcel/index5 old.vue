@@ -1,17 +1,8 @@
 <!--组织信息-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_container"
-      style="width:100%"
-    >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_container" style="width: 100%">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           v-show="labelStatus1 != 4"
           ref="searchRef"
@@ -40,10 +31,7 @@
               <el-col :span="4">
                 <span class="title">{{ title }}</span>
               </el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
+              <el-col :span="20" class="flex_flex_end">
                 <el-date-picker
                   v-model="ReplyDate"
                   type="date"
@@ -122,7 +110,6 @@
             :showFooter="true"
             :includeFields="includeFields"
             :cellStyle="cellStyle"
-         
             :isClear="isClear[0]"
             :showPagination="true"
             :pagination="tablePagination[0]"
@@ -154,10 +141,10 @@
             @pageChange="pageChange"
             @pageSize="pageSize"
             @selectfun="selectFun"
-                @changeline="changeline"
+            @changeline="changeline"
             @sortChange="sortChange"
           />
-          <div style="color:red;font-weight:bold">{{this.resultMsg}}</div>
+          <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
     </div>
@@ -208,7 +195,7 @@ export default {
         { label: "分线列表", value: 4 },
       ],
       title: this.$route.meta.title,
-      resultMsg:'',
+      resultMsg: "",
       delData: [[]],
       formSearchs: [
         {
@@ -251,14 +238,14 @@ export default {
         //   Methods: "parseData",
         //   Icon: "",
         // },
-            {
+        {
           ButtonCode: "save",
           BtnName: "保存",
           isLoading: false,
           Methods: "save",
           Type: "success",
           Icon: "",
-             signName: [1, 4],
+          signName: [1, 4],
           Size: "small",
         },
         {
@@ -307,8 +294,8 @@ export default {
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
-           NoWorkHour:[]
-      ,LineViewSort:[]
+      NoWorkHour: [],
+      LineViewSort: [],
     };
   },
   computed: {},
@@ -324,33 +311,33 @@ export default {
     }, 500);
   },
   methods: {
-    changenoworkhours(item, value, prop, index, a, b)
-    {
-      if(this.NoWorkHour.findIndex(m=>m.OrderID==item.OrderID)===-1)
-      {
-    
-     this.NoWorkHour.push(item)
-  
+    changenoworkhours(item, value, prop, index, a, b) {
+      if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
+        this.NoWorkHour.push(item);
       }
     },
     changeline(item, value, prop, index, a, b) {
       item.拉线.forEach((m) => {
         if (item.LineID === m.OrganizeID) {
-          let tmp=m;
-          if(this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)==-1)
-          {
+          let tmp = m;
+          if (
+            this.LineViewSort.findIndex(
+              (m2) => m2.OrganizeID === m.OrganizeID
+            ) == -1
+          ) {
             this.LineViewSort.push(tmp);
-          }
-          else 
-          {
-            tmp=this.LineViewSort[this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)];
+          } else {
+            tmp =
+              this.LineViewSort[
+                this.LineViewSort.findIndex(
+                  (m2) => m2.OrganizeID === m.OrganizeID
+                )
+              ];
           }
           item.ViewSort = tmp.ViewSort;
-          tmp.ViewSort=tmp.ViewSort+1
-       
+          tmp.ViewSort = tmp.ViewSort + 1;
         }
       });
-    
     },
     searchTree(msg) {
       this.treeData = [];
@@ -511,7 +498,8 @@ export default {
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
-            this.formSearchs[remarkTb].datas["ControlID"]=this.userInfo.WorkFlowInstanceID;
+      this.formSearchs[remarkTb].datas["ControlID"] =
+        this.userInfo.WorkFlowInstanceID;
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -579,7 +567,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-       // this.formSearchs[0].datas["Extend11"] = "CRTD";
+        // this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = 26; //默认待排
         this.dataSearch(0);
       }
@@ -644,7 +632,7 @@ export default {
     },
     tableRowClassName({ row, rowIndex }) {
       let className = "";
-      if (row.DbResult !='' &&row.DbResult!='计算成功') {
+      if (row.DbResult != "" && row.DbResult != "计算成功") {
         className += "bgRedColor";
       }
       return className;
@@ -665,7 +653,7 @@ export default {
       if (index === 0) {
         s = [];
       } else if (index === 1) {
-       // this.formSearchs[0].datas["Extend11"] = "CRTD";
+        // this.formSearchs[0].datas["Extend11"] = "CRTD";
         s = [26];
       } else if (index === 2) {
         s = [21, 22, 23];
@@ -713,12 +701,12 @@ export default {
       let resultTag = false;
       if (newData.length != 0) {
         if (tag == 0) {
-          newData.forEach((x,y) => {
+          newData.forEach((x, y) => {
             x.isChecked = true;
 
             if (!x.ProcessGroupID) {
               resultTag = true;
-               this.$message.error((y+1)+"工艺不能为空");
+              this.$message.error(y + 1 + "工艺不能为空");
             } else {
             }
           });
@@ -743,7 +731,7 @@ export default {
         this.$message.error("请选择需要下达的数据！");
         return;
       }
-         
+
       submitData.forEach((m) => {
         m["MOSchedulingType"] = 3;
       });
@@ -781,7 +769,7 @@ export default {
     },
     // 退回
     backData() {
-     if (this.selectionData[1].length == 0) {
+      if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.$confirm("确定退回吗？")
@@ -789,41 +777,36 @@ export default {
             // 确定
             this.adminLoading = true;
             this.selectionData[1].forEach((a) => {
-            a["ElementDeleteFlag"]=1;
+              a["ElementDeleteFlag"] = 1;
             });
             this.dataSave(this.selectionData[1], 1);
           })
           .catch(() => {
             // 取消
           });
-        
       }
     },
-       // 保存
+    // 保存
     async save(remarkTb, index, parms, newData) {
-          if(this.NoWorkHour.length>0&&remarkTb==0)
-      {
-
-        this.selectionData[remarkTb]=this.selectionData[remarkTb].concat(this.NoWorkHour);
-        
+      if (this.NoWorkHour.length > 0 && remarkTb == 0) {
+        this.selectionData[remarkTb] = this.selectionData[remarkTb].concat(
+          this.NoWorkHour
+        );
       }
-        if (this.selectionData[remarkTb].length == 0) {
+      if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-     
-       this.dataSave(this.selectionData[remarkTb],remarkTb);
+        this.dataSave(this.selectionData[remarkTb], remarkTb);
       }
-       
- 
     },
     async dataSave(newData, remarkTb) {
       let res = await GetSearch(newData, "/APSAPI/SaveData");
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
       if (result) {
-             this.$set(this.selectionData, remarkTb, []);
-          this.NoWorkHour=[]
- 
+        this.$set(this.selectionData, remarkTb, []);
+        this.NoWorkHour = [];
+
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
@@ -875,7 +858,6 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择要进入分线列表的数据！");
       } else {
-   
         // 进入预排计划
 
         this.setWeekData(1);
@@ -904,8 +886,8 @@ export default {
         if (result) {
           this.$set(this.tableData, 1, data);
           // 清空选中的，把选中的数据重新绑定
-          
-          this.resultMsg=res.data.resultMsg
+
+          this.resultMsg = res.data.resultMsg;
 
           let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
           this.$set(this.selectionData, 1, []);
@@ -920,7 +902,7 @@ export default {
               });
             });
           }
-         // console.log(this.selectionData[1]);
+          // console.log(this.selectionData[1]);
           this.adminLoading = false;
           this.$message({
             message: msg,

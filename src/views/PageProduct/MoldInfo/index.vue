@@ -2,37 +2,76 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-        :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :isLoading="isLoading"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
     </div>
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
             <el-col :span="20" class="flex_flex_end">
-              <el-button type="primary" size="mini" @click="openDrawer(0)">新增模具</el-button>
+              <el-button type="primary" size="mini" @click="openDrawer(0)"
+                >新增模具</el-button
+              >
               <el-divider direction="vertical"></el-divider>
-              <el-button type="warning" size="mini" @click="openDrawer(1)">改模</el-button>
+              <el-button type="warning" size="mini" @click="openDrawer(1)"
+                >改模</el-button
+              >
               <el-divider direction="vertical"></el-divider>
-              <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
+              <div
+                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                v-for="(item, y) in Status1"
+                :key="y"
+              >
                 <span @click="changeStatus(item, y)">{{ item.label }}</span>
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
           </el-row>
         </div>
-        <ComVxeTable :rowKey="'RowNumber'" :height="height" :tableData="tableData[0]" :tableHeader="tableColumns[0]"
-          :tableLoading="tableLoading[0]" :remark="0" :hasSelect="true" :isMultiple="false" :sysID="sysID"
-          :isEdit="true" :isClear="isClear[0]" :cellStyle="cellStyle" :pagination="tablePagination[0]"
-          @handleRowClick="handleRowClick" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
-          @selectfun="selectFun" />
+        <ComVxeTable
+          :rowKey="'RowNumber'"
+          :height="height"
+          :tableData="tableData[0]"
+          :tableHeader="tableColumns[0]"
+          :tableLoading="tableLoading[0]"
+          :remark="0"
+          :hasSelect="true"
+          :isMultiple="false"
+          :sysID="sysID"
+          :isEdit="true"
+          :isClear="isClear[0]"
+          :cellStyle="cellStyle"
+          :pagination="tablePagination[0]"
+          @handleRowClick="handleRowClick"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+        />
       </div>
     </div>
 
     <!-- 新增用户弹框 -->
-    <ComFormDialog ref="btnForm" :title="'新增模具'" :dialogShow="dialogShow" :formData="formData" :formRules="formRules"
-      :formController="formController" @dialogBtnClick="dialogBtnClick" />
+    <ComFormDialog
+      ref="btnForm"
+      :title="'新增模具'"
+      :dialogShow="dialogShow"
+      :formData="formData"
+      :formRules="formRules"
+      :formController="formController"
+      @dialogBtnClick="dialogBtnClick"
+    />
   </div>
 </template>
 
@@ -141,7 +180,7 @@ export default {
           IsShow: true,
           radioGroups: [
             { label: "启用", value: 1 },
-            { label: "制作中", value: -1 }
+            { label: "制作中", value: -1 },
           ],
         },
       ],
@@ -292,7 +331,7 @@ export default {
           _this.$set(_this.btnForm[index], "isLoading", true);
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -445,7 +484,7 @@ export default {
           let submitData = [];
           let obj = JSON.parse(JSON.stringify(this.selectionData[0][0]));
           obj["Status"] = 0;
-          obj["Remark2"] = '改模中';
+          obj["Remark2"] = "改模中";
           submitData.push(obj);
           let obj2 = JSON.parse(JSON.stringify(this.formData));
           obj2["dieBeforeName"] = obj.MoldName;
@@ -455,10 +494,10 @@ export default {
             //旧模
             dicID: 7969,
             OperationStatus: 1,
-            OperationTag: 1,// 被改模对象
+            OperationTag: 1, // 被改模对象
             MachineMouldID: this.selectionData[0][0].MachineMouldID,
             ExpectDate: this.formData.ExpectDate,
-            MouldMaintainID: ''
+            MouldMaintainID: "",
           };
           let obj4 = [
             {
@@ -469,14 +508,14 @@ export default {
               OperationMoldID: this.selectionData[0][0].MachineMouldID, //旧模id
               MachineMouldID: this.formData.MachineMouldID,
               ExpectDate: this.formData.ExpectDate,
-              MouldMaintainID: ''
+              MouldMaintainID: "",
             },
           ];
           obj2["childrens"] = obj4;
           submitData.push(obj2);
           submitData.push(obj3);
           submitData.push(obj4);
-          debugger
+          debugger;
           this.generalSaveData(submitData, 0);
           this.dialogShow = false;
         }

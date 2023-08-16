@@ -1,8 +1,5 @@
 <template>
-  <component
-    :is="type"
-    v-bind="linkProps(to)"
-  >
+  <component :is="type" v-bind="linkProps(to)">
     <slot />
   </component>
 </template>
@@ -41,13 +38,11 @@ export default {
           target: "_blank",
           rel: "noopener",
         };
-      }
-       else if (this.dicID) {
-         return {
-          to: to+"?dicID="+ this.dicID,
+      } else if (this.dicID) {
+        return {
+          to: to + "?dicID=" + this.dicID,
         };
-      }
-      else {
+      } else {
         return {
           to: to,
         };

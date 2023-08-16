@@ -70,14 +70,14 @@
                 <el-input
                   size="small"
                   v-model="formSearchs[1].datas['Code']"
-                  style="width:140px"
+                  style="width: 140px"
                   @keyup.enter.native="dataSearch(1)"
                 ></el-input>
                 <el-divider direction="vertical"></el-divider>
                 <span>名称：</span>
                 <el-input
                   size="small"
-                  style="width:140px"
+                  style="width: 140px"
                   @keyup.enter.native="dataSearch(1)"
                   v-model="formSearchs[1].datas['MaterialName']"
                 ></el-input>
@@ -87,7 +87,7 @@
                 <span>规格：</span>
                 <el-input
                   size="small"
-                  style="width:140px"
+                  style="width: 140px"
                   v-model="formSearchs[1].datas['Spec']"
                   @keyup.enter.native="dataSearch(1)"
                 ></el-input>
@@ -114,7 +114,7 @@
                   filterable
                   size="small"
                   placeholder="选择仓库"
-                  style="width:100px"
+                  style="width: 100px"
                   v-model="warehouseValue"
                   @change="selectWarehouse"
                 >
@@ -159,13 +159,13 @@
                       v-show="!expendColl"
                       src="../../../assets/svg/collapse.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                     <img
                       v-show="expendColl"
                       src="../../../assets/svg/expend.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                   </span>
                 </el-tooltip>
@@ -197,7 +197,7 @@
     </div>
 
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5;">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComReportTable
@@ -251,14 +251,14 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetServerTime
+  GetServerTime,
 } from "@/api/Common";
 export default {
   name: "BOMTechnicalConfirmation",
   components: {
     ComSearch,
     ComVxeTable,
-    ComReportTable
+    ComReportTable,
   },
   data() {
     return {
@@ -276,20 +276,20 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       parmsBtn: [],
       parmsBtn2: [
@@ -300,8 +300,8 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataSave",
-          Icon: ""
-        }
+          Icon: "",
+        },
       ],
       btnForm: [],
       btnForm2: [],
@@ -313,7 +313,7 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
@@ -328,13 +328,13 @@ export default {
       Status1: [
         { label: "待确认", value: "未开始" },
         { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" }
+        { label: "全部", value: "" },
       ],
       Status2: [
         { label: "全部", value: 0 },
         { label: "未点检", value: 1 },
         { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 }
+        { label: "已领未点", value: 3 },
       ],
       labelStatus1: 0,
       labelStatus2: 0,
@@ -343,7 +343,7 @@ export default {
       enlargeType: true,
       rem: "",
       warehouses: [],
-      userInfo: {}
+      userInfo: {},
     };
   },
   watch: {},
@@ -482,11 +482,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -496,7 +496,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -537,7 +537,7 @@ export default {
       if (result) {
         if (remarkTb == 1) {
           if (data.length != 0) {
-            data.forEach(a => {
+            data.forEach((a) => {
               this.$set(a, "update", false);
             });
           }
@@ -548,7 +548,7 @@ export default {
           let num2 = 0;
           let Rate = 0;
           if (data.length != 0) {
-            data.forEach(x => {
+            data.forEach((x) => {
               if (x.NoInspectStatusCount == 0) {
                 num2++;
               }
@@ -571,7 +571,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -582,7 +582,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -625,7 +625,7 @@ export default {
       this.OrderNos = [];
       if (row.MOS) {
         let OrderNos = row.MOS.split(",");
-        OrderNos.forEach(x => {
+        OrderNos.forEach((x) => {
           this.OrderNos.push({ OrderNo: x });
         });
       }
@@ -647,7 +647,7 @@ export default {
         this.$confirm("确定清空选中的吗，会直接保存哟？")
           .then(() => {
             let newData = [];
-            _this.selectionData[1].forEach(x => {
+            _this.selectionData[1].forEach((x) => {
               x.ShortQty = null;
               if (parseInt(x.UnIssuedQty) == 0) {
                 x.InspectStatus = 1;
@@ -678,14 +678,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -713,7 +713,7 @@ export default {
       //   });
       // }
       if (this.selectionData[1].length != 0) {
-        this.selectionData[1].forEach(y => {
+        this.selectionData[1].forEach((y) => {
           // if (parseInt(y.UnIssuedQty) != 0) {
           //   y.InspectStatus = 2;
           //   y.PrepareType = "异常";
@@ -753,15 +753,15 @@ export default {
       if (column.property == "IsCompleteInspect") {
         if (row.IsCompleteInspect == "未开始") {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else if (row.IsCompleteInspect == "进行中") {
           return {
-            backgroundColor: "#fdfd8f"
+            backgroundColor: "#fdfd8f",
           };
         } else if (row.IsCompleteInspect == "已完成") {
           return {
-            backgroundColor: "#9fff9f"
+            backgroundColor: "#9fff9f",
           };
         }
       }
@@ -771,12 +771,12 @@ export default {
       if (column.property == "OrderNo") {
         if (row.InspectStatus == 2) {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else {
           if (row.InspectStatus == 1) {
             return {
-              backgroundColor: "#9fff9f"
+              backgroundColor: "#9fff9f",
             };
           }
         }
@@ -800,7 +800,7 @@ export default {
     selectOrderNo(val) {
       this.formSearchs[1].datas["OrderNo"] = val;
       this.dataSearch(1);
-    }
-  }
+    },
+  },
 };
 </script>

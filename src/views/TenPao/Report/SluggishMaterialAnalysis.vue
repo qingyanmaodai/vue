@@ -10,7 +10,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -19,12 +20,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -39,7 +48,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -48,12 +58,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -68,7 +86,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -77,12 +96,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -97,7 +124,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -106,12 +134,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -126,7 +162,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -135,12 +172,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -155,7 +200,8 @@
                 <div class="headNumber">
                   <div class="leftContent">
                     <img
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
                     <div class="changeNum">
                       {{ headCard[0]["changeNum"] }}
                     </div>
@@ -164,12 +210,20 @@
                     {{ tableData[0][0]["S1"] }}
                   </div>
                   <div class="rightContent">
-                    <img v-if="parseInt(headCard[1]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII=" />
-                    <div class="changeNum" :class="parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[1]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACbSURBVHgBzY+9DYNADIXtEwMwQhpIidggI6TharJBMkEuEyQboLT52SEbnGgD7MAAYIMQQvwcSHS8yvZ7n2UDGOTGUrlaKpOHpjADXxuT8Pb3X2oW2Gt5JsH3/oyJL6n/eUwARwchCIjAIAIKM+/77ICl8BjCnT7aFlpRDdjNBsbD4CTkX1vmRVmcJk87ccD9PvHeg4yAldogUAFK2jH2vdTmVQAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACBSURBVHgBzZDvDUAwFMT7TGAkgyC1ARMwAhP4v4eRLMB5mpIWqfjmkiZ37e+a9pG4CHEMM1PXkZk98VE/LBCk9AVQs/fVDhDYBE3azewTNQFEkeRQO69eFknj2J4jc5Y0bP2B+r7h52Q3eF3TA7YKulQyUBhwQcNQiTchDPN9PZ1tJsUwo0mf0xkAAAAASUVORK5CYII="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[1]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[1]["changeNum"] }}
                     </div>
                   </div>
@@ -184,16 +238,34 @@
             <div class="itemCard">
               <div class="echartHead">
                 <div class="echartTitle">业务要货汇总</div>
-                <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+                <el-tabs
+                  v-model="selectedIndex"
+                  @tab-click="handleClick"
+                  :stretch="true"
+                >
                   <el-tab-pane label="日报表" name="0"></el-tab-pane>
                   <el-tab-pane label="月报表" name="1"></el-tab-pane>
                 </el-tabs>
               </div>
               <div class="echartBody">
-                <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false"
-                  :remark="6" :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[6]['ID']"
-                  :table-data="tableData[6]" :table-header="tableColumns[6]" :table-loading="tableLoading[6]"
-                  :pagination="tablePagination[6]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
+                <ComReportTable
+                  :isToolbar="false"
+                  :showFooter="false"
+                  ref="PurchaseRequisition"
+                  :isEdit="false"
+                  :remark="6"
+                  :IsIndex="false"
+                  :height="'100%'"
+                  :row-key="'RowNumber'"
+                  :sysID="sysID[6]['ID']"
+                  :table-data="tableData[6]"
+                  :table-header="tableColumns[6]"
+                  :table-loading="tableLoading[6]"
+                  :pagination="tablePagination[6]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                >
                 </ComReportTable>
                 <!-- <vue-seamless-scroll :data="tableData[0]" class="height: 100%;">
                   <ul class="item">
@@ -440,7 +512,7 @@ export default {
     this.currentDate = this.$moment().format("YYYY-MM-DD");
     // this.getTableHeader();
   },
-  activated() { },
+  activated() {},
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     // console.log(style, "style");
@@ -449,13 +521,7 @@ export default {
     // await this.getEchartsData3();
     // await this.getEchartsData4();
     //初始化图表;
-    this.chart = [
-      null,
-      null,
-      null,
-      this.$refs.chart4,
-      this.$refs.chart5,
-    ];
+    this.chart = [null, null, null, this.$refs.chart4, this.$refs.chart5];
     this.getEcharts();
 
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -1154,7 +1220,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -1458,7 +1524,8 @@ export default {
   box-sizing: border-box;
 }
 
-.el-container {}
+.el-container {
+}
 
 .el-main {
   padding: 16px;
@@ -1559,12 +1626,10 @@ export default {
                   font-weight: 400;
                   font-size: 10px;
                   color: #a4ffbd;
-
                 }
 
                 .loss {
                   color: #ff878a;
-
                 }
               }
 

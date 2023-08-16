@@ -19,12 +19,13 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12"
+            <el-col :span="12">
+              <span class="title" style="margin-right: 10px">{{ title }}</span>
+              <span style="color: #ff9900" v-if="tagRemark == 1"
+                >周计划日期显示规则：转入周计划时当周周一 至
+                下周周日，2周周期。</span
               >
-              <span class="title" style="margin-right:10px">{{ title }}</span>
-              <span style="color: #ff9900;" v-if="tagRemark==1">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span>
-              </el-col
-            >
+            </el-col>
             <el-col :span="12" class="flex_flex_end">
               <div>
                 <!-- <span>选择机台/班组：</span>
@@ -205,31 +206,31 @@ export default {
       height: "707px",
       formSearchs: [
         {
-          datas: {MFGOrganizeID:162},
+          datas: { MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: {MFGOrganizeID: 162},
+          datas: { MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: {MFGOrganizeID:162},
+          datas: { MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: { IsSetPrepare: "未生成",MFGOrganizeID:162 },
+          datas: { IsSetPrepare: "未生成", MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: { IsSetPrepare: "已生成",MFGOrganizeID:162 },
+          datas: { IsSetPrepare: "已生成", MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: {MFGOrganizeID:162},
+          datas: { MFGOrganizeID: 162 },
           forms: [],
         },
         {
-          datas: {MFGOrganizeID:162},
+          datas: { MFGOrganizeID: 162 },
           forms: [],
         },
       ],
@@ -413,14 +414,17 @@ export default {
         this.$message.error("请选择需要操作的数据！");
       } else {
         this.$confirm("确定退回吗？")
-        .then(() => {
-          this.adminLoading = true;
-          this.selectionData[this.tagRemark].forEach((a) => {
-            a["ElementDeleteFlag"] = 1;
-          });
-          this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
-        })
-        .catch(() => {});
+          .then(() => {
+            this.adminLoading = true;
+            this.selectionData[this.tagRemark].forEach((a) => {
+              a["ElementDeleteFlag"] = 1;
+            });
+            this.dataBackSave(
+              this.selectionData[this.tagRemark],
+              this.tagRemark
+            );
+          })
+          .catch(() => {});
       }
     },
     async dataBackSave(data1, index) {
@@ -468,7 +472,7 @@ export default {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = x.ButtonName;
-              y.Methods = y.Methods||x.OnClick;
+              y.Methods = y.Methods || x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
             }
@@ -520,15 +524,14 @@ export default {
           });
         } else {
           // 配置表没有日期列宽需要设置
-          if(x.name.indexOf('-')>-1){
-            x.width = 80
+          if (x.name.indexOf("-") > -1) {
+            x.width = 80;
           }
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
-          
         }
         colHeader1.push(x.label);
       });
@@ -614,17 +617,17 @@ export default {
           // );
           // cell.foreColor("gray");
         }
-        
+
         cellIndex++;
       });
 
       // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
-      var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-      var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)      
+      var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
 
       var colindexs = [1, 2, 3, 4, 5];
       this.tableData[1].forEach((row, index) => {
@@ -702,7 +705,7 @@ export default {
             rowSheet3.foreColor("#2a06ecd9");
           }
           //成品库存单元格背景色
-          if(m.name ==='StockQty'){
+          if (m.name === "StockQty") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -711,7 +714,7 @@ export default {
             rowSheet3.backColor("#c2e7b0");
           }
           // 电机库存单元格背景色
-          if(m.name ==='Extend17'){
+          if (m.name === "Extend17") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -1278,100 +1281,104 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
-        let isTodayPlan = true
-        console.log(this.selectionData[remarkTb])
+        let isTodayPlan = true;
+        console.log(this.selectionData[remarkTb]);
         this.selectionData[remarkTb].forEach((element) => {
-          if (!element.Capacity1&&element.OrderNo) {
+          if (!element.Capacity1 && element.OrderNo) {
             isNoCapacity1 = false;
-            console.log(element.OrderNo)
+            console.log(element.OrderNo);
           }
         });
         if (!isNoCapacity1) {
-            this.$confirm('请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.saveTodayPlan(remarkTb)
-            }).catch(() => {
-              
-            });
-        }else{
-          this.saveTodayPlan(remarkTb)
+          this.$confirm(
+            "请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }
+          )
+            .then(() => {
+              this.saveTodayPlan(remarkTb);
+            })
+            .catch(() => {});
+        } else {
+          this.saveTodayPlan(remarkTb);
         }
       }
     },
-    // 
-    async saveTodayPlan(remarkTb){
+    //
+    async saveTodayPlan(remarkTb) {
       // let ProcessID = "";
       this.adminLoading = true;
-        // if (remarkTb == 1) {
-        //   ProcessID = "P202009092233201";
-        // } else if (remarkTb == 3) {
-        //   ProcessID = "P202009092233413";
+      // if (remarkTb == 1) {
+      //   ProcessID = "P202009092233201";
+      // } else if (remarkTb == 3) {
+      //   ProcessID = "P202009092233413";
+      // }
+
+      let errMsg = "";
+      // let okCount = 0;
+      let okCount = this.selectionData[remarkTb].length;
+      this.selectionData[remarkTb].forEach((d) => {
+        let isOk = true;
+        //判断是否转入
+        // if (
+        //   params.ProcessID == "P202009092233201" &&
+        //   d["IsToPlanDay1"] != "否"
+        // ) {
+        //   isOk = false;
+        // } else if (
+        //   params.ProcessID == "P202009092233413" &&
+        //   d["IsToPlanDay2"] != "否"
+        // ) {
+        //   isOk = false;
         // }
 
-        let errMsg = "";
-        // let okCount = 0;
-        let okCount = this.selectionData[remarkTb].length;
-        this.selectionData[remarkTb].forEach((d) => {
-          let isOk = true;
-          //判断是否转入
-          // if (
-          //   params.ProcessID == "P202009092233201" &&
-          //   d["IsToPlanDay1"] != "否"
-          // ) {
-          //   isOk = false;
-          // } else if (
-          //   params.ProcessID == "P202009092233413" &&
-          //   d["IsToPlanDay2"] != "否"
-          // ) {
-          //   isOk = false;
-          // }
+        if (isOk) {
+          d["LineID"] = d.SMTLineID;
+          // d["ProducedDate"] = this.ruleForm.ProducedDate;
+          d["StartDate"] = this.ruleForm.ProducedDate
+            ? this.$moment(this.ruleForm.ProducedDate[0]).format("YYYY-MM-DD")
+            : d["StartDate1"];
+          d["EndDate"] = this.ruleForm.ProducedDate
+            ? this.$moment(this.ruleForm.ProducedDate[1]).format("YYYY-MM-DD")
+            : d["StartDate1"];
+          d["ProcessID"] = d.ProcessID1;
+          okCount++;
+        } else {
+          errMsg += d["OrderNo"] + "已转入或者无此工序";
+        }
+      });
 
-          if (isOk) {
-            d["LineID"] = d.SMTLineID;
-            // d["ProducedDate"] = this.ruleForm.ProducedDate;
-            d["StartDate"] = this.ruleForm.ProducedDate
-              ? this.$moment(this.ruleForm.ProducedDate[0]).format("YYYY-MM-DD")
-              : d["StartDate1"];
-            d["EndDate"] = this.ruleForm.ProducedDate
-              ? this.$moment(this.ruleForm.ProducedDate[1]).format("YYYY-MM-DD")
-              : d["StartDate1"];
-            d["ProcessID"] = d.ProcessID1;
-            okCount++;
-          } else {
-            errMsg += d["OrderNo"] + "已转入或者无此工序";
-          }
+      if (errMsg != "") {
+        this.$message({
+          message: errMsg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
         });
-
-        if (errMsg != "") {
+      }
+      if (okCount > 0) {
+        let res = await GetSearch(
+          this.selectionData[remarkTb],
+          "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
+        );
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(remarkTb);
+        } else {
+          this.adminLoading = false;
           this.$message({
-            message: errMsg,
+            message: msg,
             type: "error",
             dangerouslyUseHTMLString: true,
           });
         }
-        if (okCount > 0) {
-          let res = await GetSearch(
-            this.selectionData[remarkTb],
-            "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1"
-          );
-          const { result, data, count, msg } = res.data;
-          if (result) {
-            this.adminLoading = false;
-            this.dataSearch(remarkTb);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
-        } else {
-          this.adminLoading = false;
-        }
+      } else {
+        this.adminLoading = false;
+      }
     },
     // 选线获取剩余工时
     setFooterLabel(val) {

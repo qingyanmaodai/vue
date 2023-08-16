@@ -60,7 +60,7 @@
     </div>
   </div>
 </template>
-  <script>
+<script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -69,7 +69,13 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
-import { GetHeader, GetSearchData, ExportData, SaveData,GetSearch } from "@/api/Common";
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  SaveData,
+  GetSearch,
+} from "@/api/Common";
 import { mapState } from "vuex";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
@@ -585,7 +591,7 @@ export default {
           let list = [
             {
               rowNum: _.uniqueId("rowNum_"), //随机生成数
-              Status:1
+              Status: 1,
             },
           ];
           this.tableData[this.tagRemark] = [

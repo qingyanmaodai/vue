@@ -1,14 +1,8 @@
 <!--分配拉线-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div class="up_admin">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -23,15 +17,11 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="3"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="21"
-                class="flex_flex_end"
+              <el-col :span="3"
+                ><span class="title">{{ title }}</span></el-col
               >
-                <el-radio-group
-                  v-model="isJudje"
-                  @change="changeRadio"
-                >
+              <el-col :span="21" class="flex_flex_end">
+                <el-radio-group v-model="isJudje" @change="changeRadio">
                   <el-radio :label="0">多对一模式</el-radio>
                   <el-radio :label="1">一对多模式</el-radio>
                   <el-radio :label="2">一对一模式</el-radio>
@@ -42,7 +32,8 @@
                   v-for="(item, y) in processs"
                   :key="y"
                 >
-                  <span @click="TagSearchDataProcess('tagProcess', item, y)">{{ item.ProcessName }}
+                  <span @click="TagSearchDataProcess('tagProcess', item, y)"
+                    >{{ item.ProcessName }}
                     <el-divider direction="vertical"></el-divider>
                   </span>
                 </div>
@@ -78,22 +69,17 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title2 }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title2 }}</span></el-col
               >
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="domainComputed"
-                >计算开拉期</el-button>
+              <el-col :span="20" class="flex_flex_end">
+                <el-button size="mini" type="primary" @click="domainComputed"
+                  >计算开拉期</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  size="mini"
-                  type="success"
-                  @click="domainScheduling"
-                >指派任务到日计划中</el-button>
+                <el-button size="mini" type="success" @click="domainScheduling"
+                  >指派任务到日计划中</el-button
+                >
               </el-col>
             </el-row>
           </div>
@@ -459,8 +445,8 @@ export default {
       } else {
         let newFlag = 0;
         this.domainselection2[this.tagProcess].some((x) => {
-        //  if (x.StartDate && x.DistributionQty) {
-             if (x.DistributionQty) {
+          //  if (x.StartDate && x.DistributionQty) {
+          if (x.DistributionQty) {
           } else {
             this.$message.warning(x.OrganizeName + "分配数！");
             newFlag = 1;
@@ -503,9 +489,12 @@ export default {
           this.domainselection[this.tagProcess].forEach((x) => {
             newDistribute += parseFloat(x.PlanQty);
             let obj = x;
-            obj["StartDate"] = this.domainselection2[this.tagProcess ][0].StartDate;
-            obj["TotalPeoples"] = this.domainselection2[this.tagProcess][0].TotalPeoples;
-            obj["LineID"] = this.domainselection2[this.tagProcess][0].OrganizeID;
+            obj["StartDate"] =
+              this.domainselection2[this.tagProcess][0].StartDate;
+            obj["TotalPeoples"] =
+              this.domainselection2[this.tagProcess][0].TotalPeoples;
+            obj["LineID"] =
+              this.domainselection2[this.tagProcess][0].OrganizeID;
             newData.push(obj);
           });
         }
@@ -525,8 +514,8 @@ export default {
               if (newRow) {
                 // 只更新完工日期
                 newRow[0].EndDate = m.EndDate;
-                    newRow[0].StartDate = m.StartDate;
-                    newRow[0].ExpectTime=m.ExpectTime;
+                newRow[0].StartDate = m.StartDate;
+                newRow[0].ExpectTime = m.ExpectTime;
                 // newRow[0].ProcessingHour = m.ExpectTime;
                 //for (name in m) {
                 //    newRow[0][name] = m[name]
@@ -542,7 +531,8 @@ export default {
               }
               ExpectTime += parseFloat(m.ExpectTime);
             });
-            _this.domainselection2[_this.tagProcess][0].ProcessingHour = ExpectTime;
+            _this.domainselection2[_this.tagProcess][0].ProcessingHour =
+              ExpectTime;
             _this.domainselection2[_this.tagProcess][0].EndDate = maxDate;
           } else if (_this.isJudje == 1) {
             let maxDate = null;
@@ -644,7 +634,7 @@ export default {
         if (flag == 0) {
           this.adminLoading = true;
           let res = await SaveSchedulingV2(newData);
-          
+
           const { result, data, count, msg } = res.data;
           if (result) {
             _this.$message({
@@ -775,9 +765,8 @@ export default {
       } else {
         this.formSearchs[0].datas["sort"] = null;
       }
-      this.formSearchs[0].datas["ProcessID"] = this.processs[
-        this.tagProcess
-      ].ProcessID;
+      this.formSearchs[0].datas["ProcessID"] =
+        this.processs[this.tagProcess].ProcessID;
       this.getFirstData(this.formSearchs[0].datas, this.tagProcess);
     },
     // 改变父组件表格行数据
@@ -825,9 +814,8 @@ export default {
               data[0].DistributionQty = num;
             }
           } else {
-            data[0].DistributionQty = this.domainselection[
-              this.tagProcess
-            ][0].DistributionQty;
+            data[0].DistributionQty =
+              this.domainselection[this.tagProcess][0].DistributionQty;
           }
         }
       }

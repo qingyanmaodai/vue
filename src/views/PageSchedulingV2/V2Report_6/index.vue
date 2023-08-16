@@ -1,17 +1,9 @@
 <!--复期明细表-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-aside
-        v-show="showAside"
-        style="width:auto"
-      >
-
+      <el-aside v-show="showAside" style="width: auto">
         <div class="admin_left_2">
-
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">采购员</span>
@@ -49,19 +41,11 @@
               @node-click="handleNodeClick"
             ></el-tree>
           </div>
-
         </div>
-
       </el-aside>
-      <el-main style="padding:0;margin:0">
-        <div
-          class="admin_container_2"
-          style="width: 100%;"
-        >
-          <div
-            class="admin_head"
-            ref="headRef"
-          >
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
+          <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
@@ -77,7 +61,8 @@
               <div class="ant-table-title">
                 <el-row>
                   <el-col :span="4">
-                    <span class="title"> <i
+                    <span class="title">
+                      <i
                         class="el-icon-d-arrow-left"
                         v-show="showAside"
                         @click="showAside = !showAside"
@@ -86,13 +71,11 @@
                         class="el-icon-d-arrow-right"
                         v-show="!showAside"
                         @click="showAside = !showAside"
-                      ></i>{{ title }}</span>
+                      ></i
+                      >{{ title }}</span
+                    >
                   </el-col>
-                  <el-col
-                    :span="20"
-                    class="flex_flex_end"
-                  >
-                  </el-col>
+                  <el-col :span="20" class="flex_flex_end"> </el-col>
                 </el-row>
               </div>
               <ComReportTable
@@ -340,7 +323,10 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
-      console.log('this.formSearchs[remarkTb].datas',this.formSearchs[remarkTb].datas)
+      console.log(
+        "this.formSearchs[remarkTb].datas",
+        this.formSearchs[remarkTb].datas
+      );
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -355,13 +341,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -412,7 +398,7 @@ export default {
         this.getPOTrackerReplyData(null, "全部");
       }
     },
-    
+
     // 获取采购员对应的项数
     async getPOTrackerReplyData(IsReplyStatusOther, Label) {
       let form = {};
@@ -450,7 +436,7 @@ export default {
       form["groupby"] = "IsReplyStatusOther,POTracker";
       form["sort"] = "IsReplyStatusOther";
       let res = await GetSearchData(form);
- 
+
       const { result, data, count, msg } = res.data;
       if (result) {
         // _this.treeData2 = [];
@@ -604,13 +590,9 @@ export default {
       //   return;
       // }
       // this.asideLoading = true;
-      
-      this.$set(
-        this.formSearchs[0].datas,
-        "Remark6",
-        data.Label2+"，"
-      );
-    
+
+      this.$set(this.formSearchs[0].datas, "Remark6", data.Label2 + "，");
+
       // this.getPOTrackerReplyData(data.IsReplyStatusOther, data.Label);
       this.dataSearch(0);
     },

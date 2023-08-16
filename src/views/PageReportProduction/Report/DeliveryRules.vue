@@ -23,7 +23,13 @@
             >
             <el-col :span="20" class="flex_flex_end">
               <span>新增行数：</span>
-                  <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"></el-input-number>
+              <el-input-number
+                v-model.trim="addNum"
+                :min="1"
+                :max="100"
+                :step="10"
+                placeholder="请输入"
+              ></el-input-number>
               <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
@@ -47,7 +53,7 @@
             </span>
           </div>
           <div class="flex">
-            <span>共{{tablePagination[tagRemark].pageTotal}}条</span>
+            <span>共{{ tablePagination[tagRemark].pageTotal }}条</span>
             <!-- <el-pagination
               background
               @size-change="(val) => pageSize(val, 0)"
@@ -84,7 +90,7 @@ export default {
   },
   data() {
     return {
-      addNum:1,
+      addNum: 1,
       depList: [],
       title: this.$route.meta.title, //表名
       height: "740px",
@@ -306,19 +312,19 @@ export default {
             );
             cellType.items(this.dataSourceDate[x.prop]);
             cellType.editable(true);
-            
+
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               cellType: cellType,
               size: parseInt(x.width),
             });
-          }else if(x.DataType=="varchar"||x.DataType=='nvarchar'){
+          } else if (x.DataType == "varchar" || x.DataType == "nvarchar") {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
-              formatter: '@'//类型为字符串时转为字符串，以免数字开头为0被清情况
+              formatter: "@", //类型为字符串时转为字符串，以免数字开头为0被清情况
             });
           } else {
             colInfos.push({
@@ -338,7 +344,7 @@ export default {
           cellrange
         );
         sheet.rowFilter(hideRowFilter);
-        
+
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -372,7 +378,6 @@ export default {
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-        
 
         sheet.setCellType(
           0,
@@ -473,7 +478,7 @@ export default {
         this.headerList = colInfos;
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         //一定要放在渲染完后
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
@@ -560,33 +565,33 @@ export default {
     },
     // 行新增
     addRow() {
-      if(!this.addNum){
-            this.$message.error('请输入需要添加的行数!')
-            return
-        }
-        
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+
       let spread = this.spread;
       let sheet = spread.getActiveSheet();
       if (sheet) {
         this.adminLoading = true;
-        for(let x=0;x<this.addNum;x++){
+        for (let x = 0; x < this.addNum; x++) {
           let list = [
             {
               rowNum: _.uniqueId("rowNum_"), //随机生成数
             },
           ];
           this.tableData[this.tagRemark] = [
-          ...list,...this.tableData[this.tagRemark],
+            ...list,
+            ...this.tableData[this.tagRemark],
           ];
         }
-        
-        
+
         // this.setData();
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
-        sheet.bindColumns(this.headerList); 
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        sheet.bindColumns(this.headerList);
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         this.adminLoading = false;
       }
     },
@@ -626,8 +631,8 @@ export default {
                       //渲染数据源
                       sheet.setDataSource(this.tableData[this.tagRemark]);
                       //渲染列
-                      sheet.bindColumns(this.headerList); 
-                      this.spread.options.tabStripVisible = false;//是否显示表单标签
+                      sheet.bindColumns(this.headerList);
+                      this.spread.options.tabStripVisible = false; //是否显示表单标签
                     } else {
                       //接口返回的数据删除需要调接口删除
                       isHasID = true;

@@ -78,8 +78,8 @@
       </span>
     </el-dialog>
     <el-dialog :title="'批量设置'" :visible.sync="Dialog" width="22%">
-      <div class="flex_column" style="padding:20px">
-        <div class="flex_wrap" style="margin-bottom:20px;">
+      <div class="flex_column" style="padding: 20px">
+        <div class="flex_wrap" style="margin-bottom: 20px">
           <div>
             存储属性:
             <el-select
@@ -88,7 +88,7 @@
               size="small"
               placeholder="请选择存储属性"
               v-model="storageProperty"
-              style="width:120px;margin:0 20px 0 10px"
+              style="width: 120px; margin: 0 20px 0 10px"
             >
               <el-option
                 v-for="(item, i) in storagePropertyItems"
@@ -102,28 +102,28 @@
             批量应用
           </el-button>
         </div>
-        <div class="flex_wrap" style="margin-bottom:20px">
+        <div class="flex_wrap" style="margin-bottom: 20px">
           <div>
             托盘数量:
             <el-input
               type="number"
               v-model="palletQuantity"
               size="small"
-              style="width:120px;margin:0 20px 0 10px"
+              style="width: 120px; margin: 0 20px 0 10px"
             ></el-input>
           </div>
           <el-button type="primary" size="mini" @click="changeDate(1)">
             批量应用
           </el-button>
         </div>
-        <div class="flex_wrap" style="margin-bottom:20px">
+        <div class="flex_wrap" style="margin-bottom: 20px">
           <div>
             其他属性:
             <el-input
               type="number"
               v-model="otherProperty"
               size="small"
-              style="width:120px;margin:0 20px 0 10px"
+              style="width: 120px; margin: 0 20px 0 10px"
             ></el-input>
           </div>
           <el-button type="primary" size="mini" @click="changeDate(2)">
@@ -143,14 +143,14 @@ import {
   GetSearchData,
   ExportData,
   UpdateProcess,
-  SaveData
+  SaveData,
 } from "@/api/Common";
 import { OneStepReleaseByOrder } from "@/api/PageOrder";
 export default {
   name: "ProductFileMaintenance",
   components: {
     ComSearch,
-    ComVxeTable
+    ComVxeTable,
   },
   data() {
     return {
@@ -162,8 +162,8 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       btnForm: [],
       parmsBtn: [
@@ -176,7 +176,7 @@ export default {
           Methods: "setOrder",
           Icon: "",
           isLoading: false,
-          signName: 2
+          signName: 2,
         },
         {
           ButtonCode: "save",
@@ -187,8 +187,8 @@ export default {
           Methods: "dataSave",
           Icon: "",
           isLoading: false,
-          signName: ""
-        }
+          signName: "",
+        },
       ],
       tableData: [[]],
       tableColumns: [[]],
@@ -205,7 +205,7 @@ export default {
         { label: "全部", value: "" },
         { label: "已下达", value: [21, 22, 23, 24] },
         { label: "未下达", value: 26 },
-        { label: "已完成", value: 25 }
+        { label: "已完成", value: 25 },
       ],
       isSelect: false,
       isEdit: true,
@@ -220,15 +220,15 @@ export default {
           title: "是",
           value: "是",
           label: "是",
-          text: "是"
+          text: "是",
         },
         {
           title: "否",
           value: "否",
           label: "否",
-          text: "否"
-        }
-      ]
+          text: "否",
+        },
+      ],
     };
   },
   watch: {},
@@ -325,13 +325,12 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
             });
           }
-          
         }
       }
       // this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
@@ -369,7 +368,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
       } else {
@@ -377,7 +376,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -390,13 +389,13 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -408,11 +407,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -422,7 +421,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -464,7 +463,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -488,7 +487,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.processDialog = true;
@@ -511,7 +510,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -526,26 +525,26 @@ export default {
     //批量应用
     async changeDate(val) {
       if (val === 0) {
-        this.selectionData[0].map(item => {
+        this.selectionData[0].map((item) => {
           item["Extend18"] = this.storageProperty;
           item["Extend18Text"] = this.storageProperty;
         });
         let res = await SaveData(this.selectionData[0]);
         this.storageProperty = null;
       } else if (val === 1) {
-        this.selectionData[0].map(item => {
+        this.selectionData[0].map((item) => {
           item["TrayOfQty"] = this.palletQuantity;
         });
         let res = await SaveData(this.selectionData[0]);
         this.palletQuantity = null;
       } else if (val === 2) {
-        this.selectionData[0].map(item => {
+        this.selectionData[0].map((item) => {
           item["Extend20"] = this.otherProperty;
         });
         let res = await SaveData(this.selectionData[0]);
         this.otherProperty = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>

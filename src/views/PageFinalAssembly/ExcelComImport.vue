@@ -107,7 +107,7 @@
     </div>
   </div>
 </template>
-  <script>
+<script>
 var _this;
 let rand = Math.random();
 const GCsheets = GC.Spread.Sheets;
@@ -325,7 +325,7 @@ export default {
         sheet.reset();
         // 渲染列
         let colInfos = [];
-        this.tableColumns[this.tagRemark].forEach((x,index) => {
+        this.tableColumns[this.tagRemark].forEach((x, index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
@@ -392,17 +392,17 @@ export default {
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         // 动态启用单元格列编辑
-        this.tableColumns[this.tagRemark].forEach((m,index) => {
-        //行，start,end
-        if (m.isEdit) {
-          sheet.getRange(-1, index, 1, 1).locked(false);
-          var cell = sheet.getCell(
-            -1,
-            index,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          cell.foreColor("#2a06ecd9");
-        } 
+        this.tableColumns[this.tagRemark].forEach((m, index) => {
+          //行，start,end
+          if (m.isEdit) {
+            sheet.getRange(-1, index, 1, 1).locked(false);
+            var cell = sheet.getCell(
+              -1,
+              index,
+              GC.Spread.Sheets.SheetArea.viewport
+            );
+            cell.foreColor("#2a06ecd9");
+          }
         });
         // 锁定表格
         sheet.options.isProtected = true;
@@ -571,8 +571,7 @@ export default {
                   }
                 } else if (item.DataType === "int") {
                   obj[item.prop] = parseInt(m[key]);
-                } 
-                else {
+                } else {
                   obj[item.prop] = m[key];
                 }
               } else if (isNaN(key) && !isNaN(Date.parse(key))) {

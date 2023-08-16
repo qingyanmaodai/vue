@@ -3,36 +3,58 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 == i">
-        <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
-          :isLoading="isLoading" :btnForm="btnForm" :signName="labelStatus1" @btnClick="btnClick" />
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          :signName="labelStatus1"
+          @btnClick="btnClick"
+        />
       </div>
     </div>
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12">
-            </el-col>
-            <el-col :span="12" class="flex_flex_end">
-            </el-col>
+            <el-col :span="12"> </el-col>
+            <el-col :span="12" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div class="flex_column" :style="{ height: height }" v-show="labelStatus1 == 0">
+        <div
+          class="flex_column"
+          :style="{ height: height }"
+          v-show="labelStatus1 == 0"
+        >
           <div class="spreadContainer" v-loading="tableLoading[0]">
-            <gc-spread-sheets class="sample-spreadsheets" @workbookInitialized="initSpread">
+            <gc-spread-sheets
+              class="sample-spreadsheets"
+              @workbookInitialized="initSpread"
+            >
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
           </div>
           <div class="flex_row_spaceBtn pagination">
             <div>
-              <span @click="toPageSetting(sysID[0].ID)" class="primaryColor cursor">SysID:{{ sysID[0].ID }}
+              <span
+                @click="toPageSetting(sysID[0].ID)"
+                class="primaryColor cursor"
+                >SysID:{{ sysID[0].ID }}
               </span>
             </div>
             <div class="flex">
-              <el-pagination background @size-change="(val) => pageSize(val, 0)"
-                :current-page="tablePagination[0].pageIndex" :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
-                :page-size="tablePagination[0].pageSize" :total="tablePagination[0].pageTotal"
-                @current-change="(val) => pageChange(val, 0)" layout="total, sizes, prev, pager, next,jumper">
+              <el-pagination
+                background
+                @size-change="(val) => pageSize(val, 0)"
+                :current-page="tablePagination[0].pageIndex"
+                :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
+                :page-size="tablePagination[0].pageSize"
+                :total="tablePagination[0].pageTotal"
+                @current-change="(val) => pageChange(val, 0)"
+                layout="total, sizes, prev, pager, next,jumper"
+              >
               </el-pagination>
             </div>
           </div>
@@ -40,12 +62,19 @@
       </div>
 
       <!-- 点击齐套率弹框-->
-      <DialogTable title="订单齐套分析" :tableDialog="colDialogVisible" :sysID="5165" width="80%"
-        @closeDialog="colDialogVisible = false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+      <DialogTable
+        title="订单齐套分析"
+        :tableDialog="colDialogVisible"
+        :sysID="5165"
+        width="80%"
+        @closeDialog="colDialogVisible = false"
+        :searchForm="dialogSearchForm"
+        :isToolbar="false"
+      ></DialogTable>
     </div>
   </div>
 </template>
-  
+
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
@@ -80,9 +109,7 @@ export default {
       },
       colDialogVisible: false,
       footerLabel: ["", ""],
-      sysID: [
-        { ID: 9055 },
-      ],
+      sysID: [{ ID: 9055 }],
       Status1: [
         { label: "待排周计划", value: 0 },
         { label: "已完成", value: 1 },
@@ -98,7 +125,7 @@ export default {
         {
           datas: {},
           forms: [],
-        }
+        },
       ],
       btnForm: [],
       tableData: [[]],
@@ -106,9 +133,7 @@ export default {
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
-      ],
+      tablePagination: [{ pageIndex: 1, pageSize: 1000, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -147,7 +172,6 @@ export default {
     }, 450);
   },
   methods: {
-
     // 跳转至页面配置
     toPageSetting(id) {
       this.$router.push({
@@ -181,7 +205,7 @@ export default {
       sheet.defaults.rowHeaderColWidth = 60;
       let colHeader1 = [];
       let colInfos = [];
-      let colIndex = 0
+      let colIndex = 0;
       this.tableColumns[this.tagRemark].forEach((x) => {
         if (
           x.ControlType === "comboboxMultiple" ||
@@ -201,12 +225,16 @@ export default {
             cellType: combobox,
             size: parseInt(x.width),
           });
-        } else if (x.DataType == 'datetime' || x.DataType === 'varchar' || x.DataType === 'nvarchar') {
+        } else if (
+          x.DataType == "datetime" ||
+          x.DataType === "varchar" ||
+          x.DataType === "nvarchar"
+        ) {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
-            formatter: '@'//字符串格式
+            formatter: "@", //字符串格式
           });
         } else {
           colInfos.push({
@@ -214,10 +242,9 @@ export default {
             displayName: x.label,
             size: parseInt(x.width),
           });
-
         }
         colHeader1.push(x.label);
-        cellIndex++
+        cellIndex++;
       });
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
@@ -243,12 +270,12 @@ export default {
       }
       // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
       var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, colIndex);
 
       var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)
+      sheet.rowFilter(hideRowFilter);
       var row = sheet.getRange(
         0,
         -1,
@@ -313,18 +340,21 @@ export default {
 
       // 列筛选
       // 参数2 开始列
-      // 参数3 
+      // 参数3
       // 参数4 结束列
       var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
       var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-      sheet.rowFilter(hideRowFilter)
+      sheet.rowFilter(hideRowFilter);
 
       var colindexs = [1, 2, 3, 4, 5];
       this.tableData[this.tagRemark].forEach((row, index) => {
         let cellIndex = 0;
         this.tableColumns[this.tagRemark].forEach((m, num) => {
           //行，start,end
-          if ((m.DataType == "bit" || m.ControlType == 'checkbox') && m.isEdit) {
+          if (
+            (m.DataType == "bit" || m.ControlType == "checkbox") &&
+            m.isEdit
+          ) {
             var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
             cellType.caption("");
             cellType.textTrue("");
@@ -395,7 +425,7 @@ export default {
             rowSheet3.foreColor("#2a06ecd9");
           }
           //成品库存单元格背景色
-          if (m.name === 'StockQty') {
+          if (m.name === "StockQty") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -404,7 +434,7 @@ export default {
             rowSheet3.backColor("#c2e7b0");
           }
           // 电机库存单元格背景色
-          if (m.name === 'Extend17') {
+          if (m.name === "Extend17") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -427,7 +457,7 @@ export default {
       });
       //表格编辑事件
 
-      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) { });
+      this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
       this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
       });
@@ -458,8 +488,8 @@ export default {
       sheet.options.protectionOptions.allowInsertColumns = true;
       sheet.options.protectionOptions.allowDargInsertRows = true;
       sheet.options.protectionOptions.allowDragInsertColumns = true;
-      sheet.options.protectionOptions.allowSort = true
-      sheet.options.protectionOptions.allowFilter = true
+      sheet.options.protectionOptions.allowSort = true;
+      sheet.options.protectionOptions.allowFilter = true;
       sheet.options.allowUserDragDrop = true;
 
       this.spread.resumePaint();
@@ -500,8 +530,8 @@ export default {
     // 删除行
     delRow(row) {
       this.$confirm("确定要删除该菜单嘛？")
-        .then((_) => { })
-        .catch((_) => { });
+        .then((_) => {})
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -661,7 +691,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["ProductionAccounts"] = this.$store.getters.userInfo.Account;//登录账号
+      form["ProductionAccounts"] = this.$store.getters.userInfo.Account; //登录账号
 
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -785,25 +815,28 @@ export default {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
         let isNoCapacity1 = true;
-        let isTodayPlan = true
+        let isTodayPlan = true;
         this.selectionData[remarkTb].forEach((element) => {
           if (!element.Capacity1 && element.OrderNo) {
             isNoCapacity1 = false;
           }
         });
         if (!isNoCapacity1) {
-          this.$confirm('请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-
-            this.saveTodayPlan(remarkTb)
-          }).catch(() => {
-
-          });
+          this.$confirm(
+            "请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }
+          )
+            .then(() => {
+              this.saveTodayPlan(remarkTb);
+            })
+            .catch(() => {});
         } else {
-          this.saveTodayPlan(remarkTb)
+          this.saveTodayPlan(remarkTb);
         }
       }
     },
@@ -888,7 +921,10 @@ export default {
         return;
       }
       this.adminLoading = true;
-      let res = await GetSearch(this.selectionData[this.tagRemark], "/APSAPI/ManualForecastToPlanForOrder");
+      let res = await GetSearch(
+        this.selectionData[this.tagRemark],
+        "/APSAPI/ManualForecastToPlanForOrder"
+      );
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
@@ -921,8 +957,8 @@ export default {
 
       this.$confirm(
         "确定要退回的【" +
-        this[parms.dataName][remarkTb].length +
-        "】数据吗，如果已经报工则无法退回？"
+          this[parms.dataName][remarkTb].length +
+          "】数据吗，如果已经报工则无法退回？"
       )
         .then((_) => {
           if (parms && parms.dataName) {
@@ -943,12 +979,12 @@ export default {
               newData.push(obj2);
             });
           }
-          console.log('newData', newData)
-          return
+          console.log("newData", newData);
+          return;
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
   },
 };

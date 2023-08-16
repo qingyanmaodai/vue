@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -33,11 +27,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -76,11 +69,7 @@
               >
                 清空
               </el-button>
-              <el-button
-                type="primary"
-                @click="openMaterialDialog"
-                size="mini"
-              >
+              <el-button type="primary" @click="openMaterialDialog" size="mini">
                 抓取数据
               </el-button>
             </div>
@@ -97,11 +86,7 @@
               />
             </div>
             <div class="flex_right marginSmallTop">
-              <el-button
-                type="warning"
-                size="small"
-                @click="autoScheduling"
-              >
+              <el-button type="warning" size="small" @click="autoScheduling">
                 自动分配
               </el-button>
             </div>
@@ -120,11 +105,7 @@
                   :value="x"
                 ></el-option>
               </el-select>
-              <el-button
-                type="primary"
-                size="small"
-                @click="handleScheduling"
-              >
+              <el-button type="primary" size="small" @click="handleScheduling">
                 手动分配
               </el-button>
             </div>
@@ -168,11 +149,7 @@
       </div>
     </div>
 
-    <el-dialog
-      title="抓取数据"
-      :visible.sync="materialDialog"
-      width="90%"
-    >
+    <el-dialog title="抓取数据" :visible.sync="materialDialog" width="90%">
       <el-container>
         <el-aside width="300px">
           <ComUmyTable
@@ -210,34 +187,22 @@
             :rowKey="'RowNumber'"
           />
           <div class="fill marginRightTop">
-            <el-button
-              type="warning"
-              @click="addRowData"
-              size="small"
-            >
+            <el-button type="warning" @click="addRowData" size="small">
               添加数据
             </el-button>
           </div>
         </el-main>
       </el-container>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="materialDialog = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="warning"
-          @click="addNoClose"
-          size="small"
-        >添加不关闭</el-button>
-        <el-button
-          type="primary"
-          @click="addAndClose"
-          size="small"
-        >添加并关闭</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="materialDialog = false" size="small"
+          >取 消</el-button
+        >
+        <el-button type="warning" @click="addNoClose" size="small"
+          >添加不关闭</el-button
+        >
+        <el-button type="primary" @click="addAndClose" size="small"
+          >添加并关闭</el-button
+        >
       </span>
     </el-dialog>
   </div>

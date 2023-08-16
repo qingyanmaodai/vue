@@ -1,13 +1,7 @@
 <!--备料齐套报表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,11 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -56,15 +49,8 @@
       </div>
     </div>
 
-    <el-dialog
-      title="物料明细查询"
-      :visible.sync="dialogShow"
-      width="80%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="物料明细查询" :visible.sync="dialogShow" width="80%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           物料明细
           <ComReportTable
@@ -85,15 +71,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="全局物料明细查询"
-      :visible.sync="dialogShow2"
-      width="80%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="全局物料明细查询" :visible.sync="dialogShow2" width="80%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           全局物料明细
           <ComReportTable
@@ -113,7 +92,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -388,7 +366,7 @@ export default {
         this.formSearchs[2].datas["SalesOrderDetailID"] =
           row.SalesOrderDetailID;
         this.dataSearch(2);
-        debugger
+        debugger;
         this.dialogShow2 = true;
       }
     },

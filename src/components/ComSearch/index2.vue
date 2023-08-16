@@ -6,32 +6,32 @@
       :model="searchData"
       class="demo-form-inline"
       inline
-      style="padding:0 5px;"
+      style="padding: 0 5px"
       @submit.native.prevent
     >
       <el-form-item
-        v-for="(item) in searchForm"
-        :label="item.label+'：'"
+        v-for="item in searchForm"
+        :label="item.label + '：'"
         :key="item.prop"
         :prop="item.prop"
       >
         <!-- 输入框 -->
 
-        <template v-if="item.type =='Input'">
+        <template v-if="item.type == 'Input'">
           <el-input
             v-model="searchData[item.prop]"
-            @keyup.enter.native="operation(item.methods,searchData)"
+            @keyup.enter.native="operation(item.methods, searchData)"
           ></el-input>
         </template>
-        <template v-else-if="item.type=='Select'">
+        <template v-else-if="item.type == 'Select'">
           <el-select
             v-model="searchData[item.prop]"
             filterable
-            @change="operation(item.methods,searchData[item.prop],item.prop)"
+            @change="operation(item.methods, searchData[item.prop], item.prop)"
             clearable
           >
             <el-option
-              v-for="(op,index) in item.options"
+              v-for="(op, index) in item.options"
               :label="op.label"
               :value="op.value"
               :key="index"
@@ -46,7 +46,7 @@
           icon=""
           size="small"
           @click="operation('changesearch')"
-        >查询
+          >查询
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -55,7 +55,7 @@
           icon=""
           size="small"
           @click="operation('changeresetform')"
-        >导出
+          >导出
         </el-button>
       </el-form-item>
     </el-form>

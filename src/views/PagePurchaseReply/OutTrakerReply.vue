@@ -1,9 +1,6 @@
 <!--试产复期-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
       <!-- 2022.6.29客户要求取消左侧供应商 -->
       <!-- <el-aside
@@ -33,15 +30,9 @@
           </div>
         </div>
       </el-aside> -->
-      <el-main style="padding:0;margin:0">
-        <div
-          class="admin_container_2"
-          style="width:100%"
-        >
-          <div
-            class="admin_head"
-            ref="headRef"
-          >
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
+          <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
               :searchData="formSearchs[0].datas"
@@ -56,7 +47,6 @@
               <div class="ant-table-title">
                 <el-row>
                   <el-col :span="4">
-
                     <span class="title">
                       <!-- <i
                         class="el-icon-d-arrow-left"
@@ -67,12 +57,11 @@
                         class="el-icon-d-arrow-right"
                         v-show="!showAside"
                         @click="showAside = !showAside"
-                      ></i>{{ title }}</span>
+                      ></i
+                      >{{ title }}</span
+                    >
                   </el-col>
-                  <el-col
-                    :span="20"
-                    class="flex_flex_end"
-                  >
+                  <el-col :span="20" class="flex_flex_end">
                     <el-date-picker
                       v-model="ReplyDate"
                       type="date"
@@ -107,11 +96,15 @@
                     </el-button>
                     <el-divider direction="vertical"></el-divider>
                     <div
-                      :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                      :class="
+                        labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                      "
                       v-for="(item, y) in Status1"
                       :key="y"
                     >
-                      <span @click="changeStatus(item, y)">{{ item.label }}</span>
+                      <span @click="changeStatus(item, y)">{{
+                        item.label
+                      }}</span>
                       <el-divider direction="vertical"></el-divider>
                     </div>
                   </el-col>
@@ -145,15 +138,8 @@
         </div>
       </el-main>
     </el-container>
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
           <ComReportTable
@@ -291,7 +277,7 @@ export default {
     // } else {
     //   this.getSupplierData(this.userInfo.Account, 0);
     // }
-    this.getData()
+    this.getData();
     this.getTableHeader();
     this.judgeBtn();
   },
@@ -301,13 +287,10 @@ export default {
     }, 500);
   },
   methods: {
-    getData(){
-       this.formSearchs[0].datas["PMCRemark"] = [
-          "试产",
-          "试产/车间生产",
-        ];
-        this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
-        this.getTableData(this.formSearchs[0].datas, 0);
+    getData() {
+      this.formSearchs[0].datas["PMCRemark"] = ["试产", "试产/车间生产"];
+      this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
+      this.getTableData(this.formSearchs[0].datas, 0);
     },
     // 获取查询到的所有欠料数
     async getTotalOweNum() {
@@ -443,10 +426,7 @@ export default {
         //   SupplierNameCount: "全部" + "(" + num + ")",
         // });
 
-        this.formSearchs[0].datas["PMCRemark"] = [
-          "试产",
-          "试产/车间生产",
-        ];
+        this.formSearchs[0].datas["PMCRemark"] = ["试产", "试产/车间生产"];
         this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
         this.treeListTmp = this.treeData;
         if (this.treeData.length < 2) {
@@ -561,13 +541,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -578,14 +558,14 @@ export default {
       const { result, data, msg } = res.data;
       if (result) {
         let submitData = [];
-        const $table = this.$refs.ComVxeTable.$refs.vxeTable
-          // 获取修改记录
-          const updateRecords = $table.getUpdateRecords()
-          if(updateRecords.length==0){
-            this.$message.error("当前数据没做修改，请先修改再保存！");
-            return
-          }
-          updateRecords.forEach((x) => {
+        const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+        // 获取修改记录
+        const updateRecords = $table.getUpdateRecords();
+        if (updateRecords.length == 0) {
+          this.$message.error("当前数据没做修改，请先修改再保存！");
+          return;
+        }
+        updateRecords.forEach((x) => {
           let MaterialFormID = x.MaterialFormID.split(",");
           MaterialFormID.forEach((b, i) => {
             let obj = JSON.parse(JSON.stringify(x));

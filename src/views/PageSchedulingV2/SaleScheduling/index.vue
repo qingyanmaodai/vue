@@ -1,16 +1,10 @@
 <!--装配总排期-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div ref="searchRef">
         <ComSearch
-          v-for="(item3,o) in 6"
+          v-for="(item3, o) in 6"
           :key="o"
           v-show="labelStatus1 == o"
           :searchData="formSearchs[o].datas"
@@ -22,26 +16,24 @@
           @btnClick="btnClick"
         />
       </div>
-
     </div>
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="2"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="22"
-              class="flex_flex_end"
+            <el-col :span="2"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="22" class="flex_flex_end">
               <el-button
-                v-for="(item1,i1) in btnData"
-                :key="'key'+i1"
+                v-for="(item1, i1) in btnData"
+                :key="'key' + i1"
                 :type="item1.Type"
                 v-show="item1.signName == labelStatus1"
                 size="mini"
-                @click="btnClick(item1.Methods, item1.Params, i1,0)"
+                @click="btnClick(item1.Methods, item1.Params, i1, 0)"
               >
-                {{item1.BtnName}}
+                {{ item1.BtnName }}
               </el-button>
               <el-divider direction="vertical"></el-divider>
               <div
@@ -49,17 +41,15 @@
                 v-for="(item2, y) in Status1"
                 :key="y"
               >
-                <span @click="changeStatus(item2, y, 1)">{{ item2.label }}</span>
+                <span @click="changeStatus(item2, y, 1)">{{
+                  item2.label
+                }}</span>
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item3,o) in 6"
-          :key="o"
-          v-show="labelStatus1 == o"
-        >
+        <div v-for="(item3, o) in 6" :key="o" v-show="labelStatus1 == o">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -67,7 +57,7 @@
             :tableHeader="tableColumns[o]"
             :tableLoading="tableLoading[o]"
             :remark="o"
-            :ref="'vxeTable'+`${o}`"
+            :ref="'vxeTable' + `${o}`"
             :sysID="IDs[o].ID"
             :hasSelect="true"
             :isEdit="true"
@@ -99,14 +89,11 @@
             type="number"
             v-model="SN"
             size="small"
-            style="width:120px;margin:0 20px 0 10px"
+            style="width: 120px; margin: 0 20px 0 10px"
           ></el-input>
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="SearchSN"
-          >查 找</el-button>
+          <el-button size="small" type="primary" plain @click="SearchSN"
+            >查 找</el-button
+          >
         </div>
         <div class="margin_bottom_10">
           <vxe-table
@@ -133,13 +120,12 @@
           </vxe-table>
         </div>
         <div class="flex_between margin_bottom_10">
-          <span class="flex_shrink">2.确认调整对象（{{dialogData[1].length}}笔）：</span>
-          <el-button
-            type="warning"
-            size="small"
-            @click="addRow"
-            plain
-          >添加</el-button>
+          <span class="flex_shrink"
+            >2.确认调整对象（{{ dialogData[1].length }}笔）：</span
+          >
+          <el-button type="warning" size="small" @click="addRow" plain
+            >添加</el-button
+          >
         </div>
         <div>
           <vxe-table
@@ -185,7 +171,7 @@
                 </span>
                 <span
                   v-else
-                  v-html="scope.row[x.propName ?x.propName:x.prop]"
+                  v-html="scope.row[x.propName ? x.propName : x.prop]"
                 ></span>
               </template>
             </vxe-column>
@@ -194,27 +180,22 @@
                 <el-button
                   plain
                   type="danger"
-                  @click="delRow(scope.row,scope.$rowIndex)"
-                >删除</el-button>
+                  @click="delRow(scope.row, scope.$rowIndex)"
+                  >删除</el-button
+                >
               </template>
             </vxe-column>
           </vxe-table>
         </div>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <span class="dialog_notive">注意：以上订单行会调整到目标行下方，同时柜号也会更改，插入到两个不同柜号中间可以自行调整</span>
-        <el-button
-          @click="cancelChangeSort"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureChangeSort"
-          size="small"
-        >确 认 调 整</el-button>
+      <span slot="footer" class="dialog-footer">
+        <span class="dialog_notive"
+          >注意：以上订单行会调整到目标行下方，同时柜号也会更改，插入到两个不同柜号中间可以自行调整</span
+        >
+        <el-button @click="cancelChangeSort" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureChangeSort" size="small"
+          >确 认 调 整</el-button
+        >
       </span>
     </el-dialog>
 
@@ -226,13 +207,9 @@
     >
       <el-form>
         <el-form-item label="请选择柜号：">
-          <el-select
-            v-model="GroupCabineValue"
-            filterable
-            allow-create
-          >
+          <el-select v-model="GroupCabineValue" filterable allow-create>
             <el-option
-              v-for="(item4,i4) in GroupCabineOptions"
+              v-for="(item4, i4) in GroupCabineOptions"
               :key="i4"
               :label="item4.GroupCabinet"
               :value="item4.GroupCabinet"
@@ -240,21 +217,17 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="温馨提示："><span class="redFont">不选择柜号可输入新柜号回车即可</span></el-form-item>
+        <el-form-item label="温馨提示："
+          ><span class="redFont"
+            >不选择柜号可输入新柜号回车即可</span
+          ></el-form-item
+        >
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="switchDialog=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureGroupCabine"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="switchDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureGroupCabine" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 所有柜号 -->
@@ -266,7 +239,7 @@
     >
       <el-form label-width="100px">
         <el-form-item label="计划总数：">
-          {{numForm.numTotal}}
+          {{ numForm.numTotal }}
         </el-form-item>
         <el-form-item label="拆分数量：">
           <el-input
@@ -277,19 +250,11 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="numDialog=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureSplitNum"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="numDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureSplitNum" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -329,31 +294,16 @@
           @selectfun="selectFun"
         />
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="newDataDialog=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureAddNewData"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="newDataDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureAddNewData" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
 
-    <el-dialog
-      title="工单分析"
-      :visible.sync="orderDialog"
-      width="70%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="工单分析" :visible.sync="orderDialog" width="70%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           工单
           <ComReportTable
@@ -374,13 +324,9 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="工单查询"
-      :visible.sync="formatDialog"
-      width="70%"
-    >
-        <div>
-          <ComSearch
+    <el-dialog title="工单查询" :visible.sync="formatDialog" width="70%">
+      <div>
+        <ComSearch
           class="margin_bottom_10 dialog_search"
           ref="searchRef"
           :searchData="formSearchs[9].datas"
@@ -390,11 +336,8 @@
           :btnForm="btnForm[9]"
           @btnClick="btnClick"
         />
-        </div>
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+      </div>
+      <div class="container" style="background-color: #f0f2f5">
         <!-- <div class="admin_content">
 
           <ComReportTable
@@ -414,9 +357,8 @@
             @sortChange="sortChange"
           />
         </div> -->
-        
+
         <div class="admin_content">
-          
           <ComReportTable
             :rowKey="'RowNumber'"
             :height="height1"
@@ -435,7 +377,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -1103,9 +1044,8 @@ export default {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
-        this.labelStatus1
-      ].value;
+      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+        this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
@@ -1597,8 +1537,8 @@ export default {
             EditDisabled = true;
             NewGroupCabinet = newRow[0].GroupCabinet;
           } else {
-            let NextGroupCabinet = this.tableData[0][parseInt(this.SN)]
-              .GroupCabinet;
+            let NextGroupCabinet =
+              this.tableData[0][parseInt(this.SN)].GroupCabinet;
             if (newRow[0].GroupCabinet == NextGroupCabinet) {
               EditDisabled = true;
               NewGroupCabinet = newRow[0].GroupCabinet;
@@ -1681,11 +1621,11 @@ export default {
         // this.dataSearch(8);
         this.formSearchs[9].datas["OweQty"] = 0;
         // this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
-        let MOSList = []
-        MOSList = row.MOS?row.MOS.split(','):[]
+        let MOSList = [];
+        MOSList = row.MOS ? row.MOS.split(",") : [];
         this.formSearchs[9].datas["OrderNo"] = MOSList;
-        
-         console.log('MOSList',MOSList)
+
+        console.log("MOSList", MOSList);
         // this.formSearchs[9].datas["OrderID"] = row.OrderID; 接口没返回此字段，会查出所有工单的数据，所有注释代码
         this.dataSearch(9);
         this.formatDialog = true;

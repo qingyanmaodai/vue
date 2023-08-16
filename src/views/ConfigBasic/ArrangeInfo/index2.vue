@@ -1,8 +1,6 @@
 <!--排班信息-->
 <template>
-  <div>
-    hahahahhah
-  </div>
+  <div>hahahahhah</div>
 </template>
 
 <script>
@@ -766,5 +764,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

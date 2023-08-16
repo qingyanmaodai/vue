@@ -1,5 +1,5 @@
 <template>
-<!-- 有checkbox树形 -->
+  <!-- 有checkbox树形 -->
   <div>
     <div class="flex px-2 py-1.5 border-b-1 tree_Head">
       <span class="tree_text">{{ title }}</span>
@@ -13,10 +13,7 @@
           class="w2/3 cx_margin_right1"
           @input="searchTree"
         ></el-input>
-        <el-dropdown
-          @command="handleCommand"
-          class="flex_inline"
-        >
+        <el-dropdown @command="handleCommand" class="flex_inline">
           <img src="../../assets/svg/dot.svg" />
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="1">展开全部</el-dropdown-item>

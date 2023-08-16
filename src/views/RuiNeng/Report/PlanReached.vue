@@ -15,12 +15,20 @@
                     {{ tableData[2][0]["S2"] }}
                   </div>
                   <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg=="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
@@ -40,12 +48,20 @@
                     {{ tableData[2][0]["S1"] }}
                   </div>
                   <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg=="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
@@ -65,12 +81,20 @@
                     {{ tableData[2][0]["S3"] }}
                   </div>
                   <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg=="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
@@ -90,12 +114,20 @@
                     {{ tableData[2][0]["S4"] }}
                   </div>
                   <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg=="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
@@ -121,17 +153,42 @@
             <div class="itemCard">
               <div class="echartHead">
                 <div class="echartTitle">业务要货汇总</div>
-                <el-tabs v-model="selectedIndex" @tab-click="changeStatus" :stretch="true">
-                  <el-tab-pane v-for="(item, key) in Status1" :key="key" :label="item['label']"
-                    :name="item['name']"></el-tab-pane>
+                <el-tabs
+                  v-model="selectedIndex"
+                  @tab-click="changeStatus"
+                  :stretch="true"
+                >
+                  <el-tab-pane
+                    v-for="(item, key) in Status1"
+                    :key="key"
+                    :label="item['label']"
+                    :name="item['name']"
+                  ></el-tab-pane>
                 </el-tabs>
               </div>
               <div class="echartBody">
-                <ComVxeTable v-for="(item, key) in [0, 1]" v-if="Number(selectedIndex) === item" :key="key" ref="tableRef"
-                  :rowKey="'RowNumber'" :height="'100%'" :tableData="tableData[item]" :tableHeader="tableColumns[item]"
-                  :tableLoading="tableLoading[item]" :remark="item" :sysID="sysID[item]['ID']" :hasSelect="true"
-                  :isEdit="isEdit" :isClear="isClear[item]" :keepSource="true" :pagination="tablePagination[item]"
-                  @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange" @selectfun="selectFun">
+                <ComVxeTable
+                  v-for="(item, key) in [0, 1]"
+                  v-if="Number(selectedIndex) === item"
+                  :key="key"
+                  ref="tableRef"
+                  :rowKey="'RowNumber'"
+                  :height="'100%'"
+                  :tableData="tableData[item]"
+                  :tableHeader="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :remark="item"
+                  :sysID="sysID[item]['ID']"
+                  :hasSelect="true"
+                  :isEdit="isEdit"
+                  :isClear="isClear[item]"
+                  :keepSource="true"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                  @selectfun="selectFun"
+                >
                 </ComVxeTable>
               </div>
             </div>
@@ -149,12 +206,20 @@
                     {{ tableData[2][0]["S1"] }}
                   </div>
                   <div class="content">
-                    <img v-if="parseInt(headCard[0]['changeNum']) >= 0"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg==" />
-                    <img v-else
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg==" />
-                    <div class="changeNum" :class="parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
-                      ">
+                    <img
+                      v-if="parseInt(headCard[0]['changeNum']) >= 0"
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGsSURBVHgBpZW9TgJBEMfnPvgQk+MaGpEnsNB3sICe2JhYmGh8AN6AWguDMRaGWJPQQ2GrvSZaYsTKWAAG4QjcOrO3h3q3t5vgP5nMsh8/Zm9u5gxIEGMsjS6LRt5GM2gabY42Q/syDGMuO2tIYBY6V8B0mqKNEL5IhCIwh84ByZ8p5AvwJAYVwDysrkEINgXQEhH+R47gBFAIIlRfuXFZg8ZFTbGDWC4fID2FPgM64HiMNtGB0/TWEH1NCWzelDkwFIGvrvcUJzKmMspWewveP85j88NBna8poJZ0qdstQe+liWmMJ5CxPF/r3G5KTlphpcRVLveB2VU+fnqow2xe4WPD7MP2TjC/URhJTpoEZYngyu4b98+PP4dT9t1yXi6frr8AnRastBw7Tle3m6AeaKF+8Ozo6keHHc1uj6BT5ZY2Zpn5QaSucwZ6TUysV2pjs8Qtvdc697n1Uzg5boEGSO3QFj8GaAWIJowqCUsEisUqHOzfa4CU8E+Av12KKsuF1bXsUtF+SmB9c4lHOJT201/gsA1mQS9PAJM7fwSeEmDqDdFvFME8keSYvgEgyZnv7NknkgAAAABJRU5ErkJggg=="
+                    />
+                    <img
+                      v-else
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIbSURBVHgBrZXPbtNAEMa/tY3TIiylAg5UHAyCXnoxpFRC6iHwAu4DIKW5FEWc+iScUAUcSt4gPXE1h16aVLZ6C0hRpaIUiX+WgmiTxl7Ga2zFjd0tFZ/kZDM7+8vs7OyYoUBW+20VCmwwXgWHSaYyPT4YDsCZg4A3veV1L28tm4K5mya4tgVOMKl4C6Nww3vcOJi0Khng3uYaQtW9GFDEtApdda3O61rGmgFC3cJlxfmat/S8mULFlqMI47xdVj5GwYMoFfH2Q/VlHnDl9gLshQquzxoXYNL6UrxTZu2+saDCLfK071cwb8yhc9RDmx6pwuCJApXVzvNJQEu37mL+2hykUjRboaxWz/Pp//qJwehEjJ+ai5CKKkehD1Pm9+33QHwb+ow8WgYzOijpiQ+DcTq+U74pcy9riEohB1xSNeialo4TRZEapRkxHgxP8qC+BsboLnPr7IxOIPtehQCzGfuNqwaeLa4Q8Bjbn/bSfKfioDrlcPL+LnJ+39vPbD3RcDwWc1PASIw5CsLxNgr0/XiAncOPU/adz10xl6tg1FS8Rw2HTsxBgbo/+gTupr/b/R7ZjvKdOW95yy+8+ARYUAcvvvv7Xw8px1fEuPOl8Fb5OA03BC6x/M8ulfZTr9J4RwmpIy6xf5E/CcxEmuhvG4y61qqMJirnNKif7fysyN/afUXdS6+JtwCbeEdRHUZlwxhvuQ/XP+St/QMIONIPfffW1AAAAABJRU5ErkJggg=="
+                    />
+                    <div
+                      class="changeNum"
+                      :class="
+                        parseInt(headCard[0]['changeNum']) < 0 ? 'loss' : ''
+                      "
+                    >
                       {{ headCard[0]["changeNum"] }}
                     </div>
                   </div>
@@ -287,21 +352,17 @@ export default {
       ],
       formSearchs: [
         {
-          datas: {
-          },
+          datas: {},
           forms: [],
         },
         {
-          datas: {
-          },
+          datas: {},
           forms: [],
         },
         {
-          datas: {
-          },
+          datas: {},
           forms: [],
         },
-
       ],
       sysID: [
         {
@@ -316,14 +377,17 @@ export default {
       chart: [],
       chartOptions: [],
       handleWindowResizeDebounced: null,
-      selectedIndex: '0',
-      Status1: [{
-        label: '日报表',
-        name: '0'
-      }, {
-        label: '月报表',
-        name: '1'
-      },]
+      selectedIndex: "0",
+      Status1: [
+        {
+          label: "日报表",
+          name: "0",
+        },
+        {
+          label: "月报表",
+          name: "1",
+        },
+      ],
     };
   },
   watch: {},
@@ -336,7 +400,7 @@ export default {
     this.currentDate = this.$moment().format("YYYY-MM-DD");
     this.getTableHeader();
   },
-  activated() { },
+  activated() {},
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     // console.log(style, "style");
@@ -345,10 +409,7 @@ export default {
     // await this.getEchartsData3();
     // await this.getEchartsData4();
     //初始化图表;
-    this.chart = [
-      this.$refs.chart4,
-      this.$refs.chart5,
-    ];
+    this.chart = [this.$refs.chart4, this.$refs.chart5];
     this.getEcharts();
 
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
@@ -647,8 +708,8 @@ export default {
       this.getEcharts();
     },
     changeStatus(tab, event) {
-      this.selectedIndex = tab.name
-      this.dataSearch(Number(tab.name))
+      this.selectedIndex = tab.name;
+      this.dataSearch(Number(tab.name));
       console.log(tab, event);
     },
     handleConsumeBtnClick(index) {
@@ -791,7 +852,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -1101,7 +1162,8 @@ export default {
   box-sizing: border-box;
 }
 
-.el-container {}
+.el-container {
+}
 
 .el-main {
   padding: 16px;

@@ -387,9 +387,9 @@ export default {
               },
             },
             label: {
-              normal:{
-                formatter:'{b} {c}'
-              }
+              normal: {
+                formatter: "{b} {c}",
+              },
             },
             data: [{ name: "包装", value: 100 }],
           },
@@ -1219,7 +1219,7 @@ export default {
     }
     .f4 {
       width: 20%;
-      color:rgb(250, 86, 86);
+      color: rgb(250, 86, 86);
     }
   }
 }
@@ -1247,9 +1247,9 @@ export default {
 }
 ::v-deep .home {
   .el-card__body {
-  width: 100%;
-  display: flex;
-}
+    width: 100%;
+    display: flex;
+  }
 }
 .bodyContent {
   display: flex;

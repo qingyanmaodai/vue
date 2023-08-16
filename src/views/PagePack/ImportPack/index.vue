@@ -1,13 +1,7 @@
 <!--导入销售计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -24,38 +18,25 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[0]"
-          >
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
             >
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
-
           </div>
         </div>
       </div>
     </div>
-    <el-dialog
-      title="销售导入"
-      :visible.sync="dialogImport"
-      width="30%"
-    >
+    <el-dialog title="销售导入" :visible.sync="dialogImport" width="30%">
       <el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         style="padding-top: 10px"
@@ -76,26 +57,15 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >
+        <div class="el-upload__tip" slot="tip">
           只能上传xls、xslx文件且仅支持上传一个文件
         </div>
       </el-upload>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogImport = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="sureImport"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogImport = false" size="small">取 消</el-button>
+        <el-button size="small" type="primary" @click="sureImport"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -550,7 +520,7 @@ export default {
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
     // 解析
     async checkSys(a, b, type) {
@@ -581,7 +551,7 @@ export default {
             });
             sheet.setDataSource(data);
             if (data.length != 0) {
-              data.forEach((m,i) => {
+              data.forEach((m, i) => {
                 //改变颜色，行，列，-1为全部
                 sheet.getCell(i, -1).backColor("");
               });

@@ -1,17 +1,8 @@
 <!--组织信息-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_container"
-      style="width:100%"
-    >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_container" style="width: 100%">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -28,10 +19,7 @@
               <el-col :span="2">
                 <span class="title">{{ title }}</span>
               </el-col>
-              <el-col
-                :span="22"
-                class="flex_flex_end"
-              >
+              <el-col :span="22" class="flex_flex_end">
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
@@ -82,26 +70,18 @@
           placeholder="选择线别"
         >
           <el-option
-            v-for="(item,i) in Status1"
+            v-for="(item, i) in Status1"
             :key="i"
             :label="item.OrganizeName"
             :value="item.OrganizeID"
           ></el-option>
         </el-select>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="lineDialog = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureLine"
-          size="small"
-        >确 认 改 线</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="lineDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureLine" size="small"
+          >确 认 改 线</el-button
+        >
       </span>
     </el-dialog>
     <el-dialog
@@ -117,14 +97,11 @@
             type="number"
             v-model="SN"
             size="small"
-            style="width:120px;margin:0 20px 0 10px"
+            style="width: 120px; margin: 0 20px 0 10px"
           ></el-input>
-          <el-button
-            size="small"
-            type="primary"
-            plain
-            @click="SearchSN"
-          >查 找</el-button>
+          <el-button size="small" type="primary" plain @click="SearchSN"
+            >查 找</el-button
+          >
         </div>
         <div class="margin_bottom_10">
           <vxe-table
@@ -151,13 +128,12 @@
           </vxe-table>
         </div>
         <div class="flex_between margin_bottom_10">
-          <span class="flex_shrink">2.确认调整对象（{{dialogData[1].length}}笔）：</span>
-          <el-button
-            type="warning"
-            size="small"
-            @click="addRow"
-            plain
-          >添加</el-button>
+          <span class="flex_shrink"
+            >2.确认调整对象（{{ dialogData[1].length }}笔）：</span
+          >
+          <el-button type="warning" size="small" @click="addRow" plain
+            >添加</el-button
+          >
         </div>
         <div>
           <vxe-table
@@ -203,7 +179,7 @@
                 </span>
                 <span
                   v-else
-                  v-html="scope.row[x.propName ?x.propName:x.prop]"
+                  v-html="scope.row[x.propName ? x.propName : x.prop]"
                 ></span>
               </template>
             </vxe-column>
@@ -212,30 +188,24 @@
                 <el-button
                   plain
                   type="danger"
-                  @click="delRow(scope.row,scope.$rowIndex)"
-                >删除</el-button>
+                  @click="delRow(scope.row, scope.$rowIndex)"
+                  >删除</el-button
+                >
               </template>
             </vxe-column>
           </vxe-table>
         </div>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <span class="dialog_notive">注意：以上订单行会调整到目标行下方，同时柜号也会更改，插入到两个不同柜号中间可以自行调整</span>
-        <el-button
-          @click="cancelChangeSort"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureChangeSort"
-          size="small"
-        >确 认 调 整</el-button>
+      <span slot="footer" class="dialog-footer">
+        <span class="dialog_notive"
+          >注意：以上订单行会调整到目标行下方，同时柜号也会更改，插入到两个不同柜号中间可以自行调整</span
+        >
+        <el-button @click="cancelChangeSort" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureChangeSort" size="small"
+          >确 认 调 整</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -686,10 +656,10 @@ export default {
       form["rows"] = 0;
       form["dicID"] = 36;
       form["OrganizeTypeID"] = 6;
-          form["OrganizeIDs"] = this.userInfo.CenterID;
+      form["OrganizeIDs"] = this.userInfo.CenterID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
-               this.adminLoading = false;
+      this.adminLoading = false;
       if (result) {
         if (data.length != 0) {
           data.forEach((a) => {

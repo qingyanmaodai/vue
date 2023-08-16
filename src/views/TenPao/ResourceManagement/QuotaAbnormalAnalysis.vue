@@ -1,9 +1,6 @@
 <!--设备与工装汇总-->
 <template>
-  <div
-    class="container flex_column content_height"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch
@@ -18,15 +15,17 @@
         />
       </div>
       <div class="ant-table-title" ref="headRef_2">
-            <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <!-- <el-col :span="20" class="flex_flex_end">
+        <el-row>
+          <el-col :span="4"
+            ><span class="title">{{ title }}</span></el-col
+          >
+          <!-- <el-col :span="20" class="flex_flex_end">
                 <span>新增行数：</span>
                 <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"
                   size="small"></el-input-number>
                 <el-divider direction="vertical"></el-divider></el-col> -->
-            </el-row>
-          </div>
+        </el-row>
+      </div>
       <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
         <ComVxeTable
           :ref="`tableRef${item}`"
@@ -232,10 +231,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [
-        { ID: 11150 },
-        { ID: 11149 },
-      ],
+      sysID: [{ ID: 11150 }, { ID: 11149 }],
       isEdit: [false, false],
       userInfo: {},
       selectedIndex: "1",

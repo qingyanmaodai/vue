@@ -1,9 +1,6 @@
 <template>
   <div :class="{ 'has-logo': showLogo }">
-    <logo
-      v-if="showLogo"
-      :collapse="isCollapse"
-    />
+    <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -16,7 +13,7 @@
         mode="vertical"
       >
         <sidebar-item
-          v-for="(route,i) in routers"
+          v-for="(route, i) in routers"
           :key="i"
           :item="route"
           :base-path="route.path"
@@ -31,12 +28,11 @@ import { mapGetters } from "vuex";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
 import variables from "@/styles/variables.scss";
-import router from '@/router';
+import router from "@/router";
 
 export default {
   components: { SidebarItem, Logo },
-  mounted(){
-  },
+  mounted() {},
   computed: {
     ...mapGetters(["sidebar", "routers"]),
     routes() {

@@ -8,7 +8,7 @@ const spreadNS = GC.Spread.Sheets;
 //         this.NORMAL_COLOR = "rgb(128, 255, 255)";
 //         this.HIGHLIGHT_TIP = "Remove highlight.";
 //         this.NORMAL_TIP = "Highlight negative numbers.";
-    
+
 //         spreadNS.CellTypes.ColumnHeader.apply(this);
 //     }
 // }
@@ -127,7 +127,7 @@ const spreadNS = GC.Spread.Sheets;
 //         this.NORMAL_COLOR = "rgb(128, 255, 255)";
 //         this.HIGHLIGHT_TIP = "Remove highlight.";
 //         this.NORMAL_TIP = "Highlight negative numbers.";
-    
+
 //         spreadNS.CellTypes.RowHeader.apply(this);
 //     }
 // }
@@ -268,15 +268,15 @@ const spreadNS = GC.Spread.Sheets;
 
 // Define checkbox cell type
 export function HeaderCheckBoxCellType() {
-    // constructor(value) {
-        GC.Spread.Sheets.CellTypes.CheckBox.apply(this);
-        // value = +value || 0;
-        // if (!value || isNaN(value) || value < 0) {
-        //     value = 0;
-        // }
-        // this.value = value;
-        this.caption("选择");
-    // }
+  // constructor(value) {
+  GC.Spread.Sheets.CellTypes.CheckBox.apply(this);
+  // value = +value || 0;
+  // if (!value || isNaN(value) || value < 0) {
+  //     value = 0;
+  // }
+  // this.value = value;
+  this.caption("选择");
+  // }
 }
 // export class HeaderCheckBoxCellType {
 //     constructor(value) {
@@ -290,68 +290,97 @@ export function HeaderCheckBoxCellType() {
 //     }
 // }
 
-
 HeaderCheckBoxCellType.prototype = new spreadNS.CellTypes.CheckBox();
 var basePaint = spreadNS.CellTypes.CheckBox.prototype.paint;
-HeaderCheckBoxCellType.prototype.paint = function (ctx, value, x, y, width, height, style, context) {
-    var tag = !!(context.sheet.getTag(context.row, context.col, context.sheetArea) || false);
+HeaderCheckBoxCellType.prototype.paint = function (
+  ctx,
+  value,
+  x,
+  y,
+  width,
+  height,
+  style,
+  context
+) {
+  var tag = !!(
+    context.sheet.getTag(context.row, context.col, context.sheetArea) || false
+  );
 
-    basePaint.apply(this, [ctx, tag, x, y, width, height, style, context]);
+  basePaint.apply(this, [ctx, tag, x, y, width, height, style, context]);
 };
-HeaderCheckBoxCellType.prototype.getHitInfo = function (x, y, cellStyle, cellRect, context) {
-    if (context) {
-        return {x: x, y: y, row: context.row, col: context.col, cellRect: cellRect, sheetArea: context.sheetArea, isReservedLocation: true, sheet: context.sheet};
-    }
-    return null;
+HeaderCheckBoxCellType.prototype.getHitInfo = function (
+  x,
+  y,
+  cellStyle,
+  cellRect,
+  context
+) {
+  if (context) {
+    return {
+      x: x,
+      y: y,
+      row: context.row,
+      col: context.col,
+      cellRect: cellRect,
+      sheetArea: context.sheetArea,
+      isReservedLocation: true,
+      sheet: context.sheet,
+    };
+  }
+  return null;
 };
 
 HeaderCheckBoxCellType.prototype.processMouseDown = function (hitInfo) {
-    this._isMouseDown = true;
+  this._isMouseDown = true;
 
-    // var sheet = hitInfo.sheet;
-    // let  allData = sheet.getDataSource();
-    //     allData.some((x,i) => {     
-    //         // sheet.setValue(i, 0,!x.isChecked);
-    //         x.isChecked = !x.isChecked;
-    //     });
+  // var sheet = hitInfo.sheet;
+  // let  allData = sheet.getDataSource();
+  //     allData.some((x,i) => {
+  //         // sheet.setValue(i, 0,!x.isChecked);
+  //         x.isChecked = !x.isChecked;
+  //     });
 };
 HeaderCheckBoxCellType.prototype.processMouseUp = function (hitInfo) {
-    if (this._isMouseDown) {
-        this.doFilter(hitInfo);
-        this._isMouseDown = false;
-    }
-    return true;
+  if (this._isMouseDown) {
+    this.doFilter(hitInfo);
+    this._isMouseDown = false;
+  }
+  return true;
 };
 // 选择数据
 HeaderCheckBoxCellType.prototype.doFilter = function (hitInfo) {
-    var value = this.value, sheet = hitInfo.sheet, row = hitInfo.row, col = hitInfo.col, sheetArea = hitInfo.sheetArea;
-    var tag = sheet.getTag(row, col, sheetArea);
-    sheet.setTag(row, col, !tag, sheetArea);
-    // var rowFilter = new spreadNS.Filter.HideRowFilter(new spreadNS.Range(-1, col, -1, 1));
-    // sheet.rowFilter(rowFilter);
-    // rowFilter.filterButtonVisible(false);
-    // var condition = new spreadNS.ConditionalFormatting.Condition(spreadNS.ConditionalFormatting.ConditionType.numberCondition, {
-    //     compareType: spreadNS.ConditionalFormatting.GeneralComparisonOperators.greaterThan,
-    //     expected: value
-    // });
-    // rowFilter.addFilterItem(col, condition);
+  var value = this.value,
+    sheet = hitInfo.sheet,
+    row = hitInfo.row,
+    col = hitInfo.col,
+    sheetArea = hitInfo.sheetArea;
+  var tag = sheet.getTag(row, col, sheetArea);
+  sheet.setTag(row, col, !tag, sheetArea);
+  // var rowFilter = new spreadNS.Filter.HideRowFilter(new spreadNS.Range(-1, col, -1, 1));
+  // sheet.rowFilter(rowFilter);
+  // rowFilter.filterButtonVisible(false);
+  // var condition = new spreadNS.ConditionalFormatting.Condition(spreadNS.ConditionalFormatting.ConditionType.numberCondition, {
+  //     compareType: spreadNS.ConditionalFormatting.GeneralComparisonOperators.greaterThan,
+  //     expected: value
+  // });
+  // rowFilter.addFilterItem(col, condition);
 
-    //   var sheet = hitInfo.sheet;
-    // let  allData = sheet.getDataSource();
+  //   var sheet = hitInfo.sheet;
+  // let  allData = sheet.getDataSource();
 
-    var sheet = hitInfo.sheet;
-    let  allData = sheet.getDataSource();
-    let newData = [];
-    if (!tag) {
-        allData.forEach(element => {
-            newData.push(true);
-        });
-    } else {
-        allData.forEach(element => {
-            newData.push(false);
-        });
-    }
-    sheet.setArray(0,0,newData);
+  var sheet = hitInfo.sheet;
+  let allData = sheet.getDataSource();
+  let newData = [];
+  if (!tag) {
+    allData.forEach((element) => {
+      newData.push(true);
+    });
+  } else {
+    allData.forEach((element) => {
+      newData.push(false);
+    });
+  }
+  sheet.setArray(0, 0, newData);
 };
 
 // Define hyperlink cell type
@@ -405,9 +434,6 @@ HeaderCheckBoxCellType.prototype.doFilter = function (hitInfo) {
 // SortHyperlinkCellType.prototype.processMouseLeave = function (hitInfo) {
 
 // };
-
-
-
 
 // export function MyCheckBoxCellType() {
 // 	GC.Spread.Sheets.CellTypes.CheckBox.apply(this);

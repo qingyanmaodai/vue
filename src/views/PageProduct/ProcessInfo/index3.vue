@@ -1,50 +1,38 @@
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title2 }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title2 }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <span v-show="labelStatus2 == 1">
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="openProcess"
-                >新增工序</el-button>
+                <el-button type="primary" size="mini" @click="openProcess"
+                  >新增工序</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="warning"
-                  size="mini"
-                >保存工艺工序</el-button>
+                <el-button type="warning" size="mini">保存工艺工序</el-button>
               </span>
               <span v-show="labelStatus2 == 2">
                 <el-radio
                   v-model="loseCategory"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >缺失工艺</el-radio>
+                  >缺失工艺</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                >建立关联</el-button>
+                <el-button type="primary" size="mini">建立关联</el-button>
               </span>
               <span v-show="labelStatus2 == 3">
-                <el-button
-                  type="primary"
-                  size="mini"
-                >保存</el-button>
+                <el-button type="primary" size="mini">保存</el-button>
               </span>
               <el-divider direction="vertical"></el-divider>
               <div
-                :class="labelStatus2 == item.value ? 'statusActive cursor' : 'cursor'"
+                :class="
+                  labelStatus2 == item.value ? 'statusActive cursor' : 'cursor'
+                "
                 v-for="(item, y) in Status2"
                 :key="y"
               >
@@ -58,10 +46,7 @@
     </div>
 
     <div class="down_admin">
-      <div
-        class="admin_head"
-        v-show="labelStatus2 == 1"
-      >
+      <div class="admin_head" v-show="labelStatus2 == 1">
         <ComSearch
           ref="searchRef1"
           :searchData="formSearchs[1].datas"
@@ -86,14 +71,9 @@
           @sortChange="sortChange"
         />
       </div>
-      <div
-        v-show="labelStatus2 == 2"
-        class="admin_head"
-      >
-     
-
+      <div v-show="labelStatus2 == 2" class="admin_head">
         <ComUmyTable
-          v-show="labelStatus2 ==2"
+          v-show="labelStatus2 == 2"
           :rowKey="'RowNumber'"
           :height="'280px'"
           :tableData="tableData[2]"
@@ -110,13 +90,9 @@
           @sortChange="sortChange"
         />
       </div>
-      <div
-        v-show="labelStatus2 == 3"
-        class="admin_head"
-      >
-
+      <div v-show="labelStatus2 == 3" class="admin_head">
         <ComUmyTable
-          v-show="labelStatus2 ==3"
+          v-show="labelStatus2 == 3"
           :rowKey="'RowNumber'"
           :height="'280px'"
           :tableData="tableData[3]"
@@ -281,9 +257,9 @@ export default {
           let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
           });
-             if(newData.length != 0){
-              newBtn = newBtn.concat(newData);
-            }
+          if (newData.length != 0) {
+            newBtn = newBtn.concat(newData);
+          }
         });
       }
       this.$set(this, "btnForm", newBtn);
@@ -292,10 +268,8 @@ export default {
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
-      
-      let rem =
-        (document.documentElement.clientHeight - headHeight - 100) /
-        2;
+
+      let rem = (document.documentElement.clientHeight - headHeight - 100) / 2;
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
@@ -358,7 +332,7 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-        setTimeout(() => {
+      setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
     },
@@ -382,24 +356,22 @@ export default {
     // 特殊接口保存
     async specialSave(remarkTb, index) {
       let res = null;
-      
+
       res = await SaveSalesPlan(this.tableData[remarkTb]);
       const { result, data, count, msg } = res.data;
       this.dataSearch(0);
       if (result) {
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 保存
@@ -421,18 +393,18 @@ export default {
       if (result) {
         this.btnForm[index].isLoading = false;
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
         this.dataSearch(remarkTb);
       } else {
         this.btnForm[index].isLoading = false;
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 获取表头数据
@@ -472,17 +444,17 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          console.log(this.formSearchs[0].forms)
+          console.log(this.formSearchs[0].forms);
         });
         this.adminLoading = false;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.getTableData(this.formSearchs[4].datas, 4);
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       // this.getAutoHeader(IDs);
     },
@@ -506,10 +478,10 @@ export default {
         });
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 验证数据
@@ -536,10 +508,10 @@ export default {
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
@@ -588,4 +560,4 @@ export default {
     },
   },
 };
-</script>    
+</script>

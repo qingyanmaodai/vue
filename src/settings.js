@@ -1,6 +1,5 @@
 module.exports = {
-
-  title: 'APS',
+  title: "APS",
 
   /**
    * @type {boolean} true | false
@@ -14,4 +13,4 @@ module.exports = {
    */
   sidebarLogo: true,
   tagsView: true,
-}
+};

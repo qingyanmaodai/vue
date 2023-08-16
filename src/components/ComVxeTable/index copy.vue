@@ -11,14 +11,20 @@
       :id="rowKey"
       :cell-class-name="tableCellClassName"
       :row-class-name="tableRowClassName"
-      :keyboard-config="{isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true}"
-      :mouse-config="{selected: true}"
+      :keyboard-config="{
+        isArrow: true,
+        isDel: true,
+        isEnter: true,
+        isTab: true,
+        isEdit: true,
+      }"
+      :mouse-config="{ selected: true }"
       resizable
       @checkbox-change="handleSelectionChange"
       @cell-click="handleRowClick"
       @cell-dblclick="handleRowdbClick"
       @sort-change="sortChange"
-      :edit-config="{trigger: 'click', mode: 'row', showStatus: true}"
+      :edit-config="{ trigger: 'click', mode: 'row', showStatus: true }"
     >
       >
       <vxe-column
@@ -28,12 +34,7 @@
         v-if="hasSelect"
         fixed="left"
       ></vxe-column>
-      <vxe-column
-        tree-node
-        type="seq"
-        min-width="60"
-        title="序号"
-      ></vxe-column>
+      <vxe-column tree-node type="seq" min-width="60" title="序号"></vxe-column>
       <vxe-column
         v-for="(x, z) in tableHeader"
         :key="z"
@@ -43,7 +44,7 @@
         :title="x.label"
         :min-width="x.width"
         :fixed="x.fix"
-        :edit-render="{name: 'input'}"
+        :edit-render="{ name: 'input' }"
       >
       </vxe-column>
       <vxe-column
@@ -59,7 +60,7 @@
             icon="el-icon-edit"
             circle
             size="mini"
-            @click="editRow(scope.row,scope.$index)"
+            @click="editRow(scope.row, scope.$index)"
           ></el-button>
           <el-button
             v-show="condition ? condition(scope.row) : true"
@@ -67,50 +68,31 @@
             icon="el-icon-delete"
             circle
             size="mini"
-            @click="delRow(scope.row,scope.$index)"
+            @click="delRow(scope.row, scope.$index)"
           ></el-button>
         </template>
       </vxe-column>
     </vxe-table>
     <div>
-      <div
-        v-if="showPagination"
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
         </div>
         <div class="flex">
-          <div
-            class="footer_label"
-            v-show="multipleSelection.length != 0"
-          >
+          <div class="footer_label" v-show="multipleSelection.length != 0">
             已选[<span style="color: red; font-weight: bold">{{
               multipleSelection.length
-            }}</span>]
+            }}</span
+            >]
           </div>
           <el-pagination
             background
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
             :page-sizes="[
-              32,
-              50,
-              100,
-              150,
-              200,
-              250,
-              300,
-              350,
-              400,
-              800,
-              1000,
-              1500,
-              2000,
+              32, 50, 100, 150, 200, 250, 300, 350, 400, 800, 1000, 1500, 2000,
             ]"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"
@@ -120,15 +102,10 @@
           </el-pagination>
         </div>
       </div>
-      <div
-        v-else
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-else class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
         </div>
         <div>

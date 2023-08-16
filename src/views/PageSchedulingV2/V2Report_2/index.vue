@@ -1,13 +1,7 @@
 <!--欠料追踪表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,21 +16,16 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="setClearTag(0)"
-              >标记退补</el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="setClearTag(1)"
-              >清除退补</el-button>
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="primary" size="mini" @click="setClearTag(0)"
+                >标记退补</el-button
+              >
+              <el-button type="danger" size="mini" @click="setClearTag(1)"
+                >清除退补</el-button
+              >
               <el-divider direction="vertical"></el-divider>
               <div
                 :class="labelStatus3 == y ? 'statusActive cursor' : 'cursor'"
@@ -73,24 +62,10 @@
       </div>
     </div>
 
-    <el-dialog
-      title="维护超领"
-      :visible.sync="editDialog"
-      width="98%"
-    >
-      <el-tabs
-        tab-position="left"
-        v-model="activeTab"
-        style="height: auto;"
-      >
-        <el-tab-pane
-          label="汇总"
-          name="first"
-        >
-          <div
-            class="admin_head"
-            ref="headRef"
-          >
+    <el-dialog title="维护超领" :visible.sync="editDialog" width="98%">
+      <el-tabs tab-position="left" v-model="activeTab" style="height: auto">
+        <el-tab-pane label="汇总" name="first">
+          <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
               :searchData="formSearchs[1].datas"
@@ -102,18 +77,16 @@
             />
           </div>
           <div class="admin_content">
-            <div
-              class="ant-table-title"
-              ref="headRef_2"
-            >
+            <div class="ant-table-title" ref="headRef_2">
               <el-row>
-                <el-col :span="4"><span class="title">备料追踪列表</span></el-col>
-                <el-col
-                  :span="20"
-                  class="flex_flex_end"
+                <el-col :span="4"
+                  ><span class="title">备料追踪列表</span></el-col
                 >
+                <el-col :span="20" class="flex_flex_end">
                   <div
-                    :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                    :class="
+                      labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                    "
                     v-for="(item, y) in Status1"
                     :key="y"
                   >
@@ -142,31 +115,24 @@
             />
           </div>
         </el-tab-pane>
-        <el-tab-pane
-          label="明细"
-          name="second"
-        >
+        <el-tab-pane label="明细" name="second">
           <div class="admin_content">
             <div class="ant-table-title">
               <el-row>
                 <!-- <el-col :span="1"><span class="title">物料明细</span></el-col> -->
-                <el-col
-                  :span="24"
-                  class="flex_flex_end"
-                >
-
+                <el-col :span="24" class="flex_flex_end">
                   <span>料号：</span>
                   <el-input
                     size="small"
                     v-model="formSearchs[2].datas['Code']"
-                    style="width:140px"
+                    style="width: 140px"
                     @keyup.enter.native="dataSearch(2)"
                   ></el-input>
                   <el-divider direction="vertical"></el-divider>
                   <span>名称：</span>
                   <el-input
                     size="small"
-                    style="width:140px"
+                    style="width: 140px"
                     @keyup.enter.native="dataSearch(2)"
                     v-model="formSearchs[2].datas['MaterialName']"
                   ></el-input>
@@ -176,7 +142,7 @@
                   <span>规格：</span>
                   <el-input
                     size="small"
-                    style="width:140px"
+                    style="width: 140px"
                     v-model="formSearchs[2].datas['Spec']"
                     @keyup.enter.native="dataSearch(2)"
                   ></el-input>
@@ -191,10 +157,10 @@
                     @change="selectOrderNo"
                   >
                     <el-option
-                      v-for="(item,i) in OrderNos"
+                      v-for="(item, i) in OrderNos"
                       :key="i"
                       :label="item.OrderNo"
-                      :value="item.	OrderNo"
+                      :value="item.OrderNo"
                     ></el-option>
                   </el-select>
                   <el-divider direction="vertical"></el-divider>
@@ -203,42 +169,40 @@
                     filterable
                     size="small"
                     placeholder="选择仓库"
-                    style="width:100px"
+                    style="width: 100px"
                     v-model="warehouseValue"
                     @change="selectWarehouse"
                   >
                     <el-option
-                      v-for="(item,i) in warehouses"
+                      v-for="(item, i) in warehouses"
                       :key="i"
                       :label="item.WarehouseName"
-                      :value="item.	WarehouseID"
+                      :value="item.WarehouseID"
                     ></el-option>
                   </el-select>
                   <el-divider direction="vertical"></el-divider>
-                  <el-button
-                    type="danger"
-                    size="small"
-                    @click="clearShort"
-                  >清空超领</el-button>
+                  <el-button type="danger" size="small" @click="clearShort"
+                    >清空超领</el-button
+                  >
                   <el-divider direction="vertical"></el-divider>
-                  <el-button
-                    type="success"
-                    size="small"
-                    @click="submitChildren"
-                  >提交</el-button>
+                  <el-button type="success" size="small" @click="submitChildren"
+                    >提交</el-button
+                  >
                   <el-divider direction="vertical"></el-divider>
-                  <el-button
-                    type="warning"
-                    size="small"
-                    @click="dataExport(1)"
-                  >导出</el-button>
+                  <el-button type="warning" size="small" @click="dataExport(1)"
+                    >导出</el-button
+                  >
                   <el-divider direction="vertical"></el-divider>
                   <div
-                    :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
+                    :class="
+                      labelStatus2 == y ? 'statusActive cursor' : 'cursor'
+                    "
                     v-for="(item, y) in Status2"
                     :key="y"
                   >
-                    <span @click="changeStatus2(item, y)">{{ item.label }}</span>
+                    <span @click="changeStatus2(item, y)">{{
+                      item.label
+                    }}</span>
                     <el-divider direction="vertical"></el-divider>
                   </div>
                 </el-col>
@@ -269,15 +233,8 @@
       </el-tabs>
     </el-dialog>
 
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComVxeTable
@@ -318,7 +275,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -589,13 +545,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }

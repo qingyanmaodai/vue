@@ -1,13 +1,7 @@
 <!--入库处理-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,16 +16,13 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="openDrawer"
-              >新增</el-button>
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="primary" size="mini" @click="openDrawer"
+                >新增</el-button
+              >
               <el-divider direction="vertical"></el-divider>
             </el-col>
           </el-row>
@@ -62,18 +53,12 @@
       :modal-append-to-body="false"
       :modal="false"
     >
-      <span
-        slot="title"
-        class="dialog-footer"
-      >
+      <span slot="title" class="dialog-footer">
         <span>{{ dialogHeader }}</span>
-        <i
-          class="el-icon-zoom-in dialog_icon"
-          @click="changeWidth"
-        />
+        <i class="el-icon-zoom-in dialog_icon" @click="changeWidth" />
       </span>
       <el-container>
-        <span class="content_head">{{dialogHeader}}</span>
+        <span class="content_head">{{ dialogHeader }}</span>
         <GeneralForm
           class="formStyle"
           ref="ruleForm0"
@@ -85,11 +70,9 @@
         <div class="hr-line-dashed" />
         <el-main>
           <div class="content_main_head">
-            <el-button
-              @click="openGoodsDialog"
-              size="small"
-              class="orange_btn"
-            >选择添加商品</el-button>
+            <el-button @click="openGoodsDialog" size="small" class="orange_btn"
+              >选择添加商品</el-button
+            >
           </div>
           <ComVxeTable
             ref="addPurchaseRequisition"
@@ -112,18 +95,13 @@
             rows="2"
             v-model="ruleForm0.Remark1"
           />
-          <span class="footer_span">制单人：{{userInfo.Name}}</span>
+          <span class="footer_span">制单人：{{ userInfo.Name }}</span>
         </el-main>
         <el-footer class="footer">
-          <el-button
-            size="small"
-            @click="dialogShow = false"
-          >取消</el-button>
-          <el-button
-            size="small"
-            type="success"
-            @click="submitData"
-          >提交</el-button>
+          <el-button size="small" @click="dialogShow = false">取消</el-button>
+          <el-button size="small" type="success" @click="submitData"
+            >提交</el-button
+          >
         </el-footer>
       </el-container>
       <GoodsDialog

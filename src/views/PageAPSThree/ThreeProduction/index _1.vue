@@ -1,9 +1,6 @@
 <!--报工第一步-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <div>
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
@@ -27,21 +24,20 @@
       <div class="admin_content">
         <div
           class="admin_content_all"
-          :style="{height:height,overflow:'auto'}"
+          :style="{ height: height, overflow: 'auto' }"
         >
           <div class="flex_wrap">
             <el-button
               class="list_box"
               plain
-              v-for="(item,i) in rightData"
-              :type="currentRow.LineID == item.LineID?'primary':''"
+              v-for="(item, i) in rightData"
+              :type="currentRow.LineID == item.LineID ? 'primary' : ''"
               :key="i"
               @click="openDialog(item)"
             >
-              {{item.LineName}} 计划产品（8） 待报工（8）
+              {{ item.LineName }} 计划产品（8） 待报工（8）
             </el-button>
           </div>
-
         </div>
       </div>
     </div>
@@ -52,10 +48,7 @@
       :close-on-click-modal="false"
       width="90%"
     >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           <ComSearch
             ref="searchRef"
@@ -104,25 +97,15 @@
               />
             </div>
           </div>
-
         </div>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogShow = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="dialogBtnClick"
-          size="small"
-        >提 交 报 工</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogShow = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="dialogBtnClick" size="small"
+          >提 交 报 工</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 

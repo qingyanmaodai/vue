@@ -56,20 +56,12 @@
             <div class="flex">
               <el-pagination
                 background
-                @size-change="val=>pageSize(val,0)"
+                @size-change="(val) => pageSize(val, 0)"
                 :current-page="tablePagination[tagRemark].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
+                :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
                 :page-size="tablePagination[tagRemark].pageSize"
                 :total="tablePagination[tagRemark].pageTotal"
-                @current-change="val=>pageChange(val,0)"
+                @current-change="(val) => pageChange(val, 0)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
@@ -81,7 +73,7 @@
     </div>
   </div>
 </template>
-  <script>
+<script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -90,7 +82,13 @@ import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
 import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
-import { GetHeader, GetSearchData, ExportData, SaveData,GetSearch } from "@/api/Common";
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  SaveData,
+  GetSearch,
+} from "@/api/Common";
 import { mapState } from "vuex";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {

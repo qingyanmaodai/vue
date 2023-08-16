@@ -1,18 +1,8 @@
 <!--生产报工-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 3"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,11 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -45,11 +34,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(x,y) in 3"
-          :key="y"
-          v-show="labelStatus1 == y"
-        >
+        <div v-for="(x, y) in 3" :key="y" v-show="labelStatus1 == y">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -62,13 +47,12 @@
             :isClear="isClear[y]"
             :cellStyle="cellStyle0"
             :pagination="tablePagination[y]"
-             @selectfun="selectFun"
+            @selectfun="selectFun"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
           />
         </div>
-
       </div>
     </div>
   </div>
@@ -109,22 +93,22 @@ export default {
       formSearchs: [
         {
           datas: {
-            MFGOrganizeID:162,
-            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+            MFGOrganizeID: 162,
+            ProcessID: ["P2209290002"], //丝印报工默认丝印工序
           },
           forms: [],
         },
         {
           datas: {
-            MFGOrganizeID:162,
-            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+            MFGOrganizeID: 162,
+            ProcessID: ["P2209290002"], //丝印报工默认丝印工序
           },
           forms: [],
         },
         {
           datas: {
-            MFGOrganizeID:162,
-            ProcessID: ["P2209290002"]//丝印报工默认丝印工序
+            MFGOrganizeID: 162,
+            ProcessID: ["P2209290002"], //丝印报工默认丝印工序
           },
           forms: [],
         },
@@ -185,11 +169,11 @@ export default {
           ID: 6688,
         },
         {
-            ID: 7907,
-          },
-          {
-            ID: 7909,
-          },
+          ID: 7907,
+        },
+        {
+          ID: 7909,
+        },
       ],
       selectionData: [[], [], []],
       currentDay:
@@ -319,43 +303,42 @@ export default {
     // 保存
     async dataSave(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
-        } else {
-          let flag = []
-          for(let i=0;i<this.selectionData[remarkTb].length;i++){
-            let a = this.selectionData[remarkTb][i]
-            if(!a.ProductionQty){
-              flag.push(a)
-            }else if(parseFloat(a.ProductionQty) == 0){
-              flag.push(a)
-            }
-          } // 判断必填报工数
-          this.$nextTick(async()=>{
-            // if (flag.length == 0) {
-            for (let item of this.selectionData[remarkTb].values()) {
-              item["dicID"] = 5586;
-              item["ProducedDate"] = item.PlanDay;
-            }
-            let res = await SaveData(this.selectionData[remarkTb]);
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.$set(this.tableData, remarkTb, data);
-              this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-              this.dataSearch(remarkTb)
-              this.selectionData[remarkTb] = []
-            } else {
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
+        this.$message.error("请选择需要操作的数据！");
+      } else {
+        let flag = [];
+        for (let i = 0; i < this.selectionData[remarkTb].length; i++) {
+          let a = this.selectionData[remarkTb][i];
+          if (!a.ProductionQty) {
+            flag.push(a);
+          } else if (parseFloat(a.ProductionQty) == 0) {
+            flag.push(a);
+          }
+        } // 判断必填报工数
+        this.$nextTick(async () => {
+          // if (flag.length == 0) {
+          for (let item of this.selectionData[remarkTb].values()) {
+            item["dicID"] = 5586;
+            item["ProducedDate"] = item.PlanDay;
+          }
+          let res = await SaveData(this.selectionData[remarkTb]);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.$set(this.tableData, remarkTb, data);
+            this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+            this.dataSearch(remarkTb);
+            this.selectionData[remarkTb] = [];
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
           // }else{
           //   this.$message.error(`报工数不能为空或0,请填写！`)
           // }
-          })
-          
-        }
+        });
+      }
     },
     // 获取表头数据
     async getTableHeader() {
@@ -388,7 +371,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-      //   this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
+        //   this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
         this.dataSearch(0);
       }
     },
@@ -409,7 +392,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-        // form["ProcessID"]="P202009092233413";
+      // form["ProcessID"]="P202009092233413";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -444,7 +427,6 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-   
       this.selectionData[remarkTb] = data;
     },
     async addData(val) {
@@ -454,23 +436,22 @@ export default {
         let newData = JSON.parse(JSON.stringify(this.selectionData[0]));
         // this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
         // this.selectionData[0] = [];
-        for(var a of newData)
-        {
-    if (a["ProductionQty"] > a["ProcessOweQty"]) {
+        for (var a of newData) {
+          if (a["ProductionQty"] > a["ProcessOweQty"]) {
             this.$message.error("报工数不能大于欠数！");
             return;
           }
           a["dicID"] = 5586;
           a["ProducedDate"] = a.PlanDay;
         }
-        
+
         this.adminLoading = true;
         let res = await SaveData(newData);
         this.adminLoading = false;
         if (res.data.result) {
           this.dataSearch(0);
           this.dataSearch(1);
-          this.selectionData[0] = []
+          this.selectionData[0] = [];
         } else {
           this.$message.error(res.data.msg);
         }

@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from '@/store'
+import Vue from "vue";
+import Router from "vue-router";
+import store from "@/store";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -33,20 +33,20 @@ import Layout from '@/layout'
  */
 export let constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    path: "/login",
+    component: () => import("@/views/login/index"),
+    hidden: true,
   },
   {
-    path: '/board',
-    component: () => import('@/views/board/index'),
-    hidden: true
+    path: "/board",
+    component: () => import("@/views/board/index"),
+    hidden: true,
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/404"),
+    hidden: true,
   },
   // {
   //   path: '/',
@@ -60,9 +60,9 @@ export let constantRoutes = [
   //   }]
   // },
   {
-    path: '/redirect/:path*',
-    component: () => import('@/views/redirect/index')
-  }
+    path: "/redirect/:path*",
+    component: () => import("@/views/redirect/index"),
+  },
   // {
   //   path: '/PurchasingModule',
   //   component: Layout,
@@ -215,22 +215,23 @@ export let constantRoutes = [
 
   // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
-]
+];
 
-const createRouter = () => new Router({
-  // mode: 'history', // 去掉地址栏的#，需要后端支持，修改nginx配置
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes,
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // 去掉地址栏的#，需要后端支持，修改nginx配置
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
 export const asyncRouterMap = [];
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;

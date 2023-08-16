@@ -3,30 +3,35 @@
     <div class="head flex">
       <div
         class="card_box"
-        v-for="(item,i) in boxData"
+        v-for="(item, i) in boxData"
         :key="i"
-        :style="{background:`url(${item.imgUrl})`,backgroundSize:'100% 100%'}"
+        :style="{
+          background: `url(${item.imgUrl})`,
+          backgroundSize: '100% 100%',
+        }"
       >
         <div class="head_label">
-          {{item.name}}
+          {{ item.name }}
         </div>
         <div class="flex_around">
           <div class="head_left_icon">
             <img
               :src="item.icon"
-              style="width:60%;height:60%;background-size:100% 100%;margin:20%"
+              style="
+                width: 60%;
+                height: 60%;
+                background-size: 100% 100%;
+                margin: 20%;
+              "
               alt=""
-            >
+            />
           </div>
           <div class="head_center_label">
-            <div>{{item.name_1}}：{{item.num_1}}</div>
-            <div>{{item.name_2}}：{{item.num_2}}</div>
+            <div>{{ item.name_1 }}：{{ item.num_1 }}</div>
+            <div>{{ item.name_2 }}：{{ item.num_2 }}</div>
           </div>
-          <div style="margin:auto 0">
-            <i
-              class="el-icon-arrow-right"
-              style="font-size:24px"
-            ></i>
+          <div style="margin: auto 0">
+            <i class="el-icon-arrow-right" style="font-size: 24px"></i>
           </div>
         </div>
       </div>
@@ -37,23 +42,17 @@
           <div class="span_text"><span>常用功能</span></div>
           <div class="flex_wrap">
             <div
-              v-for="(x,y) in btnData"
+              v-for="(x, y) in btnData"
               :key="y"
               @click="toPage(x.path)"
               class="btn_icon"
             >
-              <img
-                :src="x.imgUrl"
-                alt=""
-              >
-              <span>{{x.label}}</span>
+              <img :src="x.imgUrl" alt="" />
+              <span>{{ x.label }}</span>
             </div>
           </div>
         </div>
-        <div
-          id="echart_1"
-          class="card content_1_left_down"
-        ></div>
+        <div id="echart_1" class="card content_1_left_down"></div>
       </div>
       <div class="content_2">
         <div class="card content_2_right_up">
@@ -61,63 +60,38 @@
           <div>
             <div
               class="newDot_label flex_row"
-              v-for="(m,n) in rightData_1"
+              v-for="(m, n) in rightData_1"
               :key="n"
             >
-              <div
-                class="newDot"
-                :style="{background:m.color}"
-              ></div>
-              <div style="margin-left:6px">{{m.label}}</div>
-              <div style="position:absolute;right:0">{{m.num}}</div>
+              <div class="newDot" :style="{ background: m.color }"></div>
+              <div style="margin-left: 6px">{{ m.label }}</div>
+              <div style="position: absolute; right: 0">{{ m.num }}</div>
             </div>
           </div>
         </div>
         <div class="card content_2_right_down">
-          <div
-            class="span_text"
-            style="padding-bottom:6px"
-          ><span>系统管理员</span></div>
-          <div
-            class="flex_row"
-            style="margin-bottom:5px"
-          >
-            <img
-              :src="envelope"
-              alt=""
-              style="width:15px;height:15px;"
-            >
+          <div class="span_text" style="padding-bottom: 6px">
+            <span>系统管理员</span>
+          </div>
+          <div class="flex_row" style="margin-bottom: 5px">
+            <img :src="envelope" alt="" style="width: 15px; height: 15px" />
             <div class="block_span">第九制造群：xxx （1300000000）</div>
           </div>
           <div class="flex_row">
-            <img
-              :src="envelope"
-              style="width:15px;height:15px;"
-              alt=""
-            >
+            <img :src="envelope" style="width: 15px; height: 15px" alt="" />
             <div class="block_span">系统开发管理部：XXX （1300000000）</div>
           </div>
         </div>
       </div>
-
     </div>
     <div class="footer flex_row">
       <div class="card footer_div">
         <div class="footer_label"><span>计划完成统计</span></div>
-        <div
-          id="echart_2"
-          class="echart"
-        ></div>
+        <div id="echart_2" class="echart"></div>
       </div>
-      <div
-        style="margin-left:17px"
-        class="card footer_div"
-      >
+      <div style="margin-left: 17px" class="card footer_div">
         <div class="footer_label"><span>出勤率统计</span></div>
-        <div
-          id="echart_3"
-          class="echart"
-        ></div>
+        <div id="echart_3" class="echart"></div>
       </div>
     </div>
   </div>
@@ -412,7 +386,7 @@ export default {
           },
         },
         legend: {
-          data: ["计划总量","完成总量"],
+          data: ["计划总量", "完成总量"],
         },
         grid: {
           left: "10%",
@@ -506,17 +480,27 @@ export default {
             symbolSize: 4,
             stack: "产量",
             areaStyle: {
-                normal: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                        offset: 0,
-                        color: 'rgba(255, 232,152, .9)'
-                    }, {
-                        offset: 0.8,
-                        color: 'rgba(255, 212, 62,.1)'
-                    }], false),
-                    shadowColor: 'rgba(0, 0, 0, 0.1)',
-                    shadowBlur: 8
-                }
+              normal: {
+                color: new echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(255, 232,152, .9)",
+                    },
+                    {
+                      offset: 0.8,
+                      color: "rgba(255, 212, 62,.1)",
+                    },
+                  ],
+                  false
+                ),
+                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowBlur: 8,
+              },
             },
             itemStyle: {
               normal: {
@@ -634,7 +618,7 @@ export default {
               },
             },
             data: [], //lowline
-          }
+          },
         ],
       },
     };
@@ -665,7 +649,7 @@ export default {
     getData_2() {
       let xAxis = ["1月", "2月", "3月", "4月", "5月", "6月", "7月"];
       let series_1 = [12, 345, 20, 434, 232, 2345, 245];
-      let series_2 = [100, 200, 300, 400, 500, 60 , 700];
+      let series_2 = [100, 200, 300, 400, 500, 60, 700];
       this.option_2.xAxis.data = xAxis;
       this.option_2.series[0].data = series_1;
       this.option_2.series[2].data = series_2;

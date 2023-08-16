@@ -30,8 +30,6 @@
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
-         
-                
                 >
                 </el-date-picker>
               </div>
@@ -125,15 +123,15 @@
     </div>
     <!-- 点击行弹框-->
     <DialogTable
-        title="送货预测需求明细"
-        :tableDialog="colDialogVisible"
-        :sysID="8999"
-        width="80%"
-        @closeDialog="colDialogVisible = false"
-        :searchForm="dialogSearchForm"
-        :isToolbar="false"
-        :cellStyle="cellStyle"
-      ></DialogTable>
+      title="送货预测需求明细"
+      :tableDialog="colDialogVisible"
+      :sysID="8999"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+      :cellStyle="cellStyle"
+    ></DialogTable>
   </div>
 </template>
 <script>
@@ -163,13 +161,12 @@ export default {
   name: "ImportAnalysis",
   components: {
     ComSearch,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-        },
-        colDialogVisible:false,
+      dialogSearchForm: {},
+      colDialogVisible: false,
       colAdd: [],
       dialogImport: false,
       machineCycle: "",
@@ -414,7 +411,7 @@ export default {
       try {
         // 获取活动表单
         let sheet = this.spread.getActiveSheet();
-        
+
         // sheet.visible(false)
         // 重置表单
         sheet.reset();
@@ -431,11 +428,13 @@ export default {
         });
         // 列筛选
         // 参数2 开始列
-        // 参数3 
+        // 参数3
         // 参数4 结束列
-        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-        sheet.rowFilter(hideRowFilter) 
+        var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+          cellrange
+        );
+        sheet.rowFilter(hideRowFilter);
         if (colInfos.length && colInfos[0].name === "isChecked") {
           // 选框
           sheet.setCellType(
@@ -491,59 +490,57 @@ export default {
         );
 
         // 表格单击齐套率弹框事件
-      this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
-   
-        if (_this.tableColumns[_this.tagRemark].length) {
-          _this.tableColumns[_this.tagRemark].map((item, index) => {
-            if (args.col === index) {
-              // 显示表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.ItemCode =
-              _this.tableData[_this.tagRemark][args.row].ItemCode;
-              _this.dialogSearchForm.Account = _this.tableData[_this.tagRemark][args.row].Account;
-            }
-          });
-        }
-      });
-        
+        this.spread.bind(GCsheets.Events.CellDoubleClick, function (e, args) {
+          if (_this.tableColumns[_this.tagRemark].length) {
+            _this.tableColumns[_this.tagRemark].map((item, index) => {
+              if (args.col === index) {
+                // 显示表
+                _this.colDialogVisible = true;
+                _this.dialogSearchForm.ItemCode =
+                  _this.tableData[_this.tagRemark][args.row].ItemCode;
+                _this.dialogSearchForm.Account =
+                  _this.tableData[_this.tagRemark][args.row].Account;
+              }
+            });
+          }
+        });
+
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         // 设置行颜色，最终判断有错误整行底色红色
         this.tableData[this.tagRemark].forEach((row, index) => {
-          if(row['Remark1']&&row['Remark1'].indexOf('错误')>-1){
+          if (row["Remark1"] && row["Remark1"].indexOf("错误") > -1) {
             sheet.getCell(index, -1).backColor("red");
           }
-          
-          
-        })
+        });
         this.spread.resumePaint();
-
-
-        
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
       }
       this.spread.refresh(); //重新定位宽高度
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
     },
-     // 单元格样式控制
-     cellStyle({ row, column }) {
+    // 单元格样式控制
+    cellStyle({ row, column }) {
       //判断结果为“错误”时，分配剩余和计算结果单元格字体为红色
-      if (row['DBResult']&&row["DBResult"] == "错误") {
-        if(column.property === "Remark1" || column.property === 'AvailableQty'){
-          return {  
+      if (row["DBResult"] && row["DBResult"] == "错误") {
+        if (
+          column.property === "Remark1" ||
+          column.property === "AvailableQty"
+        ) {
+          return {
             color: "red",
           };
         }
       }
       // 分配后剩余数量<0字体红色
-      if(column.property === 'AvailableQty'&&row['AvailableQty']<0){
-        return {  
+      if (column.property === "AvailableQty" && row["AvailableQty"] < 0) {
+        return {
           color: "red",
         };
       }
@@ -758,7 +755,7 @@ export default {
       reader.readAsBinaryString(file.raw);
     },
     isValidDate(date) {
-      return date instanceof Date && !isNaN(date.getTime())
+      return date instanceof Date && !isNaN(date.getTime());
     },
     // 解析文件
     async dataSys(importData) {
@@ -768,142 +765,167 @@ export default {
         let isDate = false;
         this.colAdd = [];
         let obj = {};
-        let rowNo = 0// excel行号
-        let propName = ''
-        let split = []//存储需求到料日期过期信息
-        let groupList = []
-        let rowNoOweQty  =  true
-        let firstDate = 0
-        importData[0].sheet.forEach((m,y) => {
-          rowNoOweQty  =  true
-          firstDate = 0
+        let rowNo = 0; // excel行号
+        let propName = "";
+        let split = []; //存储需求到料日期过期信息
+        let groupList = [];
+        let rowNoOweQty = true;
+        let firstDate = 0;
+        importData[0].sheet.forEach((m, y) => {
+          rowNoOweQty = true;
+          firstDate = 0;
           for (let key in m) {
-            
             // 判断是否和配置里的取名一致，一致才可导入
             for (let i = 0; i < this.tableColumns[this.tagRemark].length; i++) {
               let item = this.tableColumns[this.tagRemark][i];
               if (item.label === key) {
                 if (item.DataType === "datetime") {
-                  if(m[key]&&!this.isValidDate(m[key])){//预防用户输入日期格式不正确的判断
-                    propName = key
-                    rowNo =Number(m.__rowNum__)+1
+                  if (m[key] && !this.isValidDate(m[key])) {
+                    //预防用户输入日期格式不正确的判断
+                    propName = key;
+                    rowNo = Number(m.__rowNum__) + 1;
                     // 异常提示
-                    split.push(`第${rowNo}行,【${propName}】【${m[key]}】格式存在错误，导入失败，请检查！`)
-                  }else{
-                    if(this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")){
-                      let getDate  = new Date(m[key])
+                    split.push(
+                      `第${rowNo}行,【${propName}】【${m[key]}】格式存在错误，导入失败，请检查！`
+                    );
+                  } else {
+                    if (this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")) {
+                      let getDate = new Date(m[key]);
                       // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
-                      var  date = new Date(getDate.setSeconds(getDate.getSeconds()+43));
+                      var date = new Date(
+                        getDate.setSeconds(getDate.getSeconds() + 43)
+                      );
                       obj[item.prop] = m[key]
-                      ? this.$moment(date).format("YYYY-MM-DD")
-                      : "";
+                        ? this.$moment(date).format("YYYY-MM-DD")
+                        : "";
                     }
                   }
-                  
+
                   // 判断需求到料日期是否大于今天
-                if(item.prop==='DemandToDay'&&obj[item.prop]&&obj[item.prop]<formatDates.formatTodayDate()){
-                    propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
-                    rowNo =Number(m.__rowNum__)+1
+                  if (
+                    item.prop === "DemandToDay" &&
+                    obj[item.prop] &&
+                    obj[item.prop] < formatDates.formatTodayDate()
+                  ) {
+                    propName = this.$moment(obj[item.prop]).format(
+                      "YYYY-MM-DD"
+                    );
+                    rowNo = Number(m.__rowNum__) + 1;
                     // 异常提示
-                    split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
-                }
-                } else if(item.prop==='OweQty') {
-                  if(m[key]>0){//导入欠料数大于0才导入
-                    obj[item.prop] = m[key];
-                  }else{
-                    return
+                    split.push(
+                      `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
+                    );
                   }
-                }else{
+                } else if (item.prop === "OweQty") {
+                  if (m[key] > 0) {
+                    //导入欠料数大于0才导入
+                    obj[item.prop] = m[key];
+                  } else {
+                    return;
+                  }
+                } else {
                   obj[item.prop] = m[key];
                 }
-              }
-               else if (isNaN(key) && !isNaN(Date.parse(key))){
+              } else if (isNaN(key) && !isNaN(Date.parse(key))) {
                 // 列为日期的格式
                 isDate = true;
-                
-                if(Number(m[key])>0){//导入日期并且欠料数大于0才导入
-                  rowNoOweQty = false//行存在欠料的判断
+
+                if (Number(m[key]) > 0) {
+                  //导入日期并且欠料数大于0才导入
+                  rowNoOweQty = false; //行存在欠料的判断
                   // 判断需求到料日期是否大于今天
-                  if(formatDate(key)<formatDates.formatTodayDate()){
-                      propName = formatDate(key)
-                      rowNo =Number(m.__rowNum__)+1
-                      // 异常提示
-                      split.push(`第${rowNo}行,【${propName}】过期，导入失败，请检查！`)
+                  if (formatDate(key) < formatDates.formatTodayDate()) {
+                    propName = formatDate(key);
+                    rowNo = Number(m.__rowNum__) + 1;
+                    // 异常提示
+                    split.push(
+                      `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
+                    );
                   }
-                  obj['DemandToDay'] =this.$moment(key).format('YYYY-MM-DD')
-                  obj['OweQty'] = m[key]
+                  obj["DemandToDay"] = this.$moment(key).format("YYYY-MM-DD");
+                  obj["OweQty"] = m[key];
                   obj["dicID"] = _this.sysID[_this.tagRemark].ID;
                   obj["Account"] = _this.$store.getters.userInfo.Account;
                   obj["row"] = m.__rowNum__;
-                  if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-                    obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
-                    obj["Sum"] = 0
+                  if (obj["ResourceNO"] && obj["LineNum"] && obj["ItemCode"]) {
+                    obj["groupName"] =
+                      obj["ResourceNO"] +
+                      "" +
+                      obj["LineNum"] +
+                      "" +
+                      obj["ItemCode"];
+                    obj["Sum"] = 0;
                   }
                   // 需要使用...obj 不然值回写有问题
-                  if(isDate){
-                    DataList.push({...obj});
-                    break
+                  if (isDate) {
+                    DataList.push({ ...obj });
+                    break;
                   }
                 }
                 // 行欠料都空取第一个日期插入一条数据，给后端用于异常提示
-                firstDate ++
-                if(firstDate===1){
-                  obj['DemandToDay'] = formatDate(key)
+                firstDate++;
+                if (firstDate === 1) {
+                  obj["DemandToDay"] = formatDate(key);
                 }
               }
             }
-           
           }
-          
+
           // 以下为固定入参
           if (!isDate) {
             obj["dicID"] = this.sysID[this.tagRemark].ID;
-            obj["EndDate"] =_this.machineCycle;
+            obj["EndDate"] = _this.machineCycle;
             obj["Account"] = this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
-            if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-              obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
-              obj["Sum"] = 0
+            if (obj["ResourceNO"] && obj["LineNum"] && obj["ItemCode"]) {
+              obj["groupName"] =
+                obj["ResourceNO"] + "" + obj["LineNum"] + "" + obj["ItemCode"];
+              obj["Sum"] = 0;
             }
             // 需要使用...obj 不然值回写有问题
-            DataList.push({...obj});
+            DataList.push({ ...obj });
           }
           // 日期为列时，行欠料都空插入一条记录
-          if(isDate&&rowNoOweQty){
-            obj['OweQty'] = 0
+          if (isDate && rowNoOweQty) {
+            obj["OweQty"] = 0;
             obj["dicID"] = _this.sysID[_this.tagRemark].ID;
             obj["Account"] = _this.$store.getters.userInfo.Account;
             obj["row"] = m.__rowNum__;
-            if(obj['ResourceNO']&&obj['LineNum']&&obj['ItemCode']){
-              obj["groupName"] = obj['ResourceNO']+''+obj['LineNum']+''+obj['ItemCode']
-              obj["Sum"] = 0
+            if (obj["ResourceNO"] && obj["LineNum"] && obj["ItemCode"]) {
+              obj["groupName"] =
+                obj["ResourceNO"] + "" + obj["LineNum"] + "" + obj["ItemCode"];
+              obj["Sum"] = 0;
             }
-            DataList.push({...obj})
+            DataList.push({ ...obj });
           }
-         
         });
         // 过滤掉组合出来空的数据
-          let list = _.filter(DataList,(params) =>{
-            if(params.groupName){
-              return params
-            }
-          })
-          groupList = _.groupBy(list,'groupName')
-        //  组合后的数据数量对比资源可用量
-          for(let key in groupList){
-            if(groupList[key].length){
-              let total = 0
-              let AvailableQty =0
-              groupList[key].map((element,x)=>{
-                total += element.OweQty
-                AvailableQty = element.AvailableQty||0
-                if(total>AvailableQty){//同个资源单号+行号+物料编码的欠料数>可用资源抛出异常
-                // 异常提示
-                split.push(`第${Number(element.row)+1}行,物料【${element.ItemCode}】欠数超量，导入失败，请检查！`)
-              }
-              })
-            }
+        let list = _.filter(DataList, (params) => {
+          if (params.groupName) {
+            return params;
           }
+        });
+        groupList = _.groupBy(list, "groupName");
+        //  组合后的数据数量对比资源可用量
+        for (let key in groupList) {
+          if (groupList[key].length) {
+            let total = 0;
+            let AvailableQty = 0;
+            groupList[key].map((element, x) => {
+              total += element.OweQty;
+              AvailableQty = element.AvailableQty || 0;
+              if (total > AvailableQty) {
+                //同个资源单号+行号+物料编码的欠料数>可用资源抛出异常
+                // 异常提示
+                split.push(
+                  `第${Number(element.row) + 1}行,物料【${
+                    element.ItemCode
+                  }】欠数超量，导入失败，请检查！`
+                );
+              }
+            });
+          }
+        }
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
           // 动态检验必填项
@@ -916,58 +938,64 @@ export default {
               if (
                 DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===undefined||DataList[i][
+                ] === undefined ||
+                DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===null||DataList[i][
+                ] === null ||
+                DataList[i][
                   this.formSearchs[this.tagRemark].required[x]["prop"]
-                ]===''
+                ] === ""
               ) {
                 this.adminLoading = false;
-                rowNo = Number(DataList[i]['row'])+1
+                rowNo = Number(DataList[i]["row"]) + 1;
                 // 异常提示
-                split.push(`第${rowNo}行,【${this.formSearchs[this.tagRemark].required[x]["label"]}】不能为空，导入失败，请填写`)
-                
+                split.push(
+                  `第${rowNo}行,【${
+                    this.formSearchs[this.tagRemark].required[x]["label"]
+                  }】不能为空，导入失败，请填写`
+                );
               }
             }
           }
         }
-        if(split.length){//异常集合
+        if (split.length) {
+          //异常集合
           this.adminLoading = false;
-          let txt = ''
+          let txt = "";
           split.map((value) => {
-            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`)
-          })
-          this.$alert(txt,  {
-            dangerouslyUseHTMLString: true,
-            title:'导入异常信息!',
-            customClass: 'message-width'
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
           });
-          
+          this.$alert(txt, {
+            dangerouslyUseHTMLString: true,
+            title: "导入异常信息!",
+            customClass: "message-width",
+          });
+
           return;
         }
-        console.log('DataList',DataList)
-        if(DataList.length){
+        console.log("DataList", DataList);
+        if (DataList.length) {
           let res = await GetSearch(DataList, "/APSAPI/ImportDeliveryData");
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
-          // 导入可能存在表头格式不一样，需要更新
-          this.getTableHeader();
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            // this.dataSearch(this.tagRemark);
+            // 导入可能存在表头格式不一样，需要更新
+            this.getTableHeader();
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
-        }else{
           this.adminLoading = false;
           this.$message.error("未接收到数据，请检查！");
         }
@@ -1002,8 +1030,8 @@ export default {
     // 分析
     async Analysis() {
       let form = {
-        StartDate:null,
-        EndDate: _this.machineCycle
+        StartDate: null,
+        EndDate: _this.machineCycle,
       };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/AnalyseDeliveryData");
@@ -1082,13 +1110,12 @@ export default {
 };
 </script>
 <style lang="scss">
-  .message-width{
-    width:500px ;
-    height: 90%;
-    .el-message-box__content{
-      height: 93% ;
-      overflow-y: scroll ;
-    }
+.message-width {
+  width: 500px;
+  height: 90%;
+  .el-message-box__content {
+    height: 93%;
+    overflow-y: scroll;
+  }
 }
-
 </style>

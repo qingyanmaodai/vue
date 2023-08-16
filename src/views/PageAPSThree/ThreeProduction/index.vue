@@ -1,15 +1,9 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
-        v-for="(item,i) in Status1"
+        v-for="(item, i) in Status1"
         :key="i"
         v-show="labelStatus1 == i"
         ref="searchRef"
@@ -23,23 +17,23 @@
     </div>
     <div>
       <div class="admin_content">
-        <div
-          class="ant-table-title"
-          v-show="labelStatus1 != 3 || expendColl2"
-        >
+        <div class="ant-table-title" v-show="labelStatus1 != 3 || expendColl2">
           <el-row>
-            <el-col :span="8"><span
+            <el-col :span="8"
+              ><span
                 class="title"
                 v-show="labelStatus1 == 3"
-                v-html=" '日期：2021-02-18 &nbsp;&nbsp; 生产线：A2 &nbsp;&nbsp; 负责人：张川 ' "
-              > </span></el-col>
-            <el-col
-              :span="16"
-              class="flex_flex_end"
-            >
-
+                v-html="
+                  '日期：2021-02-18 &nbsp;&nbsp; 生产线：A2 &nbsp;&nbsp; 负责人：张川 '
+                "
+              >
+              </span
+            ></el-col>
+            <el-col :span="16" class="flex_flex_end">
               <div
-                :class="labelStatus1 == item.value ? 'statusActive cursor' : 'cursor'"
+                :class="
+                  labelStatus1 == item.value ? 'statusActive cursor' : 'cursor'
+                "
                 v-for="(item, y) in Status1"
                 :key="y"
               >
@@ -52,32 +46,25 @@
                 :content="expendCollText"
                 placement="top"
               >
-                <span
-                  class="right_icon"
-                  v-show="labelStatus1 == 3"
-                >
+                <span class="right_icon" v-show="labelStatus1 == 3">
                   <img
                     v-show="!expendColl"
                     src="../../../assets/svg/collapse.svg"
                     @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
+                    style="width: 1.4rem; height: 1.4rem"
                   />
                   <img
                     v-show="expendColl"
                     src="../../../assets/svg/expend.svg"
                     @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
+                    style="width: 1.4rem; height: 1.4rem"
                   />
                 </span>
               </el-tooltip>
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(x,y) in 3"
-          :key="y"
-          v-show="labelStatus1 == y"
-        >
+        <div v-for="(x, y) in 3" :key="y" v-show="labelStatus1 == y">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -113,10 +100,7 @@
           <div v-show="expendColl">
             <el-row>
               <el-col :span="4"><span class="title"></span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
+              <el-col :span="20" class="flex_flex_end">
                 <div class="redColorText">添加人员</div>
                 <el-divider direction="vertical"></el-divider>
                 <el-tooltip
@@ -125,21 +109,18 @@
                   :content="expendCollText2"
                   placement="top"
                 >
-                  <span
-                    class="right_icon"
-                    v-show="labelStatus1 == 3"
-                  >
+                  <span class="right_icon" v-show="labelStatus1 == 3">
                     <img
                       v-show="!expendColl2"
                       src="../../../assets/svg/collapse.svg"
                       @click="systolic2"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                     <img
                       v-show="expendColl2"
                       src="../../../assets/svg/expend.svg"
                       @click="systolic2"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                   </span>
                 </el-tooltip>
@@ -162,10 +143,8 @@
             />
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -225,7 +204,7 @@ export default {
           BtnName: "提交",
           Type: "success",
           Ghost: true,
-          signName:3,
+          signName: 3,
           Size: "small",
           Methods: "submitData",
           Icon: "",
@@ -260,7 +239,7 @@ export default {
       allLevelTwoProcessData: [],
       LevelTwoProcessData: [],
       standWorkTime: {},
-      isEdit:false
+      isEdit: false,
     };
   },
   watch: {},

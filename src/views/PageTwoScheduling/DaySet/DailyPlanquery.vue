@@ -3,7 +3,7 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
-        v-for="(item,i) in Status1"
+        v-for="(item, i) in Status1"
         :key="i"
         v-show="labelStatus1 == i"
         ref="searchRef"
@@ -20,11 +20,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -48,7 +47,9 @@
         </div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span @click="toPageSetting(sysID[tagRemark].ID)" class="primaryColor cursor"
+            <span
+              @click="toPageSetting(sysID[tagRemark].ID)"
+              class="primaryColor cursor"
               >SysID:{{ sysID[tagRemark].ID }}
             </span>
           </div>
@@ -70,11 +71,19 @@
     </div>
 
     <!-- 弹框-->
-    <DialogTable title="全局欠料" :tableDialog="colDialogVisible" :sysID="5165" width="80%" @closeDialog="colDialogVisible =false" :searchForm="dialogSearchForm" :isToolbar="false"></DialogTable>
+    <DialogTable
+      title="全局欠料"
+      :tableDialog="colDialogVisible"
+      :sysID="5165"
+      width="80%"
+      @closeDialog="colDialogVisible = false"
+      :searchForm="dialogSearchForm"
+      :isToolbar="false"
+    ></DialogTable>
   </div>
 </template>
-  
-  <script>
+
+<script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -84,25 +93,21 @@ import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import { mapState } from "vuex";
 import ComSearch from "@/components/ComSearch";
-import {
-  GetHeader,
-  GetSearchData,
-  ExportData,
-} from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData } from "@/api/Common";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
   name: "DailyPlanquery",
   components: {
     ComSearch,
-    DialogTable
+    DialogTable,
   },
   data() {
     return {
-      dialogSearchForm:{
-        OrderID:'',
+      dialogSearchForm: {
+        OrderID: "",
       },
-      colDialogVisible:false,
-      labelStatus1:0,
+      colDialogVisible: false,
+      labelStatus1: 0,
       Status1: [
         { label: "一部插件", value: 0 },
         { label: "一部SMT", value: 1 },
@@ -117,44 +122,44 @@ export default {
       title: this.$route.meta.title,
       formSearchs: [
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},
+          datas: { DIsVisibleApp: 1 },
           forms: [],
         },
         {
-          datas: {DIsVisibleApp:1},//获取此字段显示表头，因为跟日计划中冲突了。
+          datas: { DIsVisibleApp: 1 }, //获取此字段显示表头，因为跟日计划中冲突了。
           forms: [],
         },
       ],
       btnForm: [],
       parmsBtn: [],
-      tableData: [[],[],[],[],[],[],[],[],],
-      tableColumns: [[],[],[],[],[],[],[],[]],
-      tableLoading: [false,false,false,false,false,false,false,false],
-      isClear: [false,false,false,false,false,false,false,false],
+      tableData: [[], [], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
@@ -163,17 +168,26 @@ export default {
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
       ],
       height: "707px",
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: [{ ID: 7945 }, { ID: 7946 },{ ID: 9025 }, { ID: 7956 }, { ID: 7957 }, { ID: 6734 }, { ID: 7955 }, { ID: 7954 }],
+      sysID: [
+        { ID: 7945 },
+        { ID: 7946 },
+        { ID: 9025 },
+        { ID: 7956 },
+        { ID: 7957 },
+        { ID: 6734 },
+        { ID: 7955 },
+        { ID: 7954 },
+      ],
       spread: null,
       adminLoading: false,
       checkBoxCellTypeLine: "",
-      selectionData: [[],[],[],[],[],[],[],[]],
+      selectionData: [[], [], [], [], [], [], [], []],
     };
   },
   created() {
@@ -287,19 +301,18 @@ export default {
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
-      
     },
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -322,13 +335,12 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           // 因为此表ID跟日计划ID一致，需要额外做显示隐藏列，现通过APP可见参数“IsVisibleApp”控制，过滤掉没选择APP可见的
-          m.forEach((x,y)=>{
+          m.forEach((x, y) => {
             //特殊处理，因为这个页面用的是各部的日计划ID，但此页面需要隐藏一些列时再通过“IsVisibleApp”过滤，配置表中没有类似日期的会x.IsVisibleApp==null，所以需要默认显示
-            if(x.IsVisibleApp==null||x.IsVisibleApp){
+            if (x.IsVisibleApp == null || x.IsVisibleApp) {
               this.$set(this.tableColumns[i], y, x);
             }
-          })
-          
+          });
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -342,7 +354,10 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.getTableData(this.formSearchs[this.tagRemark].datas, this.tagRemark);
+        this.getTableData(
+          this.formSearchs[this.tagRemark].datas,
+          this.tagRemark
+        );
         // this.getLineData(this.userInfo.WorkFlowInstanceID);
       }
     },
@@ -387,17 +402,19 @@ export default {
       let sheet = this.spread.getActiveSheet();
       sheet.reset();
       let colInfos = [];
-      this.tableColumns[this.tagRemark] = this.tableColumns[this.tagRemark].filter(x=>{
-        return x.prop!='isChecked'
-      })
-      this.tableColumns[this.tagRemark].forEach((x,colIndex) => {
+      this.tableColumns[this.tagRemark] = this.tableColumns[
+        this.tagRemark
+      ].filter((x) => {
+        return x.prop != "isChecked";
+      });
+      this.tableColumns[this.tagRemark].forEach((x, colIndex) => {
         if (x.prop == "LineID") {
           let checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        checkBoxCellTypeLine.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-        checkBoxCellTypeLine.items(x.items);
-        checkBoxCellTypeLine.itemHeight(24);
+          checkBoxCellTypeLine.editorValueType(
+            GC.Spread.Sheets.CellTypes.EditorValueType.value
+          );
+          checkBoxCellTypeLine.items(x.items);
+          checkBoxCellTypeLine.itemHeight(24);
           colInfos.push({
             name: x.prop,
             displayName: "线别",
@@ -412,23 +429,29 @@ export default {
           });
         }
       });
-      
+
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-      
-      this.tableColumns[this.tagRemark].forEach((m,colIndex) => {
+
+      this.tableColumns[this.tagRemark].forEach((m, colIndex) => {
         // 参数1，row
         // 参数3，col
         // 参数2，rowCount
         // 参数4，colCount
         // 自动向上合并相同文本内容
-        if(m.prop === "LineID"){
-          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
-          sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
-        }else if(m.prop === "LineName"){
-          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1,1 );
-          sheet.autoMerge(range, GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column);
+        if (m.prop === "LineID") {
+          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1, 1);
+          sheet.autoMerge(
+            range,
+            GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column
+          );
+        } else if (m.prop === "LineName") {
+          let range = new GC.Spread.Sheets.Range(-1, colIndex, -1, 1);
+          sheet.autoMerge(
+            range,
+            GC.Spread.Sheets.AutoMerge.AutoMergeDirection.column
+          );
         }
-      })
+      });
 
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
@@ -456,12 +479,12 @@ export default {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
-      if(this.tableColumns[this.tagRemark].length){
+      if (this.tableColumns[this.tagRemark].length) {
         sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
       }
-    // debugger
-    this.tableData[this.tagRemark].forEach((row, index) => {
-      let cellIndex = 0;
+      // debugger
+      this.tableData[this.tagRemark].forEach((row, index) => {
+        let cellIndex = 0;
         this.tableColumns[0].forEach((m) => {
           //行，start,end
           if (m.DataType == "bit" && m.isEdit) {
@@ -482,23 +505,24 @@ export default {
 
       // 表格单击单元格弹框事件
       this.spread.bind(GCsheets.Events.CellClick, function (e, args) {
-          if(_this.tableColumns[_this.tagRemark].length){
-            _this.tableColumns[_this.tagRemark].map((item,index)=>{
-              if(item.name ==="Q1"&&args.col===index){
-                // 显示ERP供需平衡表
-                _this.colDialogVisible =true
-                _this.dialogSearchForm.OrderID = _this.tableData[_this.tagRemark][args.row].OrderID
-                _this.dialogSearchForm.OweQty = 0 
-              }
-            })
-          }
+        if (_this.tableColumns[_this.tagRemark].length) {
+          _this.tableColumns[_this.tagRemark].map((item, index) => {
+            if (item.name === "Q1" && args.col === index) {
+              // 显示ERP供需平衡表
+              _this.colDialogVisible = true;
+              _this.dialogSearchForm.OrderID =
+                _this.tableData[_this.tagRemark][args.row].OrderID;
+              _this.dialogSearchForm.OweQty = 0;
+            }
+          });
+        }
       });
 
       sheet.setDataSource(this.tableData[this.tagRemark]);
       sheet.bindColumns(colInfos);
       this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.refresh(); //重新定位宽高度
-      
+
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[this.tagRemark] = false;
@@ -545,7 +569,6 @@ export default {
         );
         this.checkBoxCellTypeLine.items(newData);
         this.checkBoxCellTypeLine.itemHeight(24);
-        
       } else {
         this.adminLoading = false;
         this.$message({
@@ -557,12 +580,12 @@ export default {
     },
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.dataSearch(index)
+      this.dataSearch(index);
     },
   },
 };
 </script>
-  <style lang="scss" scoped>
+<style lang="scss" scoped>
 .spreadContainer {
   position: relative;
   overflow: hidden;

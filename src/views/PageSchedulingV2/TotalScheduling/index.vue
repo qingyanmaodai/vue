@@ -19,12 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12"
-              >
-              <span class="title" style="margin-right:10px">{{ title }}</span>
+            <el-col :span="12">
+              <span class="title" style="margin-right: 10px">{{ title }}</span>
               <!-- <span style="color: #ff9900;">周计划日期显示规则：转入周计划时当周周一 至 下周周日，2周周期。</span> -->
-              </el-col
-            >
+            </el-col>
             <el-col :span="12" class="flex_flex_end">
               <div>
                 <!-- <span>选择机台/班组：</span>
@@ -326,7 +324,7 @@ export default {
           Size: "small",
           signName: 1,
           Methods: "setPlan",
-          Params: { },
+          Params: {},
           Icon: "",
         },
         {
@@ -428,12 +426,14 @@ export default {
             this.selectionData[this.tagRemark].forEach((a) => {
               a["ElementDeleteFlag"] = 1;
             });
-            this.dataBackSave(this.selectionData[this.tagRemark], this.tagRemark);
+            this.dataBackSave(
+              this.selectionData[this.tagRemark],
+              this.tagRemark
+            );
           })
           .catch(() => {
             // 取消
           });
-        
       }
     },
     async dataBackSave(data1, index) {
@@ -480,8 +480,8 @@ export default {
           let newData = this.parmsBtn.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = y.BtnName||x.ButtonName;
-              y.Methods = y.Methods||x.OnClick;
+              y.BtnName = y.BtnName || x.ButtonName;
+              y.Methods = y.Methods || x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
             }
@@ -701,7 +701,7 @@ export default {
             rowSheet3.foreColor("#2a06ecd9");
           }
           //成品库存单元格背景色
-          if(m.name ==='StockQty'){
+          if (m.name === "StockQty") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -710,7 +710,7 @@ export default {
             rowSheet3.backColor("#c2e7b0");
           }
           // 电机库存单元格背景色
-          if(m.name ==='Extend17'){
+          if (m.name === "Extend17") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -1275,7 +1275,7 @@ export default {
       } else {
         let isNoCapacity1 = true;
         this.selectionData[remarkTb].forEach((element) => {
-          if (!element.Capacity1&&element.OrderNo) {
+          if (!element.Capacity1 && element.OrderNo) {
             isNoCapacity1 = false;
           }
         });
@@ -1336,11 +1336,11 @@ export default {
         }
         if (okCount > 0) {
           // 如果接收到参数isQty传入地址栏
-          let url = params&&params.isQty===1?'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1':'/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1'
-          let res = await GetSearch(
-            this.selectionData[remarkTb],
-            url
-          );
+          let url =
+            params && params.isQty === 1
+              ? "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1&isQty=1"
+              : "/APSAPI/MOPlanSaveToDayPlanV3?isPlan=1";
+          let res = await GetSearch(this.selectionData[remarkTb], url);
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;

@@ -1,13 +1,7 @@
 <!--smt报工-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,16 +16,13 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <el-button
-                type="warning"
-                size="mini"
-                @click="openDialog"
-              >添加</el-button>
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="warning" size="mini" @click="openDialog"
+                >添加</el-button
+              >
             </el-col>
           </el-row>
         </div>
@@ -56,7 +47,7 @@
     <el-dialog
       title=""
       :visible.sync="dialogVisible"
-       v-loading="adminLoading"
+      v-loading="adminLoading"
       width="85%"
     >
       <ComVxeTable
@@ -72,26 +63,17 @@
         :isClear="isClear[1]"
         :pagination="tablePagination[1]"
         @pageChange="pageChange"
-        @pageSize="pageSize"   :isEdit="true"
+        @pageSize="pageSize"
+        :isEdit="true"
         @sortChange="sortChange"
         @selectfun="selectFun"
       />
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="warning"
-          @click="addData(true)"
-        >报工不关闭</el-button>
-        <el-button
-          type="primary"
-          @click="addData(false)"
-        >报工并关闭</el-button>
+        <el-button type="warning" @click="addData(true)">报工不关闭</el-button>
+        <el-button type="primary" @click="addData(false)">报工并关闭</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -164,15 +146,15 @@ export default {
     }, 450);
   },
   methods: {
-     // 判断按钮权限
+    // 判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
       let permission = false;
- 
+
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-         // alert(x.ButtonCode)
+          // alert(x.ButtonCode)
           if (x.ButtonCode == "edit") {
             permission = true;
           }
@@ -184,7 +166,7 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn); 
+      this.$set(this, "btnForm", newBtn);
     },
     // 行内样式 红ff7b7b 黄fdfd8f 绿9fff9f
     cellStyle0({ row, column }) {},
@@ -284,7 +266,7 @@ export default {
             item["dicID"] = 5586;
             item["ProducedDate"] = item.PlanDay;
           }
-          console.log(this.tableData[0])
+          console.log(this.tableData[0]);
           let res = await SaveData(this.tableData[0]);
           const { result, data, count, msg } = res.data;
           if (result) {
@@ -331,7 +313,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.dataSearch(0)
+        this.dataSearch(0);
       }
     },
     // 验证数据
@@ -396,42 +378,35 @@ export default {
       if (this.selectionData[1].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-        
         let newData = JSON.parse(JSON.stringify(this.selectionData[1]));
         this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
         this.selectionData[1] = [];
         newData.forEach((a) => {
- 
-  if(a["ProductionQty"]>a["ProcessOweQty"])
-           {
-             this.$message.error("报工数不能大于欠数！");
-             return ;
-           }
-            a["dicID"] = 5586;
-            a["ProducedDate"] = a.PlanDay;
+          if (a["ProductionQty"] > a["ProcessOweQty"]) {
+            this.$message.error("报工数不能大于欠数！");
+            return;
+          }
+          a["dicID"] = 5586;
+          a["ProducedDate"] = a.PlanDay;
           // if (
           //   this.tableData[0].findIndex((b) => b.DayPlanID == a.DayPlanID) == -1
           // ) {
           //   a["update"] = true;
           //  // a["ProductionQty"]=a["HasQty"]
-         
+
           //   this.tableData[0].push(a);
           // }
         });
-        this.adminLoading=true;
-          let res = await  SaveData(newData);
-                this.adminLoading=false;
-          if(res.data.result)
-          {
-              this.dialogVisible = val;   
-                this.dataSearch(1)
-              this.dataSearch(0)
-          }
-          else{
-             this.$message.error(res.data.msg);
-          }
- 
-
+        this.adminLoading = true;
+        let res = await SaveData(newData);
+        this.adminLoading = false;
+        if (res.data.result) {
+          this.dialogVisible = val;
+          this.dataSearch(1);
+          this.dataSearch(0);
+        } else {
+          this.$message.error(res.data.msg);
+        }
       }
     },
   },

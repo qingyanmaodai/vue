@@ -1,13 +1,7 @@
 <!-- 年度销售预测 -->
 <template>
-    <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[currentIndex].datas"
@@ -23,32 +17,23 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[currentIndex]"
-          >
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[currentIndex]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               @workbookInitialized="initSpread"
             >
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
-
           </div>
         </div>
-        <div  class="flex_row_spaceBtn">
+        <div class="flex_row_spaceBtn">
           <div>
             <span
               @click="toPageSetting(sysID[currentIndex].ID)"
@@ -57,26 +42,18 @@
             </span>
           </div>
           <div class="flex">
-              <el-pagination
-                background
-                @size-change="val=>pageSize(val,0)"
-                :current-page="tablePagination[currentIndex].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
-                :page-size="tablePagination[currentIndex].pageSize"
-                :total="tablePagination[currentIndex].pageTotal"
-                @current-change="val=>pageChange(val,0)"
-                layout="total, sizes, prev, pager, next,jumper"
-              >
-              </el-pagination>
-            </div>
+            <el-pagination
+              background
+              @size-change="(val) => pageSize(val, 0)"
+              :current-page="tablePagination[currentIndex].pageIndex"
+              :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
+              :page-size="tablePagination[currentIndex].pageSize"
+              :total="tablePagination[currentIndex].pageTotal"
+              @current-change="(val) => pageChange(val, 0)"
+              layout="total, sizes, prev, pager, next,jumper"
+            >
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -92,13 +69,8 @@ import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComSearch from "@/components/ComSearch";
-import {
-  GetHeader,
-  GetSearchData,
-  GetSearch,
-  ExportData,
-} from "@/api/Common";
-import { indexOf } from 'xe-utils';
+import { GetHeader, GetSearchData, GetSearch, ExportData } from "@/api/Common";
+import { indexOf } from "xe-utils";
 export default {
   name: "AnnualSalesPlan",
   components: {
@@ -106,50 +78,51 @@ export default {
   },
   data() {
     return {
-        title:this.$route.meta.title,//表名
-        height:'740px',
-        adminLoading:false,//加载状态
-        currentIndex:0,//当前表下标
-        tabStatus:0,
-        btnForm: [],//拥有的按钮权限
-        parmsBtn: [
-          {
-            BtnName: "保存",
-            ButtonCode: "save",
-            Type: "success",
-            Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
-           },
-        ],
-        formSearchs:[//不同标签页面的查询条件
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          }
-        ],
-        tableData: [[]],//表格渲染数据,sysID有几个就有几个数组
-        tableColumns: [[]],//表格表头列
-        tableLoading:[false],//每个表加载
-        isClear: [false],
-        tablePagination: [//表分页参数
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        ],
-        sysID:[{ID:8978}],
-        tagRemark: 0,
-        spread: null,//excel初始
-        currentMonth:'',
-    }
+      title: this.$route.meta.title, //表名
+      height: "740px",
+      adminLoading: false, //加载状态
+      currentIndex: 0, //当前表下标
+      tabStatus: 0,
+      btnForm: [], //拥有的按钮权限
+      parmsBtn: [
+        {
+          BtnName: "保存",
+          ButtonCode: "save",
+          Type: "success",
+          Ghost: true,
+          Size: "small",
+          Methods: "dataSave",
+          Icon: "",
+        },
+      ],
+      formSearchs: [
+        //不同标签页面的查询条件
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+        },
+      ],
+      tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[]], //表格表头列
+      tableLoading: [false], //每个表加载
+      isClear: [false],
+      tablePagination: [
+        //表分页参数
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+      ],
+      sysID: [{ ID: 8978 }],
+      tagRemark: 0,
+      spread: null, //excel初始
+      currentMonth: "",
+    };
   },
   created() {
-    
     _this = this;
     _this.judgeBtn();
-    _this.getTableHeader()
+    _this.getTableHeader();
   },
   activated() {
-    if(this.spread){
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -158,10 +131,10 @@ export default {
       this.setHeight();
     }, 350);
   },
-  methods:{
+  methods: {
     //初始化SpreadJS
     initSpread: function (spread) {
-      console.log('spread',spread)
+      console.log("spread", spread);
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -183,7 +156,7 @@ export default {
       let newHeight = rem + 33 + "px";
       this.$set(this, "height", newHeight);
     },
-     // 跳转至属性配置
+    // 跳转至属性配置
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
@@ -193,7 +166,7 @@ export default {
     // 拥有什么按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
-      console.log('routeBtn',routeBtn)
+      console.log("routeBtn", routeBtn);
       let newBtn = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
@@ -209,33 +182,32 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
-      this.adminLoading = true
+      this.adminLoading = true;
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
-        console.log('datas',datas)
+        console.log("datas", datas);
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach((y,i) => {
+          x.forEach((y, i) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
               this.$set(this.formSearchs[z].datas, [y.prop], "");
             }
           });
-          console.log('x',x)
+          console.log("x", x);
           //获取今年第一天
           const date1 = new Date();
           const year1 = date1.getFullYear();
-          this.currentMonth = date1.getMonth()+1
-          this.formSearchs[this.tagRemark].datas['FYear'] = year1
+          this.currentMonth = date1.getMonth() + 1;
+          this.formSearchs[this.tagRemark].datas["FYear"] = year1;
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
           this.adminLoading = false;
@@ -250,7 +222,7 @@ export default {
       }
     },
     // 获取表格数据
-    async getTableData(params,index){
+    async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
@@ -268,7 +240,7 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData)
+      console.log("this.tableData", this.tableData);
     },
     // excle表数据渲染
     async setData() {
@@ -279,7 +251,7 @@ export default {
         // 重置表单
         sheet.reset();
         // 渲染列
-        let colInfos = []
+        let colInfos = [];
         this.tableColumns[this.currentIndex].forEach((x) => {
           colInfos.push({
             name: x.prop,
@@ -287,7 +259,7 @@ export default {
             size: parseInt(x.width),
           });
         });
-      
+
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:起始行
@@ -296,24 +268,36 @@ export default {
          * 参数4:结束列
          * 参数5:
          */
-        let colHeaderStyle = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeaderStyle.foreColor('000000d9')
-        colHeaderStyle.backColor("#f3f3f3")
-        colHeaderStyle.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif")
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        
+        let colHeaderStyle = sheet.getRange(
+          0,
+          -1,
+          1,
+          -1,
+          GC.Spread.Sheets.SheetArea.colHeader
+        );
+        colHeaderStyle.foreColor("000000d9");
+        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.font(
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+        );
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font = "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        defaultStyle.font =
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.showEllipsis = true;
-        sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        
+        sheet.setDefaultStyle(
+          defaultStyle,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
-        sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
         //一定要放在渲染完后
         /**
@@ -323,30 +307,41 @@ export default {
          * 参数4:列数
          */
         // 指定可编辑区域
-        const monthList = [1,2,3,4,5,6,7,8,9,10,11,12]
-        const nameList = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12']
-        this.tableColumns[this.currentIndex].forEach((item,index) => {
-          if(nameList.includes(item.prop)&&item.displayName){
+        const monthList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        const nameList = [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9",
+          "M10",
+          "M11",
+          "M12",
+        ];
+        this.tableColumns[this.currentIndex].forEach((item, index) => {
+          if (nameList.includes(item.prop) && item.displayName) {
             // 大于当前月份的列可编辑
-            let month  = item.prop.split('M')
-            if(Number(month[1])>=this.currentMonth){
-              console.log('Number(month[1]',Number(month[1]))
-              sheet.getRange(-1,index, -1, 1).locked(false);
+            let month = item.prop.split("M");
+            if (Number(month[1]) >= this.currentMonth) {
+              console.log("Number(month[1]", Number(month[1]));
+              sheet.getRange(-1, index, -1, 1).locked(false);
             }
           }
-          
         });
         // 锁定表格
         sheet.options.isProtected = true;
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
       } catch (error) {
-        console.log('表格渲染的错误信息:',error)
+        console.log("表格渲染的错误信息:", error);
       }
-      
     },
     // 查询
     dataSearch(remarkTb) {
-      this.tagRemark = remarkTb
+      this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
@@ -356,13 +351,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -387,51 +382,49 @@ export default {
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 保存
-    async dataSave(){
-      if(!this.formSearchs[this.tagRemark].datas['FYear']){
-        this.$message.error("年份不能为空，请输入！")
-        return
+    async dataSave() {
+      if (!this.formSearchs[this.tagRemark].datas["FYear"]) {
+        this.$message.error("年份不能为空，请输入！");
+        return;
       }
       let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDirtyRows();//获取修改过的数据
+      let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
-      let curYear = this.formSearchs[this.tagRemark].datas['FYear']
-      console.log('ye',curYear)
+      let curYear = this.formSearchs[this.tagRemark].datas["FYear"];
+      console.log("ye", curYear);
       if (newData.length != 0) {
         newData.forEach((x) => {
-          x.item['dicID'] = 8978 
-          x.item['FYear'] = curYear
+          x.item["dicID"] = 8978;
+          x.item["FYear"] = curYear;
           submitData.push(x.item);
         });
       }
-      if(submitData.length){
-        console.log('修改了',submitData)
-        this.adminLoading = true
-        let res = await GetSearch(submitData, "/APSAPI/SaveData")
+      if (submitData.length) {
+        console.log("修改了", submitData);
+        this.adminLoading = true;
+        let res = await GetSearch(submitData, "/APSAPI/SaveData");
         try {
           const { result, data, count, msg } = res.data;
-        if(result){
-          this.dataSearch(this.tagRemark)
-          this.adminLoading = false
-        }else {
-          this.adminLoading = false
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-      }
-          
+          if (result) {
+            this.dataSearch(this.tagRemark);
+            this.adminLoading = false;
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         } catch (error) {
-          if(error){
-            this.adminLoading = false
+          if (error) {
+            this.adminLoading = false;
           }
         }
-        
-      }else{
-        this.$message.error("当前数据没做修改，请先修改再保存！")
+      } else {
+        this.$message.error("当前数据没做修改，请先修改再保存！");
       }
     },
-  }
-}
+  },
+};
 </script>

@@ -1,18 +1,8 @@
 <!--不达成维护列表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 6"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 6" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -38,11 +28,12 @@
         </div> -->
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ Status1[labelStatus1].title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{
+                Status1[labelStatus1].title
+              }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -54,11 +45,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 6"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div v-for="(item, i) in 6" :key="i" v-show="labelStatus1 == i">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -76,7 +63,6 @@
             @sortChange="sortChange"
           />
         </div>
-
       </div>
     </div>
 
@@ -94,18 +80,17 @@
         :prop="item.prop"
         :label="item.label"
       >
-        <template v-if='item.children'>
+        <template v-if="item.children">
           <el-table-column
             :prop="i.prop"
             :label="i.label"
-            v-for='(i,k) in item.children'
+            v-for="(i, k) in item.children"
             :key="k"
           >
           </el-table-column>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 

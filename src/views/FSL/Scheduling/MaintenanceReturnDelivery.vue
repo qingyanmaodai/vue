@@ -2,8 +2,8 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
@@ -44,7 +44,7 @@
                         type="date"
                         size="small"
                         value-format="yyyy-MM-dd"
-                        style="flex: 1;"
+                        style="flex: 1"
                         placeholder="请输入复期"
                       >
                       </el-date-picker>
@@ -165,7 +165,7 @@ import {
   GetSearchData,
   ExportData,
   GetSearch,
-  SaveData
+  SaveData,
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
@@ -177,7 +177,7 @@ export default {
     ComVxeTable,
     ComReportTable,
     ComFormDialog,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
@@ -190,7 +190,7 @@ export default {
       labelStatus1: 0,
       Status1: [
         { label: "要求交期已超时", value: -1 },
-        { label: "全部", value: 0 }
+        { label: "全部", value: 0 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -201,24 +201,24 @@ export default {
       formSearchs: [
         {
           datas: { IsOverTime: 1 },
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       selectionData: [[], [], [], [], []],
       btnForm: [],
@@ -231,7 +231,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       showPagination: true,
@@ -248,9 +248,9 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10075 },
-        { ID: 10075 }
+        { ID: 10075 },
       ],
-      userInfo: {}
+      userInfo: {},
     };
   },
   computed: {},
@@ -278,7 +278,7 @@ export default {
       this.$set(this, "btnForm", routeBtn);
     },
     //获取子组件实例
-    workbookInitialized: function(workbook) {
+    workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
     //获取当前选中行的值
@@ -317,7 +317,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -393,7 +393,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -424,7 +424,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -432,7 +432,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -483,7 +483,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
           this.$set(this, "adminLoading", false);
@@ -491,7 +491,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.$set(this, "adminLoading", false);
         }
@@ -566,7 +566,7 @@ export default {
               this.userInfo.Account
             );
           }
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -601,7 +601,7 @@ export default {
           this.$message.error("请填写复期时间");
           return;
         }
-        this.selectionData[0].map(item => {
+        this.selectionData[0].map((item) => {
           this.$set(item, "DeliveryDate", this.Rescheduled);
           item["DeliveryDate"] = this.Rescheduled;
         });
@@ -638,7 +638,7 @@ export default {
       if (result) {
         if (remarkTb === 0) {
           Columns[0] = Columns[0].filter(
-            item =>
+            (item) =>
               item["label"] !== "预计生产日期" &&
               item["label"] !== "线体" &&
               item["label"] !== "标准人员" &&
@@ -647,20 +647,22 @@ export default {
           );
         } else if (remarkTb === 1) {
           Columns[0] = Columns[0].filter(
-            item =>
+            (item) =>
               item["label"] !== "标准人员" &&
               item["label"] !== "每托数量" &&
               item["label"] !== "托板数"
           );
         } else if (remarkTb === 2) {
-          Columns[0] = Columns[0].filter(item => item["label"] !== "标准人员");
+          Columns[0] = Columns[0].filter(
+            (item) => item["label"] !== "标准人员"
+          );
         }
         Columns.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyData(x);
               });
             }
@@ -674,7 +676,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -735,10 +737,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -762,7 +761,7 @@ export default {
               const color = row.colorMapping[key];
               cell.style({
                 backColor: color,
-                foreColor: "#FFFFFF"
+                foreColor: "#FFFFFF",
               });
               // 其他代码
             }
@@ -879,7 +878,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -892,15 +891,15 @@ export default {
     cellStyle({ row, column }) {
       if (column.property == "DeliveryDate") {
         return {
-          background: "#00b0f0"
+          background: "#00b0f0",
         };
       } else if (column.property == "ArriveQty") {
         return {
-          color: "#00b0f0"
+          color: "#00b0f0",
         };
       } else if (column.property == "UnaccountedQty") {
         return {
-          color: "#ff0000"
+          color: "#ff0000",
         };
       } else if (
         (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
@@ -908,18 +907,18 @@ export default {
           row["IsReplyStatusName"] == "是")
       ) {
         return {
-          background: "#9fff9f"
+          background: "#9fff9f",
         };
       }
 
       if (column.property == "OnloadQty") {
         return {
-          color: "blue"
+          color: "blue",
         };
       }
       if (column.property == "RealOweQty") {
         return {
-          color: "red"
+          color: "red",
         };
       }
       if (
@@ -927,7 +926,7 @@ export default {
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       }
 
@@ -937,7 +936,7 @@ export default {
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -949,7 +948,7 @@ export default {
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -960,7 +959,7 @@ export default {
           parseFloat(row.StockQtyAllocationPrepare)
         ) {
           return {
-            background: "#9fff9f"
+            background: "#9fff9f",
           };
         }
       }
@@ -973,7 +972,7 @@ export default {
         this.formSearchs[0].datas["IsOverTime"] = 1;
       }
       this.dataSearch(0);
-    }
-  }
+    },
+  },
 };
 </script>

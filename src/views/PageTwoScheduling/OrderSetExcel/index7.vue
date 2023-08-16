@@ -887,8 +887,7 @@ export default {
       //表格编辑事件
 
       this.spread.bind(GCsheets.Events.EditStarting, function (e, args) {});
-      this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {
-      });
+      this.spread.bind(GCsheets.Events.EditEnded, function (e, args) {});
       this.spread.resumePaint();
       this.adminLoading = false;
       this.tableLoading[0] = false;

@@ -1,21 +1,18 @@
 <template>
-  <div
-    class="container"
-    style="background:#f3f3f4"
-  >
+  <div class="container" style="background: #f3f3f4">
     <el-container class="home">
       <el-main>
         <div class="home_1">
-          <el-card
-            v-for="(item,index) in head"
-            :key="index"
-            class="box-card"
-          >
-            <el-image
-              :src="item.img"
-              style="margin:0 10% 0 5%;"
-            />
-            <div style="flex:1;display:flex;flex-direction: column;justify-content:space-between;">
+          <el-card v-for="(item, index) in head" :key="index" class="box-card">
+            <el-image :src="item.img" style="margin: 0 10% 0 5%" />
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              "
+            >
               <div>
                 <span class="head">{{ item.label }}</span>
               </div>
@@ -26,23 +23,26 @@
         <div class="home_2">
           <div class="home_3">
             <span class="home_4">常用功能</span>
-            <i
-              class="el-icon-edit"
-              style="float:right"
-            />
+            <i class="el-icon-edit" style="float: right" />
           </div>
           <div class="bodyContent">
-            <div
-              v-for="(item,index) in head2"
-              :key="index"
-              class="box-card2"
-            >
-              <i :style="{backgroundImage:'url(' +item.img+ ')',display:'block',float:'left', backgroundRepeat:'no-repeat',backgroundSize: 'cover',width:'36px',height:'36px'}" />
+            <div v-for="(item, index) in head2" :key="index" class="box-card2">
+              <i
+                :style="{
+                  backgroundImage: 'url(' + item.img + ')',
+                  display: 'block',
+                  float: 'left',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                  width: '36px',
+                  height: '36px',
+                }"
+              />
               <span
-                @click="toPage(item.path,item.isUsing)"
-                style="margin:10px 15px"
-              >{{ item.label }}</span>
-
+                @click="toPage(item.path, item.isUsing)"
+                style="margin: 10px 15px"
+                >{{ item.label }}</span
+              >
             </div>
           </div>
         </div>
@@ -50,51 +50,45 @@
           <div class="home_6">
             <div class="home_7">
               <span class="home_8">计划详情</span>
-              <i :style="{backgroundImage:'url('+img9+')',float:'left',width:'19px',height:'19px',marginTop:'3px',marginLeft:'5px'}" />
+              <i
+                :style="{
+                  backgroundImage: 'url(' + img9 + ')',
+                  float: 'left',
+                  width: '19px',
+                  height: '19px',
+                  marginTop: '3px',
+                  marginLeft: '5px',
+                }"
+              />
             </div>
             <div class="home_9">
               <span class="home_10">今日计划</span>
               <span class="home_11"></span>
             </div>
             <div class="home_12">
-              <div style="float:left;width:50%;text-align:center">
-                <el-image
-                  class="home_13"
-                  :src="img9"
-                />
+              <div style="float: left; width: 50%; text-align: center">
+                <el-image class="home_13" :src="img9" />
               </div>
               <div class="home_14">
                 <div class="balance">
-                  <i
-                    class="home_dot"
-                    style="background: #ed5565;"
-                  />
+                  <i class="home_dot" style="background: #ed5565" />
                   <span>计划总产品数</span>
-                  <span style="float:right">{{ pieForm.Q0 }}个</span>
+                  <span style="float: right">{{ pieForm.Q0 }}个</span>
                 </div>
                 <div class="balance">
-                  <i
-                    class="home_dot"
-                    style="background: #5050d6;"
-                  />
+                  <i class="home_dot" style="background: #5050d6" />
                   <span>已报工产品数</span>
-                  <span style="float:right">{{ pieForm.Q3 }}个</span>
+                  <span style="float: right">{{ pieForm.Q3 }}个</span>
                 </div>
                 <div class="balance">
-                  <i
-                    class="home_dot"
-                    style="background: #ba55d3;"
-                  />
+                  <i class="home_dot" style="background: #ba55d3" />
                   <span>未报工产品数</span>
-                  <span style="float:right">{{ pieForm.Q4 }}个</span>
+                  <span style="float: right">{{ pieForm.Q4 }}个</span>
                 </div>
                 <div class="balance">
-                  <i
-                    class="home_dot"
-                    style="background: #1ab394;"
-                  />
+                  <i class="home_dot" style="background: #1ab394" />
                   <span>今日达成</span>
-                  <span style="float:right">{{ pieForm.P1 }}</span>
+                  <span style="float: right">{{ pieForm.P1 }}</span>
                 </div>
               </div>
             </div>
@@ -105,22 +99,21 @@
               <el-button
                 class="trend"
                 size="mini"
-                :class="{default:show==2}"
-                style="border-right: 1px solid #8f8f8f;"
+                :class="{ default: show == 2 }"
+                style="border-right: 1px solid #8f8f8f"
                 @click="queryLastMonth"
-              >上月</el-button>
+                >上月</el-button
+              >
               <el-button
                 size="mini"
                 class="trend"
-                :class="{default:show==1}"
-                style="border-right: 1px solid #8f8f8f;"
+                :class="{ default: show == 1 }"
+                style="border-right: 1px solid #8f8f8f"
                 @click="queryMonth"
-              >本月</el-button>
+                >本月</el-button
+              >
             </div>
-            <div
-              id="lineChart2"
-              class="home_18 echartOne"
-            />
+            <div id="lineChart2" class="home_18 echartOne" />
           </div>
         </div>
 
@@ -130,10 +123,7 @@
               <span class="home_22">今日工序达成占比</span>
             </div>
             <div class="home_23">
-              <div
-                id="lineChart"
-                class="home_24 echartOne"
-              />
+              <div id="lineChart" class="home_24 echartOne" />
             </div>
           </div>
           <div class="home_25">
@@ -142,83 +132,61 @@
               <el-button
                 class="trend"
                 size="mini"
-                :class="{default:show==2}"
-                style="border-right: 1px solid #8f8f8f;"
+                :class="{ default: show == 2 }"
+                style="border-right: 1px solid #8f8f8f"
                 @click="queryLastMonth"
-              >上月</el-button>
+                >上月</el-button
+              >
               <el-button
                 size="mini"
                 class="trend"
-                :class="{default:show==1}"
-                style="border-right: 1px solid #8f8f8f;"
+                :class="{ default: show == 1 }"
+                style="border-right: 1px solid #8f8f8f"
                 @click="queryMonth"
-              >本月</el-button>
+                >本月</el-button
+              >
             </div>
-            <div
-              id="lineChart3"
-              class="home_26 echartOne"
-            />
+            <div id="lineChart3" class="home_26 echartOne" />
           </div>
         </div>
       </el-main>
-      <el-aside
-        class="home_27"
-        width="300px"
-      >
+      <el-aside class="home_27" width="300px">
         <div class="home_28">
           <span class="home_right_2">代办事项</span>
           <div
             class="asideOne"
-            @click="toPage('CategoryInfo',dotPage[0].isUsing)"
+            @click="toPage('CategoryInfo', dotPage[0].isUsing)"
           >
-            <i
-              class="home_dot"
-              style="background: #ed5565;margin: 4px 8px;"
-            />
+            <i class="home_dot" style="background: #ed5565; margin: 4px 8px" />
             <span>产品缺失工艺</span>
             <span class="asideRight">{{ dotOne }}</span>
           </div>
           <div
             class="asideOne"
-            @click="toPage('ProcessInfo',dotPage[1].isUsing)"
+            @click="toPage('ProcessInfo', dotPage[1].isUsing)"
           >
-            <i
-              class="home_dot"
-              style="background: #1ab394;margin: 4px 8px;"
-            />
+            <i class="home_dot" style="background: #1ab394; margin: 4px 8px" />
             <span>工艺缺失</span>
             <span class="asideRight">{{ dotTwo }}</span>
           </div>
           <div
             class="asideOne"
-            @click="toPage('CapaticyInfo',dotPage[2].isUsing)"
+            @click="toPage('CapaticyInfo', dotPage[2].isUsing)"
           >
-            <i
-              class="home_dot"
-              style="background: #5050d6;margin: 4px 8px;"
-            />
+            <i class="home_dot" style="background: #5050d6; margin: 4px 8px" />
             <span>产能缺失</span>
             <span class="asideRight">{{ dotThree }}</span>
           </div>
           <div
             class="asideOne"
-            @click="toPage('ArrangeInfo',dotPage[3].isUsing)"
+            @click="toPage('ArrangeInfo', dotPage[3].isUsing)"
           >
-            <i
-              class="home_dot"
-              style="background: #f859d5;margin: 4px 8px;"
-            />
+            <i class="home_dot" style="background: #f859d5; margin: 4px 8px" />
             <span>排班未配置</span>
             <span class="asideRight">{{ dotFour }}</span>
           </div>
-          <div
-            class="asideOne"
-            style="border-bottom:none"
-          >
-            <i
-              class="home_dot"
-              style="background: #f8ac59;margin: 4px 8px;"
-            />
+          <div class="asideOne" style="border-bottom: none">
+            <i class="home_dot" style="background: #f8ac59; margin: 4px 8px" />
             <span>库存预警</span>
             <span class="asideRight">{{ dotFive }}</span>
           </div>
@@ -243,7 +211,6 @@
         </div>
       </el-aside>
     </el-container>
-
   </div>
 </template>
 
@@ -375,9 +342,7 @@ export default {
                 fontSize: 14,
               },
             },
-            data: [
-              {name:'包装',value:100}
-            ],
+            data: [{ name: "包装", value: 100 }],
           },
         ],
       },
@@ -602,7 +567,7 @@ export default {
       });
     },
     // 跳转地址
-    toPage(val, tag,url) {
+    toPage(val, tag, url) {
       if (tag) {
         this.$router.push({
           name: val,
@@ -778,7 +743,7 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if(data.length != 0){
+        if (data.length != 0) {
           this.option1.series[0].data = data;
         }
         this.drawChart("lineChart", this.option1);
@@ -850,15 +815,7 @@ export default {
               },
             },
             data: [
-              30000,
-              43000,
-              38670,
-              12320,
-              22560,
-              37670,
-              41356,
-              51622,
-              25260,
+              30000, 43000, 38670, 12320, 22560, 37670, 41356, 51622, 25260,
             ],
             markPoint: {
               data: [
@@ -1100,7 +1057,7 @@ export default {
   width: 100%;
   display: flex;
 }
-.bodyContent{
+.bodyContent {
   display: flex;
   flex-wrap: wrap;
 }

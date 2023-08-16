@@ -1,16 +1,7 @@
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="up_admin"
-      ref="up_admin"
-    >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="up_admin" ref="up_admin">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -23,19 +14,20 @@
       </div>
       <div>
         <div class="admin_content">
-          <div class="ant-table-title"  ref="ant1">
+          <div class="ant-table-title" ref="ant1">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y, 1)">{{
+                    item.label
+                  }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -63,10 +55,7 @@
     </div>
 
     <div class="down_admin">
-      <div
-        class="admin_head"
-        ref="headRef2"
-      >
+      <div class="admin_head" ref="headRef2">
         <ComSearch
           v-show="labelStatus2 == 1"
           ref="searchRef"
@@ -102,13 +91,16 @@
         <div class="admin_content">
           <div class="ant-table-title" ref="ant2">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title2 }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title2 }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <div
-                  :class="labelStatus2 == item.value ? 'statusActive cursor' : 'cursor'"
+                  :class="
+                    labelStatus2 == item.value
+                      ? 'statusActive cursor'
+                      : 'cursor'
+                  "
                   v-for="(item, y) in Status2"
                   :key="y"
                 >
@@ -119,7 +111,7 @@
             </el-row>
           </div>
           <ComUmyTable
-            v-show="labelStatus2 ==1"
+            v-show="labelStatus2 == 1"
             :rowKey="'RowNumber'"
             :height="height2"
             :tableData="tableData[1]"
@@ -136,7 +128,7 @@
             @sortChange="sortChange"
           />
           <ComUmyTable
-            v-show="labelStatus2 ==2"
+            v-show="labelStatus2 == 2"
             :rowKey="'RowNumber'"
             :height="height2"
             :tableData="tableData[2]"
@@ -153,7 +145,7 @@
             @sortChange="sortChange"
           />
           <ComUmyTable
-            v-show="labelStatus2 ==3"
+            v-show="labelStatus2 == 3"
             :rowKey="'RowNumber'"
             :height="height2"
             :tableData="tableData[3]"
@@ -375,9 +367,15 @@ export default {
       let headHeight2 = this.$refs.headRef2.offsetHeight;
       let headHeight3 = this.$refs.ant1.offsetHeight;
       let headHeight4 = this.$refs.ant2.offsetHeight;
-      let rem = document.documentElement.clientHeight - headHeight - headHeight2 - this.$store.getters.reduceHeight - headHeight3 -headHeight4;
-      let newHeight1 = Math.floor(rem/2)-10+'px';
-      let newHeight2 = Math.floor(rem/2)-20+'px';
+      let rem =
+        document.documentElement.clientHeight -
+        headHeight -
+        headHeight2 -
+        this.$store.getters.reduceHeight -
+        headHeight3 -
+        headHeight4;
+      let newHeight1 = Math.floor(rem / 2) - 10 + "px";
+      let newHeight2 = Math.floor(rem / 2) - 20 + "px";
       this.$set(this, "height1", newHeight1);
       this.$set(this, "height2", newHeight2);
     },
@@ -631,24 +629,24 @@ export default {
       } else if (this.delData[1].length == 0) {
         this.$message.error("请单击选择工艺！");
       } else {
-let objs=[];
+        let objs = [];
         this.selectionData[0].some((x, i) => {
           let obj = {
             materialID: x.MaterialID,
             processGroupID: this.delData[1][0].ProcessGroupID,
           };
-         objs.push(obj);
+          objs.push(obj);
         });
-         this.submitData(objs);
+        this.submitData(objs);
       }
     },
     // 提交配置的工艺
     async submitData(obj) {
-         this.adminLoading = true;
- 
-      let res = await GetSearch(obj,"/APSAPI/UpdateProcessV2");
+      this.adminLoading = true;
+
+      let res = await GetSearch(obj, "/APSAPI/UpdateProcessV2");
       const { result, data, count, msg } = res.data;
-       this.adminLoading = false;
+      this.adminLoading = false;
       if (result) {
         this.dataSearch(0);
       } else {
@@ -657,7 +655,6 @@ let objs=[];
           type: "error",
           dangerouslyUseHTMLString: true,
         });
-    
       }
     },
     // 单击行
@@ -725,4 +722,4 @@ let objs=[];
     },
   },
 };
-</script>    
+</script>

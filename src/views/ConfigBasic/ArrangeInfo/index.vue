@@ -2,8 +2,16 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
-      <ComCheckboxTree ref="asideRef" :treeData="treeData" :treeHeight="treeHeight" :title="'车间级信息'"
-        :nodekey="'OrganizeID'" :treeProps="treeProps" @searchTree="searchTree" @check="check" />
+      <ComCheckboxTree
+        ref="asideRef"
+        :treeData="treeData"
+        :treeHeight="treeHeight"
+        :title="'车间级信息'"
+        :nodekey="'OrganizeID'"
+        :treeProps="treeProps"
+        @searchTree="searchTree"
+        @check="check"
+      />
     </div>
     <div class="admin_container">
       <div>
@@ -13,36 +21,80 @@
               <div class="flex">
                 <div class="tree_text">排班配置</div>
                 <el-divider direction="vertical"></el-divider>
-                <el-radio-group v-model="largeOrSmall" size="mini" @change="changeRadio">
+                <el-radio-group
+                  v-model="largeOrSmall"
+                  size="mini"
+                  @change="changeRadio"
+                >
                   <el-radio-button label="大周"></el-radio-button>
                   <el-radio-button label="小周"></el-radio-button>
                 </el-radio-group>
                 <el-divider direction="vertical"></el-divider>
-                <el-date-picker size="mini" v-model="dataPicker" type="daterange" align="right" unlink-panels
-                  range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+                <el-date-picker
+                  size="mini"
+                  v-model="dataPicker"
+                  type="daterange"
+                  align="right"
+                  unlink-panels
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  :picker-options="pickerOptions"
+                >
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
-                <el-select size="mini" v-model="WorkingTimesID" filterable placeholder="选择班次"
-                  @change="changeWorkingTimesID">
-                  <el-option v-for="(item, y) in WorkingTimesIDs" :key="y" :label="item.WorkingTimesName"
-                    :value="item.WorkingTimesID">
+                <el-select
+                  size="mini"
+                  v-model="WorkingTimesID"
+                  filterable
+                  placeholder="选择班次"
+                  @change="changeWorkingTimesID"
+                >
+                  <el-option
+                    v-for="(item, y) in WorkingTimesIDs"
+                    :key="y"
+                    :label="item.WorkingTimesName"
+                    :value="item.WorkingTimesID"
+                  >
                   </el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
-                <el-radio v-model="IsCicle" :label="true" @click.native.prevent="clickitem(true)">是否循环大小周</el-radio>
+                <el-radio
+                  v-model="IsCicle"
+                  :label="true"
+                  @click.native.prevent="clickitem(true)"
+                  >是否循环大小周</el-radio
+                >
               </div>
               <div>
-                <el-button type="success" plain size="mini" :disabled="!isEdit" @click="saveWork">保存</el-button>
+                <el-button
+                  type="success"
+                  plain
+                  size="mini"
+                  :disabled="!isEdit"
+                  @click="saveWork"
+                  >保存</el-button
+                >
               </div>
             </div>
             <div class="margin_lr10">
               <ux-grid size="mini" ref="plxTable" :row-key="true">
                 <ux-table-column field="empty" title="" width="160">
                 </ux-table-column>
-                <ux-table-column v-for="(item, index) in tableHeader" :key="index" :title="item.label" :field="item.prop">
+                <ux-table-column
+                  v-for="(item, index) in tableHeader"
+                  :key="index"
+                  :title="item.label"
+                  :field="item.prop"
+                >
                   <template slot-scope="scope">
-                    <el-input type="number" size="mini" v-model="scope.row[item.prop]" :disabled="scope.row['disabled']"
-                      @input="totalTimesChange(scope)"></el-input>
+                    <el-input
+                      type="number"
+                      size="mini"
+                      v-model="scope.row[item.prop]"
+                      :disabled="scope.row['disabled']"
+                      @input="totalTimesChange(scope)"
+                    ></el-input>
                   </template>
                 </ux-table-column>
               </ux-grid>
@@ -56,10 +108,19 @@
                 <div class="flex">
                   <div class="tree_text">排班日历</div>
                   <el-divider direction="vertical"></el-divider>
-                  <el-select size="mini" v-model="WorkingTimesID2" filterable placeholder="批量设置班次"
-                    @change="changeWorkingTimesID2">
-                    <el-option v-for="(item, y) in WorkingTimesIDs" :key="y" :label="item.WorkingTimesName"
-                      :value="item.WorkingTimesID">
+                  <el-select
+                    size="mini"
+                    v-model="WorkingTimesID2"
+                    filterable
+                    placeholder="批量设置班次"
+                    @change="changeWorkingTimesID2"
+                  >
+                    <el-option
+                      v-for="(item, y) in WorkingTimesIDs"
+                      :key="y"
+                      :label="item.WorkingTimesName"
+                      :value="item.WorkingTimesID"
+                    >
                     </el-option>
                   </el-select>
                   <el-divider direction="vertical"></el-divider>
@@ -68,10 +129,20 @@
                   </div>
                   <el-divider direction="vertical"></el-divider>
                 </div>
-                <el-button type="success" plain size="mini" :disabled="!isEdit" @click="saveOnlyWeek">保存</el-button>
+                <el-button
+                  type="success"
+                  plain
+                  size="mini"
+                  :disabled="!isEdit"
+                  @click="saveOnlyWeek"
+                  >保存</el-button
+                >
               </div>
               <div class="margin_lr10">
-                <el-calendar class="arrange_calendar__body" v-model="calendarMonth">
+                <el-calendar
+                  class="arrange_calendar__body"
+                  v-model="calendarMonth"
+                >
                   <template slot="dateCell" slot-scope="{ data }">
                     <div :class="data.isSelected ? 'is-selected' : ''">
                       <span v-if="calenderData.length === 0">
@@ -79,11 +150,18 @@
                       </span>
                     </div>
                     <div v-for="(item, index) in calenderData" :key="index">
-                      <div class="flex_between" v-if="item.WorkingDate.indexOf(data.day) != -1">
+                      <div
+                        class="flex_between"
+                        v-if="item.WorkingDate.indexOf(data.day) != -1"
+                      >
                         <span>
                           {{ data.day.split("-").slice(1).join("-") }}
                         </span>
-                        <el-checkbox v-model="item.ElementDeleteFlag" :true-label="1" :false-label="0">
+                        <el-checkbox
+                          v-model="item.ElementDeleteFlag"
+                          :true-label="1"
+                          :false-label="0"
+                        >
                           <span>休</span>
                         </el-checkbox>
                       </div>
@@ -91,32 +169,55 @@
                         <el-row class="text_row">
                           <el-col :span="12"> 班次： </el-col>
                           <el-col :span="12">
-                            <el-select size="mini" clearable filterable v-model="item.WorkingTimesID" placeholder=""
-                              :disabled="item.ElementDeleteFlag === 1">
-                              <el-option v-for="(item, y) in WorkingTimesIDs" :key="y" :label="item.WorkingTimesName"
-                                :value="item.WorkingTimesID"></el-option>
+                            <el-select
+                              size="mini"
+                              clearable
+                              filterable
+                              v-model="item.WorkingTimesID"
+                              placeholder=""
+                              :disabled="item.ElementDeleteFlag === 1"
+                            >
+                              <el-option
+                                v-for="(item, y) in WorkingTimesIDs"
+                                :key="y"
+                                :label="item.WorkingTimesName"
+                                :value="item.WorkingTimesID"
+                              ></el-option>
                             </el-select>
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
                           <el-col :span="12"> 上班人数： </el-col>
                           <el-col :span="12">
-                            <el-input size="mini" type="number" v-model="item.Peoples"
-                              :disabled="item.ElementDeleteFlag === 1"></el-input>
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.Peoples"
+                              :disabled="item.ElementDeleteFlag === 1"
+                            ></el-input>
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
                           <el-col :span="12"> 总时长： </el-col>
                           <el-col :span="12">
-                            <el-input size="mini" type="number" v-model="item.TotalHours"
-                              :disabled="item.ElementDeleteFlag === 1"></el-input>
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.TotalHours"
+                              :disabled="item.ElementDeleteFlag === 1"
+                            ></el-input>
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
                           <el-col :span="12"> 加班时长： </el-col>
                           <el-col :span="12">
-                            <el-input size="mini" type="number" v-model="item.OverTime"
-                              :disabled="item.ElementDeleteFlag === 1" @input="totalHoursChange(item)"></el-input>
+                            <el-input
+                              size="mini"
+                              type="number"
+                              v-model="item.OverTime"
+                              :disabled="item.ElementDeleteFlag === 1"
+                              @input="totalHoursChange(item)"
+                            ></el-input>
                           </el-col>
                         </el-row>
                       </div>
@@ -370,7 +471,7 @@ export default {
     },
     //累计时长计算
     totalHoursChange(item) {
-      item.TotalHours = parseFloat(item.WorkHour) + parseFloat(item.OverTime)
+      item.TotalHours = parseFloat(item.WorkHour) + parseFloat(item.OverTime);
     },
     getDays(year, month) {
       let days = new Date(year, month, 0).getDate();
@@ -566,7 +667,7 @@ export default {
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
@@ -720,7 +821,7 @@ export default {
             });
           }
         }
-        console.log(this.calenderData, 'this.calenderData');
+        console.log(this.calenderData, "this.calenderData");
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -796,7 +897,7 @@ export default {
             });
             this.saveArrangeInfo(submitData);
           })
-          .catch((_) => { });
+          .catch((_) => {});
       }
     },
     // 清空表格数据
@@ -871,7 +972,7 @@ export default {
               });
             }
           })
-          .catch((_) => { });
+          .catch((_) => {});
       }
     },
     // 点击是否循环大小周

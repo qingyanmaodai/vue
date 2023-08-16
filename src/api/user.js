@@ -1,35 +1,35 @@
-import request from '@/utils/request'
-import { getToken } from '@/utils/auth';
+import request from "@/utils/request";
+import { getToken } from "@/utils/auth";
 export function NEWLOGIN(data) {
   return request({
-    url: '/Login/CheckAccount',
-    method: 'post',
+    url: "/Login/CheckAccount",
+    method: "post",
     data,
     // CheckAccountJson
     transformRequest: [
       function (data) {
-        let ret = ''
+        let ret = "";
         for (let it in data) {
-          ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+          ret +=
+            encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&";
         }
-        ret = ret.substring(0, ret.lastIndexOf('&'));
-        return ret
-      }
+        ret = ret.substring(0, ret.lastIndexOf("&"));
+        return ret;
+      },
     ],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  })
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 }
-
 
 export function OrgData(data) {
   return request({
-    url: '/APSAPI/GetOrganize',
-    method: 'post',
+    url: "/APSAPI/GetOrganize",
+    method: "post",
     data,
-    headers:{
-      'Content-Type': 'application/json'
-    }
-  })
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }

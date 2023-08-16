@@ -175,7 +175,7 @@
                 v-model="userValue.Name"
                 clearabled
                 :fetch-suggestions="fetchsuggertions"
-                @select="item => getRemote(item)"
+                @select="(item) => getRemote(item)"
               >
                 <template slot-scope="{ item }">
                   <div style="border-bottom: 1px dashed #8c8e8e">
@@ -300,13 +300,13 @@ import {
   ExportData,
   GetFuzzySearchData,
   GetMenus,
-  GetMenuRoleBtn
+  GetMenuRoleBtn,
 } from "@/api/Common";
 export default {
   name: "RoleInfo",
   components: {
     ComSearch,
-    ComUmyTable
+    ComUmyTable,
   },
   data() {
     return {
@@ -322,8 +322,8 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       btnForm: [
         {
@@ -332,7 +332,7 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataTreeSave",
-          Icon: ""
+          Icon: "",
         },
         {
           BtnName: "删除",
@@ -341,8 +341,8 @@ export default {
           Size: "small",
           Methods: "dataDel",
           Icon: "",
-          Params: { dataName: "delData" }
-        }
+          Params: { dataName: "delData" },
+        },
       ],
       tableData: [[]],
       tableColumns: [[]],
@@ -361,12 +361,12 @@ export default {
         ParentID: "",
         ParentRoleName: "",
         Status: 1,
-        dicID: 40
+        dicID: 40,
       },
       roleRules: {
         RoleName: [
-          { required: true, message: "请输入角色名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入角色名称", trigger: "blur" },
+        ],
       },
       roleProps: { label: "RoleName", children: "children" },
       roleData: [],
@@ -380,17 +380,17 @@ export default {
       isOpen2: true,
       menuProps: {
         children: "children",
-        label: "MenuName"
+        label: "MenuName",
       },
       menuBtnProps: {
         children: "children",
-        label: "MenuName"
+        label: "MenuName",
       },
       orgForm: {},
       orgData: [],
       orgProps: {
         children: "children",
-        label: "OrganizeName"
+        label: "OrganizeName",
       },
       userValue: {
         Account: "",
@@ -399,20 +399,20 @@ export default {
         OrganizeID: "",
         dicID: 41,
         RoleID: "",
-        ID: null
+        ID: null,
       },
       userData: [],
-      dialogLoading: [false, false, false]
+      dialogLoading: [false, false, false],
     };
   },
   watch: {
     $route: {
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         // this.$set(this,'btnForm',val.meta.btns);
       },
       // 深度观察监听
-      deep: true
-    }
+      deep: true,
+    },
   },
   created() {
     _this = this;
@@ -519,7 +519,7 @@ export default {
     dataTreeSave(remarkTb, index, parms, newData) {
       if (this.tableData[remarkTb].length != 0) {
         let submitData = [];
-        this.tableData[remarkTb].forEach(x => {
+        this.tableData[remarkTb].forEach((x) => {
           if (x.update) {
             submitData.push(x);
           }
@@ -539,7 +539,7 @@ export default {
     // 递归获取子数据
     getChildrensData(row, submitData) {
       submitData.concat(row.children);
-      row.children.forEach(x => {
+      row.children.forEach((x) => {
         if (x.update) {
           submitData.push(x);
         }
@@ -563,7 +563,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
       } else {
@@ -571,7 +571,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -583,11 +583,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
@@ -597,7 +597,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -630,24 +630,24 @@ export default {
           this.$message.error("请单击需要操作的数据！");
           return;
         } else {
-          this[parms.dataName][remarkTb].forEach(x => {
+          this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
             obj["ElementDeleteFlag"] = 1;
             newData.push(obj);
           });
         }
       } else {
-        this.tableData[remarkTb].forEach(y => {
+        this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
           obj2["ElementDeleteFlag"] = 1;
           newData.push(obj2);
         });
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
+        .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
@@ -663,7 +663,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -706,7 +706,7 @@ export default {
           let res = await GetSearchData({
             RoleID: row.ParentID,
             dicID: 40,
-            rows: 0
+            rows: 0,
           });
           const { result, data, count, msg } = res.data;
           if (result) {
@@ -715,7 +715,7 @@ export default {
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
         }
@@ -734,10 +734,10 @@ export default {
     sureAdd() {
       if (this.operationStatus) {
         // 新增
-        this.$refs.roleForm.validate(valid => {
+        this.$refs.roleForm.validate((valid) => {
           if (valid) {
             let newData = [this.roleForm];
-            this.returnResultData(newData).then(res => {
+            this.returnResultData(newData).then((res) => {
               const { result, msg } = res.data;
               if (result) {
                 this.$refs.roleForm.resetFields();
@@ -746,14 +746,14 @@ export default {
                 this.$message({
                   message: msg,
                   type: "success",
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 });
                 this.drawer = false;
               } else {
                 this.$message({
                   message: msg,
                   type: "error",
-                  dangerouslyUseHTMLString: true
+                  dangerouslyUseHTMLString: true,
                 });
                 this.drawer = false;
               }
@@ -773,7 +773,7 @@ export default {
           let submitData = [];
           // menus = menus.concat(menus2);
           let newData = menus.filter(
-            x => !this.initialBtnData.some(y => y.MenuCode == x.MenuCode)
+            (x) => !this.initialBtnData.some((y) => y.MenuCode == x.MenuCode)
           ); //新增
 
           // let newData3 = this.initialBtnData.filter((r) =>
@@ -787,10 +787,10 @@ export default {
           //   });
           // }
           let newData2 = this.initialBtnData.filter(
-            c => !menus.some(z => c.MenuCode == z.MenuCode)
+            (c) => !menus.some((z) => c.MenuCode == z.MenuCode)
           ); //删除
           if (newData.length != 0) {
-            newData.forEach(a => {
+            newData.forEach((a) => {
               // let obj = {};
               // obj["MenuCode"] = a;
               a["RoleID"] = this.delData[0][0].RoleID;
@@ -800,26 +800,26 @@ export default {
             });
           }
           if (newData2.length != 0) {
-            newData2.forEach(b => {
+            newData2.forEach((b) => {
               b["dicID"] = 42;
               b["ElementDeleteFlag"] = 1;
               submitData.push(b);
             });
           }
-          this.returnResultData(submitData).then(res => {
+          this.returnResultData(submitData).then((res) => {
             const { result, msg } = res.data;
             if (result) {
               this.getRoleMenu(this.delData[0][0].RoleID);
               this.$message({
                 message: msg,
                 type: "success",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             } else {
               this.$message({
                 message: msg,
                 type: "error",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             }
             this.sureLoading = false;
@@ -829,33 +829,33 @@ export default {
           let btns = _this.$refs.menuBtnTree.getCheckedNodes();
           let btns2 = _this.$refs.menuBtnTree.getHalfCheckedNodes();
           if (btns2.length != 0) {
-            btns2.forEach(x => {
+            btns2.forEach((x) => {
               x.TempKey = 1;
             });
           }
           btns = btns.concat(btns2);
           let submitData = [];
           let newData = btns.filter(
-            x =>
+            (x) =>
               !this.initialBtnData2.some(
-                y => y.ButtonMenuMapID == x.ButtonMenuMapID
+                (y) => y.ButtonMenuMapID == x.ButtonMenuMapID
               )
           ); //新增
-          let newData3 = this.initialBtnData.filter(r =>
-            btns2.some(t => r.ButtonMenuMapID == t.ButtonMenuMapID)
+          let newData3 = this.initialBtnData.filter((r) =>
+            btns2.some((t) => r.ButtonMenuMapID == t.ButtonMenuMapID)
           ); // 本来有的值但是变成半选状态需要更新
           if (newData3.length != 0) {
-            newData3.forEach(p => {
+            newData3.forEach((p) => {
               p["dicID"] = 42;
               p["TempKey"] = 1;
               submitData.push(p);
             });
           }
           let newData2 = this.initialBtnData2.filter(
-            c => !btns.some(z => c.ButtonMenuMapID == z.ButtonMenuMapID)
+            (c) => !btns.some((z) => c.ButtonMenuMapID == z.ButtonMenuMapID)
           ); //删除
           if (newData.length != 0) {
-            newData.forEach(a => {
+            newData.forEach((a) => {
               a["RoleID"] = this.delData[0][0].RoleID;
               a["ID"] = -1;
               a["dicID"] = 31;
@@ -863,13 +863,13 @@ export default {
             });
           }
           if (newData2.length != 0) {
-            newData2.forEach(b => {
+            newData2.forEach((b) => {
               b["dicID"] = 31;
               b["ElementDeleteFlag"] = 1;
               submitData.push(b);
             });
           }
-          this.returnResultData(submitData).then(res => {
+          this.returnResultData(submitData).then((res) => {
             const { result, msg } = res.data;
             if (result) {
               this.getRoleMenu(this.delData[0][0].RoleID);
@@ -878,13 +878,13 @@ export default {
               this.$message({
                 message: msg,
                 type: "success",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             } else {
               this.$message({
                 message: msg,
                 type: "error",
-                dangerouslyUseHTMLString: true
+                dangerouslyUseHTMLString: true,
               });
             }
             this.sureLoading = false;
@@ -909,14 +909,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -934,12 +934,12 @@ export default {
     },
     handleCommand0(val) {
       this.$confirm("确定要删除所有用户数据吗？")
-        .then(_ => {
-          _this.userData.forEach(x => {
+        .then((_) => {
+          _this.userData.forEach((x) => {
             x["ElementDeleteFlag"] = 1;
             x["dicID"] = 41;
           });
-          _this.returnResultData(_this.userData).then(res => {
+          _this.returnResultData(_this.userData).then((res) => {
             const { result, msg } = res.data;
             if (result) {
               _this.getRoleUser(_this.delData[0][0].RoleID, null);
@@ -948,7 +948,7 @@ export default {
             }
           });
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 下拉选择事件
     handleCommand(val) {
@@ -1005,7 +1005,7 @@ export default {
         dicID: 1,
         MenuCode: null,
         MenuName: "",
-        IsEnable: 1
+        IsEnable: 1,
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1015,7 +1015,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1029,7 +1029,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1041,7 +1041,7 @@ export default {
       let res = await GetMenuRoleBtn({
         dicID: 48,
         RoleID: RoleID,
-        ParentCode: "null"
+        ParentCode: "null",
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1051,7 +1051,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1070,7 +1070,7 @@ export default {
         // }
         _this.initialBtnData2 = data;
         if (data.length != 0) {
-          data.forEach(x => {
+          data.forEach((x) => {
             if (x.TempKey != 1) {
               _this.checkdBtnCodes2.push(x.ButtonMenuMapID);
             }
@@ -1080,7 +1080,7 @@ export default {
         _this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         _this.$set(_this.dialogLoading, 2, false);
       }
@@ -1090,7 +1090,7 @@ export default {
       let res = await GetSearchData({
         dicID: 47,
         RoleID: RoleID,
-        Account: Account
+        Account: Account,
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1106,7 +1106,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1122,7 +1122,7 @@ export default {
         this.$set(this, "checkdBtnCodes", []);
         this.$refs.roleMenuTree.setCheckedKeys([]);
         if (data) {
-          this.checkdBtnCodes = data["Table1"].map(item => item.MenuCode);
+          this.checkdBtnCodes = data["Table1"].map((item) => item.MenuCode);
           this.initialBtnData = [...data["Table"], ...data["Table1"]];
         }
         // data.forEach((x) => {
@@ -1136,7 +1136,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1155,7 +1155,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -1166,7 +1166,7 @@ export default {
         let res = await GetFuzzySearchData({
           dicID: 25,
           Account: val,
-          Name: val
+          Name: val,
         });
         const { result, data, count, msg } = res.data;
         if (result) {
@@ -1175,7 +1175,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       }
@@ -1193,7 +1193,7 @@ export default {
         let newData = [];
         this.userValue.RoleID = this.delData[0][0].RoleID;
         newData.push(this.userValue);
-        _this.returnResultData(newData).then(res => {
+        _this.returnResultData(newData).then((res) => {
           const { result, msg } = res.data;
           if (result) {
             _this.getRoleUser(_this.delData[0][0].RoleID, null);
@@ -1218,12 +1218,12 @@ export default {
     // 删除用户
     delRoleUser(item) {
       this.$confirm("确定要删除该用户吗？")
-        .then(_ => {
+        .then((_) => {
           item["ElementDeleteFlag"] = 1;
           item["dicID"] = 41;
           let newData = [];
           newData.push(item);
-          _this.returnResultData(newData).then(res => {
+          _this.returnResultData(newData).then((res) => {
             const { result, msg } = res.data;
             if (result) {
               _this.getRoleUser(_this.delData[0][0].RoleID, null);
@@ -1233,8 +1233,8 @@ export default {
             }
           });
         })
-        .catch(_ => {});
-    }
-  }
+        .catch((_) => {});
+    },
+  },
 };
 </script>

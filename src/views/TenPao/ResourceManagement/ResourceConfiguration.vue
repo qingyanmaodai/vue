@@ -3,8 +3,16 @@
   <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
       <div class="admin_head" ref="headRef">
-        <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-          :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="0" />
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[0].datas"
+          :searchForm="formSearchs[0].forms"
+          :remark="0"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+          :signName="0"
+        />
       </div>
       <!-- <div class="ant-table-title gray" ref="headRef_2">
         <el-row>
@@ -13,11 +21,26 @@
         </el-row>
       </div> -->
       <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-        <ComVxeTable :ref="`tableRef${item}`" :rowKey="'RowNumber'" height="100%" :tableData="tableData[item]"
-          :tableHeader="tableColumns[item]" :tableLoading="tableLoading[item]" :isToolbar="false" :remark="item"
-          :sysID="sysID[item]['ID']" :hasSelect="true" :isEdit="isEdit[item]" :isClear="isClear[item]" :keepSource="true"
-          :pagination="tablePagination[item]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
-          @selectfun="selectFun" />
+        <ComVxeTable
+          :ref="`tableRef${item}`"
+          :rowKey="'RowNumber'"
+          height="100%"
+          :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :isToolbar="false"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :hasSelect="true"
+          :isEdit="isEdit[item]"
+          :isClear="isClear[item]"
+          :keepSource="true"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+        />
       </div>
     </div>
   </div>
@@ -145,7 +168,7 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() { },
+  mounted() {},
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
@@ -255,7 +278,7 @@ export default {
             ) {
               let content =
                 this.tableData[remarkTb][i][
-                this.formSearchs[remarkTb].required[x]["prop"]
+                  this.formSearchs[remarkTb].required[x]["prop"]
                 ];
               if (!content && (content !== 0) & (content !== false)) {
                 this.$message.error(
@@ -513,7 +536,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
   },
 };

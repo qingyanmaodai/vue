@@ -1,96 +1,79 @@
 <!-- 计划配套汇总 -->
 <template>
-    <div
-    class="container"
-    v-loading="adminLoading"
-  >
-  <div class="mainTable">
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[tagRemark].datas"
-        :searchForm="formSearchs[tagRemark].forms"
-        :remark="tagRemark"
-        :isLoading="tableLoading[tagRemark]"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-        :defaultShow="true"
-      />
-    </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
-            >
+  <div class="container" v-loading="adminLoading">
+    <div class="mainTable">
+      <div class="admin_head" ref="headRef">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[tagRemark].datas"
+          :searchForm="formSearchs[tagRemark].forms"
+          :remark="tagRemark"
+          :isLoading="tableLoading[tagRemark]"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+          :defaultShow="true"
+        />
+      </div>
+      <div>
+        <div class="admin_content">
+          <div class="ant-table-title">
+            <el-row>
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
+              >
+              <el-col :span="20" class="flex_flex_end">
                 <div
                   :class="currentIndex == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y, 1)">{{
+                    item.label
+                  }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-          style="margin-bottom:10px"
-        >
+              </el-col>
+            </el-row>
+          </div>
           <div
-            class="spreadContainer"
-            v-loading="tableLoading[tagRemark]"
+            class="flex_column"
+            :style="{ height: height }"
+            style="margin-bottom: 10px"
           >
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread"
-            >
-              <gc-worksheet></gc-worksheet>
-            </gc-spread-sheets>
-
+            <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
+              <gc-spread-sheets
+                class="sample-spreadsheets"
+                @workbookInitialized="initSpread"
+              >
+                <gc-worksheet></gc-worksheet>
+              </gc-spread-sheets>
+            </div>
           </div>
-        </div>
-        <div  class="flex_row_spaceBtn">
-          <div>
-            <span
-              @click="toPageSetting(sysID[tagRemark].ID)"
-              class="primaryColor cursor"
-              >SysID:{{ sysID[tagRemark].ID }}
-            </span>
-          </div>
-          <div class="flex">
+          <div class="flex_row_spaceBtn">
+            <div>
+              <span
+                @click="toPageSetting(sysID[tagRemark].ID)"
+                class="primaryColor cursor"
+                >SysID:{{ sysID[tagRemark].ID }}
+              </span>
+            </div>
+            <div class="flex">
               <el-pagination
                 background
-                @size-change="val=>pageSize(val,0)"
+                @size-change="(val) => pageSize(val, 0)"
                 :current-page="tablePagination[tagRemark].pageIndex"
-                :page-sizes="[
-                200,
-                500,
-                1000,
-                2000,
-                3000,
-                5000,
-                10000
-                ]"
+                :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
                 :page-size="tablePagination[tagRemark].pageSize"
                 :total="tablePagination[tagRemark].pageTotal"
-                @current-change="val=>pageChange(val,0)"
+                @current-change="(val) => pageChange(val, 0)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
             </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 <script>
@@ -103,12 +86,7 @@ import "@grapecity/spread-sheets/js/zh.js";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComSearch from "@/components/ComSearch";
-import {
-  GetHeader,
-  GetSearchData,
-  GetSearch,
-  ExportData,
-} from "@/api/Common";
+import { GetHeader, GetSearchData, GetSearch, ExportData } from "@/api/Common";
 export default {
   name: "PlanMatchingSummary",
   components: {
@@ -116,51 +94,51 @@ export default {
   },
   data() {
     return {
-      itemTitle:'独立配套欠料明细',
+      itemTitle: "独立配套欠料明细",
       Status1: [
         { label: "独立配套计算汇总", value: 0 },
         { label: "独立配套欠料明细", value: 1 },
       ],
-        title:this.$route.meta.title,//表名
-        height:'740px',
-        adminLoading:false,//加载状态
-        currentIndex:0,//当前表下标
-        tabStatus:0,
-        btnForm: [],//拥有的按钮权限
-        parmsBtn: [
-          
-        ],
-        formSearchs:[//不同标签页面的查询条件
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          },
-          {
-            datas: {},//查询入参
-            forms: [],// 页面显示的查询条件
-          },
-        ],
-        tableData: [[],[]],//表格渲染数据,sysID有几个就有几个数组
-        tableColumns: [[],[]],//表格表头列
-        tableLoading:[false,false],//每个表加载
-        isClear: [false,false],
-        tablePagination: [//表分页参数
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-          { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        ],
-        sysID:[{ID:8985},{ID:8984}],
-        tagRemark: 0,
-        spread: null,//excel初始
-        itemSpread:null,
-    }
+      title: this.$route.meta.title, //表名
+      height: "740px",
+      adminLoading: false, //加载状态
+      currentIndex: 0, //当前表下标
+      tabStatus: 0,
+      btnForm: [], //拥有的按钮权限
+      parmsBtn: [],
+      formSearchs: [
+        //不同标签页面的查询条件
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+        },
+      ],
+      tableData: [[], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], []], //表格表头列
+      tableLoading: [false, false], //每个表加载
+      isClear: [false, false],
+      tablePagination: [
+        //表分页参数
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+      ],
+      sysID: [{ ID: 8985 }, { ID: 8984 }],
+      tagRemark: 0,
+      spread: null, //excel初始
+      itemSpread: null,
+    };
   },
   created() {
     _this = this;
     _this.judgeBtn();
-    _this.getTableHeader()
+    _this.getTableHeader();
   },
   activated() {
-    if(this.spread){
+    if (this.spread) {
       this.spread.refresh();
     }
   },
@@ -169,10 +147,10 @@ export default {
       this.setHeight();
     }, 350);
   },
-  methods:{
+  methods: {
     //初始化SpreadJS
     initSpread: function (spread) {
-      console.log('spread',spread)
+      console.log("spread", spread);
       this.spread = spread;
     },
     // 统一渲染按钮事件
@@ -191,10 +169,10 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = (rem+ 33) + "px";
+      let newHeight = rem + 33 + "px";
       this.$set(this, "height", newHeight);
     },
-     // 跳转至属性配置
+    // 跳转至属性配置
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
@@ -204,7 +182,7 @@ export default {
     // 拥有什么按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
-      console.log('routeBtn',routeBtn)
+      console.log("routeBtn", routeBtn);
       let newBtn = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
@@ -220,19 +198,18 @@ export default {
     },
     // 获取表头
     async getTableHeader() {
-      this.adminLoading = true
+      this.adminLoading = true;
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
-        console.log('datas',datas)
+        console.log("datas", datas);
         datas.some((m, i) => {
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
@@ -243,7 +220,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
           this.getTableData(this.formSearchs[z].datas, z);
-          this.adminLoading = false
+          this.adminLoading = false;
         });
       } else {
         this.adminLoading = false;
@@ -255,7 +232,7 @@ export default {
       }
     },
     // 获取表格数据
-    async getTableData(params,index){
+    async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
       params["rows"] = this.tablePagination[index].pageSize;
       params["page"] = this.tablePagination[index].pageIndex;
@@ -273,7 +250,7 @@ export default {
         });
       }
       this.$set(this.tableLoading, index, false);
-      console.log('this.tableData',this.tableData)
+      console.log("this.tableData", this.tableData);
     },
     // excle表数据渲染
     async setData() {
@@ -284,17 +261,17 @@ export default {
         // 重置表单
         // sheet.reset();
         // 渲染列
-        let colInfos = []
-        let colIndex = 0
-        this.tableColumns[this.tagRemark].forEach((x,index) => {
+        let colInfos = [];
+        let colIndex = 0;
+        this.tableColumns[this.tagRemark].forEach((x, index) => {
           colInfos.push({
             name: x.prop,
             displayName: x.label,
             size: parseInt(x.width),
           });
-          colIndex++
-      });
-      
+          colIndex++;
+        });
+
         // 设置整个列头的背景色和前景色。
         /**
          * 参数1:表示行
@@ -303,35 +280,46 @@ export default {
          * 参数4:
          * 参数5:
          */
-        let colHeaderStyle = sheet.getRange(0, -1, 1, -1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeaderStyle.foreColor('000000d9')
-        colHeaderStyle.backColor("#f3f3f3")
-        colHeaderStyle.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif")
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center)
-        
+        let colHeaderStyle = sheet.getRange(
+          0,
+          -1,
+          1,
+          -1,
+          GC.Spread.Sheets.SheetArea.colHeader
+        );
+        colHeaderStyle.foreColor("000000d9");
+        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.font(
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+        );
+        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.center);
+        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.center);
+
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font = "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        defaultStyle.font =
+          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
         defaultStyle.showEllipsis = true;
-        sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-        
+        sheet.setDefaultStyle(
+          defaultStyle,
+          GC.Spread.Sheets.SheetArea.viewport
+        );
+
         sheet.setDataSource(this.tableData[this.currentIndex]);
         //渲染列
-        sheet.bindColumns(colInfos);//此方法一定要放在setDataSource后面才能正确渲染列名
+        sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
       } catch (error) {
-        console.log('表格渲染的错误信息:',error)
+        console.log("表格渲染的错误信息:", error);
       }
-      console.log('this.tableColumns',this.tableColumns)
-      
+      console.log("this.tableColumns", this.tableColumns);
     },
     // 查询
     dataSearch(remarkTb) {
-      this.tagRemark = remarkTb
+      this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
@@ -341,13 +329,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -374,16 +362,16 @@ export default {
     // 切换状态
     changeStatus(item, index) {
       this.currentIndex = index;
-      this.dataSearch(index) 
+      this.dataSearch(index);
     },
-  }
-}
+  },
+};
 </script>
 <style lang="scss" scoped>
-  .mainTable{
-    margin-bottom: 10px;
-  }
-  .container .admin_head{
-    margin-bottom: 0px
-  }
+.mainTable {
+  margin-bottom: 10px;
+}
+.container .admin_head {
+  margin-bottom: 0px;
+}
 </style>

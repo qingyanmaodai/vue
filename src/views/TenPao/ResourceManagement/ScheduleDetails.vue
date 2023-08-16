@@ -3,47 +3,98 @@
   <div class="container flex_column content_height" v-loading="adminLoading">
     <splitpanes class="default-theme" horizontal>
       <pane size="50">
-        <div class="flex_column bgWhite" style="width: 100%;height: 100%;">
+        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
           <div class="admin_head_2" ref="headRef">
-            <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[0].datas"
+              :searchForm="formSearchs[0].forms"
+              :remark="0"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="labelStatus1"
+            />
           </div>
           <div class="admin_content">
             <div class="ant-table-title" ref="headRef_2">
               <el-row>
-                <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-                <el-col :span="20" class="flex_flex_end">
-                </el-col>
+                <el-col :span="4"
+                  ><span class="title">{{ title }}</span></el-col
+                >
+                <el-col :span="20" class="flex_flex_end"> </el-col>
               </el-row>
             </div>
           </div>
-          <div class="admin_content" style="flex-grow: 1;overflow: hidden;">
-            <ComVxeTable ref="tableRef0" :rowKey="'RowNumber'" height="100%" :isToolbar="false" :hasSelect="true"
-              :isEdit="true" :tableData="tableData[0]" :tableHeader="tableColumns[0]" :tableLoading="tableLoading[0]"
-              :remark="0" :cellStyle="cellStyle0" :sysID="sysID[0].ID" :footerLabel="footerLabel[0]" :isClear="isClear[0]"
-              :pagination="tablePagination[0]" @pageChange="pageChange" @handleRowClick="handleRowClick"
-              @pageSize="pageSize" @sortChange="sortChange" :keepSource="true" />
+          <div class="admin_content" style="flex-grow: 1; overflow: hidden">
+            <ComVxeTable
+              ref="tableRef0"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :isToolbar="false"
+              :hasSelect="true"
+              :isEdit="true"
+              :tableData="tableData[0]"
+              :tableHeader="tableColumns[0]"
+              :tableLoading="tableLoading[0]"
+              :remark="0"
+              :cellStyle="cellStyle0"
+              :sysID="sysID[0].ID"
+              :footerLabel="footerLabel[0]"
+              :isClear="isClear[0]"
+              :pagination="tablePagination[0]"
+              @pageChange="pageChange"
+              @handleRowClick="handleRowClick"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              :keepSource="true"
+            />
           </div>
         </div>
       </pane>
       <pane size="50">
-        <div class="flex_column bgWhite" style="width: 100%;height: 100%;">
+        <div class="flex_column bgWhite" style="width: 100%; height: 100%">
           <div class="admin_head_2" ref="headRef">
-            <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
-              :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
+            <ComSearch
+              ref="searchRef"
+              :searchData="formSearchs[1].datas"
+              :searchForm="formSearchs[1].forms"
+              :remark="1"
+              :isLoading="isLoading"
+              :btnForm="btnForm"
+              @btnClick="btnClick"
+              :signName="labelStatus1"
+            />
           </div>
           <div class="admin_content">
             <div class="ant-table-title" ref="headRef_2">
               <el-row>
-                <el-col :span="4"><span class="title">各科室每天开拉情况</span></el-col>
+                <el-col :span="4"
+                  ><span class="title">各科室每天开拉情况</span></el-col
+                >
                 <el-col :span="20" class="flex_flex_end">
-                  <el-select clearable filterable size="small" placeholder="请选择修改值" v-model="OrderNo">
-                    <el-option v-for="(item, i) in OrderNos[1]" :key="i" :label="item.label"
-                      :value="item.value"></el-option>
+                  <el-select
+                    clearable
+                    filterable
+                    size="small"
+                    placeholder="请选择修改值"
+                    v-model="OrderNo"
+                  >
+                    <el-option
+                      v-for="(item, i) in OrderNos[1]"
+                      :key="i"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
                   </el-select>
                   <el-divider direction="vertical"></el-divider>
-                  <el-input size="small" v-model="OrderNoValue" style="width:160px" placeholder="请输入"
-                    @keyup.enter.native="changeProp(1)"></el-input>
+                  <el-input
+                    size="small"
+                    v-model="OrderNoValue"
+                    style="width: 160px"
+                    placeholder="请输入"
+                    @keyup.enter.native="changeProp(1)"
+                  ></el-input>
                   <el-divider direction="vertical"></el-divider>
                   <el-button type="primary" size="mini" @click="changeProp(1)">
                     批量修改
@@ -53,12 +104,29 @@
               </el-row>
             </div>
           </div>
-          <div class="admin_content" style="flex-grow: 1;overflow: hidden;">
-            <ComVxeTable :rowKey="'RowNumber'" :isToolbar="false" height="100%" :isEdit="true" :tableData="tableData[1]"
-              ref="tableRef1" :tableHeader="tableColumns[1]" :tableLoading="tableLoading[1]" :remark="1" :hasSelect="true"
-              :cellStyle="cellStyle" :sysID="sysID[1].ID" :checCheckboxkMethod="checCheckboxkMethod" :isClear="isClear[1]"
-              @pageChange="pageChange" @pageSize="pageSize" :pagination="tablePagination[1]" @sortChange="sortChange"
-              @selectfun="selectFun" :keepSource="true" />
+          <div class="admin_content" style="flex-grow: 1; overflow: hidden">
+            <ComVxeTable
+              :rowKey="'RowNumber'"
+              :isToolbar="false"
+              height="100%"
+              :isEdit="true"
+              :tableData="tableData[1]"
+              ref="tableRef1"
+              :tableHeader="tableColumns[1]"
+              :tableLoading="tableLoading[1]"
+              :remark="1"
+              :hasSelect="true"
+              :cellStyle="cellStyle"
+              :sysID="sysID[1].ID"
+              :checCheckboxkMethod="checCheckboxkMethod"
+              :isClear="isClear[1]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              :pagination="tablePagination[1]"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              :keepSource="true"
+            />
           </div>
         </div>
       </pane>
@@ -68,8 +136,8 @@
 
 <script>
 var _this;
-import { Splitpanes, Pane } from 'splitpanes'
-import 'splitpanes/dist/splitpanes.css'
+import { Splitpanes, Pane } from "splitpanes";
+import "splitpanes/dist/splitpanes.css";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
@@ -78,7 +146,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetServerTime
+  GetServerTime,
 } from "@/api/Common";
 export default {
   name: "ScheduleDetails",
@@ -87,7 +155,7 @@ export default {
     ComVxeTable,
     ComReportTable,
     Splitpanes,
-    Pane
+    Pane,
   },
   data() {
     return {
@@ -104,20 +172,20 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       parmsBtn: [],
       parmsBtn2: [
@@ -128,8 +196,8 @@ export default {
           Ghost: true,
           Size: "small",
           Methods: "dataSave",
-          Icon: ""
-        }
+          Icon: "",
+        },
       ],
       btnForm: [],
       btnForm2: [],
@@ -141,7 +209,7 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 50, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       // height: "707px",
       showPagination: true,
@@ -153,18 +221,17 @@ export default {
       warehouseValue: "",
       OrderNo: "",
       OrderNoValue: "",
-      OrderNos: [
-      ],
+      OrderNos: [],
       Status1: [
         { label: "待确认", value: "未开始" },
         { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" }
+        { label: "全部", value: "" },
       ],
       Status2: [
         { label: "全部", value: 0 },
         { label: "未点检", value: 1 },
         { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 }
+        { label: "已领未点", value: 3 },
       ],
       labelStatus1: 0,
       labelStatus2: 0,
@@ -173,7 +240,7 @@ export default {
       enlargeType: true,
       rem: "",
       warehouses: [],
-      userInfo: {}
+      userInfo: {},
     };
   },
   watch: {},
@@ -307,7 +374,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -347,7 +414,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
       } else {
@@ -355,7 +422,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -367,30 +434,32 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyDta(x);
               });
             }
           });
           this.$set(this.tableColumns, i, m);
-          this.$set(this.OrderNos, i, m)
+          this.$set(this.OrderNos, i, m);
 
-          this.OrderNos[i] = this.OrderNos[i].filter(item => item.isEdit).map((item) => {
-            return {
-              value: item.prop,
-              label: item.label
-            }
-          })
-          console.log(this.OrderNos, 'this.OrderNo');
+          this.OrderNos[i] = this.OrderNos[i]
+            .filter((item) => item.isEdit)
+            .map((item) => {
+              return {
+                value: item.prop,
+                label: item.label,
+              };
+            });
+          console.log(this.OrderNos, "this.OrderNo");
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -435,7 +504,7 @@ export default {
       if (result) {
         if (remarkTb == 1) {
           if (data.length != 0) {
-            data.forEach(a => {
+            data.forEach((a) => {
               this.$set(a, "update", false);
             });
           }
@@ -469,7 +538,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -480,7 +549,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -530,7 +599,7 @@ export default {
         this.$confirm("确定清空选中的吗，会直接保存哟？")
           .then(() => {
             let newData = [];
-            _this.selectionData[1].forEach(x => {
+            _this.selectionData[1].forEach((x) => {
               x.ShortQty = null;
               if (parseInt(x.UnIssuedQty) == 0) {
                 x.InspectStatus = 1;
@@ -547,7 +616,7 @@ export default {
             });
             _this.generalSaveData(newData, 1);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     },
     // 通用保存数据
@@ -561,14 +630,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -596,15 +665,15 @@ export default {
       if (column.property == "IsCompleteInspect") {
         if (row.IsCompleteInspect == "未开始") {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else if (row.IsCompleteInspect == "进行中") {
           return {
-            backgroundColor: "#fdfd8f"
+            backgroundColor: "#fdfd8f",
           };
         } else if (row.IsCompleteInspect == "已完成") {
           return {
-            backgroundColor: "#9fff9f"
+            backgroundColor: "#9fff9f",
           };
         }
       }
@@ -614,12 +683,12 @@ export default {
       if (column.property == "OrderNo") {
         if (row.InspectStatus == 2) {
           return {
-            backgroundColor: "#ff7b7b"
+            backgroundColor: "#ff7b7b",
           };
         } else {
           if (row.InspectStatus == 1) {
             return {
-              backgroundColor: "#9fff9f"
+              backgroundColor: "#9fff9f",
             };
           }
         }
@@ -628,16 +697,16 @@ export default {
     changeProp(index) {
       if (!this.OrderNo) {
         this.$message.error("请选择需要修改的值");
-        return
+        return;
       }
       if (this.tableData[index].length === 0) {
         this.$message.error("当前表格无数据");
-        return
+        return;
       }
       this.tableData[index].map((item) => {
-        item[this.OrderNo] = this.OrderNoValue
-      })
-    }
-  }
+        item[this.OrderNo] = this.OrderNoValue;
+      });
+    },
+  },
 };
 </script>

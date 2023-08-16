@@ -1,17 +1,13 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div
       ref="content_up"
-      :class="enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'"
+      :class="
+        enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'
+      "
     >
-      <div
-        class="admin_head_2"
-        ref="headRef"
-      >
+      <div class="admin_head_2" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -24,17 +20,12 @@
       </div>
       <div>
         <div class="admin_content">
-          <div
-            class="ant-table-title"
-            ref="headRef_2"
-          >
+          <div class="ant-table-title" ref="headRef_2">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
-              </el-col>
+              <el-col :span="20" class="flex_flex_end"> </el-col>
             </el-row>
           </div>
           <ComReportTable
@@ -56,16 +47,10 @@
         </div>
       </div>
     </div>
-    <div
-      ref="content_down"
-      class="list_content_down"
-    >
+    <div ref="content_down" class="list_content_down">
       <div>
         <div class="admin_content">
-          <div
-            class="ant-table-title"
-            style="height:3rem"
-          >
+          <div class="ant-table-title" style="height: 3rem">
             <el-row class="admin_head_2">
               <!-- <el-col :span="4"><span class="title">物料明细</span></el-col> -->
               <el-col :span="23">
@@ -79,10 +64,7 @@
                   @btnClick="btnClick"
                 />
               </el-col>
-              <el-col
-                :span="1"
-                class="flex_flex_end"
-              >
+              <el-col :span="1" class="flex_flex_end">
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -94,13 +76,13 @@
                       v-show="!expendColl"
                       src="../../../assets/svg/collapse.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                     <img
                       v-show="expendColl"
                       src="../../../assets/svg/expend.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                   </span>
                 </el-tooltip>
@@ -199,7 +181,7 @@ export default {
         }
       }
 
-       if (column.property == "InspectRate") {
+      if (column.property == "InspectRate") {
         if (row.InspectRate_2 == 0) {
           return {
             backgroundColor: "#ff7b7b",
@@ -214,7 +196,6 @@ export default {
           };
         }
       }
-      
     },
     // 收缩头部
     systolic() {

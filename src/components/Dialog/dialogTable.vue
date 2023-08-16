@@ -1,20 +1,49 @@
 <!-- 简单表格弹框组件-->
 <template>
-  <el-dialog :title="title" :visible.sync="Dialog" :width="width" :close-on-click-modal="false">
+  <el-dialog
+    :title="title"
+    :visible.sync="Dialog"
+    :width="width"
+    :close-on-click-modal="false"
+  >
     <div class="admin_head" ref="headRef">
-      <ComSearch ref="searchRef" :searchData="formSearchs[0].datas" :searchForm="formSearchs[0].forms" :remark="0"
-        :btnForm="btnForm" @btnClick="btnClick" />
+      <ComSearch
+        ref="searchRef"
+        :searchData="formSearchs[0].datas"
+        :searchForm="formSearchs[0].forms"
+        :remark="0"
+        :btnForm="btnForm"
+        @btnClick="btnClick"
+      />
     </div>
     <div>
-      <ComVxeTable ref="PurchaseRequisition" :isToolbar="isToolbar" :forbidden="forbidden" :isEdit="isEdit"
-        :hasSelect="hasSelect" :remark="0" :row-key="'RowNumber'" :height="height" :sysID="sysID"
-        :table-data="tableData[0]" :table-header="tableColumns[0]" :table-loading="tableLoading[0]"
-        :pagination="tablePagination[0]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange"
-        @selectfun="selectFun" @toPageSetting="toPageSetting" :cell-style="cellStyle" />
+      <ComVxeTable
+        ref="PurchaseRequisition"
+        :isToolbar="isToolbar"
+        :forbidden="forbidden"
+        :isEdit="isEdit"
+        :hasSelect="hasSelect"
+        :remark="0"
+        :row-key="'RowNumber'"
+        :height="height"
+        :sysID="sysID"
+        :table-data="tableData[0]"
+        :table-header="tableColumns[0]"
+        :table-loading="tableLoading[0]"
+        :pagination="tablePagination[0]"
+        @pageChange="pageChange"
+        @pageSize="pageSize"
+        @sortChange="sortChange"
+        @selectfun="selectFun"
+        @toPageSetting="toPageSetting"
+        :cell-style="cellStyle"
+      />
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="Dialog = false">取 消</el-button>
-      <el-button v-show="isConfirmBtn" type="primary" @click="confirmDialog">确 定</el-button>
+      <el-button v-show="isConfirmBtn" type="primary" @click="confirmDialog"
+        >确 定</el-button
+      >
     </span>
   </el-dialog>
 </template>
@@ -89,22 +118,22 @@ export default {
     // 是否显示确定按钮
     isConfirmBtn: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 单元格是否支持编辑
     isEdit: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 单元格是否支持编辑
     hasSelect: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 是否显示选择框
     forbidden: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isToolbar: {
       type: Boolean,
@@ -159,11 +188,11 @@ export default {
       deep: true,
     },
   },
-  mounted() { },
+  mounted() {},
   methods: {
     // 点击系统id先关闭弹框
     toPageSetting() {
-      this.Dialog = false
+      this.Dialog = false;
     },
     // 选择数据
     selectFun(data, remarkTb, row) {

@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,16 +16,11 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="clearShortData"
-              >
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="primary" size="mini" @click="clearShortData">
                 清空超领
               </el-button>
               <el-divider direction="vertical"></el-divider>
@@ -84,7 +73,7 @@ export default {
     return {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      isEdit:false,
+      isEdit: false,
       drawer: false,
       formSearchs: [
         {
@@ -106,7 +95,7 @@ export default {
       isLoading: false,
       adminLoading: false,
       parseForm: {},
-      parmsBtn:[],
+      parmsBtn: [],
       parseSearch: false,
       sysID: [{ ID: 7864 }],
       selectionData: [[]],
@@ -124,7 +113,7 @@ export default {
     }, 450);
   },
   methods: {
-     //判断按钮权限
+    //判断按钮权限
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];

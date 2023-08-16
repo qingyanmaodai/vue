@@ -1,18 +1,8 @@
 <!--备料任务指派-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 4"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 4" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,17 +19,17 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div v-show="labelStatus1 == 0">
                 <el-radio
                   v-model="losePrepareDate"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >无备料日期</el-radio>
+                  >无备料日期</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
                 <el-date-picker
                   v-model="PrepareDatePCB"
@@ -50,11 +40,7 @@
                 >
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="changeDate"
-                >
+                <el-button type="primary" size="mini" @click="changeDate">
                   指定备料日期
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
@@ -64,7 +50,8 @@
                   v-model="losePrepareDate2"
                   :label="0"
                   @click.native.prevent="clickitem2(1)"
-                >未免检</el-radio>
+                  >未免检</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
               <div
@@ -78,11 +65,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 4"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div v-for="(item, i) in 4" :key="i" v-show="labelStatus1 == i">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"

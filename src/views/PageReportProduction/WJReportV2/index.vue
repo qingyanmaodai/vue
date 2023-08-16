@@ -3,8 +3,16 @@
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
-        <ComSearch ref="searchRef" :searchData="formSearchs[i].datas" :searchForm="formSearchs[i].forms" :remark="i"
-          :isMoreHeader="true" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" />
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
+          :isMoreHeader="true"
+          :isLoading="isLoading"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
       </div>
     </div>
     <div>
@@ -20,9 +28,17 @@
         </div> -->
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ Status1[labelStatus1].title }}</span></el-col>
+            <el-col :span="4"
+              ><span class="title">{{
+                Status1[labelStatus1].title
+              }}</span></el-col
+            >
             <el-col :span="20" class="flex_flex_end">
-              <div :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status1" :key="y">
+              <div
+                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                v-for="(item, y) in Status1"
+                :key="y"
+              >
                 <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
                 <el-divider direction="vertical"></el-divider>
               </div>
@@ -30,25 +46,51 @@
           </el-row>
         </div>
         <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
-          <ComVxeTable :rowKey="'RowNumber'" :height="height" :tableData="tableData[i]" :tableHeader="tableColumns[i]"
-            :tableLoading="tableLoading[i]" :remark="i" :sysID="sysID[i].ID" :cellStyle="cellStyle" :isSpanMethods="true"
-            :isClear="isClear[i]" :pagination="tablePagination[i]" @pageChange="pageChange" @pageSize="pageSize"
-            @sortChange="sortChange" />
+          <ComVxeTable
+            :rowKey="'RowNumber'"
+            :height="height"
+            :tableData="tableData[i]"
+            :tableHeader="tableColumns[i]"
+            :tableLoading="tableLoading[i]"
+            :remark="i"
+            :sysID="sysID[i].ID"
+            :cellStyle="cellStyle"
+            :isSpanMethods="true"
+            :isClear="isClear[i]"
+            :pagination="tablePagination[i]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+          />
         </div>
-
       </div>
     </div>
 
     <!-- 导出多级表头的虚拟表 -->
-    <el-table ref="exportTableRef" v-show="false" :data="generalExportData" :row-key="'RowNumber'" height="500px">
-      <el-table-column v-for="(item, key) in generalExportHeader" :key="key" :prop="item.prop" :label="item.label">
-        <template v-if='item.children'>
-          <el-table-column :prop="i.prop" :label="i.label" v-for='(i, k) in item.children' :key="k">
+    <el-table
+      ref="exportTableRef"
+      v-show="false"
+      :data="generalExportData"
+      :row-key="'RowNumber'"
+      height="500px"
+    >
+      <el-table-column
+        v-for="(item, key) in generalExportHeader"
+        :key="key"
+        :prop="item.prop"
+        :label="item.label"
+      >
+        <template v-if="item.children">
+          <el-table-column
+            :prop="i.prop"
+            :label="i.label"
+            v-for="(i, k) in item.children"
+            :key="k"
+          >
           </el-table-column>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
@@ -271,7 +313,6 @@ export default {
     _this = this;
     // this.echartStyle();
     this.getTableHeader();
-
   },
   mounted() {
     setTimeout(() => {
@@ -486,7 +527,7 @@ export default {
       return wbout;
     },
     // 保存
-    dataSave(remarkTb) { },
+    dataSave(remarkTb) {},
     // 获取表头数据
     async getTableHeader() {
       let IDs = this.sysID;
@@ -505,7 +546,6 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
-
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -518,7 +558,11 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z]['datas'], "PlanDay", this.$moment().format('YYYY-MM'))
+          this.$set(
+            this.formSearchs[z]["datas"],
+            "PlanDay",
+            this.$moment().format("YYYY-MM")
+          );
         });
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -625,7 +669,7 @@ export default {
     cellStyle({ row, column, columnIndex }) {
       if (
         parseFloat(column.property.substring(column.property.length - 1)) >=
-        0 &&
+          0 &&
         row[column.property] > 0
       ) {
         return {

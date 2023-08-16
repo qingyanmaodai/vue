@@ -1,18 +1,8 @@
 <!--报工-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 3"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,11 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -45,11 +34,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(x,y) in 3"
-          :key="y"
-          v-show="labelStatus1 == y"
-        >
+        <div v-for="(x, y) in 3" :key="y" v-show="labelStatus1 == y">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -62,13 +47,12 @@
             :isClear="isClear[y]"
             :cellStyle="cellStyle0"
             :pagination="tablePagination[y]"
-             @selectfun="selectFun"
+            @selectfun="selectFun"
             @pageChange="pageChange"
             @pageSize="pageSize"
             @sortChange="sortChange"
           />
         </div>
-
       </div>
     </div>
   </div>
@@ -176,11 +160,11 @@ export default {
           ID: 6688,
         },
         {
-            ID: 7907,
-          },
-          {
-            ID: 7909,
-          },
+          ID: 7907,
+        },
+        {
+          ID: 7909,
+        },
       ],
       selectionData: [[], [], []],
       currentDay:
@@ -368,7 +352,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         // this.formSearchs[0].datas["ProcessID"] = "P202009092233413";
-         this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
+        this.formSearchs[0].datas["WorkOrderTypeID"] = "6033a552143a56";
         this.formSearchs[1].datas["ProducedDate"] = this.currentDay;
         this.dataSearch(0);
       }
@@ -390,7 +374,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-        // form["ProcessID"]="P202009092233413";
+      // form["ProcessID"]="P202009092233413";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -425,7 +409,6 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-   
       this.selectionData[remarkTb] = data;
     },
     async addData(val) {
@@ -435,16 +418,15 @@ export default {
         let newData = JSON.parse(JSON.stringify(this.selectionData[0]));
         // this.$refs.dialog_1.$refs.vxeTable.clearCheckboxRow();
         // this.selectionData[0] = [];
-        for(var a of newData)
-        {
-    if (a["ProductionQty"] > a["ProcessOweQty"]) {
+        for (var a of newData) {
+          if (a["ProductionQty"] > a["ProcessOweQty"]) {
             this.$message.error("报工数不能大于欠数！");
             return;
           }
           a["dicID"] = 5586;
           a["ProducedDate"] = a.PlanDay;
         }
-        
+
         this.adminLoading = true;
         let res = await SaveData(newData);
         this.adminLoading = false;

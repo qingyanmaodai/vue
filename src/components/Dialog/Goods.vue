@@ -10,11 +10,8 @@
     width="60%"
   >
     <el-container>
-      <el-aside
-        width="160px"
-        style="background:#fff"
-      >
-        <span style="height:40px;display:block">产品类别</span>
+      <el-aside width="160px" style="background: #fff">
+        <span style="height: 40px; display: block">产品类别</span>
         <div class="hr-line-dashed" />
         <el-tree
           ref="GoodsTree"
@@ -23,8 +20,8 @@
           :data="treeData"
           :props="treeProps"
           :load="loadNode"
-          :style="{height:''+height+'',overflow:'auto'}"
-          style="overflow:auto"
+          :style="{ height: '' + height + '', overflow: 'auto' }"
+          style="overflow: auto"
           highlight-current
           :expand-on-click-node="false"
           @node-click="handleNodeClick"
@@ -32,24 +29,18 @@
       </el-aside>
       <el-main
         class="GoodsMain"
-        style="padding:0;margin:0;overflow:hidden"
+        style="padding: 0; margin: 0; overflow: hidden"
       >
-        <div style="height:40px">
+        <div style="height: 40px">
           <el-input
             size="small"
             v-model="MaterialName"
-            style="width:240px;"
+            style="width: 240px"
             placeholder="按产品名称可查询"
             @keyup.enter.native="queryGoods"
           ></el-input>
-          <el-button
-            size="small"
-            @click="queryGoods"
-          >查询</el-button>
-          <el-button
-            size="small"
-            @click="toGoodsPage"
-          >新增产品</el-button>
+          <el-button size="small" @click="queryGoods">查询</el-button>
+          <el-button size="small" @click="toGoodsPage">新增产品</el-button>
         </div>
         <div class="hr-line-dashed" />
         <ComVxeTable
@@ -70,24 +61,14 @@
         />
       </el-main>
     </el-container>
-    <div
-      slot="footer"
-      class="dialog-footer"
-    >
-      <el-button
-        size="small"
-        @click="cancel"
-      >取 消</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        @click="addNoClose"
-      >添加不关闭</el-button>
-      <el-button
-        size="small"
-        type="primary"
-        @click="addClose"
-      >添加并关闭</el-button>
+    <div slot="footer" class="dialog-footer">
+      <el-button size="small" @click="cancel">取 消</el-button>
+      <el-button size="small" type="primary" @click="addNoClose"
+        >添加不关闭</el-button
+      >
+      <el-button size="small" type="primary" @click="addClose"
+        >添加并关闭</el-button
+      >
     </div>
   </el-dialog>
 </template>

@@ -27,16 +27,34 @@
           <div class="itemCard">
             <div class="echartHead">
               <div class="echartTitle">业务要货汇总</div>
-              <el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
+              <el-tabs
+                v-model="selectedIndex"
+                @tab-click="handleClick"
+                :stretch="true"
+              >
                 <el-tab-pane label="白班" name="0"></el-tab-pane>
                 <el-tab-pane label="夜班" name="1"></el-tab-pane>
               </el-tabs>
             </div>
             <div class="echartBody">
-              <ComReportTable :isToolbar="false" :showFooter="false" ref="PurchaseRequisition" :isEdit="false" :remark="4"
-                :IsIndex="false" :height="'100%'" :row-key="'RowNumber'" :sysID="sysID[4]['ID']"
-                :table-data="tableData[4]" :table-header="tableColumns[4]" :table-loading="tableLoading[4]"
-                :pagination="tablePagination[4]" @pageChange="pageChange" @pageSize="pageSize" @sortChange="sortChange">
+              <ComReportTable
+                :isToolbar="false"
+                :showFooter="false"
+                ref="PurchaseRequisition"
+                :isEdit="false"
+                :remark="4"
+                :IsIndex="false"
+                :height="'100%'"
+                :row-key="'RowNumber'"
+                :sysID="sysID[4]['ID']"
+                :table-data="tableData[4]"
+                :table-header="tableColumns[4]"
+                :table-loading="tableLoading[4]"
+                :pagination="tablePagination[4]"
+                @pageChange="pageChange"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+              >
               </ComReportTable>
             </div>
           </div>
@@ -274,7 +292,7 @@ export default {
     this.currentDate = this.$moment().format("YYYY-MM-DD");
     // this.getTableHeader();
   },
-  activated() { },
+  activated() {},
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     // console.log(style, "style");
@@ -352,7 +370,7 @@ export default {
             itemStyle: {
               borderRadius: "50%", // 将图例项的形状设定为圆形
             },
-            data: ['1', '2', '3'],
+            data: ["1", "2", "3"],
           },
           grid: {
             containLabel: true,
@@ -386,19 +404,20 @@ export default {
                   show: false,
                 },
               },
-              data: [{
-                value: 10,
-                name: '1',
-              }, {
-                value: 20,
-                name: '2',
-              }, {
-                value: 30,
-                name: '3',
-              }]
-
-
-              ,
+              data: [
+                {
+                  value: 10,
+                  name: "1",
+                },
+                {
+                  value: 20,
+                  name: "2",
+                },
+                {
+                  value: 30,
+                  name: "3",
+                },
+              ],
             },
           ],
         },
@@ -424,7 +443,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ['1', '2', '3'],
+            data: ["1", "2", "3"],
             axisLabel: {
               interval: 0,
               show: true,
@@ -838,7 +857,6 @@ export default {
             },
           ],
         },
-
       ];
       this.chart.map((item, index) => {
         if (item) {
@@ -998,7 +1016,7 @@ export default {
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
-        .catch((_) => { });
+        .catch((_) => {});
     },
     // 单击行
     handleRowClick(row, remarkTb) {
@@ -1250,7 +1268,8 @@ export default {
   box-sizing: border-box;
 }
 
-.el-container {}
+.el-container {
+}
 
 .el-main {
   padding: 16px;
@@ -1285,7 +1304,6 @@ export default {
 
       .itemCard:last-child {
         margin-right: 0px;
-
       }
     }
 

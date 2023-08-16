@@ -1,13 +1,7 @@
 <!--采购复期统计列表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -21,23 +15,15 @@
     </div>
     <div>
       <div class="admin_content">
-        <div
-          class="echart_up"
-          ref="echart_up"
-        >
-          <div
-            id="echart_one"
-            class="echart"
-          ></div>
+        <div class="echart_up" ref="echart_up">
+          <div id="echart_one" class="echart"></div>
         </div>
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComVxeTable
@@ -73,18 +59,17 @@
         :prop="item.prop"
         :label="item.label"
       >
-        <template v-if='item.children'>
+        <template v-if="item.children">
           <el-table-column
             :prop="i.prop"
             :label="i.label"
-            v-for='(i,k) in item.children'
+            v-for="(i, k) in item.children"
             :key="k"
           >
           </el-table-column>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
@@ -636,7 +621,8 @@ export default {
       }
       if (column.property == "Count_Rate") {
         if (
-          parseFloat(row.Count_Rate.substring(0, row.Count_Rate.length - 1)) == 0
+          parseFloat(row.Count_Rate.substring(0, row.Count_Rate.length - 1)) ==
+          0
         ) {
           return {
             background: "#fb8d8d",

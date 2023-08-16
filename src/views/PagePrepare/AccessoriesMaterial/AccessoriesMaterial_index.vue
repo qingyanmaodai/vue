@@ -1,18 +1,8 @@
 <!--PCB备料-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 4"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 4" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,17 +19,17 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div v-show="labelStatus1 == 0">
                 <el-radio
                   v-model="losePrepareDate"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >无备料日期</el-radio>
+                  >无备料日期</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
                 <el-date-picker
                   v-model="PrepareDate"
@@ -65,7 +55,8 @@
                   v-model="losePrepareDate2"
                   :label="0"
                   @click.native.prevent="clickitem2(1)"
-                >未免检</el-radio>
+                  >未免检</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
               <!-- <div
@@ -79,11 +70,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 4"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div v-for="(item, i) in 4" :key="i" v-show="labelStatus1 == i">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -147,7 +134,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            WorkOrderTypeID:'6033a552143a56'
+            WorkOrderTypeID: "6033a552143a56",
           },
           forms: [],
         },
@@ -384,13 +371,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -611,7 +598,7 @@ export default {
     setOut(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择数据！");
-        return
+        return;
       }
       let submitData = this.selectionData[remarkTb];
       let flag = 0;
@@ -657,7 +644,7 @@ export default {
     backOut(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择数据！");
-        return
+        return;
       }
       this.$confirm("确定要退回吗？")
         .then((_) => {

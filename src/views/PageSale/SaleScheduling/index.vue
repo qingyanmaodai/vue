@@ -1,10 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div class="container"  v-loading="adminLoading">
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -19,7 +16,9 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
           </el-row>
         </div>
         <ComVxeTable
@@ -94,7 +93,7 @@ export default {
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      adminLoading:false,
+      adminLoading: false,
     };
   },
   watch: {
@@ -141,10 +140,11 @@ export default {
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
-      
+
       let rem =
-        document.documentElement.clientHeight - headHeight - 
- this.$store.getters.reduceHeight;
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
@@ -203,7 +203,7 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-       setTimeout(() => {
+      setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       }, 200);
     },
@@ -211,13 +211,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -229,29 +229,27 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 特殊接口保存
     async specialSave(remarkTb, index) {
       let res = null;
-      
+
       res = await SaveSalesPlan(this.tableData[remarkTb]);
       const { result, data, count, msg } = res.data;
       this.dataSearch(0);
       if (result) {
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 保存
@@ -274,19 +272,19 @@ export default {
       if (result) {
         this.btnForm[index].isLoading = false;
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
         this.dataSearch(remarkTb);
         this.adminLoading = false;
       } else {
         this.btnForm[index].isLoading = false;
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
         this.adminLoading = false;
       }
     },
@@ -326,10 +324,10 @@ export default {
       } else {
         this.adminLoading = false;
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       // this.getAutoHeader(IDs);
     },
@@ -353,10 +351,10 @@ export default {
         });
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 验证数据
@@ -390,10 +388,10 @@ export default {
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },

@@ -348,7 +348,7 @@ export default {
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
         this.spread.refresh(); //重新定位宽高度
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         //一定要放在渲染完后
       } catch (error) {
         console.log("表格渲染的错误信息:", error);

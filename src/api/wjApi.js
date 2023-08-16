@@ -5,7 +5,7 @@ export function MOPlanStep1(data) {
   return request({
     url: "/APSAPI/MOPlanStep1",
     method: "POST",
-    data
+    data,
   });
 }
 // 进入分线列表
@@ -13,7 +13,7 @@ export function FSLMOPlanStep1(data) {
   return request({
     url: "/APSAPI/FSLMOPlanStep1",
     method: "POST",
-    data
+    data,
   });
 }
 // 计算完成期
@@ -21,7 +21,7 @@ export function MOPlanStep1Calculation(data) {
   return request({
     url: "/APSAPI/MOPlanStep1Calculation",
     method: "POST",
-    data
+    data,
   });
 }
 // 计算完成期FSL
@@ -29,6 +29,6 @@ export function FSLMOPlanStep1Calculation(data) {
   return request({
     url: "/APSAPI/FSLMOPlanStep1Calculation",
     method: "POST",
-    data
+    data,
   });
 }

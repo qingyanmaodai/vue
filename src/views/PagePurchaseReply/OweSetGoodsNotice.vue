@@ -1,13 +1,7 @@
 <!--送货通知单-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div>
         <ComSearch
           ref="searchRef"
@@ -25,18 +19,18 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div>
                 <el-radio
                   v-show="labelStatus1 == 0"
                   v-model="Result"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >显示有变化</el-radio>
+                  >显示有变化</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
               <div
@@ -44,7 +38,9 @@
                 v-for="(item, y) in Status1"
                 :key="y"
               >
-                <span @click="changeStatus(item, y)">{{ item.label }}（{{item.num}}）</span>
+                <span @click="changeStatus(item, y)"
+                  >{{ item.label }}（{{ item.num }}）</span
+                >
                 <el-divider direction="vertical"></el-divider>
               </div>
             </el-col>
@@ -153,7 +149,7 @@ export default {
       selectionData: [[], [], [], []],
       isEdit: false,
       Result: 1,
-      height1: "460px"
+      height1: "460px",
     };
   },
   created() {

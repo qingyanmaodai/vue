@@ -1,17 +1,8 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="up_admin"
-      ref="up_admin"
-    >
-      <div
-        class="admin_head_2"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="up_admin" ref="up_admin">
+      <div class="admin_head_2" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -48,10 +39,7 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col
-                :span="21"
-                class="flex_flex_start"
-              >
+              <el-col :span="21" class="flex_flex_start">
                 <div
                   :class="
                     labelStatus2 == item.value
@@ -86,11 +74,7 @@
       </div>
     </div>
 
-    <el-dialog
-      title="导入模板"
-      :visible.sync="dialogImport"
-      width="30%"
-    >
+    <el-dialog title="导入模板" :visible.sync="dialogImport" width="30%">
       <el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         style="padding-top: 10px"
@@ -111,26 +95,15 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >
+        <div class="el-upload__tip" slot="tip">
           只能上传xls、xslx文件且仅支持上传一个文件
         </div>
       </el-upload>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogImport = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="sureImport"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogImport = false" size="small">取 消</el-button>
+        <el-button size="small" type="primary" @click="sureImport"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>

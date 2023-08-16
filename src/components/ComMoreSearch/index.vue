@@ -344,7 +344,6 @@ export default {
       let remarkTb = this.exportList[index].value;
       this.$emit("btnClick", "dataExport", "", 0, remarkTb);
     },
-    
   },
 };
 </script>

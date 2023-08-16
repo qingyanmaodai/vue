@@ -1,13 +1,7 @@
 <!--点检明细-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,12 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComReportTable
@@ -104,7 +96,7 @@ export default {
           this.parseSearch = true;
           this.parseForm = JSON.parse(val.params["PrepareDate"]);
           let obj2 = JSON.parse(val.params["PrepareDate"]);
-          let PrepareDate = [obj2["PrepareDate"],obj2["PrepareDate"]];
+          let PrepareDate = [obj2["PrepareDate"], obj2["PrepareDate"]];
           this.$set(this.formSearchs[0].datas, "PrepareDate", PrepareDate);
           this.$set(
             this.formSearchs[0].datas,
@@ -134,16 +126,19 @@ export default {
     }, 450);
   },
   methods: {
-    cellStyle({row,column}){
-     if(column.property == 'IsInspectName'  && row.IsInspectName == '是'){
-       return {
-        background:'#7df97d'
-       }
-     }else if(column.property == 'IsInspectName'  && row.IsInspectName == '否'){
-         return {
-        background:'#f98686'
-       }
-     }
+    cellStyle({ row, column }) {
+      if (column.property == "IsInspectName" && row.IsInspectName == "是") {
+        return {
+          background: "#7df97d",
+        };
+      } else if (
+        column.property == "IsInspectName" &&
+        row.IsInspectName == "否"
+      ) {
+        return {
+          background: "#f98686",
+        };
+      }
     },
     // 高度控制
     setHeight() {

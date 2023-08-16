@@ -13,12 +13,12 @@
           @input="searchTree"
           @keyup.enter.native="searchTreeEnter"
         >
-        <!-- 搜索图标可点击查询 -->
-        <i
-          slot="suffix"
-          class="el-icon-search"
-          @click.stop="searchTreeEnter"
-        ></i>
+          <!-- 搜索图标可点击查询 -->
+          <i
+            slot="suffix"
+            class="el-icon-search"
+            @click.stop="searchTreeEnter"
+          ></i>
         </el-input>
         <el-dropdown
           v-show="!isEdit"
@@ -26,24 +26,18 @@
           class="flex_inline"
         >
           <img src="../../assets/svg/dot.svg" />
-          <el-dropdown-menu
-            slot="dropdown"
-            
-          >
+          <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="1">展开全部</el-dropdown-item>
             <el-dropdown-item command="2">折叠全部</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <el-dropdown
-              v-show="isEdit"
+          v-show="isEdit"
           @command="handleCommand2"
           class="flex_inline"
         >
           <img src="../../assets/svg/dot.svg" />
-          <el-dropdown-menu
-            slot="dropdown"
-      
-          >
+          <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="1">新增</el-dropdown-item>
             <el-dropdown-item command="2">编辑</el-dropdown-item>
             <el-dropdown-item command="3" divided>删除</el-dropdown-item>
@@ -56,7 +50,7 @@
       :indent="0"
       ref="asideTree"
       :node-key="nodekey"
-      :default-expand-all="expand?isOpen:expand"
+      :default-expand-all="expand ? isOpen : expand"
       :data="treeData"
       :props="treeProps"
       :load="loadNode"
@@ -72,12 +66,12 @@
         class="flex_row_spaceBtn pagination flex_column flex-start"
       >
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
-          <span style="color: red; font-weight: bold;margin-left: 10px;">{{Prompt}}</span>
+          <span style="color: red; font-weight: bold; margin-left: 10px">{{
+            Prompt
+          }}</span>
         </div>
         <div class="flex">
           <!-- <div
@@ -171,46 +165,48 @@ export default {
       required: false,
     },
     // 分页组件布局
-    layout:{
+    layout: {
       type: String,
       default: "total, sizes, prev, pager, next",
     },
     // 分页样式
-    small:{
+    small: {
       type: Boolean,
       default: true,
     },
-    pagerCount:{
+    pagerCount: {
       type: Number,
-      default: 7,//5~21之间的奇数
+      default: 7, //5~21之间的奇数
     },
-    pageSizes:{
+    pageSizes: {
       type: Array,
       default: function () {
-        return [32,50,100,150,200,250,300,350,400,800,1000,1500,2000,];
+        return [
+          32, 50, 100, 150, 200, 250, 300, 350, 400, 800, 1000, 1500, 2000,
+        ];
       },
     },
-    expand:{
+    expand: {
       type: Boolean,
       default: true,
     },
     // 是否在点击节点的时候展开或者收缩节点
-    expandOnClickNode:{
+    expandOnClickNode: {
       type: Boolean,
       default: false,
     },
     //自定义样式
-    classNameInput:{
+    classNameInput: {
       type: String,
       default: "w2\/3",
     },
     //输入框提示文字
-    placeholder:{
+    placeholder: {
       type: String,
       default: "搜索",
     },
     //加载
-    loading:{
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -223,7 +219,7 @@ export default {
       nodeTree: {},
       isOpen: true,
       // multipleSelection: [],
-      Prompt:'',//底部文本
+      Prompt: "", //底部文本
     };
   },
   computed: {},
@@ -278,8 +274,8 @@ export default {
         this.changeTreeNodeStatus(this.$refs.asideTree.store.root);
       }
     },
-    handleCommand2(val){
-    this.$emit('handleCommand',val);
+    handleCommand2(val) {
+      this.$emit("handleCommand", val);
     },
     // 改变节点状态
     changeTreeNodeStatus(node) {
@@ -298,7 +294,7 @@ export default {
       this.$emit("searchTree", this.Value);
     },
     // 回车查询
-    searchTreeEnter(){
+    searchTreeEnter() {
       this.$emit("searchTreeEnter", this.Value);
     },
     // 跳转至页面配置

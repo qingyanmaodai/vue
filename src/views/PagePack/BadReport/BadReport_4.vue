@@ -1,13 +1,7 @@
 <!--采购复期统计列表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -21,23 +15,17 @@
     </div>
     <div>
       <div class="admin_content">
-        <div
-          class="echart_up"
-          ref="echart_up"
-        >
-          <div
-            id="echart_one"
-            class="echart"
-          ></div>
+        <div class="echart_up" ref="echart_up">
+          <div id="echart_one" class="echart"></div>
         </div>
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ formSearchs[0].OrganizeName }}报废数柏拉图</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title"
+                >{{ formSearchs[0].OrganizeName }}报废数柏拉图</span
+              ></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComUmyTable
@@ -74,18 +62,17 @@
         :prop="item.prop"
         :label="item.label"
       >
-        <template v-if='item.children'>
+        <template v-if="item.children">
           <el-table-column
             :prop="i.prop"
             :label="i.label"
-            v-for='(i,k) in item.children'
+            v-for="(i, k) in item.children"
             :key="k"
           >
           </el-table-column>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
@@ -104,7 +91,8 @@ export default {
   name: "BadReport_3",
   components: {
     ComSearch,
-    ComVxeTable,ComUmyTable
+    ComVxeTable,
+    ComUmyTable,
   },
   data() {
     return {
@@ -176,8 +164,8 @@ export default {
             },
             align: "right",
             top: "0%",
-            min:0,
-            max:100,
+            min: 0,
+            max: 100,
             right: "7%",
           },
         ],
@@ -222,8 +210,8 @@ export default {
           type: "value",
           name: "",
           splitLine: { show: false },
-          max:100,
-          min:0,
+          max: 100,
+          min: 0,
           axisLine: {
             show: false,
             symbol: ["none", "arrow"],
@@ -261,13 +249,13 @@ export default {
             type: "line",
             barWidth: 20,
             data: [],
-        
+
             label: {
               show: true,
               position: "top",
               color: "#FF2E00",
               marginBottom: 10,
-             
+
               formatter: function (params) {
                 if (params.name !== "") {
                   return params.value + "%";
@@ -437,19 +425,18 @@ export default {
     },
     // 导出
     async dataExport(remarkTb) {
-  
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      console.log(this.tableData[0][2])
+      console.log(this.tableData[0][2]);
       this.$store.dispatch("user/exportData", this.tableData[0][2]);
     },
     // 导出多级表头
     async exportmoreExcel(remarkTb) {
       this.adminLoading = true;
-    
+
       this.$message.info("数据如若过多可能会加载很慢，请耐心等待！");
       this.generalExportHeader = this.tableColumns[remarkTb];
       let newForm = JSON.parse(

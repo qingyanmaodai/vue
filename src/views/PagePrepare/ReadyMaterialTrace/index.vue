@@ -1,17 +1,8 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      ref="content_up"
-      class="list_content_up"
-    >
-      <div
-        class="admin_head_2"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div ref="content_up" class="list_content_up">
+      <div class="admin_head_2" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -26,11 +17,10 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <!-- <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
@@ -61,14 +51,8 @@
       </div>
     </div>
 
-    <div
-      ref="content_down"
-      class="list_content_down"
-    >
-      <div
-        class="admin_head_2"
-        ref="headRef_2"
-      >
+    <div ref="content_down" class="list_content_down">
+      <div class="admin_head_2" ref="headRef_2">
         <ComSearch
           ref="searchRef2"
           :searchData="formSearchs[1].datas"
@@ -100,15 +84,8 @@
       </div>
     </div>
 
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComReportTable
@@ -149,7 +126,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 

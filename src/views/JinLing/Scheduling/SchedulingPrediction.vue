@@ -136,7 +136,7 @@
     ></DialogTable> -->
   </div>
 </template>
-  <script>
+<script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
@@ -187,19 +187,19 @@ export default {
           Size: "small",
           Methods: "syncSave",
           Icon: "",
-          sort:0,
+          sort: 0,
         },
-      // {
-      //     ButtonCode: "import",
-      //     BtnName: "1.删除并导入",
-      //     Type: "danger",
-      //     Ghost: true,
-      //     Size: "small",
-      //     Methods: "dataImport",
-      //     Icon: "",
-      //     sort:1,
-      //     Params:{isDel:1}
-      //   },
+        // {
+        //     ButtonCode: "import",
+        //     BtnName: "1.删除并导入",
+        //     Type: "danger",
+        //     Ghost: true,
+        //     Size: "small",
+        //     Methods: "dataImport",
+        //     Icon: "",
+        //     sort:1,
+        //     Params:{isDel:1}
+        //   },
         {
           ButtonCode: "import",
           BtnName: "1.增量导入",
@@ -208,8 +208,8 @@ export default {
           Size: "small",
           Methods: "dataImport",
           Icon: "",
-          sort:1,
-          Params:{isDel:0}
+          sort: 1,
+          Params: { isDel: 0 },
         },
         {
           ButtonCode: "sysData",
@@ -219,7 +219,7 @@ export default {
           Size: "small",
           Methods: "Analysis",
           Icon: "",
-          sort:2,
+          sort: 2,
         },
         {
           ButtonCode: "to_weeks_plan",
@@ -229,11 +229,9 @@ export default {
           Size: "small",
           Methods: "toWeeksPlan",
           Icon: "",
-          sort:3,
+          sort: 3,
         },
-        
-        
-       
+
         {
           ButtonCode: "delete",
           BtnName: "删除",
@@ -243,7 +241,7 @@ export default {
           Ghost: true,
           Icon: "",
           Size: "small",
-          sort:4,
+          sort: 4,
         },
         {
           ButtonCode: "save",
@@ -253,7 +251,7 @@ export default {
           Size: "small",
           Methods: "dataSave",
           Icon: "",
-          sort:5,
+          sort: 5,
         },
         {
           ButtonCode: "downLoadErpData",
@@ -261,10 +259,10 @@ export default {
           Type: "warning",
           Ghost: true,
           Size: "small",
-        
+
           Methods: "downERP",
           Icon: "",
-          sort:6,
+          sort: 6,
         },
       ],
       // 表头添加动态按钮
@@ -283,8 +281,8 @@ export default {
         //不同标签页面的查询条件
         {
           datas: {
-            MFGOrganizeID: 1222,//恩平
-            OrganizeID: 1222,  // 恩平组织ID,可能是上面字段，可能下面字段
+            MFGOrganizeID: 1222, //恩平
+            OrganizeID: 1222, // 恩平组织ID,可能是上面字段，可能下面字段
           }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
@@ -303,7 +301,7 @@ export default {
       fileList: [],
       file: [],
       selectionData: [[]],
-      ImportParams:'',
+      ImportParams: "",
     };
   },
   activated() {
@@ -378,8 +376,8 @@ export default {
             btn2 = btn2.concat(newData2);
           }
         });
-      } 
-      newBtn = _.sortBy(newBtn,['sort'])
+      }
+      newBtn = _.sortBy(newBtn, ["sort"]);
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "parmsBtn2", btn2);
     },
@@ -505,7 +503,7 @@ export default {
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-        
+
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
@@ -639,13 +637,17 @@ export default {
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
-          x.item['SDate'] = this.machineCycle.length ? this.machineCycle[0] : "",
-          x.item['Edate'] = this.machineCycle.length ? this.machineCycle[1] : "",
-          submitData.push(x.item);
+          (x.item["SDate"] = this.machineCycle.length
+            ? this.machineCycle[0]
+            : ""),
+            (x.item["Edate"] = this.machineCycle.length
+              ? this.machineCycle[1]
+              : ""),
+            submitData.push(x.item);
         });
         this.adminLoading = true;
         // let res = await SaveData(submitData);
-        let res = await GetSearch(submitData,"/APSAPI/SaveManualForecast");//金羚此特殊接口，没使用通用保存
+        let res = await GetSearch(submitData, "/APSAPI/SaveManualForecast"); //金羚此特殊接口，没使用通用保存
         const { datas, forms, result, msg } = res.data;
         if (result) {
           this.adminLoading = false;
@@ -676,10 +678,10 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
@@ -706,22 +708,25 @@ export default {
             this.selectionData[this.tagRemark].push(x);
           }
         });
-      } 
-      if(this.selectionData[this.tagRemark].length==0) {
+      }
+      if (this.selectionData[this.tagRemark].length == 0) {
         this.$message.error("请选择需要转入的数据！");
         return;
       }
       this.adminLoading = true;
-      let res = await GetSearch(this.selectionData[this.tagRemark],"/APSAPI/ManualForecastToPlan");
+      let res = await GetSearch(
+        this.selectionData[this.tagRemark],
+        "/APSAPI/ManualForecastToPlan"
+      );
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
           this.adminLoading = false;
           this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
@@ -750,10 +755,10 @@ export default {
         if (result) {
           this.adminLoading = false;
           this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
           this.dataSearch(this.tagRemark);
         } else {
           this.adminLoading = false;
@@ -774,7 +779,7 @@ export default {
       this.dialogImport = true;
       this.fileList = [];
       this.file = [];
-      this.ImportParams = params.isDel
+      this.ImportParams = params.isDel;
     },
     // 确认导入
     sureImport() {
@@ -862,7 +867,8 @@ export default {
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
                     // 判断需求到料日期是否大于今天
                     if (
-                      item.prop === "PlanDay" &&obj[item.prop]&&
+                      item.prop === "PlanDay" &&
+                      obj[item.prop] &&
                       obj[item.prop] < formatDates.formatTodayDate()
                     ) {
                       propName = key;
@@ -882,14 +888,11 @@ export default {
                   } else {
                     obj[item.prop] = m[key];
                   }
-                } else if (
-                  isNaN(key) &&
-                  !isNaN(Date.parse(key)) 
-                ) {
+                } else if (isNaN(key) && !isNaN(Date.parse(key))) {
                   //导入日期并且数大于0才导入
                   // 列为日期的格式
                   isDate = true;
-                  if(Number(m[key])>0){
+                  if (Number(m[key]) > 0) {
                     obj["PlanDay"] = this.$moment(key).format("YYYY-MM-DD");
                     obj["PlanQty"] = m[key];
                     obj["dicID"] = _this.sysID[_this.tagRemark].ID;
@@ -967,8 +970,11 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        if(DataList.length){
-          let res = await GetSearch(DataList, "/APSAPI/ImportManualForecast?isDel="+this.ImportParams);
+        if (DataList.length) {
+          let res = await GetSearch(
+            DataList,
+            "/APSAPI/ImportManualForecast?isDel=" + this.ImportParams
+          );
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
@@ -988,8 +994,7 @@ export default {
               dangerouslyUseHTMLString: true,
             });
           }
-        }
-        else{
+        } else {
           this.adminLoading = false;
           this.$message.error("未接收到数据，请检查！");
         }
@@ -1105,7 +1110,7 @@ export default {
   },
 };
 </script>
-  <style lang="scss">
+<style lang="scss">
 .message-width {
   width: 500px;
   height: 90%;

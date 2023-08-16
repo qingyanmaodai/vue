@@ -27,11 +27,7 @@
         v-if="hasSelect"
         fixed="left"
       ></ux-table-column>
-      <ux-table-column
-        type="index"
-        width="60"
-        title="序号"
-      ></ux-table-column>
+      <ux-table-column type="index" width="60" title="序号"></ux-table-column>
       <ux-table-column
         v-for="(x, z) in tableHeader"
         :key="z"
@@ -50,10 +46,7 @@
             type="number"
           ></el-input>
           <span v-else-if="x.active">
-            <span
-              v-for="(x2, index2) in x.active"
-              :key="index2"
-            >
+            <span v-for="(x2, index2) in x.active" :key="index2">
               <span
                 v-show="x2.condition ? x2.condition(scope.row) : true"
                 size="mini"
@@ -71,7 +64,8 @@
                     scope.$index
                   )
                 "
-              >{{ x2.name }}</span>
+                >{{ x2.name }}</span
+              >
             </span>
           </span>
           <span v-else-if="x.button">
@@ -108,16 +102,15 @@
               }"
               @click="handleActive(scope.row, x.routerName)"
             >
-              <span
-                v-if="!x.format"
-                v-html="scope.row[x.prop]"
-              ></span>
+              <span v-if="!x.format" v-html="scope.row[x.prop]"></span>
               <span v-else>{{ x.format(scope.row[x.prop], scope.row) }}</span>
             </a>
           </span>
           <span v-else-if="x.component">
             <span v-if="scope.row['update']">
-              <span v-if="x.component.type == 'input' && x.component.inputChange">
+              <span
+                v-if="x.component.type == 'input' && x.component.inputChange"
+              >
                 <el-input
                   v-model="scope.row[x.prop]"
                   :type="x.component.inputType || 'text'"
@@ -149,10 +142,12 @@
                   size="mini"
                 ></el-input>
               </span>
-              <span v-else-if="
+              <span
+                v-else-if="
                   x.component.type == 'input' &&
                   x.component.inputType != 'number'
-                ">
+                "
+              >
                 <el-input
                   v-model="scope.row[x.prop]"
                   :type="x.component.inputType || 'text'"
@@ -270,21 +265,18 @@
                 >
                   <template slot-scope="{ item }">
                     <div style="border-bottom: 1px dashed #8c8e8e">
-                      <el-form
-                        label-width="100px"
-                        inline
-                      >
+                      <el-form label-width="100px" inline>
                         <el-form-item
                           style="margin-bottom: 5px"
                           :label="x.component.label"
-                        ><span style="color: orange">{{
+                          ><span style="color: orange">{{
                             item[x.component.prop]
                           }}</span>
                         </el-form-item>
                         <el-form-item
                           style="margin-bottom: 5px"
                           :label="x.component.label2"
-                        ><span style="color: orange">{{
+                          ><span style="color: orange">{{
                             item[x.component.prop2]
                           }}</span>
                         </el-form-item>
@@ -298,7 +290,8 @@
                   class="table_tag"
                   @click.stop.native="x.component.handleClick(scope.row)"
                 >
-                  {{ scope.row[x.prop] }}</el-tag>
+                  {{ scope.row[x.prop] }}</el-tag
+                >
               </span>
             </span>
             <span v-else>{{ scope.row[x.prop] }}</span>
@@ -306,39 +299,31 @@
           <span v-else-if="x.format">{{
             x.format(scope.row[x.prop], scope.row)
           }}</span>
-          <span
-            v-else
-            v-html="scope.row[x.prop]"
-          ></span>
+          <span v-else v-html="scope.row[x.prop]"></span>
         </template>
       </ux-table-column>
     </ux-grid>
     <div>
-      <div
-        v-if="showPagination"
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
         </div>
         <div class="flex">
-          <div
-            class="footer_label"
-            v-show="multipleSelection.length != 0"
-          >
+          <div class="footer_label" v-show="multipleSelection.length != 0">
             已选[<span style="color: red; font-weight: bold">{{
               multipleSelection.length
-            }}</span>]
+            }}</span
+            >]
           </div>
           <el-pagination
             background
             @size-change="pageSize"
             :current-page="pagination.pageIndex"
-            :page-sizes="[32, 50, 100, 150, 200, 250, 300, 350, 400, 1000,2000,4000]"
+            :page-sizes="[
+              32, 50, 100, 150, 200, 250, 300, 350, 400, 1000, 2000, 4000,
+            ]"
             :page-size="pagination.pageSize"
             :total="pagination.pageTotal"
             @current-change="pageChange"
@@ -347,15 +332,10 @@
           </el-pagination>
         </div>
       </div>
-      <div
-        v-else
-        class="flex_row_spaceBtn pagination"
-      >
+      <div v-else class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span
-            @click="toPageSetting"
-            class="primaryColor cursor"
-          >SysID:{{ sysID }}
+          <span @click="toPageSetting" class="primaryColor cursor"
+            >SysID:{{ sysID }}
           </span>
         </div>
         <div>

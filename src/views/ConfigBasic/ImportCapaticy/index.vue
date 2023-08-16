@@ -1,15 +1,9 @@
 <!--委外业务关联-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
-        v-for="(item,i) in Status1"
+        v-for="(item, i) in Status1"
         :key="i"
         v-show="labelStatus1 == i"
         ref="searchRef"
@@ -26,11 +20,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -43,7 +36,7 @@
           </el-row>
         </div>
         <ComVxeTable
-          v-for="(item,i) in Status1"
+          v-for="(item, i) in Status1"
           :key="i"
           v-show="labelStatus1 == i"
           :rowKey="'RowNumber'"
@@ -64,11 +57,7 @@
       </div>
     </div>
 
-    <el-dialog
-      title="导入工序产能"
-      :visible.sync="dialogImport"
-      width="30%"
-    >
+    <el-dialog title="导入工序产能" :visible.sync="dialogImport" width="30%">
       <el-upload
         action="https://jsonplaceholder.typicode.com/posts/"
         style="padding-top: 10px"
@@ -89,26 +78,15 @@
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
-        <div
-          class="el-upload__tip"
-          slot="tip"
-        >
+        <div class="el-upload__tip" slot="tip">
           只能上传xls、xslx文件且仅支持上传一个文件
         </div>
       </el-upload>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogImport = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          size="small"
-          type="primary"
-          @click="sureImport"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogImport = false" size="small">取 消</el-button>
+        <el-button size="small" type="primary" @click="sureImport"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -584,7 +562,7 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
-       this.adminLoading = false;
+      this.adminLoading = false;
     },
     // 更新
     async refreshData() {

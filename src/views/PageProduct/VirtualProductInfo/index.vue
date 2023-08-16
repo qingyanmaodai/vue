@@ -1,9 +1,6 @@
 <!--产品信息-->
 <template>
-  <div
-    class="container flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <ComAsideTree
         ref="asideRef"
@@ -19,10 +16,7 @@
       />
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -36,23 +30,22 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="openDrawer"
-                >{{rightName}}</el-button>
+              <el-col :span="20" class="flex_flex_end">
+                <el-button type="primary" size="mini" @click="openDrawer">{{
+                  rightName
+                }}</el-button>
                 <el-divider direction="vertical"></el-divider>
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y, 1)">{{
+                    item.label
+                  }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -88,11 +81,7 @@
       @dialogBtnClick="dialogBtnClick"
     />
 
-    <el-dialog
-      :title="title"
-      :visible.sync="dialogShow2"
-      width="90%"
-    >
+    <el-dialog :title="title" :visible.sync="dialogShow2" width="90%">
       <ComSearch
         class="margin_bottom_10"
         ref="searchRef"
@@ -117,22 +106,13 @@
         @sortChange="sortChange"
         @selectfun="selectFun"
       />
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="dialogShow2 = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="saveConfig"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogShow2 = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="saveConfig" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -247,8 +227,22 @@ export default {
       remark: 1,
       adminLoading: false,
       Status1: [
-        { label: "关联的半成品", value: 1, title: "半成品列表",name:'半成品',rightName:'配置半成品',MaterialType:'半成品'},
-        { label: "关联的成品", value: 3, title: "成品列表",name:'成品',rightName:'配置成品',MaterialType:'成品' },
+        {
+          label: "关联的半成品",
+          value: 1,
+          title: "半成品列表",
+          name: "半成品",
+          rightName: "配置半成品",
+          MaterialType: "半成品",
+        },
+        {
+          label: "关联的成品",
+          value: 3,
+          title: "成品列表",
+          name: "成品",
+          rightName: "配置成品",
+          MaterialType: "成品",
+        },
       ],
       labelStatus1: 0,
     };
@@ -331,17 +325,17 @@ export default {
           });
           this.formSearchs[0].datas["ParantMaterialID"] = data[0].MaterialID;
           this.formSearchs[0].datas["dicID"] = 6730;
-          this.formSearchs[0].datas["MaterialType"] = '半成品';
-          this.formSearchs[1].datas["MaterialType"] = '半成品';
-          this.formSearchs[0].datas["Extend18"] = 'null';
+          this.formSearchs[0].datas["MaterialType"] = "半成品";
+          this.formSearchs[1].datas["MaterialType"] = "半成品";
+          this.formSearchs[0].datas["Extend18"] = "null";
           this.dataSearch(0);
         }
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 判断按钮权限
@@ -380,10 +374,11 @@ export default {
     setHeight() {
       this.treeHeight = document.documentElement.clientHeight - 150 + "px";
       let headHeight = this.$refs.headRef.offsetHeight;
-      
+
       let rem =
-        document.documentElement.clientHeight - headHeight - 
- this.$store.getters.reduceHeight;
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       this.$set(this, "height", newHeight);
     },
@@ -456,24 +451,22 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
-      
       let res = await SaveData(this.tableData[remarkTb]);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.dataSearch(remarkTb);
       } else {
-        
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 单击行
@@ -504,7 +497,6 @@ export default {
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
-          
           _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {});
@@ -517,23 +509,22 @@ export default {
       if (result) {
         this.dataSearch(remarkTb);
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
         this.adminLoading = false;
-        
+
         if (tag) {
           this.getMaterialData();
         }
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
         this.adminLoading = false;
-        
       }
     },
     // 获取表头数据
@@ -588,7 +579,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      console.log(form)
+      console.log(form);
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -596,10 +587,10 @@ export default {
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },

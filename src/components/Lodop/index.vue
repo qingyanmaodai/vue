@@ -7,42 +7,48 @@
         type="primary"
         size="small"
         @click="displayDesign"
-      >{{ design.name }}</el-button>
+        >{{ design.name }}</el-button
+      >
       <el-button
         :style="print.style || { display: 'none' }"
         plain
         type="warning"
         size="small"
         @click="printPreview"
-      >{{ print.name }}</el-button>
+        >{{ print.name }}</el-button
+      >
       <el-button
         :style="setup.style || { display: 'none' }"
         plain
         type="success"
         size="small"
         @click="displaySetup"
-      >{{ setup.name }}</el-button>
+        >{{ setup.name }}</el-button
+      >
       <el-button
         :style="data.style || { display: 'none' }"
         plain
         type="primary"
         size="small"
         @click="getProgramData"
-      >{{ data.name }}</el-button>
+        >{{ data.name }}</el-button
+      >
       <el-button
         :style="code.style || { display: 'none' }"
         plain
         type="primary"
         size="small"
         @click="getProgramCode"
-      >{{ code.name }}</el-button>
+        >{{ code.name }}</el-button
+      >
       <el-button
         :style="version.style || { display: 'none' }"
         plain
         type="primary"
         size="small"
         @click="getVersion"
-      >{{ version.name }}</el-button>
+        >{{ version.name }}</el-button
+      >
     </div>
     <object
       id="LODOP_OB"
@@ -60,18 +66,10 @@
       />
     </object>
     <div :hidden="true">
-      <textarea
-        rows="5"
-        cols="100"
-        v-model="ProgramDataTMP"
-      ></textarea>
+      <textarea rows="5" cols="100" v-model="ProgramDataTMP"></textarea>
     </div>
     <div :hidden="true">
-      <textarea
-        rows="5"
-        cols="100"
-        v-model="ProgramCodesTMP"
-      ></textarea>
+      <textarea rows="5" cols="100" v-model="ProgramCodesTMP"></textarea>
     </div>
   </div>
 </template>
@@ -349,5 +347,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

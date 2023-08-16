@@ -1,23 +1,24 @@
 <template>
-  <div
-    id="tags-view-container"
-    class="tags-view-container"
-  >
-    <scroll-pane
-      ref="scrollPane"
-      class="tags-view-wrapper"
-    >
+  <div id="tags-view-container" class="tags-view-container">
+    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
-        v-for="(tag,i) in visitedViews"
+        v-for="(tag, i) in visitedViews"
         ref="tag"
         :key="i"
-        :class="isActive(tag)?'active':''"
-        :style="isActive(tag)?{'background':$store.state.settings.theme,'border':'1px solid' + $store.state.settings.theme}:{}"
-        :to="{ path: tag.path, query: tag.meta.dicID, fullPath:tag.fullPath }"
+        :class="isActive(tag) ? 'active' : ''"
+        :style="
+          isActive(tag)
+            ? {
+                background: $store.state.settings.theme,
+                border: '1px solid' + $store.state.settings.theme,
+              }
+            : {}
+        "
+        :to="{ path: tag.path, query: tag.meta.dicID, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
-        @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
+        @click.middle.native="!isAffix(tag) ? closeSelectedTag(tag) : ''"
+        @contextmenu.prevent.native="openMenu(tag, $event)"
       >
         {{ tag.title }}
         <span
@@ -29,14 +30,13 @@
     </scroll-pane>
     <ul
       v-show="visible"
-      :style="{left:left+'px',top:top+'px'}"
+      :style="{ left: left + 'px', top: top + 'px' }"
       class="contextmenu"
     >
       <li @click="refreshSelectedTag(selectedTag)">刷新</li>
-      <li
-        v-if="!isAffix(selectedTag)"
-        @click="closeSelectedTag(selectedTag)"
-      >关闭</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
+        关闭
+      </li>
       <li @click="closeOthersTags">关闭其他</li>
       <li @click="closeAllTags(selectedTag)">关闭全部</li>
     </ul>
@@ -162,9 +162,11 @@ export default {
         });
     },
     closeOthersTags() {
-      if(this.selectedTag&&this.selectedTag.path.indexOf('dic')>-1){
-        this.$router.push(this.selectedTag.path+"?dicID="+ this.selectedTag.meta.dicID);
-      }else{
+      if (this.selectedTag && this.selectedTag.path.indexOf("dic") > -1) {
+        this.$router.push(
+          this.selectedTag.path + "?dicID=" + this.selectedTag.meta.dicID
+        );
+      } else {
         this.$router.push(this.selectedTag.path);
       }
       this.$store
@@ -174,12 +176,14 @@ export default {
         });
     },
     closeAllTags(view) {
-      this.$store.dispatch("tagsView/delAllViews",this.$route).then(({ visitedViews }) => {
-        if (this.affixTags.some((tag) => tag.path === view.path)) {
-          return;
-        }
-        this.toLastView(visitedViews, view);
-      });
+      this.$store
+        .dispatch("tagsView/delAllViews", this.$route)
+        .then(({ visitedViews }) => {
+          if (this.affixTags.some((tag) => tag.path === view.path)) {
+            return;
+          }
+          this.toLastView(visitedViews, view);
+        });
     },
     toLastView(visitedViews, view) {
       const latestView = visitedViews.slice(-1)[0];

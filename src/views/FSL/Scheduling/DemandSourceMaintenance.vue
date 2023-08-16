@@ -110,7 +110,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import formatDates from "@/utils/formatDate";
@@ -119,7 +119,7 @@ export default {
   name: "DemandSourceMaintenance",
   components: {
     ComSearch,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
@@ -140,11 +140,11 @@ export default {
         //不同标签页面的查询条件
         {
           datas: {
-            CreatedBy: this.$store.getters.userInfo.Account
+            CreatedBy: this.$store.getters.userInfo.Account,
           }, //查询入参
           forms: [], // 页面显示的查询条件
-          required: [] //获取必填项
-        }
+          required: [], //获取必填项
+        },
       ],
       tableData: [[]], //表格渲染数据,sysID有几个就有几个数组
       tableColumns: [[]], //表格表头列
@@ -152,20 +152,20 @@ export default {
       isClear: [false],
       tablePagination: [
         //表分页参数
-        { pageIndex: 1, pageSize: 2000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
       sysID: [{ ID: 10076 }],
       Status1: [
         { label: "重复导入", value: 0 },
         { label: "个人数据", value: 1 },
-        { label: "已关闭", value: 2 }
+        { label: "已关闭", value: 2 },
       ],
       spread: null, //excel初始
       fileList: [],
       file: [],
       selectionData: [[]],
       ImportParams: "",
-      isEdit: true
+      isEdit: true,
     };
   },
   activated() {
@@ -192,7 +192,7 @@ export default {
         this.$store.getters.reduceHeight;
       let newHeight = rem + "px";
       return newHeight;
-    }
+    },
   },
   methods: {
     judgeBtn(routeBtn) {
@@ -209,7 +209,7 @@ export default {
     //   this.spread = spread;
     // },
     //获取子组件实例
-    workbookInitialized: function(workbook) {
+    workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
     //获取当前选中行的值
@@ -234,7 +234,7 @@ export default {
     toPageSetting(id) {
       this.$router.push({
         name: "FieldInfo",
-        params: { ID: id }
+        params: { ID: id },
       });
     },
     // 获取表头
@@ -255,7 +255,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -271,7 +271,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -296,7 +296,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -371,10 +371,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -513,7 +510,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -565,7 +562,7 @@ export default {
       let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           submitData.push(x.item);
         });
         this.adminLoading = true;
@@ -576,7 +573,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
         } else {
@@ -584,7 +581,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } else {
@@ -607,10 +604,10 @@ export default {
         this.$message.error("仅支持一个文件上传");
       } else {
         this.$confirm("确定要导入并分析吗？")
-          .then(_ => {
+          .then((_) => {
             _this.importExcel(this.file);
           })
-          .catch(_ => {});
+          .catch((_) => {});
       }
     },
     //导入解析excel
@@ -620,19 +617,19 @@ export default {
       const result = [];
       const reader = new FileReader(); //上传就解析文件
       var that = this;
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
           type: "binary",
           cellDates: true,
-          dateNF: "yyyy-MM-dd"
+          dateNF: "yyyy-MM-dd",
         });
-        this.wb.SheetNames.forEach(sheetName => {
+        this.wb.SheetNames.forEach((sheetName) => {
           result.push({
             sheetName: sheetName,
             sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
-              defval: null
-            })
+              defval: null,
+            }),
           });
         });
         that.dataSys(result); // 解析文件
@@ -775,13 +772,13 @@ export default {
           //异常集合
           this.adminLoading = false;
           let txt = "";
-          split.map(value => {
+          split.map((value) => {
             return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
           });
           this.$alert(txt, {
             dangerouslyUseHTMLString: true,
             title: "导入异常信息!",
-            customClass: "message-width"
+            customClass: "message-width",
           });
 
           return;
@@ -800,14 +797,14 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
         } else {
@@ -838,7 +835,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -852,7 +849,7 @@ export default {
       let newData = sheet.getDataSource();
       this.selectionData[this.tagRemark] = [];
       if (newData && newData.length != 0) {
-        newData.forEach(x => {
+        newData.forEach((x) => {
           if (x.isChecked) {
             this.selectionData[this.tagRemark].push(x);
           }
@@ -874,7 +871,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -882,7 +879,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } catch (error) {
@@ -902,7 +899,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -910,7 +907,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } catch (error) {
@@ -937,7 +934,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
         } else {
@@ -945,7 +942,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
         }
       } catch (error) {
@@ -963,10 +960,10 @@ export default {
         this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "info"
+          type: "info",
         }).then(async () => {
           this.adminLoading = true;
-          this.selectionData[this.tagRemark].map(item => {
+          this.selectionData[this.tagRemark].map((item) => {
             item["ElementDeleteFlag"] = 1;
           });
           let res = await SaveData(this.selectionData[this.tagRemark]);
@@ -977,20 +974,20 @@ export default {
             this.$message({
               message: msg,
               type: "success",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
               type: "error",
-              dangerouslyUseHTMLString: true
+              dangerouslyUseHTMLString: true,
             });
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

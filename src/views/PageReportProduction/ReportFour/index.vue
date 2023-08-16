@@ -1,18 +1,8 @@
 <!--备料任务指派-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 3"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -29,11 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -45,11 +34,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 3"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div v-for="(item, i) in 3" :key="i" v-show="labelStatus1 == i">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -277,7 +262,7 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
@@ -339,7 +324,7 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-       
+
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -380,12 +365,12 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     // 切换状态
-    changeStatus(item,index){
+    changeStatus(item, index) {
       this.labelStatus1 = index;
-      if(this.tableData[index].length == 0){
+      if (this.tableData[index].length == 0) {
         this.dataSearch(index);
       }
-    }
+    },
   },
 };
 </script>

@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -20,16 +14,10 @@
     </div>
     <div>
       <div class="admin_content">
-        <div
-          class="ant-table-title"
-          v-show="expendColl2"
-        >
+        <div class="ant-table-title" v-show="expendColl2">
           <el-row>
             <el-col :span="4"></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
-            >
+            <el-col :span="20" class="flex_flex_end">
               <el-tooltip
                 class="item"
                 effect="dark"
@@ -41,13 +29,13 @@
                     v-show="!expendColl"
                     src="../../../assets/svg/collapse.svg"
                     @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
+                    style="width: 1.4rem; height: 1.4rem"
                   />
                   <img
                     v-show="expendColl"
                     src="../../../assets/svg/expend.svg"
                     @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
+                    style="width: 1.4rem; height: 1.4rem"
                   />
                 </span>
               </el-tooltip>
@@ -75,10 +63,7 @@
           <div v-show="expendColl">
             <el-row>
               <el-col :span="4"><span class="title"></span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
+              <el-col :span="20" class="flex_flex_end">
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -90,13 +75,13 @@
                       v-show="!expendColl2"
                       src="../../../assets/svg/collapse.svg"
                       @click="systolic2"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                     <img
                       v-show="expendColl2"
                       src="../../../assets/svg/expend.svg"
                       @click="systolic2"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                   </span>
                 </el-tooltip>
@@ -119,10 +104,8 @@
             />
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 

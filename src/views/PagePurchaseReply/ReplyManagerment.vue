@@ -1,13 +1,7 @@
 <!--备料任务指派-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div>
         <ComSearch
           ref="searchRef"
@@ -25,17 +19,11 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-
-              <el-button
-                type="success"
-                size="mini"
-                @click="changeDate"
-              >
+            <el-col :span="20" class="flex_flex_end">
+              <el-button type="success" size="mini" @click="changeDate">
                 开始复期
               </el-button>
               <el-divider direction="vertical"></el-divider>

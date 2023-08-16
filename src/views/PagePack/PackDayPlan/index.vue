@@ -1,9 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container  flex_flex"
-    v-loading="adminLoading"
-  >
+  <div class="container flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <div>
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
@@ -16,12 +13,16 @@
               placeholder="搜索"
               suffix-icon="el-icon-search"
               class="w2/3 cx_margin_right1"
-              @input="searchTree(OrganizeName,'treeData','treeListTmp','OrganizeName')"
+              @input="
+                searchTree(
+                  OrganizeName,
+                  'treeData',
+                  'treeListTmp',
+                  'OrganizeName'
+                )
+              "
             ></el-input>
-            <el-dropdown
-              @command="handleCommand"
-              class="flex_inline"
-            >
+            <el-dropdown @command="handleCommand" class="flex_inline">
               <img src="../../../assets/svg/dot.svg" />
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="1">展开全部</el-dropdown-item>
@@ -55,12 +56,18 @@
               placeholder="搜索"
               suffix-icon="el-icon-search"
               class="w2/3 cx_margin_right1"
-              @input="searchTree(ProcessName,'treeData2','treeListTmp2','ProcessName')"
+              @input="
+                searchTree(
+                  ProcessName,
+                  'treeData2',
+                  'treeListTmp2',
+                  'ProcessName'
+                )
+              "
             ></el-input>
             <el-dropdown class="flex_inline">
               <img src="../../../assets/svg/dot.svg" />
-              <el-dropdown-menu slot="dropdown">
-              </el-dropdown-menu>
+              <el-dropdown-menu slot="dropdown"> </el-dropdown-menu>
             </el-dropdown>
           </div>
         </div>
@@ -72,19 +79,15 @@
           default-expand-all
           :data="treeData2"
           :props="treeProps2"
-          style="height:75px;overflow:auto"
+          style="height: 75px; overflow: auto"
           highlight-current
           :expand-on-click-node="false"
           @node-click="handleNodeClick2"
         ></el-tree>
       </div>
-
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -99,26 +102,22 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <el-input
                   type="text"
                   v-model="materialValue"
                   size="small"
                   clearable
-                  style="width:160px"
+                  style="width: 160px"
                   placeholder="输入添加的产品"
                 ></el-input>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="openDialog"
-                >新增产品</el-button>
-
+                <el-button type="primary" size="mini" @click="openDialog"
+                  >新增产品</el-button
+                >
               </el-col>
             </el-row>
           </div>
@@ -133,7 +132,11 @@
             :sysID="6709"
             :isEdit="isEdit"
             :isEditDel="true"
-            :condition="(row)=>{return row.IsAdd == true}"
+            :condition="
+              (row) => {
+                return row.IsAdd == true;
+              }
+            "
             :isClear="isClear[0]"
             :pagination="tablePagination[0]"
             @selectfun="selectFun"
@@ -153,21 +156,21 @@
       width="40%"
       :close-on-click-modal="false"
     >
-      <span class="dialog_head">查出如下，请选择添加的产品，无工艺需绑定工艺！</span>
+      <span class="dialog_head"
+        >查出如下，请选择添加的产品，无工艺需绑定工艺！</span
+      >
 
       <div class="dialog_content">
-        <div
-          class=""
-          v-for="(item, index) in addData"
-          :key="index"
-        >
-          <el-checkbox v-model="item.checked">{{item.MaterialName}}({{item.Extend15}}) <span class="blue">【工艺：{{item.ProcessGroupName}}]</span></el-checkbox>
+        <div class="" v-for="(item, index) in addData" :key="index">
+          <el-checkbox v-model="item.checked"
+            >{{ item.MaterialName }}({{ item.Extend15 }})
+            <span class="blue"
+              >【工艺：{{ item.ProcessGroupName }}]</span
+            ></el-checkbox
+          >
         </div>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-select
           v-model="ProcessGroup"
           clearable
@@ -176,27 +179,22 @@
           value-key="ProcessGroupID"
         >
           <el-option
-            v-for="(item,x) in categorys"
+            v-for="(item, x) in categorys"
             :key="x"
             :label="item.ProcessGroupName"
             :value="item"
           >
           </el-option>
         </el-select>
-        <el-button
-          @click="configCategory"
-          size="small"
-          type="warning"
-        >配置工艺</el-button>
-        <el-button
-          @click="materialDialog = false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          size="small"
-          @click="sureAdd"
-        >确 定</el-button>
+        <el-button @click="configCategory" size="small" type="warning"
+          >配置工艺</el-button
+        >
+        <el-button @click="materialDialog = false" size="small"
+          >取 消</el-button
+        >
+        <el-button type="primary" size="small" @click="sureAdd"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -298,7 +296,7 @@ export default {
       childrenLines: [],
       asideType: "分厂",
       lineProcessData: [],
-      toDay:[],
+      toDay: [],
     };
   },
   watch: {
@@ -318,7 +316,7 @@ export default {
   created() {
     _this = this;
     this.adminLoading = true;
-    this.toDay = [formatDate.formatTodayDate(),formatDate.formatTodayDate()];
+    this.toDay = [formatDate.formatTodayDate(), formatDate.formatTodayDate()];
     // 获取用户信息
     this.getAllProcessData();
     this.judgeBtn();
@@ -718,7 +716,7 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        console.log(data)
+        console.log(data);
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {

@@ -19,32 +19,27 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12"
-              >
-              <span class="title" style="margin-right:10px">{{ title }}</span>
-              </el-col
-            >
+            <el-col :span="12">
+              <span class="title" style="margin-right: 10px">{{ title }}</span>
+            </el-col>
             <el-col :span="12" class="flex_flex_end">
               <div style="margin-right: 10px">
-              <span>日期范围</span>
-              <el-date-picker
-                v-model="machineCycle"
-                type="daterange"
-                size="small"
-                value-format="yyyy-MM-dd"
-                placeholder="请选择"
-                :clearable="false"
-                :editable="false"
-              >
-              </el-date-picker>
-            </div>
+                <span>日期范围</span>
+                <el-date-picker
+                  v-model="machineCycle"
+                  type="daterange"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                  placeholder="请选择"
+                  :clearable="false"
+                  :editable="false"
+                >
+                </el-date-picker>
+              </div>
             </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{ height: height }"
-        >
+        <div class="flex_column" :style="{ height: height }">
           <div class="spreadContainer" v-loading="tableLoading[tagRemark]">
             <gc-spread-sheets
               class="sample-spreadsheets"
@@ -115,9 +110,7 @@ export default {
       sysID: [
         { ID: 9006 }, //一些扩展的参数，这里表示是周一
       ],
-      Status1: [
-        
-      ],
+      Status1: [],
       title: this.$route.meta.title,
       labelStatus1: 0,
       PrepareDate: "",
@@ -132,16 +125,13 @@ export default {
         },
       ],
       btnForm: [],
-      parmsBtn: [
-      ],
+      parmsBtn: [],
       tableData: [[]],
       delData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
-      tablePagination: [
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-      ],
+      tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -162,18 +152,18 @@ export default {
   },
   created() {
     _this = this;
-  this.getTableHeader();
+    this.getTableHeader();
     // 获取所有按钮
     this.judgeBtn();
     // 计算周期默认时间：今天+1个月
-  _this.machineCycle = [
-    formatDates.formatTodayDate(),
-    formatDates.formatOneMonthDate(),
-  ];
+    _this.machineCycle = [
+      formatDates.formatTodayDate(),
+      formatDates.formatOneMonthDate(),
+    ];
   },
   activated() {
     if (this.spread) {
-      console.log('1111')
+      console.log("1111");
       this.spread.refresh();
     }
   },
@@ -206,8 +196,8 @@ export default {
           let newData = this.parmsBtn.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
-              y.BtnName = y.BtnName||x.ButtonName;
-              y.Methods = y.Methods||x.OnClick;
+              y.BtnName = y.BtnName || x.ButtonName;
+              y.Methods = y.Methods || x.OnClick;
               y.Type = y.Type || x.ButtonType;
               return y;
             }
@@ -266,11 +256,10 @@ export default {
             size: parseInt(x.width),
           });
         }
-        
+
         colHeader1.push(x.label);
       });
-      
-      
+
       sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
       colHeader1.forEach(function (value, index) {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
@@ -325,26 +314,26 @@ export default {
             GC.Spread.Sheets.SheetArea.viewport
           );
           cell.foreColor("#2a06ecd9");
-        } 
+        }
         // 列宽自适应
-        if(m.name.indexOf('-')>-1){
-          sheet.autoFitColumn(cellIndex)
-          if(sheet.getColumnWidth(cellIndex)<=60){
-            sheet.setColumnWidth(cellIndex, parseInt(m.width))
+        if (m.name.indexOf("-") > -1) {
+          sheet.autoFitColumn(cellIndex);
+          if (sheet.getColumnWidth(cellIndex) <= 60) {
+            sheet.setColumnWidth(cellIndex, parseInt(m.width));
           }
         }
 
         cellIndex++;
       });
       // 列筛选
-        // 参数2 开始列
-        // 参数3
-        // 参数4 结束列
-        // var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-        // var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-        //   cellrange
-        // );
-        // sheet.rowFilter(hideRowFilter);
+      // 参数2 开始列
+      // 参数3
+      // 参数4 结束列
+      // var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+      // var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+      //   cellrange
+      // );
+      // sheet.rowFilter(hideRowFilter);
       var colindexs = [1, 2, 3, 4, 5];
       this.tableData[this.tagRemark].forEach((row, index) => {
         let cellIndex = 0;
@@ -421,7 +410,7 @@ export default {
             rowSheet3.foreColor("#2a06ecd9");
           }
           //成品库存单元格背景色
-          if(m.name ==='StockQty'){
+          if (m.name === "StockQty") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -430,7 +419,7 @@ export default {
             rowSheet3.backColor("#c2e7b0");
           }
           // 电机库存单元格背景色
-          if(m.name ==='Extend17'){
+          if (m.name === "Extend17") {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -439,7 +428,11 @@ export default {
             rowSheet3.backColor("#f0f9eb");
           }
           // 日期列包含负数字体红色
-          if(m.name.indexOf('-')>-1&&row[m.prop]&&row[m.prop].indexOf('-')>-1){
+          if (
+            m.name.indexOf("-") > -1 &&
+            row[m.prop] &&
+            row[m.prop].indexOf("-") > -1
+          ) {
             rowSheet3 = sheet.getCell(
               index, //行
               num, //列
@@ -474,7 +467,8 @@ export default {
       sheet.options.isProtected = true; //锁定表格
       this.spread.options.tabStripVisible = false; //是否显示表单标签
       this.spread.refresh();
-      this.spread.options.autoFitType = GC.Spread.Sheets.AutoFitType.cellWithHeader;
+      this.spread.options.autoFitType =
+        GC.Spread.Sheets.AutoFitType.cellWithHeader;
     },
     // 高度控制
     setHeight() {
@@ -568,43 +562,43 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-    let IDs = this.sysID;
-    let res = await GetHeader(IDs);
-    const { datas, forms, result, msg } = res.data;
-    if (result) {
-      // 获取每个表头
-      datas.some((m, i) => {
-        this.$set(this.tableColumns, i, m);
-        m.forEach((n, index) => {
-          if (n.Required) {
-            this.formSearchs[this.tagRemark].required.push(n);
-          }
+      let IDs = this.sysID;
+      let res = await GetHeader(IDs);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        // 获取每个表头
+        datas.some((m, i) => {
+          this.$set(this.tableColumns, i, m);
+          m.forEach((n, index) => {
+            if (n.Required) {
+              this.formSearchs[this.tagRemark].required.push(n);
+            }
+          });
         });
-      });
-      // 获取查询的初始化字段 组件 按钮
-      forms.some((x, z) => {
-        this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-        x.forEach((y) => {
-          if (y.prop && y.value) {
-            this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-          } else {
-            this.$set(this.formSearchs[z].datas, [y.prop], "");
-          }
+        // 获取查询的初始化字段 组件 按钮
+        forms.some((x, z) => {
+          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          x.forEach((y) => {
+            if (y.prop && y.value) {
+              this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+            } else {
+              this.$set(this.formSearchs[z].datas, [y.prop], "");
+            }
+          });
+          this.$set(this.formSearchs[z], "forms", x);
+          this.formSearchs[this.tagRemark].datas["OweQty"] = 0;
+          this.getTableData(this.formSearchs[z].datas, z);
         });
-        this.$set(this.formSearchs[z], "forms", x);
-        this.formSearchs[this.tagRemark].datas["OweQty"] = 0;
-        this.getTableData(this.formSearchs[z].datas, z);
-      });
-      this.adminLoading = false;
-    } else {
-      this.adminLoading = false;
-      this.$message({
-        message: msg,
-        type: "error",
-        dangerouslyUseHTMLString: true,
-      });
-    }
-  },
+        this.adminLoading = false;
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
     // 验证数据
     verifyDta(n) {
       for (let name in n) {

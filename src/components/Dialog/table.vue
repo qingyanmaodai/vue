@@ -1,13 +1,6 @@
 <template>
-  <el-dialog
-    :title="title"
-    :visible.sync="Dialog"
-    :width="width"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <el-dialog :title="title" :visible.sync="Dialog" :width="width">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"

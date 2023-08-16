@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -23,11 +17,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -63,7 +56,7 @@
 <script>
 import ComSearch from "@/components/ComSearch";
 import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData,GetSearch } from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
 import { OneStepReleaseByOrder } from "@/api/PageSale";
 export default {
   name: "SaleOrder",
@@ -229,9 +222,8 @@ export default {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
-        this.labelStatus1
-      ].value;
+      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+        this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
@@ -240,7 +232,7 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 下达
     async dataSave(remarkTb, index, parms) {
@@ -256,8 +248,8 @@ export default {
         newData = this.tableData[remarkTb];
       }
       this.adminLoading = true;
-      debugger
-      let res = await GetSearch(newData,'/APSAPI/SaleOrderRelease');
+      debugger;
+      let res = await GetSearch(newData, "/APSAPI/SaleOrderRelease");
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(0);

@@ -11,13 +11,12 @@
     </div>
     <div class="head_right">
       <div class="content_icon usericon2">
-
         <a
-          :href="`${apsurl}`+'/APS系统操作指南v1.pdf'"
+          :href="`${apsurl}` + '/APS系统操作指南v1.pdf'"
           target="_blank"
           class="font_size_1"
-        >操作指南</a>
-
+          >操作指南</a
+        >
       </div>
       <div class="content_icon">
         <el-tooltip
@@ -26,10 +25,7 @@
           content="全屏"
           placement="bottom"
         >
-          <img
-            src="../../assets/svg/enlarge.svg"
-            @click="screen"
-          />
+          <img src="../../assets/svg/enlarge.svg" @click="screen" />
         </el-tooltip>
       </div>
       <div class="content_icon">
@@ -42,35 +38,22 @@
           <theme-picker @change="themeChange" />
         </el-tooltip>
       </div>
-      <el-dropdown
-        class="avatar-container"
-        trigger="click"
-      >
-        <div
-          class="content_icon usericon"
-          @click.prevent
-        >
+      <el-dropdown class="avatar-container" trigger="click">
+        <div class="content_icon usericon" @click.prevent>
           <img
             src="../../assets/imgs/user.png"
             style="width: 24px; height: 24px"
           />
           <span class="content_text">{{ UserName }}</span>
         </div>
-        <el-dropdown-menu
-          slot="dropdown"
-          class="user-dropdown"
-        >
+        <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <!-- <router-link to="/"> -->
-            <el-dropdown-item  @click.native="jumpHome">回到首页</el-dropdown-item>
+          <el-dropdown-item @click.native="jumpHome">回到首页</el-dropdown-item>
           <!-- </router-link> -->
-          <el-dropdown-item
-            divided
-            @click.native="editPwd"
-          >修改密码</el-dropdown-item>
-          <el-dropdown-item
-            divided
-            @click.native="logout"
+          <el-dropdown-item divided @click.native="editPwd"
+            >修改密码</el-dropdown-item
           >
+          <el-dropdown-item divided @click.native="logout">
             <span style="display: block">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -171,18 +154,20 @@ export default {
   },
   methods: {
     // 跳转到首页
-    jumpHome(){
-      let indexNum = -1
-      indexNum = _.findIndex(this.$store.getters.routers, function(o) { 
-          if(o.children&&o.children[0].meta.title==='首页'){
-              return o
-          }
-        })
-        if(indexNum>-1){
-          this.$router.push({path:'/'+this.$store.getters.routers[indexNum].children[0].path} );
-        }else{
-          this.$router.push("/" );
+    jumpHome() {
+      let indexNum = -1;
+      indexNum = _.findIndex(this.$store.getters.routers, function (o) {
+        if (o.children && o.children[0].meta.title === "首页") {
+          return o;
         }
+      });
+      if (indexNum > -1) {
+        this.$router.push({
+          path: "/" + this.$store.getters.routers[indexNum].children[0].path,
+        });
+      } else {
+        this.$router.push("/");
+      }
     },
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");

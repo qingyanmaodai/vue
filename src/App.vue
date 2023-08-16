@@ -51,17 +51,6 @@ export default {
     if (eipaulg) {
       this.getAutoLogin(eipaulg);
     }
-    if(sessionStorage){//刷新浏览器移除当前窗口和标签页的保存的数据
-      for(let key in sessionStorage){
-        if(key&&key.indexOf('dicIDData')>-1){
-          sessionStorage.removeItem(key)
-        }else if(key&&key.indexOf('dicIDForm')>-1){
-          sessionStorage.removeItem(key)
-        }else if(key&&key.indexOf('dicIDStatus')>-1){
-          sessionStorage.removeItem(key)
-        }
-      }
-    }
     // 在页面加载时读取sessionStorage
     if (sessionStorage.getItem("tokenExpire")) {
       this.$store.commit(

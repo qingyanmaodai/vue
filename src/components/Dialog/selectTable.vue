@@ -1,13 +1,6 @@
 <template>
-  <el-dialog
-    :title="title"
-    :visible.sync="Dialog"
-    :width="width"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <el-dialog :title="title" :visible.sync="Dialog" :width="width">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -35,15 +28,9 @@
         @selectfun="selectFun"
       />
     </div>
-    <span
-      slot="footer"
-      class="dialog-footer"
-    >
+    <span slot="footer" class="dialog-footer">
       <el-button @click="closeDialog">取 消</el-button>
-      <el-button
-        type="primary"
-        @click="sureDialog"
-      >确 定</el-button>
+      <el-button type="primary" @click="sureDialog">确 定</el-button>
     </span>
   </el-dialog>
 </template>

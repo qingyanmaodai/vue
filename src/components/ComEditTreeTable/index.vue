@@ -1,5 +1,5 @@
 <template>
-<!-- 树形table -->
+  <!-- 树形table -->
   <div class="table-temp">
     <el-table
       ref="ComEditTreeTable"
@@ -13,8 +13,8 @@
       v-loading="loading"
       lazy
       :load="load"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      style="width:100%;margin-bottom:10px;"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      style="width: 100%; margin-bottom: 10px"
       @sort-change="sortChange"
       @row-click="handleRowClick"
       @row-dblclick="handleRowDBClick"
@@ -40,39 +40,52 @@
               :type="o.type"
               :icon="o.icon"
               size="small"
-            >{{o.name}}</el-button>
+              >{{ o.name }}</el-button
+            >
           </span>
           <span v-else>
             <a
               v-if="item.routerName"
               @click="handleActive(scope.row, item.routerName, item.routerId)"
-              :style="{color:theme,'text-decoration':'underline'}"
+              :style="{ color: theme, 'text-decoration': 'underline' }"
             >
               <span v-if="!item.format">{{ scope.row[item.prop] }}</span>
-              <span v-else>{{ item.format(scope.row[item.prop], scope.row) }}</span>
+              <span v-else>{{
+                item.format(scope.row[item.prop], scope.row)
+              }}</span>
             </a>
             <a
               v-else-if="item.handle"
               @click="item.handle(scope.row)"
-              :style="{color:theme,'text-decoration':'underline'}"
+              :style="{ color: theme, 'text-decoration': 'underline' }"
             >
               <span v-if="!item.format">{{ scope.row[item.prop] }}</span>
-              <span v-else>{{ item.format(scope.row[item.prop], scope.row) }}</span>
+              <span v-else>{{
+                item.format(scope.row[item.prop], scope.row)
+              }}</span>
             </a>
             <span v-else>
-              <span v-if="scope.row['update']&&item.component">
+              <span v-if="scope.row['update'] && item.component">
                 <el-input
-                  v-if="scope.row['update']&&item.component.type=='input'"
+                  v-if="scope.row['update'] && item.component.type == 'input'"
                   :type="item.component.inputType || 'text'"
                   size="small"
                   v-model="scope.row[item.prop]"
                 ></el-input>
                 <el-select
-                  v-else-if="scope.row['update']&&item.component.type=='select'&&item.component.selectChange"
+                  v-else-if="
+                    scope.row['update'] &&
+                    item.component.type == 'select' &&
+                    item.component.selectChange
+                  "
                   size="small"
                   v-model="scope.row[item.prop]"
                   placeholder
-                  @change="((val)=>{item.component.selectChange(val, scope.row)})"
+                  @change="
+                    (val) => {
+                      item.component.selectChange(val, scope.row);
+                    }
+                  "
                 >
                   <el-option
                     v-for="item in item.component.options"
@@ -82,7 +95,9 @@
                   ></el-option>
                 </el-select>
                 <el-select
-                  v-else-if="scope.row['update']&&item.component.type=='select'"
+                  v-else-if="
+                    scope.row['update'] && item.component.type == 'select'
+                  "
                   size="small"
                   v-model="scope.row[item.prop]"
                   placeholder
@@ -95,16 +110,20 @@
                   ></el-option>
                 </el-select>
                 <el-date-picker
-                  v-else-if="scope.row['update']&&item.component.type=='date'"
+                  v-else-if="
+                    scope.row['update'] && item.component.type == 'date'
+                  "
                   v-model="scope.row[item.prop]"
                   type="date"
                   editable
                   clearable
                   placeholder="选择日期"
-                  style="width: 100%;"
+                  style="width: 100%"
                 ></el-date-picker>
                 <el-switch
-                  v-else-if="scope.row['update']&&item.component.type=='switch'"
+                  v-else-if="
+                    scope.row['update'] && item.component.type == 'switch'
+                  "
                   v-model="scope.row[item.prop]"
                   :active-color="item.component.activeColor"
                   :inactive-color="item.component.inactiveColor"
@@ -112,19 +131,36 @@
                   :inactive-value="item.component.inactiveValue"
                 ></el-switch>
                 <el-autocomplete
-                  v-else-if="scope.row['update']&&item.component.type=='autocomplete'"
+                  v-else-if="
+                    scope.row['update'] && item.component.type == 'autocomplete'
+                  "
                   v-model="scope.row[item.prop]"
                   :fetch-suggestions="item.component.querySearchAsync"
-                  @select="(val)=>{item.component.handleSelect(val, scope.row)}"
+                  @select="
+                    (val) => {
+                      item.component.handleSelect(val, scope.row);
+                    }
+                  "
                 ></el-autocomplete>
                 <el-tag
-                  v-else-if="scope.row['update']&&item.component.type=='tag'"
-                  style="float: left;margin-left: 3px;cursor: pointer;background: #fff;color: #933EC5"
+                  v-else-if="
+                    scope.row['update'] && item.component.type == 'tag'
+                  "
+                  style="
+                    float: left;
+                    margin-left: 3px;
+                    cursor: pointer;
+                    background: #fff;
+                    color: #933ec5;
+                  "
                   @click.stop.native="item.component.handleClick(scope.row)"
-                >{{ scope.row[item.prop] || "选择" }}</el-tag>
+                  >{{ scope.row[item.prop] || "选择" }}</el-tag
+                >
                 <span v-else>{{ scope.row[item.prop] }}</span>
               </span>
-              <span v-else-if="item.format">{{ item.format(scope.row[item.prop], scope.row) }}</span>
+              <span v-else-if="item.format">{{
+                item.format(scope.row[item.prop], scope.row)
+              }}</span>
               <span v-else>{{ scope.row[item.prop] }}</span>
             </span>
           </span>
@@ -133,7 +169,7 @@
     </el-table>
     <div class="pagination">
       <el-pagination
-        v-if="pagination.pageTotal>0"
+        v-if="pagination.pageTotal > 0"
         background
         layout="total, prev, pager, next"
         :current-page="pagination.pageIndex"

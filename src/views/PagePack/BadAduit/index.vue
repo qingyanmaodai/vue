@@ -1,13 +1,7 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,11 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -66,22 +59,16 @@
       :modal-append-to-body="false"
       :modal="false"
     >
-      <span
-        slot="title"
-        class="dialog-footer"
-      >
+      <span slot="title" class="dialog-footer">
         <span>不良产品明细</span>
-        <i
-          class="el-icon-zoom-in dialog_icon"
-          @click="changeWidth"
-        />
+        <i class="el-icon-zoom-in dialog_icon" @click="changeWidth" />
       </span>
       <el-container>
         <div
           ref="printTest"
           id="printTest"
           class="flex_column"
-          style="padding:10px"
+          style="padding: 10px"
         >
           <div>
             <span class="content_head">明细列表</span>
@@ -93,24 +80,23 @@
               :form-controller="formController0"
             ></GeneralForm>
           </div>
-          <div
-            class="content_main_head"
-            v-show="AbnormalStatus == 1"
-          >
+          <div class="content_main_head" v-show="AbnormalStatus == 1">
             <el-button
               @click="addType('报废')"
               size="small"
               type="danger"
               class=""
               plain
-            >报废</el-button>
+              >报废</el-button
+            >
             <el-button
               @click="addType('返工')"
               plain
               size="small"
               type="danger"
               class="margin_left_10"
-            >返工</el-button>
+              >返工</el-button
+            >
           </div>
           <ComVxeTable
             ref="addPurchaseRequisition"
@@ -136,7 +122,11 @@
           />
           <span
             v-show="currentRow.AbnormalStatus == 5"
-            v-html="currentRow.AduitRemark?currentRow.AduitRemark.replace(/\n/g,'<br/>'):''"
+            v-html="
+              currentRow.AduitRemark
+                ? currentRow.AduitRemark.replace(/\n/g, '<br/>')
+                : ''
+            "
           ></span>
           <!-- <el-input
             type="textarea"
@@ -154,32 +144,29 @@
           /> -->
           <!-- <span class="footer_span">审批人：{{currentRow.ModifiedByName}}</span> -->
         </div>
-        <el-footer
-          class="footer"
-          style="height:50px;line-height:50px"
-        >
-          <el-button
-            size="small"
-            @click="dialogShow = false"
-          >取消</el-button>
+        <el-footer class="footer" style="height: 50px; line-height: 50px">
+          <el-button size="small" @click="dialogShow = false">取消</el-button>
           <el-button
             size="small"
             type="danger"
             @click="backData"
             v-show="sureAduit"
-          >退回</el-button>
+            >退回</el-button
+          >
           <el-button
             size="small"
             type="success"
             @click="aduitData"
             v-show="sureAduit"
-          >审批</el-button>
+            >审批</el-button
+          >
           <el-button
             v-show="currentRow.AbnormalStatus == 5"
             class="green_btn"
             size="small"
             @click="printData"
-          >打印</el-button>
+            >打印</el-button
+          >
         </el-footer>
       </el-container>
     </el-dialog>

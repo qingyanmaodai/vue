@@ -1,13 +1,7 @@
 <!--销售计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -23,11 +17,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -39,49 +32,32 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{'height':height}"
-        >
-          <div
-            class="spreadContainer"
-            v-loading="tableLoading[0]"
-          >
+        <div class="flex_column" :style="{ height: height }">
+          <div class="spreadContainer" v-loading="tableLoading[0]">
             <gc-spread-sheets
               class="sample-spreadsheets"
               id="spreadsheets"
               @workbookInitialized="initSpread"
             >
-              <gc-worksheet :colCount=49></gc-worksheet>
+              <gc-worksheet :colCount="49"></gc-worksheet>
             </gc-spread-sheets>
           </div>
         </div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span
-              @click="toPageSetting"
-              class="primaryColor cursor"
-            >SysID:{{sysID[tagRemark].ID}}
+            <span @click="toPageSetting" class="primaryColor cursor"
+              >SysID:{{ sysID[tagRemark].ID }}
             </span>
           </div>
           <div class="flex">
             <el-pagination
               background
-              @size-change="val=>pageSize(val,0)"
+              @size-change="(val) => pageSize(val, 0)"
               :current-page="tablePagination[0].pageIndex"
-              :page-sizes="[
-              200,
-              500,
-              1000,
-              2000,
-              3000,
-              5000,
-              10000
-
-            ]"
+              :page-sizes="[200, 500, 1000, 2000, 3000, 5000, 10000]"
               :page-size="tablePagination[0].pageSize"
               :total="tablePagination[0].pageTotal"
-              @current-change="val=>pageChange(val,0)"
+              @current-change="(val) => pageChange(val, 0)"
               layout="total, sizes, prev, pager, next,jumper"
             >
             </el-pagination>
@@ -184,9 +160,7 @@ export default {
       tagRemark: 0,
       isLoading: false,
       isEdit: false,
-      sysID: [
-        {ID:6676},
-      ],      
+      sysID: [{ ID: 6676 }],
       spread: null,
       adminLoading: false,
       categorys: [],
@@ -316,13 +290,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -451,7 +425,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["dicID"] = this.sysID[remarkTb].ID
+      form["dicID"] = this.sysID[remarkTb].ID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -484,8 +458,8 @@ export default {
         colHeader1.push("");
         // 选框
         let checkbox = {
-          name: "isChecked",//字段名
-          displayName: "选择",//列名
+          name: "isChecked", //字段名
+          displayName: "选择", //列名
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
           size: 60,
         };
@@ -589,8 +563,8 @@ export default {
       this.adminLoading = false;
       this.tableLoading[0] = false;
       this.spread.repaint();
-      this.spread.refresh()
-      this.spread.options.tabStripVisible = false;//是否显示表单标签
+      this.spread.refresh();
+      this.spread.options.tabStripVisible = false; //是否显示表单标签
       // this.spread.suspendPaint();
       // this.spread.isPaintSuspended(false);
     },

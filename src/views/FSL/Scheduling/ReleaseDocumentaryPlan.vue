@@ -2,8 +2,8 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-aside v-show="showAside" style="width:auto">
-        <div class="admin_left_2" style="height:100%;overflow:hidden">
+      <el-aside v-show="showAside" style="width: auto">
+        <div class="admin_left_2" style="height: 100%; overflow: hidden">
           <div>
             <div class="flex px-2 py-1.5 border-b-1 tree_Head">
               <span class="tree_text">成品车间</span>
@@ -23,8 +23,8 @@
           </div>
         </div>
       </el-aside>
-      <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div
               v-for="i in [0, 1, 2, 3, 4]"
@@ -160,7 +160,7 @@
       </el-main>
     </el-container>
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5;">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
           <ComReportTable
@@ -199,7 +199,7 @@ import {
   SaveData,
   GetServerTime,
   GetOrgData,
-  UpdateOrderBomPOTracker
+  UpdateOrderBomPOTracker,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
@@ -209,7 +209,7 @@ export default {
     ComAsideTree,
     ComVxeTable,
     ComReportTable,
-    ComFormDialog
+    ComFormDialog,
   },
   data() {
     return {
@@ -226,14 +226,14 @@ export default {
         { label: "待下达计划", value: 0 },
         { label: "生产任务单", value: "" },
         { label: "生产计划追踪", value: "" },
-        { label: "完成下达清单", value: 1 }
+        { label: "完成下达清单", value: 1 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
       ReplyDate: "",
       treeProps: {
         label: "DeptCount",
-        children: "children"
+        children: "children",
       },
       treeData: [],
       treeListTmp: [],
@@ -245,33 +245,33 @@ export default {
           datas: {
             IsClose: -1,
             sort: "OrderDate",
-            Account: ""
+            Account: "",
           },
-          forms: []
+          forms: [],
         },
         {
           datas: {
             IsClose: 0,
-            sort: "OrderDate"
+            sort: "OrderDate",
           },
-          forms: []
+          forms: [],
         },
         {
           datas: {
-            sort: "OrderDate"
+            sort: "OrderDate",
           },
-          forms: []
+          forms: [],
         },
         {
           datas: {
-            sort: "OrderDate"
+            sort: "OrderDate",
           },
-          forms: []
+          forms: [],
         },
         {
           datas: { IsClose: 1, sort: "OrderDate" },
-          forms: []
-        }
+          forms: [],
+        },
       ],
       selectionData: [[], [], [], [], []],
       btnForm: [],
@@ -284,7 +284,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -302,9 +302,9 @@ export default {
         { ID: 9053 },
         { ID: 10089 },
         { ID: 10097 },
-        { ID: 9053 }
+        { ID: 9053 },
       ],
-      userInfo: {}
+      userInfo: {},
     };
   },
   computed: {},
@@ -345,12 +345,12 @@ export default {
       }
       let newarr = [];
       if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach(element => {
+        arr.forEach((element) => {
           if (element.SupplierName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
             const obj = {
               ...element,
-              children: element.children
+              children: element.children,
             };
             newarr.push(obj);
           } else {
@@ -358,7 +358,7 @@ export default {
               const ab = this.rebuildData(value, element.children);
               const obj = {
                 ...element,
-                children: ab
+                children: ab,
               };
               if (ab && ab.length > 0) {
                 newarr.push(obj);
@@ -400,7 +400,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -411,7 +411,7 @@ export default {
       let form = {
         dicID: 10090,
         Account: [this.userInfo.Account, null],
-        sort: "Level"
+        sort: "Level",
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -419,17 +419,17 @@ export default {
         let newTree = [];
         if (data.length != 0) {
           let supplierMap = new Map();
-          data.forEach(a => {
+          data.forEach((a) => {
             let currentSum = supplierMap.get(a.Dept) || 0;
             currentSum += a.SumCount;
             supplierMap.set(a.Dept, currentSum);
             a["DeptCount"] = `${a.Dept}(${currentSum})`;
           });
           newTree = Array.from(supplierMap.entries()).map(([Dept, sum]) => {
-            const foundItem = data.find(a => a.Dept === Dept);
+            const foundItem = data.find((a) => a.Dept === Dept);
             return {
               ...foundItem,
-              DeptCount: `${foundItem.Dept}(${sum})`
+              DeptCount: `${foundItem.Dept}(${sum})`,
             };
           });
         }
@@ -445,7 +445,7 @@ export default {
           this.labelStatus1
         );
         if (data.length != 0) {
-          this.$nextTick(function() {
+          this.$nextTick(function () {
             _this.$refs.asideTree.setCurrentKey(-1);
           });
         }
@@ -453,7 +453,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -534,7 +534,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -595,7 +595,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -603,7 +603,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -617,7 +617,7 @@ export default {
       } else {
         if (
           !this.selectionData[remarkTb].every(
-            obj =>
+            (obj) =>
               obj.hasOwnProperty("PlanDeliveryDate") && obj.PlanDeliveryDate
           )
         ) {
@@ -634,7 +634,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
           this.$set(this, "adminLoading", false);
@@ -642,7 +642,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.$set(this, "adminLoading", false);
         }
@@ -754,11 +754,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyData(x);
               });
             }
@@ -775,7 +775,7 @@ export default {
               this.userInfo.Account
             );
           }
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -809,7 +809,7 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
-          data.forEach(x => {
+          data.forEach((x) => {
             if (!x.IsReplyStatus) {
               x.ReplyQty = x.RealOweQty;
             }
@@ -832,7 +832,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -852,7 +852,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -906,21 +906,21 @@ export default {
           column.property == "CurrentSendQty")
       ) {
         return {
-          background: "#00b0f0"
+          background: "#00b0f0",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "在途不足"
       ) {
         return {
-          background: "#ffced6"
+          background: "#ffced6",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "待复期"
       ) {
         return {
-          background: "#fdfd8f"
+          background: "#fdfd8f",
         };
       }
       // else if (
@@ -937,18 +937,18 @@ export default {
           row["IsReplyStatusName"] == "是")
       ) {
         return {
-          background: "#9fff9f"
+          background: "#9fff9f",
         };
       }
 
       if (column.property == "OnloadQty") {
         return {
-          color: "blue"
+          color: "blue",
         };
       }
       if (column.property == "RealOweQty") {
         return {
-          color: "red"
+          color: "red",
         };
       }
       if (
@@ -956,7 +956,7 @@ export default {
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       }
 
@@ -966,7 +966,7 @@ export default {
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -978,7 +978,7 @@ export default {
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -989,7 +989,7 @@ export default {
           parseFloat(row.StockQtyAllocationPrepare)
         ) {
           return {
-            background: "#9fff9f"
+            background: "#9fff9f",
           };
         }
       }
@@ -998,7 +998,7 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       this.dataSearch(index);
-    }
+    },
     // 改变状态
     // changeStatus(x, index) {
     //   this.labelStatus1 = index;
@@ -1016,6 +1016,6 @@ export default {
     //   this.dataSearch(1);
     //   this.dialogShow = true;
     // }
-  }
+  },
 };
 </script>

@@ -1,13 +1,7 @@
 <!--采购复期统计列表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -21,23 +15,15 @@
     </div>
     <div>
       <div class="admin_content">
-        <div
-          class="echart_up"
-          ref="echart_up"
-        >
-          <div
-            id="echart_one"
-            class="echart"
-          ></div>
+        <div class="echart_up" ref="echart_up">
+          <div id="echart_one" class="echart"></div>
         </div>
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComUmyTable
@@ -50,7 +36,6 @@
           :sysID="sysID[0].ID"
           :isSpanMethods="true"
           :isClear="isClear[0]"
-     
           :pagination="tablePagination[0]"
           :showPagination="false"
           @pageChange="pageChange"
@@ -74,18 +59,17 @@
         :prop="item.prop"
         :label="item.label"
       >
-        <template v-if='item.children'>
+        <template v-if="item.children">
           <el-table-column
             :prop="i.prop"
             :label="i.label"
-            v-for='(i,k) in item.children'
+            v-for="(i, k) in item.children"
             :key="k"
           >
           </el-table-column>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
@@ -104,7 +88,8 @@ export default {
   name: "BadReport_3",
   components: {
     ComSearch,
-    ComVxeTable,ComUmyTable
+    ComVxeTable,
+    ComUmyTable,
   },
   data() {
     return {
@@ -559,7 +544,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         this.formSearchs[0].datas["PlanYear"] = new Date().getFullYear();
-        this.formSearchs[0].datas["MFGOrganizeName"] = '一分厂';
+        this.formSearchs[0].datas["MFGOrganizeName"] = "一分厂";
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
@@ -596,15 +581,15 @@ export default {
         "WorkShopID,WorkShopName,sum(BadQty) as BadQty,sum(ConfirmQty) as ConfirmQty, cast(sum(BadQty)/sum(ConfirmQty) as decimal(18,4)) AS BadRate";
       form["groupby"] = "WorkShopID,WorkShopName";
       form["sort"] = "BadQty desc";
-      let res = await GetSearch(form,"/APSAPI/GetBadReport3");
-      console.log(res.data)
+      let res = await GetSearch(form, "/APSAPI/GetBadReport3");
+      console.log(res.data);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let columns= [{ label: "车间", prop: "Tag", width: "80px" }];
-       
-        let datas=[]
+        let columns = [{ label: "车间", prop: "Tag", width: "80px" }];
+
+        let datas = [];
         datas = [
-          { Tag: "生产数",'黑管':100000},
+          { Tag: "生产数", 黑管: 100000 },
           { Tag: "报废数" },
           { Tag: "报废率" },
           { Tag: "占比" },
@@ -620,15 +605,14 @@ export default {
         let Total_3 = 0;
         let Total_4 = 0;
         if (data.length != 0) {
-  
           let totalNumber = data
             .map((q) => q.BadQty)
             .reduce((list, item) => {
               list += item;
               return list;
             });
-       
-          data.forEach((a,index) => {
+
+          data.forEach((a, index) => {
             xAxis.push(a.WorkShopName);
             Total_1 += parseFloat(a.ConfirmQty);
             Total_2 += parseFloat(a.BadQty);
@@ -645,9 +629,8 @@ export default {
             Total_3 += parseFloat(TotalRate);
             newData_2.push(Total_3.toFixed(2));
 
- 
-            this.$set(datas[0], a.WorkShopName, a.ConfirmQty+'');
-            this.$set(datas[1], a.WorkShopName, a.BadQty+'');
+            this.$set(datas[0], a.WorkShopName, a.ConfirmQty + "");
+            this.$set(datas[1], a.WorkShopName, a.BadQty + "");
             this.$set(
               datas[2],
               a.WorkShopName,
@@ -655,14 +638,11 @@ export default {
             );
             _this.$set(datas[3], a.WorkShopName, TotalRate + "%");
             _this.$set(datas[4], a.WorkShopName, Total_3.toFixed(2) + "%");
-            
           });
-      
-          this.$set(this.tableColumns,0,columns);
-       
-this.$set(this.tableData,0,datas);
 
+          this.$set(this.tableColumns, 0, columns);
 
+          this.$set(this.tableData, 0, datas);
         }
 
         if (data.length != 0) {

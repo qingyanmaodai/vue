@@ -27,7 +27,7 @@
     </div>
     <div class="admin_container_right">
       <div class="admin_head_3" ref="headRef">
-        <div style="text-align: right;;">
+        <div style="text-align: right">
           <el-button
             plain
             v-for="(item, i) in parmsBtn2"
@@ -185,7 +185,7 @@ import {
   ExportData,
   SaveData,
   GetOrgData,
-  GetSearch
+  GetSearch,
 } from "@/api/Common";
 import ComFormDialog from "@/components/ComFormDialog";
 import ComForm from "@/components/ComForm";
@@ -196,7 +196,7 @@ export default {
     ComAsideTree,
     ComUmyTable,
     ComFormDialog,
-    ComForm
+    ComForm,
   },
   data() {
     return {
@@ -205,7 +205,7 @@ export default {
       ChildTitle: "子件信息",
       treeProps: {
         label: "label",
-        children: "children"
+        children: "children",
       },
       keyWords: "",
       ///////////////新增弹框//////////////
@@ -230,7 +230,7 @@ export default {
         MaterialName: null,
         Unit: null,
         Scrappage: 0,
-        Molecule: null
+        Molecule: null,
       },
       formData: {
         ParentID: 0,
@@ -246,7 +246,7 @@ export default {
         MaterialName: null,
         Unit: null,
         Scrappage: 0,
-        Molecule: null
+        Molecule: null,
       },
       formDataChild: {
         Code: null,
@@ -256,14 +256,14 @@ export default {
         Scrappage: null,
         Remark1: null,
         Status: 0,
-        ParentCode: null
+        ParentCode: null,
       },
       UserTypes: [],
       PositionIDs: [],
       treeData: [],
       treeListTmp: [],
       formData2: {
-        Status: 0
+        Status: 0,
       },
       formController2: [
         {
@@ -272,9 +272,9 @@ export default {
           type: "radioGroupLabel",
           radioGroups: [
             { label: "禁用", value: 0 },
-            { label: "启用", value: 1 }
-          ]
-        }
+            { label: "启用", value: 1 },
+          ],
+        },
       ],
       formControllerParent: [
         { label: "父件物料号", prop: "Code", type: "input", colSpan: 8 },
@@ -282,14 +282,14 @@ export default {
           label: "父件描述",
           prop: "MaterialName",
           type: "textarea",
-          colSpan: 12
+          colSpan: 12,
         },
         {
           label: "数量",
           prop: "Molecule",
           type: "input",
           inputType: "number",
-          colSpan: 4
+          colSpan: 4,
         },
         { label: "单位", prop: "Unit", type: "input", colSpan: 4 },
         { label: "项目类别", prop: "ItemClass", type: "input", colSpan: 4 },
@@ -298,7 +298,7 @@ export default {
           prop: "LineNum",
           type: "input",
           inputType: "number",
-          colSpan: 4
+          colSpan: 4,
         },
         {
           label: "状态",
@@ -306,16 +306,16 @@ export default {
           type: "radioGroupLabel",
           radioGroups: [
             { label: "启用", value: 1 },
-            { label: "禁用", value: 0 }
+            { label: "禁用", value: 0 },
           ],
-          colSpan: 6
-        }
+          colSpan: 6,
+        },
       ],
       formRulesParent: {
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
-        Unit: [{ required: true, message: "必填项", trigger: "blur" }]
+        Unit: [{ required: true, message: "必填项", trigger: "blur" }],
       },
       formController: [
         { label: "父件物料号", prop: "Code", type: "input" },
@@ -324,7 +324,7 @@ export default {
           label: "数量",
           prop: "Molecule",
           type: "input",
-          inputType: "number"
+          inputType: "number",
         },
         { label: "单位", prop: "Unit", type: "input" },
         { label: "项目类别", prop: "ItemClass", type: "input" },
@@ -335,22 +335,22 @@ export default {
           type: "radioGroupLabel",
           radioGroups: [
             { label: "启用", value: 1 },
-            { label: "禁用", value: 0 }
-          ]
-        }
+            { label: "禁用", value: 0 },
+          ],
+        },
       ],
       formRules: {
         Code: [{ required: true, message: "必填项", trigger: "blur" }],
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
-        Unit: [{ required: true, message: "必填项", trigger: "blur" }]
+        Unit: [{ required: true, message: "必填项", trigger: "blur" }],
       },
       formControllerChild: [
         {
           label: "父件物料号",
           prop: "ParentCode",
           type: "input",
-          disabled: true
+          disabled: true,
         },
         { label: "子件物料号", prop: "Code", type: "input" },
         { label: "子件描述", prop: "MaterialName", type: "textarea" },
@@ -358,7 +358,7 @@ export default {
           label: "数量",
           prop: "Molecule",
           type: "input",
-          inputType: "number"
+          inputType: "number",
         },
         { label: "单位", prop: "Unit", type: "input" },
         { label: "报废率", prop: "Scrappage", type: "input" },
@@ -369,15 +369,15 @@ export default {
           type: "radioGroupLabel",
           radioGroups: [
             { label: "启用", value: 1 },
-            { label: "禁用", value: 0 }
-          ]
-        }
+            { label: "禁用", value: 0 },
+          ],
+        },
       ],
       formRulesChild: {
         MaterialName: [{ required: true, message: "必填项", trigger: "blur" }],
         Molecule: [{ required: true, message: "必填项", trigger: "blur" }],
         Unit: [{ required: true, message: "必填项", trigger: "blur" }],
-        Scrappage: [{ required: true, message: "必填项", trigger: "blur" }]
+        Scrappage: [{ required: true, message: "必填项", trigger: "blur" }],
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
@@ -387,13 +387,13 @@ export default {
         {
           datas: {},
           forms: [],
-          required: [] //获取必填项
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
-          required: [] //获取必填项
-        }
+          required: [], //获取必填项
+        },
       ],
       parmsBtn: [
         {
@@ -404,7 +404,7 @@ export default {
           Size: "small",
           Methods: "addChildBom",
           Icon: "",
-          sort: 2
+          sort: 2,
         },
         {
           ButtonCode: "save",
@@ -415,7 +415,7 @@ export default {
           Methods: "dataSave",
           Icon: "",
           sort: 3,
-          Params: { dataName: "saveData" }
+          Params: { dataName: "saveData" },
         },
         {
           ButtonCode: "delete",
@@ -426,7 +426,7 @@ export default {
           Methods: "dataDel",
           Params: { dataName: "selectionData" },
           Icon: "",
-          sort: 4
+          sort: 4,
         },
         {
           ButtonCode: "update",
@@ -437,8 +437,8 @@ export default {
           Methods: "lockSave",
           Icon: "",
           sort: 5,
-          Params: {}
-        }
+          Params: {},
+        },
       ],
       parmsBtn2: [
         {
@@ -449,7 +449,7 @@ export default {
           Size: "small",
           Methods: "addParentBom",
           Icon: "",
-          sort: 1
+          sort: 1,
         },
         {
           ButtonCode: "save",
@@ -460,7 +460,7 @@ export default {
           Methods: "dataSave",
           Icon: "",
           sort: 2,
-          Params: { dataName: "saveData" }
+          Params: { dataName: "saveData" },
         },
         {
           ButtonCode: "delete",
@@ -471,8 +471,8 @@ export default {
           Methods: "dataDel",
           Params: {},
           Icon: "",
-          sort: 3
-        }
+          sort: 3,
+        },
       ],
       saveData: [[], []],
       selectionData: [[], []],
@@ -483,7 +483,7 @@ export default {
       isClear: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -501,7 +501,7 @@ export default {
       childAddEdit: false, //新增状态
       DataSourceList: {}, //数据源
       DataSourceIds: [], //数据源ID
-      keyWords: ""
+      keyWords: "",
     };
   },
   computed: {},
@@ -542,11 +542,11 @@ export default {
       let newBtn2 = [];
       let permission = false;
       if (routeBtn.length != 0) {
-        routeBtn.forEach(x => {
+        routeBtn.forEach((x) => {
           if (x.ButtonCode == "edit") {
             permission = true;
           }
-          let newData = this.parmsBtn.filter(y => {
+          let newData = this.parmsBtn.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = y.BtnName || x.ButtonName;
@@ -559,7 +559,7 @@ export default {
             newBtn = newBtn.concat(newData);
           }
 
-          let newData2 = this.parmsBtn2.filter(y => {
+          let newData2 = this.parmsBtn2.filter((y) => {
             // 如果页面定义了取页面的，否则取按钮权限配置中的
             if (x.ButtonCode == y.ButtonCode) {
               y.BtnName = y.BtnName || x.ButtonName;
@@ -657,7 +657,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -675,7 +675,7 @@ export default {
           this.$message.error("请选择需要操作的数据！");
           return;
         } else {
-          this[parms.dataName][remarkTb].forEach(x => {
+          this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
             obj["ElementDeleteFlag"] = 1;
             obj["dicID"] = this.sysID[remarkTb].ID;
@@ -693,10 +693,10 @@ export default {
         newData = [obj];
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then(_ => {
+        .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
@@ -711,14 +711,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -730,11 +730,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyData(x);
               });
             }
@@ -742,7 +742,7 @@ export default {
             if (n.DataSourceID && n.ControlType === "combobox") {
               this.DataSourceList = {
                 [n.DataSourceName]: [],
-                ...this.DataSourceList
+                ...this.DataSourceList,
               };
               if (!this.DataSourceIds.includes(n.DataSourceID)) {
                 this.DataSourceIds.push(n.DataSourceID);
@@ -757,7 +757,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -822,7 +822,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -862,7 +862,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -886,11 +886,12 @@ export default {
     // 父件确认添加
     parentConfirm(val) {
       if (val) {
-        this.$refs["refParent"].$refs["formData"].validate(valid => {
+        this.$refs["refParent"].$refs["formData"].validate((valid) => {
           if (valid) {
             //因为后端用这些字段保存才能更新Code,因此要同步改
             this.formDataParent.ParentCode = this.formDataParent.Code;
-            this.formDataParent.ParentMaterialName = this.formDataParent.MaterialName;
+            this.formDataParent.ParentMaterialName =
+              this.formDataParent.MaterialName;
             this.formDataParent.ParentUnit = this.formDataParent.Unit;
             this.formDataParent.Denominator = this.formDataParent.Molecule;
 
@@ -925,7 +926,7 @@ export default {
     // 子件确认添加
     childConfirm(val) {
       if (val) {
-        this.$refs["refChild"].$refs["formData"].validate(valid => {
+        this.$refs["refChild"].$refs["formData"].validate((valid) => {
           if (valid) {
             this.addDataSave([this.formDataChild], 1);
             this.dialogShowChild = false;
@@ -948,7 +949,7 @@ export default {
     dialogBtnClick2(val) {
       if (val) {
         let newData = [];
-        this.selectionData[this.tagRemark].forEach(item => {
+        this.selectionData[this.tagRemark].forEach((item) => {
           item.Status = 0;
           newData.push(item);
         });
@@ -964,7 +965,7 @@ export default {
         return;
       }
       let newData = [];
-      this.selectionData[remarkTb].forEach(item => {
+      this.selectionData[remarkTb].forEach((item) => {
         let obj = _.cloneDeep(item);
         obj.Status = 0;
         newData.push(obj);
@@ -973,7 +974,7 @@ export default {
         .then(() => {
           this.addDataSave(newData, 1, "update");
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     // 新增保存
     async addDataSave(newData, remarkTb, status) {
@@ -992,14 +993,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1008,7 +1009,7 @@ export default {
       let submitData = [];
       let isPass = true;
       if (remarkTb == 0) {
-        this.$refs["ruleForm0"].$refs["formData"].validate(valid => {
+        this.$refs["ruleForm0"].$refs["formData"].validate((valid) => {
           if (valid) {
             //因为后端用这些字段保存才能更新Code,因此要同步改
             this.formData.ParentCode = this.formData.Code;
@@ -1083,14 +1084,14 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1114,7 +1115,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
     },
@@ -1136,12 +1137,12 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

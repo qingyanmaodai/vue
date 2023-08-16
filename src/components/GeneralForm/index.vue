@@ -33,10 +33,7 @@
           :class="newItem.component.className"
           @focus="openInnerDialog(newItem.component.methods)"
         >
-          <i
-            slot="suffix"
-            class="el-icon-search"
-          ></i>
+          <i slot="suffix" class="el-icon-search"></i>
         </el-input>
         <el-select
           size="small"
@@ -45,7 +42,7 @@
           placeholder="请选择"
           v-else-if="newItem.component.type == 'select'"
           :disabled="newItem.disabled"
-          @change="(val)=>operation(newItem.methods,val)"
+          @change="(val) => operation(newItem.methods, val)"
         >
           <el-option
             v-for="(item2, index2) in newItem.select"
@@ -127,26 +124,25 @@
         />
         <el-autocomplete
           size="small"
-          v-else-if="newItem.component.type=='autocomplete'"
-          style="width:100%"
+          v-else-if="newItem.component.type == 'autocomplete'"
+          style="width: 100%"
           v-model="ruleForm[newItem.prop]"
-          :fetch-suggestions="((queryString,cb)=>{fetchSuggertions(queryString,cb,newItem.methods)})"
-          @select="item => getRemote(item,newItem.methods)"
+          :fetch-suggestions="
+            (queryString, cb) => {
+              fetchSuggertions(queryString, cb, newItem.methods);
+            }
+          "
+          @select="(item) => getRemote(item, newItem.methods)"
         >
           <template slot-scope="{ item }">
-            <div style="border-bottom: 1px dashed #8c8e8e;">
-              <el-form
-                label-width="100px"
-                inline
-              >
-                <el-form-item
-                  style="margin-bottom:5px"
-                  :label="newItem.label"
-                ><span style="color:orange">{{ item[newItem.prop] }}</span> </el-form-item>
-                <el-form-item
-                  style="margin-bottom:5px"
-                  :label="newItem.label2"
-                ><span style="color:orange">{{ item[newItem.prop2]}}</span> </el-form-item>
+            <div style="border-bottom: 1px dashed #8c8e8e">
+              <el-form label-width="100px" inline>
+                <el-form-item style="margin-bottom: 5px" :label="newItem.label"
+                  ><span style="color: orange">{{ item[newItem.prop] }}</span>
+                </el-form-item>
+                <el-form-item style="margin-bottom: 5px" :label="newItem.label2"
+                  ><span style="color: orange">{{ item[newItem.prop2] }}</span>
+                </el-form-item>
               </el-form>
             </div>
           </template>
@@ -172,10 +168,7 @@
           v-model="ruleForm[newItem.prop]"
           :disabled="newItem.disabled"
         >
-          <el-checkbox
-            :label="newItem.label"
-            name="type"
-          />
+          <el-checkbox :label="newItem.label" name="type" />
         </el-checkbox-group>
         <el-radio-group
           v-else-if="newItem.component.type == 'radio'"
@@ -204,10 +197,7 @@
             将文件拖到此处，或
             <em>点击上传</em>
           </div>
-          <div
-            class="el-upload__tip"
-            slot="tip"
-          >
+          <div class="el-upload__tip" slot="tip">
             只能上传jpg/png文件，且不超过500kb
           </div>
         </el-upload>
@@ -254,8 +244,7 @@ export default {
   computed: {},
   watch: {},
   mounted() {},
-  created() {
-  },
+  created() {},
   methods: {
     //选中树的节点
     selectHandleNodeClick(data, node) {

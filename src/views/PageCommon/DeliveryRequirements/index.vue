@@ -19,33 +19,34 @@
         <div class="ant-table-title">
           <el-row>
             <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col>
-            <el-col :span="20" class="flex_flex_end"> 
-            <div style="margin-right:10px;">
-              <span>计算截止日期：</span>
-                  <el-date-picker 
-                  v-model="machineCycle" type="date"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end">
+              <div style="margin-right: 10px">
+                <span>计算截止日期：</span>
+                <el-date-picker
+                  v-model="machineCycle"
+                  type="date"
                   size="small"
                   value-format="yyyy-MM-dd"
                   placeholder="请选择"
-                
                 >
-                  </el-date-picker>
-            </div>
-            <div>
-              <el-button
-               style="margin-right:10px;"
-              plain
-              v-for="(item, i) in parmsBtn2"
-              :key="i"
-              :type="item.Type ? item.Type : 'primary'"
-              :icon="item.Icon"
-              size="small"
-              @click="btnClick(item.Methods, item.Params, i)"
-            >
-              {{ item.BtnName }}</el-button>
-            </div>
-              
+                </el-date-picker>
+              </div>
+              <div>
+                <el-button
+                  style="margin-right: 10px"
+                  plain
+                  v-for="(item, i) in parmsBtn2"
+                  :key="i"
+                  :type="item.Type ? item.Type : 'primary'"
+                  :icon="item.Icon"
+                  size="small"
+                  @click="btnClick(item.Methods, item.Params, i)"
+                >
+                  {{ item.BtnName }}</el-button
+                >
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -101,7 +102,7 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
-import formatDate,{formatNextMonthDate} from "@/utils/formatDate"
+import formatDate, { formatNextMonthDate } from "@/utils/formatDate";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 export default {
   name: "DeliveryRequirements",
@@ -110,7 +111,7 @@ export default {
   },
   data() {
     return {
-      machineCycle:'',
+      machineCycle: "",
       title: this.$route.meta.title, //表名
       height: "740px",
       adminLoading: false, //加载状态
@@ -145,10 +146,9 @@ export default {
           Icon: "",
           Size: "small",
         },
-        
       ],
       // 表头添加动态按钮
-      parmsBtn2:[
+      parmsBtn2: [
         {
           ButtonCode: "save",
           BtnName: "计算",
@@ -176,9 +176,9 @@ export default {
       ],
       sysID: [{ ID: 8993 }],
       spread: null, //excel初始
-      selectionData:[[]],
-      filterParams:{
-        col:-1
+      selectionData: [[]],
+      filterParams: {
+        col: -1,
       },
     };
   },
@@ -194,14 +194,14 @@ export default {
     _this.getTableHeader();
     // 计算周期默认时间：今天~1.5月
     //_this.machineCycle = [formatDate.formatTodayDate(),formatNextMonthDate()]
-    console.log('roles',this.$store.getters.roles)
+    console.log("roles", this.$store.getters.roles);
     // 判断登录接口缓存的当前登录账号的所拥有的角色，如果有R2103250001则作为Account登录账号的查询条件
-    if(_this.$store.getters.roles.length){
-      _this.$store.getters.roles.forEach(item=>{
-        if(item.RoleID==='R2103250001'){
-          _this.formSearchs[_this.tagRemark].datas['Account'] = item.Account
+    if (_this.$store.getters.roles.length) {
+      _this.$store.getters.roles.forEach((item) => {
+        if (item.RoleID === "R2103250001") {
+          _this.formSearchs[_this.tagRemark].datas["Account"] = item.Account;
         }
-      })
+      });
     }
   },
   mounted() {
@@ -244,7 +244,7 @@ export default {
     judgeBtn() {
       let routeBtn = this.$route.meta.btns;
       let newBtn = [];
-      let btn2 = []
+      let btn2 = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
           let newData = this.parmsBtn.filter((y) => {
@@ -261,7 +261,7 @@ export default {
           }
         });
       }
-      console.log('parmsBtn2',this.parmsBtn2)
+      console.log("parmsBtn2", this.parmsBtn2);
       this.$set(this, "btnForm", newBtn);
       this.$set(this, "parmsBtn2", btn2);
     },
@@ -338,11 +338,13 @@ export default {
         });
         // 列筛选
         // 参数2 开始列
-        // 参数3 
+        // 参数3
         // 参数4 结束列
-        var cellrange =new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
-        var hideRowFilter =new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
-        sheet.rowFilter(hideRowFilter) 
+        var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
+        var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
+          cellrange
+        );
+        sheet.rowFilter(hideRowFilter);
         if (colInfos.length && colInfos[0].name === "isChecked") {
           // 选框
           sheet.setCellType(
@@ -396,31 +398,31 @@ export default {
           GC.Spread.Sheets.SheetArea.viewport
         );
 
-        
-        
-
-         // 冻结列
-         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
+        // 冻结列
+        sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
         sheet.setDataSource(this.tableData[this.tagRemark]);
         //渲染列
         sheet.bindColumns(colInfos); //此方法一定要放在setDataSource后面才能正确渲染列名
-        this.spread.options.tabStripVisible = false;//是否显示表单标签
+        this.spread.options.tabStripVisible = false; //是否显示表单标签
         // 事件
-        let self = this
+        let self = this;
         // 当前有排序规则进行排序
-        if(self.filterParams&&self.filterParams.col>-1){
+        if (self.filterParams && self.filterParams.col > -1) {
           // 参数1
           // 参数2
           // 参数3--排序行数
           // 参数4--排序列数量
           sheet.sortRange(-1, -1, -1, -1, true, [
-              { index: self.filterParams.col, ascending: self.filterParams.ascending}, 
+            {
+              index: self.filterParams.col,
+              ascending: self.filterParams.ascending,
+            },
           ]);
         }
         // 排序事件
         sheet.bind(GC.Spread.Sheets.Events.RangeSorting, function (e, info) {
-          self.filterParams = info
+          self.filterParams = info;
         });
       } catch (error) {
         console.log("表格渲染的错误信息:", error);
@@ -530,11 +532,11 @@ export default {
       }
     },
     // 计算
-    async calculateSave(){
+    async calculateSave() {
       let form = {
-        StartDate:null,
-        EndDate:_this.machineCycle
-      }
+        StartDate: null,
+        EndDate: _this.machineCycle,
+      };
       this.adminLoading = true;
       let res = await GetSearch(form, "/APSAPI/CalculateDeliveryData");
       const { result, data, count, msg } = res.data;
@@ -577,23 +579,22 @@ export default {
     // 删除
     async dataDel(remarkTb, index, parms) {
       let newData = [];
-      this.getSelectionData()
+      this.getSelectionData();
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择需要删除的数据！");
         return;
-      } else if(this.selectionData[0].length){
+      } else if (this.selectionData[0].length) {
         this.selectionData[0].forEach((y) => {
           let obj = y;
           obj["ElementDeleteFlag"] = 1;
           newData.push(obj);
         });
         this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then((_) => {
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
+          .then((_) => {
+            _this.dataSave(remarkTb, index, null, newData);
+          })
+          .catch((_) => {});
       }
-      
     },
   },
 };

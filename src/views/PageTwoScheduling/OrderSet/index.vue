@@ -1,10 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-
+  <div class="container" v-loading="adminLoading">
     <div class="admin_left">
       <ComAsideTree
         ref="asideRef"
@@ -18,10 +14,7 @@
       />
     </div>
     <div class="admin_container">
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+      <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -37,17 +30,18 @@
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
                   :key="y"
                 >
-                  <span @click="changeStatus(item, y, 1)">{{ item.label }}</span>
+                  <span @click="changeStatus(item, y, 1)">{{
+                    item.label
+                  }}</span>
                   <el-divider direction="vertical"></el-divider>
                 </div>
               </el-col>
@@ -74,18 +68,10 @@
     </div>
 
     <!-- 工艺配置 -->
-    <el-dialog
-      title="选择工艺"
-      :visible.sync="processDialog"
-      width="16.8%"
-    >
+    <el-dialog title="选择工艺" :visible.sync="processDialog" width="16.8%">
       <el-form label-width="110px">
         <el-form-item label="请选择工艺：">
-          <el-select
-            v-model="ProcessGroupID"
-            clearable
-            filterable
-          >
+          <el-select v-model="ProcessGroupID" clearable filterable>
             <el-option
               v-for="item in processGroupOptions"
               :key="item.ProcessGroupID"
@@ -96,22 +82,13 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="processDialog=false"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="sureProcess"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="processDialog = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="sureProcess" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -317,9 +294,8 @@ export default {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] = this.Status1[
-        this.labelStatus1
-      ].value;
+      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+        this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {

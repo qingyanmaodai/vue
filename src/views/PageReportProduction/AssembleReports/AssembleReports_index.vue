@@ -1,13 +1,7 @@
 <!--装配齐套报表-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,12 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
-            </el-col>
+            <el-col :span="20" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <ComVxeTable
@@ -56,11 +48,7 @@ var _this;
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComFormDialog from "@/components/ComFormDialog";
-import {
-  GetHeader,
-  GetSearchData,
-  ExportData,
-} from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData } from "@/api/Common";
 export default {
   name: "AssembleReports_index",
   components: {
@@ -73,21 +61,17 @@ export default {
       ////////////////// Search /////////////////
       isAdd: false,
       adminLoading: false,
-      title:this.$route.meta.title,
+      title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
       formSearchs: [
         {
-          datas: {
-            
-          },
+          datas: {},
           forms: [],
         },
       ],
       btnForm: [],
-      parmsBtn: [
-        
-      ],
+      parmsBtn: [],
       tableData: [[]],
       tableColumns: [[]],
       tableLoading: [false],
@@ -99,7 +83,7 @@ export default {
       isLoading: false,
       isEdit: false,
       isSelect: false,
-      sysID:[{ID: 5594}],
+      sysID: [{ ID: 5594 }],
       newTag: -1,
       selectionData: [[], [], [], []],
     };
@@ -144,7 +128,7 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem -10+ "px";
+      let newHeight = rem - 10 + "px";
       this.$set(this, "height", newHeight);
     },
     // 第几页
@@ -192,9 +176,13 @@ export default {
     },
     // 查询
     dataSearch(remarkTb) {
-    this.formSearchs[0].datas["dicID"] = this.sysID[this.tagRemark].ID;
-    this.formSearchs[0].datas["OweQty"] = 0
-    this.formSearchs[0].datas["WorkOrderTypeID"] = ['6033a57f143bbd', '6033a514143788', '6033a5371438ef']
+      this.formSearchs[0].datas["dicID"] = this.sysID[this.tagRemark].ID;
+      this.formSearchs[0].datas["OweQty"] = 0;
+      this.formSearchs[0].datas["WorkOrderTypeID"] = [
+        "6033a57f143bbd",
+        "6033a514143788",
+        "6033a5371438ef",
+      ];
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -209,13 +197,13 @@ export default {
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != "dicID") {
-          if(this.formSearchs[remarkTb].forms.length){
+          if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach((element)=>{
-              if(element.prop===name){
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
-            })
+            });
           }
         }
       }
@@ -267,8 +255,12 @@ export default {
         });
         this.adminLoading = false;
         this.formSearchs[0].datas["dicID"] = this.sysID[this.tagRemark].ID;
-        this.formSearchs[0].datas["OweQty"] = 0
-        this.formSearchs[0].datas["WorkOrderTypeID"] = ['6033a57f143bbd', '6033a514143788', '6033a5371438ef']
+        this.formSearchs[0].datas["OweQty"] = 0;
+        this.formSearchs[0].datas["WorkOrderTypeID"] = [
+          "6033a57f143bbd",
+          "6033a514143788",
+          "6033a5371438ef",
+        ];
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },

@@ -41,10 +41,7 @@
             :placeholder="newItem.placeholder"
             @focus="openInnerDialog(newItem.methods)"
           >
-            <i
-              slot="suffix"
-              class="el-icon-search"
-            ></i>
+            <i slot="suffix" class="el-icon-search"></i>
           </el-input>
           <el-select
             class="fill_width"
@@ -138,26 +135,31 @@
           />
           <el-autocomplete
             size="small"
-            v-else-if="newItem.type=='autocomplete'"
-            style="width:100%"
+            v-else-if="newItem.type == 'autocomplete'"
+            style="width: 100%"
             v-model="ruleForm[newItem.prop]"
-            :fetch-suggestions="((queryString,cb)=>{fetchSuggertions(queryString,cb,newItem.methods)})"
-            @select="item => getRemote(item,newItem.methods)"
+            :fetch-suggestions="
+              (queryString, cb) => {
+                fetchSuggertions(queryString, cb, newItem.methods);
+              }
+            "
+            @select="(item) => getRemote(item, newItem.methods)"
           >
             <template slot-scope="{ item }">
-              <div style="border-bottom: 1px dashed #8c8e8e;">
-                <el-form
-                  label-width="100px"
-                  inline
-                >
+              <div style="border-bottom: 1px dashed #8c8e8e">
+                <el-form label-width="100px" inline>
                   <el-form-item
-                    style="margin-bottom:5px"
+                    style="margin-bottom: 5px"
                     :label="newItem.label"
-                  ><span style="color:orange">{{ item[newItem.prop] }}</span> </el-form-item>
+                    ><span style="color: orange">{{ item[newItem.prop] }}</span>
+                  </el-form-item>
                   <el-form-item
-                    style="margin-bottom:5px"
+                    style="margin-bottom: 5px"
                     :label="newItem.label2"
-                  ><span style="color:orange">{{ item[newItem.prop2]}}</span> </el-form-item>
+                    ><span style="color: orange">{{
+                      item[newItem.prop2]
+                    }}</span>
+                  </el-form-item>
                 </el-form>
               </div>
             </template>
@@ -172,14 +174,14 @@
             :inactive-value="newItem.inactiveValue"
           />
           <el-time-select
-            style="width:100%"
+            style="width: 100%"
             v-else-if="newItem.type == 'time'"
             v-model="formData[newItem.prop]"
             :picker-options="{
-    start: '00:00',
-    step: '00:15',
-    end: '24:00'
-  }"
+              start: '00:00',
+              step: '00:15',
+              end: '24:00',
+            }"
             placeholder=""
           >
           </el-time-select>
@@ -195,10 +197,7 @@
             v-model="formData[newItem.prop]"
             :disabled="newItem.disabled"
           >
-            <el-checkbox
-              :label="newItem.label"
-              name="type"
-            />
+            <el-checkbox :label="newItem.label" name="type" />
           </el-checkbox-group>
           <el-radio-group
             v-else-if="newItem.type == 'radioGroupLabel'"
@@ -208,7 +207,8 @@
               v-for="(item2, index2) in newItem.radioGroups"
               :key="index2"
               :label="item2.value"
-            >{{ item2.label }}</el-radio>
+              >{{ item2.label }}</el-radio
+            >
           </el-radio-group>
 
           <el-radio-group
@@ -240,28 +240,17 @@
               将文件拖到此处，或
               <em>点击上传</em>
             </div>
-            <div
-              class="el-upload__tip"
-              slot="tip"
-            >
+            <div class="el-upload__tip" slot="tip">
               只能上传jpg/png文件，且不超过500kb
             </div>
           </el-upload>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          @click="btnClick(false)"
-          size="small"
-        >取 消</el-button>
-        <el-button
-          type="primary"
-          @click="btnClick(true)"
-          size="small"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="btnClick(false)" size="small">取 消</el-button>
+        <el-button type="primary" @click="btnClick(true)" size="small"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>

@@ -1,18 +1,9 @@
 <!--组织信息-->
 <!-- 四部周计划 -->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_container"
-      style="width:100%"
-    >
-      <div
-        class="admin_head"
-        ref="headRef"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_container" style="width: 100%">
+      <div class="admin_head" ref="headRef">
         <ComSearch
           v-show="labelStatus1 != 4"
           ref="searchRef"
@@ -41,10 +32,7 @@
               <el-col :span="4">
                 <span class="title">{{ title }}</span>
               </el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
-              >
+              <el-col :span="20" class="flex_flex_end">
                 <el-date-picker
                   v-model="ReplyDate"
                   type="date"
@@ -110,7 +98,7 @@
             </el-row>
           </div>
           <ComVxeTable
-            v-show="labelStatus1 <=2"
+            v-show="labelStatus1 <= 2"
             :rowKey="'RowNumber'"
             :height="height"
             :tableData="tableData[0]"
@@ -123,7 +111,6 @@
             :showFooter="true"
             :includeFields="includeFields"
             :cellStyle="cellStyle"
-          
             :isClear="isClear[0]"
             :showPagination="false"
             :pagination="tablePagination[0]"
@@ -147,8 +134,6 @@
             :isEdit="isEdit"
             :showFooter="true"
             :includeFields="includeFields"
-     
-          
             :isClear="isClear[2]"
             :showPagination="false"
             :pagination="tablePagination[2]"
@@ -183,7 +168,7 @@
             @changeline="changeline"
             @sortChange="sortChange"
           />
-          <div style="color:red;font-weight:bold">{{this.resultMsg}}</div>
+          <div style="color: red; font-weight: bold">{{ this.resultMsg }}</div>
         </div>
       </div>
     </div>
@@ -234,7 +219,7 @@ export default {
         { label: "分线列表", value: 4 },
       ],
       title: this.$route.meta.title,
-      resultMsg:'',
+      resultMsg: "",
       delData: [[]],
       formSearchs: [
         {
@@ -245,7 +230,7 @@ export default {
           datas: {},
           forms: [],
         },
-         {
+        {
           datas: {},
           forms: [],
         },
@@ -281,7 +266,7 @@ export default {
         //   Methods: "parseData",
         //   Icon: "",
         // },
-            {
+        {
           ButtonCode: "save",
           BtnName: "保存",
           isLoading: false,
@@ -289,9 +274,9 @@ export default {
           Type: "success",
           Icon: "",
           Size: "small",
-           signName: [1, 4],
+          signName: [1, 4],
         },
-                {
+        {
           ButtonCode: "save",
           BtnName: "恢复",
           isLoading: false,
@@ -300,7 +285,7 @@ export default {
           signName: 3,
           Icon: "",
           Size: "small",
-          Params: { dataName: "selectionData",remarkTb:2 },
+          Params: { dataName: "selectionData", remarkTb: 2 },
         },
         {
           ButtonCode: "save",
@@ -345,12 +330,12 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 6736 }, { ID: 6735 },{ ID: 5585 }],
+      sysID: [{ ID: 6736 }, { ID: 6735 }, { ID: 5585 }],
       userInfo: {},
       IsPurchaseBoss: false,
       ReplyDate: "",
-           NoWorkHour:[]
-      ,LineViewSort:[]
+      NoWorkHour: [],
+      LineViewSort: [],
     };
   },
   computed: {},
@@ -366,70 +351,67 @@ export default {
     }, 500);
   },
   methods: {
+    //   changeline(item,index,newLineID)
+    //   {
+    //  console.log(item.LineID);console.log(index)
+    //     let viewindex=0;
+    //      for (const m of this.tableData[1]) {
 
-  //   changeline(item,index,newLineID)
-  //   {
-  //  console.log(item.LineID);console.log(index)
-  //     let viewindex=0;
-  //      for (const m of this.tableData[1]) {
+    //      if(m.LineID===index&&m.ProcessPlanID!=item.ProcessPlanID)
+    //      {
+    //          if(viewindex<=m.ViewSort)
+    //          {
+    //     viewindex=m.ViewSort;
+    //          }
 
-  //      if(m.LineID===index&&m.ProcessPlanID!=item.ProcessPlanID)
-  //      {
-  //          if(viewindex<=m.ViewSort)
-  //          {
-  //     viewindex=m.ViewSort;
-  //          }
-      
-  //         // break;
-  //      }
- 
+    //         // break;
+    //      }
 
-  //    }
- 
-  //    for (const m of this.tableData[1]) {
-    
-  //      if(m.LineID===index&&m.ProcessPlanID!=item.ProcessPlanID)
-  //      {
-  //              viewindex=m.ViewSort;
-  //      }
-  //      if(m.ProcessPlanID===item.ProcessPlanID)
-  //      {
-  //           viewindex++;
-  //         item.ViewSort= viewindex  ;
-  //           return false;
-  //      }
+    //    }
 
-  //    }
-  //   },
+    //    for (const m of this.tableData[1]) {
 
+    //      if(m.LineID===index&&m.ProcessPlanID!=item.ProcessPlanID)
+    //      {
+    //              viewindex=m.ViewSort;
+    //      }
+    //      if(m.ProcessPlanID===item.ProcessPlanID)
+    //      {
+    //           viewindex++;
+    //         item.ViewSort= viewindex  ;
+    //           return false;
+    //      }
 
-        changenoworkhours(item, value, prop, index, a, b)
-    {
-      if(this.NoWorkHour.findIndex(m=>m.OrderID==item.OrderID)===-1)
-      {
-    
-     this.NoWorkHour.push(item)
-  
+    //    }
+    //   },
+
+    changenoworkhours(item, value, prop, index, a, b) {
+      if (this.NoWorkHour.findIndex((m) => m.OrderID == item.OrderID) === -1) {
+        this.NoWorkHour.push(item);
       }
     },
     changeline(item, value, prop, index, a, b) {
       item.拉线.forEach((m) => {
         if (item.LineID === m.OrganizeID) {
-          let tmp=m;
-          if(this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)==-1)
-          {
+          let tmp = m;
+          if (
+            this.LineViewSort.findIndex(
+              (m2) => m2.OrganizeID === m.OrganizeID
+            ) == -1
+          ) {
             this.LineViewSort.push(tmp);
-          }
-          else 
-          {
-            tmp=this.LineViewSort[this.LineViewSort.findIndex(m2=>m2.OrganizeID===m.OrganizeID)];
+          } else {
+            tmp =
+              this.LineViewSort[
+                this.LineViewSort.findIndex(
+                  (m2) => m2.OrganizeID === m.OrganizeID
+                )
+              ];
           }
           item.ViewSort = tmp.ViewSort;
-          tmp.ViewSort=tmp.ViewSort+1
-       
+          tmp.ViewSort = tmp.ViewSort + 1;
         }
       });
-    
     },
     searchTree(msg) {
       this.treeData = [];
@@ -631,7 +613,7 @@ export default {
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
-     
+
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
@@ -660,10 +642,10 @@ export default {
         });
         //this.formSearchs[0].datas["Extend11"] = "CRTD";
         this.formSearchs[0].datas["ProductionStatus"] = 26; //默认待排
-             this.formSearchs[2].datas["ProductionStatus"] = 24; //默认待排
-                 this.formSearchs[2].datas["ControlID"] ='202'; //默认待排
+        this.formSearchs[2].datas["ProductionStatus"] = 24; //默认待排
+        this.formSearchs[2].datas["ControlID"] = "202"; //默认待排
         this.dataSearch(0);
-        console.log(this.formSearchs)
+        console.log(this.formSearchs);
       }
     },
     // 验证数据
@@ -683,7 +665,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
-     // form["ControlID"] = "202";
+      // form["ControlID"] = "202";
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
@@ -726,7 +708,7 @@ export default {
     },
     tableRowClassName({ row, rowIndex }) {
       let className = "";
-      if (row.DbResult !='' &&row.DbResult!='计算成功') {
+      if (row.DbResult != "" && row.DbResult != "计算成功") {
         className += "bgRedColor";
       }
       return className;
@@ -735,16 +717,14 @@ export default {
     cellStyle({ row, column }) {},
     // 改变状态
     changeStatus(x, index) {
-     
       this.labelStatus1 = index;
       if (index == 4) {
         if (this.tableData[1].length == 0) {
           this.dataSearch(1);
         }
         return;
-      }else if(index==3)
-      {
-         if (this.tableData[2].length == 0) {
+      } else if (index == 3) {
+        if (this.tableData[2].length == 0) {
           this.dataSearch(2);
         }
         return;
@@ -754,7 +734,7 @@ export default {
       if (index === 0) {
         s = [];
       } else if (index === 1) {
-        this.formSearchs[0].datas["Extend11"] = ["CRTD",'REL'];
+        this.formSearchs[0].datas["Extend11"] = ["CRTD", "REL"];
         s = [26];
       } else if (index === 2) {
         s = [21, 22, 23];
@@ -802,12 +782,12 @@ export default {
       let resultTag = false;
       if (newData.length != 0) {
         if (tag == 0) {
-          newData.forEach((x,y) => {
+          newData.forEach((x, y) => {
             x.isChecked = true;
 
             if (!x.ProcessGroupID) {
               resultTag = true;
-               this.$message.error((y+1)+"工艺不能为空");
+              this.$message.error(y + 1 + "工艺不能为空");
             } else {
             }
           });
@@ -832,7 +812,7 @@ export default {
         this.$message.error("请选择需要下达的数据！");
         return;
       }
-         
+
       submitData.forEach((m) => {
         m["MOSchedulingType"] = 3;
       });
@@ -877,60 +857,52 @@ export default {
           .then(() => {
             // 确定
             this.adminLoading = true;
-        this.selectionData[1].forEach((a) => {
-         a["ElementDeleteFlag"]=1;
-        });
-        this.dataSave(this.selectionData[1], 1);
+            this.selectionData[1].forEach((a) => {
+              a["ElementDeleteFlag"] = 1;
+            });
+            this.dataSave(this.selectionData[1], 1);
           })
           .catch(() => {
             // 取消
           });
-        
       }
     },
-       // 保存
+    // 保存
     async save(remarkTb, index, parms, newData) {
-           if(this.NoWorkHour.length>0&&remarkTb==0)
-      {
-
-        this.selectionData[remarkTb]=this.selectionData[remarkTb].concat(this.NoWorkHour);
-        
+      if (this.NoWorkHour.length > 0 && remarkTb == 0) {
+        this.selectionData[remarkTb] = this.selectionData[remarkTb].concat(
+          this.NoWorkHour
+        );
       }
-        if (this.selectionData[remarkTb].length == 0) {
+      if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-     
-       this.dataSave(this.selectionData[remarkTb],remarkTb);
+        this.dataSave(this.selectionData[remarkTb], remarkTb);
       }
-       
- 
     },
     //恢复计划
     async recovery(remarkTb, index, parms, newData) {
-      console.log('remarkTb',remarkTb)
-      console.log('this.selectionData',this.selectionData)
-      return
-        if (this.selectionData[2].length == 0) {
+      console.log("remarkTb", remarkTb);
+      console.log("this.selectionData", this.selectionData);
+      return;
+      if (this.selectionData[2].length == 0) {
         this.$message.error("请选择需要操作的数据！");
       } else {
-     this.selectionData[2].forEach(m=>{
-       m["ProductionStatus"]=23;
+        this.selectionData[2].forEach((m) => {
+          m["ProductionStatus"] = 23;
+        });
 
-     });
-     
-       this.dataSave(this.selectionData[2],2);
+        this.dataSave(this.selectionData[2], 2);
       }
-       
- 
     },
     async dataSave(newData, remarkTb) {
-      this.adminLoading=true;
+      this.adminLoading = true;
       let res = await GetSearch(newData, "/APSAPI/SaveData");
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
       if (result) {
-            this.$set(this.selectionData, remarkTb, []);
-          this.NoWorkHour=[]
+        this.$set(this.selectionData, remarkTb, []);
+        this.NoWorkHour = [];
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
@@ -982,7 +954,6 @@ export default {
       if (this.selectionData[0].length == 0) {
         this.$message.error("请选择要进入分线列表的数据！");
       } else {
-   
         // 进入预排计划
 
         this.setWeekData(1);
@@ -1011,8 +982,8 @@ export default {
         if (result) {
           this.$set(this.tableData, 1, data);
           // 清空选中的，把选中的数据重新绑定
-          
-          this.resultMsg=res.data.resultMsg
+
+          this.resultMsg = res.data.resultMsg;
 
           let templateData = JSON.parse(JSON.stringify(this.selectionData[1]));
           this.$set(this.selectionData, 1, []);
@@ -1027,7 +998,7 @@ export default {
               });
             });
           }
-         // console.log(this.selectionData[1]);
+          // console.log(this.selectionData[1]);
           this.adminLoading = false;
           this.$message({
             message: msg,

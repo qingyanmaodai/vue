@@ -1,13 +1,7 @@
 <!--封口计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,11 +16,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 v-for="(item, y) in Status1"
@@ -45,18 +38,16 @@
         ></div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span
-              @click="toPageSetting"
-              class="primaryColor cursor"
-            >SysID:6740
+            <span @click="toPageSetting" class="primaryColor cursor"
+              >SysID:6740
             </span>
           </div>
           <el-pagination
             class="flex_right"
-            @size-change="(val)=>pageSize(val,0)"
-            @current-change="(val)=>pageChange(val,0)"
+            @size-change="(val) => pageSize(val, 0)"
+            @current-change="(val) => pageChange(val, 0)"
             :current-page="tablePagination[0].pageIndex"
-            :page-sizes="[100,300,500,800,1000,2000,3000,4000]"
+            :page-sizes="[100, 300, 500, 800, 1000, 2000, 3000, 4000]"
             :page-size="tablePagination[0].pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="tablePagination[0].pageTotal"
@@ -194,9 +185,11 @@ export default {
     },
     // 高度控制
     setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;   
+      let headHeight = this.$refs.headRef.offsetHeight;
       let rem =
-        document.documentElement.clientHeight - headHeight - this.$store.getters.reduceHeight;
+        document.documentElement.clientHeight -
+        headHeight -
+        this.$store.getters.reduceHeight;
       let newHeight = rem - 5 + "px";
       this.$set(this, "height", newHeight);
     },
@@ -270,56 +263,56 @@ export default {
       form["rows"] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-     this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch("user/exportData", res.data);
     },
     // 特殊接口保存
     async specialSave(remarkTb, index) {
       let res = null;
       this.adminLoading = true;
-      
+
       res = await SalesPlanProcessMaterialDay(jspreadsheettable[0].getJson());
       const { result, data, count, msg } = res.data;
       this.dataSearch(0);
       if (result) {
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       }
     },
     // 保存
     async dataSave(remarkTb, index) {
       this.adminLoading = true;
-      
+
       let res = await SaveData(this.tableData[remarkTb]);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.dataSearch(0);
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       }
     },
@@ -358,10 +351,10 @@ export default {
         this.adminLoading = false;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
         this.adminLoading = false;
       }
 
@@ -375,10 +368,10 @@ export default {
         jspreadsheetColumns[0] = datas[0];
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 验证数据
@@ -425,10 +418,10 @@ export default {
         this.tablePagination[remarkTb].pageTotal = count;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
@@ -449,17 +442,17 @@ export default {
         this.dataSearch(remarkTb);
         this.btnForm[index].isLoading = false;
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
         this.adminLoading = false;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
         this.btnForm[index].isLoading = false;
         this.adminLoading = false;
       }
@@ -479,10 +472,10 @@ export default {
         });
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
       }
     },
     // 选择车间

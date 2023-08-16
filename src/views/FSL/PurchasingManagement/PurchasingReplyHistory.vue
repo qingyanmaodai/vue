@@ -2,8 +2,8 @@
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
-      <el-main style="padding:0;margin:0">
-        <div class="admin_container_2" style="width:100%">
+      <el-main style="padding: 0; margin: 0">
+        <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
             <div v-for="i in [0]" :key="i" v-show="true">
               <ComSearch
@@ -181,7 +181,7 @@ import {
   SaveData,
   GetServerTime,
   GetOrgData,
-  UpdateOrderBomPOTracker
+  UpdateOrderBomPOTracker,
 } from "@/api/Common";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
@@ -193,7 +193,7 @@ export default {
     ComVxeTable,
     ComReportTable,
     ComFormDialog,
-    ComSpreadTable
+    ComSpreadTable,
   },
   data() {
     return {
@@ -208,7 +208,7 @@ export default {
         { label: "数量+时间+线体", value: 0 },
         { label: "数量+时间+线体+托盘", value: "" },
         { label: "综合分析", value: "" },
-        { label: "全部", value: 1 }
+        { label: "全部", value: 1 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -219,24 +219,24 @@ export default {
       formSearchs: [
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
+          forms: [],
         },
         {
           datas: {},
-          forms: []
-        }
+          forms: [],
+        },
       ],
       selectionData: [[], [], [], [], []],
       btnForm: [],
@@ -249,7 +249,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 }
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
@@ -267,9 +267,9 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10075 },
-        { ID: 10075 }
+        { ID: 10075 },
       ],
-      userInfo: {}
+      userInfo: {},
     };
   },
   computed: {},
@@ -297,7 +297,7 @@ export default {
       this.$set(this, "btnForm", routeBtn);
     },
     //获取子组件实例
-    workbookInitialized: function(workbook) {
+    workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
     //获取当前选中行的值
@@ -336,7 +336,7 @@ export default {
     },
     handleRemove(file) {
       this.fileList.splice(
-        this.fileList.findIndex(item => item.url === file.url),
+        this.fileList.findIndex((item) => item.url === file.url),
         1
       );
     },
@@ -413,7 +413,7 @@ export default {
         if (name != "dicID") {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
-            this.formSearchs[remarkTb].forms.forEach(element => {
+            this.formSearchs[remarkTb].forms.forEach((element) => {
               if (element.prop === name) {
                 this.formSearchs[remarkTb].datas[name] = null;
               }
@@ -444,7 +444,7 @@ export default {
         this.$message({
           message: msg,
           type: "success",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
@@ -452,7 +452,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
         this.$set(this, "adminLoading", false);
       }
@@ -472,7 +472,7 @@ export default {
           this.$message({
             message: msg,
             type: "success",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
           this.$set(this, "adminLoading", false);
@@ -480,7 +480,7 @@ export default {
           this.$message({
             message: msg,
             type: "error",
-            dangerouslyUseHTMLString: true
+            dangerouslyUseHTMLString: true,
           });
           this.$set(this, "adminLoading", false);
         }
@@ -555,7 +555,7 @@ export default {
               this.userInfo.Account
             );
           }
-          x.forEach(y => {
+          x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
@@ -588,11 +588,11 @@ export default {
       let { result, data, count, msg, Columns } = res.data;
       if (result) {
         Columns.some((m, i) => {
-          m.forEach(n => {
+          m.forEach((n) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
-              n.children.forEach(x => {
+              n.children.forEach((x) => {
                 this.verifyData(x);
               });
             }
@@ -606,7 +606,7 @@ export default {
         this.$message({
           message: msg,
           type: "error",
-          dangerouslyUseHTMLString: true
+          dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
@@ -668,10 +668,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet
-              .getCell(-1, y)
-              .locked(false)
-              .foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -695,7 +692,7 @@ export default {
               const color = row.colorMapping[key];
               cell.style({
                 backColor: color,
-                foreColor: "#FFFFFF"
+                foreColor: "#FFFFFF",
               });
               // 其他代码
             }
@@ -812,7 +809,7 @@ export default {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath
+            path: "/redirect" + fullPath,
           });
         });
       });
@@ -828,21 +825,21 @@ export default {
         row["JudgeResult"] == "缺采购单"
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "在途不足"
       ) {
         return {
-          background: "#ffced6"
+          background: "#ffced6",
         };
       } else if (
         column.property == "JudgeResult" &&
         row["JudgeResult"] == "待复期"
       ) {
         return {
-          background: "#fdfd8f"
+          background: "#fdfd8f",
         };
       } else if (
         (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
@@ -850,18 +847,18 @@ export default {
           row["IsReplyStatusName"] == "是")
       ) {
         return {
-          background: "#9fff9f"
+          background: "#9fff9f",
         };
       }
 
       if (column.property == "OnloadQty") {
         return {
-          color: "blue"
+          color: "blue",
         };
       }
       if (column.property == "RealOweQty") {
         return {
-          color: "red"
+          color: "red",
         };
       }
       if (
@@ -869,7 +866,7 @@ export default {
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b"
+          background: "#ff7b7b",
         };
       }
 
@@ -879,7 +876,7 @@ export default {
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -891,7 +888,7 @@ export default {
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b"
+            background: "#ff7b7b",
           };
         }
       }
@@ -902,7 +899,7 @@ export default {
           parseFloat(row.StockQtyAllocationPrepare)
         ) {
           return {
-            background: "#9fff9f"
+            background: "#9fff9f",
           };
         }
       }
@@ -911,7 +908,7 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       this.dataSearch(index);
-    }
-  }
+    },
+  },
 };
 </script>

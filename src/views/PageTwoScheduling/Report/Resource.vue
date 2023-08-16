@@ -24,7 +24,6 @@
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
-                
                 >
                 </el-date-picker>
               </el-form-item>
@@ -39,15 +38,26 @@
                   range-separator="至"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
-        
                 >
                 </el-date-picker> </el-form-item
             ></el-col>
             <el-col :span="6">
               <el-form-item>
-                <el-button type="primary" :disabled="isEdit==false" @click="calc()">运算</el-button>
-                <el-button type="primary"  :disabled="isEdit==false" @click="dataSave(0)">保存</el-button>
-                <el-button type="primary" @click="dataExport(0)">导出</el-button>
+                <el-button
+                  type="primary"
+                  :disabled="isEdit == false"
+                  @click="calc()"
+                  >运算</el-button
+                >
+                <el-button
+                  type="primary"
+                  :disabled="isEdit == false"
+                  @click="dataSave(0)"
+                  >保存</el-button
+                >
+                <el-button type="primary" @click="dataExport(0)"
+                  >导出</el-button
+                >
               </el-form-item></el-col
             >
             <el-col :span="6"
@@ -119,7 +129,13 @@
 <script>
 import ComSearch from "@/components/ComSearch";
 import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData, SaveData, GetSearch } from "@/api/Common";
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  SaveData,
+  GetSearch,
+} from "@/api/Common";
 export default {
   name: "Resource",
   components: {
@@ -149,10 +165,15 @@ export default {
           Icon: "",
         },
       ],
-      searchData:{
-      date1:[new Date(),new Date(new Date().setDate(new Date().getDate()+30))],
-      date2:[new Date(new Date().setDate(new Date().getDate()-60)),new Date(new Date().setDate(new Date().getDate()+60))],
-
+      searchData: {
+        date1: [
+          new Date(),
+          new Date(new Date().setDate(new Date().getDate() + 30)),
+        ],
+        date2: [
+          new Date(new Date().setDate(new Date().getDate() - 60)),
+          new Date(new Date().setDate(new Date().getDate() + 60)),
+        ],
       },
       tableData: [[]],
       tableColumns: [[]],
@@ -187,7 +208,6 @@ export default {
         routeBtn.forEach((x) => {
           if (x.ButtonCode == "edit") {
             permission = true;
-         
           }
           let newData = this.parmsBtn.filter((y) => {
             return x.ButtonCode == y.ButtonCode;
@@ -285,10 +305,10 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index) {
-        this.$set(this.tableLoading, remarkTb, true);
+      this.$set(this.tableLoading, remarkTb, true);
       let res = await SaveData(this.tableData[remarkTb]);
       const { datas, forms, result, msg } = res.data;
-         this.$set(this.tableLoading, remarkTb, false);
+      this.$set(this.tableLoading, remarkTb, false);
       if (result) {
         this.$message({
           message: msg,
@@ -371,28 +391,28 @@ export default {
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
-   async calc()
-    {//计算
-       this.$set(this.tableLoading, 0, true);
-  let res = await GetSearch(this.searchData, "/APSAPI/CalcHours");
-          const { result, data, count, msg } = res.data;
-   this.$set(this.tableLoading, 0, false);
-          if (result) {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-            this.dataSearch(0);
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
+    async calc() {
+      //计算
+      this.$set(this.tableLoading, 0, true);
+      let res = await GetSearch(this.searchData, "/APSAPI/CalcHours");
+      const { result, data, count, msg } = res.data;
+      this.$set(this.tableLoading, 0, false);
+      if (result) {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(0);
+      } else {
+        this.adminLoading = false;
+        this.$message({
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+      }
     },
     // 刷新页面
     refrshPage() {

@@ -1,13 +1,7 @@
 <!--串线计划-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
         :searchData="formSearchs[0].datas"
@@ -22,10 +16,7 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col
-              :span="24"
-              class="flex_flex_end"
-            >
+            <el-col :span="24" class="flex_flex_end">
               工序：
               <el-select
                 clearable
@@ -35,7 +26,7 @@
                 v-model="headForm.ProcessID"
               >
                 <el-option
-                  v-for="(item,i) in processs"
+                  v-for="(item, i) in processs"
                   :key="i"
                   :label="item.ProcessName"
                   :value="item.ProcessID"
@@ -76,7 +67,7 @@
                 class="minShortInput"
               >
                 <el-option
-                  v-for="(item,o) in schedulingData"
+                  v-for="(item, o) in schedulingData"
                   :key="o"
                   :label="item.Name"
                   :value="item.Name"
@@ -92,7 +83,7 @@
                 class="minShortInput"
               >
                 <el-option
-                  v-for="(item,i) in sourceData"
+                  v-for="(item, i) in sourceData"
                   :key="i"
                   :label="item.sourceNoName"
                   :value="item.sourceNoName"
@@ -120,11 +111,9 @@
               >
               </el-date-picker>
               <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="info"
-                @click="clearHeadForm"
-                size="small"
-              >重置</el-button>
+              <el-button type="info" @click="clearHeadForm" size="small"
+                >重置</el-button
+              >
               <el-divider direction="vertical"></el-divider>
               <div
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
@@ -144,18 +133,16 @@
         ></div>
         <div class="flex_row_spaceBtn pagination">
           <div>
-            <span
-              @click="toPageSetting"
-              class="primaryColor cursor"
-            >SysID:7801
+            <span @click="toPageSetting" class="primaryColor cursor"
+              >SysID:7801
             </span>
           </div>
           <el-pagination
             class="flex_right"
-            @size-change="(val)=>pageSize(val,0)"
-            @current-change="(val)=>pageChange(val,0)"
+            @size-change="(val) => pageSize(val, 0)"
+            @current-change="(val) => pageChange(val, 0)"
             :current-page="tablePagination[0].pageIndex"
-            :page-sizes="[100,300,500,800,1000,2000,3000,4000]"
+            :page-sizes="[100, 300, 500, 800, 1000, 2000, 3000, 4000]"
             :page-size="tablePagination[0].pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="tablePagination[0].pageTotal"
@@ -205,17 +192,17 @@ export default {
     return {
       ////////////////// 头部参数///////////////
       sourceData: [{ sourceNoName: "销售" }, { sourceNoName: "客户" }],
-      schedulingData: [{ Name: "按需求" } ,{ Name: "按产能" }],
+      schedulingData: [{ Name: "按需求" }, { Name: "按产能" }],
       processs: [],
       headForm: {
         ProcessName: "",
         ProcessID: "P202106171344021",
-        Day:0,
-        StartDate:null,
-        EndDate:null,
-        SchedulingType:'按需求'
-        ,Source:'客户'
-        ,Resources:1
+        Day: 0,
+        StartDate: null,
+        EndDate: null,
+        SchedulingType: "按需求",
+        Source: "客户",
+        Resources: 1,
       },
       ////////////////// Search /////////////////
       adminLoading: false,
@@ -592,7 +579,7 @@ export default {
     async AutoPrePlan(remarkTb, index) {
       this.adminLoading = true;
       this.btnForm[index].isLoading = true;
-      this.headForm["type"]=0;
+      this.headForm["type"] = 0;
       let res = await GetSearch(this.headForm, "/APSAPI/AutoPrePlan");
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -653,34 +640,31 @@ export default {
     schedulingComputed() {},
     // 执行排程
     async submitScheduling() {
+      this.adminLoading = true;
 
-
-    this.adminLoading = true;
-      
-      let res = await GetSearch(jspreadsheettable[0].getJson(),'/APSAPI/SaveMaterialPlanFromSale')
+      let res = await GetSearch(
+        jspreadsheettable[0].getJson(),
+        "/APSAPI/SaveMaterialPlanFromSale"
+      );
       const { result, data, count, msg } = res.data;
       this.dataSearch(0);
       if (result) {
         this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "success",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       } else {
         this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-        
+          message: msg,
+          type: "error",
+          dangerouslyUseHTMLString: true,
+        });
+
         this.adminLoading = false;
       }
-
-
-
-
     },
     // 重置表单
     clearHeadForm() {
@@ -695,7 +679,7 @@ export default {
 .shortInput {
   width: 140px;
 }
-.minShortInput{
+.minShortInput {
   width: 80px;
 }
 </style>

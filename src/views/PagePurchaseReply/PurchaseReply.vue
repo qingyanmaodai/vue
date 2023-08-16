@@ -1,13 +1,7 @@
 <!--下发复期-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
       <div>
         <ComSearch
           ref="searchRef"
@@ -25,17 +19,17 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div>
                 <el-radio
                   v-model="IsSetReply"
                   :label="0"
                   @click.native.prevent="clickitem(1)"
-                >显示未下发</el-radio>
+                  >显示未下发</el-radio
+                >
                 <el-divider direction="vertical"></el-divider>
                 <el-date-picker
                   v-model="DemandReplyDate"
@@ -46,11 +40,7 @@
                 >
                 </el-date-picker>
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="changeDate"
-                >
+                <el-button type="primary" size="mini" @click="changeDate">
                   指定要求完成期
                 </el-button>
                 <el-divider direction="vertical"></el-divider>
@@ -91,15 +81,8 @@
       </div>
     </div>
 
-    <el-dialog
-      title="复期明细"
-      :visible.sync="dialogShow"
-      width="90%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="复期明细" :visible.sync="dialogShow" width="90%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           <ComReportTable
             :rowKey="'RowNumber'"
@@ -557,12 +540,11 @@ export default {
       // if (row.IsSetReplyName == "否") {
       //   this.$message.error("暂未下发，还没有复期任务！");
       // } else {
-        this.dialogShow = true;
-        this.formSearchs[1].datas["SalesOrderDetailID"] =
-          row.SalesOrderDetailID;
-        this.formSearchs[1].datas["PrepareDate"] = row.MinPrepareDate;
-        this.dataSearch(1);
-      }
+      this.dialogShow = true;
+      this.formSearchs[1].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+      this.formSearchs[1].datas["PrepareDate"] = row.MinPrepareDate;
+      this.dataSearch(1);
+    },
     // },
   },
 };

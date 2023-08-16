@@ -1,17 +1,13 @@
 <!--配件点检-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
+  <div class="container" v-loading="adminLoading">
     <div
       ref="content_up"
-      :class="enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'"
+      :class="
+        enlargeType ? 'list_content_up blockClass' : 'list_content_up noneClass'
+      "
     >
-      <div
-        class="admin_head_2"
-        ref="headRef"
-      >
+      <div class="admin_head_2" ref="headRef">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -24,16 +20,12 @@
       </div>
       <div>
         <div class="admin_content">
-          <div
-            class="ant-table-title"
-            ref="headRef_2"
-          >
+          <div class="ant-table-title" ref="headRef_2">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
-              <el-col
-                :span="20"
-                class="flex_flex_end"
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
               >
+              <el-col :span="20" class="flex_flex_end">
                 <div
                   :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                   v-for="(item, y) in Status1"
@@ -66,32 +58,25 @@
       </div>
     </div>
 
-    <div
-      ref="content_down"
-      class="list_content_down"
-    >
+    <div ref="content_down" class="list_content_down">
       <div>
         <div class="admin_content">
           <div class="ant-table-title">
             <el-row>
               <!-- <el-col :span="1"><span class="title">物料明细</span></el-col> -->
-              <el-col
-                :span="24"
-                class="flex_flex_end"
-              >
-
+              <el-col :span="24" class="flex_flex_end">
                 <span>料号：</span>
                 <el-input
                   size="small"
                   v-model="formSearchs[1].datas['Code']"
-                  style="width:140px"
+                  style="width: 140px"
                   @keyup.enter.native="dataSearch(1)"
                 ></el-input>
                 <el-divider direction="vertical"></el-divider>
                 <span>名称：</span>
                 <el-input
                   size="small"
-                  style="width:140px"
+                  style="width: 140px"
                   @keyup.enter.native="dataSearch(1)"
                   v-model="formSearchs[1].datas['MaterialName']"
                 ></el-input>
@@ -101,7 +86,7 @@
                 <span>规格：</span>
                 <el-input
                   size="small"
-                  style="width:140px"
+                  style="width: 140px"
                   v-model="formSearchs[1].datas['Spec']"
                   @keyup.enter.native="dataSearch(1)"
                 ></el-input>
@@ -116,10 +101,10 @@
                   @change="selectOrderNo"
                 >
                   <el-option
-                    v-for="(item,i) in OrderNos"
+                    v-for="(item, i) in OrderNos"
                     :key="i"
                     :label="item.OrderNo"
-                    :value="item.	OrderNo"
+                    :value="item.OrderNo"
                   ></el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
@@ -128,15 +113,15 @@
                   filterable
                   size="small"
                   placeholder="选择仓库"
-                  style="width:100px"
+                  style="width: 100px"
                   v-model="warehouseValue"
                   @change="selectWarehouse"
                 >
                   <el-option
-                    v-for="(item,i) in warehouses"
+                    v-for="(item, i) in warehouses"
                     :key="i"
                     :label="item.WarehouseName"
-                    :value="item.	WarehouseID"
+                    :value="item.WarehouseID"
                   ></el-option>
                 </el-select>
                 <el-divider direction="vertical"></el-divider>
@@ -146,17 +131,13 @@
                   @click="clearShort"
                 >清空超领</el-button>
                 <el-divider direction="vertical"></el-divider> -->
-                <el-button
-                  type="success"
-                  size="small"
-                  @click="submitChildren"
-                >提交</el-button>
+                <el-button type="success" size="small" @click="submitChildren"
+                  >提交</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
-                <el-button
-                  type="warning"
-                  size="small"
-                  @click="dataExport(1)"
-                >导出</el-button>
+                <el-button type="warning" size="small" @click="dataExport(1)"
+                  >导出</el-button
+                >
                 <el-divider direction="vertical"></el-divider>
                 <div
                   :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
@@ -177,13 +158,13 @@
                       v-show="!expendColl"
                       src="../../../assets/svg/collapse.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                     <img
                       v-show="expendColl"
                       src="../../../assets/svg/expend.svg"
                       @click="systolic"
-                      style="width:1.4rem;height:1.4rem"
+                      style="width: 1.4rem; height: 1.4rem"
                     />
                   </span>
                 </el-tooltip>
@@ -214,15 +195,8 @@
       </div>
     </div>
 
-    <el-dialog
-      title="料品可用量查询"
-      :visible.sync="dialogShow"
-      width="50%"
-    >
-      <div
-        class="container"
-        style="background-color: #f0f2f5;"
-      >
+    <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
+      <div class="container" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComReportTable
@@ -263,7 +237,6 @@
         </div>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -302,7 +275,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            WorkOrderTypeID:['604ed9c8fbbad5','6033a5371438ef']
+            WorkOrderTypeID: ["604ed9c8fbbad5", "6033a5371438ef"],
           },
           forms: [],
         },
@@ -669,7 +642,6 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      
       this.formSearchs[1].datas["OrderID"] = row.OrderID;
       // this.formSearchs[1].datas["SalesOrderDetailID"] = row.OrderID;
       this.OrderNos = [];

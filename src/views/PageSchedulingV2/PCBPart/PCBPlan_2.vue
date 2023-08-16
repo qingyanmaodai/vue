@@ -1,18 +1,8 @@
 <!--备料任务指派-->
 <template>
-  <div
-    class="container"
-    v-loading="adminLoading"
-  >
-    <div
-      class="admin_head"
-      ref="headRef"
-    >
-      <div
-        v-for="(item,i) in 6"
-        :key="i"
-        v-show="labelStatus1 == i"
-      >
+  <div class="container" v-loading="adminLoading">
+    <div class="admin_head" ref="headRef">
+      <div v-for="(item, i) in 6" :key="i" v-show="labelStatus1 == i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -29,11 +19,10 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"><span class="title">{{title}}</span></el-col>
-            <el-col
-              :span="20"
-              class="flex_flex_end"
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
             >
+            <el-col :span="20" class="flex_flex_end">
               <div>
                 <span>选择机台/班组：</span>
                 <el-select
@@ -44,7 +33,7 @@
                   @change="setFooterLabel"
                 >
                   <el-option
-                    v-for="(item,i) in lines"
+                    v-for="(item, i) in lines"
                     :key="i"
                     :label="item.LineName"
                     :value="item.LineID"
@@ -72,11 +61,7 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          v-for="(item,i) in 6"
-          :key="i"
-          v-show="labelStatus1 == i"
-        >
+        <div v-for="(item, i) in 6" :key="i" v-show="labelStatus1 == i">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :height="height"
@@ -143,7 +128,7 @@ export default {
         { label: "已转备料", value: 2 },
         { label: "无工单", value: 2 },
       ],
-      title:this.$route.meta.title,
+      title: this.$route.meta.title,
       labelStatus1: 0,
       PrepareDate: "",
       adminLoading: false,

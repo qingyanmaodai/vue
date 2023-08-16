@@ -56,7 +56,13 @@
             @sortChange="sortChange"
             @selectfun="selectFun"
             :showFooter="true"
-            :includeFields="['Qty','ReportQty','OutStockQty','OutStockQtyDiff','UnfinishQty']"
+            :includeFields="[
+              'Qty',
+              'ReportQty',
+              'OutStockQty',
+              'OutStockQtyDiff',
+              'UnfinishQty',
+            ]"
           />
         </div>
       </div>
