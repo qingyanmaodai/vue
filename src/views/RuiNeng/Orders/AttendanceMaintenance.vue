@@ -128,35 +128,6 @@
                 >设置</el-button
               >
               <el-divider direction="vertical"></el-divider>
-              <!-- <div
-                  :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
-                  v-for="(item, y) in Status2"
-                  :key="y"
-                >
-                  <span @click="changeStatus2(item, y)">{{ item.label }}</span>
-                  <el-divider direction="vertical"></el-divider>
-                </div> -->
-              <!-- <el-tooltip
-                class="item"
-                effect="dark"
-                :content="expendCollText"
-                placement="top"
-              >
-                <span class="right_icon">
-                  <img
-                    v-show="!expendColl"
-                    src="../../../assets/svg/collapse.svg"
-                    @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
-                  />
-                  <img
-                    v-show="expendColl"
-                    src="../../../assets/svg/expend.svg"
-                    @click="systolic"
-                    style="width:1.4rem;height:1.4rem"
-                  />
-                </span>
-              </el-tooltip> -->
             </el-col>
           </el-row>
         </div>

@@ -81,41 +81,6 @@
             />
           </div>
           <div class="admin_content">
-            <!-- <div class="ant-table-title">
-              <el-row>
-                <el-col :span="1"><span class="title">物料明细</span></el-col>
-                <el-col :span="24" class="flex_flex_end">
-                  <el-select clearable filterable size="small" placeholder="选择出勤情况" v-model="OrderNo"
-                    @change="selectOrderNo">
-                    <el-option v-for="(item, i) in OrderNos" :key="i" :label="item.label" :value="item.value"></el-option>
-                  </el-select>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-select clearable filterable size="small" placeholder="选择仓库" style="width:100px"
-                    v-model="warehouseValue" @change="selectWarehouse">
-                    <el-option v-for="(item, i) in warehouses" :key="i" :label="item.WarehouseName"
-                      :value="item.WarehouseID"></el-option>
-                  </el-select>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-button type="danger" size="small" @click="clearShort">清空超领</el-button>
-                  <el-divider direction="vertical"></el-divider>
-                  <el-button type="success" size="small" @click="setAttendance">设置</el-button>
-                  <el-divider direction="vertical"></el-divider>
-                  <div :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'" v-for="(item, y) in Status2"
-                    :key="y">
-                    <span @click="changeStatus2(item, y)">{{ item.label }}</span>
-                    <el-divider direction="vertical"></el-divider>
-                  </div>
-                  <el-tooltip class="item" effect="dark" :content="expendCollText" placement="top">
-                    <span class="right_icon">
-                      <img v-show="!expendColl" src="../../../assets/svg/collapse.svg" @click="systolic"
-                        style="width:1.4rem;height:1.4rem" />
-                      <img v-show="expendColl" src="../../../assets/svg/expend.svg" @click="systolic"
-                        style="width:1.4rem;height:1.4rem" />
-                    </span>
-                  </el-tooltip>
-                </el-col>
-              </el-row>
-            </div> -->
 
             <div class="ant-table-title" ref="headRef_2">
               <el-row>

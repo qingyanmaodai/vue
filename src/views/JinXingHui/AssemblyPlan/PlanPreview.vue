@@ -15,7 +15,7 @@
         />
       </div>
     </div>
-    <div class="ant-table-title pd-6-6-0">
+    <div class="ant-table-title pd-0-6">
       <el-row>
         <el-col :span="12">
           <span class="title" style="margin-right: 10px">{{ title }}</span>
@@ -434,7 +434,7 @@ export default {
         this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[remarkTb],
-          "/APSAPI/InsertIntoPCBByOrderID"
+          "/APSAPI/InsertIntoIMByOrderID"
         );
         const { result, data, count, msg } = res.data;
         if (result) {

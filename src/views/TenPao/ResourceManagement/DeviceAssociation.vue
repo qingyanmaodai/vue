@@ -66,10 +66,7 @@
             <ComSearch ref="searchRef" :searchData="formSearchs[1].datas" :searchForm="formSearchs[1].forms" :remark="1"
               :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="labelStatus1" />
           </div> -->
-          <div
-            class="ant-table-title pd-6-6-0 flex_row_spaceBtn"
-            ref="headRef_2"
-          >
+          <div class="ant-table-title pd-0-6 flex_row_spaceBtn" ref="headRef_2">
             <div>
               <el-tabs
                 v-model="selectedIndex"

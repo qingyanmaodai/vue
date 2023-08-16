@@ -687,20 +687,19 @@ ul li .el-tree .el-tree-node__content {
   color: #0960bd;
   font-weight: bold;
   border-bottom: 1px solid #0960bd;
+  padding-bottom: 4px;
 }
 
 .ant-table-title {
   background: #fff;
-  height: 35px;
-  line-height: 35px;
-  padding: 0 0 6px 0 !important;
+  height: 36px;
+  line-height: 36px;
 
-  .el-row {
-    height: 30px !important;
-  }
+  // .el-row {
+  //   height: 30px !important;
+  // }
 
-  .title,
-  .table_setting {
+  .title {
     font-size: 14px;
   }
 
@@ -1467,6 +1466,6 @@ label {
 .content_height {
   height: calc(100vh - 80px);
 }
-.pd-6-6-0 {
-  padding: 6px 6px 0 !important;
+.pd-0-6 {
+  padding: 0 6px !important;
 }

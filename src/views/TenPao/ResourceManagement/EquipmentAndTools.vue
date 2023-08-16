@@ -60,7 +60,7 @@
               :remark="item" :isLoading="isLoading" :btnForm="btnForm" @btnClick="btnClick" :signName="item" />
           </div> -->
           <div
-            class="ant-table-title bgWhite pd-6-6-0 flex_row_spaceBtn"
+            class="ant-table-title bgWhite pd-0-6 flex_row_spaceBtn"
             ref="headRef_2"
           >
             <div>

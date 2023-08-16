@@ -13,7 +13,7 @@
         @btnClick="btnClick"
       />
     </div>
-    <div class="ant-table-title pd-6-6-0">
+    <div class="ant-table-title pd-0-6">
       <el-row>
         <el-col :span="4"
           ><span class="title">{{ title }}</span></el-col

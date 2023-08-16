@@ -81,7 +81,7 @@
             </div>
           </div>
           <!-- <div
-            class="ant-table-title pd-6-6-0 flex_row_spaceBtn"
+            class="ant-table-title pd-0-6 flex_row_spaceBtn"
             ref="headRef_2"
           >
             <div>
