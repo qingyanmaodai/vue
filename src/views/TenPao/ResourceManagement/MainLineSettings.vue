@@ -678,7 +678,7 @@ export default {
             }
           });
           this.$set(this.OrderNos, i, m);
-          this.$set(this.tableColumns, remarkTb, m);
+          this.$set(this.tableColumns, i, m);
 
           this.OrderNos[i] = this.OrderNos[i]
             .filter((item) => item.isEdit)
