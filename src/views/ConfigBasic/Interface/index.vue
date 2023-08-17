@@ -83,7 +83,7 @@
           </el-row>
         </div>
         <ComVxeTable
-          ref="ComVxeTable"
+          ref="ComVxeTable0"
           :rowKey="'RowNumber'"
           :height="height"
           :tableData="tableData[0]"
@@ -144,9 +144,9 @@
               </el-row>
             </div>
             <ComVxeTable
-              ref="ComVxeTable"
+              ref="ComVxeTable1"
               :rowKey="'RowNumber'"
-              height="650px"
+              height="500px"
               :tableData="tableData[1]"
               :tableHeader="tableColumns[1]"
               :tableLoading="tableLoading[1]"
@@ -208,9 +208,9 @@
               </el-row>
             </div>
             <ComVxeTable
-              ref="ComVxeTable"
+              ref="ComVxeTable2"
               :rowKey="'RowNumber'"
-              height="650px"
+              height="500px"
               :tableData="tableData[2]"
               :tableHeader="tableColumns[2]"
               :tableLoading="tableLoading[2]"
@@ -272,9 +272,9 @@
               </el-row>
             </div>
             <ComVxeTable
-              ref="ComVxeTable"
+              ref="ComVxeTable3"
               :rowKey="'RowNumber'"
-              height="650px"
+              height="500px"
               :tableData="tableData[3]"
               :tableHeader="tableColumns[3]"
               :tableLoading="tableLoading[3]"
@@ -338,9 +338,9 @@
               </el-row>
             </div>
             <ComVxeTable
-              ref="ComVxeTable"
+              ref="ComVxeTable4"
               :rowKey="'RowNumber'"
-              height="650px"
+              height="500px"
               :tableData="tableData[4]"
               :tableHeader="tableColumns[4]"
               :tableLoading="tableLoading[4]"
@@ -361,6 +361,68 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="colDialogVisible4 = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 输出字段表2 -->
+    <el-dialog
+      :visible.sync="colDialogVisible5"
+      width="80%"
+      @closeDialog="colDialogVisible5 = false"
+      :close-on-click-modal="false"
+    >
+      <div>
+        <div class="admin_head" ref="headRef">
+          <ComSearch
+            ref="searchRef"
+            :searchData="formSearchs[5].datas"
+            :searchForm="formSearchs[5].forms"
+            :remark="5"
+            :isLoading="isLoading"
+            :btnForm="btnForm"
+            @btnClick="btnClick"
+          />
+        </div>
+        <div>
+          <div class="admin_content">
+            <div class="ant-table-title">
+              <el-row>
+                <el-col :span="4"><span class="title">参数配置表</span></el-col>
+                <el-col :span="20" class="flex_flex_end">
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    @click="addRow(5)"
+                    v-show="isAdd"
+                    >新增</el-button
+                  >
+                  <el-divider direction="vertical"></el-divider>
+                </el-col>
+              </el-row>
+            </div>
+            <ComVxeTable
+              ref="ComVxeTable5"
+              :rowKey="'RowNumber'"
+              height="500px"
+              :tableData="tableData[5]"
+              :tableHeader="tableColumns[5]"
+              :tableLoading="tableLoading[5]"
+              :remark="5"
+              :sysID="sysID[5].ID"
+              :isEdit="isEdit"
+              :isClear="isClear[5]"
+              :pagination="tablePagination[5]"
+              @pageChange="pageChange"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @toPageSetting="colDialogVisible5 = false"
+              :hasSelect="true"
+              @selectfun="selectFun"
+            />
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="colDialogVisible5 = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -389,11 +451,18 @@ export default {
       colDialogVisible3: false,
       // 参数配置表
       colDialogVisible4: false,
+      // 输出字段表2
+      colDialogVisible5: false,
       adminLoading: false,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
         {
           datas: {},
           forms: [],
@@ -442,11 +511,12 @@ export default {
           Params: {},
         },
       ],
-      tableData: [[], [], [], [], []],
-      tableColumns: [[], [], [], [], []],
-      tableLoading: [false, false, false, false, false],
-      isClear: [false, false, false, false, false],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
@@ -466,10 +536,11 @@ export default {
         { ID: 9032 },
         { ID: 9033 },
         { ID: 10119 },
+        { ID: 9033 },
       ],
-      DataSourceList: [{}, {}, {}, {}, {}],
-      selectionData: [[], [], [], [], [], []],
-      delData: [[], [], [], [], []],
+      DataSourceList: [{}, {}, {}, {}, {}, {}],
+      selectionData: [[], [], [], [], [], [], []],
+      delData: [[], [], [], [], [], []],
     };
   },
   watch: {},
@@ -639,14 +710,12 @@ export default {
     },
     // 验证数据
     verifyDta(n) {
-      console.log("n[name]", n);
       for (let name in n) {
         if (
           (name == "component" && n[name]) ||
           (name == "button" && n[name]) ||
           (name == "active" && n[name])
         ) {
-          console.log("n[name]", n[name]);
           n[name] = eval("(" + n[name] + ")");
         }
       }
@@ -731,44 +800,42 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      console.log("remarkTb", remarkTb);
-      console.log("this.tagRemark", this.tagRemark);
-      let res = null;
       this.adminLoading = true;
-      if (newData && newData.length != 0) {
-        res = await SaveData(newData);
+      const $table = this.$refs["ComVxeTable" + remarkTb].$refs.vxeTable;
+
+      // 获取修改记录
+      let changeRecords = [];
+      if (newData) {
+        changeRecords = newData;
       } else {
-        // 必填校验
+        if ($table) {
+          const { insertRecords, updateRecords, removeRecords } =
+            $table.getRecordset();
+          changeRecords = insertRecords.concat(updateRecords, removeRecords);
+        } else {
+        }
+      }
+      if (changeRecords.length == 0) {
+        this.$set(this, "adminLoading", false);
+        this.$message.error("当前数据没做修改，请先修改再保存！");
+        return;
+      }
+      if (changeRecords.length > 0 && !newData) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
-          for (let i = 0; i < this.tableData[remarkTb].length; i++) {
-            for (
-              let x = 0;
-              x < this.formSearchs[remarkTb].required.length;
-              x++
-            ) {
-              if (
-                this.tableData[remarkTb][i][
-                  this.formSearchs[remarkTb].required[x]["prop"]
-                ] === undefined ||
-                this.tableData[remarkTb][i][
-                  this.formSearchs[remarkTb].required[x]["prop"]
-                ] === null ||
-                this.tableData[remarkTb][i][
-                  this.formSearchs[remarkTb].required[x]["prop"]
-                ] === ""
-              ) {
-                this.$message.error(
-                  `【${this.formSearchs[remarkTb].required[x]["label"]}】不能为空，请填写`
-                );
-                this.adminLoading = false;
-                return;
+          changeRecords.map((item1, index1) => {
+            this.formSearchs[remarkTb].required.map((item2, index2) => {
+              let content = item1[item2["prop"]];
+              if (!content && (content !== 0) & (content !== false)) {
+                this.$message.error(`${item2["label"]}不能为空，请选择`);
+                this.$set(this, "adminLoading", false);
+                throw new Error("报错了");
               }
-            }
-          }
+            });
+          });
         }
-        res = await SaveData(this.tableData[remarkTb]);
       }
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -789,23 +856,35 @@ export default {
     },
     // 新增
     addRow(remarkTb) {
-      let obj = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      //获取下拉数据源
-      this.tableColumns[remarkTb].map((item) => {
-        obj[item.prop] = null;
-        obj["dicID"] = this.sysID[remarkTb].ID;
-        obj["update"] = true;
-        if (remarkTb === 4) {
-          obj["EID"] = this.formSearchs[remarkTb].datas.EID;
-        }
-        for (let key in this.DataSourceList[remarkTb]) {
-          if (item.DataSourceName === key) {
-            obj[key] = this.DataSourceList[remarkTb][key];
-          }
-        }
-      });
+      const $table = this.$refs["ComVxeTable" + remarkTb].$refs.vxeTable;
 
-      this.tableData[remarkTb].unshift(obj);
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < 1; x++) {
+        let obj = {
+          dicID: this.sysID[remarkTb].ID,
+          RowNumber: _.uniqueId(),
+        };
+        this.tableColumns[remarkTb].map((item) => {
+          obj[item.prop] = null;
+          obj["update"] = true;
+          if (item.prop === "Status") {
+            obj[item.prop] = 1;
+          }
+          if (remarkTb === 4) {
+            obj["EID"] = this.formSearchs[remarkTb].datas.EID;
+          }
+          if (remarkTb === 5) {
+            obj["ParentFieldID"] =
+              this.formSearchs[remarkTb].datas.ParentFieldID;
+          }
+          for (let key in this.DataSourceList[remarkTb]) {
+            if (item.DataSourceName === key) {
+              obj[key] = this.DataSourceList[remarkTb][key];
+            }
+          }
+        });
+        $table.insert(obj);
+      }
     },
     inputPar(row) {
       console.log("输出参row", row);
@@ -840,46 +919,27 @@ export default {
         return;
       }
     },
-    outputField(row) {
-      if (row.EID) {
-        this.colDialogVisible3 = true;
-        this.formSearchs[3].datas.EID = row.EID;
-        this.dataSearch(3);
-      } else {
-        this.$message.error("请先保存数据，再操作！");
-        return;
+    outputField(row, val, prop, rowIndex, remarkTb) {
+      if (remarkTb === 2) {
+        if (row.EID) {
+          this.colDialogVisible3 = true;
+          this.formSearchs[3].datas.EID = row.EID;
+          this.dataSearch(3);
+        } else {
+          this.$message.error("请先保存数据，再操作！");
+          return;
+        }
+      } else if (remarkTb === 3) {
+        if (row.EID) {
+          this.colDialogVisible5 = true;
+          this.formSearchs[5].datas.ParentFieldID = row.FieldID;
+          this.dataSearch(5);
+        } else {
+          this.$message.error("请先保存数据，再操作！");
+          return;
+        }
       }
     },
-    // 保存更新的内容
-    // async dataSaveUpdate(remarkTb, index){
-    //   console.log('remarkTb',remarkTb)
-    //   const $table = this.$refs.ComVxeTable.$refs.vxeTable
-    //   // 获取修改记录
-    //   const updateRecords = $table.getUpdateRecords()
-    //   if(updateRecords.length==0){
-    //     this.$message.error("当前数据没做修改，请先修改再保存！");
-    //     return
-    //   }
-    //   this.adminLoading = true;
-    //   let res = await SaveData(updateRecords);
-    //   const { datas, forms, result, msg } = res.data;
-    //   if (result) {
-    //       this.$message({
-    //       message: msg,
-    //       type: "success",
-    //       dangerouslyUseHTMLString: true,
-    //       });
-    //       this.dataSearch(remarkTb);
-    //       this.adminLoading = false;
-    //   } else {
-    //       this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true,
-    //       });
-    //       this.adminLoading = false;
-    //   }
-    // }
   },
 };
 </script>
