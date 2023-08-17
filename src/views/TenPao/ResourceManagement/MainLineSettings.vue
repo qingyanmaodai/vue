@@ -6,7 +6,7 @@
         <div class="flex_column" style="width: 100%; height: 100%">
           <div class="admin_head" ref="headRef">
             <div class="flex">
-              <div>
+              <div style="margin-right: 10px">
                 <el-tabs
                   v-model="selectedIndex"
                   @tab-click="handleClick"
@@ -60,7 +60,7 @@
           <div
             class="admin_head"
             ref="headRef"
-            v-for="item in [1, 2, 3]"
+            v-for="item in [1]"
             :key="item + 'head'"
             v-show="Number(selectedIndex) === item"
           >
@@ -449,6 +449,7 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
+    console.log(this.$route.meta.btns, "this.$route.meta.btns");
     this.judgeBtn(this.btnForm);
   },
   mounted() {},
@@ -781,11 +782,11 @@ export default {
       this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
       this.dataSearch(this.selectedIndex);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-      this.selectedIndex = tab.name;
-      this.dataSearch(this.selectedIndex);
-    },
+    // handleClick(tab, event) {
+    //   console.log(tab, event);
+    //   this.selectedIndex = tab.name;
+    //   this.dataSearch(this.selectedIndex);
+    // },
     AddEvent(index) {
       if (index === 1) {
         this.colDialogVisible2 = true;
@@ -1378,5 +1379,10 @@ export default {
 }
 ::v-deep .el-dialog__close {
   color: #fff !important;
+}
+::v-deep .el-tabs__item {
+  padding: 5px !important;
+
+  /* 设置为0或调整合适的数值 */
 }
 </style>

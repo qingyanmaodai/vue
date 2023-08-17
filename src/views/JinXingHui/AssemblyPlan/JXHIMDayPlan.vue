@@ -122,7 +122,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "ProductionSchedule",
+  name: "JXHIMDayPlan",
   components: {
     ComSearch,
     ComReportTable,
@@ -814,69 +814,37 @@ export default {
             cell.backColor("#A0CFFF");
             cell.foreColor("balck");
           }
-          //  else if (row["MFGOrganizeID"] === 162) {
-          //   cell.backColor("#FFFF00");
-          //   cell.foreColor("black");
-          // } else {
-          //   cell.foreColor("black");
-          //   cell.backColor("#FFFFFF");
-          // }
-          // if (row["Capacity"] && column["name"] === "Capacity") {
-          //   cell.foreColor("red");
-          // }
+
+          if (
+            Object.prototype.toString.call(row["FColors"]) === "[object Object]"
+          ) {
+            Object.keys(row["FColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(row["FColors"][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(row["BColors"]) === "[object Object]"
+          ) {
+            Object.keys(row["BColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(row["BColors"][key]);
+              }
+            });
+          }
         });
       });
-
-      // this.tableData[remarkTb].forEach((row, index) => {
-      //   var rowSheet = sheet.getRange(
-      //     index,
-      //     0,
-      //     1,
-      //     colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   var rowSheet2 = sheet.getRange(
-      //     index,
-      //     colindex,
-      //     1,
-      //     colInfos.length - colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   if (row["Code"] == null) {
-      //     rowSheet.backColor("#A0CFFF");
-      //     rowSheet.foreColor("balck");
-      //     rowSheet2.backColor("#A0CFFF");
-      //     rowSheet2.foreColor("balck");
-      //   } else if (row["MFGOrganizeID"] === 162) {
-      //     // row.backColor();
-      //     rowSheet.backColor("#FFFF00");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("#FFFF00");
-      //   } else {
-      //     // row.backColor();
-      //     rowSheet.foreColor("black");
-      //     rowSheet.backColor("#FFFFFF");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("#FFFFFF");
-      //   }
-      //   let cellIndex = 0;
-      //   this.tableColumns[remarkTb].forEach(m => {
-      //     //行，start,end
-      //     if (m.DataType == "bit" && m.isEdit) {
-      //       var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-      //       cellType.caption("");
-      //       cellType.textTrue("");
-      //       cellType.textFalse("");
-      //       cellType.textIndeterminate("");
-      //       cellType.textAlign(
-      //         GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
-      //       );
-      //       cellType.isThreeState(false);
-      //       sheet.getCell(index, cellIndex).cellType(cellType);
-      //     }
-      //     cellIndex++;
-      //   });
-      // });
 
       let cellIndex = 0;
       let viewSortIndex = 0; //排序的索引
@@ -889,40 +857,9 @@ export default {
         if (m.prop == "LineID") {
           lineIDIndex = cellIndex;
         }
-        //行，start,end
-        if (m.isEdit) {
-          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          //cell.foreColor("#2a06ecd9");
-        } else {
-          var cell = sheet.getCell(
-            -1,
-            cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
-          );
-          // cell.foreColor("gray");
-        }
 
         cellIndex++;
       });
-      sheet.options.protectionOptions.allowResizeColumns = true;
-      sheet.options.isProtected = true;
-      sheet.options.protectionOptions.allowResizeColumns = true;
-      sheet.options.protectionOptions.allowInsertRows = true;
-      sheet.options.protectionOptions.allowDeleteRows = true;
-      sheet.options.protectionOptions.allowSelectLockedCells = true;
-      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-      sheet.options.protectionOptions.allowDeleteColumns = true;
-      sheet.options.protectionOptions.allowInsertColumns = true;
-      sheet.options.protectionOptions.allowDargInsertRows = true;
-      sheet.options.protectionOptions.allowDragInsertColumns = true;
-      sheet.options.protectionOptions.allowSort = true;
-      sheet.options.protectionOptions.allowFilter = true;
-      sheet.options.allowUserDragDrop = true;
 
       var insertRowsCopyStyle = {
         canUndo: true,
@@ -1122,6 +1059,21 @@ export default {
         console.log(arr, arr2);
         // sheet.clearPendingChanges();
       });
+
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.isProtected = true;
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.protectionOptions.allowInsertRows = true;
+      sheet.options.protectionOptions.allowDeleteRows = true;
+      sheet.options.protectionOptions.allowSelectLockedCells = true;
+      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+      sheet.options.protectionOptions.allowDeleteColumns = true;
+      sheet.options.protectionOptions.allowInsertColumns = true;
+      sheet.options.protectionOptions.allowDargInsertRows = true;
+      sheet.options.protectionOptions.allowDragInsertColumns = true;
+      sheet.options.protectionOptions.allowSort = true;
+      sheet.options.protectionOptions.allowFilter = true;
+      sheet.options.allowUserDragDrop = true;
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;

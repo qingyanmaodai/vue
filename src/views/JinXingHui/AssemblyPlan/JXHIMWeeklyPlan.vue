@@ -147,7 +147,7 @@ import {
 } from "@/api/PageTwoScheduling";
 import { template } from "xe-utils";
 export default {
-  name: "PlanPreview",
+  name: "JXHIMWeeklyPlan",
   components: {
     ComSearch,
     ComAsideTree,
@@ -281,9 +281,9 @@ export default {
   //   }
   // },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 500);
+    // setTimeout(() => {
+    //   this.setHeight();
+    // }, 500);
   },
   methods: {
     judgeBtn(routeBtn) {
@@ -581,15 +581,34 @@ export default {
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
             cell.foreColor("balck");
-          } else {
-            cell.foreColor("black");
-            cell.backColor("#FFFFFF");
           }
-          if (row["Capacity"] && column["name"] === "Capacity") {
-            cell.foreColor("red");
+          if (
+            Object.prototype.toString.call(row["FColors"]) === "[object Object]"
+          ) {
+            Object.keys(row["FColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(row["FColors"][key]);
+              }
+            });
           }
-          if (row["SchedulingStatus"] !== "OK") {
-            cell.foreColor("red");
+          if (
+            Object.prototype.toString.call(row["BColors"]) === "[object Object]"
+          ) {
+            Object.keys(row["BColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(row["BColors"][key]);
+              }
+            });
           }
         });
       });
@@ -620,18 +639,18 @@ export default {
       });
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
-        if (_this.tableColumns[remarkTb].length) {
-          _this.tableColumns[remarkTb].map((item, index) => {
-            if (item.name === "K1" && args.col === index) {
-              console.log("OrderID", _this.tableData[_this.tagRemark]);
-              // 显示ERP供需平衡表
-              _this.colDialogVisible = true;
-              _this.dialogSearchForm.AUFNR =
-                _this.tableData[_this.tagRemark][args.row].OrderNo;
-              _this.dialogSearchForm.ZQLS = 0;
-            }
-          });
-        }
+        // if (_this.tableColumns[remarkTb].length) {
+        //   _this.tableColumns[remarkTb].map((item, index) => {
+        //     if (item.name === "K1" && args.col === index) {
+        //       console.log("OrderID", _this.tableData[_this.tagRemark]);
+        //       // 显示ERP供需平衡表
+        //       _this.colDialogVisible = true;
+        //       _this.dialogSearchForm.AUFNR =
+        //         _this.tableData[_this.tagRemark][args.row].OrderNo;
+        //       _this.dialogSearchForm.ZQLS = 0;
+        //     }
+        //   });
+        // }
       });
 
       //表格编辑事件
@@ -753,6 +772,35 @@ export default {
         this[methods](remarkTb, index);
       }
     },
+    async MatchIMMachine(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要匹配机台的数据！");
+      } else {
+        this.adminLoading = true;
+
+        let res = await GetSearch(
+          this.selectionData[remarkTb],
+          "/APSAPI/MatchIMMachine"
+        );
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.dataSearch(remarkTb);
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "success",
+            dangerouslyUseHTMLString: true,
+          });
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: "error",
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
     // 查询
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -760,8 +808,6 @@ export default {
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.formSearchs[remarkTb].datas["ControlID"] =
-        this.userInfo.WorkFlowInstanceID;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
