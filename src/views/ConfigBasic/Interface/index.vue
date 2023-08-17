@@ -857,26 +857,25 @@ export default {
     // 新增
     addRow(remarkTb) {
       const $table = this.$refs["ComVxeTable" + remarkTb].$refs.vxeTable;
-
       // 下拉数据是需要获取数据源
       for (let x = 0; x < 1; x++) {
-        let obj = {
-          dicID: this.sysID[remarkTb].ID,
-          RowNumber: _.uniqueId(),
-        };
+        let obj = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
         this.tableColumns[remarkTb].map((item) => {
+          obj["dicID"] = this.sysID[remarkTb].ID;
+          obj["RowNumber"] = _.uniqueId();
           obj[item.prop] = null;
           obj["update"] = true;
+
           if (item.prop === "Status") {
             obj[item.prop] = 1;
           }
-          if (remarkTb === 4) {
-            obj["EID"] = this.formSearchs[remarkTb].datas.EID;
-          }
-          if (remarkTb === 5) {
-            obj["ParentFieldID"] =
-              this.formSearchs[remarkTb].datas.ParentFieldID;
-          }
+          // if (remarkTb === 4) {
+          //   obj["EID"] = this.formSearchs[remarkTb].datas.EID;
+          // }
+          // if (remarkTb === 5) {
+          //   obj["ParentFieldID"] =
+          //     this.formSearchs[remarkTb].datas.ParentFieldID;
+          // }
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
               obj[key] = this.DataSourceList[remarkTb][key];
