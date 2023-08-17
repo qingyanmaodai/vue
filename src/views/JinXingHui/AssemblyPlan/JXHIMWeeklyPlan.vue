@@ -312,17 +312,22 @@ export default {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要转入日计划的数据！");
       } else {
-        let isNoCapacity1 = true;
-        let isTodayPlan = true;
-        console.log(this.selectionData[remarkTb]);
-        this.selectionData[remarkTb].forEach((element) => {
-          if (!element.Capacity1 && element.OrderNo) {
-            isNoCapacity1 = false;
-          }
+        // this.selectionData[remarkTb].forEach((element) => {
+        //   if (!element.Capacity1 && element.OrderNo) {
+        //     isNoCapacity1 = false;
+        //   }
+        // });
+        let DayErrorPlanData = [];
+        DayErrorPlanData = this.selectionData[remarkTb].filter((element) => {
+          return element["Remark1"] !== "正确";
         });
-        if (!isNoCapacity1) {
+        let DayTruePlanData = [];
+        DayTruePlanData = this.selectionData[remarkTb].filter((element) => {
+          return element["Remark1"] == "正确";
+        });
+        if (DayErrorPlanData.length) {
           this.$confirm(
-            "请检查并维护产品产能，存在产能为空，会导致数据异常，是否确定转入日计划?",
+            `有${DayErrorPlanData.length}条数据异常，是否确定转入日计划?`,
             "提示",
             {
               confirmButtonText: "确定",
@@ -330,12 +335,18 @@ export default {
               type: "warning",
             }
           )
-            .then(() => {
-              this.saveTodayPlan(remarkTb);
+            .then(async () => {
+              await GetSearch(
+                DayTruePlanData,
+                "/APSAPI/InsertIntoIMToProcessplan"
+              );
             })
             .catch(() => {});
         } else {
-          this.saveTodayPlan(remarkTb);
+          await GetSearch(
+            this.selectionData[remarkTb],
+            "/APSAPI/InsertIntoIMToProcessplan"
+          );
         }
       }
     },

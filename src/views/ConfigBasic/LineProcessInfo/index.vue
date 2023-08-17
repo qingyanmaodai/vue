@@ -461,6 +461,10 @@ export default {
         datas.some((m, i) => {
           m.forEach((n) => {
             // 进行验证
+            if (n.prop == "OrganizeTypeID") {
+              this.$set(n, "treeNode", true);
+            }
+            // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {

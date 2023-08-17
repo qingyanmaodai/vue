@@ -160,6 +160,7 @@
               @sortChange="sortChange"
               @toPageSetting="colDialogVisible1 = false"
               :hasSelect="true"
+              :keepSource="true"
               @selectfun="selectFun"
               @inputParCon="inputParCon"
             />
@@ -224,6 +225,7 @@
               @sortChange="sortChange"
               @toPageSetting="colDialogVisible2 = false"
               :hasSelect="true"
+              :keepSource="true"
               @selectfun="selectFun"
               @outputField="outputField"
             />
@@ -290,6 +292,7 @@
                 (colDialogVisible3 = false), (colDialogVisible2 = false)
               "
               :hasSelect="true"
+              :keepSource="true"
               @selectfun="selectFun"
               @outputField="outputField"
             />
@@ -354,6 +357,7 @@
               @sortChange="sortChange"
               @toPageSetting="colDialogVisible4 = false"
               :hasSelect="true"
+              :keepSource="true"
               @selectfun="selectFun"
             />
           </div>
@@ -416,6 +420,7 @@
               @sortChange="sortChange"
               @toPageSetting="colDialogVisible5 = false"
               :hasSelect="true"
+              :keepSource="true"
               @selectfun="selectFun"
             />
           </div>
