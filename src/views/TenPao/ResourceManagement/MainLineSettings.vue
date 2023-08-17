@@ -159,7 +159,7 @@
     <!-- 弹框-->
     <!-- <el-dialog
       :title="'计划调整'"
-      :visible.sync="colDialogVisible2"
+      :visible.sync="colDialogVisible3"
       width="70%"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
@@ -250,36 +250,36 @@
         >
         <el-button type="primary" @click="Reschedule()">重算排期</el-button>
         <el-button type="primary" @click="dataSave2()">确定</el-button>
-        <el-button @click="colDialogVisible2 = false">取消</el-button>
+        <el-button @click="colDialogVisible3 = false">取消</el-button>
       </span>
     </el-dialog> -->
     <!-- 弹框-->
     <DialogOptTable
       title="关联工段"
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
+      :tableDialog="colDialogVisible3"
+      :sysID="sysID[3]['ID']"
+      :isEdit="isEdit[3]"
+      :remark="3"
       width="80%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
+      :hasSelect="hasSelect[3]"
+      @closeDialog="colDialogVisible3 = false"
       @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
+      :searchForm="formSearchs[3]"
       :btnForm="btnForm"
       :isToolbar="false"
       :isConfirmBtn="true"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
+      :table-data="tableData[3]"
+      :table-header="tableColumns[3]"
+      :table-loading="tableLoading[3]"
+      :table-pagination="tablePagination[3]"
       @confirmDialog="confirmDialog"
       @pageChangeCall="pageChange"
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
     ></DialogOptTable>
-    <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible2" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible2 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
+    <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible3" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
+      @closeDialog="colDialogVisible3 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
       @confirmDialog="confirmDialog"></DialogTable> -->
     <!-- <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
       @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
@@ -422,7 +422,7 @@ export default {
       isEdit: [false, false, true, false, false, false, false],
       userInfo: {},
       selectedIndex: "0",
-      colDialogVisible2: false,
+      colDialogVisible3: false,
       colDialogVisible5: false,
       colDialogVisible6: false,
       addNum: 1,
@@ -786,7 +786,7 @@ export default {
     },
     AddEvent(index) {
       if (index === 2) {
-        this.colDialogVisible2 = true;
+        this.colDialogVisible3 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       if (index === 2) {
@@ -798,8 +798,8 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
-      if (remarkTb === 1) {
-        this.colDialogVisible2 = true;
+      if (remarkTb === 2) {
+        this.colDialogVisible3 = true;
       }
       // if (!this.addNum) {
       //   this.$message.error("请输入需要添加的行数!");
@@ -849,7 +849,7 @@ export default {
         item["RAMID"] = this.formSearchs[tagNumber]["datas"]["RAMID"];
         item["dicID"] = this.sysID[tagNumber]["ID"];
       });
-      this.colDialogVisible2 = false;
+      this.colDialogVisible3 = false;
       this.colDialogVisible5 = false;
       this.colDialogVisible6 = false;
       this.dataSave(tagNumber, null, null, data);
@@ -908,7 +908,7 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        this.colDialogVisible2 = false;
+        this.colDialogVisible3 = false;
         // this.dataSearch(remarkTb);
       } else {
         this.$message({
@@ -937,7 +937,7 @@ export default {
           });
         }
 
-        this.colDialogVisible2 = true;
+        this.colDialogVisible3 = true;
         this.formSearchs[2].datas["OrderID"] = "";
         this.formSearchs[2].datas["SalesOrderDetailID"] = "";
         if (!row.SalesOrderDetailID) {
