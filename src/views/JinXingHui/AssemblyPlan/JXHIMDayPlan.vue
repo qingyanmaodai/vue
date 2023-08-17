@@ -846,21 +846,6 @@ export default {
         });
       });
 
-      let cellIndex = 0;
-      let viewSortIndex = 0; //排序的索引
-      let lineIDIndex = 0;
-      this.tableColumns[remarkTb].forEach((m) => {
-        //行，start,end
-        if (m.prop == "ViewSort") {
-          viewSortIndex = cellIndex;
-        }
-        if (m.prop == "LineID") {
-          lineIDIndex = cellIndex;
-        }
-
-        cellIndex++;
-      });
-
       var insertRowsCopyStyle = {
         canUndo: true,
         name: "insertRowsCopyStyle",
@@ -911,24 +896,6 @@ export default {
                 _this.sheetSelectObj.start,
                 _this.sheetSelectObj.count
               );
-            }
-            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
-
-            let lineID = _this.sheetSelectRows[0][lineIDIndex];
-            let isFind = false;
-            let viewSort = 1;
-
-            for (var i = 0; i < count; i++) {
-              if (isFind == false && sheet.getValue(i, lineIDIndex) == lineID) {
-                isFind = true;
-              }
-              if (isFind && sheet.getValue(i, lineIDIndex) != lineID) {
-                break;
-              }
-              if (isFind) {
-                sheet.setValue(i, viewSortIndex, viewSort);
-                viewSort++;
-              }
             }
 
             // Commands.startTransaction(context, options);

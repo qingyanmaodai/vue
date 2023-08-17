@@ -112,7 +112,6 @@
 
 <script>
 var _this;
-
 const GCsheets = GC.Spread.Sheets;
 import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
@@ -139,13 +138,11 @@ import {
   MOPlanStep1Calculation,
   FSLMOPlanStep1,
 } from "@/api/wjApi";
-
 import {
   SaveMOPlanStep4,
   SaveMOPlanStep2,
   OrderPlanMaterialForm,
 } from "@/api/PageTwoScheduling";
-import { template } from "xe-utils";
 export default {
   name: "JXHIMWeeklyPlan",
   components: {
@@ -627,6 +624,152 @@ export default {
       sheet.options.protectionOptions.allowFilter = true;
       sheet.options.allowUserDragDrop = true;
       /////////////////表格事件/////////////
+      // let cellIndex = 0;
+      // let viewSortIndex = 0; //排序的索引
+      // let lineIDIndex = 0;
+      // this.tableColumns[remarkTb].forEach((m) => {
+      //   //行，start,end
+      //   if (m.prop == "ViewSort") {
+      //     viewSortIndex = cellIndex;
+      //   }
+      //   if (m.prop == "LineID") {
+      //     lineIDIndex = cellIndex;
+      //   }
+
+      //   cellIndex++;
+      // });
+
+      var insertRowsCopyStyle = {
+        canUndo: true,
+        name: "insertRowsCopyStyle",
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
+          } else {
+            sheet.suspendPaint();
+            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+            // console.log(_this.sheetSelectRows);
+
+            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+            //删除旧行
+            if (_this.sheetSelectObj.start > options.activeRow) {
+              //说明从下面插入上面
+              sheet.copyTo(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+
+              //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                _this.sheetSelectObj.count
+              );
+              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+            } else {
+              //从上面往下面插入
+              sheet.copyTo(
+                _this.sheetSelectObj.start,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all
+              );
+              //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start,
+                _this.sheetSelectObj.count
+              );
+            }
+            // let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
+
+            // let lineID = _this.sheetSelectRows[0][lineIDIndex];
+            // let isFind = false;
+            // let viewSort = 1;
+
+            // for (var i = 0; i < count; i++) {
+            //   if (isFind == false && sheet.getValue(i, lineIDIndex) == lineID) {
+            //     isFind = true;
+            //   }
+            //   if (isFind && sheet.getValue(i, lineIDIndex) != lineID) {
+            //     break;
+            //   }
+            //   if (isFind) {
+            //     sheet.setValue(i, viewSortIndex, viewSort);
+            //     viewSort++;
+            //   }
+            // }
+
+            // Commands.startTransaction(context, options);
+
+            // sheet.suspendPaint();
+
+            // var beforeRowCount = 0;
+
+            //  sheet.suspendPaint();
+
+            // Commands.endTransaction(context, options);
+            sheet.resumePaint();
+
+            return true;
+          }
+        },
+      };
+
+      this.spread[remarkTb]
+        .commandManager()
+        .register("insertRowsCopyStyle", insertRowsCopyStyle);
+
+      function MyContextMenu() {}
+      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+        this.spread[remarkTb]
+      );
+      MyContextMenu.prototype.onOpenMenu = function (
+        menuData,
+        itemsDataForShown,
+        hitInfo,
+        spread
+      ) {
+        itemsDataForShown.forEach(function (item, index) {
+          // console.log(item);
+          if (item && item.name === "gc.spread.rowHeaderinsertCutCells") {
+            item.command = "insertRowsCopyStyle";
+          }
+          //  else if (item && item.name === "gc.spread.cut") {
+
+          //     item.command = "insertRowsCut";
+          //   }
+        });
+      };
+      var contextMenu = new MyContextMenu();
+      this.spread[remarkTb].contextMenu = contextMenu;
+      // 剪贴板事件绑定
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          console.log(sheet.getDataItem(s.row));
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[remarkTb].length
+          );
+          _this.sheetSelectObj.start = s.row;
+
+          _this.sheetSelectObj.count = s.rowCount;
+        }
+      );
+
       this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
         const { sheet, row, col } = args;
         const cellType = sheet.getCellType(row, col);
