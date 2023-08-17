@@ -781,7 +781,13 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
+      if (remarkTb === 0) {
+        this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
+        this.formSearchs[2].datas["MaterialTypeID"] = "";
+      } else if (remarkTb === 1) {
+        this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialID;
+        this.formSearchs[2].datas["MaterialID"] = "";
+      }
       this.dataSearch(2);
     },
     AddEvent(index) {
@@ -844,15 +850,25 @@ export default {
     },
     //添加产品机台
     confirmDialog(data) {
-      let tagNumber = Number(this.selectedIndex);
-      data.map((item) => {
-        item["RAMID"] = this.formSearchs[tagNumber]["datas"]["RAMID"];
-        item["dicID"] = this.sysID[tagNumber]["ID"];
-      });
-      this.colDialogVisible3 = false;
-      this.colDialogVisible5 = false;
-      this.colDialogVisible6 = false;
-      this.dataSave(tagNumber, null, null, data);
+      if (Number(this.selectedIndex) === 0) {
+        data.map((item) => {
+          item["MaterialID"] =
+            this.formSearchs[Number(this.selectedIndex)]["datas"]["MaterialID"];
+          item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
+        });
+        this.colDialogVisible3 = false;
+        this.dataSave(2, null, null, data);
+      } else if (Number(this.selectedIndex) === 1) {
+        data.map((item) => {
+          item["MaterialTypeID"] =
+            this.formSearchs[Number(this.selectedIndex)]["datas"][
+              "MaterialTypeID"
+            ];
+          item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
+        });
+        this.colDialogVisible3 = false;
+        this.dataSave(2, null, null, data);
+      }
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
