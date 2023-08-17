@@ -336,17 +336,21 @@ export default {
             }
           )
             .then(async () => {
+              this.adminLoading = true;
               await GetSearch(
                 DayTruePlanData,
                 "/APSAPI/InsertIntoIMToProcessplan"
               );
+              this.adminLoading = false;
             })
             .catch(() => {});
         } else {
+          this.adminLoading = true;
           await GetSearch(
             this.selectionData[remarkTb],
             "/APSAPI/InsertIntoIMToProcessplan"
           );
+          this.adminLoading = false;
         }
       }
     },

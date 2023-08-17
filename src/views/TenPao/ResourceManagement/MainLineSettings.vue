@@ -418,7 +418,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 11173 }, { ID: 11173 }],
+      sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 125 }, { ID: 11173 }],
       isEdit: [false, false, true, false, false, false, false],
       userInfo: {},
       selectedIndex: "0",
