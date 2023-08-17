@@ -44,10 +44,10 @@
                 clearable
               >
                 <el-option
-                  v-for="op in x.options"
+                  v-for="(op, index) in x.options"
                   :label="op.label"
                   :value="op.value"
-                  :key="op.value"
+                  :key="index"
                 ></el-option>
               </el-select>
               <el-date-picker
@@ -220,10 +220,10 @@
                 style="width: 100%"
               >
                 <el-option
-                  v-for="op in x.options"
+                  v-for="(op, index) in x.options"
                   :label="op.label"
                   :value="op.value"
-                  :key="op.value"
+                  :key="index"
                 ></el-option>
               </el-select>
               <!-- 日期 -->
@@ -394,10 +394,10 @@
                 style="width: 100%"
               >
                 <el-option
-                  v-for="op in x.options"
+                  v-for="(op, index) in x.options"
                   :label="op.label"
                   :value="op.value"
-                  :key="op.value"
+                  :key="index"
                 ></el-option>
               </el-select>
               <!-- 日期 -->
@@ -486,10 +486,10 @@
                 @change="handleChange($event, y)"
               >
                 <el-option
-                  v-for="x in searchMoreForm"
+                  v-for="(x, y) in searchMoreForm"
                   :label="x.label"
                   :value="x['prop']"
-                  :key="x['prop']"
+                  :key="y"
                 ></el-option>
               </el-select>
               <el-select
@@ -500,10 +500,10 @@
                 clearable
               >
                 <el-option
-                  v-for="x1 in x['queryType']"
+                  v-for="(x1, y1) in x['queryType']"
                   :label="x1.label"
                   :value="x1['value']"
-                  :key="x1['value']"
+                  :key="y1"
                 ></el-option>
               </el-select>
               <el-form-item :name="x.prop" class="dialogContent">
@@ -536,10 +536,10 @@
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="op in x.options"
+                    v-for="(op, index) in x.options"
                     :label="op.label"
                     :value="op.value"
-                    :key="op.value"
+                    :key="index"
                   ></el-option>
                 </el-select>
                 <!-- 日期 -->

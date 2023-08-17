@@ -514,11 +514,6 @@ export default {
         ) {
           x.formatter = "@";
         }
-
-        //行，start,end
-        if (x.isEdit) {
-          sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
-        }
       });
       //渲染列
       sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
@@ -574,10 +569,15 @@ export default {
         this.tableColumns[remarkTb].forEach((column, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);
-
+          cell.foreColor("black");
+          cell.backColor("white");
+          //修改可编辑锁定状态以及字体颜色
+          if (column["isEdit"]) {
+            cell.locked(false).foreColor("#2a06ecd9");
+          }
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
+            cell.foreColor("black");
           }
           if (
             Object.prototype.toString.call(row["FColors"]) === "[object Object]"

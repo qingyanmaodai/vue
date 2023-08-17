@@ -12,8 +12,8 @@
                   @tab-click="handleClick"
                   :stretch="true"
                 >
-                  <el-tab-pane label="产品" name="1"></el-tab-pane>
-                  <el-tab-pane label="产品族" name="2"></el-tab-pane
+                  <el-tab-pane label="产品" name="0"></el-tab-pane>
+                  <el-tab-pane label="产品族" name="1"></el-tab-pane
                 ></el-tabs>
               </div>
               <div class="flex_grow">
@@ -30,7 +30,12 @@
               </div>
             </div>
           </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <div
+            v-for="item in [0, 1]"
+            :key="item"
+            class="admin_content flex_grow"
+            v-show="Number(selectedIndex) === item"
+          >
             <ComVxeTable
               :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
@@ -60,9 +65,8 @@
           <div
             class="admin_head"
             ref="headRef"
-            v-for="item in [1]"
+            v-for="item in [2]"
             :key="item + 'head'"
-            v-show="Number(selectedIndex) === item"
           >
             <ComSearch
               ref="searchRef"
@@ -121,7 +125,7 @@
               </el-col>
             </el-row>
           </div> -->
-          <div v-for="item in [1]" :key="item" class="admin_content flex_grow">
+          <div v-for="item in [2]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
               :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
@@ -153,7 +157,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <el-dialog
+    <!-- <el-dialog
       :title="'计划调整'"
       :visible.sync="colDialogVisible2"
       width="70%"
@@ -248,7 +252,7 @@
         <el-button type="primary" @click="dataSave2()">确定</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 弹框-->
     <DialogOptTable
       title="关联工段"
@@ -415,9 +419,9 @@ export default {
       labelStatus1: 0,
       labelStatus2: 0,
       sysID: [
-        { ID: 1180 },
-        { ID: 125 },
-        { ID: 5139 },
+        { ID: 11171 },
+        { ID: 11172 },
+        { ID: 11173 },
         { ID: 11148 },
         { ID: 1180 },
         { ID: 11142 },
@@ -425,7 +429,7 @@ export default {
       ],
       isEdit: [false, false, true, false, false, false, false],
       userInfo: {},
-      selectedIndex: "1",
+      selectedIndex: "0",
       colDialogVisible2: false,
       colDialogVisible5: false,
       colDialogVisible6: false,
@@ -513,6 +517,12 @@ export default {
       for (let name in row) {
         this.$set(this.tableData[remarkTb][index], name, row[name]);
       }
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
+
+      this.selectedIndex = tab.name;
+      this.dataSearch(Number(this.selectedIndex));
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -779,16 +789,11 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      this.dataSearch(this.selectedIndex);
+      this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
+      this.dataSearch(2);
     },
-    // handleClick(tab, event) {
-    //   console.log(tab, event);
-    //   this.selectedIndex = tab.name;
-    //   this.dataSearch(this.selectedIndex);
-    // },
     AddEvent(index) {
-      if (index === 1) {
+      if (index === 2) {
         this.colDialogVisible2 = true;
         this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
@@ -797,40 +802,6 @@ export default {
       }
       if (index === 3) {
         this.colDialogVisible6 = true;
-      }
-    },
-    // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == "IsCompleteInspect") {
-        if (row.IsCompleteInspect == "未开始") {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
-        } else if (row.IsCompleteInspect == "进行中") {
-          return {
-            backgroundColor: "#fdfd8f",
-          };
-        } else if (row.IsCompleteInspect == "已完成") {
-          return {
-            backgroundColor: "#9fff9f",
-          };
-        }
-      }
-    },
-    // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == "OrderNo") {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: "#9fff9f",
-            };
-          }
-        }
       }
     },
     // 增行

@@ -361,6 +361,7 @@ export default {
       this.treeListTmp = [];
       let form = {
         dicID: 7911,
+        sort: "Level",
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;

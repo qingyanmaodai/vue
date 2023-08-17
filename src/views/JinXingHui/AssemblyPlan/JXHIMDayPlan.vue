@@ -809,10 +809,15 @@ export default {
         this.tableColumns[remarkTb].forEach((column, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);
-
+          cell.foreColor("black");
+          cell.backColor("white");
+          //修改可编辑锁定状态以及字体颜色
+          if (column["isEdit"]) {
+            cell.locked(false).foreColor("#2a06ecd9");
+          }
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
+            cell.foreColor("black");
           }
 
           if (
