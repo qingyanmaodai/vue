@@ -839,7 +839,7 @@ export default {
               if (columnIndex !== -1) {
                 // 这里使用 rowIndex 和 columnIndex 获取单元格
                 const cell = sheet.getCell(rowIndex, columnIndex);
-                cell.foreColor(row["BColors"][key]);
+                cell.backColor(row["BColors"][key]);
               }
             });
           }
