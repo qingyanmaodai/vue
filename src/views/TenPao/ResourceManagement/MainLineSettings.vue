@@ -6,29 +6,42 @@
         <div class="flex_column" style="width: 100%; height: 100%">
           <div class="admin_head" ref="headRef">
             <div class="flex">
-              <div style="margin-right: 10px">
-                <el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  :stretch="true"
-                >
-                  <el-tab-pane label="产品" name="0"></el-tab-pane>
-                  <el-tab-pane label="产品族" name="1"></el-tab-pane
-                ></el-tabs>
-              </div>
-              <div class="flex_grow">
+              <div
+                class="flex_grow"
+                v-for="item in [0, 1]"
+                :key="item"
+                v-show="Number(selectedIndex) === item"
+              >
                 <ComSearch
                   ref="searchRef"
-                  :searchData="formSearchs[0].datas"
-                  :searchForm="formSearchs[0].forms"
-                  :remark="0"
+                  :searchData="formSearchs[item].datas"
+                  :searchForm="formSearchs[item].forms"
+                  :remark="item"
                   :isLoading="isLoading"
                   :btnForm="btnForm"
                   @btnClick="btnClick"
-                  :signName="0"
+                  :signName="item"
                 />
               </div>
             </div>
+          </div>
+
+          <div class="ant-table-title pd-0-6">
+            <el-row>
+              <el-col :span="4"></el-col>
+              <el-col :span="20" class="flex_flex_end">
+                <div style="margin-right: 10px">
+                  <el-tabs
+                    v-model="selectedIndex"
+                    @tab-click="handleClick"
+                    :stretch="true"
+                  >
+                    <el-tab-pane label="产品" name="0"></el-tab-pane>
+                    <el-tab-pane label="产品族" name="1"></el-tab-pane
+                  ></el-tabs>
+                </div>
+              </el-col>
+            </el-row>
           </div>
           <div
             v-for="item in [0, 1]"
@@ -141,7 +154,6 @@
               :isClear="isClear[item]"
               :keepSource="true"
               :pagination="tablePagination[item]"
-              @handleRowdbClick="handleRowdbClick"
               @pageChange="pageChange"
               @pageSize="pageSize"
               @sortChange="sortChange"
@@ -157,105 +169,8 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <!-- <el-dialog
-      :title="'计划调整'"
-      :visible.sync="colDialogVisible3"
-      width="70%"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-      ><div
-        style="
-          height: 60vh;
-          overflow-x: hidden;
-          display: flex;
-          flex-direction: column;
-        "
-      >
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="6"
-              ><span class="title">销售订单：{{ SalesOrderNo }}</span></el-col
-            >
-            <el-col :span="6"
-              ><span class="title">行项目：{{ SalesLineNum }} </span></el-col
-            >
-            <el-col :span="6"
-              ><span class="title">交期：{{ SalesDeliveryDate }} </span></el-col
-            >
-            <el-col :span="6"
-              ><span class="title">前置期： {{ FrontDate }} </span></el-col
-            >
-          </el-row>
-        </div>
-        <div v-for="item in [2]" :key="item" class="flex_grow">
-          <ComVxeTable
-            :ref="`tableRef${item}`"
-            :rowKey="'RowNumber'"
-            height="100%"
-            :tableData="tableData[item]"
-            :tableHeader="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :isToolbar="false"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :hasSelect="true"
-            :isEdit="isEdit[item]"
-            :isClear="isClear[item]"
-            :keepSource="true"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-            @selectfun="selectFun"
-          />
-        </div>
-        <div style="height: 40px; margin-top: 6px">
-          <el-row>
-            <el-col :span="6">
-              <div>
-                原因:<el-select
-                  clearable
-                  filterable
-                  size="small"
-                  placeholder="请选择原因"
-                  v-model="ChangeReason"
-                >
-                  <el-option
-                    v-for="(item, i) in ChangeReasonArray"
-                    :key="i"
-                    :label="item.value"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-            </el-col>
-            <el-col :span="6"
-              ><span class="title">
-                <div>
-                  备注:
-                  <el-input
-                    size="small"
-                    v-model="Extend1"
-                    style="width: 160px"
-                    placeholder="请输入备注"
-                  ></el-input>
-                </div> </span
-            ></el-col>
-          </el-row>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-checkbox v-model="IgnoreSunday" border style="margin-right: 10px"
-          >忽略周日</el-checkbox
-        >
-        <el-button type="primary" @click="Reschedule()">重算排期</el-button>
-        <el-button type="primary" @click="dataSave2()">确定</el-button>
-        <el-button @click="colDialogVisible3 = false">取消</el-button>
-      </span>
-    </el-dialog> -->
-    <!-- 弹框-->
-    <DialogOptTable
-      title="关联工段"
+    <!-- <DialogOptTable
+      title="添加主辅线"
       :tableDialog="colDialogVisible3"
       :sysID="sysID[3]['ID']"
       :isEdit="isEdit[3]"
@@ -267,6 +182,7 @@
       :searchForm="formSearchs[3]"
       :btnForm="btnForm"
       :isToolbar="false"
+      :showFooter="false"
       :isConfirmBtn="true"
       :table-data="tableData[3]"
       :table-header="tableColumns[3]"
@@ -277,16 +193,54 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></DialogOptTable>
-    <!-- <DialogTable title="添加产品" :tableDialog="colDialogVisible3" :sysID="sysID[2]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible3 = false" :searchForm="formSearchs[2]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable> -->
-    <!-- <DialogTable title="添加产品族" :tableDialog="colDialogVisible5" :sysID="sysID[5]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible5 = false" :searchForm="formSearchs[5]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable>
-    <DialogTable title="添加TPM设备" :tableDialog="colDialogVisible6" :sysID="sysID[6]['ID']" width="80%" :hasSelect="true"
-      @closeDialog="colDialogVisible6 = false" :searchForm="formSearchs[6]" :isToolbar="false" :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"></DialogTable> -->
+    ></DialogOptTable> -->
+
+    <el-dialog
+      :title="'添加主辅线'"
+      :visible.sync="colDialogVisible3"
+      :width="'80%'"
+      :close-on-click-modal="false"
+    >
+      <div class="admin_head" ref="headRef" v-for="i in [3]" :key="i">
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i]['datas']"
+          :searchForm="formSearchs[i]['forms']"
+          :remark="i"
+          :btnForm="btnForm"
+          :isLoading="isLoading"
+          :signName="i"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div class="admin_content flex_grow" v-for="item in [3]" :key="item">
+        <ComVxeTable
+          :ref="`tableRef${item}`"
+          :rowKey="'RowNumber'"
+          height="100%"
+          :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :isToolbar="false"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :hasSelect="hasSelect[item]"
+          :isEdit="isEdit[item]"
+          :isClear="isClear[item]"
+          :keepSource="true"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="colDialogVisible3 = false">取 消</el-button>
+        <el-button type="danger" @click="cancelDialog(3)">删 除</el-button>
+        <el-button type="primary" @click="confirmDialog(3)">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -435,6 +389,8 @@ export default {
       SalesDeliveryDate: null,
       FrontDate: null,
       IgnoreSunday: true,
+      clickRow: null,
+      linkTableData: [],
     };
   },
   watch: {},
@@ -512,7 +468,7 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
-
+      this.clickRow = null;
       this.selectedIndex = tab.name;
       this.dataSearch(Number(this.selectedIndex));
     },
@@ -742,11 +698,36 @@ export default {
         //     this.$set(this.tableColumns, remarkTb, m);
         //   });
         // });
-        this.$set(this.tableData, remarkTb, data);
-        console.log(this.tableData, "this.tableData");
-        // if (remarkTb === 0) {
-        //   this.setData(remarkTb);
+        // if (remarkTb === 3) {
+        // if (Number(this.selectedIndex) === 0) {
+        // data
+        //   .filter((item2) => {
+        //     return this.tableData[2].some(
+        //       (item1) => item2["OrganizeID"] === item1["OrganizeID"]
+        //     );
+        //   })
+        //   .forEach((item2) => {
+        //     item2["isChecked"] = true;
+        //   });
+        // this.linkTableData = data.filter((item) => {
+        //   return item["isChecked"];
+        // });
+        // } else if (Number(this.selectedIndex) === 1) {
+        //   data
+        //     .filter((item2) => {
+        //       return this.tableData[2].some(
+        //         (item1) => item2["OrganizeID"] === item1["OrganizeID"]
+        //       );
+        //     })
+        //     .forEach((item2) => {
+        //       item2["isChecked"] = true;
+        //     });
+        //   this.linkTableData = data.filter((item) => {
+        //     return item["isChecked"];
+        //   });
         // }
+        // }
+        this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -781,30 +762,23 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      if (remarkTb === 0) {
+      this.clickRow = row;
+      if (Number(this.selectedIndex) === 0) {
         this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
         this.formSearchs[2].datas["MaterialTypeID"] = "";
-      } else if (remarkTb === 1) {
-        this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialID;
+      } else if (Number(this.selectedIndex) === 1) {
+        this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialTypeID;
         this.formSearchs[2].datas["MaterialID"] = "";
       }
       this.dataSearch(2);
     },
-    AddEvent(index) {
-      if (index === 2) {
-        this.colDialogVisible3 = true;
-        this.formSearchs[3]["MachineTypeID"] = "M20230614001";
-      }
-      if (index === 2) {
-        this.colDialogVisible5 = true;
-      }
-      if (index === 3) {
-        this.colDialogVisible6 = true;
-      }
-    },
     // 增行
     addRow(remarkTb) {
       if (remarkTb === 2) {
+        if (this.selectionData[Number(this.selectedIndex)].length === 0) {
+          this.$message.error("请选择需要绑定的数据！");
+          return;
+        }
         this.colDialogVisible3 = true;
         this.dataSearch(3);
       }
@@ -850,30 +824,158 @@ export default {
       });
     },
     //添加产品机台
-    confirmDialog(data) {
-      if (Number(this.selectedIndex) === 0) {
-        data.map((item) => {
-          item["MaterialID"] =
-            this.formSearchs[Number(this.selectedIndex)]["datas"]["MaterialID"];
-          item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
-        });
-        this.colDialogVisible3 = false;
-        this.dataSave(3, null, null, data);
-      } else if (Number(this.selectedIndex) === 1) {
-        data.map((item) => {
-          item["MaterialTypeID"] =
-            this.formSearchs[Number(this.selectedIndex)]["datas"][
-              "MaterialTypeID"
-            ];
-          item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
-        });
-        this.colDialogVisible3 = false;
-        this.dataSave(3, null, null, data);
+    async confirmDialog(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
       }
+      // if (remarkTb === 3) {
+      //   if (Number(this.selectedIndex) === 0) {
+      //     let newData1 = this.linkTableData.filter(
+      //       (x) =>
+      //         !this.selectionData[3].some((y) => y.OrganizeID === x.OrganizeID)
+      //     );
+      //     newData1.forEach((newDataItem) => {
+      //       const matchingRow = this.tableData[3].find(
+      //         (tableDataRow) =>
+      //           tableDataRow.OrganizeID === newDataItem.OrganizeID
+      //       );
+      //       if (matchingRow) {
+      //         newDataItem["ElementDeleteFlag"] = 1;
+      //         newDataItem["dicID"] = 125;
+      //         // newDataItem["MaterialID"] = matchingRow["MaterialID"];
+      //       }
+      //     });
+      //     let newData2 = this.selectionData[3].filter(
+      //       (c) => !this.linkTableData.some((z) => c.OrganizeID == z.OrganizeID)
+      //     );
+      //     newData2.forEach((newDataItem) => {
+      //       const matchingRow = this.tableData[3].find(
+      //         (tableDataRow) =>
+      //           tableDataRow.OrganizeID === newDataItem.OrganizeID
+      //       );
+      //       if (matchingRow) {
+      //         newDataItem["MaterialID"] =
+      //           this.formSearchs[2]["datas"]["MaterialID"];
+      //         newDataItem["dicID"] = 125;
+      //       }
+      //     });
+      //     let newData = [].concat(newData1, newData2);
+      //     await this.dataSave(2, null, null, newData);
+      //   } else if (Number(this.selectedIndex) === 1) {
+      //     if (Number(this.selectedIndex) === 0) {
+      //       let newData1 = this.linkTableData.filter(
+      //         (x) =>
+      //           !this.selectionData[3].some(
+      //             (y) => y.OrganizeID === x.OrganizeID
+      //           )
+      //       );
+      //       newData1.forEach((newDataItem) => {
+      //         const matchingRow = this.tableData[3].find(
+      //           (tableDataRow) =>
+      //             tableDataRow.OrganizeID === newDataItem.OrganizeID
+      //         );
+      //         if (matchingRow) {
+      //           newDataItem["ElementDeleteFlag"] = 1;
+      //           newDataItem["dicID"] = 125;
+      //           newDataItem["MaterialTypeID"] = matchingRow["MaterialTypeID"];
+      //         }
+      //       });
+      //       let newData2 = this.selectionData[3].filter(
+      //         (c) =>
+      //           !this.linkTableData.some((z) => c.OrganizeID == z.OrganizeID)
+      //       );
+      //       newData2.forEach((newDataItem) => {
+      //         const matchingRow = this.tableData[3].find(
+      //           (tableDataRow) =>
+      //             tableDataRow.OrganizeID === newDataItem.OrganizeID
+      //         );
+      //         if (matchingRow) {
+      //           newDataItem["MaterialTypeID"] =
+      //             this.formSearchs[2]["datas"]["MaterialTypeID"];
+      //           newDataItem["dicID"] = 125;
+      //         }
+      //       });
+      //       let newData = [].concat(newData1, newData2);
+      //       await this.dataSave(2, null, null, newData);
+      //     }
+      //   }
+      // }
+      let newData = [];
+      if (remarkTb === 3) {
+        this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
+          let addData = JSON.parse(
+            JSON.stringify(
+              this.selectionData[remarkTb].filter((item3) => {
+                if (item0["OrganizeIDs"]) {
+                  let OrganizeIDs = item0["OrganizeIDs"].split(",");
+                  console.log(item3["OrganizeID"]);
+                  return !OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
+                } else {
+                  return true;
+                }
+              })
+            )
+          );
+          addData.forEach((item) => {
+            item["dicID"] = 125;
+            if (Number(this.selectedIndex) === 0) {
+              item["MaterialID"] = item0["MaterialID"];
+            } else if (Number(this.selectedIndex) === 1) {
+              item["MaterialTypeID"] = item0["MaterialTypeID"];
+            }
+          });
+          newData = newData.concat(addData);
+        });
+      }
+      this.colDialogVisible3 = false;
+      await this.dataSave(Number(this.selectedIndex), null, null, newData);
+    },
+    //添加产品机台
+    async cancelDialog(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      let newData = [];
+      if (remarkTb === 3) {
+        this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
+          let addData = JSON.parse(
+            JSON.stringify(
+              this.selectionData[remarkTb].filter((item3) => {
+                if (item0["OrganizeIDs"]) {
+                  let OrganizeIDs = item0["OrganizeIDs"].split(",");
+                  return OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
+                } else {
+                  return false;
+                }
+              })
+            )
+          );
+          let OrganizeIDs = item0["OrganizeIDs"].split(",");
+          let SchedulingSpecialIDs = item0["SchedulingSpecialIDs"].split(",");
+          addData.forEach((item) => {
+            item["dicID"] = 125;
+            let newIndex = OrganizeIDs.findIndex((OID) => {
+              return item["OrganizeID"] == OID;
+            });
+            item["SchedulingSpecialID"] = SchedulingSpecialIDs[newIndex];
+            if (Number(this.selectedIndex) === 0) {
+              item["MaterialID"] = item0["MaterialID"];
+              item["ElementDeleteFlag"] = 1;
+            } else if (Number(this.selectedIndex) === 1) {
+              item["MaterialTypeID"] = item0["MaterialTypeID"];
+              item["SchedulingSpecialID"] = 1;
+            }
+          });
+          newData = newData.concat(addData);
+        });
+      }
+      this.colDialogVisible3 = false;
+      await this.dataSave(Number(this.selectedIndex), null, null, newData);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
-      let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
@@ -891,90 +993,46 @@ export default {
         })
         .catch((_) => {});
     },
-    async dataSave2(remarkTb, index, parms) {
-      this.selectionData[2] = this.tableData[2].filter(
-        (item) => item["isChecked"] === true
-      );
-      if (this.selectionData[2].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      const HasData = this.selectionData[2].some(
-        (row) => !row.NewStartDate || !row.NewEndDate
-      );
-      if (HasData) {
-        this.$message.error("选择保存的数据中没有变更日期");
-        return;
-      }
-
-      let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
-      updateRecords.forEach((item) => {
-        console.log(item, "item");
-        item["ChangeReason"] = this.ChangeReason;
-        item["Status"] = 0;
-        item["Extend1"] = this.Extend1;
-        item["StartDate"] = item["ERPStartDate"];
-        item["EndDate"] = item["ERPEndDate"];
-        item["dicID"] = 5644;
-      });
-      let res = await SaveData(updateRecords);
-      const { datas, forms, result, msg } = res.data;
-      if (result) {
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-        this.colDialogVisible3 = false;
-        // this.dataSearch(remarkTb);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
     //双击事件
-    async handleRowdbClick(row, remarkTb) {
-      //获取原因数据源
-      if (remarkTb === 1) {
-        let res = await GetSearch(
-          { DataSourceID: "D2307210001" },
-          "/APSAPI/GetDataSource"
-        );
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.ChangeReasonArray = data;
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
-        }
+    // async handleRowdbClick(row, remarkTb) {
+    //   //获取原因数据源
+    //   if (remarkTb === 1) {
+    //     let res = await GetSearch(
+    //       { DataSourceID: "D2307210001" },
+    //       "/APSAPI/GetDataSource"
+    //     );
+    //     const { result, data, count, msg } = res.data;
+    //     if (result) {
+    //       this.ChangeReasonArray = data;
+    //     } else {
+    //       this.$message({
+    //         message: msg,
+    //         type: "error",
+    //         dangerouslyUseHTMLString: true,
+    //       });
+    //     }
 
-        this.colDialogVisible3 = true;
-        this.formSearchs[2].datas["OrderID"] = "";
-        this.formSearchs[2].datas["SalesOrderDetailID"] = "";
-        if (!row.SalesOrderDetailID) {
-          this.formSearchs[2].datas["OrderID"] = row.OrderID;
-        } else {
-          this.formSearchs[2].datas["SalesOrderDetailID"] =
-            row.SalesOrderDetailID;
-        }
-        this.formSearchs[2].datas["LineNum"] = row.LineNum;
-        await this.dataSearch(2);
-        this.selectionData[2] = [];
-        if (this.tableData[2] && this.tableData[2][0]) {
-          let row = this.tableData[2][0];
-          this.SalesLineNum = row["SalesLineNum"];
-          this.SalesDeliveryDate = row["SalesDeliveryDate"];
-          this.FrontDate = row["FrontDate"];
-          this.SalesOrderNo = row["SalesOrderNo"];
-        }
-      }
-    },
+    //     this.colDialogVisible3 = true;
+    //     this.formSearchs[2].datas["OrderID"] = "";
+    //     this.formSearchs[2].datas["SalesOrderDetailID"] = "";
+    //     if (!row.SalesOrderDetailID) {
+    //       this.formSearchs[2].datas["OrderID"] = row.OrderID;
+    //     } else {
+    //       this.formSearchs[2].datas["SalesOrderDetailID"] =
+    //         row.SalesOrderDetailID;
+    //     }
+    //     this.formSearchs[2].datas["LineNum"] = row.LineNum;
+    //     await this.dataSearch(2);
+    //     this.selectionData[2] = [];
+    //     if (this.tableData[2] && this.tableData[2][0]) {
+    //       let row = this.tableData[2][0];
+    //       this.SalesLineNum = row["SalesLineNum"];
+    //       this.SalesDeliveryDate = row["SalesDeliveryDate"];
+    //       this.FrontDate = row["FrontDate"];
+    //       this.SalesOrderNo = row["SalesOrderNo"];
+    //     }
+    //   }
+    // },
     //重算
     async Reschedule() {
       if (this.selectionData[2].length == 0) {
@@ -1361,5 +1419,11 @@ export default {
   padding: 5px !important;
 
   /* 设置为0或调整合适的数值 */
+}
+::v-deep .el-dialog__body {
+  height: 70vh !important;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 </style>

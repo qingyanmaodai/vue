@@ -228,7 +228,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       tagRemark: 0,
-      isEdit: false,
+      isEdit: [false, false, false, false],
       clickData: [{}, {}],
       LineName: "",
       OrganizeName: "",
@@ -264,11 +264,19 @@ export default {
     }, 500);
   },
   methods: {
+    //按钮权限
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+            //假如signName为空，则所有表都显示保存按钮而且全部可编辑，假如不为空，则控制哪个表才可以编辑
+            if (!item["signName"] || item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);

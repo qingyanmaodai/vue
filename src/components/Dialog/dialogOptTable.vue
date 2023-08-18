@@ -9,8 +9,8 @@
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
-        :searchData="formSearchs['datas']"
-        :searchForm="formSearchs['forms']"
+        :searchData="searchForm['datas']"
+        :searchForm="searchForm['forms']"
         :remark="remark"
         :btnForm="btnForm"
         :signName="remark"
@@ -40,7 +40,7 @@
         :cell-style="cellStyle"
       />
     </div>
-    <span slot="footer" class="dialog-footer">
+    <span slot="footer" class="dialog-footer" v-show="showFooter">
       <el-button @click="Dialog = false">取 消</el-button>
       <el-button v-show="isConfirmBtn" type="primary" @click="confirmDialog"
         >确 定</el-button
@@ -86,7 +86,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    formSearchs: {
+    searchForm: {
       type: Object,
       default: function () {
         return {
@@ -110,6 +110,11 @@ export default {
     width: {
       type: String,
       default: "50%",
+    },
+    // 底部内容
+    showFooter: {
+      type: Boolean,
+      default: true,
     },
     // 显示的按钮
     btnForm: {
@@ -239,9 +244,9 @@ export default {
       handler: function (newValue, oldValue) {
         if (newValue) {
           // for (var name in this.searchForm) {
-          //   this.$set(this.formSearchs[0].datas, name, this.searchForm[name]);
+          //   this.$set(this.searchForm[0].datas, name, this.searchForm[name]);
           // }
-          // this.getTableData(this.formSearchs[0].datas, 0);
+          // this.getTableData(this.searchForm[0].datas, 0);
         }
         this.Dialog = newValue;
       },
@@ -311,15 +316,15 @@ export default {
     //     });
     //     // 获取查询的初始化字段 组件 按钮
     //     forms.some((x, z) => {
-    //       this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+    //       this.$set(this.searchForm[z].datas, "dicID", IDs[z].ID);
     //       x.forEach((y) => {
     //         if (y.prop && y.value) {
-    //           this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+    //           this.$set(this.searchForm[z].datas, [y.prop], y.value);
     //         } else {
-    //           this.$set(this.formSearchs[z].datas, [y.prop], "");
+    //           this.$set(this.searchForm[z].datas, [y.prop], "");
     //         }
     //       });
-    //       this.$set(this.formSearchs[z], "forms", x);
+    //       this.$set(this.searchForm[z], "forms", x);
     //     });
     //   }
     // },
