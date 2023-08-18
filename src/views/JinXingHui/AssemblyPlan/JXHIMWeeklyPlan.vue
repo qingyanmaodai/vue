@@ -26,7 +26,7 @@
         </el-col>
 
         <el-col :span="12" class="flex_flex_end">
-          <div>
+          <!-- <div>
             <span>生产时段：</span>
             <el-date-picker
               v-model="ruleForm.ProducedDate"
@@ -36,7 +36,7 @@
             >
             </el-date-picker>
             <el-divider direction="vertical"></el-divider>
-          </div>
+          </div> -->
           <div v-for="(item, y) in Status1" :key="y">
             <span
               @click="changeStatus(item, y)"
@@ -336,21 +336,42 @@ export default {
             }
           )
             .then(async () => {
-              this.adminLoading = true;
-              await GetSearch(
+              let res = await GetSearch(
                 DayTruePlanData,
                 "/APSAPI/InsertIntoIMToProcessplan"
               );
-              this.adminLoading = false;
+              const { result, data, count, msg } = res.data;
+              if (result) {
+                this.adminLoading = false;
+                this.dataSearch(remarkTb);
+              } else {
+                this.adminLoading = false;
+                this.$message({
+                  message: msg,
+                  type: "error",
+                  dangerouslyUseHTMLString: true,
+                });
+              }
             })
             .catch(() => {});
         } else {
           this.adminLoading = true;
-          await GetSearch(
+          let res = await GetSearch(
             this.selectionData[remarkTb],
             "/APSAPI/InsertIntoIMToProcessplan"
           );
-          this.adminLoading = false;
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            this.dataSearch(remarkTb);
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+          }
         }
       }
     },
@@ -1105,12 +1126,14 @@ export default {
         sheet.endEdit();
       }
       // 获取修改记录
-      let updateRecords = [];
+      let changeRecords = [];
       if (newData) {
-        updateRecords = newData;
+        changeRecords = newData;
       } else {
         if ($table) {
-          updateRecords = $table.getUpdateRecords();
+          const { insertRecords, updateRecords, removeRecords } =
+            $table.getRecordset();
+          changeRecords = insertRecords.concat(updateRecords, removeRecords);
         } else {
           let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
           let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
@@ -1118,17 +1141,17 @@ export default {
           DeletedRows.forEach((item) => {
             item["ElementDeleteFlag"] = 1;
           }); //获取被删除的数据
-          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+          changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
 
-      if (updateRecords.length == 0) {
+      if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await SaveData(updateRecords);
-      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
+      let res = await SaveData(changeRecords);
+      // let res = await GetSearch(changeRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({

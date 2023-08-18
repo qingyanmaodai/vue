@@ -806,6 +806,7 @@ export default {
     addRow(remarkTb) {
       if (remarkTb === 2) {
         this.colDialogVisible3 = true;
+        this.dataSearch(3);
       }
       // if (!this.addNum) {
       //   this.$message.error("请输入需要添加的行数!");
@@ -857,7 +858,7 @@ export default {
           item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
         });
         this.colDialogVisible3 = false;
-        this.dataSave(2, null, null, data);
+        this.dataSave(3, null, null, data);
       } else if (Number(this.selectedIndex) === 1) {
         data.map((item) => {
           item["MaterialTypeID"] =
@@ -867,7 +868,7 @@ export default {
           item["dicID"] = this.sysID[Number(this.selectedIndex)]["ID"];
         });
         this.colDialogVisible3 = false;
-        this.dataSave(2, null, null, data);
+        this.dataSave(3, null, null, data);
       }
     },
     // 删除

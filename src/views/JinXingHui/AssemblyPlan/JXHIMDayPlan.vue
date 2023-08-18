@@ -472,21 +472,14 @@ export default {
         })
         .catch((_) => {});
     },
-    resetScheduling() {
+    resetScheduling(remarkTb) {
       this.$confirm("确定要重新排全部数据吗？")
         .then(async (_) => {
-          this.adminLoading = true;
-
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
-          let submitData = sheet.getDataSource();
-          submitData.forEach((m) => {
-            m["isChecked"] = true;
-          });
-          if (submitData.length >= 0) {
+          if (this.selectionData[remarkTb].length > 0) {
             this.adminLoading = true;
             let res = await GetSearch(
-              submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+              this.selectionData[remarkTb],
+              "/APSAPI/ResetIMDayPlan"
             );
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -507,7 +500,7 @@ export default {
             }
           } else {
             this.$message({
-              message: "未有数据",
+              message: "未选择数据",
               type: "error",
               dangerouslyUseHTMLString: true,
             });
