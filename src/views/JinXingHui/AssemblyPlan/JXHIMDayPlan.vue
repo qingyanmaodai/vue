@@ -685,25 +685,6 @@ export default {
         ) {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
-              let newData = x["items"]; // 设置列表每行下拉菜单
-              // 获取要绑定下拉菜单的单元格对象
-              let cell = sheet.getCell(index, y);
-              // 创建下拉菜单单元格类型，并设置其选项数据
-              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-              comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
-              );
-              comboBox.editable(true);
-              // 获取下拉菜单的选项数据
-              comboBox.items(newData);
-              comboBox.itemHeight(24);
-              // 将下拉菜单单元格类型绑定到指定的单元格中
-              cell.cellType(comboBox);
-            }
-          });
-        } else if (x.ControlType === "el-selcet") {
-          this.tableData[remarkTb].map((item, index) => {
-            if (x.DataSourceID && x.DataSourceName) {
               let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
               // 获取要绑定下拉菜单的单元格对象
               let cell = sheet.getCell(index, y);
@@ -1108,80 +1089,80 @@ export default {
         sheet.setDataSource(this.tableData[this.labelStatus1]);
         return;
       }
-      if (
-        !currentRow[currentlabel].TotalHours ||
-        parseInt(currentRow[currentlabel].TotalHours) <= 0
-      ) {
-        this.$message.error("该天休息，上班时间为0");
+      // if (
+      //   !currentRow[currentlabel].TotalHours ||
+      //   parseInt(currentRow[currentlabel].TotalHours) <= 0
+      // ) {
+      //   this.$message.error("该天休息，上班时间为0");
 
-        sheet.setValue(rowIndex, colIndex, "");
+      //   sheet.setValue(rowIndex, colIndex, "");
 
-        return;
-      }
+      //   return;
+      // }
 
-      let Qty = parseInt(currentRow.OweQty);
-      let Capacity = parseInt(currentRow.Capacity);
-      if (!Capacity) {
-        this.$message.error("该单据没有产能");
-        return;
-      }
-      let list = [];
-      let editNum = 0;
-      let remainNum = 0;
-      // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
-      this.tableColumns[0].some((x, i) => {
-        if (i <= colIndex) {
-          list.push(currentRow[x.prop]);
-          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-            editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
-          }
-        } else {
-          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-            list.push("");
-          } else {
-            list.push(currentRow[x.prop]);
-          }
-        }
-      });
-      remainNum = Qty - editNum;
+      // let Qty = parseInt(currentRow.OweQty);
+      // let Capacity = parseInt(currentRow.Capacity);
+      // if (!Capacity) {
+      //   this.$message.error("该单据没有产能");
+      //   return;
+      // }
+      // let list = [];
+      // let editNum = 0;
+      // let remainNum = 0;
+      // // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
+      // this.tableColumns[0].some((x, i) => {
+      //   if (i <= colIndex) {
+      //     list.push(currentRow[x.prop]);
+      //     if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+      //       editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
+      //     }
+      //   } else {
+      //     if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+      //       list.push("");
+      //     } else {
+      //       list.push(currentRow[x.prop]);
+      //     }
+      //   }
+      // });
+      // remainNum = Qty - editNum;
 
-      if (parseInt(val) > remainNum) {
-        this.$message.error(
-          "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
-        );
-        list[colIndex] = "";
-        for (var j = 0; j < this.tableColumns[0].length; j++) {
-          sheet.setArray(rowIndex, j, [list[j]]);
-        }
-        return;
-      } else {
-        // 接着计算下面每一个空格该有的数
-        for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          if (this.tableColumns[0][j]["prop2"]) {
-            let label = this.tableColumns[0][j].prop + "dy";
-            let obj = currentRow[label];
-            remainNum = remainNum - parseInt(val);
-            let maxNum =
-              (Capacity * obj.TotalHours * obj.DayCapacity) /
-              currentRow.StandardPeoples;
-            maxNum = parseInt(maxNum);
-            if (remainNum <= 0) {
-              list[j] = null;
-            } else {
-              if (remainNum <= maxNum) {
-                list[j] = remainNum;
-                break;
-              } else {
-                list[j] = maxNum;
-                remainNum -= maxNum;
-              }
-            }
-          }
-        }
-        for (var j = 0; j < this.tableColumns[0].length; j++) {
-          sheet.setArray(rowIndex, j, [list[j]]);
-        }
-      }
+      // if (parseInt(val) > remainNum) {
+      //   this.$message.error(
+      //     "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
+      //   );
+      //   list[colIndex] = "";
+      //   for (var j = 0; j < this.tableColumns[0].length; j++) {
+      //     sheet.setArray(rowIndex, j, [list[j]]);
+      //   }
+      //   return;
+      // } else {
+      //   // 接着计算下面每一个空格该有的数
+      //   for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
+      //     if (this.tableColumns[0][j]["prop2"]) {
+      //       let label = this.tableColumns[0][j].prop + "dy";
+      //       let obj = currentRow[label];
+      //       remainNum = remainNum - parseInt(val);
+      //       let maxNum =
+      //         (Capacity * obj.TotalHours * obj.DayCapacity) /
+      //         currentRow.StandardPeoples;
+      //       maxNum = parseInt(maxNum);
+      //       if (remainNum <= 0) {
+      //         list[j] = null;
+      //       } else {
+      //         if (remainNum <= maxNum) {
+      //           list[j] = remainNum;
+      //           break;
+      //         } else {
+      //           list[j] = maxNum;
+      //           remainNum -= maxNum;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   for (var j = 0; j < this.tableColumns[0].length; j++) {
+      //     sheet.setArray(rowIndex, j, [list[j]]);
+      //   }
+      // }
     },
     // 刷新页面
     refrshPage() {
