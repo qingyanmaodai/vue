@@ -69,6 +69,7 @@
               @sortChange="sortChange"
               @selectfun="selectFun"
               @handleRowClick="handleRowClick"
+              @selectChanged="selectChanged"
             />
           </div>
         </div>
@@ -158,6 +159,7 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
+              @selectChanged="selectChanged"
               :treeConfig="{
                 children: 'children',
                 iconOpen: 'vxe-icon-square-minus-fill',
@@ -233,6 +235,7 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
+          @selectChanged="selectChanged"
         />
       </div>
       <span slot="footer" class="dialog-footer">
@@ -487,6 +490,7 @@ export default {
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
+      console.log(this.isClear, "this.isClear");
       this.tablePagination[remarkTb].pageIndex = 1;
       await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -594,7 +598,7 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
-        this.dataSearch(remarkTb);
+        await this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
       } else {
         this.$message({
@@ -774,7 +778,39 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
+      // 获取修改记录
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < this.addNum; x++) {
+        let obj = {
+          dicID: this.sysID[remarkTb]["ID"],
+          RowNumber: _.uniqueId(),
+        };
+        this.tableColumns[remarkTb].map((item) => {
+          obj[item.prop] = null;
+          obj["update"] = true;
+          if (item.prop === "Status") {
+            obj[item.prop] = 1;
+          }
+          for (let key in this.DataSourceList[remarkTb]) {
+            if (item.DataSourceName === key) {
+              obj[key] = this.DataSourceList[remarkTb][key];
+            }
+          }
+        });
+        $table.insert(obj);
+      }
+    },
+    LinkData(remarkTb) {
       if (remarkTb === 2) {
+        console.log(
+          this.selectionData[Number(this.selectedIndex)],
+          "this.selectionData[Number(this.selectedIndex)]"
+        );
         if (this.selectionData[Number(this.selectedIndex)].length === 0) {
           this.$message.error("请选择需要绑定的数据！");
           return;
@@ -782,33 +818,6 @@ export default {
         this.colDialogVisible3 = true;
         this.dataSearch(3);
       }
-      // if (!this.addNum) {
-      //   this.$message.error("请输入需要添加的行数!");
-      //   return;
-      // }
-      // // 下拉数据是需要获取数据源
-      // for (let x = 0; x < this.addNum; x++) {
-      //   let obj = {
-      //     dicID: this.sysID[remarkTb].ID,
-      //     rowNum: _.uniqueId("rowNum_"),
-      //   };
-      //   this.tableColumns[remarkTb].map((item) => {
-      //     obj[item.prop] = null;
-      //     obj["update"] = true;
-      //     if (item.prop === "Status") {
-      //       obj[item.prop] = 1;
-      //     }
-      //     for (let key in this.DataSourceList[remarkTb]) {
-      //       if (item.DataSourceName === key) {
-      //         obj[key] = this.DataSourceList[remarkTb][key];
-      //       }
-      //     }
-      //   });
-
-      //   console.log("this.addNum", this.addNum);
-
-      //   this.tableData[remarkTb].unshift(obj);
-      // }
     },
     changeProp(index) {
       if (!this.OrderNo) {
@@ -908,7 +917,7 @@ export default {
             JSON.stringify(
               this.selectionData[remarkTb].filter((item3) => {
                 if (item0["OrganizeIDs"]) {
-                  let OrganizeIDs = item0["OrganizeIDs"].split(",");
+                  let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
                   console.log(item3["OrganizeID"]);
                   return !OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
                 } else {
@@ -944,7 +953,7 @@ export default {
             JSON.stringify(
               this.selectionData[remarkTb].filter((item3) => {
                 if (item0["OrganizeIDs"]) {
-                  let OrganizeIDs = item0["OrganizeIDs"].split(",");
+                  let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
                   return OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
                 } else {
                   return false;
@@ -952,8 +961,8 @@ export default {
               })
             )
           );
-          let OrganizeIDs = item0["OrganizeIDs"].split(",");
-          let SchedulingSpecialIDs = item0["SchedulingSpecialIDs"].split(",");
+          let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
+          let SchedulingSpecialIDs = item0["SchedulingSpecialIDs"]?.split(",");
           addData.forEach((item) => {
             item["dicID"] = 125;
             let newIndex = OrganizeIDs.findIndex((OID) => {

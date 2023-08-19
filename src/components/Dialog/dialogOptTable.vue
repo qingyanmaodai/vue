@@ -32,6 +32,7 @@
         :table-header="tableHeader"
         :table-loading="tableLoading"
         :pagination="tablePagination"
+        :isClear="isClear"
         @pageChange="pageChange"
         @pageSize="pageSize"
         @sortChange="sortChange"
@@ -135,6 +136,11 @@ export default {
     sysID: {
       type: Number,
       dafault: 1,
+    },
+    //清除选框
+    isClear: {
+      type: Boolean,
+      dafault: false,
     },
     //remark
     remark: {

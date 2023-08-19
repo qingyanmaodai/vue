@@ -162,6 +162,7 @@
       :table-header="tableColumns[2]"
       :table-loading="tableLoading[2]"
       :table-pagination="tablePagination[2]"
+      :isClear="isClear[2]"
       @confirmDialog="confirmDialog"
       @pageChangeCall="pageChange"
       @pageSizeCall="pageSize"
@@ -365,6 +366,7 @@ export default {
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
+      console.log(this.isClear, "this.isClear");
       this.tablePagination[remarkTb].pageIndex = 1;
       await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -395,11 +397,22 @@ export default {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj["ElementDeleteFlag"] = 1;
-          newData.push(obj);
-        });
+        if (remarkTb === 1) {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ProcessID"] = "";
+              x["ProcessName"] = "";
+              return x;
+            })
+          );
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ElementDeleteFlag"] = 1;
+              return x;
+            })
+          );
+        }
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
@@ -409,7 +422,6 @@ export default {
     },
     //添加产品机台
     confirmDialog(remark) {
-      console.log(remark, this.selectionData);
       this.selectionData[remark].forEach((item) => {
         item.ProcessName = this.clickRow["ProcessName"];
         item.ProcessID = this.clickRow["ProcessID"];
@@ -670,35 +682,34 @@ export default {
     // 增行
     addRow(remarkTb) {
       // 获取修改记录
-      if (remarkTb == 0) {
-        const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-        if (!this.addNum) {
-          this.$message.error("请输入需要添加的行数!");
-          return;
-        }
-        // 下拉数据是需要获取数据源
-        for (let x = 0; x < this.addNum; x++) {
-          let obj = {
-            dicID: this.sysID[remarkTb]["ID"],
-            RowNumber: _.uniqueId(),
-          };
-          this.tableColumns[remarkTb].map((item) => {
-            obj[item.prop] = null;
-            obj["update"] = true;
-            if (item.prop === "Status") {
-              obj[item.prop] = 1;
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (!this.addNum) {
+        this.$message.error("请输入需要添加的行数!");
+        return;
+      }
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < this.addNum; x++) {
+        let obj = {
+          dicID: this.sysID[remarkTb]["ID"],
+          RowNumber: _.uniqueId(),
+        };
+        this.tableColumns[remarkTb].map((item) => {
+          obj[item.prop] = null;
+          obj["update"] = true;
+          if (item.prop === "Status") {
+            obj[item.prop] = 1;
+          }
+          for (let key in this.DataSourceList[remarkTb]) {
+            if (item.DataSourceName === key) {
+              obj[key] = this.DataSourceList[remarkTb][key];
             }
-            for (let key in this.DataSourceList[remarkTb]) {
-              if (item.DataSourceName === key) {
-                obj[key] = this.DataSourceList[remarkTb][key];
-              }
-            }
-          });
-          $table.insert(obj);
-
-          // this.tableData[remarkTb].unshift(obj);
-        }
-      } else if (remarkTb == 1) {
+          }
+        });
+        $table.insert(obj);
+      }
+    },
+    LinkData(remarkTb) {
+      if (remarkTb == 1) {
         if (!this.clickRow) {
           this.$message.error("请点击需要绑定的数据！");
           return;

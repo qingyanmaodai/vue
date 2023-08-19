@@ -118,8 +118,11 @@ export default {
     },
   },
   watch: {
-    multipleSelection(newValue) {
-      this.$emit("selectChanged", newValue, this.remark);
+    multipleSelection: {
+      handler(newValue) {
+        this.$emit("selectChanged", newValue, this.remark);
+      },
+      deep: true, // 启用深度监听
     },
   },
   mounted() {

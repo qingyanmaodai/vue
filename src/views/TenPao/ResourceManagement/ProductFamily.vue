@@ -58,7 +58,6 @@
               @selectfun="selectFun"
               :keepSource="true"
               :footerContent="true"
-              @toPage="productSearch"
             />
           </div>
         </div>
@@ -147,7 +146,7 @@
     </splitpanes>
     <!-- 弹框-->
     <dialogOptTable
-      title="关联工段"
+      title="新增产品族关联产品"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
@@ -227,7 +226,7 @@ import {
   GetServerTime,
 } from "@/api/Common";
 export default {
-  name: "ProcessConfiguration",
+  name: "ProductFamily",
   components: {
     ComSearch,
     ComVxeTable,
@@ -301,13 +300,17 @@ export default {
           formsAll: [],
         },
         {
-          datas: {},
+          datas: {
+            IsConfig: 1,
+          },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
         },
         {
-          datas: {},
+          datas: {
+            IsConfig: 0,
+          },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -340,7 +343,7 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 1177 }, { ID: 1186 }, { ID: 1182 }, { ID: 11171 }],
+      sysID: [{ ID: 11172 }, { ID: 11171 }, { ID: 11171 }, { ID: 1180 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
@@ -445,12 +448,23 @@ export default {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj["ElementDeleteFlag"] = 1;
-          newData.push(obj);
-        });
+        if (remarkTb === 1) {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["MaterialTypeID"] = "";
+              return x;
+            })
+          );
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ElementDeleteFlag"] = 1;
+              return x;
+            })
+          );
+        }
       }
+      console.log(newData, "newData");
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
@@ -494,54 +508,33 @@ export default {
     //添加产品机台
     async confirmDialog(remarkTb) {
       let newData;
-      if (remarkTb === 2) {
-        let newData1 = this.linkTableData.filter(
-          (x) => !this.selectionData[2].some((y) => y.ProcessID === x.ProcessID)
-        );
-        newData1.forEach((newDataItem) => {
-          const matchingRow = this.tableData[1].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-          );
-          if (matchingRow) {
-            newDataItem["ElementDeleteFlag"] = 1;
-            newDataItem["dicID"] = 1186;
-            newDataItem["ProcessGroupInfoID"] =
-              matchingRow["ProcessGroupInfoID"];
-          }
-        });
-        let newData2 = this.selectionData[2].filter(
-          (c) => !this.linkTableData.some((z) => c.ProcessID == z.ProcessID)
-        );
-        newData2.forEach((newDataItem) => {
-          const matchingRow = this.tableData[2].find(
-            (tableDataRow) => tableDataRow.ProcessID === newDataItem.ProcessID
-          );
-          if (matchingRow) {
-            newDataItem["ProcessGroupID"] =
-              this.formSearchs[1]["datas"]["ProcessGroupID"];
-            newDataItem["dicID"] = 1186;
-          }
-        });
-        newData = [].concat(newData1, newData2);
-      }
 
-      // this.selectionData[2].forEach((item) => {
-      //   item["ProcessGroupID"] = this.formSearchs[1]["datas"]["ProcessGroupID"];
-      //   item["dicID"] = 1186;
-      // });
+      newData = _.cloneDeep(
+        this.selectionData[remarkTb].map((item) => {
+          item.MaterialTypeID = this.clickRow["MaterialTypeID"];
+          return item;
+        })
+      );
+
+      // if (remarkTb === 2) {
+      //   let newData1 = this.linkTableData.filter(
+      //     (x) =>
+      //       !this.selectionData[2].some((y) => y.MaterialID === x.MaterialID)
+      //   );
+      //   newData1.forEach((newDataItem) => {
+      //     newDataItem["MaterialTypeID"] = "";
+      //   });
+      //   let newData2 = this.selectionData[2].filter(
+      //     (c) => !this.linkTableData.some((z) => c.MaterialID == z.MaterialID)
+      //   );
+      //   newData2.forEach((newDataItem) => {
+      //     newDataItem["MaterialTypeID"] = this.clickRow["MaterialTypeID"];
+      //   });
+      //   newData = [].concat(newData1, newData2);
+      // }
 
       await this.dataSave(1, null, null, newData);
-
-      // else if (Number(this.selectedIndex) === 2) {
-      //   data.map((item) => {
-      //     item["MachineMouldID"] =
-      //       this.formSearchs[2]["datas"]["MachineMouldID"];
-      //     item["dicID"] = 112;
-      //   });
-      //   this.dataSave(2, data);
-      // }
       this.colDialogVisible2 = false;
-      this.colDialogVisible4 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -673,8 +666,8 @@ export default {
         if (remarkTb === 2) {
           data
             .filter((item2) => {
-              return this.tableData[1].some(
-                (item1) => item2["ProcessID"] === item1["ProcessID"]
+              return (
+                item2["MaterialTypeID"] === this.clickRow["MaterialTypeID"]
               );
             })
             .forEach((item2) => {
@@ -713,7 +706,7 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
-      this.formSearchs[1].datas["ProcessGroupID"] = row["ProcessGroupID"];
+      this.formSearchs[1].datas["MaterialTypeID"] = row["MaterialTypeID"];
       await this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
@@ -828,12 +821,6 @@ export default {
           }
         }
       }
-    },
-    // 产品查询
-    productSearch(row, prop) {
-      this.formSearchs[3].datas["ProcessGroupID"] = row.ProcessGroupID;
-      this.dataSearch(3);
-      this.colDialogVisible3 = true;
     },
   },
 };
