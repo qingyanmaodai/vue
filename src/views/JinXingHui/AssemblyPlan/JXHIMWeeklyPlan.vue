@@ -171,7 +171,7 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {CompletionStatus: 0,ProductionStatus: 26},
           forms: [],
         },
         {
