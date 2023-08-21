@@ -205,6 +205,18 @@ export default {
           Methods: "backData",
           Icon: "",
         },
+        {
+          ButtonCode: "returnOrder",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: {
+            dataName: "selectionData",
+          },
+        },
         // {
         //   ButtonCode: "save",
         //   BtnName: "返回",
@@ -306,6 +318,26 @@ export default {
     selectChanged(newValue, remarkTb) {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
       this.selectionData[remarkTb] = newValue;
+    },
+       // 退回
+       async dataDel(remarkTb, index, parms) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.$confirm(
+        "确定要退回的【" +
+          this.selectionData[remarkTb].length +
+          "】数据吗，如果已经报工则无法退回？"
+      )
+        .then((_) => {
+          this.selectionData[remarkTb].forEach((x) => {
+            x["ElementDeleteFlag"] = 1;
+          });
+          this.adminLoading = true;
+          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+        })
+        .catch((_) => {});
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
