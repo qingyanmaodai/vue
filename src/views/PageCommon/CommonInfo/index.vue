@@ -164,7 +164,7 @@ export default {
       newTag: -1,
       selectionData: [[], [], [], []],
       addNum: 1,
-      addStep: 10,
+      addStep: null,
       scrollEnable: true,
       DataSourceList: [{}],
     };
