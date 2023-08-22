@@ -464,24 +464,12 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .text_right {
-  text-align: right;
-  margin: auto;
+  display: flex;
+  // text-align: right;
+  // margin: auto;
   justify-content: flex-end;
-
-  .el-button {
-    margin: 0 6px;
-  }
-
-  .drawer_span {
-    font-size: 16px;
-  }
-}
-
-.text_right1 {
-  text-align: right;
-  flex-wrap: wrap; /* 元素换行 */
-  justify-content: flex-end;
-
+  flex-wrap: wrap;
+  align-items: center;
   .el-button {
     margin: 0 6px;
   }

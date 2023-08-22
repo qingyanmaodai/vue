@@ -12,6 +12,8 @@
         @btnClick="btnClick"
         :signName="0"
         :defaultShow="false"
+        :defaultResetShow="false"
+        :defaultExportShow="false"
       />
     </div>
     <div>

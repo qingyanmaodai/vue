@@ -1650,7 +1650,10 @@ export default {
           this.tableHeader.splice(isChecked, 1);
         }
       }
-      return this.tableHeader;
+      let tableHeaderChange = this.tableHeader.filter((item) => {
+        return item["width"] != 0;
+      });
+      return tableHeaderChange;
     },
   },
   activated() {

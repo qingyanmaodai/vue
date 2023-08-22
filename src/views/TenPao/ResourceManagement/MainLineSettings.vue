@@ -1,7 +1,7 @@
 <!--设备与工装汇总-->
 <template>
   <div class="container flex_column content_height" v-loading="adminLoading">
-    <splitpanes class="default-theme" horizontal>
+    <splitpanes class="default-theme">
       <pane :size="60">
         <div class="flex_column" style="width: 100%; height: 100%">
           <div class="admin_head" ref="headRef">
@@ -21,6 +21,7 @@
                   :btnForm="btnForm"
                   @btnClick="btnClick"
                   :signName="item"
+                  :Region="Region[item]"
                 />
               </div>
             </div>
@@ -68,7 +69,6 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
-              @handleRowClick="handleRowClick"
               @selectChanged="selectChanged"
             />
           </div>
@@ -91,6 +91,8 @@
               :btnForm="btnForm"
               @btnClick="btnClick"
               :signName="item"
+              :Region="Region[item]"
+              :defaultResetShow="false"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -200,10 +202,10 @@
     <el-dialog
       :title="'添加主辅线'"
       :visible.sync="colDialogVisible3"
-      :width="'80%'"
+      :width="'60%'"
       :close-on-click-modal="false"
     >
-      <div class="admin_head" ref="headRef" v-for="i in [3]" :key="i">
+      <div class="admin_head" ref="headRef" v-for="i in [3]" :key="'head' + i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i]['datas']"
@@ -212,6 +214,7 @@
           :btnForm="btnForm"
           :isLoading="isLoading"
           :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -239,9 +242,13 @@
         />
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="colDialogVisible3 = false">取 消</el-button>
-        <el-button type="danger" @click="cancelDialog(3)">删 除</el-button>
-        <el-button type="primary" @click="confirmDialog(3)">确 定</el-button>
+        <el-button @click="colDialogVisible3 = false">关 闭</el-button>
+        <el-button type="danger" @click="cancelDialog(3)"
+          >批量取消关联</el-button
+        >
+        <el-button type="primary" @click="confirmDialog(3)"
+          >批量关联线体</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -361,37 +368,15 @@ export default {
       adminLoading: false,
       OrderNo: "",
       OrderNoValue: "",
-      OrderNos: [],
-      Status1: [
-        { label: "待确认", value: "未开始" },
-        { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" },
-      ],
-      Status2: [
-        { label: "全部", value: 0 },
-        { label: "未点检", value: 1 },
-        { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 },
-      ],
-      labelStatus1: 0,
-      labelStatus2: 0,
+      OrderNos: [{}, {}, {}, {}],
       sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 125 }, { ID: 11173 }],
       isEdit: [false, false, true, false, false, false, false],
+      Region: [2, 2, 1, 6],
       userInfo: {},
       selectedIndex: "0",
       colDialogVisible3: false,
-      colDialogVisible5: false,
-      colDialogVisible6: false,
       addNum: 1,
-      DataSourceList: [{}],
-      ChangeReason: null,
-      ChangeReasonArray: [],
-      Extend1: null,
-      SalesOrderNo: null,
-      SalesLineNum: null,
-      SalesDeliveryDate: null,
-      FrontDate: null,
-      IgnoreSunday: true,
+      DataSourceList: [{}, {}, {}, {}],
       clickRow: null,
       linkTableData: [],
     };
@@ -472,6 +457,10 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event);
       this.clickRow = null;
+      // if (condition) {
+      this.formSearchs[2].datas["MaterialID"] = null;
+      this.formSearchs[2].datas["MaterialTypeID"] = null;
+      // }
       this.selectedIndex = tab.name;
       this.dataSearch(Number(this.selectedIndex));
     },
@@ -530,12 +519,14 @@ export default {
       //   sheet.endEdit();
       // }
       // 获取修改记录
-      let updateRecords = [];
+      let changeRecords = [];
       if (newData) {
-        updateRecords = newData;
+        changeRecords = newData;
       } else {
         if ($table) {
-          updateRecords = $table.getUpdateRecords();
+          const { insertRecords, updateRecords, removeRecords } =
+            $table.getRecordset();
+          changeRecords = insertRecords.concat(changeRecords, removeRecords);
         } else {
           // let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
           // let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
@@ -543,20 +534,18 @@ export default {
           // DeletedRows.forEach((item) => {
           //   item["ElementDeleteFlag"] = 1;
           // }); //获取被删除的数据
-          // updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+          // changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-      console.log(updateRecords, "updateRecords", this.$refs);
-      if (updateRecords.length == 0) {
+      if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      console.log(updateRecords, "updateRecords.length");
-      if (updateRecords.length > 0 && remarkTb === 0) {
+      if (changeRecords.length > 0 && remarkTb === 0) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
-          updateRecords.map((item1, index1) => {
+          changeRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
               let content = item1[item2["prop"]];
               if (!content && (content !== 0) & (content !== false)) {
@@ -589,7 +578,7 @@ export default {
       }
       let res;
 
-      res = await SaveData(updateRecords);
+      res = await SaveData(changeRecords);
 
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -598,6 +587,10 @@ export default {
           type: "success",
           dangerouslyUseHTMLString: true,
         });
+        if (remarkTb === 0 || remarkTb === 1) {
+          this.formSearchs[2].datas["MaterialID"] = null;
+          this.formSearchs[2].datas["MaterialTypeID"] = null;
+        }
         await this.dataSearch(remarkTb);
         this.$set(this, "adminLoading", false);
       } else {
@@ -632,25 +625,26 @@ export default {
                 ...this.DataSourceList[i],
               };
             }
-            if (n.Required && i === 0) {
-              this.formSearchs[this.tagRemark].required.push(n);
+            if (n.Required) {
+              this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.OrderNos, i, m);
           this.$set(this.tableColumns, i, m);
 
-          this.OrderNos[i] = this.OrderNos[i]
-            .filter((item) => item.isEdit)
-            .map((item) => {
-              return {
-                value: item.prop,
-                label: item.label,
-              };
-            });
+          // this.OrderNos[i] = this.OrderNos[i]
+          //   .filter((item) => item.isEdit)
+          //   .map((item) => {
+          //     return {
+          //       value: item.prop,
+          //       label: item.label,
+          //     };
+          //   });
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -753,29 +747,37 @@ export default {
         });
       });
     },
-    // 改变状态
-    changeStatus(item, index) {
-      // this.labelStatus1 = index;
-      // this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
-      // this.$set(this.tableData, 1, []);
-      this.dataSearch(0);
-    },
     // 选择数据
     selectFun(data, remarkTb, row) {
+      this.formSearchs[2].datas["MaterialID"] = null;
+      this.formSearchs[2].datas["MaterialTypeID"] = null;
       this.selectionData[remarkTb] = data;
+      if (remarkTb === 0) {
+        this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
+          .map((item) => item["MaterialID"])
+          .join(",");
+        this.dataSearch(2);
+      } else if (remarkTb === 1) {
+        this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
+          remarkTb
+        ]
+          .map((item) => item["MaterialTypeID"])
+          .join(",");
+        this.dataSearch(2);
+      }
     },
     // 单击获取明细
-    handleRowClick(row, remarkTb) {
-      this.clickRow = row;
-      if (Number(this.selectedIndex) === 0) {
-        this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
-        this.formSearchs[2].datas["MaterialTypeID"] = "";
-      } else if (Number(this.selectedIndex) === 1) {
-        this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialTypeID;
-        this.formSearchs[2].datas["MaterialID"] = "";
-      }
-      this.dataSearch(2);
-    },
+    // handleRowClick(row, remarkTb) {
+    //   this.clickRow = row;
+    //   if (Number(this.selectedIndex) === 0) {
+    //     this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
+    //     this.formSearchs[2].datas["MaterialTypeID"] = "";
+    //   } else if (Number(this.selectedIndex) === 1) {
+    //     this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialTypeID;
+    //     this.formSearchs[2].datas["MaterialID"] = "";
+    //   }
+    //   this.dataSearch(2);
+    // },
     // 增行
     addRow(remarkTb) {
       // 获取修改记录
@@ -805,19 +807,13 @@ export default {
         $table.insert(obj);
       }
     },
-    LinkData(remarkTb) {
-      if (remarkTb === 2) {
-        console.log(
-          this.selectionData[Number(this.selectedIndex)],
-          "this.selectionData[Number(this.selectedIndex)]"
-        );
-        if (this.selectionData[Number(this.selectedIndex)].length === 0) {
-          this.$message.error("请选择需要绑定的数据！");
-          return;
-        }
-        this.colDialogVisible3 = true;
-        this.dataSearch(3);
+    LinkLine(remarkTb) {
+      if (this.selectionData[Number(this.selectedIndex)].length === 0) {
+        this.$message.error("请选择需要绑定的数据！");
+        return;
       }
+      this.colDialogVisible3 = true;
+      this.dataSearch(3);
     },
     changeProp(index) {
       if (!this.OrderNo) {
@@ -838,78 +834,6 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
-      // if (remarkTb === 3) {
-      //   if (Number(this.selectedIndex) === 0) {
-      //     let newData1 = this.linkTableData.filter(
-      //       (x) =>
-      //         !this.selectionData[3].some((y) => y.OrganizeID === x.OrganizeID)
-      //     );
-      //     newData1.forEach((newDataItem) => {
-      //       const matchingRow = this.tableData[3].find(
-      //         (tableDataRow) =>
-      //           tableDataRow.OrganizeID === newDataItem.OrganizeID
-      //       );
-      //       if (matchingRow) {
-      //         newDataItem["ElementDeleteFlag"] = 1;
-      //         newDataItem["dicID"] = 125;
-      //         // newDataItem["MaterialID"] = matchingRow["MaterialID"];
-      //       }
-      //     });
-      //     let newData2 = this.selectionData[3].filter(
-      //       (c) => !this.linkTableData.some((z) => c.OrganizeID == z.OrganizeID)
-      //     );
-      //     newData2.forEach((newDataItem) => {
-      //       const matchingRow = this.tableData[3].find(
-      //         (tableDataRow) =>
-      //           tableDataRow.OrganizeID === newDataItem.OrganizeID
-      //       );
-      //       if (matchingRow) {
-      //         newDataItem["MaterialID"] =
-      //           this.formSearchs[2]["datas"]["MaterialID"];
-      //         newDataItem["dicID"] = 125;
-      //       }
-      //     });
-      //     let newData = [].concat(newData1, newData2);
-      //     await this.dataSave(2, null, null, newData);
-      //   } else if (Number(this.selectedIndex) === 1) {
-      //     if (Number(this.selectedIndex) === 0) {
-      //       let newData1 = this.linkTableData.filter(
-      //         (x) =>
-      //           !this.selectionData[3].some(
-      //             (y) => y.OrganizeID === x.OrganizeID
-      //           )
-      //       );
-      //       newData1.forEach((newDataItem) => {
-      //         const matchingRow = this.tableData[3].find(
-      //           (tableDataRow) =>
-      //             tableDataRow.OrganizeID === newDataItem.OrganizeID
-      //         );
-      //         if (matchingRow) {
-      //           newDataItem["ElementDeleteFlag"] = 1;
-      //           newDataItem["dicID"] = 125;
-      //           newDataItem["MaterialTypeID"] = matchingRow["MaterialTypeID"];
-      //         }
-      //       });
-      //       let newData2 = this.selectionData[3].filter(
-      //         (c) =>
-      //           !this.linkTableData.some((z) => c.OrganizeID == z.OrganizeID)
-      //       );
-      //       newData2.forEach((newDataItem) => {
-      //         const matchingRow = this.tableData[3].find(
-      //           (tableDataRow) =>
-      //             tableDataRow.OrganizeID === newDataItem.OrganizeID
-      //         );
-      //         if (matchingRow) {
-      //           newDataItem["MaterialTypeID"] =
-      //             this.formSearchs[2]["datas"]["MaterialTypeID"];
-      //           newDataItem["dicID"] = 125;
-      //         }
-      //       });
-      //       let newData = [].concat(newData1, newData2);
-      //       await this.dataSave(2, null, null, newData);
-      //     }
-      //   }
-      // }
       let newData = [];
       if (remarkTb === 3) {
         this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
@@ -940,7 +864,7 @@ export default {
       this.colDialogVisible3 = false;
       await this.dataSave(Number(this.selectedIndex), null, null, newData);
     },
-    //添加产品机台
+    //删除产品机台
     async cancelDialog(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
@@ -974,7 +898,7 @@ export default {
               item["ElementDeleteFlag"] = 1;
             } else if (Number(this.selectedIndex) === 1) {
               item["MaterialTypeID"] = item0["MaterialTypeID"];
-              item["SchedulingSpecialID"] = 1;
+              item["ElementDeleteFlag"] = 1;
             }
           });
           newData = newData.concat(addData);
@@ -1001,85 +925,6 @@ export default {
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
-    },
-    //双击事件
-    // async handleRowdbClick(row, remarkTb) {
-    //   //获取原因数据源
-    //   if (remarkTb === 1) {
-    //     let res = await GetSearch(
-    //       { DataSourceID: "D2307210001" },
-    //       "/APSAPI/GetDataSource"
-    //     );
-    //     const { result, data, count, msg } = res.data;
-    //     if (result) {
-    //       this.ChangeReasonArray = data;
-    //     } else {
-    //       this.$message({
-    //         message: msg,
-    //         type: "error",
-    //         dangerouslyUseHTMLString: true,
-    //       });
-    //     }
-
-    //     this.colDialogVisible3 = true;
-    //     this.formSearchs[2].datas["OrderID"] = "";
-    //     this.formSearchs[2].datas["SalesOrderDetailID"] = "";
-    //     if (!row.SalesOrderDetailID) {
-    //       this.formSearchs[2].datas["OrderID"] = row.OrderID;
-    //     } else {
-    //       this.formSearchs[2].datas["SalesOrderDetailID"] =
-    //         row.SalesOrderDetailID;
-    //     }
-    //     this.formSearchs[2].datas["LineNum"] = row.LineNum;
-    //     await this.dataSearch(2);
-    //     this.selectionData[2] = [];
-    //     if (this.tableData[2] && this.tableData[2][0]) {
-    //       let row = this.tableData[2][0];
-    //       this.SalesLineNum = row["SalesLineNum"];
-    //       this.SalesDeliveryDate = row["SalesDeliveryDate"];
-    //       this.FrontDate = row["FrontDate"];
-    //       this.SalesOrderNo = row["SalesOrderNo"];
-    //     }
-    //   }
-    // },
-    //重算
-    async Reschedule() {
-      if (this.selectionData[2].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.selectionData[2].forEach((item) => {
-        item["IgnoreSunday"] = this.IgnoreSunday;
-      });
-      let res = await GetSearch(
-        this.selectionData[2],
-        "/APSAPI/CalculationStartDate"
-      );
-      const { data, result, msg } = res.data;
-      if (result) {
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-        if (data) {
-          // 对应匹配并更新表格数据
-          data.forEach((newData) => {
-            const rowIndex = this.tableData[2].findIndex(
-              (row) => row.OrderID === newData.OrderID
-            );
-            if (rowIndex !== -1) {
-              this.tableData[2].splice(rowIndex, 1, newData);
-            }
-          });
-        }
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     // 渲染数据
     setData(remarkTb) {

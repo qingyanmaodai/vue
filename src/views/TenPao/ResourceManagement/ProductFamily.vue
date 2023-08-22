@@ -16,6 +16,7 @@
               :remark="0"
               :isLoading="isLoading"
               :signName="0"
+              :Region="1"
               :btnForm="btnForm"
               @btnClick="btnClick"
             />
@@ -65,7 +66,11 @@
       <pane :size="60">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
-            <div v-for="i in [1]" :key="i" v-show="Number(selectedIndex) === i">
+            <div
+              v-for="i in [1]"
+              :key="'head' + i"
+              v-show="Number(selectedIndex) === i"
+            >
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -73,6 +78,7 @@
                 :searchMoreForm="formSearchs[i].formsAll"
                 :remark="i"
                 :signName="i"
+                :Region="Region[i]"
                 :isLoading="isLoading"
                 :btnForm="btnForm"
                 @btnClick="btnClick"
@@ -342,6 +348,7 @@ export default {
         { label: "已完成", value: "已完成" },
         { label: "全部", value: "" },
       ],
+      Region: [1, 2],
       labelStatus1: 0,
       sysID: [{ ID: 11172 }, { ID: 11171 }, { ID: 11171 }, { ID: 1180 }],
       isEdit: [false, false, false, false],

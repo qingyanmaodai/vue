@@ -679,10 +679,10 @@ export default {
         this.roleForm[name] = "";
       }
       this.roleForm.dicID = 40;
-      this.drawer = true;
       this.roleForm.Status = 1;
       this.operationStatus = val;
       if (val) {
+        this.drawer = true;
         this.drawerTitle = "新增角色";
         if (this.delData[0].length != 0) {
           this.roleForm.ParentID = this.delData[0][0].RoleID;
@@ -693,6 +693,7 @@ export default {
           this.$message.error("请单击角色列表选择需要配置的角色！");
           return;
         }
+        this.drawer = true;
         this.editType = "用户";
         this.drawerTitle = "菜单/按钮配置";
         this.$set(this.dialogLoading, 0, true);

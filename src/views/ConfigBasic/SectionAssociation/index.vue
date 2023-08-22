@@ -18,6 +18,7 @@
               :btnForm="btnForm"
               @btnClick="btnClick"
               :signName="0"
+              :Region="2"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -64,7 +65,11 @@
       <pane :size="50">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
-            <div v-for="i in [1]" :key="i" v-show="Number(selectedIndex) === i">
+            <div
+              v-for="i in [1]"
+              :key="'head' + i"
+              v-show="Number(selectedIndex) === i"
+            >
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -74,6 +79,7 @@
                 :isLoading="isLoading"
                 :btnForm="btnForm"
                 :signName="i"
+                :Region="Region[i]"
                 @btnClick="btnClick"
               />
             </div>
@@ -243,6 +249,7 @@ export default {
         },
       ],
       btnForm: [],
+      Region: [2, 1, 1, 6],
       tableData: [[], [], []],
       tableColumns: [[], [], []],
       tableLoading: [false, false, false],

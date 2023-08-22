@@ -20,7 +20,7 @@
         >
         <el-col :span="20" class="flex_flex_end">
           <!-- 新增行所需组件 -->
-          <div v-if="addNum">
+          <div v-if="addStep">
             <span>新增行数：</span>
             <el-input-number
               v-model.trim="addNum"
@@ -163,7 +163,7 @@ export default {
       ID: 0,
       newTag: -1,
       selectionData: [[], [], [], []],
-      addNum: null,
+      addNum: 1,
       addStep: 10,
       scrollEnable: true,
       DataSourceList: [{}],

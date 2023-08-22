@@ -214,26 +214,32 @@ export default {
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
         },
       ],
       btnForm: [],
@@ -493,7 +499,7 @@ export default {
                 ...this.DataSourceList[i],
               };
             }
-            if (n.Required && i === 0) {
+            if (n.Required) {
               this.formSearchs[i].required.push(n);
             }
             if (index === 1) {

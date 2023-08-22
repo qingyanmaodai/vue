@@ -1326,10 +1326,10 @@ export default {
           this.tableHeader.splice(isChecked, 1);
         }
       }
-      this.tableHeader = this.tableHeader.filter((item) => {
+      let tableHeaderChange = this.tableHeader.filter((item) => {
         return item["width"] != 0;
       });
-      return this.tableHeader;
+      return tableHeaderChange;
     },
   },
   created() {
