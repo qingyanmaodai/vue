@@ -761,14 +761,14 @@ export default {
       });
     },
     // 选择数据
-    selectFun(data, remarkTb, row) {
+    async selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
       if (remarkTb === 0) {
         this.formSearchs[2].datas["MaterialID"] = null;
         this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
           .map((item) => item["MaterialID"])
           .join(",");
-        this.dataSearch(2);
+        await this.dataSearch(2);
       } else if (remarkTb === 1) {
         this.formSearchs[2].datas["MaterialTypeID"] = null;
         this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
@@ -776,18 +776,18 @@ export default {
         ]
           .map((item) => item["MaterialTypeID"])
           .join(",");
-        this.dataSearch(2);
+        await this.dataSearch(2);
       }
     },
     // 单击获取明细
-    handleRowClick(data, remarkTb) {
+    async handleRowClick(data, remarkTb) {
       this.selectionData[remarkTb] = data;
       if (remarkTb === 0) {
         this.formSearchs[2].datas["MaterialID"] = null;
         this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
           .map((item) => item["MaterialID"])
           .join(",");
-        this.dataSearch(2);
+        await this.dataSearch(2);
       } else if (remarkTb === 1) {
         this.formSearchs[2].datas["MaterialTypeID"] = null;
         this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
@@ -795,7 +795,7 @@ export default {
         ]
           .map((item) => item["MaterialTypeID"])
           .join(",");
-        this.dataSearch(2);
+        await this.dataSearch(2);
       }
     },
     // 增行
@@ -854,7 +854,7 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
-      const hasSchedulingSpecialType = this.selectionData.some(
+      const hasSchedulingSpecialType = this.selectionData[remarkTb].some(
         (item) => !item.SchedulingSpecialType
       );
       if (hasSchedulingSpecialType) {
