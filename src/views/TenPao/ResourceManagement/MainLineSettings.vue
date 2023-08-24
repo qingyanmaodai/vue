@@ -65,6 +65,8 @@
               :isClear="isClear[item]"
               :keepSource="true"
               :pagination="tablePagination[item]"
+              :isToggleCheckbox="true"
+              @handleRowClick="handleRowClick"
               @pageChange="pageChange"
               @pageSize="pageSize"
               @sortChange="sortChange"
@@ -157,6 +159,7 @@
               :isClear="isClear[item]"
               :keepSource="true"
               :pagination="tablePagination[item]"
+              :isToggleCheckbox="true"
               @pageChange="pageChange"
               @pageSize="pageSize"
               @sortChange="sortChange"
@@ -204,6 +207,7 @@
       :visible.sync="colDialogVisible3"
       :width="'60%'"
       :close-on-click-modal="false"
+      :modal-append-to-body="false"
     >
       <div class="admin_head" ref="headRef" v-for="i in [3]" :key="'head' + i">
         <ComSearch
@@ -243,9 +247,9 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="colDialogVisible3 = false">关 闭</el-button>
-        <el-button type="danger" @click="cancelDialog(3)"
+        <!-- <el-button type="danger" @click="cancelDialog(3)"
           >批量取消关联</el-button
-        >
+        > -->
         <el-button type="primary" @click="confirmDialog(3)"
           >批量关联线体</el-button
         >
@@ -371,7 +375,7 @@ export default {
       OrderNos: [{}, {}, {}, {}],
       sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 125 }, { ID: 11173 }],
       isEdit: [false, false, true, false, false, false, false],
-      Region: [2, 2, 1, 6],
+      Region: [2, 2, 1, 3],
       userInfo: {},
       selectedIndex: "0",
       colDialogVisible3: false,
@@ -455,13 +459,22 @@ export default {
       }
     },
     handleClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
       this.clickRow = null;
       // if (condition) {
-      this.formSearchs[2].datas["MaterialID"] = null;
-      this.formSearchs[2].datas["MaterialTypeID"] = null;
+
       // }
       this.selectedIndex = tab.name;
+      let findIndex = this.tableColumns[2].findIndex((item) => {
+        return item["prop"] === "MaterialName";
+      });
+      if (Number(this.selectedIndex) === 0) {
+        this.formSearchs[2].datas["MaterialTypeID"] = null;
+        this.$set(this.tableColumns[2][findIndex], "visible", true);
+      } else if (Number(this.selectedIndex) === 1) {
+        this.formSearchs[2].datas["MaterialID"] = null;
+        this.$set(this.tableColumns[2][findIndex], "visible", false);
+      }
       this.dataSearch(Number(this.selectedIndex));
     },
     // 统一渲染按钮事件
@@ -526,7 +539,7 @@ export default {
         if ($table) {
           const { insertRecords, updateRecords, removeRecords } =
             $table.getRecordset();
-          changeRecords = insertRecords.concat(changeRecords, removeRecords);
+          changeRecords = insertRecords.concat(updateRecords, removeRecords);
         } else {
           // let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
           // let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
@@ -659,7 +672,7 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
           this.$set(this.formSearchs[z], "formsAll", formsAll[z]);
         });
-        this.getTableData(this.formSearchs[0].datas, 0);
+        await this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
     },
@@ -749,15 +762,15 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.formSearchs[2].datas["MaterialID"] = null;
-      this.formSearchs[2].datas["MaterialTypeID"] = null;
       this.selectionData[remarkTb] = data;
       if (remarkTb === 0) {
+        this.formSearchs[2].datas["MaterialID"] = null;
         this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
           .map((item) => item["MaterialID"])
           .join(",");
         this.dataSearch(2);
       } else if (remarkTb === 1) {
+        this.formSearchs[2].datas["MaterialTypeID"] = null;
         this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
           remarkTb
         ]
@@ -767,17 +780,24 @@ export default {
       }
     },
     // 单击获取明细
-    // handleRowClick(row, remarkTb) {
-    //   this.clickRow = row;
-    //   if (Number(this.selectedIndex) === 0) {
-    //     this.formSearchs[2].datas["MaterialID"] = row.MaterialID;
-    //     this.formSearchs[2].datas["MaterialTypeID"] = "";
-    //   } else if (Number(this.selectedIndex) === 1) {
-    //     this.formSearchs[2].datas["MaterialTypeID"] = row.MaterialTypeID;
-    //     this.formSearchs[2].datas["MaterialID"] = "";
-    //   }
-    //   this.dataSearch(2);
-    // },
+    handleRowClick(data, remarkTb) {
+      this.selectionData[remarkTb] = data;
+      if (remarkTb === 0) {
+        this.formSearchs[2].datas["MaterialID"] = null;
+        this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
+          .map((item) => item["MaterialID"])
+          .join(",");
+        this.dataSearch(2);
+      } else if (remarkTb === 1) {
+        this.formSearchs[2].datas["MaterialTypeID"] = null;
+        this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
+          remarkTb
+        ]
+          .map((item) => item["MaterialTypeID"])
+          .join(",");
+        this.dataSearch(2);
+      }
+    },
     // 增行
     addRow(remarkTb) {
       // 获取修改记录
@@ -832,6 +852,13 @@ export default {
     async confirmDialog(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      const hasSchedulingSpecialType = this.selectionData.some(
+        (item) => !item.SchedulingSpecialType
+      );
+      if (hasSchedulingSpecialType) {
+        this.$message.error("存在没有配置类别的数据！");
         return;
       }
       let newData = [];

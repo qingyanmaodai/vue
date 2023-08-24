@@ -37,21 +37,20 @@
                 class="font_size_1"
                 >业务订单明细导入模板</a
               >
-              <!-- <div style="margin-right: 10px"></div>
-              <div>
-                <el-checkbox-group
-                  v-model="selectedOption"
-                  @change="changeStatus"
-                  size="mini"
-                >
-                  <el-checkbox-button
-                    v-for="item in Status1"
-                    :key="item.value"
-                    :label="item.value"
-                    >{{ item.label }}</el-checkbox-button
-                  >
-                </el-checkbox-group>
-              </div> -->
+              <!-- 下拉框 -->
+              <el-select v-model="colorType" filterable size="small" clearable>
+                <el-option
+                  v-for="(op, index) in Status1"
+                  :label="op.label"
+                  :value="op.value"
+                  :key="'select' + index"
+                ></el-option>
+              </el-select>
+              <el-color-picker
+                size="small"
+                v-model="colorValue"
+              ></el-color-picker>
+              <el-button size="small" @click="updateColor(0)">确定</el-button>
             </el-col>
           </el-row>
         </div>
@@ -178,6 +177,8 @@ export default {
   data() {
     return {
       apsurl: null,
+      colorType: 0,
+      colorValue: null,
       newDataDialog: false,
       height: "607px",
       selectedOption: [1],
@@ -220,9 +221,8 @@ export default {
       ],
       sysID: [{ ID: 10108 }, { ID: 10108 }],
       Status1: [
-        { label: "重复导入", value: 0 },
-        { label: "个人数据", value: 1 },
-        { label: "已关闭", value: 2 },
+        { label: "字体颜色", value: 0 },
+        { label: "背景颜色", value: 1 },
       ],
       spread: null, //excel初始
       fileList: [],
@@ -272,6 +272,110 @@ export default {
     }, 500);
   },
   methods: {
+    updateColor(remarkTb) {
+      let sheet = this.spread.getActiveSheet();
+      sheet.suspendPaint();
+      const { col, colCount, row, rowCount } = sheet.getSelections()[0];
+
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          const key = column.prop;
+
+          if (
+            row <= rowIndex &&
+            rowIndex < rowCount + row &&
+            col <= columnIndex &&
+            columnIndex < colCount + col
+          ) {
+            if (this.colorType === 0) {
+              if (
+                Object.prototype.toString.call(rowItem["FColors"]) !==
+                "[object Object]"
+              ) {
+                rowItem["FColors"] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item["prop"] === key + "FColor"
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem["FColors"][key] = this.colorValue;
+            } else if (this.colorType === 1) {
+              if (
+                Object.prototype.toString.call(rowItem["BColors"]) !==
+                "[object Object]"
+              ) {
+                rowItem["BColors"] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item["prop"] === key + "BColor"
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem["BColors"][key] = this.colorValue;
+            }
+          }
+
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor("black");
+          cell.backColor("white");
+          if (column["isEdit"]) {
+            cell.locked(false).foreColor("#2a06ecd9");
+          }
+          // 获取颜色
+          if (
+            rowItem["Result"] !== "正常" &&
+            rowItem["Result"] &&
+            columnIndex < 5
+          ) {
+            cell.backColor("#FF0000");
+          }
+          if (rowItem["ISPOFinish"] === "是" && key === "ReportQty") {
+            cell.backColor("#92d050");
+          }
+          if (rowItem["ISOutStock"] === "出库正常" && key === "OutDate") {
+            cell.backColor("#92d050");
+          }
+          if (rowItem["ISOutStock"] === "出库异常" && key === "OutDate") {
+            cell.backColor("#ff0000");
+          }
+          if (rowItem["ISCheckWarm"] === 1 && key === "CheckDate") {
+            cell.backColor("#ffff00");
+          }
+          if (
+            Object.prototype.toString.call(rowItem["FColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["FColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem["FColors"][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem["BColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["BColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (column) => column.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem["BColors"][key]);
+              }
+            });
+          }
+        });
+      });
+      sheet.resumePaint();
+      console.log(this.tableData[0]);
+    },
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
@@ -450,13 +554,6 @@ export default {
           //行，start,end
           if (x.isEdit) {
             sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
-            // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            // let cell = sheet.getCell(
-            //   -1,
-            //   cellIndex,
-            //   GC.Spread.Sheets.SheetArea.viewport
-            // );
-            // cell.foreColor("#2a06ecd9");
           } else {
             sheet.getCell(-1, y).foreColor("gray");
           }
@@ -465,29 +562,67 @@ export default {
         //渲染列
         sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
-        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
+        this.tableData[this.tagRemark].forEach((rowItem, rowIndex) => {
           this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
             const key = column.prop;
 
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-            // const cell = sheet.getCell(-1, columnIndex);
+            cell.foreColor("black");
+            cell.backColor("white");
+            if (column["isEdit"]) {
+              cell.locked(false).foreColor("#2a06ecd9");
+            }
 
             // 获取颜色
-            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
+            if (
+              rowItem["Result"] !== "正常" &&
+              rowItem["Result"] &&
+              columnIndex < 5
+            ) {
               cell.backColor("#FF0000");
             }
-            if (row["ISPOFinish"] === "是" && key === "ReportQty") {
+            if (rowItem["ISPOFinish"] === "是" && key === "ReportQty") {
               cell.backColor("#92d050");
             }
-            if (row["ISOutStock"] === "出库正常" && key === "OutDate") {
+            if (rowItem["ISOutStock"] === "出库正常" && key === "OutDate") {
               cell.backColor("#92d050");
             }
-            if (row["ISOutStock"] === "出库异常" && key === "OutDate") {
+            if (rowItem["ISOutStock"] === "出库异常" && key === "OutDate") {
               cell.backColor("#ff0000");
             }
-            if (row["ISCheckWarm"] === 1 && key === "CheckDate") {
+            if (rowItem["ISCheckWarm"] === 1 && key === "CheckDate") {
               cell.backColor("#ffff00");
+            }
+            if (
+              Object.prototype.toString.call(rowItem["FColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["FColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (column) => column.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.foreColor(rowItem["FColors"][key]);
+                }
+              });
+            }
+            if (
+              Object.prototype.toString.call(rowItem["BColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["BColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (column) => column.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.backColor(rowItem["BColors"][key]);
+                }
+              });
             }
           });
         });
@@ -648,6 +783,7 @@ export default {
     async dataSave(remarkTb) {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDirtyRows(); //获取修改过的数据
+      debugger;
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {

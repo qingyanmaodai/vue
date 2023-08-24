@@ -536,7 +536,6 @@ export default {
       row: 0,
       colDialogVisible2: false,
       collapsiable: false,
-      changeText: "展开",
       form: [
         {
           type: null,
@@ -572,14 +571,7 @@ export default {
     };
   },
   created() {},
-  mounted() {
-    // this.$nextTick(() => {
-    //   this.openSearch();
-    // });
-    // setTimeout(() => {
-    //   this.minShowCtrol();
-    // }, 1000);
-  },
+  mounted() {},
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
@@ -625,9 +617,8 @@ export default {
       deep: true,
     },
   },
-  components: {
+  computed: {
     changeText() {
-      console.log(this.collapsiable, "this.collapsiable");
       return this.collapsiable ? "收起" : "展开";
     },
   },

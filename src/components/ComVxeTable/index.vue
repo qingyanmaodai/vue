@@ -5,14 +5,6 @@
   <!-- :footer-method="footerMethod" -->
   <div div class="flex_column" style="height: 100%">
     <div class="flex_grow">
-      <vxe-toolbar
-        ref="xToolbar1"
-        custom
-        print
-        class="toolbar"
-        v-show="isToolbar"
-      >
-      </vxe-toolbar>
       <vxe-table
         ref="vxeTable"
         border
@@ -60,12 +52,8 @@
           style="height: 27.42px"
           v-if="hasSelect"
         ></vxe-column>
-        <vxe-column
-          type="seq"
-          min-width="60"
-          v-if="IsIndex"
-          title="序号"
-        ></vxe-column>
+        type="seq"
+        <vxe-column min-width="60" v-if="IsIndex" title="序号"></vxe-column>
         <vxe-column
           v-for="(x, z) in tableHeaderChange"
           :key="z"
@@ -877,12 +865,44 @@
     <div class="flex_shrink bgWhite" v-if="footerContent">
       <div v-if="showPagination" class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span @click="toPageSetting" class="primaryColor cursor"
+          <span @click="toPageSetting" class="primaryColor cursor margin_r5"
             >SysID:{{ sysID }}
           </span>
-          <span style="color: red; font-weight: bold; margin-left: 10px">{{
-            Prompt
-          }}</span>
+          <el-popover
+            placement="top"
+            trigger="manual"
+            v-model="PromptVisible"
+            v-show="Prompt"
+          >
+            <div style="color: red; font-weight: bold" v-html="Prompt"></div>
+            <el-button
+              class="margin_r5"
+              size="mini"
+              slot="reference"
+              type="info"
+              icon="el-icon-info"
+              circle
+              @click="PromptVisible = !PromptVisible"
+            ></el-button>
+          </el-popover>
+          <el-popover
+            placement="top"
+            trigger="manual"
+            v-model="SettingVisible"
+            v-show="isToolbar"
+          >
+            <div>
+              <vxe-toolbar ref="xToolbar1" print custom> </vxe-toolbar>
+            </div>
+            <el-button
+              size="mini"
+              slot="reference"
+              type="info"
+              icon="el-icon-setting"
+              circle
+              @click="SettingVisible = !SettingVisible"
+            ></el-button>
+          </el-popover>
         </div>
         <div class="flex">
           <div class="footer_label" v-show="multipleSelection.length != 0">
@@ -912,7 +932,7 @@
       </div>
       <div v-else class="flex_row_spaceBtn pagination">
         <div v-show="sysID > 0">
-          <span @click="toPageSetting" class="primaryColor cursor"
+          <span @click="toPageSetting" class="primaryColor cursor margin_r5"
             >SysID:{{ sysID }}
           </span>
           <span style="color: red; font-weight: bold; margin-left: 10px">{{
@@ -1071,7 +1091,7 @@ export default {
       default: false,
     },
     // 是否单击需要勾选
-    isChecked: {
+    isToggleCheckbox: {
       type: Boolean,
       default: false,
     },
@@ -1127,7 +1147,7 @@ export default {
     },
     isToolbar: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     //虚拟滚动
     scrollEnable: {
@@ -1143,7 +1163,8 @@ export default {
   data() {
     return {
       Prompt: "",
-      singleSelection: {},
+      PromptVisible: false,
+      SettingVisible: false,
       multipleSelection: [],
       getPickerTime(row = {}) {
         return {
@@ -1382,10 +1403,13 @@ export default {
     },
     // 单击行
     handleRowClick({ row, column, rowIndex }) {
-      if (this.isChecked) {
-        this.$refs.vxeTable.setCheckboxRow(row, true);
-      }
       if (column.type !== "checkbox") {
+        if (this.isToggleCheckbox) {
+          this.$refs.vxeTable.toggleCheckboxRow(row);
+          row = this.$refs.vxeTable.getCheckboxRecords(true);
+          this.$emit("handleRowClick", row, this.remark);
+          return;
+        }
         // 如果是勾选框单元格，则取消行点击的触发
         if (row !== this.lastClickedRow) {
           this.$emit("handleRowClick", row, this.remark);
@@ -1594,6 +1618,7 @@ export default {
   watch: {
     tableHeader: {
       handler(newValue, oldValue) {
+        // debugger;
         if ((this.isSpanMethods || this.fixSpanMethods) && this.tableHeader) {
           this.header();
         }
@@ -1640,20 +1665,26 @@ export default {
   },
   computed: {
     tableHeaderChange() {
+      let modifiedTableHeader = this.tableHeader.map((item) => {
+        if (item["width"] == 0) {
+          item["visible"] = false;
+        }
+        return {
+          ...item,
+        };
+      });
       //如果hasSelect值存在的话
       if (this.hasSelect) {
         //删除带有选择的一列
-        let isChecked = this.tableHeader.findIndex(
-          (item) => item.prop == "isChecked"
+        modifiedTableHeader = modifiedTableHeader.filter(
+          (item) => item.prop !== "isChecked"
         );
-        if (isChecked !== -1) {
-          this.tableHeader.splice(isChecked, 1);
-        }
       }
-      let tableHeaderChange = this.tableHeader.filter((item) => {
-        return item["width"] != 0;
+      //重新渲染列
+      this.$nextTick(() => {
+        this.$refs.vxeTable.refreshColumn();
       });
-      return tableHeaderChange;
+      return modifiedTableHeader;
     },
   },
   activated() {
@@ -1691,7 +1722,9 @@ export default {
 }
 
 ::v-deep .vxe-toolbar .vxe-custom--option-wrapper {
-  right: -150px !important;
+  bottom: 0;
+  left: 50px;
+  right: auto;
 }
 //表位行高
 ::v-deep .vxe-footer--row {

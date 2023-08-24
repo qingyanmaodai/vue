@@ -15,9 +15,23 @@
         <span @click="toPageSetting" class="primaryColor cursor"
           >SysID:{{ sysID }}
         </span>
-        <span style="color: red; font-weight: bold; margin-left: 10px">{{
-          Prompt
-        }}</span>
+        <el-popover
+          placement="top"
+          trigger="manual"
+          v-model="PromptVisible"
+          v-show="Prompt"
+        >
+          <div style="color: red; font-weight: bold" v-html="Prompt"></div>
+          <el-button
+            class="margin_r5"
+            size="mini"
+            slot="reference"
+            type="info"
+            icon="el-icon-info"
+            circle
+            @click="PromptVisible = !PromptVisible"
+          ></el-button>
+        </el-popover>
       </div>
       <div class="flex">
         <div class="footer_label" v-show="multipleSelection.length != 0">
@@ -107,6 +121,7 @@ export default {
     return {
       spread: null,
       Prompt: null,
+      PromptVisible: false,
     };
   },
   computed: {

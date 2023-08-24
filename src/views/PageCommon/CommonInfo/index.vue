@@ -10,6 +10,8 @@
         :remark="0"
         :isLoading="isLoading"
         :btnForm="btnForm"
+        :signName="0"
+        :Region="Region[0]"
         @btnClick="btnClick"
       />
     </div>
@@ -32,7 +34,7 @@
           </div>
           <el-divider direction="vertical"></el-divider>
 
-          <vxe-toolbar ref="xToolbar" custom print> </vxe-toolbar>
+          <!-- <vxe-toolbar ref="xToolbar" custom print> </vxe-toolbar> -->
           <!-- <el-tooltip
             class="item"
             effect="dark"
@@ -138,7 +140,6 @@ export default {
       isAdd: false,
       adminLoading: false,
       title: this.$route.meta.title,
-      drawer: false,
       delData: [[]],
       formSearchs: [
         {
@@ -163,6 +164,7 @@ export default {
       ID: 0,
       newTag: -1,
       selectionData: [[], [], [], []],
+      Region: [6],
       addNum: 1,
       addStep: null,
       scrollEnable: true,
@@ -308,11 +310,11 @@ export default {
     // }
   },
   mounted() {
-    this.$nextTick(() => {
-      // 手动将表格和工具栏进行关联
-      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
-      $table.connect(this.$refs.xToolbar);
-    });
+    // this.$nextTick(() => {
+    //   // 手动将表格和工具栏进行关联
+    //   const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+    //   $table.connect(this.$refs.xToolbar);
+    // });
     setTimeout(() => {
       this.setHeight();
     }, 450);
@@ -543,6 +545,7 @@ export default {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
 
