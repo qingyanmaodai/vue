@@ -31,14 +31,14 @@
                 >【逻辑说明文档】</a
               >
               <a
-                style="color: #0960bd"
+                style="color: #0960bd; margin-right: 30px"
                 :href="`${apsurl}` + '/业务订单明细导入模板.xlsx'"
                 target="_blank"
                 class="font_size_1"
                 >业务订单明细导入模板</a
               >
               <!-- 下拉框 -->
-              <el-select v-model="colorType" filterable size="small" clearable>
+              <el-select v-model="colorType" filterable size="mini" clearable>
                 <el-option
                   v-for="(op, index) in Status1"
                   :label="op.label"
