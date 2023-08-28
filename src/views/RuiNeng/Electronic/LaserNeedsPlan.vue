@@ -126,7 +126,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "LaserMonthlyPlan",
+  name: "LaserNeedsPlan",
   components: {
     ComSearch,
     ComReportTable,
@@ -189,7 +189,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10115 }],
+      sysID: [{ ID: 11182 }, { ID: 6734 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,

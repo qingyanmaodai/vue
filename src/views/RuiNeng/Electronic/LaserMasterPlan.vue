@@ -1,4 +1,4 @@
-<!--SMT主计划-->
+<!--激光主计划-->
 <template>
   <div class="container flex_flex" v-loading="adminLoading">
     <el-container>
@@ -244,7 +244,7 @@ import {
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import ComFormDialog from "@/components/ComFormDialog";
 export default {
-  name: "SMTMasterPlan",
+  name: "LaserMasterPlan",
   components: {
     ComSearch,
     ComAsideTree,
@@ -285,7 +285,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            // ProcessGroupName: "SMT",
+            ProcessGroupName: "激光",
           },
           forms: [],
         },

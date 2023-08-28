@@ -549,15 +549,11 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          // m.forEach((n) => {
-          //   // 进行验证
-          //   this.verifyData(n);
-          //   if (n.children && n.children.length != 0) {
-          //     n.children.forEach((x) => {
-          //       this.verifyData(x);
-          //     });
-          //   }
-          // });
+          m.some((n, index) => {
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+            }
+          });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -586,9 +582,9 @@ export default {
         const {
           data: [{ PlanQty }],
         } = res.data;
-        this.title2 = `${this.$moment().format(
-          "YYYY年M月"
-        )} 订单总数：${PlanQty}`;
+        this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
+          PlanQty ? PlanQty : ""
+        }`;
         // this.getOrgData();
         this.dataSearch(0);
       }
@@ -608,10 +604,6 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      if (this.tableData[remarkTb].length === 0) {
-        this.tablePagination[remarkTb]["pageSize"] =
-          this.tableColumns[remarkTb][1]["pageSize"];
-      }
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = this.sysID[remarkTb]["ID"];

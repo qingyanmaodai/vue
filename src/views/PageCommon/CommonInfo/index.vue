@@ -165,10 +165,11 @@ export default {
       newTag: -1,
       selectionData: [[], [], [], []],
       Region: [6],
+      DataSourceList: [{}],
       addNum: 1,
       addStep: null,
       scrollEnable: true,
-      DataSourceList: [{}],
+      dataColumns: false,
     };
   },
   //离开的时候保存当前
@@ -246,6 +247,7 @@ export default {
       addNum: (value) => Number(value),
       addStep: (value) => Number(value),
       scrollEnable: (value) => JSON.parse(value),
+      dataColumns: (value) => JSON.parse(value),
     };
     Object.keys(variableMappings).forEach((key) => {
       const value = params.get(key);
@@ -590,8 +592,11 @@ export default {
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        if (this.dataColumns) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {

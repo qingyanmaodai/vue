@@ -1,4 +1,4 @@
-<!-- 激光月计划 -->
+<!-- SMT周计划 -->
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -19,16 +19,15 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="8"
-              ><span class="title">{{ title }}</span>
-              <span class="title" style="margin-left: 20px">{{ title2 }}</span>
-            </el-col>
-            <!-- <el-col :span="16" class="flex_flex_end"
-              ><el-divider direction="vertical"></el-divider>
+            <el-col :span="4"
+              ><span class="title">{{ title }}</span></el-col
+            >
+            <el-col :span="20" class="flex_flex_end">
+              <!-- <el-divider direction="vertical"></el-divider>
               <el-button type="primary" size="mini" @click="changeEvent(0)">
                 拆分订单
-              </el-button>
-            </el-col> -->
+              </el-button> -->
+            </el-col>
           </el-row>
         </div>
         <div
@@ -54,7 +53,7 @@
         </div>
       </div>
     </div>
-    <!-- <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
+    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
       <div class="ant-table-title">
         <el-row>
           <el-col :span="4"
@@ -85,7 +84,7 @@
           :spaceBtnShow="false"
         />
       </div>
-    </el-dialog> -->
+    </el-dialog>
     <!-- 弹框-->
     <DialogTable
       title="全局欠料"
@@ -126,7 +125,7 @@ import {
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
-  name: "LaserMonthlyPlan",
+  name: "LaserWeekPlan",
   components: {
     ComSearch,
     ComReportTable,
@@ -160,7 +159,6 @@ export default {
       autoGenerateColumns: true,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      title2: null,
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -176,6 +174,57 @@ export default {
         },
       ],
       btnForm: [],
+      parmsBtn: [
+        {
+          ButtonCode: "save",
+          BtnName: "保存",
+          isLoading: false,
+          Methods: "dataSaveDay",
+          Type: "success",
+          Icon: "",
+          Size: "small",
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "暂停",
+          isLoading: false,
+          Methods: "suspend",
+          Type: "warning",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData" },
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "退回",
+          isLoading: false,
+          Methods: "dataDel",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData" },
+        },
+        {
+          ButtonCode: "SyncSAP",
+          BtnName: "同步SAP",
+          isLoading: false,
+          Methods: "updateSAP",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "selectionData" },
+        },
+        {
+          ButtonCode: "save",
+          BtnName: "重排",
+          isLoading: false,
+          Methods: "resetScheduling",
+          Type: "danger",
+          Icon: "",
+          Size: "small",
+          Params: { dataName: "resetScheduling" },
+        },
+      ],
       tableData: [[], []],
       tableColumns: [[], []],
       tableLoading: [false],
@@ -189,7 +238,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10115 }],
+      sysID: [{ ID: 10115 }, { ID: 6734 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -576,24 +625,9 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        //给月计划赋值当月订单总数
-        let res = await GetSearchData({
-          dicID: 5170,
-          fields: "SUM(PlanQty) As PlanQty",
-          ProcessGroupName: "激光",
-          CompletionStatus: 0,
-          PlanDay: [
-            this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().endOf("month").format("YYYY-MM-DD"),
-          ],
-        });
-        const {
-          data: [{ PlanQty }],
-        } = res.data;
-        this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
-          PlanQty ? PlanQty : ""
-        }`;
-        this.dataSearch(0);
+        console.log("gettable");
+        this.getOrgData();
+        // this.dataSearch(0);
       }
     },
     // 验证数据
@@ -615,8 +649,10 @@ export default {
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       form["dicID"] = this.sysID[remarkTb]["ID"];
       form["ControlID"] = this.userInfo.WorkFlowInstanceID;
+      form["weekDays"] = 7;
       let res = await GetSearchData(form);
 
+      // console.log(res.data);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
@@ -805,6 +841,13 @@ export default {
           }
           if (row["Capacity"] && column["name"] === "Capacity") {
             cell.foreColor("red");
+          }
+          if (
+            row["IsDelay"] &&
+            row["IsDelay"] === 1 &&
+            column["name"] === "OrderNo"
+          ) {
+            cell.backColor("#FF0000");
           }
         });
       });
@@ -1323,21 +1366,21 @@ export default {
       const { data, forms, result, msg } = res.data;
       if (result) {
         let newData = [];
-        this.treeData2 = data;
-        this.treeListTmp2 = data;
+        // this.treeData2 = data;
+        // this.treeListTmp2 = data;
         this.adminLoading = false;
-        if (data.length != 0) {
-          data.forEach((x) => {
-            newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-          });
-        }
-        this.lines = newData;
-        this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeLine.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-        this.checkBoxCellTypeLine.items(newData);
-        this.checkBoxCellTypeLine.itemHeight(24);
+        // if (data.length != 0) {
+        //   data.forEach(x => {
+        //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
+        //   });
+        // }
+        // this.lines = newData;
+        // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
+        // this.checkBoxCellTypeLine.editorValueType(
+        //   GC.Spread.Sheets.CellTypes.EditorValueType.value
+        // );
+        // this.checkBoxCellTypeLine.items(newData);
+        // this.checkBoxCellTypeLine.itemHeight(24);
         // this.formSearchs[0].datas.ControlID="202";
         this.getTableData(this.formSearchs[0].datas, 0);
       } else {
@@ -1609,11 +1652,6 @@ export default {
           this.copyRowFormat(item, sheet);
           console.log(item, "item");
         });
-        this.$nextTick(() => {
-          sheet.setDataSource(sheet.getDataSource()); // 更新数据源
-          sheet.repaint();
-        });
-        await this.dataSave(this.labelStatus1);
       }
     },
   },

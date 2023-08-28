@@ -157,12 +157,13 @@ export default {
       ID: 0,
       newTag: -1,
       selectionData: [[]],
-      isData: false,
       isEdit: false,
-      addNum: null,
-      addStep: 10,
       DataSourceList: [{}],
       hasSelect: [false],
+      addNum: 1,
+      addStep: null,
+      scrollEnable: true,
+      dataColumns: false,
     };
   },
 
@@ -196,6 +197,21 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.ID = parseInt(routeBtn.meta.dicID);
+    const variableMappings = {
+      addNum: (value) => Number(value),
+      addStep: (value) => Number(value),
+      scrollEnable: (value) => JSON.parse(value),
+      dataColumns: (value) => JSON.parse(value),
+    };
+    Object.keys(variableMappings).forEach((key) => {
+      const value = params.get(key);
+      if (value !== null) {
+        this[key] =
+          typeof variableMappings[key] === "function"
+            ? variableMappings[key](value)
+            : value;
+      }
+    });
     // if (this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]) {
     //   let tmp = JSON.parse(
     //     this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]
@@ -489,7 +505,7 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (this.isData) {
+        if (this.dataColumns) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
         this.$set(this.tableData, remarkTb, data);
