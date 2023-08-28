@@ -68,21 +68,7 @@
           v-for="item in [0]"
           :key="item"
           v-show="labelStatus1 == item"
-        >
-          <ComHandsonTable
-            ref="spreadsheetRef"
-            :tableData="tableData[0]"
-            :tableColumns="tableColumns[0]"
-            :tableLoading="tableLoading[0]"
-            :remark="0"
-            :sysID="sysID[0]['ID']"
-            :pagination="tablePagination[0]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @selectChanged="selectChanged"
-            @workbookInitialized="workbookInitialized"
-          />
-        </div>
+        ></div>
       </div>
 
       <!-- 点击齐套率弹框-->
@@ -102,7 +88,6 @@
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
-import Handsontable from "handsontable";
 import "@grapecity/spread-sheets-vue";
 import GC from "@grapecity/spread-sheets";
 import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
@@ -110,7 +95,6 @@ import "@grapecity/spread-sheets/js/zh.js";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 // import ComSpreadTable from "@/components/ComSpreadTable";
-import ComHandsonTable from "@/components/ComHandsonTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
   GetHeader,
@@ -126,7 +110,6 @@ export default {
     ComSearch,
     ComVxeTable,
     DialogTable,
-    ComHandsonTable,
   },
   data() {
     return {
@@ -306,268 +289,6 @@ export default {
     initSpread: function (spread) {
       this.spread = spread;
     },
-    // excle表数据渲染
-    async setData(remarkTb) {
-      // try {
-      //   this.spread[remarkTb].suspendPaint();
-      //   // 获取活动表单
-      //   let sheet = this.spread[remarkTb].getActiveSheet();
-      //   // 重置表单
-      //   sheet.reset();
-      //   // 渲染列
-      //   this.tableColumns[remarkTb].forEach((x, y) => {
-      //     x["name"] = x["prop"];
-      //     x["displayName"] = x["label"];
-      //     x["width"] = parseInt(x.width);
-      //     if (x.prop === "isChecked") {
-      //       // 选框
-      //       sheet.setCellType(
-      //         0,
-      //         0,
-      //         new HeaderCheckBoxCellType(),
-      //         GCsheets.SheetArea.colHeader
-      //       );
-      //       x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-      //     } else if (
-      //       x.ControlType === "comboboxMultiple" ||
-      //       x.ControlType === "combobox"
-      //     ) {
-      //       // colInfos.push({
-      //       //   name: x.prop,
-      //       //   displayName: x.label,
-      //       //   cellType: "",
-      //       //   size: parseInt(x.width)
-      //       // });
-      //       let newData = [];
-      //       // let list = null;
-      //       this.tableData[remarkTb].map((item, index) => {
-      //         if (x.DataSourceID && x.DataSourceName) {
-      //           newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-      //           this.bindComboBoxToCell(sheet, index, y, newData);
-      //         }
-      //       });
-      //     } else if (
-      //       x.DataType == "datetime" ||
-      //       x.DataType === "varchar" ||
-      //       x.DataType === "nvarchar"
-      //     ) {
-      //       x.formatter = "@";
-      //       // colInfos.push({
-      //       //   name: x.prop,
-      //       //   displayName: x.label,
-      //       //   size: parseInt(x.width),
-      //       //   formatter: "@" //字符串格式
-      //       // });
-      //     }
-
-      //     //行，start,end
-      //     if (x.isEdit) {
-      //       sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
-      //       // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-      //       // let cell = sheet.getCell(
-      //       //   -1,
-      //       //   cellIndex,
-      //       //   GC.Spread.Sheets.SheetArea.viewport
-      //       // );
-      //       // cell.foreColor("#2a06ecd9");
-      //     }
-      //     // cellIndex++;
-      //   });
-      //   //渲染数据源
-      //   sheet.setDataSource(this.tableData[remarkTb]);
-      //   //渲染列
-      //   sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
-      //   //改变字体颜色
-      //   this.tableData[remarkTb].forEach((row, rowIndex) => {
-      //     this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-      //       const key = column.prop;
-
-      //       // 获取当前单元格
-      //       const cell = sheet.getCell(rowIndex, columnIndex);
-
-      //       // 获取颜色
-      //       if (row && row.colorMapping && row.colorMapping[key]) {
-      //         const color = row.colorMapping[key];
-      //         cell.style({
-      //           backColor: color,
-      //           foreColor: "#FFFFFF",
-      //         });
-      //         // 其他代码
-      //       }
-      //       // const color = row.colorMapping[key];
-
-      //       // 如果该属性有颜色信息，则设置单元格样式
-      //       // if (color) {
-      //       //   // const style = new GC.Spread.Sheets.Style();
-      //       //   cell.backColor(color);
-      //       //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
-      //       // }
-      //     });
-      //   });
-
-      //   // 列筛选
-      //   // 参数2 开始列
-      //   // 参数3
-      //   // 参数4 结束列
-      //   let cellrange = new GC.Spread.Sheets.Range(
-      //     -1,
-      //     -1,
-      //     -1,
-      //     this.tableColumns[remarkTb].length
-      //   );
-      //   let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-      //     cellrange
-      //   );
-      //   sheet.rowFilter(hideRowFilter);
-
-      //   // 设置整个列头的背景色和前景色。
-      //   /**
-      //    * 参数1:表示行
-      //    * 参数2:列，-1表示
-      //    * 参数3:
-      //    * 参数4:
-      //    * 参数5:
-      //    */
-      //   let colHeaderStyle = sheet.getRange(
-      //     0,
-      //     -1,
-      //     1,
-      //     -1,
-      //     GC.Spread.Sheets.SheetArea.colHeader
-      //   );
-      //   colHeaderStyle.foreColor("000000d9");
-      //   colHeaderStyle.backColor("#f3f3f3");
-      //   colHeaderStyle.font(
-      //     "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
-      //   );
-      //   colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
-      //   colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-
-      //   //设置数据渲染的单元格默认的样式
-      //   var defaultStyle = new GC.Spread.Sheets.Style();
-      //   defaultStyle.font =
-      //     "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-      //   defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-      //   defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
-      //   sheet.setDefaultStyle(
-      //     defaultStyle,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   defaultStyle.showEllipsis = true;
-      //   // 冻结
-      //   sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
-
-      //   this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
-      //   this.spread[remarkTb].options.scrollbarMaxAlign = true;
-      //   // this.spread[remarkTb].options.scrollByPixel = true;
-
-      //   this.spread[remarkTb].resumePaint();
-      //   sheet.options.isProtected = true;
-      //   sheet.options.protectionOptions.allowResizeColumns = true;
-      //   sheet.options.protectionOptions.allowInsertRows = true;
-      //   sheet.options.protectionOptions.allowDeleteRows = true;
-      //   sheet.options.protectionOptions.allowSelectLockedCells = true;
-      //   sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-      //   sheet.options.protectionOptions.allowDeleteColumns = true;
-      //   sheet.options.protectionOptions.allowInsertColumns = true;
-      //   sheet.options.protectionOptions.allowDargInsertRows = true;
-      //   sheet.options.protectionOptions.allowDragInsertColumns = true;
-      //   sheet.options.protectionOptions.allowSort = true;
-      //   sheet.options.protectionOptions.allowFilter = true;
-      //   sheet.options.allowUserDragDrop = true;
-      // } catch (error) {
-      //   console.log("表格渲染的错误信息:", error);
-      // }
-      // this.spread[remarkTb].refresh(); //重新定位宽高度
-
-      try {
-        this.tableColumns[remarkTb].map((item) => {
-          item["title"] = item["label"];
-          item["data"] = item["prop"];
-          item["isEdit"] === true
-            ? (item["readOnly"] = false)
-            : (item["readOnly"] = true);
-          if (item["prop"] === "isChecked") {
-            item["type"] = "checkbox";
-          } else if (item["ControlType"] === "datebox") {
-            item["type"] = "date";
-          } else if (item["ControlType"] === "combobox") {
-            item["type"] = "dropdown";
-            item["source"] = item["items"].map((item) => item.label);
-            // item["editor"] = "select";
-            // item["renderer"] = function (
-            //   instance,
-            //   td,
-            //   row,
-            //   col,
-            //   prop,
-            //   value,
-            //   cellProperties
-            // ) {
-            //   Handsontable.renderers.DropdownRenderer.apply(this, arguments);
-            //   console.log(value, "value");
-            //   var selectedOption = item["items"].find(
-            //     (option) => option.value === value
-            //   );
-            //   if (selectedOption) {
-            //     td.innerText = selectedOption.value;
-            //   }
-            // };
-          }
-        });
-        this.hotSettings[remarkTb].cells = (row, col) => {
-          const cellProperties = {};
-          if (row !== 0) {
-            cellProperties.renderer = (
-              instance,
-              td,
-              row,
-              col,
-              prop,
-              value,
-              cellProperties
-            ) => {
-              this.applyTextRenderer(
-                instance,
-                td,
-                row,
-                col,
-                prop,
-                value,
-                cellProperties
-              );
-              this.applyStyles(td, {
-                fontWeight: "bold",
-                color: "green",
-                background: "#CEC",
-              });
-            };
-          }
-          return cellProperties;
-        };
-        // 冻结固定列
-        if (this.tableColumns[remarkTb][0]["FixCount"]) {
-          this.hotSettings[remarkTb]["fixedColumnsLeft"] =
-            this.tableColumns[remarkTb][0].FixCount;
-        }
-
-        this.hotSettings[remarkTb].data = this.tableData[remarkTb];
-        this.hotSettings[remarkTb].columns = this.tableColumns[remarkTb];
-
-        console.log(this.hotTable[remarkTb], "this.hotTable[remarkTb]");
-        this.hotTable[remarkTb].hotInstance.updateSettings(
-          this.hotSettings[remarkTb]
-        );
-        // this.hotTable[remarkTb]
-        // this.$refs.textHot.hotInstance.updateSettings(this.hotSettings);
-        // 获取活动表单
-      } catch (error) {
-        console.log("表格渲染的错误信息:", error);
-      }
-    },
-    aaaaaaaaaaaa(remarkTb) {
-      console.log(this.hotTable[remarkTb].hotInstance.getData(), 11111111111);
-    },
     // bindComboBoxToCell(sheet, row, col, dataSourceName) {
     //   // 获取要绑定下拉菜单的单元格对象
     //   let cell = sheet.getCell(row, col);
@@ -586,9 +307,6 @@ export default {
     //   // 将下拉菜单单元格类型绑定到指定的单元格中
     //   cell.cellType(comboBox);
     // },
-    applyTextRenderer(instance, td, row, col, prop, value, cellProperties) {
-      Handsontable.renderers.TextRenderer.apply(this, arguments);
-    },
     applyStyles(td, styles) {
       Object.entries(styles).forEach(([style, value]) => {
         td.style[style] = value;
@@ -657,7 +375,6 @@ export default {
       }
 
       // 渲染显示label
-      Handsontable.renderers.TextRenderer.apply(this, arguments);
       td.innerText = label;
     },
     // 高度控制
@@ -1054,7 +771,6 @@ export default {
     async setPlan(remarkTb, index, params) {
       let arr = this.getSelectionData();
       if (this.ruleForm.LineIDs.length == 0 && false) {
-        this.$message.error("请选择生产线再转入日计划！");
       } else {
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error("请选择需要转入日计划的数据！");

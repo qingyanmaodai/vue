@@ -742,6 +742,6 @@ export default {
   margin-right: 10px !important;
 }
 .FormDiv {
-  // width: 220px;
+  width: 220px;
 }
 </style>

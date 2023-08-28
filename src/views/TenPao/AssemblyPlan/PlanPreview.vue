@@ -12,6 +12,7 @@
             :isLoading="isLoading"
             :btnForm="btnForm"
             :signName="i"
+            :Region="Region[i]"
             @btnClick="btnClick"
           />
         </div>
@@ -106,6 +107,7 @@
             <ComSpreadTable
               ref="`spreadsheetRef${item}`"
               :height="height"
+              :hasSelect="hasSelect[item]"
               :tableData="tableData[item]"
               :tableColumns="tableColumns[item]"
               :tableLoading="tableLoading[item]"
@@ -124,7 +126,7 @@
               :ref="`tableRef${item}`"
               :height="height"
               :tableData="tableData[item]"
-              :hasSelect="true"
+              :hasSelect="hasSelect[item]"
               :tableHeader="tableColumns[item]"
               :tableLoading="tableLoading[item]"
               :isEdit="isEdit"
@@ -285,6 +287,8 @@ export default {
       tableColumns: [[], [], []],
       tableLoading: [false, false, false, false, false],
       isClear: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
+      Region: [6, 6, 6, 6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -941,13 +945,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyData(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
