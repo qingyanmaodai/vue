@@ -315,7 +315,7 @@ export default {
           formsAll: [],
         },
         {
-          datas: {},
+          datas: { ProductType: "产品" },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -465,17 +465,36 @@ export default {
 
       // }
       this.selectedIndex = tab.name;
-      let findIndex = this.tableColumns[2].findIndex((item) => {
-        return item["prop"] === "MaterialName";
+      let materialNameIndex = -1;
+      let codeIndex = -1;
+      this.tableColumns[2].forEach((item, index) => {
+        if (item["prop"] === "MaterialName") {
+          materialNameIndex = index;
+        } else if (item["prop"] === "Code") {
+          codeIndex = index;
+        }
       });
       if (Number(this.selectedIndex) === 0) {
         this.formSearchs[2].datas["MaterialTypeID"] = null;
-        this.$set(this.tableColumns[2][findIndex], "visible", true);
+        this.formSearchs[2].datas["ProductType"] = "产品";
+        if (materialNameIndex !== -1) {
+          this.$set(this.tableColumns[2][materialNameIndex], "visible", true);
+        }
+        if (codeIndex !== -1) {
+          this.$set(this.tableColumns[2][codeIndex], "visible", true);
+        }
       } else if (Number(this.selectedIndex) === 1) {
         this.formSearchs[2].datas["MaterialID"] = null;
-        this.$set(this.tableColumns[2][findIndex], "visible", false);
+        this.formSearchs[2].datas["ProductType"] = "产品族";
+        if (materialNameIndex !== -1) {
+          this.$set(this.tableColumns[2][materialNameIndex], "visible", false);
+        }
+        if (codeIndex !== -1) {
+          this.$set(this.tableColumns[2][codeIndex], "visible", false);
+        }
       }
       this.dataSearch(Number(this.selectedIndex));
+      this.dataSearch(2);
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
