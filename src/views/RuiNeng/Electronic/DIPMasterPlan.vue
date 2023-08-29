@@ -314,7 +314,7 @@ export default {
           forms: [],
         },
         {
-          datas: { IsToMainPlan: "未排", SProcessGroupName: "DIP" },
+          datas: { IsToMainPlan: "未排", ProcessGroupName: "DIP" },
           forms: [],
         },
       ],

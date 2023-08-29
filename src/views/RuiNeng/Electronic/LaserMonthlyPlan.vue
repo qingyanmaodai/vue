@@ -21,7 +21,7 @@
           <el-row>
             <el-col :span="8"
               ><span class="title">{{ title }}</span>
-              <span class="title" style="margin-left: 20px">{{ title2 }}</span>
+              <!-- <span class="title" style="margin-left: 20px">{{ title2 }}</span> -->
             </el-col>
             <!-- <el-col :span="16" class="flex_flex_end"
               ><el-divider direction="vertical"></el-divider>
@@ -189,7 +189,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10115 }],
+      sysID: [{ ID: 7956 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -577,22 +577,22 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         //给月计划赋值当月订单总数
-        let res = await GetSearchData({
-          dicID: 5170,
-          fields: "SUM(PlanQty) As PlanQty",
-          ProcessGroupName: "激光",
-          CompletionStatus: 0,
-          PlanDay: [
-            this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().endOf("month").format("YYYY-MM-DD"),
-          ],
-        });
-        const {
-          data: [{ PlanQty }],
-        } = res.data;
-        this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
-          PlanQty ? PlanQty : ""
-        }`;
+        // let res = await GetSearchData({
+        //   dicID: 5170,
+        //   fields: "SUM(PlanQty) As PlanQty",
+        //   ProcessGroupName: "激光",
+        //   CompletionStatus: 0,
+        //   PlanDay: [
+        //     this.$moment().startOf("month").format("YYYY-MM-DD"),
+        //     this.$moment().endOf("month").format("YYYY-MM-DD"),
+        //   ],
+        // });
+        // const {
+        //   data: [{ PlanQty }],
+        // } = res.data;
+        // this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
+        //   PlanQty ? PlanQty : ""
+        // }`;
         this.dataSearch(0);
       }
     },
@@ -788,23 +788,54 @@ export default {
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
 
       //改变字体颜色
-      this.tableData[remarkTb].forEach((row, rowIndex) => {
-        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);
-
-          if (row["Code"] == null) {
+          cell.foreColor("black");
+          cell.backColor("white");
+          if (columnItem["isEdit"]) {
+            cell.locked(false).foreColor("#2a06ecd9");
+          }
+          if (rowItem["Code"] == null) {
             cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
-          } else if (row["MFGOrganizeID"] === 162) {
+            cell.foreColor("black");
+          } else if (rowItem["MFGOrganizeID"] === 162) {
             cell.backColor("#FFFF00");
             cell.foreColor("black");
-          } else {
-            cell.foreColor("black");
-            cell.backColor("#FFFFFF");
           }
-          if (row["Capacity"] && column["name"] === "Capacity") {
+          if (rowItem["Capacity"] && columnItem["name"] === "Capacity") {
             cell.foreColor("red");
+          }
+          if (
+            Object.prototype.toString.call(rowItem["FColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["FColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem["FColors"][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem["BColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["BColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem["BColors"][key]);
+              }
+            });
           }
         });
       });
