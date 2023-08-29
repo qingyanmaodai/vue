@@ -459,26 +459,44 @@ export default {
         //渲染列
         sheet.bindColumns(this.tableColumns[this.tagRemark]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
-        this.tableData[this.tagRemark].forEach((row, rowIndex) => {
-          this.tableColumns[this.tagRemark].forEach((column, columnIndex) => {
-            const key = column.prop;
-
+        this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-            // const cell = sheet.getCell(-1, columnIndex);
-
-            // 获取颜色
-            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
-              cell.backColor("#FF0000");
+            cell.foreColor("black");
+            cell.backColor("white");
+            if (columnItem["isEdit"]) {
+              cell.locked(false).foreColor("#2a06ecd9");
             }
-            if (row["ISPOFinish"] === "是" && key === "ReportQty") {
-              cell.backColor("#92d050");
+            if (
+              Object.prototype.toString.call(rowItem["FColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["FColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (columnItem) => columnItem.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.foreColor(rowItem["FColors"][key]);
+                }
+              });
             }
-            if (row["ISOutStock"] === "出库正常" && key === "OutDate") {
-              cell.backColor("#92d050");
-            }
-            if (row["ISOutStock"] === "出库异常" && key === "OutDate") {
-              cell.backColor("#ff0000");
+            if (
+              Object.prototype.toString.call(rowItem["BColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["BColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (columnItem) => columnItem.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.backColor(rowItem["BColors"][key]);
+                }
+              });
             }
           });
         });

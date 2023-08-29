@@ -907,40 +907,45 @@ export default {
         //渲染列
         sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
         //改变字体颜色
-        this.tableData[remarkTb].forEach((row, rowIndex) => {
-          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-            const key = column.prop;
-
+        this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-
-            // 获取颜色
-            // if (row && row.colorMapping && row.colorMapping[key]) {
-            //   const color = row.colorMapping[key];
-            //   cell.style({
-            //     backColor: color,
-            //     foreColor: "#FFFFFF"
-            //   });
-            //   // 其他代码
-            // }
-            if (row["IsToMainPlan"] && row["IsToMainPlan"] === "已排") {
-              cell.locked(true);
-              // sheet.setCellType(rowIndex, columnIndex, "");
+            cell.foreColor("black");
+            cell.backColor("white");
+            if (columnItem["isEdit"]) {
+              cell.locked(false).foreColor("#2a06ecd9");
             }
-            if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
-              cell.backColor("#FF0000");
-              // cell.style({
-              //   foreColor: "#FF0000"
-              // });
+            if (
+              Object.prototype.toString.call(rowItem["FColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["FColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (columnItem) => columnItem.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.foreColor(rowItem["FColors"][key]);
+                }
+              });
             }
-            // const color = row.colorMapping[key];
-
-            // 如果该属性有颜色信息，则设置单元格样式
-            // if (color) {
-            //   // const style = new GC.Spread.Sheets.Style();
-            //   cell.backColor(color);
-            //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
-            // }
+            if (
+              Object.prototype.toString.call(rowItem["BColors"]) ===
+              "[object Object]"
+            ) {
+              Object.keys(rowItem["BColors"]).forEach((key) => {
+                const columnIndex = this.tableColumns[0].findIndex(
+                  (columnItem) => columnItem.prop === key
+                );
+                if (columnIndex !== -1) {
+                  // 这里使用 rowIndex 和 columnIndex 获取单元格
+                  const cell = sheet.getCell(rowIndex, columnIndex);
+                  cell.backColor(rowItem["BColors"][key]);
+                }
+              });
+            }
           });
         });
 

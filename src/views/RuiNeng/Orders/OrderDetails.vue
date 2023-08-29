@@ -576,13 +576,6 @@ export default {
             }
 
             // 获取颜色
-            if (
-              rowItem["Result"] !== "正常" &&
-              rowItem["Result"] &&
-              columnIndex < 5
-            ) {
-              cell.backColor("#FF0000");
-            }
             if (rowItem["ISPOFinish"] === "是" && key === "ReportQty") {
               cell.backColor("#92d050");
             }

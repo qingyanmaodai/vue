@@ -1004,57 +1004,6 @@ export default {
         });
       });
 
-      // this.tableData[remarkTb].forEach((row, index) => {
-      //   var rowSheet = sheet.getRange(
-      //     index,
-      //     0,
-      //     1,
-      //     colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   var rowSheet2 = sheet.getRange(
-      //     index,
-      //     colindex,
-      //     1,
-      //     colInfos.length - colindex,
-      //     GC.Spread.Sheets.SheetArea.viewport
-      //   );
-      //   if (row["Code"] == null) {
-      //     rowSheet.backColor("#A0CFFF");
-      //     rowSheet.foreColor("balck");
-      //     rowSheet2.backColor("#A0CFFF");
-      //     rowSheet2.foreColor("balck");
-      //   } else if (row["MFGOrganizeID"] === 162) {
-      //     // row.backColor();
-      //     rowSheet.backColor("#FFFF00");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("#FFFF00");
-      //   } else {
-      //     // row.backColor();
-      //     rowSheet.foreColor("black");
-      //     rowSheet.backColor("#FFFFFF");
-      //     rowSheet.foreColor("black");
-      //     rowSheet2.backColor("#FFFFFF");
-      //   }
-      //   let cellIndex = 0;
-      //   this.tableColumns[remarkTb].forEach(m => {
-      //     //行，start,end
-      //     if (m.DataType == "bit" && m.isEdit) {
-      //       var cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-      //       cellType.caption("");
-      //       cellType.textTrue("");
-      //       cellType.textFalse("");
-      //       cellType.textIndeterminate("");
-      //       cellType.textAlign(
-      //         GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
-      //       );
-      //       cellType.isThreeState(false);
-      //       sheet.getCell(index, cellIndex).cellType(cellType);
-      //     }
-      //     cellIndex++;
-      //   });
-      // });
-
       let cellIndex = 0;
       let viewSortIndex = 0; //排序的索引
       let lineIDIndex = 0;

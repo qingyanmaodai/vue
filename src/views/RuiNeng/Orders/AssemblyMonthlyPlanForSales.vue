@@ -957,40 +957,72 @@ export default {
 
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
       //改变字体颜色
-      this.tableData[remarkTb].forEach((row, rowIndex) => {
-        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor("black");
+          cell.backColor("white");
+          if (columnItem["isEdit"]) {
+            cell.locked(false).foreColor("#2a06ecd9");
+          }
           if (
-            (column["prop"] === "PlanMonthStatus" &&
-              row["PlanMonthStatus"] !== "正常") ||
-            (column["prop"] === "MOStatus" && row["MOStatus"] !== "正常")
+            (columnItem["prop"] === "PlanMonthStatus" &&
+              rowItem["PlanMonthStatus"] !== "正常") ||
+            (columnItem["prop"] === "MOStatus" &&
+              rowItem["MOStatus"] !== "正常")
           ) {
             cell.backColor("#FDD0CB");
           }
-          if (row["Capacity"] && column["name"] === "Capacity") {
+          if (rowItem["Capacity"] && columnItem["name"] === "Capacity") {
             cell.foreColor("red");
           }
           if (
-            row["StartDate"] &&
-            this.$moment(row["StartDate"])
+            rowItem["StartDate"] &&
+            this.$moment(rowItem["StartDate"])
               .startOf("day")
               .isBefore(this.$moment().startOf("day")) &&
-            column["prop"] == "StartDate"
+            columnItem["prop"] == "StartDate"
           ) {
             cell.backColor("#FDD0CB");
           }
-          if (row["Code"] == null) {
+          if (rowItem["Code"] == null) {
             cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
-          } else if (row["MFGOrganizeID"] === 162) {
+            cell.foreColor("black");
+          } else if (rowItem["MFGOrganizeID"] === 162) {
             cell.backColor("#FFFF00");
             cell.foreColor("black");
           }
-          //  else {
-          //   cell.foreColor("black");
-          //   cell.backColor("#FFFFFF");
-          // }
+          if (
+            Object.prototype.toString.call(rowItem["FColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["FColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem["FColors"][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem["BColors"]) ===
+            "[object Object]"
+          ) {
+            Object.keys(rowItem["BColors"]).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem["BColors"][key]);
+              }
+            });
+          }
         });
       });
 

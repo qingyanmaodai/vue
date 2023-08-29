@@ -531,7 +531,7 @@ export default {
 
           if (row["Code"] == null) {
             cell.backColor("#A0CFFF");
-            cell.foreColor("balck");
+            cell.foreColor("black");
           } else {
             cell.foreColor("black");
             cell.backColor("#FFFFFF");
