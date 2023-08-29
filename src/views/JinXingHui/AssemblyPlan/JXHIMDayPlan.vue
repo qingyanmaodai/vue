@@ -8,7 +8,7 @@
           ref="searchRef"
           :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
-          :remark="i"
+          :Region="Region[i]"
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="i"
@@ -16,19 +16,45 @@
         />
       </div>
     </div>
-    <!-- <div class="ant-table-title pd-0-6">
+    <div class="ant-table-title pd-0-6">
       <el-row>
         <el-col :span="4"
           ><span class="title">{{ title }}</span></el-col
         >
         <el-col :span="20" class="flex_flex_end">
+          <el-select
+            clearable
+            filterable
+            size="small"
+            placeholder="请选择修改值"
+            v-model="OrderNo"
+          >
+            <el-option
+              v-for="(item, i) in OrderNos[0]"
+              :key="i"
+              :label="item.label"
+              :value="item.prop"
+            ></el-option>
+          </el-select>
           <el-divider direction="vertical"></el-divider>
-          <el-button type="primary" size="mini" @click="changeEvent(0)">
-            拆分订单
+          <el-input
+            size="small"
+            v-model="OrderNoValue"
+            style="width: 160px"
+            placeholder="请输入"
+            @keyup.enter.native="changeProp(0)"
+          ></el-input>
+          <el-divider direction="vertical"></el-divider>
+          <el-button type="primary" size="mini" @click="changeProp(0)">
+            批量修改
           </el-button>
+          <el-divider direction="vertical"></el-divider>
+          <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
+            拆分订单
+          </el-button> -->
         </el-col>
       </el-row>
-    </div> -->
+    </div>
     <div
       class="admin_content flex_grow"
       v-for="item in [0]"
@@ -153,6 +179,9 @@ export default {
       treeListTmp2: [],
       treeData: [],
       treeData2: [],
+      OrderNo: "",
+      OrderNoValue: "",
+      OrderNos: [{}, {}, {}, {}],
       autoGenerateColumns: true,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
@@ -209,6 +238,7 @@ export default {
       tableColumns: [[], []],
       tableLoading: [false],
       isClear: [false, false],
+      Region: [6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
@@ -336,6 +366,34 @@ export default {
         this.formSearchs[remarkTb].datas["sort"] = null;
       }
       this.dataSearch(remarkTb);
+    },
+    changeProp(index) {
+      if (!this.OrderNo) {
+        this.$message.error("请选择需要修改的值");
+        return;
+      }
+      if (this.tableData[index].length === 0) {
+        this.$message.error("当前表格无数据");
+        return;
+      }
+      let sheet = this.spread[index]?.getActiveSheet();
+      sheet.suspendPaint();
+      this.tableData[index].forEach((rowItem, rowIndex) => {
+        this.tableColumns[index].forEach((column, columnIndex) => {
+          const key = column.prop;
+          if (rowItem["isChecked"] === true) {
+            let dataIndex = this.tableColumns[index].findIndex(
+              (item) => item["prop"] === this.OrderNo
+            );
+            sheet.setValue(rowIndex, dataIndex, this.OrderNoValue);
+          }
+        });
+      });
+      sheet.resumePaint();
+
+      // this.tableData[index].map((item) => {
+      //   item[this.OrderNo] = this.OrderNoValue;
+      // });
     },
     // 改变父组件表格行数据
     changeTableRowData(remarkTb, row, index) {
@@ -583,8 +641,14 @@ export default {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item["isEdit"] === true)
+          );
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -1045,47 +1109,47 @@ export default {
       if (!currentRow[currentlabel]) {
         //不是天日的数量
         currentlabel = this.tableColumns[0][colIndex].prop;
-        if (currentlabel == "ViewSort") {
-          val = currentRow[currentlabel];
-          if (val) {
-            let newRowindex = 1;
-            let flag = false;
-            let lineID = currentRow["LineID"];
-            //循环上面
-            for (var r = 0; r < dataSource.length - 1; r++) {
-              let row = dataSource[r];
-              if (lineID != row["LineID"]) {
-                continue;
-              }
-              let thisValue = newRowindex; //row[currentlabel];
-              if (row["Code"] == null || row["Code"] == "") {
-                break;
-              }
-              if (r < rowIndex) {
-                //当前循环的在当前操作行的上面
-                if (thisValue >= val && flag === false) {
-                  newRowindex = val + 1;
-                  flag = true;
-                }
+        // if (currentlabel == "ViewSort") {
+        //   val = currentRow[currentlabel];
+        //   if (val) {
+        //     let newRowindex = 1;
+        //     let flag = false;
+        //     let lineID = currentRow["LineID"];
+        //     //循环上面
+        //     for (var r = 0; r < dataSource.length - 1; r++) {
+        //       let row = dataSource[r];
+        //       if (lineID != row["LineID"]) {
+        //         continue;
+        //       }
+        //       let thisValue = newRowindex; //row[currentlabel];
+        //       if (row["Code"] == null || row["Code"] == "") {
+        //         break;
+        //       }
+        //       if (r < rowIndex) {
+        //         //当前循环的在当前操作行的上面
+        //         if (thisValue >= val && flag === false) {
+        //           newRowindex = val + 1;
+        //           flag = true;
+        //         }
 
-                thisValue = newRowindex;
-                newRowindex++;
-              } else if (r > rowIndex) {
-                //当前循环的在当前操作行的下面
-                if (newRowindex == val) {
-                  newRowindex++;
-                }
+        //         thisValue = newRowindex;
+        //         newRowindex++;
+        //       } else if (r > rowIndex) {
+        //         //当前循环的在当前操作行的下面
+        //         if (newRowindex == val) {
+        //           newRowindex++;
+        //         }
 
-                thisValue = newRowindex;
-                newRowindex++;
-              } else {
-                thisValue = val;
-              }
-              sheet.setValue(r, colIndex, thisValue);
-            }
-          }
-        } else {
-        }
+        //         thisValue = newRowindex;
+        //         newRowindex++;
+        //       } else {
+        //         thisValue = val;
+        //       }
+        //       sheet.setValue(r, colIndex, thisValue);
+        //     }
+        //   }
+        // } else {
+        // }
         sheet.setDataSource(this.tableData[this.labelStatus1]);
         return;
       }
