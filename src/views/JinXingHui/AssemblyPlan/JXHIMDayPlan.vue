@@ -8,10 +8,11 @@
           ref="searchRef"
           :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
-          :Region="Region[i]"
+          :remark="i"
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -22,7 +23,20 @@
           ><span class="title">{{ title }}</span></el-col
         >
         <el-col :span="20" class="flex_flex_end">
-          <el-select
+          <div
+            v-for="i in [0]"
+            :key="'Edit' + i"
+            v-show="labelStatus1 === i"
+            style="height: 100%"
+          >
+            <ComBatchEdit
+              :OrderNos="OrderNos[0]"
+              @changeProp="changeProp"
+              :OrderNo="'MachineID'"
+              :remark="0"
+            />
+          </div>
+          <!-- <el-select
             clearable
             filterable
             size="small"
@@ -47,8 +61,7 @@
           <el-divider direction="vertical"></el-divider>
           <el-button type="primary" size="mini" @click="changeProp(0)">
             批量修改
-          </el-button>
-          <el-divider direction="vertical"></el-divider>
+          </el-button> -->
           <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
             拆分订单
           </el-button> -->
@@ -131,6 +144,7 @@ import "@grapecity/spread-sheets/js/zh.js";
 import { mapState } from "vuex";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
+import ComBatchEdit from "@/components/ComBatchEdit";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComSpreadTable from "@/components/ComSpreadTable";
@@ -151,6 +165,7 @@ export default {
   name: "JXHIMDayPlan",
   components: {
     ComSearch,
+    ComBatchEdit,
     ComReportTable,
     ComAsideTree,
     DialogTable,
@@ -181,7 +196,7 @@ export default {
       treeData2: [],
       OrderNo: "",
       OrderNoValue: "",
-      OrderNos: [{}, {}, {}, {}],
+      OrderNos: [[], [], [], []],
       autoGenerateColumns: true,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
@@ -367,33 +382,29 @@ export default {
       }
       this.dataSearch(remarkTb);
     },
-    changeProp(index) {
-      if (!this.OrderNo) {
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
         this.$message.error("请选择需要修改的值");
         return;
       }
-      if (this.tableData[index].length === 0) {
+      if (this.tableData[remarkTb].length === 0) {
         this.$message.error("当前表格无数据");
         return;
       }
-      let sheet = this.spread[index]?.getActiveSheet();
+      let sheet = this.spread[remarkTb]?.getActiveSheet();
       sheet.suspendPaint();
-      this.tableData[index].forEach((rowItem, rowIndex) => {
-        this.tableColumns[index].forEach((column, columnIndex) => {
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
           const key = column.prop;
           if (rowItem["isChecked"] === true) {
-            let dataIndex = this.tableColumns[index].findIndex(
-              (item) => item["prop"] === this.OrderNo
+            let dataIndex = this.tableColumns[remarkTb].findIndex(
+              (item) => item["prop"] === OrderNo
             );
-            sheet.setValue(rowIndex, dataIndex, this.OrderNoValue);
+            sheet.setValue(rowIndex, dataIndex, OrderNoValue);
           }
         });
       });
       sheet.resumePaint();
-
-      // this.tableData[index].map((item) => {
-      //   item[this.OrderNo] = this.OrderNoValue;
-      // });
     },
     // 改变父组件表格行数据
     changeTableRowData(remarkTb, row, index) {
@@ -403,6 +414,7 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
+      debugger;
       if (parms) {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
@@ -575,7 +587,7 @@ export default {
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
-
+      debugger;
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (sheet && sheet.isEditing()) {
         sheet.endEdit();
@@ -649,6 +661,7 @@ export default {
             i,
             m.filter((item) => item["isEdit"] === true)
           );
+          console.log(this.OrderNos, "OrderNos");
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
