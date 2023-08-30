@@ -2,7 +2,7 @@
 <template>
   <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2, 3]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -11,6 +11,7 @@
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -50,12 +51,12 @@
     </div>
     <div
       class="admin_content flex_grow"
-      v-for="item in [1]"
+      v-for="item in [1, 2]"
       :key="item"
       v-show="labelStatus1 === item"
     >
       <ComSpreadTable
-        ref="spreadsheetRef"
+        :ref="`spreadRef${item}`"
         height="100%"
         :tableData="tableData[item]"
         :tableColumns="tableColumns[item]"
@@ -71,7 +72,7 @@
     </div>
     <div
       class="admin_content flex_grow"
-      v-for="item in [0, 2]"
+      v-for="item in [0, 3]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -164,7 +165,8 @@ export default {
       Status1: [
         { label: "待排订单", value: 0 },
         { label: "滚动周计划", value: 1 },
-        { label: "已完成", value: 2 },
+        { label: "暂停", value: 2 },
+        { label: "已完成", value: 3 },
       ],
       title: this.$route.meta.title,
       resultMsg: "",
@@ -179,93 +181,46 @@ export default {
           forms: [],
         },
         {
+          datas: { ProductionStatus: 24 },
+          forms: [],
+        },
+        {
           datas: { CompletionStatus: 1 },
           forms: [],
         },
       ],
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "恢复",
-          isLoading: false,
-          Methods: "recovery",
-          Type: "success",
-          signName: 3,
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData", remarkTb: 2 },
-        },
-        {
-          ButtonCode: "save",
-          BtnName: "退回",
-          Type: "danger",
-          Ghost: true,
-          signName: 4,
-          Size: "small",
-          Methods: "backData",
-          Icon: "",
-        },
-        {
-          ButtonCode: "returnOrder",
-          BtnName: "退回",
-          isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: {
-            dataName: "selectionData",
-          },
-        },
-        // {
-        //   ButtonCode: "save",
-        //   BtnName: "返回",
-        //   Type: "success",
-        //   Ghost: true,
-        //   Size: "small",
-        //   signName: [0, 1, 2, 3],
-        //   Methods: "reData",
-        //   Icon: "",
-        // },
-      ],
-      selectionData: [[], [], []],
+      selectionData: [[], [], [], []],
       btnForm: [],
       isLoading: false,
-      tableData: [[], [], []],
-      tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
-      hasSelect: [false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
+      hasSelect: [false, false, false, false],
+      Region: [6, 6, 6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: "707px",
       treeHeight: "765px",
       showPagination: true,
       tagRemark: 0,
-      isEdit: [false, false, false],
+      isEdit: [false, false, false, false],
       clickData: {},
-      isUpdate: true,
       adminLoading: false,
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [
-        { ID: 9013 },
-        { ID: 11168, ConfigStartWeek: 1 }, //一些扩展的参数，这里表示是周一
-        { ID: 9013 },
-      ],
+      sysID: [{ ID: 9013 }, { ID: 11168 }, { ID: 11168 }, { ID: 9013 }],
       userInfo: {},
       ruleForm: {
         LineIDs: [],
         ProducedDate: [],
       },
-      IsPurchaseBoss: false,
-      ReplyDate: "",
       AutoDays2: 30,
-      NoWorkHour: [],
       LineViewSort: [],
       spread: [],
       sheetSelectRows: [],
@@ -348,14 +303,86 @@ export default {
       this.$confirm(
         "确定要暂停的【" + this.selectionData[remarkTb].length + "】数据吗"
       )
-        .then(async (_) => {
-          let res = await GetSearch(
-            this.selectionData[remarkTb],
-            "/APSAPI/UpdateOrderStatusByOrderID"
+        .then(async () => {
+          let newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ProductionStatus"] = 24;
+              return x;
+            })
           );
           this.adminLoading = true;
+          let res = await GetSearch(
+            newData,
+            "/APSAPI/UpdateOrderStatusByOrderID"
+          );
+          const { result, data, count, msg } = res.data;
+          await this.dataSearch(remarkTb);
+          if (result) {
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, "adminLoading", false);
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, "adminLoading", false);
+          }
+          this.adminLoading = false;
         })
-        .catch((_) => {});
+        .catch((_) => {
+          console.log(_, "_");
+        });
+    },
+    // 恢复
+    async SetRecover(remarkTb, index, parms) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.$confirm(
+        "确定要恢复的【" + this.selectionData[remarkTb].length + "】数据吗"
+      )
+        .then(async () => {
+          let newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ProductionStatus"] = 21;
+              return x;
+            })
+          );
+          this.adminLoading = true;
+          let res = await GetSearch(
+            newData,
+            "/APSAPI/UpdateOrderStatusByOrderID"
+          );
+          const { result, data, count, msg } = res.data;
+          await this.dataSearch(remarkTb);
+          if (result) {
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, "adminLoading", false);
+          } else {
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, "adminLoading", false);
+          }
+          this.adminLoading = false;
+        })
+        .catch((_) => {
+          console.log(_, "_");
+        });
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
@@ -1031,13 +1058,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       }, 500);
@@ -1076,6 +1103,7 @@ export default {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
               this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -1133,7 +1161,7 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if (remarkTb == 1) {
+        if (remarkTb == 1 || remarkTb == 2) {
           this.setData(remarkTb);
         }
       } else {
