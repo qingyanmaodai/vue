@@ -177,7 +177,7 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: { ProductionStatus: 21 },
           forms: [],
         },
         {
