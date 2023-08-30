@@ -7,6 +7,8 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
@@ -58,7 +60,10 @@ module.exports = {
         '@': resolve('src')
       }
     },
-    devtool:"source-map"
+    plugins: [
+      new HardSourceWebpackPlugin()
+    ]
+    // devtool: 'source-map'
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload
