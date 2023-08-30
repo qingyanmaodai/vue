@@ -171,7 +171,7 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {CompletionStatus: 0,ProductionStatus: 26},
+          datas: { CompletionStatus: 0, ProductionStatus: 26 },
           forms: [],
         },
         {
@@ -319,8 +319,8 @@ export default {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
       this.selectionData[remarkTb] = newValue;
     },
-       // 退回
-       async dataDel(remarkTb, index, parms) {
+    // 退回
+    async dataDel(remarkTb, index, parms) {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
         return;
@@ -336,6 +336,24 @@ export default {
           });
           this.adminLoading = true;
           _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+        })
+        .catch((_) => {});
+    },
+    // 暂停
+    async SetPause(remarkTb, index, parms) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      this.$confirm(
+        "确定要暂停的【" + this.selectionData[remarkTb].length + "】数据吗"
+      )
+        .then(async (_) => {
+          let res = await GetSearch(
+            this.selectionData[remarkTb],
+            "/APSAPI/UpdateOrderStatusByOrderID"
+          );
+          this.adminLoading = true;
         })
         .catch((_) => {});
     },
