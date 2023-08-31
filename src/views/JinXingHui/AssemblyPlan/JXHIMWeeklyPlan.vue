@@ -20,9 +20,9 @@
       <el-row>
         <el-col :span="12">
           <span class="title" style="margin-right: 10px">{{ title }}</span>
-          <span style="color: #ff9900" v-if="tagRemark == 1"
+          <!-- <span style="color: #ff9900" v-if="tagRemark == 1"
             >周计划日期显示规则：转入周计划时当周周一 至
-            下周周日，2周周期。</span
+            下周周日，2周周期。</span -->
           >
         </el-col>
 
