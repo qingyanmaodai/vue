@@ -119,20 +119,17 @@
       <div class="admin_content flex_column flex_grow">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12">
-              <div class="flex">
-                <el-tabs
-                  v-model="selectedIndex"
-                  @tab-click="handleClick"
-                  stretch
-                  ty
-                >
-                  <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
-                  <el-tab-pane label="月计划" name="1"></el-tab-pane>
-                  <el-tab-pane label="周计划" name="2"></el-tab-pane>
-                  <el-tab-pane label="日计划" name="3"></el-tab-pane>
-                </el-tabs>
-              </div>
+            <el-col :span="12" class="flex">
+              <el-tabs
+                v-model="selectedIndex"
+                @tab-click="handleClick"
+                :stretch="true"
+              >
+                <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
+                <el-tab-pane label="月计划" name="1"></el-tab-pane>
+                <el-tab-pane label="周计划" name="2"></el-tab-pane>
+                <el-tab-pane label="日计划" name="3"></el-tab-pane>
+              </el-tabs>
               <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
                 <span class="title">{{ title }}</span> -->

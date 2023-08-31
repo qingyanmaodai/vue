@@ -57,12 +57,12 @@
               <!-- <span>共{{ tablePagination[tagRemark].pageTotal }}条</span> -->
               <el-pagination
                 background
-                @size-change="(val) => pageSize(val, 1)"
+                @size-change="(val) => pageSize(val, tagRemark)"
                 :current-page="tablePagination[tagRemark].pageIndex"
                 :page-sizes="[200, 500, 1000, 3000, 5000, 10000]"
                 :page-size="tablePagination[tagRemark].pageSize"
                 :total="tablePagination[tagRemark].pageTotal"
-                @current-change="(val) => pageChange(val, 1)"
+                @current-change="(val) => pageChange(val, tagRemark)"
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination>
@@ -486,6 +486,10 @@ export default {
               _this.colDialogVisible = true;
               _this.dialogSearchForm.ProductCode =
                 _this.tableData[_this.tagRemark][args.row].ProductCode;
+              _this.dialogSearchForm.Code =
+                _this.tableData[_this.tagRemark][args.row].Code;
+              _this.dialogSearchForm.Extend12 =
+                _this.tableData[_this.tagRemark][args.row].Extend12;
               _this.dialogSearchForm.OweQty = 0;
             }
           });
