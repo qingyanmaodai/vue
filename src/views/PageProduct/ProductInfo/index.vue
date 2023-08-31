@@ -9,6 +9,7 @@
           :searchForm="formSearchs[0].forms"
           :remark="0"
           :btnForm="btnForm[0]"
+          :Region="Region[0]"
           @btnClick="btnClick"
         />
       </div>
@@ -219,6 +220,7 @@
         :remark="1"
         :isLoading="isLoading[1]"
         :btnForm="btnForm[1]"
+        :Region="Region[1]"
         @btnClick="btnClick"
       />
       <ComUmyTable
@@ -372,6 +374,8 @@ export default {
       drawer: false,
       delData: [[]],
       isLoading: [false, false],
+      hasSelect: [false, false],
+      Region: [6, 6],
       formSearchs: [
         {
           datas: {},
@@ -694,13 +698,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyData(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyData(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
