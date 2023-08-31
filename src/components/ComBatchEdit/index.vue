@@ -18,18 +18,18 @@
       </el-select>
     </el-form-item>
     <el-form-item class="FormDiv">
-      <el-input
-        v-if="OrderNoObj.ControlType === 'numberbox'"
-        v-model="OrderNoValue"
-        size="small"
-        type="number"
-      ></el-input>
       <!-- 输入框 -->
       <el-input
         v-if="OrderNoObj.ControlType === 'textbox' || !OrderNoObj.ControlType"
         v-model="OrderNoValue"
         size="small"
         type="text"
+      ></el-input>
+      <el-input
+        v-if="OrderNoObj.ControlType === 'numberbox'"
+        v-model="OrderNoValue"
+        size="small"
+        type="number"
       ></el-input>
       <!-- 下拉框 -->
       <el-select
@@ -131,29 +131,28 @@ export default {
       type: Number,
       default: 0,
     },
-    OrderNo: {},
+    OrderNo: { default: null },
   },
   data() {
     return {
-      OrderNoObj: {},
-      OrderNo: "",
+      OrderNoObj: { ControlType: "textbox" },
       OrderNoValue: "",
     };
   },
   created() {},
   mounted() {},
   watch: {
-    // searchForm: {
-    //   handler: function (val, oldVal) {
-    //     console.log("searchForm", this.searchForm);
-    //     if (this.searchForm.length > this.Region) {
-    //       this.isSpread = true;
-    //     }
-    //   },
-    //   // 深度观察监听
-    //   immediate: true,
-    //   deep: true,
-    // },
+    OrderNos: {
+      handler: function (val, oldVal) {
+        if (val) {
+          this.$nextTick(() => {
+            this.handleChange(this.OrderNo);
+          });
+        }
+      },
+      // 深度观察监听
+      deep: true,
+    },
     // isLoading: {
     //   handler: function (val, oldVal) {
     //     this.isLoading = val;
