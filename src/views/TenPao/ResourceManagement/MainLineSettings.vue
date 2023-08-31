@@ -476,7 +476,7 @@ export default {
       });
       if (Number(this.selectedIndex) === 0) {
         this.formSearchs[2].datas["MaterialTypeID"] = null;
-        this.formSearchs[2].datas["ProductType"] = "产品";
+        this.formSearchs[2].datas["ProductPlatformType"] = "产品";
         if (materialNameIndex !== -1) {
           this.$set(this.tableColumns[2][materialNameIndex], "visible", true);
         }
@@ -485,7 +485,7 @@ export default {
         }
       } else if (Number(this.selectedIndex) === 1) {
         this.formSearchs[2].datas["MaterialID"] = null;
-        this.formSearchs[2].datas["ProductType"] = "产品族";
+        this.formSearchs[2].datas["ProductPlatformType"] = "产品族";
         if (materialNameIndex !== -1) {
           this.$set(this.tableColumns[2][materialNameIndex], "visible", false);
         }

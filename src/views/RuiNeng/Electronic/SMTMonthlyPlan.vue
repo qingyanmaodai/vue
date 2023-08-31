@@ -166,7 +166,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            ProcessGroupName: "SMT,AI",
+            ProcessGroupName: [SMT, AI],
           },
           forms: [],
         },
