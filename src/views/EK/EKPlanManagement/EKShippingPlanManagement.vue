@@ -140,6 +140,7 @@ export default {
       tableColumns: [[], []],
       tableLoading: [false],
       isClear: [false, false],
+      hasSelect: [false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
@@ -714,16 +715,6 @@ export default {
           if (columnItem["isEdit"]) {
             cell.locked(false).foreColor("#2a06ecd9");
           }
-          if (rowItem["Code"] == null) {
-            cell.backColor("#A0CFFF");
-            cell.foreColor("black");
-          } else if (rowItem["MFGOrganizeID"] === 162) {
-            cell.backColor("#FFFF00");
-            cell.foreColor("black");
-          }
-          if (rowItem["Capacity"] && columnItem["name"] === "Capacity") {
-            cell.foreColor("red");
-          }
           if (
             Object.prototype.toString.call(rowItem["FColors"]) ===
             "[object Object]"
@@ -998,15 +989,13 @@ export default {
             "改变为" +
             info.newValue
         );
-        var arr = sheet.getDirtyRows();
-        var arr2 = sheet.getInsertRows();
-        console.log(arr, arr2);
-        // sheet.clearPendingChanges();
       });
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
-      this.spread[remarkTb].refresh(); //重新定位宽高度
+      setTimeout(() => {
+        this.spread[remarkTb].refresh(); //重新定位宽高度
+      });
     },
     bindComboBoxToCell(sheet, row, col, dataSourceName) {
       // 获取要绑定下拉菜单的单元格对象
