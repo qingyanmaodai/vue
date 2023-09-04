@@ -58,6 +58,38 @@
       :searchForm="dialogSearchForm"
       :isToolbar="false"
     ></DialogTable>
+    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="50%">
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="24" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
+            <el-button type="primary" size="mini" @click="changeEvent(1)">
+              确定拆分
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [1]" :key="item">
+        <ComSpreadTable
+          ref="spreadsheetRef"
+          height="600px"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -150,7 +182,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -402,6 +434,112 @@ export default {
         })
         .catch((_) => {});
     },
+    // 拆单
+    splitOrder(remarkTb) {
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要拆单的数据！");
+        return;
+      }
+      this.Dialog = true;
+      let targetArray = JSON.parse(
+        JSON.stringify(this.selectionData[remarkTb])
+      );
+
+      this.tableColumns[1] = this.tableColumns[1].filter(
+        (item) => item.prop == "PlanQty"
+      );
+      this.tableColumns[1].push({
+        label: "拆单数",
+        prop: "SQty",
+      });
+      this.tableColumns[1].forEach((item) => {
+        item["width"] = 250;
+        if (item.label === "拆单数") {
+          item["isEdit"] = true;
+        } else {
+          item["isEdit"] = false;
+        }
+      });
+      this.$nextTick(() => {
+        this.$set(this.tableData, 1, targetArray);
+        this.setData(1);
+      });
+    },
+    // 拆单
+    async changeEvent(val) {
+      if (val === 1) {
+        const errorNum1 = this.selectionData[1].findIndex(
+          (item) => !item["SQty"]
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
+          return;
+        }
+
+        const errorNum2 = this.selectionData[1].findIndex((item) => {
+          return item["SQty"] > item["PlanQty"];
+        });
+        if (errorNum2 !== -1) {
+          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
+          return;
+        }
+        this.Dialog = false;
+        let sheet = this.spread[this.labelStatus1].getActiveSheet();
+        const changedIndices = [];
+        this.tableData[this.labelStatus1].forEach((element, index) => {
+          if (element["isChecked"]) {
+            changedIndices.push(index);
+          }
+        });
+        //每增加一行，需要插入新的一行，后面一行比前面一行多1
+        const arr = changedIndices.map((num, index) => num + index);
+        //处理脏数据
+        arr.forEach((item) => {
+          this.copyRowFormat(item, sheet);
+          console.log(item, "item");
+        });
+
+        this.$nextTick(() => {
+          // sheet.setDataSource(sheet.getDataSource()); // 更新数据源
+          sheet.repaint();
+        });
+        await this.dataSave(this.labelStatus1);
+      }
+    },
+    //在该行数据下面增加新的一行
+    copyRowFormat(rowNumber, sheet) {
+      sheet.addRows(rowNumber + 1, 1);
+      sheet.copyTo(
+        rowNumber,
+        -1,
+        rowNumber + 1,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.CopyToOptions.all
+      );
+      let newRowIndex = rowNumber + 1;
+      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
+      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
+        JSON.stringify(oldData)
+      );
+      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
+      let SQtyObj = this.selectionData[1].find(
+        (item) => item["RowNumber"] === oldData["RowNumber"]
+      );
+      //去掉dy前面的值
+      // const objKeys = Object.keys(newData);
+      // objKeys.forEach((key) => {
+      //   if (key.endsWith("dy")) {
+      //     newData[key.replace(/dy$/, "")] = null;
+      //   }
+      // });
+      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
+      newData["SourceID"] = oldData["ID"]; // 将 SourceDetailPlanID 值设置为 null
+      newData["ID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
+      newData["PlanQty"] = SQtyObj["SQty"];
+      newData["DataSource"] = "拆单";
+    },
     resetScheduling() {
       this.$confirm("确定要重新排全部数据吗？")
         .then(async (_) => {
@@ -452,7 +590,7 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      this.adminLoading = true;
+      // this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
@@ -460,12 +598,12 @@ export default {
         sheet.endEdit();
       }
       // 获取修改记录
-      let updateRecords = [];
+      let changeRecords = [];
       if (newData) {
-        updateRecords = newData;
+        changeRecords = newData;
       } else {
         if ($table) {
-          updateRecords = $table.getUpdateRecords();
+          changeRecords = $table.getUpdateRecords();
         } else {
           let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
           let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
@@ -473,17 +611,16 @@ export default {
           DeletedRows.forEach((item) => {
             item["ElementDeleteFlag"] = 1;
           }); //获取被删除的数据
-          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+          console.log(DirtyRows, InsertRows, DeletedRows);
+          changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-
-      if (updateRecords.length == 0) {
+      if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await SaveMOPlanStep4(updateRecords);
-      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1361,115 +1498,6 @@ export default {
         if (node.childNodes[i].childNodes.length > 0) {
           this.changeTreeNodeStatus(node.childNodes[i]);
         }
-      }
-    },
-    //在该行数据下面增加新的一行
-    copyRowFormat(rowNumber, sheet) {
-      sheet.addRows(rowNumber + 1, 1);
-      sheet.copyTo(
-        rowNumber,
-        -1,
-        rowNumber + 1,
-        -1,
-        1,
-        -1,
-        GC.Spread.Sheets.CopyToOptions.all
-      );
-      let newRowIndex = rowNumber + 1;
-      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      // newData = JSON.parse(JSON.stringify(oldData));
-      this.tableData[0][newRowIndex] = JSON.parse(JSON.stringify(oldData));
-      let newData = this.tableData[0][newRowIndex]; // 获取数据源中新行的值
-      let SQtyObj = this.selectionData[1].find(
-        (item) => item["RowNumber"] === oldData["RowNumber"]
-      );
-      //去掉dy前面的值
-      const objKeys = Object.keys(newData);
-      objKeys.forEach((key) => {
-        if (key.endsWith("dy")) {
-          newData[key.replace(/dy$/, "")] = null;
-        }
-      });
-      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
-      newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
-      newData["LineID"] = null;
-      newData["PlanQty"] = SQtyObj["SQty"];
-      newData["HasQty"] = null;
-      this.$nextTick(() => {
-        sheet.setDataSource(sheet.getDataSource()); // 更新数据源
-        sheet.repaint();
-      });
-    },
-    // 复制
-    async changeEvent(val) {
-      if (val == 0) {
-        if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要拆单的数据！");
-          return;
-        }
-        this.Dialog = true;
-        let targetArray = JSON.parse(JSON.stringify(this.selectionData[0]));
-        let targetColumns = JSON.parse(JSON.stringify(this.tableColumns[0]));
-
-        targetColumns = targetColumns.filter(
-          (item) =>
-            item.label == "生产订单" ||
-            item.label == "数量" ||
-            item.label == "计划数"
-        );
-        targetColumns.push({
-          label: "拆单数量",
-          prop: "SQty",
-        });
-        targetColumns.map((item) => {
-          item["width"] = 250;
-          if (item.label === "拆单数量") {
-            item["isEdit"] = true;
-          } else {
-            item["isEdit"] = false;
-          }
-        });
-        this.$set(this.tableColumns, 1, targetColumns);
-        this.$nextTick(() => {
-          this.$set(this.tableData, 1, targetArray);
-          this.setData(1);
-        });
-      } else if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          (item) => !item["SQty"]
-        );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
-        }
-
-        const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item["SQty"] > item["Qty"];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.Dialog = false;
-        let sheet = this.spread[0].getActiveSheet();
-        const changedIndices = [];
-        this.tableData[0].forEach((element, index) => {
-          if (element["isChecked"]) {
-            changedIndices.push(index);
-          }
-        });
-        //每增加一行，需要插入新的一行，后面一行比前面一行多1
-        const arr = changedIndices.map((num, index) => num + index);
-        //处理脏数据
-        arr.forEach((item) => {
-          this.copyRowFormat(item, sheet);
-          console.log(item, "item");
-        });
-        this.$nextTick(() => {
-          sheet.setDataSource(sheet.getDataSource()); // 更新数据源
-          sheet.repaint();
-        });
-        await this.dataSave(this.labelStatus1);
       }
     },
   },
