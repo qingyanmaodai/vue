@@ -150,7 +150,7 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <dialogOptTable
+    <DialogOptTable
       title="关联工艺"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -174,7 +174,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></dialogOptTable>
+    ></DialogOptTable>
     <!-- <DialogTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
@@ -198,7 +198,7 @@ import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
 import DialogTable from "@/components/Dialog/dialogTable";
-import dialogOptTable from "@/components/Dialog/dialogOptTable";
+import DialogOptTable from "@/components/Dialog/dialogOptTable";
 import {
   GetHeader,
   GetSearchData,
@@ -215,7 +215,7 @@ export default {
     Splitpanes,
     Pane,
     DialogTable,
-    dialogOptTable,
+    DialogOptTable,
   },
   data() {
     return {

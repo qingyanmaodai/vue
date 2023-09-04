@@ -49,16 +49,11 @@
       </div>
     </div>
     <!-- 弹框-->
-    <DialogTable
-      title="全局欠料"
-      :tableDialog="colDialogVisible"
-      :sysID="3007"
-      width="80%"
-      @closeDialog="colDialogVisible = false"
-      :searchForm="dialogSearchForm"
-      :isToolbar="false"
-    ></DialogTable>
-    <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="50%">
+    <el-dialog
+      :title="'拆分订单'"
+      :visible.sync="colDialogVisible1"
+      width="50%"
+    >
       <div class="ant-table-title">
         <el-row>
           <el-col :span="4"
@@ -90,6 +85,33 @@
         />
       </div>
     </el-dialog>
+    <!-- 弹框-->
+    <DialogOptTable
+      title="关联工艺"
+      :tableDialog="colDialogVisible2"
+      :sysID="sysID[2]['ID']"
+      :isEdit="isEdit[2]"
+      :remark="2"
+      :Region="Region[2]"
+      width="50%"
+      :hasSelect="hasSelect[2]"
+      @closeDialog="colDialogVisible2 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[2]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :table-data="tableData[2]"
+      :table-header="tableColumns[2]"
+      :table-loading="tableLoading[2]"
+      :table-pagination="tablePagination[2]"
+      :isClear="isClear[2]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
   </div>
 </template>
 
@@ -115,43 +137,27 @@ import {
   ExportData,
   SaveData,
   GetSearch,
-  GetOrgData,
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
+import DialogOptTable from "@/components/Dialog/dialogOptTable";
 export default {
   name: "EKShippingPlanManagement",
   components: {
     ComSearch,
     ComReportTable,
     ComAsideTree,
-    DialogTable,
+    DialogOptTable,
     ComVxeTable,
     ComSpreadTable,
-    ComSpreadTable2,
   },
   data() {
     return {
-      Dialog: false,
       labelStatus1: 0,
       spread: [[], []],
       dialogSearchForm: {
         OrderID: "",
       },
-      colDialogVisible: false,
-      //////////////左侧树节点//////////////
-      LineName: "",
-      OrganizeName: "",
-      clickData: {},
-      treeProps: {
-        label: "OrganizeName",
-        children: "children",
-      },
-      treeListTmp: [],
-      treeListTmp2: [],
-      treeData: [],
-      treeData2: [],
-      autoGenerateColumns: true,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       title2: null,
@@ -166,14 +172,19 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false],
-      isClear: [false, false],
-      hasSelect: [false, false],
+      tableData: [[], [], []],
+      tableColumns: [[], [], []],
+      tableLoading: [false, false, false],
+      isClear: [false, false, false],
+      hasSelect: [false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
       ],
@@ -182,7 +193,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 3007 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -191,8 +202,10 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: false,
-      Region: [6, 6],
+      isEdit: [false, false, false],
+      colDialogVisible1: false,
+      colDialogVisible2: false,
+      Region: [6, 6, 6],
     };
   },
   watch: {},
@@ -221,11 +234,20 @@ export default {
     this.keyDown();
   },
   methods: {
+    //按钮权限
     judgeBtn(routeBtn) {
+      console.log(routeBtn, "routeBtn");
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+            //假如signName为空，则所有表都显示保存按钮而且全部可编辑，假如不为空，则控制哪个表才可以编辑
+            if (!item["signName"] || item["signName"].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item["signName"] && item["signName"].length > 0) {
+              item["signName"].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, "btnForm", routeBtn);
@@ -363,74 +385,40 @@ export default {
         });
       }
     },
-    // 退回
+    // 删除
     async dataDel(remarkTb, index, parms) {
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.$confirm(
-        "确定要退回的【" +
-          this.selectionData[remarkTb].length +
-          "】数据吗，如果已经报工则无法退回？"
-      )
-        .then((_) => {
-          this.selectionData[remarkTb].forEach((x) => {
-            x["ElementDeleteFlag"] = 1;
-          });
-          this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
-        })
-        .catch((_) => {});
-    },
-    updateSAP(remarkTb, index, parms) {
       let res = null;
-      this.getSelectionData();
       let newData = [];
-      if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-
-            newData.push(obj);
-          });
-        }
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
+        return;
       } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
+        if (remarkTb === 0) {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb]
+              .filter((x) => x["DataSource"] !== "业务") // 过滤条件，不包括 "DataSource" 为 "业务" 的对象
+              .map((x) => {
+                x["ElementDeleteFlag"] = 1;
+                return x;
+              })
+          );
 
-          newData.push(obj2);
-        });
-      }
-      this.$confirm(
-        "确定要同步的【" +
-          newData.length +
-          "】数据吗，如果已经同步过则无法再次同步"
-      )
-        .then(async (_) => {
-          this.adminLoading = true;
-
-          let res = await GetSearch(newData, "/APSAPI/UpdateERPInfo");
-          const { result, data, count, msg } = res.data;
-
-          if (result) {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "success",
-              dangerouslyUseHTMLString: true,
-            });
-          } else {
-            this.adminLoading = false;
-            this.$message({
-              message: msg,
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
+          if (newData.length === 0) {
+            this.$message.error("无数据可以删除或无法删除该数据");
+            return;
           }
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ElementDeleteFlag"] = 1;
+              return x;
+            })
+          );
+        }
+      }
+      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
@@ -440,7 +428,7 @@ export default {
         this.$message.error("请选择需要拆单的数据！");
         return;
       }
-      this.Dialog = true;
+      this.colDialogVisible1 = true;
       let targetArray = JSON.parse(
         JSON.stringify(this.selectionData[remarkTb])
       );
@@ -483,7 +471,7 @@ export default {
           this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
           return;
         }
-        this.Dialog = false;
+        this.colDialogVisible1 = false;
         let sheet = this.spread[this.labelStatus1].getActiveSheet();
         const changedIndices = [];
         this.tableData[this.labelStatus1].forEach((element, index) => {
@@ -500,7 +488,6 @@ export default {
         });
 
         this.$nextTick(() => {
-          // sheet.setDataSource(sheet.getDataSource()); // 更新数据源
           sheet.repaint();
         });
         await this.dataSave(this.labelStatus1);
@@ -677,6 +664,19 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
+        // let RoleMapList = this.$store.getters.userInfo.RoleMap;
+        // if (RoleMapList.length) {
+        //   RoleMapList.forEach((item) => {
+        //     if (item.RoleID !== "R2309040001") {
+        //       this.$set(
+        //         this.formSearchs[0]["datas"],
+        //         "SaleMan",
+        //         this.userInfo.Account
+        //       );
+        //     }
+        //   });
+        // }
+
         this.dataSearch(0);
       }
     },
@@ -707,7 +707,9 @@ export default {
           this.$set(this.tableColumns, i, m);
         });
         this.$set(this.tableData, remarkTb, data);
-        this.setData(remarkTb);
+        if (remarkTb === 0 || remarkTb === 1) {
+          this.setData(remarkTb);
+        }
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -1300,98 +1302,6 @@ export default {
         });
       });
     },
-    //////////////////////////////
-    async getOrgData() {
-      this.getLineData(this.userInfo.WorkFlowInstanceID);
-      return;
-    },
-    // 获取线别数据
-    async getLineData(ERPOrderCode) {
-      this.lines = [];
-      let res = await GetSearchData({
-        dicID: 36,
-        OrganizeTypeID: 6,
-        ERPOrderCode: ERPOrderCode,
-      });
-      const { data, forms, result, msg } = res.data;
-      if (result) {
-        let newData = [];
-        this.treeData2 = data;
-        this.treeListTmp2 = data;
-        this.adminLoading = false;
-        if (data.length != 0) {
-          data.forEach((x) => {
-            newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-          });
-        }
-        this.lines = newData;
-        this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        this.checkBoxCellTypeLine.editorValueType(
-          GC.Spread.Sheets.CellTypes.EditorValueType.value
-        );
-        this.checkBoxCellTypeLine.items(newData);
-        this.checkBoxCellTypeLine.itemHeight(24);
-        // this.formSearchs[0].datas.ControlID="202";
-        this.getTableData(this.formSearchs[0].datas, 0);
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    searchTree(msg, dataName, dataName2, valueName) {
-      this[dataName] = [];
-      let treeListTmp = JSON.parse(JSON.stringify(this[dataName2]));
-      let tmp = msg
-        ? this.rebuildData(msg, treeListTmp, valueName)
-        : JSON.parse(JSON.stringify(treeListTmp));
-      this[dataName].push(...tmp);
-    },
-    rebuildData(value, arr, valueName) {
-      if (!arr) {
-        return [];
-      }
-      let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
-        arr.forEach((element) => {
-          if (element[valueName].indexOf(value) > -1) {
-            // const ab = this.rebuildData(value, element.children);
-            const obj = {
-              ...element,
-              children: element.children,
-            };
-            newarr.push(obj);
-          } else {
-            if (element.children && element.children.length > 0) {
-              const ab = this.rebuildData(value, element.children, valueName);
-              const obj = {
-                ...element,
-                children: ab,
-              };
-              if (ab && ab.length > 0) {
-                newarr.push(obj);
-              }
-            }
-          }
-        });
-      }
-      return newarr;
-    },
-    // 单击出来组织人员
-    handleNodeClick(data, node) {
-      this.clickData = data;
-      // this.formSearchs[0].datas["ControlID"] = data.ERPOrderCode;
-      //this.dataSearch(0);
-      this.getLineData(data.OrganizeID);
-    },
-    // 单击出来线别
-    handleNodeClick2(data, node) {
-      this.$set(this.formSearchs[0].datas, "LineID", data.OrganizeID);
-      this.dataSearch(0);
-    },
     changeStatus(item, index) {
       this.labelStatus1 = index;
     },
@@ -1399,105 +1309,32 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-    // 保存日计划
-    async dataSaveDay() {
-      let sheet = this.spread[this.labelStatus1].getActiveSheet();
-      if (sheet.isEditing()) {
-        sheet.endEdit();
-      }
-      let newData = sheet.getDirtyRows();
-      let submitData = [];
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          submitData.push(x.item);
-        });
-      }
-      newData = sheet.getInsertRows();
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          x.item["dicID"] = this.sysID[this.labelStatus1]["ID"];
-          submitData.push(x.item);
-        });
-      }
-      if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据！");
+    //指定人员
+    async DesignatedPerson(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请选择需要操作的数据！");
         return;
       }
-
-      this.adminLoading = true;
-      let res = await SaveMOPlanStep4(submitData);
-      const { result, data, count, msg } = res.data;
-      if (result) {
-        this.dataSearch(0);
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
+      this.colDialogVisible2 = true;
+      this.dataSearch(2);
     },
-    async suspend(remarkTb, index, parms) {
-      let res = null;
-      this.getSelectionData();
-      let newData = [];
-
-      this.$confirm(
-        "确定要暂停【" + this[parms.dataName][remarkTb].length + "】数据吗？"
-      )
-        .then((_) => {
-          if (parms && parms.dataName) {
-            if (this[parms.dataName][remarkTb].length == 0) {
-              this.$message.error("请选择需要操作的数据！");
-              return;
-            } else {
-              this[parms.dataName][remarkTb].forEach((x) => {
-                let obj = x;
-                obj["ProductionStatus"] = 24;
-                newData.push(obj);
-              });
-            }
-          } else {
-            this.tableData[remarkTb].forEach((y) => {
-              let obj2 = y;
-              obj["ProductionStatus"] = 24;
-              newData.push(obj2);
-            });
-          }
-          this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
-    },
-
-    // 下拉选择事件
-    handleCommand(val) {
-      if (val == 1 && !this.isOpen) {
-        this.isOpen = true;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      } else if (val == 2 && this.isOpen) {
-        // 改变每个节点的状态
-        this.isOpen = false;
-        this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-      }
-    },
-    // 改变节点状态
-    changeTreeNodeStatus(node) {
-      node.expanded = this.isOpen;
-      for (let i = 0; i < node.childNodes.length; i++) {
-        // 改变节点的自身expanded状态
-        node.childNodes[i].expanded = this.isOpen;
-        // 遍历子节点
-        if (node.childNodes[i].childNodes.length > 0) {
-          this.changeTreeNodeStatus(node.childNodes[i]);
+    //添加产品机台
+    async confirmDialog(remarkTb) {
+      if (remarkTb === 2) {
+        if (this.selectionData[remarkTb].length !== 1) {
+          this.$message.error("请选择某位业务员");
+          return;
         }
+        let newData;
+
+        newData = _.cloneDeep(
+          this.selectionData[0].map((item) => {
+            item.SaleMan = this.selectionData[2][0]["Account"];
+            return item;
+          })
+        );
+        await this.dataSave(0, null, null, newData);
+        this.colDialogVisible2 = false;
       }
     },
   },
