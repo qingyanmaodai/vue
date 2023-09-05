@@ -265,7 +265,7 @@ export default {
         { label: "数量+时间+线体+托盘", value: "" },
         { label: "综合分析", value: "" },
         { label: "全部", value: 1 },
-        { label: "业务订单分析", value: 1 },
+        // { label: "业务订单分析", value: 1 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,

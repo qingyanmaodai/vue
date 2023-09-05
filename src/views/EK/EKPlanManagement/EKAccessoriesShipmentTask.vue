@@ -19,35 +19,35 @@
         />
       </div>
     </div>
-    <div class="admin_content pd-0-6">
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="8"
-            ><span class="title">{{ title }}</span>
-          </el-col>
-        </el-row>
-      </div>
+    <div class="ant-table-title pd-0-6">
+      <el-row>
+        <el-col :span="8"
+          ><span class="title">{{ title }}</span>
+        </el-col>
+      </el-row>
     </div>
-    <div
-      class="admin_content flex_grow"
-      v-for="item in [0]"
-      :key="item"
-      v-show="labelStatus1 === item"
-    >
-      <ComSpreadTable
-        ref="spreadsheetRef"
-        :height="height"
-        :tableData="tableData[item]"
-        :tableColumns="tableColumns[item]"
-        :tableLoading="tableLoading[item]"
-        :remark="item"
-        :sysID="sysID[item]['ID']"
-        :pagination="tablePagination[item]"
-        @pageChange="pageChange"
-        @pageSize="pageSize"
-        @workbookInitialized="workbookInitialized"
-        @selectChanged="selectChanged"
-      />
+    <div class="admin_content flex_grow">
+      <div
+        class="flex_column"
+        v-for="item in [0]"
+        :key="item"
+        v-show="labelStatus1 === item"
+      >
+        <ComSpreadTable
+          ref="spreadsheetRef"
+          :height="height"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
+      </div>
     </div>
     <!-- 弹框-->
     <el-dialog
@@ -129,6 +129,7 @@ import ComSearch from "@/components/ComSearch";
 import ComReportTable from "@/components/ComReportTable";
 import ComAsideTree from "@/components/ComAsideTree";
 import ComSpreadTable from "@/components/ComSpreadTable";
+import ComSpreadTable2 from "@/components/ComSpreadTable";
 import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
@@ -142,7 +143,7 @@ import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 import DialogOptTable from "@/components/Dialog/dialogOptTable";
 export default {
-  name: "EKShippingPlanManagement",
+  name: "EKAccessoriesShipmentTask",
   components: {
     ComSearch,
     ComReportTable,
@@ -193,7 +194,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }],
+      sysID: [{ ID: 11184 }, { ID: 10108 }, { ID: 7833 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -387,34 +388,16 @@ export default {
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
-      let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        if (remarkTb === 0) {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb]
-              .filter((x) => x["DataSource"] !== "业务") // 过滤条件，不包括 "DataSource" 为 "业务" 的对象
-              .map((x) => {
-                x["ElementDeleteFlag"] = 1;
-                return x;
-              })
-          );
-
-          if (newData.length === 0) {
-            this.$message.error("无数据可以删除或无法删除该数据");
-            return;
-          }
-        } else {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x["ElementDeleteFlag"] = 1;
-              return x;
-            })
-          );
-        }
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj["ElementDeleteFlag"] = 1;
+          })
+        );
       }
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
         .then((_) => {
@@ -422,151 +405,22 @@ export default {
         })
         .catch((_) => {});
     },
-    // 拆单
-    splitOrder(remarkTb) {
-      if (this.selectionData[remarkTb].length === 0) {
-        this.$message.error("请选择需要拆单的数据！");
+    // 退回
+    async backData(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error("请单击需要操作的数据！");
         return;
-      }
-      this.colDialogVisible1 = true;
-      let targetArray = JSON.parse(
-        JSON.stringify(this.selectionData[remarkTb])
-      );
-
-      this.tableColumns[1] = this.tableColumns[1].filter(
-        (item) => item.prop == "PlanQty"
-      );
-      this.tableColumns[1].push({
-        label: "拆单数",
-        prop: "SQty",
-      });
-      this.tableColumns[1].forEach((item) => {
-        item["width"] = 250;
-        if (item.label === "拆单数") {
-          item["isEdit"] = true;
-        } else {
-          item["isEdit"] = false;
-        }
-      });
-      this.$nextTick(() => {
-        this.$set(this.tableData, 1, targetArray);
-        this.setData(1);
-      });
-    },
-    // 拆单
-    async changeEvent(val) {
-      if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          (item) => !item["SQty"]
+      } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj["ElementDeleteFlag"] = 1;
+          })
         );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
-        }
-
-        const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item["SQty"] > item["PlanQty"];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.colDialogVisible1 = false;
-        let sheet = this.spread[this.labelStatus1].getActiveSheet();
-        const changedIndices = [];
-        this.tableData[this.labelStatus1].forEach((element, index) => {
-          if (element["isChecked"]) {
-            changedIndices.push(index);
-          }
-        });
-        //每增加一行，需要插入新的一行，后面一行比前面一行多1
-        const arr = changedIndices.map((num, index) => num + index);
-        //处理脏数据
-        arr.forEach((item) => {
-          this.copyRowFormat(item, sheet);
-          console.log(item, "item");
-        });
-
-        this.$nextTick(() => {
-          sheet.repaint();
-        });
-        await this.dataSave(this.labelStatus1);
       }
-    },
-    //在该行数据下面增加新的一行
-    copyRowFormat(rowNumber, sheet) {
-      sheet.addRows(rowNumber + 1, 1);
-      sheet.copyTo(
-        rowNumber,
-        -1,
-        rowNumber + 1,
-        -1,
-        1,
-        -1,
-        GC.Spread.Sheets.CopyToOptions.all
-      );
-      let newRowIndex = rowNumber + 1;
-      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
-        JSON.stringify(oldData)
-      );
-      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
-      let SQtyObj = this.selectionData[1].find(
-        (item) => item["RowNumber"] === oldData["RowNumber"]
-      );
-      //去掉dy前面的值
-      // const objKeys = Object.keys(newData);
-      // objKeys.forEach((key) => {
-      //   if (key.endsWith("dy")) {
-      //     newData[key.replace(/dy$/, "")] = null;
-      //   }
-      // });
-      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
-      newData["SourceID"] = oldData["ID"]; // 将 SourceDetailPlanID 值设置为 null
-      newData["ID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
-      newData["PlanQty"] = SQtyObj["SQty"];
-      newData["DataSource"] = "拆单";
-    },
-    resetScheduling() {
-      this.$confirm("确定要重新排全部数据吗？")
-        .then(async (_) => {
-          this.adminLoading = true;
-
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
-          let submitData = sheet.getDataSource();
-          submitData.forEach((m) => {
-            m["isChecked"] = true;
-          });
-          if (submitData.length >= 0) {
-            this.adminLoading = true;
-            let res = await GetSearch(
-              submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
-            );
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.dataSearch(0);
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "success",
-                dangerouslyUseHTMLString: true,
-              });
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: "error",
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } else {
-            this.$message({
-              message: "未有数据",
-              type: "error",
-              dangerouslyUseHTMLString: true,
-            });
-          }
+      this.$confirm("确定要退回的【" + newData.length + "】数据吗？")
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
@@ -1085,8 +939,7 @@ export default {
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-
-        _this.computedNum(args.row, args.col, args.editingText);
+        // _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
         // }
@@ -1136,161 +989,6 @@ export default {
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
     },
-    bindComboBoxToCell(sheet, row, col, dataSourceName) {
-      // 获取要绑定下拉菜单的单元格对象
-      let cell = sheet.getCell(row, col);
-
-      // 创建下拉菜单单元格类型，并设置其选项数据
-      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-      comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
-      );
-      comboBox.editable(true);
-      // 获取下拉菜单的选项数据
-
-      comboBox.items(dataSourceName);
-      comboBox.itemHeight(24);
-
-      // 将下拉菜单单元格类型绑定到指定的单元格中
-      cell.cellType(comboBox);
-    },
-    // 自动计算数量
-    computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread[this.labelStatus1].getActiveSheet();
-      let dataSource = sheet.getDataSource();
-      if (val == null) {
-        val = 0;
-      } else if (val == 0) {
-        //输入0不触发自动计算
-        return;
-      }
-      let currentRow = dataSource[rowIndex];
-      if (currentRow.ID == -1) {
-        return false;
-      }
-      let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
-      if (!currentRow[currentlabel]) {
-        //不是天日的数量
-        currentlabel = this.tableColumns[0][colIndex].prop;
-        // if (currentlabel == "ViewSort") {
-        //   val = currentRow[currentlabel];
-        //   if (val) {
-        //     let newRowindex = 1;
-        //     let flag = false;
-        //     let lineID = currentRow["LineID"];
-        //     //循环上面
-        //     for (var r = 0; r < dataSource.length - 1; r++) {
-        //       let row = dataSource[r];
-        //       if (lineID != row["LineID"]) {
-        //         continue;
-        //       }
-        //       let thisValue = newRowindex; //row[currentlabel];
-        //       if (row["Code"] == null || row["Code"] == "") {
-        //         break;
-        //       }
-        //       if (r < rowIndex) {
-        //         //当前循环的在当前操作行的上面
-        //         if (thisValue >= val && flag === false) {
-        //           newRowindex = val + 1;
-        //           flag = true;
-        //         }
-
-        //         thisValue = newRowindex;
-        //         newRowindex++;
-        //       } else if (r > rowIndex) {
-        //         //当前循环的在当前操作行的下面
-        //         if (newRowindex == val) {
-        //           newRowindex++;
-        //         }
-
-        //         thisValue = newRowindex;
-        //         newRowindex++;
-        //       } else {
-        //         thisValue = val;
-        //       }
-        //       sheet.setValue(r, colIndex, thisValue);
-        //     }
-        //   }
-        // } else {
-        // }
-        sheet.setDataSource(this.tableData[this.labelStatus1]);
-        return;
-      }
-      if (
-        !currentRow[currentlabel].TotalHours ||
-        parseInt(currentRow[currentlabel].TotalHours) <= 0
-      ) {
-        this.$message.error("该天休息，上班时间为0");
-
-        sheet.setValue(rowIndex, colIndex, "");
-
-        return;
-      }
-
-      let Qty = parseInt(currentRow.OweQty);
-      let Capacity = parseInt(currentRow.Capacity);
-      if (!Capacity) {
-        this.$message.error("该单据没有产能");
-        return;
-      }
-      let list = [];
-      let editNum = 0;
-      let remainNum = 0;
-      // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
-      this.tableColumns[0].some((x, i) => {
-        if (i <= colIndex) {
-          list.push(currentRow[x.prop]);
-          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-            editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
-          }
-        } else {
-          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
-            list.push("");
-          } else {
-            list.push(currentRow[x.prop]);
-          }
-        }
-      });
-      remainNum = Qty - editNum;
-
-      if (parseInt(val) > remainNum) {
-        this.$message.error(
-          "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
-        );
-        list[colIndex] = "";
-        for (var j = 0; j < this.tableColumns[0].length; j++) {
-          sheet.setArray(rowIndex, j, [list[j]]);
-        }
-        return;
-      } else {
-        // 接着计算下面每一个空格该有的数
-        for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
-          if (this.tableColumns[0][j]["prop2"]) {
-            let label = this.tableColumns[0][j].prop + "dy";
-            let obj = currentRow[label];
-            remainNum = remainNum - parseInt(val);
-            let maxNum =
-              (Capacity * obj.TotalHours * obj.DayCapacity) /
-              currentRow.StandardPeoples;
-            maxNum = parseInt(maxNum);
-            if (remainNum <= 0) {
-              list[j] = null;
-            } else {
-              if (remainNum <= maxNum) {
-                list[j] = remainNum;
-                break;
-              } else {
-                list[j] = maxNum;
-                remainNum -= maxNum;
-              }
-            }
-          }
-        }
-        for (var j = 0; j < this.tableColumns[0].length; j++) {
-          sheet.setArray(rowIndex, j, [list[j]]);
-        }
-      }
-    },
     // 刷新页面
     refrshPage() {
       this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
@@ -1308,15 +1006,6 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-    },
-    //指定人员
-    async DesignatedPerson(remarkTb) {
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
-        return;
-      }
-      this.colDialogVisible2 = true;
-      this.dataSearch(2);
     },
     //添加产品机台
     async confirmDialog(remarkTb) {
