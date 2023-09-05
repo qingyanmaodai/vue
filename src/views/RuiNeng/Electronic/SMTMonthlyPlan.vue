@@ -87,7 +87,7 @@
       </div>
     </el-dialog> -->
     <!-- 弹框-->
-    <DialogTable
+    <!-- <DialogTable
       title="全局欠料"
       :tableDialog="colDialogVisible"
       :sysID="5165"
@@ -95,7 +95,34 @@
       @closeDialog="colDialogVisible = false"
       :searchForm="dialogSearchForm"
       :isToolbar="false"
-    ></DialogTable>
+    ></DialogTable> -->
+    <!-- 弹框-->
+    <DialogOptTable
+      title="新增排程"
+      :tableDialog="colDialogVisible1"
+      :sysID="sysID[1]['ID']"
+      :isEdit="isEdit[1]"
+      :remark="1"
+      :Region="Region[1]"
+      width="80%"
+      :hasSelect="hasSelect[1]"
+      @closeDialog="colDialogVisible1 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[1]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :table-data="tableData[1]"
+      :table-header="tableColumns[1]"
+      :table-loading="tableLoading[1]"
+      :table-pagination="tablePagination[1]"
+      :isClear="isClear[1]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
   </div>
 </template>
 
@@ -125,6 +152,7 @@ import {
 } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
+import DialogOptTable from "@/components/Dialog/dialogOptTable";
 export default {
   name: "SMTMonthlyPlan",
   components: {
@@ -132,6 +160,7 @@ export default {
     ComReportTable,
     ComAsideTree,
     DialogTable,
+    DialogOptTable,
     ComVxeTable,
     ComSpreadTable,
     ComSpreadTable2,
@@ -144,7 +173,7 @@ export default {
       dialogSearchForm: {
         OrderID: "",
       },
-      colDialogVisible: false,
+      colDialogVisible1: false,
       //////////////左侧树节点//////////////
       LineName: "",
       OrganizeName: "",
@@ -189,11 +218,13 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 7956 }],
+      sysID: [{ ID: 7956 }, { ID: 5646 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
       selectionData: [[], []],
+      Region: [6, 6],
+      hasSelect: [false, false],
       NoWorkHour: [],
       LineViewSort: [],
       sheetSelectRows: [],
@@ -560,6 +591,8 @@ export default {
           m.some((n, index) => {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -624,7 +657,9 @@ export default {
           this.$set(this.tableColumns, i, m);
         });
         this.$set(this.tableData, remarkTb, data);
-        this.setData(remarkTb);
+        if (remarkTb === 0) {
+          this.setData(remarkTb);
+        }
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
         this.$message({
@@ -1397,6 +1432,49 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
+      }
+    },
+    // 新增排程
+    addSchedule() {
+      this.dataSearch(1);
+      this.colDialogVisible1 = true;
+    },
+    // 确定添加这些排程进来
+    async confirmDialog(remarkTb) {
+      let newData = [];
+      if (remarkTb === 1) {
+        if (this.selectionData[remarkTb].length == 0) {
+          this.$message.error("未选择数据！");
+          this.colDialogVisible1 = true;
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              return x;
+            })
+          );
+          let res = await GetSearch(newData, `/APSAPI/InsertIntoPCBByOrderID`);
+          const { result, msg } = res.data;
+
+          if (result) {
+            this.adminLoading = false;
+            this.dataSearch(0);
+            this.selectionData[1] = [];
+            this.$message({
+              message: msg,
+              type: "success",
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: "error",
+              dangerouslyUseHTMLString: true,
+              duration: 8000,
+            });
+          }
+          this.colDialogVisible1 = false;
+        }
       }
     },
     async suspend(remarkTb, index, parms) {

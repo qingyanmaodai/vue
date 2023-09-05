@@ -14,6 +14,7 @@
                 :isLoading="isLoading"
                 :btnForm="btnForm"
                 :signName="i"
+                :Region="Region[i]"
                 @btnClick="btnClick"
               />
             </div>
@@ -313,6 +314,7 @@ export default {
       tableColumns: [[], [], [], [], [], [], [], []],
       tableLoading: [false, false, false, false, false, false, false, false],
       isClear: [false, false, false, false, false, false, false, false],
+      Region: [5, 5, 5, 5, 5, 5, 5, 5],
       tablePagination: [
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -762,6 +764,7 @@ export default {
           m.some((n, index) => {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
@@ -805,7 +808,11 @@ export default {
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        if (this.labelStatus1 === 3 || this.labelStatus1 === 5) {
+        if (
+          this.labelStatus1 === 3 ||
+          this.labelStatus1 === 5 ||
+          remarkTb === 7
+        ) {
           this.setData(remarkTb);
         }
       } else {
