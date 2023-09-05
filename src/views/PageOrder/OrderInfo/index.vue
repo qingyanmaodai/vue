@@ -143,9 +143,7 @@ export default {
       ProcessGroupID: "",
       Status1: [
         { label: "全部", value: "" },
-        { label: "已下达", value: 21 },
-        { label: "生产中", value: 22 },
-        { label: "已排产", value: 23 },
+        { label: "生产中", value: [21, 22, 23] },
         { label: "暂停", value: 24 },
         { label: "待排产", value: 26 },
         { label: "已完成", value: 25 },
