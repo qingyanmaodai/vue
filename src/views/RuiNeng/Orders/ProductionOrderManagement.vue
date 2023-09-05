@@ -328,6 +328,7 @@ export default {
   },
   computed: {},
   created() {
+    this.adminLoading = true;
     _this = this;
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
