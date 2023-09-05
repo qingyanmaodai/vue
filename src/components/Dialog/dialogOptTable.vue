@@ -136,21 +136,21 @@ export default {
     //表格id
     sysID: {
       type: Number,
-      dafault: 1,
+      default: 1,
     },
     //清除选框
     isClear: {
       type: Boolean,
-      dafault: false,
+      default: false,
     },
     //remark
     remark: {
       type: Number,
-      dafault: 0,
+      default: 0,
     },
     Region: {
       type: Number,
-      dafault: 3,
+      default: 3,
     },
     //表格高度
     height: {

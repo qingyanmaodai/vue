@@ -142,7 +142,7 @@ import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 import DialogOptTable from "@/components/Dialog/dialogOptTable";
 export default {
-  name: "EKShippingPlanManagement",
+  name: "EKAccessoriesOrderList",
   components: {
     ComSearch,
     ComReportTable,
