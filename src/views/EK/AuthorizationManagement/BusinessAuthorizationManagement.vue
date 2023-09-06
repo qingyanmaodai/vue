@@ -152,7 +152,7 @@
     </splitpanes>
     <!-- 弹框-->
     <DialogOptTable
-      title="新增产品族关联产品"
+      title="关联用户"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
@@ -206,7 +206,7 @@
 
     <ComFormDialog
       ref="processForm"
-      :title="'新增工序'"
+      :title="'复制'"
       :dialogShow="processDialog1"
       :formData="formData1"
       :formRules="formRules1"
@@ -231,6 +231,7 @@ import {
   ExportData,
   SaveData,
   GetServerTime,
+  GetSearch,
 } from "@/api/Common";
 export default {
   name: "BusinessAuthorizationManagement",
@@ -260,43 +261,16 @@ export default {
         dicID: 1182,
       },
       formRules1: {
-        ProcessGroupName: [
-          { required: true, message: "工序名称为必填项", trigger: "blur" },
-        ],
         SchedulingType: [
           { required: true, message: "排产方式为必填项", trigger: "change" },
         ],
       },
       formController1: [
-        { label: "工序名称", prop: "ProcessName", type: "input" },
         {
-          label: "排产方式",
+          label: "用户",
           prop: "SchedulingType",
           type: "select",
-          select: [
-            { label: "产线", value: "产线" },
-            { label: "机台", value: "机台" },
-            { label: "机模", value: "机模" },
-          ],
-        },
-        {
-          label: "是否排产",
-          prop: "IsScheduling",
-          type: "switch",
-        },
-        {
-          label: "是否采集",
-          prop: "IsAcquisition",
-          type: "switch",
-        },
-        {
-          label: "状态",
-          prop: "Status",
-          type: "radioGroupLabel",
-          radioGroups: [
-            { label: "启用", value: 1 },
-            { label: "禁用", value: 0 },
-          ],
+          select: [],
         },
       ],
       formSearchs: [
@@ -307,9 +281,7 @@ export default {
           formsAll: [],
         },
         {
-          datas: {
-            IsConfig: 1,
-          },
+          datas: {},
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -759,6 +731,35 @@ export default {
         this.dataSearch(2);
       }
     },
+    async Copy(remarkTb) {
+      if (remarkTb == 0) {
+        if (!this.clickRow) {
+          this.$message.error("请点击需要复制的数据！");
+          return;
+        }
+        let res = await GetSearchData({
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+          formsAll: [],
+          pageIndex: 1,
+          pageSize: 0,
+          dicID: 7833,
+        });
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.formController1[0]["select"] = data.map((item) => ({
+            label: item.Name,
+            value: item.Account,
+          }));
+          this.processDialog1 = true;
+        }
+
+        return;
+        this.colDialogVisible2 = true;
+        this.dataSearch(2);
+      }
+    },
     AddEvent(index) {
       if (!this.clickRow) {
         this.$message.error("请点击需要绑定的数据！");
@@ -792,23 +793,43 @@ export default {
     // 工序弹框确定添加
     async dialogBtnClick1(val) {
       if (val) {
-        let res = await SaveData([this.formData1]);
+        // if (this.formData1["SchedulingType"] === this.clickRow["Account"]) {
+        //   this.$message.error("请选择不同的用户！");
+        // }
+        let res = await GetSearchData({
+          ...this.formSearchs[1]["datas"],
+          pageIndex: 1,
+          pageSize: 0,
+        });
         const { result, data, count, msg } = res.data;
+        let newData = [];
         if (result) {
-          this.$message({
-            message: msg,
-            type: "success",
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(2);
-        } else {
-          this.$message({
-            message: msg,
-            type: "error",
-            dangerouslyUseHTMLString: true,
-          });
+          newData = _.cloneDeep(
+            data.map((item) => {
+              item["SaleMan"] = this.formData1["SchedulingType"];
+              return item;
+            })
+          );
         }
+        console.log(newData, "newData");
+        await this.dataSave(1, null, null, newData);
         this.processDialog1 = false;
+        // let res = await SaveData([this.formData1]);
+        // const { result, data, count, msg } = res.data;
+        // if (result) {
+        //   this.$message({
+        //     message: msg,
+        //     type: "success",
+        //     dangerouslyUseHTMLString: true,
+        //   });
+        //   this.dataSearch(2);
+        // } else {
+        //   this.$message({
+        //     message: msg,
+        //     type: "error",
+        //     dangerouslyUseHTMLString: true,
+        //   });
+        // }
       } else {
         _this.$refs.processForm.$refs.formData.resetFields();
         _this.processDialog1 = false;

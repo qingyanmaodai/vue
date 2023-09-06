@@ -251,7 +251,11 @@ export default {
     let RoleMapList = this.$store.getters.userInfo.RoleMap;
     if (RoleMapList.length) {
       RoleMapList.forEach((item) => {
-        if (item.RoleID === "R2305080001" || item.RoleID === "R2306050001") {
+        if (
+          item.RoleID === "R2305080001" ||
+          item.RoleID === "R2306050001" ||
+          item.RoleID === "R2309060001"
+        ) {
           //业务经理
           this.RoleMapStatus = true;
           return;
