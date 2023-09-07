@@ -11,6 +11,7 @@
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="labelStatus1"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -198,6 +199,8 @@ export default {
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
+      hasSelect: [false],
+      Region: [6],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
@@ -424,6 +427,8 @@ export default {
           m.some((n, index) => {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);

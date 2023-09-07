@@ -11,6 +11,7 @@
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="labelStatus1"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -109,6 +110,8 @@ export default {
       tableColumns: [[]],
       tableLoading: [false],
       isClear: [false],
+      hasSelect: [false],
+      Region: [6],
       tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
       height: "707px",
       showPagination: true,
@@ -273,13 +276,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
         });

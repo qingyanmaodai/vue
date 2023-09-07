@@ -35,6 +35,7 @@
                 :isLoading="isLoading"
                 :btnForm="btnForm"
                 :signName="labelStatus1"
+                :Region="Region[i]"
                 @btnClick="btnClick"
               />
             </div>
@@ -205,7 +206,6 @@ export default {
       PODeliveryDate: "",
       CurrentSendQty: "",
       isLoading: false,
-      hasSelect: [true, true, true, true, true],
       footerLabel: [""],
       dialogShow: false,
       EditDisabled: false,
@@ -262,6 +262,8 @@ export default {
       tableColumns: [[], [], [], [], []],
       tableLoading: [false, false, false, false, false],
       isClear: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
+      Region: [5, 5, 5, 5, 5],
       tablePagination: [
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
@@ -714,6 +716,8 @@ export default {
           m.some((n, index) => {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);

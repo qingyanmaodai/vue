@@ -99,7 +99,7 @@
                   <span
                     @click="changeStatus2(item, y)"
                     :class="
-                      labelStatus2 == y ? 'statusActive cursor' : 'cursor'
+                      labelStatus2 == y + 1 ? 'statusActive cursor' : 'cursor'
                     "
                     >{{ item.label }}</span
                   >

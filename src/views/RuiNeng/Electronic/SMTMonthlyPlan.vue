@@ -11,6 +11,7 @@
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>

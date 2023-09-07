@@ -9,6 +9,7 @@
           :remark="0"
           :isLoading="isLoading[0]"
           :btnForm="btnForm[0]"
+          :Region="Region[0]"
           @btnClick="btnClick"
         />
       </div>
@@ -100,7 +101,7 @@
                   <span
                     @click="changeStatus2(item, y)"
                     :class="
-                      labelStatus2 == y ? 'statusActive cursor' : 'cursor'
+                      labelStatus2 == y + 1 ? 'statusActive cursor' : 'cursor'
                     "
                     >{{ item.label }}</span
                   >
@@ -147,6 +148,7 @@
                       :remark="4"
                       :isLoading="isLoading[4]"
                       :btnForm="btnForm[4]"
+                      :Region="Region[4]"
                       @btnClick="btnClick"
                     />
                   </div>
@@ -180,6 +182,7 @@
                 :remark="2"
                 :isLoading="isLoading[2]"
                 :btnForm="btnForm[2]"
+                :Region="Region[2]"
                 @btnClick="btnClick"
               />
             </div>
@@ -210,6 +213,7 @@
                 :remark="3"
                 :isLoading="isLoading[3]"
                 :btnForm="btnForm[3]"
+                :Region="Region[3]"
                 @btnClick="btnClick"
               />
             </div>
@@ -393,6 +397,8 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
+      Region: [5, 5, 5, 5, 1],
       isEdit: false,
       Status1: [
         { label: "全部", value: "" },
@@ -814,13 +820,18 @@ export default {
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
               n.children.forEach((x) => {
                 this.verifyDta(x);
               });
+            }
+            if (index === 1) {
+              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
