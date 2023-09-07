@@ -89,38 +89,6 @@
         @selectChanged="selectChanged"
       />
     </div>
-    <!-- <el-dialog :title="'拆分订单'" :visible.sync="Dialog" width="70%">
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="4"
-            ><span class="title">拆分编辑完请保存 </span></el-col
-          >
-          <el-col :span="24" class="flex_flex_end"
-            ><el-divider direction="vertical"></el-divider>
-            <el-button type="primary" size="mini" @click="changeEvent(1)">
-              确定拆分
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-for="item in [1]" :key="item">
-        <ComSpreadTable2
-          ref="spreadsheetRef"
-          :height="height"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
-          :spaceBtnShow="false"
-        />
-      </div>
-    </el-dialog> -->
     <!-- 弹框-->
     <DialogTable
       title="全局欠料"
@@ -145,20 +113,10 @@ import { mapState } from "vuex";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
 import ComBatchEdit from "@/components/ComBatchEdit";
-import ComReportTable from "@/components/ComReportTable";
-import ComAsideTree from "@/components/ComAsideTree";
 import ComSpreadTable from "@/components/ComSpreadTable";
-import ComSpreadTable2 from "@/components/ComSpreadTable";
 import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
-import {
-  GetHeader,
-  GetSearchData,
-  ExportData,
-  SaveData,
-  GetSearch,
-  GetOrgData,
-} from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
@@ -166,12 +124,9 @@ export default {
   components: {
     ComSearch,
     ComBatchEdit,
-    ComReportTable,
-    ComAsideTree,
     DialogTable,
     ComVxeTable,
     ComSpreadTable,
-    ComSpreadTable2,
   },
   data() {
     return {

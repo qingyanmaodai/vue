@@ -143,7 +143,6 @@
           :hasSelect="true"
           :cellStyle="cellStyle"
           :sysID="sysID[1].ID"
-          :checCheckboxkMethod="checCheckboxkMethod"
           :isClear="isClear[1]"
           @pageChange="pageChange"
           @pageSize="pageSize"
@@ -682,15 +681,6 @@ export default {
       //   this.realySubmitChildren(data);
       // } else {
       // }
-    },
-    // 控制选框是否能手动勾选
-    checCheckboxkMethod({ row }) {
-      if (row.ShortQty == 0 && row.InspectStatus == 2) {
-        this.$set(row, "Disabled", true);
-        return false;
-      } else {
-        return true;
-      }
     },
     // 行内样式
     cellStyle0({ row, column }) {

@@ -14,6 +14,7 @@
               :btnForm="btnForm"
               @btnClick="btnClick"
               :signName="labelStatus1"
+              :Region="Region[0]"
             />
           </div>
           <div class="admin_content">
@@ -32,7 +33,7 @@
               :rowKey="'RowNumber'"
               height="100%"
               :isToolbar="false"
-              :hasSelect="true"
+              :hasSelect="hasSelect[0]"
               :isEdit="true"
               :tableData="tableData[0]"
               :tableHeader="tableColumns[0]"
@@ -64,6 +65,7 @@
               :btnForm="btnForm"
               @btnClick="btnClick"
               :signName="labelStatus1"
+              :Region="Region[1]"
             />
           </div>
           <div class="admin_content">
@@ -73,7 +75,7 @@
                   ><span class="title">各科室每天开拉情况</span></el-col
                 >
                 <el-col :span="20" class="flex_flex_end">
-                  <el-select
+                  <!-- <el-select
                     clearable
                     filterable
                     size="small"
@@ -98,7 +100,17 @@
                   <el-divider direction="vertical"></el-divider>
                   <el-button type="primary" size="mini" @click="changeProp(1)">
                     批量修改
-                  </el-button>
+                  </el-button> -->
+
+                  <div v-for="i in [1]" :key="'Edit' + i" style="height: 100%">
+                    <ComBatchEdit
+                      :OrderNos="OrderNos[1]"
+                      @changeProp="changeProp"
+                      :OrderNo="'Peoples'"
+                      :remark="1"
+                    />
+                  </div>
+
                   <el-divider direction="vertical"></el-divider>
                 </el-col>
               </el-row>
@@ -115,10 +127,9 @@
               :tableHeader="tableColumns[1]"
               :tableLoading="tableLoading[1]"
               :remark="1"
-              :hasSelect="true"
+              :hasSelect="hasSelect[1]"
               :cellStyle="cellStyle"
               :sysID="sysID[1].ID"
-              :checCheckboxkMethod="checCheckboxkMethod"
               :isClear="isClear[1]"
               @pageChange="pageChange"
               @pageSize="pageSize"
@@ -141,6 +152,7 @@ import "splitpanes/dist/splitpanes.css";
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
+import ComBatchEdit from "@/components/ComBatchEdit";
 import {
   GetHeader,
   GetSearchData,
@@ -154,6 +166,7 @@ export default {
     ComSearch,
     ComVxeTable,
     ComReportTable,
+    ComBatchEdit,
     Splitpanes,
     Pane,
   },
@@ -205,6 +218,8 @@ export default {
       tableColumns: [[], [], [], []],
       tableLoading: [false, false, false, false],
       isClear: [false, false, false, false],
+      hasSelect: [false, false, false, false],
+      Region: [6, 6, 6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
@@ -221,7 +236,7 @@ export default {
       warehouseValue: "",
       OrderNo: "",
       OrderNoValue: "",
-      OrderNos: [],
+      OrderNos: [[], []],
       Status1: [
         { label: "待确认", value: "未开始" },
         { label: "已完成", value: "已完成" },
@@ -269,50 +284,6 @@ export default {
         });
       this.$set(this, "btnForm", routeBtn);
     },
-    // 获取所有仓库
-    // async getWarehosueData() {
-    //   let form = {};
-    //   form["dicID"] = 80;
-    //   form["rows"] = 0;
-    //   let res = await GetSearchData(form);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     this.warehouses = data;
-    //   } else {
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true
-    //     });
-    //   }
-    // },
-    // 高度控制
-    // setHeight() {
-    //   let headHeight =
-    //     this.$refs.content_up.offsetHeight + this.$refs.content_up.offsetTop;
-    //   let headRef_2 = this.$refs.headRef_2.offsetHeight;
-    //   let rem =
-    //     document.documentElement.offsetHeight - headHeight - headRef_2 - 65;
-    //   this.rem = rem;
-    //   let newHeight = rem + "px";
-    //   this.$set(this, "height", newHeight);
-    // },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      let rem2 =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight2 = rem2 + "px";
-      // this.$set(this, "height", newHeight);
-      // this.$set(this, "height2", newHeight2);
-    },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], "pageIndex", val);
@@ -357,13 +328,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -394,7 +365,6 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      // console.log(this.tableData[0]);
       const $table = this.$refs[`tableRef${remarkTb}`].$refs.vxeTable;
       // 获取修改记录
       let updateRecords = [];
@@ -446,20 +416,16 @@ export default {
           m.some((n, index) => {
             if (index === 1) {
               this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.hasSelect[i] = n["IsSelect"];
+              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
-          this.$set(this.OrderNos, i, m);
-
-          this.OrderNos[i] = this.OrderNos[i]
-            .filter((item) => item.isEdit)
-            .map((item) => {
-              return {
-                value: item.prop,
-                label: item.label,
-              };
-            });
-          console.log(this.OrderNos, "this.OrderNo");
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item["isEdit"] === true)
+          );
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -473,18 +439,12 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-
-        // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        // this.formSearchs[0].datas["PrepareStatus"] = 1;
-        this.getTableData(this.formSearchs[0].datas, 0);
+        await this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
     },
     // 验证数据
     verifyDta(n) {
-      // if (n.prop == "ShortQty") {
-      //   return;
-      // }
       for (let name in n) {
         if (
           (name == "component" && n[name]) ||
@@ -503,38 +463,8 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb == 1) {
-          if (data.length != 0) {
-            data.forEach((a) => {
-              this.$set(a, "update", false);
-            });
-          }
-        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
-        // if (remarkTb == 0) {
-        //   let num2 = 0;
-        //   let Rate = 0;
-        //   if (data.length != 0) {
-        //     data.forEach(x => {
-        //       if (x.NoInspectStatusCount == 0) {
-        //         num2++;
-        //       }
-        //     });
-        //     if (count != 0) {
-        //       Rate = ((num2 / count) * 100).toFixed(2);
-        //     }
-        //   }
-        //   let StringValue =
-        //     "当前查询结果【共" +
-        //     `${count}` +
-        //     "笔，已完成" +
-        //     `${num2}` +
-        //     "笔，达成率" +
-        //     `${Rate}` +
-        //     "%】";
-        //   this.$set(this.footerLabel, 0, StringValue);
-        // }
       } else {
         this.$message({
           message: msg,
@@ -562,27 +492,6 @@ export default {
       this.$set(this.tableData, 1, []);
       this.dataSearch(0);
     },
-    // 改变状态
-    changeStatus2(item, index) {
-      if (!this.formSearchs[1].datas["SalesOrderDetailID"]) {
-        this.$message.error("请单击上方行数据再查询！");
-        return;
-      }
-      this.labelStatus2 = index;
-      this.formSearchs[1].datas.PrepareType = "";
-      this.formSearchs[1].datas.InspectStatus = "";
-      this.formSearchs[1].datas.UnIssuedQty = "";
-      if (index == 1) {
-        this.formSearchs[1].datas.InspectStatus = 0;
-      } else if (index == 2) {
-        this.formSearchs[1].datas.InspectStatus = 2;
-      } else if (index == 3) {
-        this.formSearchs[1].datas.UnIssuedQty = "0";
-        this.formSearchs[1].datas.InspectStatus = 0;
-      }
-      this.$set(this.tableData, 1, []);
-      this.dataSearch(1);
-    },
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
@@ -590,122 +499,33 @@ export default {
     // 单击获取明细
     handleRowClick(row, remarkTb) {
       this.formSearchs[1].datas["OrganizeID"] = row.OrganizeID;
+      this.formSearchs[1].datas["WorkingDate"] = [
+        this.$moment(row["YearMonth"]).startOf("month").format("YYYY-MM-DD"),
+        this.$moment(row["YearMonth"]).endOf("month").format("YYYY-MM-DD"),
+      ];
       this.dataSearch(1);
     },
-    // 清空超领
-    clearShort() {
-      if (this.selectionData[1].length == 0) {
-        this.$message.error("请勾选需要清空的数据！");
-      } else {
-        this.$confirm("确定清空选中的吗，会直接保存哟？")
-          .then(() => {
-            let newData = [];
-            _this.selectionData[1].forEach((x) => {
-              x.ShortQty = null;
-              if (parseInt(x.UnIssuedQty) == 0) {
-                x.InspectStatus = 1;
-                if (parseInt(x.OweQty) == 0) {
-                  x.PrepareType = "齐套";
-                } else {
-                  x.PrepareType = "欠料";
-                }
-              } else {
-                x.InspectStatus = 2;
-                x.PrepareType = "异常";
-              }
-              newData.push(x);
-            });
-            _this.generalSaveData(newData, 1);
-          })
-          .catch(() => {});
-      }
-    },
-    // 通用保存数据
-    async generalSaveData(data, remarkTb) {
-      this.adminLoading = true;
-      let res = await SaveData(data);
-      const { result, msg } = res.data;
-      if (result) {
-        _this.dataSearch(remarkTb);
-        _this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "success",
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        _this.adminLoading = false;
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    // 提交点检
-    async setAttendance() {
-      // 获取有超领的数据
-      // let res = await GetServerTime();
-      // const { result, data, msg } = res.data;
-      // if (result) {
-      //   this.realySubmitChildren(data);
-      // } else {
-      // }
-    },
-    // 控制选框是否能手动勾选
-    checCheckboxkMethod({ row }) {
-      if (row.ShortQty == 0 && row.InspectStatus == 2) {
-        this.$set(row, "Disabled", true);
-        return false;
-      } else {
-        return true;
-      }
-    },
     // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == "IsCompleteInspect") {
-        if (row.IsCompleteInspect == "未开始") {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
-        } else if (row.IsCompleteInspect == "进行中") {
-          return {
-            backgroundColor: "#fdfd8f",
-          };
-        } else if (row.IsCompleteInspect == "已完成") {
-          return {
-            backgroundColor: "#9fff9f",
-          };
-        }
-      }
-    },
+    cellStyle0({ row, column }) {},
     // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == "OrderNo") {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: "#9fff9f",
-            };
-          }
-        }
-      }
-    },
-    changeProp(index) {
-      if (!this.OrderNo) {
+    cellStyle({ row, column }) {},
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
         this.$message.error("请选择需要修改的值");
         return;
       }
-      if (this.tableData[index].length === 0) {
+      if (this.tableData[remarkTb].length === 0) {
         this.$message.error("当前表格无数据");
         return;
       }
-      this.tableData[index].map((item) => {
-        item[this.OrderNo] = this.OrderNoValue;
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要批量修改的行");
+        return;
+      }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem["isChecked"] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
       });
     },
   },

@@ -110,7 +110,6 @@
               :hasSelect="true"
               :cellStyle="cellStyle"
               :sysID="sysID[1].ID"
-              :checCheckboxkMethod="checCheckboxkMethod"
               :isClear="isClear[1]"
               @pageChange="pageChange"
               @pageSize="pageSize"
@@ -645,25 +644,6 @@ export default {
           type: "error",
           dangerouslyUseHTMLString: true,
         });
-      }
-    },
-    // 提交点检
-    async setAttendance() {
-      // 获取有超领的数据
-      // let res = await GetServerTime();
-      // const { result, data, msg } = res.data;
-      // if (result) {
-      //   this.realySubmitChildren(data);
-      // } else {
-      // }
-    },
-    // 控制选框是否能手动勾选
-    checCheckboxkMethod({ row }) {
-      if (row.ShortQty == 0 && row.InspectStatus == 2) {
-        this.$set(row, "Disabled", true);
-        return false;
-      } else {
-        return true;
       }
     },
     // 行内样式

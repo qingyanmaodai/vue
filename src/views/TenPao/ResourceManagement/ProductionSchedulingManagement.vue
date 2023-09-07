@@ -102,32 +102,6 @@
                 <el-button type="primary" size="mini" @click="AddEvent(3)" v-show="selectedIndex === '3'">
                   添加TPM设备
                 </el-button>
-                <el-select
-                  clearable
-                  filterable
-                  size="small"
-                  placeholder="请选择修改值"
-                  v-model="OrderNo"
-                >
-                  <el-option
-                    v-for="(item, i) in OrderNos[1]"
-                    :key="i"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-                <el-divider direction="vertical"></el-divider>
-                <el-input
-                  size="small"
-                  v-model="OrderNoValue"
-                  style="width: 160px"
-                  placeholder="请输入"
-                  @keyup.enter.native="changeProp(1)"
-                ></el-input>
-                <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" @click="changeProp(1)">
-                  批量修改
-                </el-button>
               </el-col>
             </el-row>
           </div> -->
@@ -896,19 +870,6 @@ export default {
       }
 
       console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
-    },
-    changeProp(index) {
-      if (!this.OrderNo) {
-        this.$message.error("请选择需要修改的值");
-        return;
-      }
-      if (this.tableData[index].length === 0) {
-        this.$message.error("当前表格无数据");
-        return;
-      }
-      this.tableData[index].map((item) => {
-        item[this.OrderNo] = this.OrderNoValue;
-      });
     },
     //添加产品机台
     confirmDialog(data) {

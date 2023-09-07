@@ -723,19 +723,6 @@ export default {
 
       console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
     },
-    changeProp(index) {
-      if (!this.OrderNo) {
-        this.$message.error("请选择需要修改的值");
-        return;
-      }
-      if (this.tableData[index].length === 0) {
-        this.$message.error("当前表格无数据");
-        return;
-      }
-      this.tableData[index].map((item) => {
-        item[this.OrderNo] = this.OrderNoValue;
-      });
-    },
     //添加产品机台
     confirmDialog(data) {
       let tagNumber = Number(this.selectedIndex);
