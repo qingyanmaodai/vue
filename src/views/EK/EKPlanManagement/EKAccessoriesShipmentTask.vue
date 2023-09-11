@@ -1,4 +1,4 @@
-<!-- 激光月计划 -->
+<!-- 配件出货任务 -->
 <template>
   <div
     class="container flex_column content_height bgWhite"
@@ -29,13 +29,14 @@
     <div class="admin_content flex_grow">
       <div
         class="flex_column"
+        style="height: 100%"
         v-for="item in [0]"
         :key="item"
         v-show="labelStatus1 === item"
       >
         <ComSpreadTable
           ref="spreadsheetRef"
-          :height="height"
+          :height="'100%'"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
           :tableLoading="tableLoading[item]"
@@ -229,9 +230,9 @@ export default {
     }),
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 300);
+    // setTimeout(() => {
+    //   this.setHeight();
+    // }, 300);
     this.keyDown();
   },
   methods: {
@@ -396,6 +397,7 @@ export default {
         newData = _.cloneDeep(
           this.selectionData[remarkTb].map((obj) => {
             obj["ElementDeleteFlag"] = 1;
+            return obj;
           })
         );
       }
@@ -415,6 +417,7 @@ export default {
         newData = _.cloneDeep(
           this.selectionData[remarkTb].map((obj) => {
             obj["ElementDeleteFlag"] = 1;
+            return obj;
           })
         );
       }

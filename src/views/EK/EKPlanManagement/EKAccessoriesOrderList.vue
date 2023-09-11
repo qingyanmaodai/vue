@@ -1,6 +1,9 @@
-<!-- 激光月计划 -->
+<!-- 配件订单列表 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div
+    class="container flex_column content_height bgWhite"
+    v-loading="adminLoading"
+  >
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
@@ -16,36 +19,35 @@
         />
       </div>
     </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="8"
-              ><span class="title">{{ title }}</span>
-            </el-col>
-          </el-row>
-        </div>
-        <div
-          class="flex_column"
-          v-for="item in [0]"
-          :key="item"
-          v-show="labelStatus1 === item"
-        >
-          <ComSpreadTable
-            ref="spreadsheetRef"
-            :height="height"
-            :tableData="tableData[item]"
-            :tableColumns="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @workbookInitialized="workbookInitialized"
-            @selectChanged="selectChanged"
-          />
-        </div>
+    <div class="ant-table-title pd-0-6">
+      <el-row>
+        <el-col :span="8"
+          ><span class="title">{{ title }}</span>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="admin_content flex_grow">
+      <div
+        class="flex_column"
+        style="height: 100%"
+        v-for="item in [0]"
+        :key="item"
+        v-show="labelStatus1 === item"
+      >
+        <ComSpreadTable
+          ref="spreadsheetRef"
+          :height="'100%'"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+        />
       </div>
     </div>
     <!-- 弹框-->
@@ -55,7 +57,7 @@
       width="50%"
       :modal-append-to-body="false"
     >
-      <div class="custom-dialog" style="height: 70vh">
+      <div class="custom-dialog" :style="dialogStyle">
         <div class="ant-table-title pd-0-6">
           您选择的配件任务单即将生成，请选择这批配件单的出货方式。
         </div>
@@ -65,7 +67,12 @@
             <el-radio v-model="radio" label="2">单独出</el-radio>
           </el-row>
         </div>
-        <div v-for="item in [1]" :key="item" class="admin_content flex_grow">
+        <div
+          v-for="item in [1]"
+          :key="item"
+          class="admin_content flex_grow"
+          :class="{ hidden: radio !== '1' }"
+        >
           <ComVxeTable
             :ref="`tableRef${item}`"
             :rowKey="'RowNumber'"
@@ -90,6 +97,15 @@
           />
         </div>
       </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="colDialogVisible1 = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="confirmDialog(1)"
+          :loading="isConfirmLoading"
+          >确 定</el-button
+        >
+      </span>
     </el-dialog>
     <!-- 弹框-->
     <!-- <DialogOptTable
@@ -205,6 +221,7 @@ export default {
       isEdit: [false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
+      isConfirmLoading: false,
       Region: [6, 6, 6],
     };
   },
@@ -226,11 +243,14 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+    dialogStyle() {
+      // 根据条件设置弹窗高度
+      return {
+        height: this.radio === "1" ? "70vh" : "auto",
+      };
+    },
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 300);
     this.keyDown();
   },
   methods: {
@@ -337,13 +357,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -572,7 +592,7 @@ export default {
         //   });
         // }
 
-        this.dataSearch(0);
+        await this.dataSearch(0);
       }
     },
     // 验证数据
@@ -598,11 +618,12 @@ export default {
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
-        Columns.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
-        });
+        // Columns.some((m, i) => {
+        //   this.$set(this.tableColumns, i, m);
+        // });
+
         this.$set(this.tableData, remarkTb, data);
-        if (remarkTb === 0 || remarkTb === 1) {
+        if (remarkTb === 0) {
           this.setData(remarkTb);
         }
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -748,6 +769,14 @@ export default {
           cell.backColor("white");
           if (columnItem["isEdit"]) {
             cell.locked(false).foreColor("#2a06ecd9");
+          }
+          if (
+            rowItem["PlanQty"] &&
+            rowItem["Qty"] &&
+            columnItem["prop"] === "Q11" &&
+            rowItem["PlanQty"] === rowItem["Qty"]
+          ) {
+            cell.locked(true).foreColor("black");
           }
           if (
             Object.prototype.toString.call(rowItem["FColors"]) ===
@@ -1215,26 +1244,60 @@ export default {
     },
     //添加产品机台
     async confirmDialog(remarkTb) {
-      if (remarkTb === 2) {
-        if (this.selectionData[remarkTb].length !== 1) {
-          this.$message.error("请选择某位业务员");
-          return;
-        }
+      if (remarkTb === 1) {
         let newData;
+        if (this.radio == "1") {
+          if (this.selectionData[remarkTb].length !== 1) {
+            this.$message.error("请选择单条数据进行计划调整");
+            return;
+          }
+          newData = _.cloneDeep(
+            this.selectionData[0].map((item) => {
+              item["Extend9"] = this.selectionData[1][0]["ID"];
+              item["dicID"] = 11184;
+              item["OutType"] = "跟单出";
+              return item;
+            })
+          );
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[0].map((item) => {
+              item["dicID"] = 11184;
+              item["OutType"] = "单独出";
+              return item;
+            })
+          );
+        }
+        this.isConfirmLoading = true;
 
-        newData = _.cloneDeep(
-          this.selectionData[0].map((item) => {
-            item.SaleMan = this.selectionData[2][0]["Account"];
-            return item;
-          })
-        );
         await this.dataSave(0, null, null, newData);
-        this.colDialogVisible2 = false;
+        this.isConfirmLoading = false;
+        this.colDialogVisible1 = false;
       }
     },
     //提交
     async SubmitEvent(remarkTb) {
+      if (this.selectionData[0].length === 0) {
+        this.$message.error("请选择需要操作的数据！");
+        return;
+      }
+      let errorNum = -1;
+      errorNum = this.selectionData[0].findIndex((item0) => {
+        return (
+          !item0["PlanQty"] ||
+          !item0["Qty"] ||
+          item0["PlanQty"] === item0["Qty"] ||
+          !item0["Q11"]
+        );
+      });
+
+      if (errorNum !== -1) {
+        this.$message.error(`第${errorNum + 1}行数据不满足提交条件`);
+        return;
+      }
       this.colDialogVisible1 = true;
+
+      await this.dataSearch(1);
     },
   },
 };
@@ -1254,9 +1317,11 @@ export default {
 }
 
 .custom-dialog {
-  height: 70vh !important;
   overflow: auto;
   display: flex;
   flex-direction: column;
+}
+.hidden {
+  display: none;
 }
 </style>
