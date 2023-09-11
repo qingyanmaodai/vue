@@ -366,6 +366,7 @@ export default {
   computed: {},
   created() {
     _this = this;
+    this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
@@ -529,7 +530,7 @@ export default {
     //   }
     // },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
@@ -801,7 +802,8 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.dataSearch(0);
+        await this.dataSearch(0);
+        this.adminLoading = false;
       }
     },
     // 验证数据

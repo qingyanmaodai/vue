@@ -1,6 +1,6 @@
 <!--生产订单 -->
 <template>
-  <div class="container">
+  <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -153,10 +153,12 @@ export default {
       dialogCurrentRow: "",
       processGroupOptions: [],
       processDialog: false,
+      adminLoading: false,
     };
   },
   watch: {},
   created() {
+    this.adminLoading = true;
     this.judgeBtn();
     this.getTableHeader();
   },
@@ -242,13 +244,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -349,7 +351,8 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        this.getTableData(this.formSearchs[0].datas, 0);
+        await this.getTableData(this.formSearchs[0].datas, 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据

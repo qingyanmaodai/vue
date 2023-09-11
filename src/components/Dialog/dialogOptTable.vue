@@ -44,7 +44,11 @@
     </div>
     <span slot="footer" class="dialog-footer" v-show="showFooter">
       <el-button @click="Dialog = false">取 消</el-button>
-      <el-button v-show="isConfirmBtn" type="primary" @click="confirmDialog"
+      <el-button
+        v-show="isConfirmBtn"
+        type="primary"
+        @click="confirmDialog"
+        :loading="isConfirmLoading"
         >确 定</el-button
       >
     </span>
@@ -245,6 +249,7 @@ export default {
     return {
       Dialog: false,
       selectionData: [[]],
+      isConfirmLoading: false,
     };
   },
   created() {
@@ -287,8 +292,10 @@ export default {
       this.$emit("closeDialog", false);
     },
     // 确定
-    confirmDialog() {
-      this.$emit("confirmDialog", this.remark);
+    async confirmDialog() {
+      this.isConfirmLoading = true;
+      await this.$emit("confirmDialog", this.remark);
+      this.isConfirmLoading = false;
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {

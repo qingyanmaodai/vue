@@ -376,13 +376,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -779,7 +779,8 @@ export default {
         });
 
         // this.getOrgData();
-        this.dataSearch(0);
+        await this.dataSearch(0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
