@@ -589,11 +589,6 @@ export default {
   activated() {},
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
-    // console.log(style, "style");
-    // await this.getEchartsData1();
-    // await this.getEchartsData2();
-    // await this.getEchartsData3();
-    // await this.getEchartsData4();
     //初始化图表;
     this.chart = [
       this.$refs.chart1,
@@ -622,7 +617,7 @@ export default {
       // echarts.dispose(id);
       echarts.init(id).setOption(option);
     },
-    getEcharts() {
+    async getEcharts() {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -1361,15 +1356,12 @@ export default {
     },
     // 获取表头数据
     async getTableHeader() {
-      // let IDs = this.sysID;
       let rea = await GetSearchData({
         dicID: 7914,
         rows: 0,
         page: 1,
       });
       const { data: data1, result: result1, msg: msg1 } = rea.data;
-
-      console.log(data1, "data1");
 
       if (result1) {
         this.sysID = data1.map((item) => {
@@ -1401,27 +1393,27 @@ export default {
           // this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
-        console.log(this.sysID, "this.sysID");
-        forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", this.sysID[z].ID);
-          // if (z === 2) {
-          //   this.formSearchs[z].datas["PlanDay"] = this.currentDate;
-          // }
-          if (z === 7) {
-            this.formSearchs[z].datas["PlanDay"] = this.$moment()
-              .subtract(1, "days")
-              .format("YYYY-MM-DD");
-            // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
-          }
-          if (z === 5) {
-            this.formSearchs[z].datas["DemandDate"] = [
-              this.currentDate,
-              this.$moment().add(2, "days").format("YYYY-MM-DD"),
-            ];
-          }
-          this.getTableData(this.formSearchs[z].datas, z);
-          this.adminLoading = false;
-        });
+
+        await Promise.all(
+          forms.map(async (x, z) => {
+            this.$set(this.formSearchs[z].datas, "dicID", this.sysID[z].ID);
+            if (z === 7) {
+              this.formSearchs[z].datas["PlanDay"] = this.$moment()
+                .subtract(1, "days")
+                .format("YYYY-MM-DD");
+              // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+            }
+            if (z === 5) {
+              this.formSearchs[z].datas["DemandDate"] = [
+                this.currentDate,
+                this.$moment().add(2, "days").format("YYYY-MM-DD"),
+              ];
+            }
+            await this.getTableData(this.formSearchs[z].datas, z);
+          })
+        );
+        this.adminLoading = false;
+        await this.getEcharts();
       }
     },
     // 验证数据
@@ -1438,7 +1430,7 @@ export default {
     // },
     // 获取表格数据
     async getTableData(form, remarkTb) {
-      +-this.$set(this.tableLoading, remarkTb, true);
+      this.$set(this.tableLoading, remarkTb, true);
       form["rows"] = this.tablePagination[remarkTb].pageSize;
       form["page"] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
@@ -1447,55 +1439,14 @@ export default {
         data.map((item, index) => {
           this.headCard[index]["title"] = item["Label"];
         });
-        // data[0]['Prop'] = data[0]['Prop'].toLocaleString()
-        // data[1]['Prop'] = data[1]['Prop'].toLocaleString()
-        // data[2]['Prop'] = data[2]['Prop'].toLocaleString()
-        // data[3]['Prop'] = data[3]['Prop'].toLocaleString()
 
         // headCard[0]['title'] = data
       }
       if (remarkTb === 4) {
-        // this.tableColumns[6] = [
-        //   {
-        //     label: "品类",
-        //     prop: "ProductType",
-        //     width: 80,
-        //   },
-        //   {
-        //     label: "内部型号",
-        //     prop: "InnerModel",
-        //     width: 100,
-        //   },
-        //   {
-        //     label: "数量",
-        //     prop: "Qty",
-        //     width: 80,
-        //   },
-        //   {
-        //     label: "汇报数",
-        //     prop: "ReportQty",
-        //     width: 80,
-        //   },
-        //   {
-        //     label: "出库数",
-        //     prop: "OutStockQty",
-        //     width: 80,
-        //   },
-        //   {
-        //     label: "库存数",
-        //     prop: "StockQtyDiff",
-        //     width: 80,
-        //   },
-        // ];
         this.tableColumns[4] = Columns[0];
       }
       if (remarkTb === 5) {
         this.tableColumns[5] = Columns[0];
-        // Columns[0].filter((x) => {
-        //   return Object.keys(data[0]).some((y) => {
-        //     return x['prop'] === y;
-        //   });
-        // });
       }
       if (result) {
         this.$set(this.tableData, remarkTb, data);
@@ -1507,10 +1458,8 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
-      await this.getEcharts();
 
       this.$set(this.tableLoading, remarkTb, false);
-      console.log(this.tableData, 11111);
     },
     // 刷新页面
     refrshPage() {
@@ -1522,58 +1471,6 @@ export default {
           });
         });
       });
-    },
-    async getEchartsData1() {
-      let res = await GetSearchData(
-        {
-          dicID: 9037,
-          groupby: "Dept",
-          fields: "SUM(DemandQty) as DemandQty,Dept",
-          sort: "DemandQty desc",
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartTotal1 = data.reduce(
-          (accumulator, current) => accumulator + current.DemandQty,
-          0
-        );
-        this.chartData1 = data.map((item) => ({
-          value: item.DemandQty,
-          name: item.Dept,
-        }));
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    async getEchartsData2() {
-      let res = await GetSearchData(
-        {
-          dicID: 9062,
-          sort: "OweQty",
-          page: 1,
-          rows: 6,
-        },
-        "6E8BF76C6BA5B0D8"
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartData2[0] = data.map(
-          (item) => item.MaterialName.split(" ")[0]
-        );
-        this.chartData2[1] = data.map((item) => item.OweQty);
-      } else {
-        this.$message({
-          message: msg,
-          type: "error",
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
     hexToRgba(hex, opacity) {
       let rgbaColor = "";

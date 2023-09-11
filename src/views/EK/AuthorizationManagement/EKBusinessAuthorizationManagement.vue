@@ -234,7 +234,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "BusinessAuthorizationManagement",
+  name: "EKBusinessAuthorizationManagement",
   components: {
     ComSearch,
     ComVxeTable,
@@ -288,7 +288,7 @@ export default {
         },
         {
           datas: {
-            IsConfig: 0,
+            // IsConfig: 0,
           },
           forms: [],
           required: [], //获取必填项
@@ -323,7 +323,7 @@ export default {
       ],
       Region: [1, 2, 2],
       labelStatus1: 0,
-      sysID: [{ ID: 7833 }, { ID: 7848 }, { ID: 7848 }],
+      sysID: [{ ID: 7833 }, { ID: 10136 }, { ID: 7848 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
@@ -428,21 +428,21 @@ export default {
         this.$message.error("请单击需要操作的数据！");
         return;
       } else {
-        if (remarkTb === 1) {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x["SaleMan"] = "";
-              return x;
-            })
-          );
-        } else {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x["ElementDeleteFlag"] = 1;
-              return x;
-            })
-          );
-        }
+        // if (remarkTb === 1) {
+        //   newData = _.cloneDeep(
+        //     this.selectionData[remarkTb].map((x) => {
+        //       x["SaleMan"] = "";
+        //       return x;
+        //     })
+        //   );
+        // } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x["ElementDeleteFlag"] = 1;
+            return x;
+          })
+        );
+        // }
       }
       console.log(newData, "newData");
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
@@ -487,32 +487,26 @@ export default {
     },
     //添加产品机台
     async confirmDialog(remarkTb) {
-      let newData;
-
-      newData = _.cloneDeep(
-        this.selectionData[remarkTb].map((item) => {
-          item.SaleMan = this.clickRow["Account"];
-          return item;
-        })
-      );
-
-      // if (remarkTb === 2) {
-      //   let newData1 = this.linkTableData.filter(
-      //     (x) =>
-      //       !this.selectionData[2].some((y) => y.MaterialID === x.MaterialID)
-      //   );
-      //   newData1.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = "";
-      //   });
-      //   let newData2 = this.selectionData[2].filter(
-      //     (c) => !this.linkTableData.some((z) => c.MaterialID == z.MaterialID)
-      //   );
-      //   newData2.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = this.clickRow["MaterialTypeID"];
-      //   });
-      //   newData = [].concat(newData1, newData2);
-      // }
-
+      let newData = [];
+      if (remarkTb === 2) {
+        [this.clickRow].forEach((item0) => {
+          let addData = _.cloneDeep(
+            this.selectionData[2].filter((item2) => {
+              if (item2["SaleManIDs"]) {
+                let SaleManIDs = item2["SaleManIDs"]?.split(",");
+                return !SaleManIDs.some((OID) => OID == item0["Account"]);
+              } else {
+                return true;
+              }
+            })
+          );
+          addData.forEach((item) => {
+            item["dicID"] = 10136;
+            item["SaleMan"] = item0["Account"];
+          });
+          newData = newData.concat(addData);
+        });
+      }
       await this.dataSave(1, null, null, newData);
       this.colDialogVisible2 = false;
     },

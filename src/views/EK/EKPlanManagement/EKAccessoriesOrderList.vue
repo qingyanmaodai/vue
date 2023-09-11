@@ -50,43 +50,49 @@
     </div>
     <!-- 弹框-->
     <el-dialog
-      :title="'拆分订单'"
+      :title="'计划调整'"
       :visible.sync="colDialogVisible1"
       width="50%"
+      :modal-append-to-body="false"
     >
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="4"
-            ><span class="title">拆分编辑完请保存 </span></el-col
-          >
-          <el-col :span="24" class="flex_flex_end"
-            ><el-divider direction="vertical"></el-divider>
-            <el-button type="primary" size="mini" @click="changeEvent(1)">
-              确定拆分
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-for="item in [1]" :key="item">
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          height="600px"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
-          :spaceBtnShow="false"
-        />
+      <div class="custom-dialog" style="height: 70vh">
+        <div class="ant-table-title pd-0-6">
+          您选择的配件任务单即将生成，请选择这批配件单的出货方式。
+        </div>
+        <div class="ant-table-title pd-0-6">
+          <el-row>
+            <el-radio v-model="radio" label="1">跟单出</el-radio>
+            <el-radio v-model="radio" label="2">单独出</el-radio>
+          </el-row>
+        </div>
+        <div v-for="item in [1]" :key="item" class="admin_content flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[item]"
+            :tableData="tableData[item]"
+            :tableHeader="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :isClear="isClear[item]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+          />
+        </div>
       </div>
     </el-dialog>
     <!-- 弹框-->
-    <DialogOptTable
+    <!-- <DialogOptTable
       title="指定业务员"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -111,7 +117,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></DialogOptTable>
+    ></DialogOptTable> -->
   </div>
 </template>
 
@@ -125,10 +131,7 @@ import "@grapecity/spread-sheets/js/zh.js";
 import { mapState } from "vuex";
 GC.Spread.Common.CultureManager.culture("zh-cn");
 import ComSearch from "@/components/ComSearch";
-import ComReportTable from "@/components/ComReportTable";
-import ComAsideTree from "@/components/ComAsideTree";
 import ComSpreadTable from "@/components/ComSpreadTable";
-import ComSpreadTable2 from "@/components/ComSpreadTable";
 import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
 import {
@@ -138,16 +141,12 @@ import {
   SaveData,
   GetSearch,
 } from "@/api/Common";
-import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
-import DialogTable from "@/components/Dialog/dialogTable";
-import DialogOptTable from "@/components/Dialog/dialogOptTable";
+// import DialogTable from "@/components/Dialog/dialogTable";
+// import DialogOptTable from "@/components/Dialog/dialogOptTable";
 export default {
   name: "EKAccessoriesOrderList",
   components: {
     ComSearch,
-    ComReportTable,
-    ComAsideTree,
-    DialogOptTable,
     ComVxeTable,
     ComSpreadTable,
   },
@@ -163,6 +162,7 @@ export default {
       title2: null,
       drawer: false,
       delData: [[]],
+      radio: "1",
       formSearchs: [
         {
           datas: {},
@@ -193,7 +193,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 11181 }, { ID: 10108 }, { ID: 7833 }],
+      sysID: [{ ID: 11181 }, { ID: 10117 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -421,111 +421,6 @@ export default {
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
-    },
-    // 拆单
-    splitOrder(remarkTb) {
-      if (this.selectionData[remarkTb].length === 0) {
-        this.$message.error("请选择需要拆单的数据！");
-        return;
-      }
-      this.colDialogVisible1 = true;
-      let targetArray = JSON.parse(
-        JSON.stringify(this.selectionData[remarkTb])
-      );
-
-      this.tableColumns[1] = this.tableColumns[1].filter(
-        (item) => item.prop == "PlanQty"
-      );
-      this.tableColumns[1].push({
-        label: "拆单数",
-        prop: "SQty",
-      });
-      this.tableColumns[1].forEach((item) => {
-        item["width"] = 250;
-        if (item.label === "拆单数") {
-          item["isEdit"] = true;
-        } else {
-          item["isEdit"] = false;
-        }
-      });
-      this.$nextTick(() => {
-        this.$set(this.tableData, 1, targetArray);
-        this.setData(1);
-      });
-    },
-    // 拆单
-    async changeEvent(val) {
-      if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          (item) => !item["SQty"]
-        );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
-        }
-
-        const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item["SQty"] > item["PlanQty"];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.colDialogVisible1 = false;
-        let sheet = this.spread[this.labelStatus1].getActiveSheet();
-        const changedIndices = [];
-        this.tableData[this.labelStatus1].forEach((element, index) => {
-          if (element["isChecked"]) {
-            changedIndices.push(index);
-          }
-        });
-        //每增加一行，需要插入新的一行，后面一行比前面一行多1
-        const arr = changedIndices.map((num, index) => num + index);
-        //处理脏数据
-        arr.forEach((item) => {
-          this.copyRowFormat(item, sheet);
-          console.log(item, "item");
-        });
-
-        this.$nextTick(() => {
-          sheet.repaint();
-        });
-        await this.dataSave(this.labelStatus1);
-      }
-    },
-    //在该行数据下面增加新的一行
-    copyRowFormat(rowNumber, sheet) {
-      sheet.addRows(rowNumber + 1, 1);
-      sheet.copyTo(
-        rowNumber,
-        -1,
-        rowNumber + 1,
-        -1,
-        1,
-        -1,
-        GC.Spread.Sheets.CopyToOptions.all
-      );
-      let newRowIndex = rowNumber + 1;
-      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
-        JSON.stringify(oldData)
-      );
-      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
-      let SQtyObj = this.selectionData[1].find(
-        (item) => item["RowNumber"] === oldData["RowNumber"]
-      );
-      //去掉dy前面的值
-      // const objKeys = Object.keys(newData);
-      // objKeys.forEach((key) => {
-      //   if (key.endsWith("dy")) {
-      //     newData[key.replace(/dy$/, "")] = null;
-      //   }
-      // });
-      oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
-      newData["SourceID"] = oldData["ID"]; // 将 SourceDetailPlanID 值设置为 null
-      newData["ID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
-      newData["PlanQty"] = SQtyObj["SQty"];
-      newData["DataSource"] = "拆单";
     },
     resetScheduling() {
       this.$confirm("确定要重新排全部数据吗？")
@@ -1337,6 +1232,10 @@ export default {
         this.colDialogVisible2 = false;
       }
     },
+    //提交
+    async SubmitEvent(remarkTb) {
+      this.colDialogVisible1 = true;
+    },
   },
 };
 </script>
@@ -1352,5 +1251,12 @@ export default {
 .sample-spreadsheets {
   width: 100%;
   height: 100%;
+}
+
+.custom-dialog {
+  height: 70vh !important;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 </style>
