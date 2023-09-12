@@ -828,9 +828,54 @@ export default {
         const {
           data: [{ PlanQty }],
         } = res.data;
-        this.title2 = `${this.$moment().format(
-          "YYYY年M月"
-        )}  订单总数：${PlanQty}`;
+        //给月计划赋值本月已排数量
+        let res2 = await GetSearchData({
+          dicID: 6734,
+          fields:
+            "SUM(ScheduleQty) As PlanQty2,SUM(HasQty) As PlanQty3,SUM(OweQty) As PlanQty",
+          StartDate: [
+            this.$moment().startOf("month").format("YYYY-MM-DD"),
+            this.$moment().endOf("month").format("YYYY-MM-DD"),
+          ],
+          // groupby: "ProcessPlanID",
+          // sort: "Code",
+          // page: 1,
+          // rows: 0,
+        });
+        const {
+          data: [{ PlanQty2, PlanQty3, PlanQty4 }],
+        } = res2.data;
+        // //给月计划赋值本月完成数量
+        // let res3 = await GetSearchData({
+        //   dicID: 6734,
+        //   fields: "SUM(HasQty) As PlanQty3",
+        //   StartDate: [
+        //     this.$moment().startOf("month").format("YYYY-MM-DD"),
+        //     this.$moment().endOf("month").format("YYYY-MM-DD"),
+        //   ],
+        //   page: 1,
+        //   rows: 0,
+        // });
+        // const {
+        //   data: [{ PlanQty3 }],
+        // } = res3.data;
+        //给月计划赋值本月剩余数量
+        // let res4 = await GetSearchData({
+        //   dicID: 6734,
+        //   fields: "SUM(OweQty) As PlanQty",
+        //   StartDate: [
+        //     this.$moment().startOf("month").format("YYYY-MM-DD"),
+        //     this.$moment().endOf("month").format("YYYY-MM-DD"),
+        //   ],
+        // });
+        // const {
+        //   data: [{ PlanQty4 }],
+        // } = res4.data;
+        this.title2 =
+          `${this.$moment().format("YYYY年M月")}  订单总数：${PlanQty}` +
+          `${this.$moment().format("YYYY年M月")}  已排数量：${PlanQty2}` +
+          `${this.$moment().format("YYYY年M月")}  完成数量：${PlanQty3}` +
+          `${this.$moment().format("YYYY年M月")}  剩余数量：${PlanQty4}`;
       } else {
         this.$message({
           message: msg,
