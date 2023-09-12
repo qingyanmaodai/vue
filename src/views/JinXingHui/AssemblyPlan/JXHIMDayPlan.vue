@@ -36,35 +36,6 @@
               :remark="0"
             />
           </div>
-          <!-- <el-select
-            clearable
-            filterable
-            size="small"
-            placeholder="请选择修改值"
-            v-model="OrderNo"
-          >
-            <el-option
-              v-for="(item, i) in OrderNos[0]"
-              :key="i"
-              :label="item.label"
-              :value="item.prop"
-            ></el-option>
-          </el-select>
-          <el-divider direction="vertical"></el-divider>
-          <el-input
-            size="small"
-            v-model="OrderNoValue"
-            style="width: 160px"
-            placeholder="请输入"
-            @keyup.enter.native="changeProp(0)"
-          ></el-input>
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="primary" size="mini" @click="changeProp(0)">
-            批量修改
-          </el-button> -->
-          <!-- <el-button type="primary" size="mini" @click="changeEvent(0)">
-            拆分订单
-          </el-button> -->
         </el-col>
       </el-row>
     </div>

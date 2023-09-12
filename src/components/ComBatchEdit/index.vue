@@ -103,13 +103,6 @@
       >
       </el-date-picker>
     </el-form-item>
-    <!-- <el-input
-            size="small"
-            v-model="OrderNoValue"
-            style="width: 160px"
-            placeholder="请输入"
-            @keyup.enter.native="changeProp(0)"
-          ></el-input> -->
     <el-form-item>
       <el-button type="primary" size="small" @click="changeProp()">
         批量修改
@@ -217,13 +210,15 @@ export default {
 .innerDiv:last-child {
   margin-right: 0 !important; /* 最后一个元素去除右侧间隔 */
 }
-// .full-width {
-//   width: 100% !important;
-// }
-
+::v-deep .el-form-item {
+  height: 100% !important;
+}
 ::v-deep .el-form-item__content {
   width: 100% !important;
   height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 150px;
   // margin-right: 10px !important;
 }

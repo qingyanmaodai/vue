@@ -1,6 +1,6 @@
 <!--生产订单 -->
 <template>
-  <div class="container">
+  <div class="container flex_column content_height bgWhite">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -14,15 +14,26 @@
         @btnClick="btnClick"
       />
     </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
-            <el-col :span="20" class="flex_flex_end">
-              <!-- <div
+    <div class="ant-table-title pd-0-6">
+      <el-row>
+        <el-col :span="4"
+          ><span class="title">{{ title }}</span></el-col
+        >
+        <el-col :span="20" class="flex_flex_end">
+          <div
+            v-for="i in [0]"
+            :key="'Edit' + i"
+            v-show="labelStatus1 === i"
+            style="height: 100%"
+          >
+            <ComBatchEdit
+              :OrderNos="OrderNos[0]"
+              @changeProp="changeProp"
+              :OrderNo="'Extend18'"
+              :remark="0"
+            />
+          </div>
+          <!-- <div
                 
                 v-for="(item, y) in Status1"
                 :key="y"
@@ -30,30 +41,31 @@
                 <span @click="changeStatus(item, y)" :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'">{{ item.label }}</span>
                 <el-divider direction="vertical"></el-divider>
               </div> -->
-            </el-col>
-          </el-row>
-        </div>
-        <ComVxeTable
-          ref="tableRef"
-          :rowKey="'RowNumber'"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableHeader="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :remark="0"
-          :sysID="10110"
-          :hasSelect="true"
-          :isEdit="isEdit"
-          :isClear="isClear[0]"
-          :keepSource="true"
-          :pagination="tablePagination[0]"
-          @configprocess="configprocess"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-          @selectfun="selectFun"
-        />
-      </div>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="admin_content flex_grow">
+      <ComVxeTable
+        ref="tableRef"
+        :rowKey="'RowNumber'"
+        :height="'100%'"
+        :tableData="tableData[0]"
+        :tableHeader="tableColumns[0]"
+        :tableLoading="tableLoading[0]"
+        :remark="0"
+        :sysID="10110"
+        :cellStyle="cellStyle0"
+        :hasSelect="true"
+        :isEdit="isEdit"
+        :isClear="isClear[0]"
+        :keepSource="true"
+        :pagination="tablePagination[0]"
+        @configprocess="configprocess"
+        @pageChange="pageChange"
+        @pageSize="pageSize"
+        @sortChange="sortChange"
+        @selectfun="selectFun"
+      />
     </div>
 
     <!-- 工艺配置 -->
@@ -147,11 +159,13 @@ import {
   SaveData,
 } from "@/api/Common";
 import { OneStepReleaseByOrder } from "@/api/PageOrder";
+import ComBatchEdit from "@/components/ComBatchEdit";
 export default {
   name: "ProductFileMaintenance",
   components: {
     ComSearch,
     ComVxeTable,
+    ComBatchEdit,
   },
   data() {
     return {
@@ -198,6 +212,9 @@ export default {
       hasSelect: [false],
       Region: [5],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
+      OrderNo: "",
+      OrderNoValue: "",
+      OrderNos: [[]],
       height: "707px",
       showPagination: true,
       tagRemark: 0,
@@ -426,6 +443,11 @@ export default {
               this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item["isEdit"] === true)
+          );
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -550,6 +572,72 @@ export default {
         let res = await SaveData(this.selectionData[0]);
         this.otherProperty = null;
       }
+    },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      if (
+        Object.prototype.toString.call(row["FColors"]) === "[object Object]"
+      ) {
+        Object.keys(row["FColors"]).forEach((key) => {
+          const columnIndex = this.tableColumns[0].findIndex(
+            (column) => column.prop === key
+          );
+          if (columnIndex !== -1) {
+            return {
+              color: row["FColors"][key],
+            };
+          }
+        });
+      }
+      if (
+        Object.prototype.toString.call(row["BColors"]) === "[object Object]"
+      ) {
+        Object.keys(row["BColors"]).forEach((key) => {
+          const columnIndex = this.tableColumns[0].findIndex(
+            (column) => column.prop === key
+          );
+          if (columnIndex !== -1) {
+            return {
+              backgroundColor: row["BColors"][key],
+            };
+          }
+        });
+      }
+
+      // if (column.property == "IsCompleteInspect") {
+      //   if (row.IsCompleteInspect == "未开始") {
+      //     return {
+      //       backgroundColor: "#ff7b7b",
+      //     };
+      //   } else if (row.IsCompleteInspect == "进行中") {
+      //     return {
+      //       backgroundColor: "#fdfd8f",
+      //     };
+      //   } else if (row.IsCompleteInspect == "已完成") {
+      //     return {
+      //       backgroundColor: "#9fff9f",
+      //     };
+      //   }
+      // }
+    },
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
+        this.$message.error("请选择需要修改的值");
+        return;
+      }
+      if (this.tableData[remarkTb].length === 0) {
+        this.$message.error("当前表格无数据");
+        return;
+      }
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要批量修改的行");
+        return;
+      }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem["isChecked"] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
+      });
     },
   },
 };
