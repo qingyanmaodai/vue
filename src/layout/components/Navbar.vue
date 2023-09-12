@@ -195,7 +195,7 @@ export default {
       if (val) {
         if (this.formData.NewPwd != this.formData.SurePwd) {
           this.$message.error("两次输入的密码不一致！");
-        } else {
+          return;
         }
         obj["Account"] = this.formData.Account;
         // obj["Pwd"] = this.formData.NewPwd;

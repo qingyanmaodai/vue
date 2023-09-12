@@ -335,7 +335,7 @@ export default {
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
     const params = new URLSearchParams(this.$route.meta.TargetFor);
-    this.accountsValue = params.get("accounts");
+    this.accountsValue = params.get("Accounts");
   },
   // activated() {
   //   if (this.spread[remarkTb]) {

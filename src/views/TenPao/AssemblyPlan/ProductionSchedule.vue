@@ -247,7 +247,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      accountsValue: null,
+      params: {},
     };
   },
   watch: {},
@@ -258,8 +258,7 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
-    const params = new URLSearchParams(this.$route.meta.TargetFor);
-    this.accountsValue = params.get("accounts");
+    this.params = new URLSearchParams(this.$route.meta.TargetFor);
   },
   // activated() {
   //   if (this.spread) {
@@ -626,19 +625,25 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.$set(
-            this.formSearchs[z].datas,
-            "Accounts",
-            this.accountsValue
-              ? [
-                  "$" + `${this.userInfo["Account"]}` + "$",
-                  "$" + `${this.accountsValue}` + "$",
-                ]
-              : ["$" + `${this.userInfo["Account"]}` + "$"]
-          );
+          this.params.forEach((value, key) => {
+            if (key === "Accounts") {
+              this.formSearchs[z].datas[key] = [
+                "$" + `${this.userInfo["Account"]}` + "$",
+                "$" + `${value}` + "$",
+              ];
+            } else {
+              this.formSearchs[z].datas[key] = value;
+            }
+          });
         });
-        console.log("gettable");
-        this.getOrgData();
+        // 如果 "Accounts" 参数不存在，可以在循环之后添加特殊处理
+        if (!this.params.has("Accounts")) {
+          // 这里执行特殊处理的逻辑
+          this.formSearchs[z].datas["Accounts"] = [
+            "$" + `${this.userInfo["Account"]}` + "$",
+          ];
+        }
+        await this.getOrgData();
         // this.dataSearch(0);
       }
     },
