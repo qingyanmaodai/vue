@@ -21,6 +21,20 @@
           ><span class="title">{{ title }}</span></el-col
         >
         <el-col :span="20" class="flex_flex_end">
+          <!-- 批量修改组件 -->
+          <div
+            v-for="i in [0]"
+            :key="'Edit' + i"
+            v-show="isBatch"
+            style="height: 100%"
+          >
+            <ComBatchEdit
+              :OrderNos="OrderNos[0]"
+              @changeProp="changeProp"
+              :OrderNo="DVBatch"
+              :remark="0"
+            />
+          </div>
           <!-- 新增行所需组件 -->
           <div v-if="addStep">
             <span>新增行数：</span>
@@ -120,6 +134,7 @@ var _this;
 import ComSearch from "@/components/ComSearch";
 import ComVxeTable from "@/components/ComVxeTable";
 import ComFormDialog from "@/components/ComFormDialog";
+import ComBatchEdit from "@/components/ComBatchEdit";
 import {
   GetHeader,
   GetSearchData,
@@ -133,6 +148,7 @@ export default {
     ComSearch,
     ComVxeTable,
     ComFormDialog,
+    ComBatchEdit,
   },
   data() {
     return {
@@ -170,6 +186,11 @@ export default {
       addStep: null,
       scrollEnable: true,
       dataColumns: false,
+      isBatch: false,
+      DVBatch: null,
+      OrderNo: "",
+      OrderNoValue: "",
+      OrderNos: [[]],
     };
   },
   //离开的时候保存当前
@@ -246,6 +267,8 @@ export default {
     const variableMappings = {
       addNum: (value) => Number(value),
       addStep: (value) => Number(value),
+      isBatch: (value) => JSON.parse(value),
+      DVBatch: (value) => value,
       scrollEnable: (value) => JSON.parse(value),
       dataColumns: (value) => JSON.parse(value),
     };
@@ -550,7 +573,11 @@ export default {
               this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
             }
           });
-
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item["isEdit"] === true)
+          );
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
@@ -654,6 +681,25 @@ export default {
       }
 
       console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
+    },
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
+        this.$message.error("请选择需要修改的值");
+        return;
+      }
+      if (this.tableData[remarkTb].length === 0) {
+        this.$message.error("当前表格无数据");
+        return;
+      }
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要批量修改的行");
+        return;
+      }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem["isChecked"] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
+      });
     },
   },
 };
