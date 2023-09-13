@@ -112,6 +112,7 @@
         :tableHeader="tableColumns[0]"
         :tableLoading="tableLoading[0]"
         :remark="0"
+        :cellStyle="cellStyle0"
         :sysID="ID"
         :isEdit="isEdit"
         :isClear="isClear[0]"
@@ -681,6 +682,24 @@ export default {
       }
 
       console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
+    },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
+      if (
+        Object.prototype.toString.call(row["FColors"]) === "[object Object]" &&
+        key in row["FColors"]
+      ) {
+        style.backgroundColor = row["FColors"][key]; // 设置背景颜色
+      }
+      if (
+        Object.prototype.toString.call(row["BColors"]) === "[object Object]" &&
+        key in row["BColors"]
+      ) {
+        style.backgroundColor = row["BColors"][key]; // 设置背景颜色
+      }
+      return style; // 返回样式对象
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
