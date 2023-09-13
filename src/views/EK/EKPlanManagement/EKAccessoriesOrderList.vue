@@ -1283,12 +1283,7 @@ export default {
       }
       let errorNum = -1;
       errorNum = this.selectionData[0].findIndex((item0) => {
-        return (
-          !item0["PlanQty"] ||
-          !item0["Qty"] ||
-          item0["PlanQty"] === item0["Qty"] ||
-          !item0["Q11"]
-        );
+        return Number(item0["PlanQty"]) === Number(item0["Qty"]);
       });
 
       if (errorNum !== -1) {

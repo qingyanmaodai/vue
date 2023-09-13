@@ -29,7 +29,7 @@
             <ComBatchEdit
               :OrderNos="OrderNos[0]"
               @changeProp="changeProp"
-              :OrderNo="'Extend18'"
+              :OrderNo="'Extend22'"
               :remark="0"
             />
           </div>
@@ -575,50 +575,21 @@ export default {
     },
     // 行内样式
     cellStyle0({ row, column }) {
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
       if (
-        Object.prototype.toString.call(row["FColors"]) === "[object Object]"
+        Object.prototype.toString.call(row["FColors"]) === "[object Object]" &&
+        key in row["FColors"]
       ) {
-        Object.keys(row["FColors"]).forEach((key) => {
-          const columnIndex = this.tableColumns[0].findIndex(
-            (column) => column.prop === key
-          );
-          if (columnIndex !== -1) {
-            return {
-              color: row["FColors"][key],
-            };
-          }
-        });
+        style.backgroundColor = row["FColors"][key]; // 设置背景颜色
       }
       if (
-        Object.prototype.toString.call(row["BColors"]) === "[object Object]"
+        Object.prototype.toString.call(row["BColors"]) === "[object Object]" &&
+        key in row["BColors"]
       ) {
-        Object.keys(row["BColors"]).forEach((key) => {
-          const columnIndex = this.tableColumns[0].findIndex(
-            (column) => column.prop === key
-          );
-          if (columnIndex !== -1) {
-            return {
-              backgroundColor: row["BColors"][key],
-            };
-          }
-        });
+        style.backgroundColor = row["BColors"][key]; // 设置背景颜色
       }
-
-      // if (column.property == "IsCompleteInspect") {
-      //   if (row.IsCompleteInspect == "未开始") {
-      //     return {
-      //       backgroundColor: "#ff7b7b",
-      //     };
-      //   } else if (row.IsCompleteInspect == "进行中") {
-      //     return {
-      //       backgroundColor: "#fdfd8f",
-      //     };
-      //   } else if (row.IsCompleteInspect == "已完成") {
-      //     return {
-      //       backgroundColor: "#9fff9f",
-      //     };
-      //   }
-      // }
+      return style; // 返回样式对象
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
