@@ -1254,6 +1254,7 @@ export default {
           newData = _.cloneDeep(
             this.selectionData[0].map((item) => {
               item["Extend9"] = this.selectionData[1][0]["ID"];
+              item["PlanQty"] = item["Q11"];
               item["dicID"] = 11184;
               item["OutType"] = "跟单出";
               return item;
@@ -1281,9 +1282,15 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
+      const sheet = this.spread[0]?.getActiveSheet();
+      if (sheet && sheet.isEditing()) {
+        sheet.endEdit();
+      }
       let errorNum = -1;
       errorNum = this.selectionData[0].findIndex((item0) => {
-        return Number(item0["PlanQty"]) === Number(item0["Qty"]);
+        return (
+          Number(item0["PlanQty"]) === Number(item0["Qty"]) || !item0["Q11"]
+        );
       });
 
       if (errorNum !== -1) {
