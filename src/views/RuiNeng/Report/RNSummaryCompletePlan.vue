@@ -7,28 +7,9 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">入库月统计</div>
+                <div class="echartTitle">计划齐套概览</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
-            </div>
-          </div>
-          <div class="headCard">
-            <div class="box">
-              <svg-icon icon-class="Documentation" class="Documentation" />
-              <div class="textBox">
-                <div class="statusNum">1,857</div>
-                <div class="textHead">
-                  <div class="title">今日累计异常次数</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">仓位分布</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
             </div>
           </div>
         </div>
@@ -42,7 +23,7 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               :signName="0"
-              :Region="3"
+              :Region="2"
               @btnClick="btnClick"
             />
           </div>
@@ -91,7 +72,7 @@ import {
   GetSearch,
 } from "@/api/Common";
 export default {
-  name: "RNRawMaterialStorage",
+  name: "RNSummaryCompletePlan",
   components: {
     ComSearch,
     ComVxeTable,
@@ -224,9 +205,8 @@ export default {
   },
   activated() {},
   async mounted() {
-    // var style = window.getComputedStyle("echartBody");
     //初始化图表;
-    this.chart = [this.$refs.chart1, this.$refs.chart2];
+    this.chart = [this.$refs.chart1];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
@@ -259,17 +239,11 @@ export default {
       }
       this.chartOptions = [
         {
-          backgroundColor: "#fff",
-          color: [
-            "#0090FF",
-            "#36CE9E",
-            "#FFC005",
-            "#FF515A",
-            "#8B5CFF",
-            "#00CA69",
-          ],
-          legend: {
-            top: "0%",
+          grid: {
+            containLabel: true,
+            bottom: 0,
+            left: fontSize(10),
+            right: fontSize(10),
           },
           tooltip: {
             trigger: "axis",
@@ -277,43 +251,77 @@ export default {
               type: "shadow",
             },
           },
-          grid: {
-            left: fontSize(10),
-            right: fontSize(10),
-            bottom: fontSize(10),
-            containLabel: true,
+          legend: {
+            top: "0",
+            data: ["计划任务", "配套任务", "计划齐套趋势"],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            itemGap: fontSize(100),
           },
-          xAxis: [
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: [
+              "SMT1线",
+              "SMT2线",
+              "AI1线",
+              "AI2线",
+              "插件1线",
+              "插件2线",
+              "插件3线",
+              "丝印组",
+              "激光组",
+              "宁波1线",
+              "宁波2线",
+              "宁波3线",
+              "宁波4线",
+              "宁波5线",
+              "宁波6线",
+              "宁波7线",
+              "宁波8线",
+              "新昌1线",
+              "新昌2线",
+              "新昌3线",
+            ],
+            axisLabel: {
+              interval: 0,
+              show: true,
+              textStyle: {
+                color: "#000",
+              },
+            },
+            axisLine: {
+              lineStyle: {
+                show: false,
+                color: "#F3F3F3",
+                width: 2,
+              },
+            },
+          },
+          yAxis: [
             {
-              type: "category",
-              boundaryGap: false,
+              name: "百分比",
+              type: "value",
+              nameTextStyle: {
+                color: "#444444",
+              },
               axisLabel: {
-                formatter: "{value}月",
+                interval: 0,
+                show: true,
+                formatter: "{value}%",
                 textStyle: {
-                  color: "#333",
+                  color: "#444444",
                 },
               },
               axisLine: {
-                lineStyle: {
-                  color: "#D9D9D9",
-                },
+                show: false,
+                // lineStyle: {
+                //   color: "#F3F3F3",
+                //   width: 2
+                // }
               },
-              data: ["1", "2", "3", "4", "5", "6", "7", "8"],
-            },
-          ],
-          yAxis: [
-            {
-              type: "value",
-              name: "单位：万",
-              axisLabel: {
-                textStyle: {
-                  color: "#666",
-                },
-              },
-              nameTextStyle: {
-                color: "#666",
-                fontSize: 12,
-                lineHeight: 40,
+              axisTick: {
+                show: false,
               },
               splitLine: {
                 lineStyle: {
@@ -321,182 +329,52 @@ export default {
                   color: "#E9E9E9",
                 },
               },
-              axisLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
             },
           ],
           series: [
             {
-              name: "计划数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,/
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
+              name: "计划任务",
+              type: "bar",
+              barWidth: fontSize(15),
+              silent: true,
+              itemStyle: {
                 normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#0090FF30",
-                      },
-                      {
-                        offset: 1,
-                        color: "#0090FF10",
-                      },
-                    ],
-                    false
-                  ),
-                  shadowColor: "#0090FF10",
-                  shadowBlur: 10,
+                  color: "#009B4C",
                 },
               },
-              data: [100, 138, 350, 173, 180, 150, 180, 230],
-            },
-            {
-              name: "生产数",
-              type: "line",
-              smooth: true,
-              // showSymbol: false,
-              symbolSize: 8,
-              zlevel: 3,
-              areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: "#36CE9E30",
-                      },
-                      {
-                        offset: 1,
-                        color: "#36CE9E10",
-                      },
-                    ],
-                    false
-                  ),
-                  shadowColor: "#36CE9E10",
-                  shadowBlur: 10,
-                },
-              },
-              data: [233, 233, 200, 180, 199, 233, 210, 180],
-            },
-          ],
-        },
-        {
-          backgroundColor: "#fff",
-          // title: {
-          //   text: "注册资金",
-          //   subtext: "2016年",
-          //   x: "center",
-          //   y: "center",
-          //   textStyle: {
-          //     fontWeight: "normal",
-          //     fontSize: 16
-          //   }
-          // },
-          tooltip: {
-            trigger: "item",
-            formatter: "{b}:({d}%)",
-          },
-          legend: {
-            top: "0",
-            left: "center",
-            orient: "horizontal",
-            // right: "0%",
-            // bottom: "0",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12),
-            },
-            itemStyle: {
-              borderRadius: "50%", // 将图例项的形状设定为圆形
-            },
-            data: this.tableData[2].map((item) => item["WorkShopName"]),
-          },
-          grid: {
-            containLabel: true,
-          },
-          series: [
-            {
-              type: "pie",
-              // selectedMode: "single",
-              radius: ["30%", "60%"],
-              color: [
-                "#23CF9C",
-                "#578FFB",
-                "#6E40F2",
-                "#FF61E6",
-                "#E82074",
-                "#FBA806",
+              data: [
+                100, 25, 6, 6, 66, 26, 55, 51, 54, 44, 58, 66, 15, 96, 87, 26,
+                84, 86, 64, 56,
               ],
-              center: ["50%", "60%"],
-              label: {
+            },
+            {
+              name: "配套任务",
+              type: "bar",
+              barWidth: fontSize(15),
+              silent: true,
+              itemStyle: {
                 normal: {
-                  position: "inner",
-                  formatter: "{d}%",
-                  show: true,
-                  fontSize: fontSize(10),
-                  lineHeight: 15,
-                  formatter: function (params) {
-                    // let percent = 0;
-                    // let total = 0;
-                    // for (var i = 0; i < this.tableData[2].length; i++) {
-                    //   total += scaleData[i].value;
-                    // }
-                    // percent = ((params.value / total) * 100).toFixed(0);
-                    if (params.name !== "") {
-                      // return params.name + '\n' + params.data.data;
-                      if (params.name.length > 4) {
-                        return (
-                          params.name.slice(
-                            0,
-                            Math.ceil(params.name.length / 2)
-                          ) +
-                          "\n" +
-                          params.name.slice(Math.ceil(params.name.length / 2)) +
-                          "\n" +
-                          params.percent +
-                          "%"
-                        );
-                      } else {
-                        return params.name + params.percent + "%";
-                      }
-                    } else {
-                      return "";
-                    }
-                  },
-                },
-                textStyle: {
-                  color: "#fff",
-                  fontSize: fontSize(12),
+                  color: "#40AAF6",
                 },
               },
-              labelLine: {
+              data: [
+                84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
+                75, 52, 25, 63,
+              ],
+            },
+            {
+              name: "计划齐套趋势",
+              type: "line",
+              silent: true,
+              itemStyle: {
                 normal: {
-                  show: false,
+                  color: "#FA9A09",
                 },
               },
-              data: this.tableData[2].map((item) => {
-                return {
-                  value: item["S1"],
-                  name: item["WorkShopName"],
-                };
-              }),
+              data: [
+                84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
+                75, 52, 25, 63,
+              ],
             },
           ],
         },
@@ -837,79 +715,9 @@ export default {
       height: 45%;
       display: flex;
       margin-bottom: 10px;
-      .headCard {
-        width: 20%;
-        height: 100%;
-        border-radius: 4px;
-        background: #ffffff;
-        display: grid;
-        justify-self: center;
-        align-self: center;
-        border-radius: 4px;
-        margin-right: 10px;
-        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-
-        // display: flex;
-        // justify-content: space-between;
-        margin-right: 10px;
-        .box {
-          display: flex;
-          flex-direction: column;
-          // width: calc(25% - 16px);
-          width: 100%;
-          height: 100%;
-          align-items: center;
-          justify-content: space-between;
-
-          // border: 1px solid #d5d6ff;
-          padding: 40px 10px 40px 10px;
-          .textBox {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            .textHead {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              .title {
-                font-family: PingFang SC;
-                font-weight: 400;
-                font-size: 14px;
-                color: #979797;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-            }
-            .statusNum {
-              font-family: PingFang SC;
-              font-size: 60px;
-              font-weight: 500;
-              text-align: center;
-              color: #000000;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-        }
-      }
       .secondCard {
-        width: 50%;
+        width: 100%;
         height: 100%;
-        margin-right: 10px;
-        .itemCard {
-          height: 100%;
-          border-radius: 4px;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
-      }
-      .thirdCard {
-        width: 30%;
         .itemCard {
           height: 100%;
           border-radius: 4px;
