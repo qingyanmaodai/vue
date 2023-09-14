@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">
-      <pane :size="40">
+      <pane :size="65">
         <div class="flex_column fullScreen">
           <div class="admin_head_2" ref="headRef">
             <ComSearch
@@ -63,7 +63,7 @@
           </div>
         </div>
       </pane>
-      <pane :size="60">
+      <pane :size="35">
         <div class="flex_column fullScreen">
           <div class="admin_head" ref="headRef">
             <div

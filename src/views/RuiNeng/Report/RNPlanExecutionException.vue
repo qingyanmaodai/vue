@@ -7,7 +7,7 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">入库月统计</div>
+                <div class="echartTitle">各部门分布</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
             </div>
@@ -26,7 +26,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">仓位分布</div>
+                <div class="echartTitle">异常原因占比</div>
               </div>
               <div class="echartBody" ref="chart2"></div>
             </div>
@@ -261,10 +261,10 @@ export default {
         {
           backgroundColor: "#fff",
           color: [
-            "#0090FF",
-            "#36CE9E",
-            "#FFC005",
-            "#FF515A",
+            "#23CF9C",
+            "#578FFB",
+            "#6E40F2",
+            "#FF61E6",
             "#8B5CFF",
             "#00CA69",
           ],
@@ -331,7 +331,7 @@ export default {
           ],
           series: [
             {
-              name: "计划数",
+              name: "电子车间",
               type: "line",
               smooth: true,
               // showSymbol: false,/
@@ -347,23 +347,23 @@ export default {
                     [
                       {
                         offset: 0,
-                        color: "#0090FF30",
+                        color: "#23CF9C30",
                       },
                       {
                         offset: 1,
-                        color: "#0090FF10",
+                        color: "#23CF9C10",
                       },
                     ],
                     false
                   ),
-                  shadowColor: "#0090FF10",
+                  shadowColor: "#23CF9C10",
                   shadowBlur: 10,
                 },
               },
               data: [100, 138, 350, 173, 180, 150, 180, 230],
             },
             {
-              name: "生产数",
+              name: "整机车间(宁波)",
               type: "line",
               smooth: true,
               // showSymbol: false,
@@ -379,20 +379,84 @@ export default {
                     [
                       {
                         offset: 0,
-                        color: "#36CE9E30",
+                        color: "#578FFB30",
                       },
                       {
                         offset: 1,
-                        color: "#36CE9E10",
+                        color: "#578FFB10",
                       },
                     ],
                     false
                   ),
-                  shadowColor: "#36CE9E10",
+                  shadowColor: "#578FFB10",
                   shadowBlur: 10,
                 },
               },
               data: [233, 233, 200, 180, 199, 233, 210, 180],
+            },
+            {
+              name: "整机车间(新昌)",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#6E40F230",
+                      },
+                      {
+                        offset: 1,
+                        color: "#6E40F210",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#6E40F210",
+                  shadowBlur: 10,
+                },
+              },
+              data: [400, 300, 250, 140, 289, 13, 320, 180],
+            },
+            {
+              name: "宁波瑞能",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#FF61E630",
+                      },
+                      {
+                        offset: 1,
+                        color: "#FF61E610",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#FF61E610",
+                  shadowBlur: 10,
+                },
+              },
+              data: [20, 525, 241, 321, 58, 122, 75, 243],
             },
           ],
         },

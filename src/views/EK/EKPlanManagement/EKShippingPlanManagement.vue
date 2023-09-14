@@ -4,7 +4,7 @@
     class="container flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
-    <div class="admin_head flex_grow" ref="headRef">
+    <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"

@@ -50,7 +50,6 @@
             :isClear="isClear[0]"
             :keepSource="true"
             :showPagination="false"
-            :IsIndex="true"
             :pagination="tablePagination[0]"
             @pageChange="pageChange"
             @pageSize="pageSize"
@@ -98,9 +97,9 @@ export default {
         {
           datas: {
             fields:
-              "ProductType,Model,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
-            groupby: "ProductType,Model",
-            sort: "ProductType DESC",
+              "ProductTypeName,Model,sum(Qty) as Qty,sum(ReportQty) as ReportQty,SUM(OutStockQty) AS OutStockQty,sum(OutStockQtyDiff) as OutStockQtyDiff,sum(UnfinishQty) as UnfinishQty ",
+            groupby: "ProductTypeName,Model",
+            sort: "ProductTypeName DESC",
           },
           forms: [],
         },
@@ -331,38 +330,38 @@ export default {
       this.$set(this.tableColumns, remarkTb, [
         {
           label: "品类",
-          prop: "ProductType",
+          prop: "ProductTypeName",
           width: 30,
         },
         {
           label: "内部型号",
           prop: "Model",
-          width: 150,
+          width: 100,
         },
         {
           label: "数量",
           prop: "Qty",
-          width: 80,
+          width: 60,
         },
         {
           label: "汇报数",
           prop: "ReportQty",
-          width: 80,
+          width: 60,
         },
         {
           label: "出库数",
           prop: "OutStockQty",
-          width: 80,
+          width: 60,
         },
         {
           label: "库存数",
           prop: "OutStockQtyDiff",
-          width: 80,
+          width: 60,
         },
         {
           label: "未完成",
           prop: "UnfinishQty",
-          width: 80,
+          width: 600,
         },
       ]);
       if (result) {

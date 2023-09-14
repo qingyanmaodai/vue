@@ -2,7 +2,7 @@
 <template>
   <div class="container" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0]" :key="i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -20,10 +20,7 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
-            <el-col :span="20" class="flex_flex_end">
+            <el-col :span="12" class="flex">
               <a
                 style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
@@ -39,9 +36,15 @@
                 >业务订单明细导入模板</a
               >
               <!-- 下拉框 -->
-              <el-select v-model="colorType" filterable size="mini" clearable>
+              <el-select
+                v-model="colorType"
+                filterable
+                size="small"
+                clearable
+                class="margin_right_10"
+              >
                 <el-option
-                  v-for="(op, index) in Status1"
+                  v-for="(op, index) in colorStatus"
                   :label="op.label"
                   :value="op.value"
                   :key="'select' + index"
@@ -50,8 +53,25 @@
               <el-color-picker
                 size="small"
                 v-model="colorValue"
+                class="margin_right_10"
               ></el-color-picker>
-              <el-button size="small" @click="updateColor(0)">确定</el-button>
+              <el-button
+                class="margin_right_10"
+                size="small"
+                type="primary"
+                @click="updateColor(0)"
+                >确定</el-button
+              >
+            </el-col>
+            <el-col :span="12" class="flex_flex_end">
+              <div v-for="(item, y) in Status1" :key="y">
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                  >{{ item.label }}</span
+                >
+                <el-divider direction="vertical"></el-divider>
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -81,8 +101,8 @@
           :remark="item"
           :isLoading="tableLoading[item]"
           :btnForm="btnForm"
-          :signName="i"
-          :Region="Region[i]"
+          :signName="item"
+          :Region="Region[item]"
           @btnClick="btnClick"
         />
         <ComSpreadTable2
@@ -225,9 +245,20 @@ export default {
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
       sysID: [{ ID: 10108 }, { ID: 10108 }],
-      Status1: [
+      colorStatus: [
         { label: "字体颜色", value: 0 },
         { label: "背景颜色", value: 1 },
+      ],
+      Status1: [
+        {
+          label: "未完成",
+          value: { ISPOFinish: "否" },
+        },
+        {
+          label: "已完成",
+          value: { ISPOFinish: "是", ISOutStock: "出库正常" },
+        },
+        { label: "全部", value: { ISPOFinish: "", ISOutStock: "" } },
       ],
       spread: null, //excel初始
       fileList: [],
@@ -585,7 +616,13 @@ export default {
             if (column["isEdit"]) {
               cell.locked(false).foreColor("#2a06ecd9");
             }
-
+            if (
+              rowItem["Result"] !== "正常" &&
+              rowItem["Result"] &&
+              columnIndex < 5
+            ) {
+              cell.backColor("#FF0000");
+            }
             // 获取颜色
             if (rowItem["ISPOFinish"] === "是" && key === "ReportQty") {
               cell.backColor("#92d050");
@@ -670,15 +707,41 @@ export default {
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
 
         //设置数据渲染的单元格默认的样式
+        // var defaultStyle = new GC.Spread.Sheets.Style();
+        // defaultStyle.font =
+        //   "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        // defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        // defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        // sheet.setDefaultStyle(
+        //   defaultStyle,
+        //   GC.Spread.Sheets.SheetArea.viewport
+        // );
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
+
         defaultStyle.showEllipsis = true;
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
@@ -766,24 +829,13 @@ export default {
       this.$set(this.tablePagination[remarkTb], "pageSize", val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
-    // // 改变状态
-    // changeStatus() {
-    //   console.log(this.selectedOption, "selectedOption");
-    //   this.formSearchs[0]["datas"]["Status"] = this.selectedOption.includes(0)
-    //     ? 0
-    //     : null;
-    //   this.formSearchs[0]["datas"]["CreatedBy"] = this.selectedOption.includes(
-    //     1
-    //   )
-    //     ? this.$store.getters.userInfo.Account
-    //     : null;
-    //   this.formSearchs[0]["datas"]["IsClose"] = this.selectedOption.includes(2)
-    //     ? "是"
-    //     : "否";
-    //   console.log("item", this.formSearchs[0]["datas"]);
-    //   // this.labelStatus1 = index;
-    //   this.dataSearch(0);
-    // },
+    // 改变状态
+    changeStatus(item, index) {
+      this.labelStatus1 = index;
+      this.formSearchs[0].datas["ISPOFinish"] = item.value["ISPOFinish"];
+      this.formSearchs[0].datas["ISOutStock"] = item.value["ISOutStock"];
+      this.dataSearch(0);
+    },
     // 保存
     async dataSave(remarkTb) {
       let sheet = this.spread.getActiveSheet();
