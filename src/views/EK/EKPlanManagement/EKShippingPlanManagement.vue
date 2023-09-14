@@ -814,6 +814,29 @@ export default {
         sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
       });
 
+      // 设置整个列头的背景色和前景色。
+      /**
+       * 参数1:表示行
+       * 参数2:列，-1表示
+       * 参数3:
+       * 参数4:
+       * 参数5:
+       */
+      let colHeaderStyle = sheet.getRange(
+        0,
+        -1,
+        1,
+        -1,
+        GC.Spread.Sheets.SheetArea.colHeader
+      );
+      colHeaderStyle.foreColor("000000d9");
+      colHeaderStyle.backColor("#f3f3f3");
+      colHeaderStyle.font(
+        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+      );
+      colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
+      colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
+
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
         "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";

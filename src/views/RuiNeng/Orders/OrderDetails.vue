@@ -20,7 +20,8 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12" class="flex">
+            <el-col :span="12" class="flex"> </el-col>
+            <el-col :span="12" class="flex_flex_end">
               <a
                 style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
@@ -56,14 +57,12 @@
                 class="margin_right_10"
               ></el-color-picker>
               <el-button
-                class="margin_right_10"
+                class="margin_right_20"
                 size="small"
                 type="primary"
                 @click="updateColor(0)"
                 >确定</el-button
               >
-            </el-col>
-            <el-col :span="12" class="flex_flex_end">
               <div v-for="(item, y) in Status1" :key="y">
                 <span
                   @click="changeStatus(item, y)"
@@ -252,13 +251,13 @@ export default {
       Status1: [
         {
           label: "未完成",
-          value: { ISPOFinish: "否" },
+          value: { IsPoDetailFinish: 0 },
         },
         {
           label: "已完成",
-          value: { ISPOFinish: "是", ISOutStock: "出库正常" },
+          value: { IsPoDetailFinish: 1 },
         },
-        { label: "全部", value: { ISPOFinish: "", ISOutStock: "" } },
+        { label: "全部", value: { IsPoDetailFinish: "" } },
       ],
       spread: null, //excel初始
       fileList: [],
@@ -493,7 +492,7 @@ export default {
         this.changeStatus(
           {
             label: "未完成",
-            value: { ISPOFinish: "否" },
+            value: { IsPoDetailFinish: 0 },
           },
           0
         );
@@ -838,8 +837,8 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["ISPOFinish"] = item.value["ISPOFinish"];
-      this.formSearchs[0].datas["ISOutStock"] = item.value["ISOutStock"];
+      this.formSearchs[0].datas["IsPoDetailFinish"] =
+        item.value["IsPoDetailFinish"];
       this.dataSearch(0);
     },
     // 保存

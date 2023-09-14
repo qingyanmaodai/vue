@@ -3,98 +3,72 @@
   <el-container>
     <el-main>
       <div class="firstNode">
-        <div class="leftCard container">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              :signName="0"
-              :Region="4"
-              @btnClick="btnClick"
-            />
+        <div class="leftCard">
+          <div class="LFirstCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">过去30天计划完成趋势</div>
+              </div>
+              <div class="echartBody" ref="chart0"></div>
+            </div>
           </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[0]"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :sysID="sysID[0]['ID']"
-              :isClear="isClear[0]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[0]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-            />
+          <div class="LSecondCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">车间计划完成情况</div>
+              </div>
+              <div class="echartBody" ref="chart1"></div>
+            </div>
           </div>
         </div>
         <div class="rightCard">
-          <div class="headCard">
-            <div class="box bgColor1">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]["title"] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[0]["Prop"] }}
-                </div>
+          <div class="firstCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">整体完成情况</div>
               </div>
-            </div>
-            <div class="box bgColor2">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[1]["Prop"] }}
-                </div>
-              </div>
-            </div>
-            <div class="box bgColor3">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]["title"] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[2]["Prop"] }}</div>
-              </div>
-            </div>
-            <div class="box bgColor4">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]["title"] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[3]["Prop"] }}</div>
-              </div>
+              <div class="echartBody" ref="chart2"></div>
             </div>
           </div>
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">入库月统计</div>
+                <div class="echartTitle">各车间完成占比</div>
               </div>
-              <div class="echartBody" ref="chart1"></div>
+              <div class="echartBody" ref="chart3"></div>
             </div>
           </div>
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">仓位分布</div>
+                <div class="echartTitle">各车间完成率</div>
               </div>
-              <div class="echartBody" ref="chart2"></div>
+              <div class="echartBody" v-for="item in [0]" :key="item">
+                <div class="tableContainer">
+                  <ComVxeTable
+                    :ref="`tableRef${item}`"
+                    :rowKey="'RowNumber'"
+                    height="100%"
+                    :isToolbar="false"
+                    :isEdit="isEdit[0]"
+                    :tableData="tableData[0]"
+                    :tableHeader="tableColumns[0]"
+                    :tableLoading="tableLoading[0]"
+                    :remark="0"
+                    :sysID="sysID[0]['ID']"
+                    :isClear="isClear[0]"
+                    :hasSelect="hasSelect[item]"
+                    :pagination="tablePagination[0]"
+                    @pageChange="pageChange"
+                    @handleRowClick="handleRowClick"
+                    @pageSize="pageSize"
+                    @sortChange="sortChange"
+                    @selectfun="selectFun"
+                    :keepSource="true"
+                    :footerContent="false"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -249,7 +223,12 @@ export default {
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     //初始化图表;
-    this.chart = [this.$refs.chart1, this.$refs.chart2];
+    this.chart = [
+      this.$refs.chart0,
+      this.$refs.chart1,
+      this.$refs.chart2,
+      this.$refs.chart3,
+    ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener("resize", this.handleWindowResizeDebounced);
@@ -282,6 +261,150 @@ export default {
       }
       this.chartOptions = [
         {
+          backgroundColor: "#fff",
+          color: [
+            "#009B4C",
+            "#578FFB",
+            "#6E40F2",
+            "#FF61E6",
+            "#8B5CFF",
+            "#00CA69",
+          ],
+          // legend: {
+          //   top: "0%",
+          // },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow",
+            },
+          },
+          grid: {
+            left: fontSize(10),
+            right: fontSize(10),
+            bottom: fontSize(10),
+            containLabel: true,
+          },
+          xAxis: [
+            {
+              type: "category",
+              boundaryGap: false,
+              axisLabel: {
+                formatter: "{value}日",
+                textStyle: {
+                  color: "#333",
+                },
+              },
+              axisLine: {
+                lineStyle: {
+                  color: "#D9D9D9",
+                },
+              },
+              data: [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30",
+              ],
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name: "单位：万",
+              axisLabel: {
+                textStyle: {
+                  color: "#666",
+                },
+              },
+              nameTextStyle: {
+                color: "#666",
+                fontSize: 12,
+                lineHeight: 40,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: "dashed",
+                  color: "#E9E9E9",
+                },
+              },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+            },
+          ],
+          series: [
+            {
+              name: "电子车间",
+              type: "line",
+              smooth: false,
+              // showSymbol: false,/
+              symbolSize: 0, //标记点
+              zlevel: 3,
+              lineStyle: {
+                width: fontSize(4),
+              },
+              areaStyle: {
+                normal: {
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#23CF9C30",
+                      },
+                      {
+                        offset: 1,
+                        color: "#23CF9C10",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#23CF9C10",
+                  shadowBlur: 10,
+                },
+              },
+              data: [
+                132, 219, 84, 298, 56, 214, 179, 45, 267, 93, 176, 309, 62, 198,
+                127, 76, 241, 168, 114, 77, 212, 292, 97, 58, 173, 128, 203,
+                244, 91, 138,
+              ],
+            },
+          ],
+        },
+        {
           grid: {
             containLabel: true,
             bottom: 0,
@@ -294,28 +417,26 @@ export default {
               type: "shadow",
             },
           },
-          legend: {
-            top: "0",
-            data: ["计划数", "入库数"],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
-          },
+          // legend: {
+          //   top: "0",
+          //   data: ["计划数", "入库数"],
+          //   itemWidth: fontSize(14),
+          //   itemHeight: fontSize(14),
+          // },
           xAxis: {
             // name: "班级",
             triggerEvent: true,
             data: [
-              "1月",
-              "2月",
-              "3月",
-              "4月",
-              "5月",
-              "6月",
-              "7月",
-              "8月",
-              "9月",
-              "10月",
-              "11月",
-              "12月",
+              "丝印组",
+              "激光组",
+              "宁波1线",
+              "宁波2线",
+              "宁波3线",
+              "宁波4线",
+              "宁波5线",
+              "宁波6线",
+              "宁波7线",
+              "宁波8线",
             ],
             axisLabel: {
               interval: 0,
@@ -368,27 +489,252 @@ export default {
             {
               name: "计划数",
               type: "bar",
+              barWidth: fontSize(30),
               silent: true,
               itemStyle: {
                 normal: {
-                  color: "#578FFB",
+                  color: "#009B4C",
+                  label: {
+                    show: true, // 显示标签
+                    position: "top", // 标签位置：在柱形的顶部
+                    textStyle: {
+                      color: "black", // 标签文本颜色
+                      fontSize: fontSize(12), // 标签文本字号
+                    },
+                    formatter: function (params) {
+                      // 使用千位分隔符格式化标签文本
+                      return params.value
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    },
+                  },
                 },
               },
               data: [
-                100, 225, 626, 162, 626, 2626, 515, 151, 54, 484, 518, 626,
+                102210, 22515, 21125, 16251, 61226, 122626, 51255, 156661,
+                52124, 48214,
+              ],
+            },
+          ],
+        },
+        {
+          title: {
+            x: "center",
+            bottom: 40,
+            text: "BBB",
+            textStyle: {
+              fontWeight: "normal",
+              fontSize: 55,
+              color: "#323232",
+            },
+          },
+          tooltip: {
+            show: true,
+          },
+          grid: {
+            containLabel: true,
+          },
+          series: [
+            {
+              type: "gauge",
+              center: ["50%", "55%"], // 默认全局居中
+              radius: 233,
+              splitNumber: 10, //刻度数量
+              min: 0,
+              max: 100,
+              startAngle: 200,
+              endAngle: -20,
+
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  width: 2,
+                  shadowBlur: 0,
+                  color: [[1, "#8f8f8f"]],
+                },
+              },
+              axisTick: {
+                show: true,
+                lineStyle: {
+                  color: "#8f8f8f",
+                  width: 1,
+                },
+                length: 8,
+                splitNumber: 10,
+              },
+              splitLine: {
+                show: true,
+                length: 12,
+                lineStyle: {
+                  color: "#8f8f8f",
+                },
+              },
+              axisLabel: {
+                distance: 8,
+                textStyle: {
+                  color: "#8f8f8f",
+                  fontSize: "14",
+                  fontWeight: "bold",
+                },
+                formatter: function (e) {
+                  switch (e + "") {
+                    case "10":
+                      return "10";
+
+                    case "20":
+                      return "20";
+
+                    case "30":
+                      return "30";
+
+                    case "40":
+                      return "40";
+
+                    case "50":
+                      return "50";
+
+                    case "60":
+                      return "60";
+
+                    case "70":
+                      return "70";
+
+                    case "80":
+                      return "80";
+
+                    case "90":
+                      return "90";
+
+                    case "100":
+                      return "100";
+                    default:
+                      return e;
+                  }
+                },
+                textStyle: {
+                  fontSize: 12,
+                  fontWeight: "",
+                },
+              },
+              pointer: {
+                //仪表盘指针
+                show: 0,
+              },
+              detail: {
+                show: false,
+              },
+              data: [
+                {
+                  name: "",
+                  value: 100,
+                },
               ],
             },
             {
-              name: "入库数",
-              type: "bar",
-              silent: true,
+              startAngle: 200,
+              endAngle: -20,
+              name: "实际完成",
+              type: "gauge",
+              center: ["50%", "55%"], // 默认全局居中
+              radius: 103,
+              min: 0,
+              max: 100,
+              splitNumber: 0,
+              axisLine: {
+                // 坐标轴线
+                lineStyle: {
+                  color: [
+                    [0.66, "#dddddd"],
+                    [1, "#dddddd"],
+                  ], // 属性lineStyle控制线条样式
+                  width: 4,
+                },
+              },
+
+              axisLabel: {
+                // 坐标轴小标记
+                textStyle: {
+                  // 属性lineStyle控制线条样式
+                  fontWeight: "bolder",
+                  fontSize: 16,
+                  color: "rgba(30,144,255,0)",
+                },
+              },
+              splitLine: {
+                // 分隔线
+                length: 10, // 属性length控制线长
+                lineStyle: {
+                  // 属性lineStyle（详见lineStyle）控制线条样式
+                  width: 0,
+                  color: "#444",
+                },
+              },
+              pointer: {
+                // 分隔线 指针
+                color: "#666666",
+                width: 0,
+                length: 230,
+              },
+              detail: {
+                show: false,
+              },
+            },
+            {
+              name: "信用分",
+              type: "gauge",
+              startAngle: 200,
+              endAngle: -20,
+              radius: 180,
+              center: ["50%", "55%"], // 默认全局居中
+
+              min: 0,
+              max: 100,
+
+              axisLine: {
+                show: false,
+                lineStyle: {
+                  width: 25,
+                  shadowBlur: 0,
+                  color: [
+                    [0.2, "#E43F3D"],
+                    [0.4, "#E100E2C"],
+                    [0.6, "#DDBD4D"],
+                    [0.8, "#7CBB55"],
+                    [1, "#9CD6CE"],
+                  ],
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                show: false,
+                length: 20,
+              },
+
+              axisLabel: {
+                show: false,
+              },
+              pointer: {
+                show: true,
+              },
+              detail: {
+                show: false,
+                offsetCenter: [0, 0],
+                textStyle: {
+                  fontSize: 30,
+                },
+              },
               itemStyle: {
                 normal: {
-                  color: "#23CF9C",
+                  color: "#323232",
                 },
               },
               data: [
-                2626, 515, 151, 54, 484, 518, 626, 100, 225, 626, 162, 626,
+                {
+                  name: "",
+                  value: Math.floor(10),
+                },
               ],
             },
           ],
@@ -821,79 +1167,49 @@ export default {
     height: 100%;
     .leftCard {
       width: 65%;
-      background: #fff;
+      // background: #fff;
       margin-right: 10px;
       display: flex;
       flex-direction: column;
       height: 100%;
+      .LFirstCard {
+        height: 50%;
+        margin-bottom: 10px;
+        .itemCard {
+          height: 100%;
+          border-radius: 4px;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+      }
+      .LSecondCard {
+        height: 50%;
+        .itemCard {
+          height: 100%;
+          border-radius: 4px;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+      }
     }
     .rightCard {
       width: 35%;
       display: flex;
       flex-direction: column;
-      .headCard {
+      .firstCard {
         height: 30%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 创建两列，每列等分剩余空间 */
-        grid-template-rows: repeat(2, 1fr); /* 创建两行，每行等分剩余空间 */
-        gap: 10px; /* 可选的行和列之间的间距 */
-        // display: flex;
-        // justify-content: space-between;
         margin-bottom: 10px;
-        .box {
-          display: flex;
-          // width: calc(25% - 16px);
-          width: 100%;
+        .itemCard {
           height: 100%;
-          // border: 1px solid #d5d6ff;
-          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
           border-radius: 4px;
-          margin-right: 10px;
-          padding: 22px 10px 26px 10px;
-          .textBox {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            .textHead {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              .title {
-                font-weight: 400;
-                font-size: 14px;
-                color: #ffffff;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-            }
-            .statusNum {
-              font-family: Mplus 1p Bold;
-              font-size: 32px;
-              font-weight: 700;
-              text-align: center;
-              color: #ffffff;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-        }
-        .box:last-child {
-          margin-right: 0px;
-        }
-        .bgColor1 {
-          background: rgba(99, 183, 97, 1);
-        }
-        .bgColor2 {
-          background: rgba(245, 170, 57, 1);
-        }
-        .bgColor3 {
-          background: rgba(64, 170, 246, 1);
-        }
-        .bgColor4 {
-          background: rgba(244, 109, 79, 1);
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
         }
       }
       .secondCard {
@@ -918,6 +1234,19 @@ export default {
           display: flex;
           flex-direction: column;
           width: 100%;
+          .echartBody {
+            .tableContainer {
+              display: flex;
+              flex-direction: column;
+              height: 100%;
+            }
+            height: calc(100% - 60px);
+            overflow: auto;
+            overflow: hidden;
+          }
+          .echartBody::-webkit-scrollbar {
+            display: none;
+          }
         }
       }
     }
@@ -962,7 +1291,6 @@ export default {
     margin-right: 10px;
   }
   .echartBody {
-    // height: 480px;
     flex-grow: 1;
     padding: 10px;
     width: 100%;
@@ -973,8 +1301,8 @@ export default {
   .itemCard1:hover {
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   }
-  .container {
-    padding: 0;
-  }
+  // .container {
+  //   padding: 0;
+  // }
 }
 </style>

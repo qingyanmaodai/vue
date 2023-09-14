@@ -1696,8 +1696,10 @@ export default {
   created() {
     this.getFooterRemark();
     this.$nextTick(() => {
-      // 手动将表格和工具栏进行关联
-      this.$refs.vxeTable.connect(this.$refs.xToolbar1);
+      if (this.isToolbar) {
+        // 手动将表格和工具栏进行关联
+        this.$refs.vxeTable.connect(this.$refs.xToolbar1);
+      }
     });
   },
 };
