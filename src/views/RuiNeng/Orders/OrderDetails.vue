@@ -488,9 +488,15 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], "forms", x);
-          this.getTableData(this.formSearchs[z].datas, z);
         });
         this.adminLoading = false;
+        this.changeStatus(
+          {
+            label: "未完成",
+            value: { ISPOFinish: "否" },
+          },
+          0
+        );
       } else {
         this.adminLoading = false;
         this.$message({
