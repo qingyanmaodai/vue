@@ -61,7 +61,7 @@
           <el-col :span="4"
             ><span class="title">拆分编辑完请保存 </span></el-col
           >
-          <el-col :span="24" class="flex_flex_end"
+          <el-col :span="20" class="flex_flex_end"
             ><el-divider direction="vertical"></el-divider>
             <el-button type="primary" size="mini" @click="changeEvent(1)">
               确定拆分

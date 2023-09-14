@@ -198,7 +198,7 @@ export default {
           return;
         }
         obj["Account"] = this.formData.Account;
-        // obj["Pwd"] = this.formData.NewPwd;
+        obj["Pwd"] = this.formData.NewPwd;
         obj["dicID"] = 25;
         newData.push(obj);
         let res = await SaveData(newData);
