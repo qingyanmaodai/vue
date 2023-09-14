@@ -691,7 +691,7 @@ export default {
         Object.prototype.toString.call(row["FColors"]) === "[object Object]" &&
         key in row["FColors"]
       ) {
-        style.backgroundColor = row["FColors"][key]; // 设置背景颜色
+        style.color = row["FColors"][key]; // 设置背景颜色
       }
       if (
         Object.prototype.toString.call(row["BColors"]) === "[object Object]" &&

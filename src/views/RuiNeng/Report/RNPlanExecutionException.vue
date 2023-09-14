@@ -3,6 +3,35 @@
   <el-container>
     <el-main>
       <div class="firstNode">
+        <div class="rightCard">
+          <div class="secondCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">入库月统计</div>
+              </div>
+              <div class="echartBody" ref="chart1"></div>
+            </div>
+          </div>
+          <div class="headCard">
+            <div class="box">
+              <svg-icon icon-class="Documentation" class="Documentation" />
+              <div class="textBox">
+                <div class="statusNum">1,857</div>
+                <div class="textHead">
+                  <div class="title">今日累计异常次数</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="thirdCard">
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">仓位分布</div>
+              </div>
+              <div class="echartBody" ref="chart2"></div>
+            </div>
+          </div>
+        </div>
         <div class="leftCard container">
           <div class="admin_head_2" ref="headRef">
             <ComSearch
@@ -40,62 +69,6 @@
               :keepSource="true"
               :footerContent="true"
             />
-          </div>
-        </div>
-        <div class="rightCard">
-          <div class="headCard">
-            <div class="box bgColor1">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]["title"] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[0]["Prop"] }}
-                </div>
-              </div>
-            </div>
-            <div class="box bgColor2">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]["title"] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[1]["Prop"] }}
-                </div>
-              </div>
-            </div>
-            <div class="box bgColor3">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]["title"] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[2]["Prop"] }}</div>
-              </div>
-            </div>
-            <div class="box bgColor4">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]["title"] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[3]["Prop"] }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">入库月统计</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">仓位分布</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
-            </div>
           </div>
         </div>
       </div>
@@ -286,11 +259,17 @@ export default {
       }
       this.chartOptions = [
         {
-          grid: {
-            containLabel: true,
-            bottom: 0,
-            left: fontSize(10),
-            right: fontSize(10),
+          backgroundColor: "#fff",
+          color: [
+            "#0090FF",
+            "#36CE9E",
+            "#FFC005",
+            "#FF515A",
+            "#8B5CFF",
+            "#00CA69",
+          ],
+          legend: {
+            top: "0%",
           },
           tooltip: {
             trigger: "axis",
@@ -298,54 +277,43 @@ export default {
               type: "shadow",
             },
           },
-          legend: {
-            top: "0",
-            data: ["计划数", "完成数"],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
+          grid: {
+            left: fontSize(10),
+            right: fontSize(10),
+            bottom: fontSize(10),
+            containLabel: true,
           },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
-            data: this.tableData[1].map((item) => item["PlanDay"]),
-            axisLabel: {
-              interval: 1,
-              show: true,
-              textStyle: {
-                color: "#000",
-              },
-            },
-            axisLine: {
-              lineStyle: {
-                show: false,
-                color: "#F3F3F3",
-                width: 2,
-              },
-            },
-          },
-          yAxis: [
+          xAxis: [
             {
-              name: "单位:万",
-              type: "value",
-              nameTextStyle: {
-                color: "#444444",
-              },
+              type: "category",
+              boundaryGap: false,
               axisLabel: {
-                interval: 0,
-                show: true,
+                formatter: "{value}月",
                 textStyle: {
-                  color: "#444444",
+                  color: "#333",
                 },
               },
               axisLine: {
-                show: false,
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
+                lineStyle: {
+                  color: "#D9D9D9",
+                },
               },
-              axisTick: {
-                show: false,
+              data: ["1", "2", "3", "4", "5", "6", "7", "8"],
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name: "单位：万",
+              axisLabel: {
+                textStyle: {
+                  color: "#666",
+                },
+              },
+              nameTextStyle: {
+                color: "#666",
+                fontSize: 12,
+                lineHeight: 40,
               },
               splitLine: {
                 lineStyle: {
@@ -353,30 +321,78 @@ export default {
                   color: "#E9E9E9",
                 },
               },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
             },
           ],
           series: [
             {
               name: "计划数",
-              type: "bar",
-              silent: true,
-              itemStyle: {
+              type: "line",
+              smooth: true,
+              // showSymbol: false,/
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
                 normal: {
-                  color: "#578FFB",
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#0090FF30",
+                      },
+                      {
+                        offset: 1,
+                        color: "#0090FF10",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#0090FF10",
+                  shadowBlur: 10,
                 },
               },
-              data: this.tableData[1].map((item) => item["S1"]),
+              data: [100, 138, 350, 173, 180, 150, 180, 230],
             },
             {
-              name: "完成数",
-              type: "bar",
-              silent: true,
-              itemStyle: {
+              name: "生产数",
+              type: "line",
+              smooth: true,
+              // showSymbol: false,
+              symbolSize: 8,
+              zlevel: 3,
+              areaStyle: {
                 normal: {
-                  color: "#23CF9C",
+                  color: new echarts.graphic.LinearGradient(
+                    0,
+                    0,
+                    0,
+                    1,
+                    [
+                      {
+                        offset: 0,
+                        color: "#36CE9E30",
+                      },
+                      {
+                        offset: 1,
+                        color: "#36CE9E10",
+                      },
+                    ],
+                    false
+                  ),
+                  shadowColor: "#36CE9E10",
+                  shadowBlur: 10,
                 },
               },
-              data: this.tableData[1].map((item) => item["S2"]),
+              data: [233, 233, 200, 180, 199, 233, 210, 180],
             },
           ],
         },
@@ -792,10 +808,12 @@ export default {
 
   .firstNode {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     height: 100%;
     .leftCard {
-      width: 65%;
+      width: 100%;
+      height: 55%;
       background: #fff;
       margin-right: 10px;
       display: flex;
@@ -803,28 +821,36 @@ export default {
       height: 100%;
     }
     .rightCard {
-      width: 35%;
+      width: 100%;
+      height: 45%;
       display: flex;
-      flex-direction: column;
+      margin-bottom: 10px;
       .headCard {
-        height: 30%;
+        width: 20%;
+        height: 100%;
+        border-radius: 4px;
+        background: #ffffff;
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 创建两列，每列等分剩余空间 */
-        grid-template-rows: repeat(2, 1fr); /* 创建两行，每行等分剩余空间 */
-        gap: 10px; /* 可选的行和列之间的间距 */
+        justify-self: center;
+        align-self: center;
+        border-radius: 4px;
+        margin-right: 10px;
+        box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
+
         // display: flex;
         // justify-content: space-between;
-        margin-bottom: 10px;
+        margin-right: 10px;
         .box {
           display: flex;
+          flex-direction: column;
           // width: calc(25% - 16px);
           width: 100%;
           height: 100%;
+          align-items: center;
+          justify-content: space-between;
+
           // border: 1px solid #d5d6ff;
-          box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
-          border-radius: 4px;
-          margin-right: 10px;
-          padding: 22px 10px 26px 10px;
+          padding: 40px 10px 40px 10px;
           .textBox {
             width: 100%;
             display: flex;
@@ -835,45 +861,32 @@ export default {
               justify-content: center;
               align-items: center;
               .title {
+                font-family: PingFang SC;
                 font-weight: 400;
                 font-size: 14px;
-                color: #ffffff;
+                color: #979797;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
               }
             }
             .statusNum {
-              font-family: Mplus 1p Bold;
-              font-size: 32px;
-              font-weight: 700;
+              font-family: PingFang SC;
+              font-size: 60px;
+              font-weight: 500;
               text-align: center;
-              color: #ffffff;
+              color: #000000;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
             }
           }
         }
-        .box:last-child {
-          margin-right: 0px;
-        }
-        .bgColor1 {
-          background: rgba(99, 183, 97, 1);
-        }
-        .bgColor2 {
-          background: rgba(245, 170, 57, 1);
-        }
-        .bgColor3 {
-          background: rgba(64, 170, 246, 1);
-        }
-        .bgColor4 {
-          background: rgba(244, 109, 79, 1);
-        }
       }
       .secondCard {
-        height: 30%;
-        margin-bottom: 10px;
+        width: 50%;
+        height: 100%;
+        margin-right: 10px;
         .itemCard {
           height: 100%;
           border-radius: 4px;
@@ -884,8 +897,7 @@ export default {
         }
       }
       .thirdCard {
-        height: 40%;
-
+        width: 30%;
         .itemCard {
           height: 100%;
           border-radius: 4px;
@@ -951,5 +963,9 @@ export default {
   .container {
     padding: 0;
   }
+}
+.Documentation {
+  height: 80px;
+  width: 80px;
 }
 </style>

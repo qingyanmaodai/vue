@@ -1468,3 +1468,8 @@ label {
 .width-100px {
   width: 100px;
 }
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

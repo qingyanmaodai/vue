@@ -4,7 +4,7 @@
     class="container flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
-    <div class="admin_head" ref="headRef">
+    <div class="admin_head flex_grow" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
@@ -30,13 +30,14 @@
     </div>
     <div
       class="admin_content flex_grow"
+      id="tableContainer"
       v-for="item in [0]"
       :key="item"
       v-show="labelStatus1 === item"
     >
       <ComSpreadTable
         ref="spreadsheetRef"
-        :height="height"
+        :height="'100%'"
         :tableData="tableData[item]"
         :tableColumns="tableColumns[item]"
         :tableLoading="tableLoading[item]"
@@ -205,7 +206,7 @@ export default {
       isEdit: [false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
-      Region: [6, 6, 6],
+      Region: [5, 6, 6],
     };
   },
   watch: {},
@@ -228,12 +229,24 @@ export default {
     }),
   },
   mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 300);
+    let tableContainer = document.getElementById("tableContainer"); // 通过 `<div>` 的 ID 获取元素
+    // 创建一个 ResizeObserver 实例
+    const resizeObserver = new ResizeObserver((entries) => {
+      // 当元素的大小发生变化时，会触发此回调函数
+      for (const entry of entries) {
+        if (entry.target === tableContainer) {
+          // 在这里执行你的操作，例如刷新 SpreadJS
+          // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
+          this.spread[this.labelStatus1].refresh();
+        }
+      }
+    }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
+    resizeObserver.observe(tableContainer);
     this.keyDown();
   },
   methods: {
+    // 更新表格高度的函数
+    updateTableHeight() {},
     //按钮权限
     judgeBtn(routeBtn) {
       console.log(routeBtn, "routeBtn");
