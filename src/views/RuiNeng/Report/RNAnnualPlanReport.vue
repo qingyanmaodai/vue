@@ -371,7 +371,7 @@ export default {
           yAxis: [
             {
               type: "value",
-              name: "单位：万",
+              name: "单位:万",
               axisLabel: {
                 textStyle: {
                   color: "#666",
@@ -379,8 +379,8 @@ export default {
               },
               nameTextStyle: {
                 color: "#666",
-                fontSize: 12,
-                lineHeight: 40,
+                fontSize: fontSize(12),
+                lineHeight: fontSize(40),
               },
               splitLine: {
                 lineStyle: {
@@ -441,9 +441,9 @@ export default {
         {
           grid: {
             containLabel: true,
-            bottom: 0,
             left: fontSize(10),
             right: fontSize(10),
+            bottom: fontSize(10),
           },
           tooltip: {
             trigger: "axis",
@@ -493,6 +493,8 @@ export default {
               type: "value",
               nameTextStyle: {
                 color: "#444444",
+                fontSize: fontSize(12),
+                lineHeight: fontSize(40),
               },
               axisLabel: {
                 interval: 0,
@@ -533,7 +535,7 @@ export default {
                 normal: {
                   color: "#009B4C",
                   label: {
-                    show: true, // 显示标签
+                    show: false, // 显示标签
                     position: "top", // 标签位置：在柱形的顶部
                     textStyle: {
                       color: "black", // 标签文本颜色
@@ -991,7 +993,7 @@ export default {
     flex-direction: column;
     height: 100%;
     .headCard {
-      height: 20%;
+      height: 15%;
       display: grid;
       grid-template-columns: repeat(5, 1fr); /* 创建两列，每列等分剩余空间 */
       gap: 10px; /* 可选的行和列之间的间距 */
@@ -1020,7 +1022,7 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 60px 0px 50px 0px;
+          padding: 30px 0px 30px 0px;
           .textHead {
             display: flex;
             justify-content: space-between;
@@ -1108,7 +1110,7 @@ export default {
     }
     .bottomCard {
       width: 100%;
-      height: 50%;
+      height: 55%;
       display: flex;
       flex-direction: column;
       .thirdCard {
