@@ -57,6 +57,60 @@
         </div>
       </pane>
     </splitpanes>
+    <!-- 弹框-->
+    <DialogOptTable
+      title="库存齐套率查询"
+      :tableDialog="colDialogVisible1"
+      :sysID="sysID[1]['ID']"
+      :isEdit="isEdit[1]"
+      :remark="1"
+      width="80%"
+      :hasSelect="hasSelect[1]"
+      @closeDialog="colDialogVisible1 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[1]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :showFooter="false"
+      :table-data="tableData[1]"
+      :table-header="tableColumns[1]"
+      :table-loading="tableLoading[1]"
+      :table-pagination="tablePagination[1]"
+      :isClear="isClear[1]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
+    <!-- 弹框-->
+    <DialogOptTable
+      title="采购齐套率查询"
+      :tableDialog="colDialogVisible2"
+      :sysID="sysID[2]['ID']"
+      :isEdit="isEdit[2]"
+      :remark="2"
+      width="80%"
+      :hasSelect="hasSelect[2]"
+      @closeDialog="colDialogVisible2 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[2]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :showFooter="false"
+      :table-data="tableData[2]"
+      :table-header="tableColumns[2]"
+      :table-loading="tableLoading[2]"
+      :table-pagination="tablePagination[2]"
+      :isClear="isClear[2]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
   </div>
 </template>
 
@@ -151,17 +205,13 @@ export default {
           formsAll: [],
         },
         {
-          datas: {
-            IsConfig: 1,
-          },
+          datas: {},
           forms: [],
           required: [], //获取必填项
           formsAll: [],
         },
         {
-          datas: {
-            IsConfig: 0,
-          },
+          datas: {},
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -195,15 +245,15 @@ export default {
       ],
       Region: [1, 2],
       labelStatus1: 0,
-      sysID: [{ ID: 7833 }],
+      sysID: [{ ID: 7833 }, { ID: 7757 }, { ID: 5633 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: "1",
-      colDialogVisible2: false,
-      colDialogVisible3: false,
       clickRow: null,
       linkTableData: [],
       hasSelect: [false, false, false, false],
+      colDialogVisible1: false,
+      colDialogVisible2: false,
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
     };
@@ -359,15 +409,13 @@ export default {
     },
     //添加产品机台
     async confirmDialog(remarkTb) {
-      let newData;
-
-      newData = _.cloneDeep(
-        this.selectionData[remarkTb].map((item) => {
-          item.MaterialTypeID = this.clickRow["MaterialTypeID"];
-          return item;
-        })
-      );
-
+      // let newData;
+      // newData = _.cloneDeep(
+      //   this.selectionData[remarkTb].map((item) => {
+      //     item.MaterialTypeID = this.clickRow["MaterialTypeID"];
+      //     return item;
+      //   })
+      // );
       // if (remarkTb === 2) {
       //   let newData1 = this.linkTableData.filter(
       //     (x) =>
@@ -384,9 +432,8 @@ export default {
       //   });
       //   newData = [].concat(newData1, newData2);
       // }
-
-      await this.dataSave(1, null, null, newData);
-      this.colDialogVisible2 = false;
+      // await this.dataSave(1, null, null, newData);
+      // this.colDialogVisible2 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -516,20 +563,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb === 2) {
-          data
-            .filter((item2) => {
-              return (
-                item2["MaterialTypeID"] === this.clickRow["MaterialTypeID"]
-              );
-            })
-            .forEach((item2) => {
-              item2["isChecked"] = true;
-            });
-          this.linkTableData = data.filter((item) => {
-            return item["isChecked"];
-          });
-        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
       } else {
@@ -557,10 +590,20 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     // 单击获取明细
-    async handleRowClick(row, remarkTb) {
+    async handleRowClick(row, remarkTb, column) {
+      console.log(column["property"], "11111");
       this.clickRow = row;
-      this.formSearchs[1].datas["MaterialTypeID"] = row["MaterialTypeID"];
-      await this.dataSearch(this.selectedIndex);
+      if (column["property"] === "FormRate") {
+        this.formSearchs[1].datas["OrderID"] = row["OrderID"];
+        this.colDialogVisible1 = true;
+        await this.dataSearch(1);
+      }
+      if (column["property"] === "FormRate1") {
+        this.formSearchs[2].datas["OrderID"] = row["OrderID"];
+        this.colDialogVisible2 = true;
+
+        await this.dataSearch(2);
+      }
     },
     handleClick(tab, event) {
       console.log(tab, event);
@@ -592,28 +635,6 @@ export default {
           }
         });
         $table.insert(obj);
-      }
-    },
-    LinkData(remarkTb) {
-      if (remarkTb == 1) {
-        if (!this.clickRow) {
-          this.$message.error("请点击需要绑定的数据！");
-          return;
-        }
-        this.colDialogVisible2 = true;
-        this.dataSearch(2);
-      }
-    },
-    AddEvent(index) {
-      if (!this.clickRow) {
-        this.$message.error("请点击需要绑定的数据！");
-        return;
-      }
-      if (index === 1) {
-        this.colDialogVisible2 = true;
-      }
-      if (index === 2) {
-        this.colDialogVisible4 = true;
       }
     },
     // 行内样式

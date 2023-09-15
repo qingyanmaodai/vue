@@ -1403,18 +1403,16 @@ export default {
     },
     // 单击行
     handleRowClick({ row, column, rowIndex }) {
+      // 如果是勾选框单元格，则取消行点击的触发
+
       if (column.type !== "checkbox") {
         if (this.isToggleCheckbox) {
           this.$refs.vxeTable.toggleCheckboxRow(row);
           row = this.$refs.vxeTable.getCheckboxRecords(true);
-          this.$emit("handleRowClick", row, this.remark);
+          this.$emit("handleRowClick", row, this.remark, column);
           return;
         }
-        // 如果是勾选框单元格，则取消行点击的触发
-        if (row !== this.lastClickedRow) {
-          this.$emit("handleRowClick", row, this.remark);
-          this.lastClickedRow = row;
-        }
+        this.$emit("handleRowClick", row, this.remark, column);
       }
     },
     // 双击行
