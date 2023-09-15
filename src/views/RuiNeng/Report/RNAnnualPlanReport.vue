@@ -380,7 +380,7 @@ export default {
               nameTextStyle: {
                 color: "#666",
                 fontSize: fontSize(12),
-                lineHeight: fontSize(40),
+                lineHeight: fontSize(20),
               },
               splitLine: {
                 lineStyle: {
@@ -494,7 +494,7 @@ export default {
               nameTextStyle: {
                 color: "#444444",
                 fontSize: fontSize(12),
-                lineHeight: fontSize(40),
+                lineHeight: fontSize(20),
               },
               axisLabel: {
                 interval: 0,
