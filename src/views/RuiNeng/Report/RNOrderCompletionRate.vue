@@ -44,30 +44,28 @@
                 <div class="echartTitle">各车间完成率</div>
               </div>
               <div class="echartBody" v-for="item in [0]" :key="item">
-                <div class="tableContainer">
-                  <ComVxeTable
-                    :ref="`tableRef${item}`"
-                    :rowKey="'RowNumber'"
-                    height="100%"
-                    :isToolbar="false"
-                    :isEdit="isEdit[0]"
-                    :tableData="tableData[0]"
-                    :tableHeader="tableColumns[0]"
-                    :tableLoading="tableLoading[0]"
-                    :remark="0"
-                    :sysID="sysID[0]['ID']"
-                    :isClear="isClear[0]"
-                    :hasSelect="hasSelect[item]"
-                    :pagination="tablePagination[0]"
-                    @pageChange="pageChange"
-                    @handleRowClick="handleRowClick"
-                    @pageSize="pageSize"
-                    @sortChange="sortChange"
-                    @selectfun="selectFun"
-                    :keepSource="true"
-                    :footerContent="false"
-                  />
-                </div>
+                <ComVxeTable
+                  :ref="`tableRef${item}`"
+                  :rowKey="'RowNumber'"
+                  height="100%"
+                  :isToolbar="false"
+                  :isEdit="isEdit[0]"
+                  :tableData="tableData[0]"
+                  :tableHeader="tableColumns[0]"
+                  :tableLoading="tableLoading[0]"
+                  :remark="0"
+                  :sysID="sysID[0]['ID']"
+                  :isClear="isClear[0]"
+                  :hasSelect="hasSelect[item]"
+                  :pagination="tablePagination[0]"
+                  @pageChange="pageChange"
+                  @handleRowClick="handleRowClick"
+                  @pageSize="pageSize"
+                  @sortChange="sortChange"
+                  @selectfun="selectFun"
+                  :keepSource="true"
+                  :footerContent="false"
+                />
               </div>
             </div>
           </div>
@@ -518,222 +516,140 @@ export default {
           ],
         },
         {
-          title: {
-            x: "center",
-            bottom: 40,
-            text: "BBB",
-            textStyle: {
-              fontWeight: "normal",
-              fontSize: 55,
-              color: "#323232",
-            },
-          },
-          tooltip: {
-            show: true,
-          },
-          grid: {
-            containLabel: true,
-          },
+          // backgroundColor: "#062a44",
           series: [
             {
+              name: "刻度",
               type: "gauge",
-              center: ["50%", "55%"], // 默认全局居中
-              radius: 233,
-              splitNumber: 10, //刻度数量
-              min: 0,
-              max: 100,
-              startAngle: 200,
-              endAngle: -20,
+              radius: "86%",
+              center: ["50%", "55%"],
 
+              min: 0, //最小刻度
+              max: 100, //最大刻度
+              splitNumber: 10, //刻度数量
+              startAngle: 225,
+              endAngle: -45,
               axisLine: {
                 show: true,
                 lineStyle: {
-                  width: 2,
-                  shadowBlur: 0,
-                  color: [[1, "#8f8f8f"]],
+                  width: fontSize(1),
+                  color: [[1, "rgba(0,0,0,0)"]],
                 },
-              },
-              axisTick: {
-                show: true,
-                lineStyle: {
-                  color: "#8f8f8f",
-                  width: 1,
-                },
-                length: 8,
-                splitNumber: 10,
-              },
-              splitLine: {
-                show: true,
-                length: 12,
-                lineStyle: {
-                  color: "#8f8f8f",
-                },
-              },
+              }, //仪表盘轴线
               axisLabel: {
-                distance: 8,
-                textStyle: {
-                  color: "#8f8f8f",
-                  fontSize: "14",
-                  fontWeight: "bold",
-                },
-                formatter: function (e) {
-                  switch (e + "") {
+                show: true,
+                color: "#7E7E7E",
+                distance: fontSize(-30),
+                fontSize: fontSize(10),
+                formatter: function (v) {
+                  switch (v + "") {
+                    case "0":
+                      return "0%";
                     case "10":
-                      return "10";
-
+                      return "10%";
                     case "20":
-                      return "20";
-
+                      return "20%";
                     case "30":
-                      return "30";
-
+                      return "30%";
                     case "40":
-                      return "40";
-
+                      return "40%";
                     case "50":
-                      return "50";
-
+                      return "50%";
                     case "60":
-                      return "60";
-
+                      return "60%";
                     case "70":
-                      return "70";
-
+                      return "70%";
                     case "80":
-                      return "80";
-
+                      return "80%";
                     case "90":
-                      return "90";
-
+                      return "90%";
                     case "100":
-                      return "100";
-                    default:
-                      return e;
+                      return "100%";
                   }
                 },
-                textStyle: {
-                  fontSize: 12,
-                  fontWeight: "",
-                },
-              },
-              pointer: {
-                //仪表盘指针
-                show: 0,
-              },
-              detail: {
-                show: false,
-              },
-              data: [
-                {
-                  name: "",
-                  value: 100,
-                },
-              ],
-            },
-            {
-              startAngle: 200,
-              endAngle: -20,
-              name: "实际完成",
-              type: "gauge",
-              center: ["50%", "55%"], // 默认全局居中
-              radius: 103,
-              min: 0,
-              max: 100,
-              splitNumber: 0,
-              axisLine: {
-                // 坐标轴线
+              }, //刻度标签。
+              axisTick: {
+                show: true,
+                splitNumber: 10,
                 lineStyle: {
-                  color: [
-                    [0.66, "#dddddd"],
-                    [1, "#dddddd"],
-                  ], // 属性lineStyle控制线条样式
-                  width: 4,
+                  color: "#AEAEAE",
+                  width: fontSize(1),
                 },
-              },
-
-              axisLabel: {
-                // 坐标轴小标记
-                textStyle: {
-                  // 属性lineStyle控制线条样式
-                  fontWeight: "bolder",
-                  fontSize: 16,
-                  color: "rgba(30,144,255,0)",
-                },
-              },
+                length: fontSize(6),
+              }, //刻度样式
               splitLine: {
-                // 分隔线
-                length: 10, // 属性length控制线长
+                show: true,
+                length: fontSize(10),
                 lineStyle: {
-                  // 属性lineStyle（详见lineStyle）控制线条样式
-                  width: 0,
-                  color: "#444",
+                  color: "#7E7E7E",
                 },
+              }, //分隔线样式
+              detail: {
+                show: false,
               },
               pointer: {
-                // 分隔线 指针
-                color: "#666666",
-                width: 0,
-                length: 230,
-              },
-              detail: {
                 show: false,
               },
             },
             {
-              name: "信用分",
               type: "gauge",
-              startAngle: 200,
-              endAngle: -20,
-              radius: 180,
-              center: ["50%", "55%"], // 默认全局居中
+              radius: "70%",
+              center: ["50%", "55%"],
 
-              min: 0,
-              max: 100,
-
+              splitNumber: 0, //刻度数量
+              startAngle: 225,
+              endAngle: -45,
               axisLine: {
-                show: false,
+                show: true,
                 lineStyle: {
-                  width: 25,
-                  shadowBlur: 0,
+                  width: fontSize(15),
                   color: [
-                    [0.2, "#E43F3D"],
-                    [0.4, "#E100E2C"],
-                    [0.6, "#DDBD4D"],
-                    [0.8, "#7CBB55"],
-                    [1, "#9CD6CE"],
+                    [0.384, "#10AB5C"],
+                    [1, "#BFECD4"],
                   ],
                 },
               },
-              axisTick: {
-                show: false,
-              },
+              //分隔线样式。
               splitLine: {
                 show: false,
-                length: 20,
               },
-
               axisLabel: {
+                show: false,
+              },
+              axisTick: {
                 show: false,
               },
               pointer: {
                 show: true,
-              },
-              detail: {
-                show: false,
-                offsetCenter: [0, 0],
-                textStyle: {
-                  fontSize: 30,
+                width: fontSize(4),
+                itemStyle: {
+                  color: "rgba(197, 221, 40, 1)",
                 },
               },
-              itemStyle: {
-                normal: {
-                  color: "#323232",
+              // title: {
+              //   show: true,
+              //   offsetCenter: [0, "-26%"], // x, y，单位px
+              //   textStyle: {
+              //     color: "#fff",
+              //     fontSize: 20,
+              //   },
+              // },
+              //仪表盘详情，用于显示数据。
+              detail: {
+                show: true,
+                offsetCenter: [0, "50%"],
+                color: "#000",
+                formatter: function (params) {
+                  return params + "%";
+                },
+                textStyle: {
+                  fontSize: fontSize(20),
                 },
               },
               data: [
                 {
-                  name: "",
-                  value: Math.floor(10),
+                  // name: "当前毕业率",
+                  value: 38.4,
                 },
               ],
             },
@@ -756,10 +672,10 @@ export default {
             formatter: "{b}:({d}%)",
           },
           legend: {
-            top: "0",
-            left: "center",
-            orient: "horizontal",
-            // right: "0%",
+            top: "center",
+            // left: "center",
+            orient: "vertical",
+            right: "10%",
             // bottom: "0",
             itemWidth: fontSize(10),
             itemHeight: fontSize(10),
@@ -778,16 +694,24 @@ export default {
             {
               type: "pie",
               // selectedMode: "single",
-              radius: ["30%", "60%"],
+              radius: ["50%", "80%"],
+              center: ["40%", "50%"],
               color: [
-                "#23CF9C",
-                "#578FFB",
-                "#6E40F2",
-                "#FF61E6",
-                "#E82074",
-                "#FBA806",
+                "#009B4C",
+                "#3E6EEA",
+                "#47A7FF",
+                "#4BDB84",
+                "#8BCE1D",
+                "#D170FF",
+                "#F46D4F",
+                "#FA9A09",
+                "#FF317B",
+                "#444444",
+                "#BDBDBD",
+                "#D01505",
+                "#D5D5D5",
+                "#D70303",
               ],
-              center: ["50%", "60%"],
               label: {
                 normal: {
                   position: "inner",
@@ -1166,7 +1090,7 @@ export default {
     justify-content: space-between;
     height: 100%;
     .leftCard {
-      width: 65%;
+      width: 70%;
       // background: #fff;
       margin-right: 10px;
       display: flex;
@@ -1197,7 +1121,7 @@ export default {
       }
     }
     .rightCard {
-      width: 35%;
+      width: 30%;
       display: flex;
       flex-direction: column;
       .firstCard {
@@ -1235,11 +1159,6 @@ export default {
           flex-direction: column;
           width: 100%;
           .echartBody {
-            .tableContainer {
-              display: flex;
-              flex-direction: column;
-              height: 100%;
-            }
             height: calc(100% - 60px);
             overflow: auto;
             overflow: hidden;
