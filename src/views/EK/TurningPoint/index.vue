@@ -187,7 +187,7 @@ export default {
         { label: "全部", value: "" },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 7861 }, { ID: 10123 }, { ID: 7912 }],
+      sysID: [{ ID: 7861 }, { ID: 10122 }, { ID: 7912 }],
       isEdit: [false, false, false],
       userInfo: {},
       selectedIndex: "1",
