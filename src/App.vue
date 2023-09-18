@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { CheckSSO } from "@/api/user";
 export default {
   name: "App",
   provide() {
@@ -25,18 +26,12 @@ export default {
       });
     },
     // 单点登录
-    getAutoLogin(eipaulg) {
-      let loginForm = { Account: "378102", Pwd: "824525", eipaulg: eipaulg };
-      this.$store
-        .dispatch("user/autoLogin", loginForm)
-        .then(() => {
-          this.$router.push({ path: "/" });
-          this.loading = false;
-        })
-        .catch((error) => {
-          this.$message.error(error.message);
-          this.loading = false;
-        });
+    async SignIn() {
+      let res = await CheckSSO();
+      const { result, url } = res.data;
+      if (result) {
+        window.location.href = url; // 替换成你想跳转的外部URL
+      }
     },
     // 获取地址栏参数
     getQueryString(name) {
@@ -46,18 +41,8 @@ export default {
       return null;
     },
   },
-  created() {
-    let eipaulg = this.getQueryString("eipaulg");
-    if (eipaulg) {
-      this.getAutoLogin(eipaulg);
-    }
-    // 在页面加载时读取sessionStorage
-    if (sessionStorage.getItem("tokenExpire")) {
-      this.$store.commit(
-        "user/SET_TokenExpire",
-        sessionStorage.getItem("tokenExpire")
-      );
-    }
+  async created() {
+    // await this.SignIn();
   },
 };
 </script>

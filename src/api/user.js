@@ -33,3 +33,15 @@ export function OrgData(data) {
     },
   });
 }
+
+
+export function CheckSSO(data) {
+  return request({
+    url: "/APSAPI/CheckSSO",
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
