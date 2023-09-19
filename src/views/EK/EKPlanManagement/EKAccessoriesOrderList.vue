@@ -1174,7 +1174,7 @@ export default {
       let errorNum = -1;
       errorNum = this.selectionData[0].findIndex((item0) => {
         return (
-          Number(item0["PlanQty"]) === Number(item0["Qty"]) ||
+          Number(item0["OutStockQty"]) === Number(item0["Qty"]) ||
           !item0["CurPlanQty"]
         );
       });

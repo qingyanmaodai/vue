@@ -166,7 +166,9 @@ export default {
       includeFields: [[], [], [], []],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            Status: 0,
+          },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -210,11 +212,10 @@ export default {
         { label: "审核中", value: "1" },
       ],
       Region: [5, 5, 5],
-      labelStatus1: 0,
+      labelStatus1: 1,
       sysID: [{ ID: 7844 }],
       isEdit: [false, false, false, false],
       userInfo: {},
-      selectedIndex: "1",
       clickRow: null,
       linkTableData: [],
       hasSelect: [false, false, false, false],
@@ -548,11 +549,6 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb, column) {
       this.clickRow = row;
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
-      this.selectedIndex = tab.name;
-      this.dataSearch(this.selectedIndex);
     },
     addRow(remarkTb) {
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
