@@ -1,5 +1,4 @@
-<!--菜单设置-->
-<!-- 四部日计划 -->
+<!-- 每日生产计划 -->
 <template>
   <div class="container flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
@@ -61,15 +60,43 @@
       />
     </div>
     <!-- 弹框-->
-    <DialogTable
-      title="全局欠料"
-      :tableDialog="colDialogVisible"
-      :sysID="5165"
-      width="80%"
-      @closeDialog="colDialogVisible = false"
-      :searchForm="dialogSearchForm"
-      :isToolbar="false"
-    ></DialogTable>
+    <!-- 弹框-->
+    <el-dialog
+      :title="'拆分订单'"
+      :visible.sync="colDialogVisible1"
+      width="50%"
+    >
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="4"
+            ><span class="title">拆分编辑完请保存 </span></el-col
+          >
+          <el-col :span="20" class="flex_flex_end"
+            ><el-divider direction="vertical"></el-divider>
+            <el-button type="primary" size="mini" @click="changeEvent(1)">
+              确定拆分
+            </el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-for="item in [1]" :key="item">
+        <ComSpreadTable
+          ref="spreadsheetRef"
+          height="600px"
+          :tableData="tableData[item]"
+          :tableColumns="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :pagination="tablePagination[item]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @workbookInitialized="workbookInitialized"
+          @selectChanged="selectChanged"
+          :spaceBtnShow="false"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -139,41 +166,6 @@ export default {
         },
       ],
       btnForm: [],
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          isLoading: false,
-          Methods: "dataSaveDay",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-        },
-        {
-          ButtonCode: "returnOrder",
-          BtnName: "退回",
-          isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: {
-            dataName: "selectionData",
-          },
-        },
-        {
-          ButtonCode: "reset",
-          BtnName: "重排",
-          isLoading: false,
-          Methods: "resetScheduling",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: {
-            dataName: "resetScheduling",
-          },
-        },
-      ],
       tableData: [[], []],
       hasSelect: [false, false],
       tableColumns: [[], []],
@@ -190,7 +182,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 9016 }],
+      sysID: [{ ID: 9016 }, { ID: 9016 }],
       adminLoading: false,
       checkBoxCellTypeLine: "",
       isOpen: true,
@@ -200,6 +192,7 @@ export default {
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       accountsValue: null,
+      colDialogVisible1: null,
     };
   },
   watch: {},
@@ -340,7 +333,6 @@ export default {
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      debugger;
       if (parms) {
         // 下标 要用的数据 标题 ref
         this[methods](remarkTb, index, parms);
@@ -399,21 +391,35 @@ export default {
     },
     // 退回
     async dataDel(remarkTb, index, parms) {
+      let newData = [];
+
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error("请选择需要操作的数据！");
         return;
+      } else {
+        if (remarkTb === 0) {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb]
+              .filter((x) => x["DataSource"] !== "业务") // 过滤条件，不包括 "DataSource" 为 "业务" 的对象
+              .map((x) => {
+                x["ElementDeleteFlag"] = 1;
+                return x;
+              })
+          );
+        } else {
+          newData = _.cloneDeep(
+            this.selectionData[remarkTb].map((x) => {
+              x["ElementDeleteFlag"] = 1;
+              return x;
+            })
+          );
+        }
       }
       this.$confirm(
-        "确定要退回的【" +
-          this.selectionData[remarkTb].length +
-          "】数据吗，如果已经报工则无法退回？"
+        "确定要退回的【" + newData.length + "】数据吗，如果已经报工则无法退回？"
       )
         .then((_) => {
-          this.selectionData[remarkTb].forEach((x) => {
-            x["ElementDeleteFlag"] = 1;
-          });
-          this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
@@ -513,7 +519,6 @@ export default {
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
-      debugger;
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (sheet && sheet.isEditing()) {
         sheet.endEdit();
@@ -533,9 +538,9 @@ export default {
             item["ElementDeleteFlag"] = 1;
           }); //获取被删除的数据
           updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+          console.log(updateRecords, "updateRecords");
         }
       }
-
       if (updateRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
@@ -566,6 +571,7 @@ export default {
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
+        console.log(datas, "datas");
         // 获取每个表头
         datas.some((m, i) => {
           m.forEach((n, index) => {
@@ -592,7 +598,7 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, "dicID", this.sysID[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
@@ -1302,51 +1308,6 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-    // 保存日计划
-    // async dataSaveDay() {
-    //   let sheet = this.spread[this.labelStatus1].getActiveSheet();
-    //   if (sheet && sheet.isEditing()) {
-    //     sheet.endEdit();
-    //   }
-    //   let newData = sheet.getDirtyRows();
-    //   let submitData = [];
-    //   if (newData.length != 0) {
-    //     newData.forEach((x) => {
-    //       submitData.push(x.item);
-    //     });
-    //   }
-    //   newData = sheet.getInsertRows();
-    //   if (newData.length != 0) {
-    //     newData.forEach((x) => {
-    //       x.item["dicID"] = this.sysID[this.labelStatus1]["ID"];
-    //       submitData.push(x.item);
-    //     });
-    //   }
-    //   if (submitData.length == 0) {
-    //     this.$message.error("没修改过任何数据！");
-    //     return;
-    //   }
-
-    //   this.adminLoading = true;
-    //   let res = await SaveMOPlanStep4(submitData);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     this.dataSearch(0);
-    //     this.adminLoading = false;
-    //     this.$message({
-    //       message: msg,
-    //       type: "success",
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   } else {
-    //     this.adminLoading = false;
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   }
-    // },
     async suspend(remarkTb, index, parms) {
       let res = null;
       this.getSelectionData();
@@ -1379,30 +1340,89 @@ export default {
         })
         .catch((_) => {});
     },
+    // 拆单
+    splitOrder(remarkTb) {
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error("请选择需要拆单的数据！");
+        return;
+      } else {
+        // 遍历数组中的所有元素
+        for (let i = 0; i < this.selectionData[remarkTb].length; i++) {
+          const item = this.selectionData[remarkTb][i];
+          if (!item.RowNumber) {
+            this.$message.error("所选数据含有合计行");
+            return; // 可以选择中断循环，或者继续检查其他元素
+          }
+        }
+      }
+      this.colDialogVisible1 = true;
+      let targetArray = JSON.parse(
+        JSON.stringify(this.selectionData[remarkTb])
+      );
 
-    // 下拉选择事件
-    // handleCommand(val) {
-    //   if (val == 1 && !this.isOpen) {
-    //     this.isOpen = true;
-    //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-    //   } else if (val == 2 && this.isOpen) {
-    //     // 改变每个节点的状态
-    //     this.isOpen = false;
-    //     this.changeTreeNodeStatus(this.$refs.asideTreeRef.store.root);
-    //   }
-    // },
-    // 改变节点状态
-    // changeTreeNodeStatus(node) {
-    //   node.expanded = this.isOpen;
-    //   for (let i = 0; i < node.childNodes.length; i++) {
-    //     // 改变节点的自身expanded状态
-    //     node.childNodes[i].expanded = this.isOpen;
-    //     // 遍历子节点
-    //     if (node.childNodes[i].childNodes.length > 0) {
-    //       this.changeTreeNodeStatus(node.childNodes[i]);
-    //     }
-    //   }
-    // },
+      this.tableColumns[1] = this.tableColumns[1].filter(
+        (item) =>
+          item.prop == "PlanQty" ||
+          item.prop == "MachineID" ||
+          item.prop == "MachineMouldID"
+      );
+      this.tableColumns[1].push({
+        label: "拆单数",
+        prop: "SQty",
+      });
+      this.tableColumns[1].forEach((item) => {
+        item["width"] = 200;
+        if (item.prop === "PlanQty") {
+          item["isEdit"] = false;
+        } else {
+          item["isEdit"] = true;
+        }
+      });
+      this.$nextTick(() => {
+        this.$set(this.tableData, 1, targetArray);
+        this.setData(1);
+      });
+    },
+    // 复制
+    async changeEvent(val) {
+      if (val === 1) {
+        const errorNum1 = this.selectionData[1].findIndex(
+          (item) => !item["SQty"]
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
+          return;
+        }
+
+        const errorNum2 = this.selectionData[1].findIndex((item) => {
+          return item["SQty"] > item["PlanQty"];
+        });
+        if (errorNum2 !== -1) {
+          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
+          return;
+        }
+        this.colDialogVisible1 = false;
+        let sheet = this.spread[this.labelStatus1].getActiveSheet();
+        const changedIndices = [];
+        this.tableData[this.labelStatus1].forEach((element, index) => {
+          if (element["isChecked"]) {
+            changedIndices.push(index);
+          }
+        });
+        //每增加一行，需要插入新的一行，后面一行比前面一行多1
+        const arr = changedIndices.map((num, index) => num + index);
+        //处理脏数据
+        arr.forEach((item) => {
+          this.copyRowFormat(item, sheet);
+        });
+
+        this.$nextTick(() => {
+          sheet.repaint();
+        });
+        return;
+        await this.dataSave(this.labelStatus1);
+      }
+    },
     //在该行数据下面增加新的一行
     copyRowFormat(rowNumber, sheet) {
       sheet.addRows(rowNumber + 1, 1);
@@ -1417,110 +1437,38 @@ export default {
       );
       let newRowIndex = rowNumber + 1;
       let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      // newData = JSON.parse(JSON.stringify(oldData));
-      this.tableData[0][newRowIndex] = JSON.parse(JSON.stringify(oldData));
-      let newData = this.tableData[0][newRowIndex]; // 获取数据源中新行的值
+      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
+        JSON.stringify(oldData)
+      );
+      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[1].find(
         (item) => item["RowNumber"] === oldData["RowNumber"]
       );
-      //去掉dy前面的值
-      const objKeys = Object.keys(newData);
-      objKeys.forEach((key) => {
-        if (key.endsWith("dy")) {
-          newData[key.replace(/dy$/, "")] = null;
-        }
-      });
+      // //去掉dy前面的值
+      // const objKeys = Object.keys(newData);
+      // objKeys.forEach((key) => {
+      //   if (key.endsWith("dy")) {
+      //     newData[key.replace(/dy$/, "")] = null;
+      //   }
+      // });
       oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
-      newData["ProcessPlanID"] = 0; // 将 ProcessPlanID 值设置为 0
-      newData["LineID"] = null;
+      newData["ID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
       newData["PlanQty"] = SQtyObj["SQty"];
-      newData["HasQty"] = null;
-      this.$nextTick(() => {
-        sheet.setDataSource(sheet.getDataSource()); // 更新数据源
-        sheet.repaint();
-      });
-    },
-    // 复制
-    async changeEvent(val) {
-      if (val == 0) {
-        if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要拆单的数据！");
-          return;
-        }
-        this.Dialog = true;
-        let targetArray = JSON.parse(JSON.stringify(this.selectionData[0]));
-        let targetColumns = JSON.parse(JSON.stringify(this.tableColumns[0]));
-
-        targetColumns = targetColumns.filter(
-          (item) =>
-            item.label == "生产订单" ||
-            item.label == "数量" ||
-            item.label == "计划数"
-        );
-        targetColumns.push({
-          label: "拆单数量",
-          prop: "SQty",
-        });
-        targetColumns.map((item) => {
-          item["width"] = 250;
-          if (item.label === "拆单数量") {
-            item["isEdit"] = true;
-          } else {
-            item["isEdit"] = false;
-          }
-        });
-        this.$set(this.tableColumns, 1, targetColumns);
-        this.$nextTick(() => {
-          this.$set(this.tableData, 1, targetArray);
-          this.setData(1);
-        });
-      } else if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          (item) => !item["SQty"]
-        );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
-        }
-
-        const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item["SQty"] > item["Qty"];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.Dialog = false;
-        let sheet = this.spread[0].getActiveSheet();
-        const changedIndices = [];
-        this.tableData[0].forEach((element, index) => {
-          if (element["isChecked"]) {
-            changedIndices.push(index);
-          }
-        });
-        //每增加一行，需要插入新的一行，后面一行比前面一行多1
-        const arr = changedIndices.map((num, index) => num + index);
-        //处理脏数据
-        arr.forEach((item) => {
-          this.copyRowFormat(item, sheet);
-          console.log(item, "item");
-        });
-      }
+      newData["MachineMouldID"] = SQtyObj["MachineMouldID"];
+      newData["MachineID"] = SQtyObj["MachineID"];
+      newData["DataSource"] = "拆单";
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.spreadContainer {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  flex: 1;
-  border: 1px solid #ababab;
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
 }
-
-.sample-spreadsheets {
-  width: 100%;
-  height: 100%;
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
 }
 </style>

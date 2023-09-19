@@ -6,7 +6,7 @@
         filterable
         size="small"
         placeholder="请选择修改值"
-        v-model="OrderNo"
+        v-model="localOrderNo"
         @change="handleChange($event)"
       >
         <el-option
@@ -130,6 +130,7 @@ export default {
     return {
       OrderNoObj: { ControlType: "textbox" },
       OrderNoValue: "",
+      localOrderNo: this.OrderNo, // 创建一个局部属性来存储 prop 的值
     };
   },
   created() {},
@@ -157,7 +158,12 @@ export default {
   computed: {},
   methods: {
     changeProp() {
-      this.$emit("changeProp", this.remark, this.OrderNo, this.OrderNoValue);
+      this.$emit(
+        "changeProp",
+        this.remark,
+        this.localOrderNo,
+        this.OrderNoValue
+      );
     },
     handleChange(value) {
       this.OrderNoObj = this.OrderNos.find((item) => {
