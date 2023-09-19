@@ -774,7 +774,7 @@ export default {
           if (
             rowItem["PlanQty"] &&
             rowItem["Qty"] &&
-            columnItem["prop"] === "Q11" &&
+            columnItem["prop"] === "CurPlanQty" &&
             rowItem["PlanQty"] === rowItem["Qty"]
           ) {
             cell.locked(true).foreColor("black");
@@ -1083,7 +1083,7 @@ export default {
     // 自动计算数量
     computedNum(rowIndex, colIndex, val, oldval) {
       let sheet = this.spread[0].getActiveSheet();
-      if (this.tableColumns[0][colIndex]["prop"] == "Q11") {
+      if (this.tableColumns[0][colIndex]["prop"] == "CurPlanQty") {
         let currentRow = sheet.getDataItem(rowIndex);
         let currentProp = this.tableColumns[0][colIndex].prop;
         if (!Number.isFinite(Number(val)) || Number.isFinite(Number(val)) < 0) {
@@ -1138,7 +1138,7 @@ export default {
           newData = _.cloneDeep(
             this.selectionData[0].map((item) => {
               item["SourceID"] = this.selectionData[1][0]["ID"];
-              item["PlanQty"] = item["Q11"];
+              item["PlanQty"] = item["CurPlanQty"];
               item["dicID"] = 11184;
               item["OutType"] = "跟单出";
               return item;
@@ -1147,7 +1147,7 @@ export default {
         } else {
           newData = _.cloneDeep(
             this.selectionData[0].map((item) => {
-              item["PlanQty"] = item["Q11"];
+              item["PlanQty"] = item["CurPlanQty"];
               item["dicID"] = 11184;
               item["OutType"] = "单独出";
               return item;
@@ -1174,7 +1174,8 @@ export default {
       let errorNum = -1;
       errorNum = this.selectionData[0].findIndex((item0) => {
         return (
-          Number(item0["PlanQty"]) === Number(item0["Qty"]) || !item0["Q11"]
+          Number(item0["PlanQty"]) === Number(item0["Qty"]) ||
+          !item0["CurPlanQty"]
         );
       });
 
