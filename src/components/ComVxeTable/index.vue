@@ -435,6 +435,7 @@
                         v-model="scope.row[i.prop]"
                       ></el-color-picker>
                     </span>
+                    <span v-else>{{ scope.row[i.prop] }}</span>
                   </span>
                   <span v-else>{{ scope.row[i.prop] }}</span>
                 </span>
@@ -801,6 +802,7 @@
                     v-model="scope.row[x.prop]"
                   ></el-color-picker>
                 </span>
+                <span v-else>{{ scope.row[x.prop] }}</span>
               </span>
               <span v-else-if="x.component.type == 'checkbox'">
                 <el-tag
