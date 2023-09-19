@@ -17,13 +17,6 @@ const mutations = {
     if (state.cachedViews.includes(view.name)) return;
     if (!view.meta.noCache) {
       state.cachedViews.push(view.name);
-      // tag中重新打开路由后，如果存在前面的设置dicIDStatus状态则清除
-      // if (sessionStorage.getItem("dicIDStatus" + view.meta.dicID)) {
-      //   let status = JSON.parse(sessionStorage.getItem("dicIDStatus" + view.meta.dicID))
-      //   if(status){
-      //     sessionStorage.removeItem('dicIDStatus' + view.meta.dicID)
-      //   }
-      // }
     }
   },
 
@@ -38,10 +31,6 @@ const mutations = {
   DEL_CACHED_VIEW: (state, view) => {
     const index = state.cachedViews.indexOf(view.name);
     index > -1 && state.cachedViews.splice(index, 1);
-    // 刷新标识,无论是否存在缓存都需要刷新标识并且删除缓存
-    // sessionStorage.setItem("dicIDStatus" + view.meta.dicID, true);
-    // sessionStorage.removeItem("dicIDForm" + view.meta.dicID)
-    // sessionStorage.removeItem("dicIDData" + view.meta.dicID)
   },
 
   DEL_OTHERS_VISITED_VIEWS: (state, view) => {
@@ -57,20 +46,6 @@ const mutations = {
       // if index = -1, there is no cached tags
       state.cachedViews = [];
     }
-    // 删除关闭路由的缓存
-    // for(let key in sessionStorage){
-    //   let dicID = ''
-    //   if(key.indexOf('dicIDData')>-1){
-    //     let  text = 'dicIDData'
-    //     let index = key.lastIndexOf(text) + text.length-1;
-    //     dicID = key.substring(index+1,key.length);
-    //     if(dicID!=view.meta.dicID){
-    //       sessionStorage.removeItem('dicIDData'+dicID)
-    //       sessionStorage.removeItem('dicIDForm'+dicID)
-    //       sessionStorage.setItem("dicIDStatus" +dicID , true)
-    //     }
-    //   }
-    // }
   },
 
   DEL_ALL_VISITED_VIEWS: (state) => {
@@ -80,21 +55,6 @@ const mutations = {
   },
   DEL_ALL_CACHED_VIEWS: (state, view) => {
     state.cachedViews = [];
-    // 删除所有路由的缓存
-    if (sessionStorage) {
-      for (let key in sessionStorage) {
-        let dicID = "";
-        if (key && key.indexOf("dicIDData") > -1) {
-          let text = "dicIDData";
-          let index = key.lastIndexOf(text) + text.length - 1;
-          dicID = key.substring(index + 1, key.length);
-          sessionStorage.removeItem("dicIDData" + dicID);
-          sessionStorage.removeItem("dicIDForm" + dicID);
-        }
-        // 因为打开当前页面没离开的时候没缓存到，导致操作右键关闭所有后缓存了，为了再次打开左侧界面的缓存需清除，所以需要在做右键关闭时赋予状态标识不做缓存。
-        sessionStorage.setItem("dicIDStatus" + view.meta.dicID, true);
-      }
-    }
   },
 
   UPDATE_VISITED_VIEW: (state, view) => {

@@ -212,41 +212,7 @@ export default {
             : value;
       }
     });
-    // if (this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]) {
-    //   let tmp = JSON.parse(
-    //     this.$store.state.tagsView.viewDataCached["dicIDForm" + this.ID]
-    //   );
-    //   if (tmp) {
-    //     this.$set(this.formSearchs[0], "datas", tmp.dicData);
-    //     this.$set(this.formSearchs[0], "forms", tmp.dicForm);
-    //     this.$set(this.formSearchs[0].datas, "dicID", this.ID);
-
-    //     if (tmp.tablePagination) {
-    //       this.tablePagination = tmp.tablePagination;
-    //     }
-    //   }
-    // }
-
-    // if (this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]) {
-    //   let showTag = JSON.parse(
-    //     this.$store.state.tagsView.viewDataCached["dicIDData" + this.ID]
-    //   );
-    //   if (
-    //     showTag &&
-    //     showTag.tableColumns.length != 0 &&
-    //     !this.$route.meta.noCache
-    //   ) {
-    //     let newData = showTag;
-    //     this.$set(this.tableColumns, 0, newData.tableColumns);
-    //     this.$nextTick(() => {
-    //       this.$set(this.tableData, 0, newData.tableData);
-    //       this.setData(0);
-    //     });
-    //   }
-    // } else {
-    //   this.adminLoading = true;
     this.getTableHeader();
-    // }
   },
   mounted() {
     let tableContainer = document.getElementById("tableContainer"); // 通过 `<div>` 的 ID 获取元素

@@ -189,41 +189,7 @@ export default {
       newTag: -1,
       selectionData: [[], [], [], []],
     };
-  }, //离开的时候保存当前
-  beforeRouteLeave(to, form, next) {
-    let status = JSON.parse(sessionStorage.getItem("dicIDStatus" + this.ID));
-    //判断需要缓存情况下再判断是否操作右键快捷刷新、关闭功能
-    if (!this.$route.meta.noCache) {
-      if (!status) {
-        let dicForm = {
-          dicData: this.formSearchs[0].datas,
-          dicForm: this.formSearchs[0].forms,
-          tablePagination: this.tablePagination,
-        };
-        sessionStorage.setItem("dicIDForm" + this.ID, JSON.stringify(dicForm));
-        let dicIDData = {
-          dicID: this.ID,
-          tableColumns: this.tableColumns[0],
-          tableData: this.tableData[0],
-        };
-        sessionStorage.setItem(
-          "dicIDData" + this.ID,
-          JSON.stringify(dicIDData)
-        );
-        sessionStorage.removeItem("dicIDStatus" + this.ID);
-      } else {
-        // 在tag操作右键快捷方法后都需要重新渲染清除缓存状态，防止切换tag一直不缓存 导致一直刷新请求。
-        sessionStorage.removeItem("dicIDStatus" + this.ID);
-      }
-    }
-    next();
   },
-
-  beforeRouteEnter(to, form, next) {
-    //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.ID));
-    next();
-  },
-
   watch: {
     $route: {
       handler: function (val, oldVal) {
@@ -242,33 +208,7 @@ export default {
     this.judgeBtn();
     let routeBtn = this.$route;
     this.ID = parseInt(routeBtn.meta.dicID);
-    if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-      let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-      if (tmp) {
-        this.$set(this.formSearchs[0], "datas", tmp.dicData);
-        this.$set(this.formSearchs[0], "forms", tmp.dicForm);
-        this.$set(this.formSearchs[0].datas, "dicID", this.ID);
-
-        if (tmp.tablePagination) {
-          this.tablePagination = tmp.tablePagination;
-        }
-      }
-    }
-    let showTag = JSON.parse(sessionStorage.getItem("dicIDData" + this.ID));
-    if (
-      showTag &&
-      showTag.tableColumns.length != 0 &&
-      !this.$route.meta.noCache
-    ) {
-      let newData = showTag;
-      this.$set(this.tableColumns, 0, newData.tableColumns);
-      this.$nextTick(() => {
-        this.$set(this.tableData, 0, newData.tableData);
-      });
-    } else {
-      this.adminLoading = true;
-      this.getTableHeader();
-    }
+    this.getTableHeader();
   },
   mounted() {
     setTimeout(() => {
@@ -513,13 +453,6 @@ export default {
         if (this.newTag != -1) {
           this.tableColumns.splice(this.newTag, 1);
         }
-        // if (sessionStorage.getItem("dicIDForm" + this.ID)) {
-        //   let tmp = JSON.parse(sessionStorage.getItem("dicIDForm" + this.ID));
-
-        //   if (tmp.dicID) {
-        //     this.formSearchs[0].datas = tmp;
-        //   }
-        // }
         this.formSearchs[0].datas["dicID"] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
       }

@@ -180,50 +180,6 @@ export default {
       addNum: 1,
     };
   },
-  //离开的时候保存当前
-  beforeRouteLeave(to, form, next) {
-    let status = JSON.parse(
-      sessionStorage.getItem("dicIDStatus" + this.sysID[this.tagRemark].ID)
-    );
-    console.log("status", status);
-    //判断需要缓存情况下再判断是否操作右键快捷刷新、关闭功能
-    if (!this.$route.meta.noCache) {
-      if (!status) {
-        let dicForm = {
-          dicData: this.formSearchs[this.tagRemark].datas,
-          dicForm: this.formSearchs[this.tagRemark].forms,
-          tablePagination: this.tablePagination,
-        };
-        sessionStorage.setItem(
-          "dicIDForm" + this.sysID[this.tagRemark].ID,
-          JSON.stringify(dicForm)
-        );
-        let dicIDData = {
-          dicID: this.sysID[this.tagRemark].ID,
-          tableColumns: this.tableColumns[this.tagRemark],
-          tableData: this.tableData[this.tagRemark],
-        };
-        sessionStorage.setItem(
-          "dicIDData" + this.sysID[this.tagRemark].ID,
-          JSON.stringify(dicIDData)
-        );
-        sessionStorage.removeItem(
-          "dicIDStatus" + this.sysID[this.tagRemark].ID
-        );
-      } else {
-        // 在tag操作右键快捷方法后都需要重新渲染清除缓存状态，防止切换tag一直不缓存 导致一直刷新请求。
-        sessionStorage.removeItem(
-          "dicIDStatus" + this.sysID[this.tagRemark].ID
-        );
-      }
-    }
-    next();
-  },
-
-  beforeRouteEnter(to, form, next) {
-    //this.formSearchs= JSON.parse(sessionStorage .setItem("dicIDForm"+this.sysID[this.tagRemark].ID));
-    next();
-  },
   watch: {
     $route: {
       handler: function (val, oldVal) {
@@ -240,42 +196,7 @@ export default {
     this.judgeBtn();
     let routeBtn = this.$route;
     this.sysID[this.tagRemark].ID = parseInt(routeBtn.meta.dicID);
-
-    if (sessionStorage.getItem("dicIDForm" + this.sysID[this.tagRemark].ID)) {
-      let tmp = JSON.parse(
-        sessionStorage.getItem("dicIDForm" + this.sysID[this.tagRemark].ID)
-      );
-      if (tmp) {
-        this.$set(this.formSearchs[this.tagRemark], "datas", tmp.dicData);
-        this.$set(this.formSearchs[this.tagRemark], "forms", tmp.dicForm);
-        this.$set(
-          this.formSearchs[this.tagRemark].datas,
-          "dicID",
-          this.sysID[this.tagRemark].ID
-        );
-
-        if (tmp.tablePagination) {
-          this.tablePagination = tmp.tablePagination;
-        }
-      }
-    }
-    let showTag = JSON.parse(
-      sessionStorage.getItem("dicIDData" + this.sysID[this.tagRemark].ID)
-    );
-    if (
-      showTag &&
-      showTag.tableColumns[this.tagRemark].length != 0 &&
-      !this.$route.meta.noCache
-    ) {
-      let newData = showTag;
-      this.$set(this.tableColumns, this.tagRemark, newData.tableColumns);
-      this.$nextTick(() => {
-        this.$set(this.tableData, this.tagRemark, newData.tableData);
-      });
-    } else {
-      this.adminLoading = true;
-      this.getTableHeader();
-    }
+    this.getTableHeader();
   },
   mounted() {
     setTimeout(() => {
