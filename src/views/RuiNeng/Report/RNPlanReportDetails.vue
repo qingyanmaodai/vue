@@ -16,13 +16,13 @@
           >
             <ComSearch
               ref="searchRef"
-              :searchData="formSearchs[i].datas"
-              :searchForm="formSearchs[i].forms"
-              :searchMoreForm="formSearchs[i].formsAll"
-              :remark="i"
+              :searchData="formSearchs[0].datas"
+              :searchForm="formSearchs[0].forms"
+              :searchMoreForm="formSearchs[0].formsAll"
+              :remark="0"
               :isLoading="isLoading"
               :signName="i"
-              :Region="Region[i]"
+              :Region="Region[0]"
               :btnForm="btnForm"
               @btnClick="btnClick"
             />
@@ -45,13 +45,18 @@
               ></el-col>
             </el-row>
           </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <div
+            v-for="item in [0, 1, 2]"
+            :key="item"
+            class="admin_content flex_grow"
+            v-show="labelStatus1 === item"
+          >
             <ComVxeTable
               :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
               height="100%"
               :isToolbar="false"
-              :isEdit="isEdit[0]"
+              :isEdit="isEdit[item]"
               :tableData="tableData[0]"
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
@@ -59,7 +64,7 @@
               :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
-              :hasSelect="hasSelect[item]"
+              :hasSelect="hasSelect[0]"
               :pagination="tablePagination[0]"
               @pageChange="pageChange"
               @handleRowClick="handleRowClick"
@@ -68,65 +73,12 @@
               @selectfun="selectFun"
               :keepSource="true"
               :scrollEnable="false"
-              :footerContent="true"
             />
           </div>
         </div>
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <!-- <DialogOptTable
-      title="库存齐套率查询"
-      :tableDialog="colDialogVisible1"
-      :sysID="sysID[1]['ID']"
-      :isEdit="isEdit[1]"
-      :remark="1"
-      width="80%"
-      :hasSelect="hasSelect[1]"
-      @closeDialog="colDialogVisible1 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[1]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :showFooter="false"
-      :table-data="tableData[1]"
-      :table-header="tableColumns[1]"
-      :table-loading="tableLoading[1]"
-      :table-pagination="tablePagination[1]"
-      :isClear="isClear[1]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable>
-    <DialogOptTable
-      title="采购齐套率查询"
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
-      width="80%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :showFooter="false"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
-      :isClear="isClear[2]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable> -->
   </div>
 </template>
 
@@ -139,13 +91,7 @@ import ComVxeTable from "@/components/ComVxeTable";
 import ComReportTable from "@/components/ComReportTable";
 import DialogOptTable from "@/components/Dialog/dialogOptTable";
 import ComFormDialog from "@/components/ComFormDialog";
-import {
-  GetHeader,
-  GetSearchData,
-  ExportData,
-  SaveData,
-  GetServerTime,
-} from "@/api/Common";
+import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
 export default {
   name: "RNPlanReportDetails",
   components: {
@@ -161,7 +107,6 @@ export default {
     return {
       ////////////////// Search /////////////////
       selectionData: [[], [], [], []],
-      processDialog1: false,
       title: this.$route.meta.title,
       includeFields: [[], [], [], []],
       formSearchs: [
@@ -219,8 +164,6 @@ export default {
       clickRow: null,
       linkTableData: [],
       hasSelect: [false, false, false, false],
-      colDialogVisible1: false,
-      colDialogVisible2: false,
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
     };
@@ -307,21 +250,12 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       } else {
-        if (remarkTb === 1) {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x["MaterialTypeID"] = "";
-              return x;
-            })
-          );
-        } else {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x["ElementDeleteFlag"] = 1;
-              return x;
-            })
-          );
-        }
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x["ElementDeleteFlag"] = 1;
+            return x;
+          })
+        );
       }
       console.log(newData, "newData");
       this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
@@ -363,34 +297,6 @@ export default {
       let res = await ExportData(form);
       this.adminLoading = false;
       this.$store.dispatch("user/exportData", res.data);
-    },
-    //添加产品机台
-    async confirmDialog(remarkTb) {
-      // let newData;
-      // newData = _.cloneDeep(
-      //   this.selectionData[remarkTb].map((item) => {
-      //     item.MaterialTypeID = this.clickRow["MaterialTypeID"];
-      //     return item;
-      //   })
-      // );
-      // if (remarkTb === 2) {
-      //   let newData1 = this.linkTableData.filter(
-      //     (x) =>
-      //       !this.selectionData[2].some((y) => y.MaterialID === x.MaterialID)
-      //   );
-      //   newData1.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = "";
-      //   });
-      //   let newData2 = this.selectionData[2].filter(
-      //     (c) => !this.linkTableData.some((z) => c.MaterialID == z.MaterialID)
-      //   );
-      //   newData2.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = this.clickRow["MaterialTypeID"];
-      //   });
-      //   newData = [].concat(newData1, newData2);
-      // }
-      // await this.dataSave(1, null, null, newData);
-      // this.colDialogVisible2 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -648,7 +554,6 @@ export default {
           this.selectionData[0].map((x) => {
             x["Status"] = 4;
             x["CheckStatus"] = "异常";
-            x["Checked"] = "人工判断不通过";
             return x;
           })
         );

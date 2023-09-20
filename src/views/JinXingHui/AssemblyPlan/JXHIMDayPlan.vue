@@ -114,7 +114,13 @@ import ComBatchEdit from "@/components/ComBatchEdit";
 import ComSpreadTable from "@/components/ComSpreadTable";
 import ComVxeTable from "@/components/ComVxeTable";
 import { HeaderCheckBoxCellType } from "@/static/data.js";
-import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  GetSearch,
+  SaveData,
+} from "@/api/Common";
 import { SaveMOPlanStep4 } from "@/api/PageTwoScheduling";
 import DialogTable from "@/components/Dialog/dialogTable";
 export default {
@@ -157,7 +163,7 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: { MFGOrganizeID: 1222 },
+          datas: {},
           forms: [],
         },
         {
@@ -198,7 +204,7 @@ export default {
   watch: {},
   created() {
     _this = this;
-    // this.adminLoading = true;
+    this.adminLoading = true;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
@@ -206,11 +212,11 @@ export default {
     const params = new URLSearchParams(this.$route.meta.TargetFor);
     this.accountsValue = params.get("accounts");
   },
-  // activated() {
-  //   if (this.spread) {
-  //     this.spread.refresh();
-  //   }
-  // },
+  activated() {
+    if (this.spread[this.labelStatus1]) {
+      this.spread[this.labelStatus1].refresh();
+    }
+  },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
@@ -516,7 +522,7 @@ export default {
     //   this.delData[remarkTb].push(row);
     // },
     // 保存
-    async dataSave(remarkTb, index, parms, newData) {
+    async dataSave(remarkTb, index, parms, newData, Interface) {
       this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
@@ -524,12 +530,12 @@ export default {
         sheet.endEdit();
       }
       // 获取修改记录
-      let updateRecords = [];
+      let changeRecords = [];
       if (newData) {
-        updateRecords = newData;
+        changeRecords = newData;
       } else {
         if ($table) {
-          updateRecords = $table.getUpdateRecords();
+          changeRecords = $table.getUpdateRecords();
         } else {
           let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
           let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
@@ -537,16 +543,20 @@ export default {
           DeletedRows.forEach((item) => {
             item["ElementDeleteFlag"] = 1;
           }); //获取被删除的数据
-          updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
-          console.log(updateRecords, "updateRecords");
+          changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-      if (updateRecords.length == 0) {
+      if (changeRecords.length == 0) {
         this.$set(this, "adminLoading", false);
         this.$message.error("当前数据没做修改，请先修改再保存！");
         return;
       }
-      let res = await SaveMOPlanStep4(updateRecords);
+      let res;
+      if (Interface == 1) {
+        res = await SaveData(changeRecords);
+      } else {
+        res = await SaveMOPlanStep4(changeRecords);
+      }
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1419,8 +1429,7 @@ export default {
         this.$nextTick(() => {
           sheet.repaint();
         });
-        return;
-        await this.dataSave(this.labelStatus1);
+        await this.dataSave(Number(this.labelStatus1), null, null, null, 1);
       }
     },
     //在该行数据下面增加新的一行
@@ -1444,15 +1453,14 @@ export default {
       let SQtyObj = this.selectionData[1].find(
         (item) => item["RowNumber"] === oldData["RowNumber"]
       );
-      // //去掉dy前面的值
-      // const objKeys = Object.keys(newData);
-      // objKeys.forEach((key) => {
-      //   if (key.endsWith("dy")) {
-      //     newData[key.replace(/dy$/, "")] = null;
-      //   }
-      // });
+      // 去掉含prop2的值
+      this.tableColumns[this.labelStatus1].forEach((item) => {
+        if (item["prop2"]) {
+          newData[item.prop] = null;
+        }
+      });
       oldData["PlanQty"] = oldData["PlanQty"] - SQtyObj["SQty"];
-      newData["ID"] = null; // 将 SalesOrderDetailPlanID 值设置为 null
+      newData["ProcessPlanID"] = null;
       newData["PlanQty"] = SQtyObj["SQty"];
       newData["MachineMouldID"] = SQtyObj["MachineMouldID"];
       newData["MachineID"] = SQtyObj["MachineID"];
