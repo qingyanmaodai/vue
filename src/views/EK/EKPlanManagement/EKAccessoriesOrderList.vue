@@ -580,18 +580,6 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        // let RoleMapList = this.$store.getters.userInfo.RoleMap;
-        // if (RoleMapList.length) {
-        //   RoleMapList.forEach((item) => {
-        //     if (item.RoleID !== "R2309040001") {
-        //       this.$set(
-        //         this.formSearchs[0]["datas"],
-        //         "SaleMan",
-        //         this.userInfo.Account
-        //       );
-        //     }
-        //   });
-        // }
 
         await this.dataSearch(0);
       }

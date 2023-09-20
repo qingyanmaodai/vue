@@ -5,16 +5,16 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 3, 4]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[i].datas"
-          :searchForm="formSearchs[i].forms"
-          :remark="i"
+          :searchData="formSearchs[0].datas"
+          :searchForm="formSearchs[0].forms"
+          :remark="0"
           :isLoading="isLoading"
           :btnForm="btnForm"
-          :signName="i"
-          :Region="Region[i]"
+          :signName="0"
+          :Region="Region[0]"
           @btnClick="btnClick"
         />
       </div>
@@ -25,6 +25,19 @@
           <el-col :span="8"
             ><span class="title">{{ title }}</span>
           </el-col>
+          <el-col :span="16" class="flex_flex_end">
+            <div v-for="(item, y) in Status1" :key="y">
+              <span
+                @click="changeStatus(item, y)"
+                :class="
+                  labelStatus1 == item['index']
+                    ? 'statusActive cursor'
+                    : 'cursor'
+                "
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider></div
+          ></el-col>
         </el-row>
       </div>
     </div>
@@ -33,7 +46,6 @@
       id="tableContainer"
       v-for="item in [0]"
       :key="item"
-      v-show="labelStatus1 === item"
     >
       <ComSpreadTable
         ref="spreadsheetRef"
@@ -154,7 +166,7 @@ export default {
   },
   data() {
     return {
-      labelStatus1: 0,
+      labelStatus1: 3,
       spread: [[], []],
       dialogSearchForm: {
         OrderID: "",
@@ -166,7 +178,9 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            IsFinish: 0,
+          },
           forms: [],
         },
         {
@@ -206,6 +220,11 @@ export default {
       isEdit: [false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
+      Status1: [
+        { label: "已完成", value: "1", index: 0 },
+        { label: "未完成", value: "0", index: 3 },
+        { label: "全部", value: "", index: 4 },
+      ],
       Region: [5, 6, 6],
     };
   },
@@ -237,7 +256,7 @@ export default {
         if (entry.target === tableContainer) {
           // 在这里执行你的操作，例如刷新 SpreadJS
           // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
-          this.spread[this.labelStatus1].refresh();
+          this.spread[0].refresh();
         }
       }
     }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
@@ -263,6 +282,15 @@ export default {
             }
           }
         });
+      routeBtn = routeBtn.filter((item) => {
+        if (item.ButtonCode === "DesignatedPerson") {
+          return this.userInfo.RoleMap.some(
+            (role) =>
+              role.RoleID === "R2309040001" || role.RoleID === "E01Admin"
+          );
+        }
+        return true;
+      });
       this.$set(this, "btnForm", routeBtn);
     },
     // 监听键盘
@@ -276,7 +304,7 @@ export default {
           e.preventDefault();
           e.returnValue = false;
 
-          this.dataSave(this.labelStatus1);
+          this.dataSave(0);
           return false;
         }
       };
@@ -485,9 +513,9 @@ export default {
           return;
         }
         this.colDialogVisible1 = false;
-        let sheet = this.spread[this.labelStatus1].getActiveSheet();
+        let sheet = this.spread[0].getActiveSheet();
         const changedIndices = [];
-        this.tableData[this.labelStatus1].forEach((element, index) => {
+        this.tableData[0].forEach((element, index) => {
           if (element["isChecked"]) {
             changedIndices.push(index);
           }
@@ -503,7 +531,7 @@ export default {
         this.$nextTick(() => {
           sheet.repaint();
         });
-        await this.dataSave(this.labelStatus1);
+        await this.dataSave(0);
       }
     },
     //在该行数据下面增加新的一行
@@ -520,10 +548,8 @@ export default {
       );
       let newRowIndex = rowNumber + 1;
       let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
-        JSON.stringify(oldData)
-      );
-      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
+      this.tableData[0][newRowIndex] = JSON.parse(JSON.stringify(oldData));
+      let newData = this.tableData[0][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[1].find(
         (item) => item["RowNumber"] === oldData["RowNumber"]
       );
@@ -545,7 +571,7 @@ export default {
         .then(async (_) => {
           this.adminLoading = true;
 
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
+          let sheet = this.spread[0].getActiveSheet();
           let submitData = sheet.getDataSource();
           submitData.forEach((m) => {
             m["isChecked"] = true;
@@ -677,18 +703,17 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        // let RoleMapList = this.$store.getters.userInfo.RoleMap;
-        // if (RoleMapList.length) {
-        //   RoleMapList.forEach((item) => {
-        //     if (item.RoleID !== "R2309040001") {
-        //       this.$set(
-        //         this.formSearchs[0]["datas"],
-        //         "SaleMan",
-        //         this.userInfo.Account
-        //       );
-        //     }
-        //   });
-        // }
+        if (this.userInfo.RoleMap.length) {
+          this.userInfo.RoleMap.forEach((role) => {
+            if (role.RoleID === "R2309040001" || role.RoleID === "E01Admin") {
+              this.$set(
+                this.formSearchs[0]["datas"],
+                "SaleMan",
+                this.userInfo.Account
+              );
+            }
+          });
+        }
 
         await this.dataSearch(0);
         this.adminLoading = false;
@@ -1193,7 +1218,7 @@ export default {
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread[this.labelStatus1].getActiveSheet();
+      let sheet = this.spread[0].getActiveSheet();
       let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
@@ -1250,7 +1275,7 @@ export default {
         //   }
         // } else {
         // }
-        sheet.setDataSource(this.tableData[this.labelStatus1]);
+        sheet.setDataSource(this.tableData[0]);
         return;
       }
       if (
@@ -1339,9 +1364,6 @@ export default {
         });
       });
     },
-    changeStatus(item, index) {
-      this.labelStatus1 = index;
-    },
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
@@ -1375,20 +1397,13 @@ export default {
         this.colDialogVisible2 = false;
       }
     },
+    // 改变状态
+    changeStatus(item, index) {
+      this.labelStatus1 = item["index"];
+      this.formSearchs[0].datas["IsFinish"] = item.value;
+      this.dataSearch(0);
+    },
   },
 };
 </script>
-<style lang="scss" scoped>
-.spreadContainer {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  flex: 1;
-  border: 1px solid #ababab;
-}
-
-.sample-spreadsheets {
-  width: 100%;
-  height: 100%;
-}
-</style>
+<style lang="scss" scoped></style>
