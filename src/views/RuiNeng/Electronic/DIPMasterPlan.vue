@@ -1,6 +1,6 @@
 <!--DIP主计划-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <el-container>
       <el-main style="padding: 0; margin: 0">
         <div class="admin_container_2" style="width: 100%">

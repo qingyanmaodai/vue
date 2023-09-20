@@ -1,5 +1,5 @@
 <template>
-  <div class="container flex_flex content_height" v-loading="adminLoading">
+  <div class="APSContainer flex_flex content_height" v-loading="adminLoading">
     <div class="admin_container_two flex_column">
       <div class="admin_head" ref="headRef">
         <ComSearch

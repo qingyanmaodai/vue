@@ -1,6 +1,6 @@
 <!-- 注塑待排 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <ComSearch

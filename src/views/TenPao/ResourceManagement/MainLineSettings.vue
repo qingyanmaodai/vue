@@ -1,6 +1,6 @@
 <!--设备与工装汇总-->
 <template>
-  <div class="container flex_column content_height" v-loading="adminLoading">
+  <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <splitpanes class="default-theme">
       <pane :size="60">
         <div class="flex_column" style="width: 100%; height: 100%">

@@ -1,6 +1,6 @@
 <!-- 生产订单管理-->
 <template>
-  <div class="container flex_column content_height" v-loading="adminLoading">
+  <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0, 1, 2, 3]" :key="i" v-show="labelStatus1 === i">
         <ComSearch

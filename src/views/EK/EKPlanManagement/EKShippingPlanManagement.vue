@@ -1,7 +1,7 @@
 <!-- 激光月计划 -->
 <template>
   <div
-    class="container flex_column content_height bgWhite"
+    class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
@@ -19,7 +19,7 @@
         />
       </div>
     </div>
-    <div class="admin_content pd-0-6">
+    <div class="text-blue">
       <div class="ant-table-title">
         <el-row>
           <el-col :span="8"

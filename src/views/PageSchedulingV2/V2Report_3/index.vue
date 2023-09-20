@@ -1,6 +1,6 @@
 <!--点检达成率-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div
       ref="content_up"
       :class="

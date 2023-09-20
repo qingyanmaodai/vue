@@ -1,6 +1,6 @@
 <!--报工第一步-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <div>
         <div class="flex px-2 py-1.5 border-b-1 tree_Head">
@@ -48,7 +48,7 @@
       :close-on-click-modal="false"
       width="90%"
     >
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           <ComSearch
             ref="searchRef"

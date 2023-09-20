@@ -1,6 +1,6 @@
 <!-- 生产订单管理-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_container" style="width: 100%">
       <div class="admin_head" ref="headRef">
         <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">

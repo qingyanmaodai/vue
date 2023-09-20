@@ -1,6 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div class="container">
+  <div class="APSContainer">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -151,7 +151,7 @@
     </div>
 
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="80%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_head">
           <div>
             <span> {{ currentRow.Code }} </span>

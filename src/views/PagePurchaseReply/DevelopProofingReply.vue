@@ -1,6 +1,6 @@
 <!--研发打样复期-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <el-container>
       <el-main style="padding: 0; margin: 0">
         <div class="admin_container_2" style="width: 100%">
@@ -90,7 +90,7 @@
       </el-main>
     </el-container>
     <el-dialog title="复期变更记录" :visible.sync="orderDialog" width="70%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           复期变更记录
           <ComReportTable

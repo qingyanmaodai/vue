@@ -1,6 +1,6 @@
 <!--装配总排期-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div ref="searchRef">
         <ComSearch
@@ -299,7 +299,7 @@
     </el-dialog>
 
     <el-dialog title="工单分析" :visible.sync="orderDialog" width="70%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           工单
           <ComReportTable
@@ -333,7 +333,7 @@
           @btnClick="btnClick"
         />
       </div>
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <!-- <div class="admin_content">
 
           <ComReportTable

@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="background: #f3f3f4">
+  <div class="APSContainer" style="background: #f3f3f4">
     <el-container class="home">
       <el-main>
         <div class="home_1">
@@ -1224,7 +1224,7 @@ export default {
   }
 }
 
-.container {
+.APSContainer {
   margin: 10px 10px 0 10px;
   overflow: auto;
 }

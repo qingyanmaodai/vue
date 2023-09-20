@@ -1,6 +1,6 @@
 <!--委外业务关联-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         v-for="(item, i) in Status1"

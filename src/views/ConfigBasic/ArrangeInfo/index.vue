@@ -1,6 +1,6 @@
 <!--排班信息-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <div class="admin_left">
       <ComCheckboxTree
         ref="asideRef"

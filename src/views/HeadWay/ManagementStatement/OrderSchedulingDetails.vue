@@ -1,6 +1,6 @@
 <!--生产订单排产明细-->
 <template>
-  <div class="container">
+  <div class="APSContainer">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"

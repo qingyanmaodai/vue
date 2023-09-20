@@ -1,6 +1,6 @@
 <template>
   <!-- 只查看的表格 -->
-  <div class="container">
+  <div class="APSContainer">
     <div class="flex_grow">
       <vxe-toolbar
         ref="xToolbar1"
@@ -997,7 +997,7 @@ export default {
   right: -150px !important;
 }
 
-.container {
+.APSContainer {
   display: flex;
   flex-direction: column;
   height: 100%;
