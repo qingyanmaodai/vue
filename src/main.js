@@ -17,6 +17,7 @@ import App from "./App";
 import store from "./store";
 import router from "./router";
 
+
 import "@/icons"; // svg icon
 import "@/permission"; // permission control
 import "@/utils/alertMsgBox";
@@ -44,6 +45,7 @@ Vue.use(dataV);
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
+import 'uno.css'
 if (process.env.NODE_ENV === "production") {
   const { mockXHR } = require("../mock");
   mockXHR();

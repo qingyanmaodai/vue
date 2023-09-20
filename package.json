@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
-    "@unocss/webpack": "^0.56.0",
     "axios": "0.18.1",
     "body-parser": "^1.20.2",
     "chokidar": "^3.5.3",
