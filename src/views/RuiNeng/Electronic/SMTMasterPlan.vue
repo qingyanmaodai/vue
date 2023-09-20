@@ -973,40 +973,35 @@ export default {
         );
         sheet.rowFilter(hideRowFilter);
 
-        // 设置整个列头的背景色和前景色。
-        /**
-         * 参数1:表示行
-         * 参数2:列，-1表示
-         * 参数3:
-         * 参数4:
-         * 参数5:
-         */
-        let colHeaderStyle = sheet.getRange(
-          0,
-          -1,
-          1,
-          -1,
-          GC.Spread.Sheets.SheetArea.colHeader
-        );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
-        colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
-        );
-        colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
-        colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-
         //设置数据渲染的单元格默认的样式
+
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
           "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
+        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+        defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+        defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+          "gray",
+          GC.Spread.Sheets.LineStyle.thin
+        );
+
+        defaultStyle.showEllipsis = true;
         sheet.setDefaultStyle(
           defaultStyle,
           GC.Spread.Sheets.SheetArea.viewport
         );
-        defaultStyle.showEllipsis = true;
         if (this.tableColumns[remarkTb][0]["FixCount"]) {
           // 冻结
           sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);

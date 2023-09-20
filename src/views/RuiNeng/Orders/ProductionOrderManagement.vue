@@ -773,8 +773,7 @@ export default {
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-
-        _this.computedNum(args.row, args.col, args.editingText);
+        // _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
         // }
@@ -1529,6 +1528,143 @@ export default {
         });
       }
       // }
+    },
+    // 自动计算数量
+    computedNum(rowIndex, colIndex, val) {
+      let sheet = this.spread[this.labelStatus1].getActiveSheet();
+      let dataSource = sheet.getDataSource();
+      if (val == null) {
+        val = 0;
+      } else if (val == 0) {
+        //输入0不触发自动计算
+        return;
+      }
+      let currentRow = dataSource[rowIndex];
+      if (currentRow.ID == -1) {
+        return false;
+      }
+      let currentlabel = this.tableColumns[0][colIndex].prop + "dy";
+      if (!currentRow[currentlabel]) {
+        //不是天日的数量
+        currentlabel = this.tableColumns[0][colIndex].prop;
+        if (currentlabel == "ViewSort") {
+          val = currentRow[currentlabel];
+          if (val) {
+            let newRowindex = 1;
+            let flag = false;
+            let lineID = currentRow["LineID"];
+            //循环上面
+            for (var r = 0; r < dataSource.length - 1; r++) {
+              let row = dataSource[r];
+              if (lineID != row["LineID"]) {
+                continue;
+              }
+              let thisValue = newRowindex; //row[currentlabel];
+              if (row["Code"] == null || row["Code"] == "") {
+                break;
+              }
+              if (r < rowIndex) {
+                //当前循环的在当前操作行的上面
+                if (thisValue >= val && flag === false) {
+                  newRowindex = val + 1;
+                  flag = true;
+                }
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else if (r > rowIndex) {
+                //当前循环的在当前操作行的下面
+                if (newRowindex == val) {
+                  newRowindex++;
+                }
+
+                thisValue = newRowindex;
+                newRowindex++;
+              } else {
+                thisValue = val;
+              }
+              sheet.setValue(r, colIndex, thisValue);
+            }
+          }
+        } else {
+        }
+        sheet.setDataSource(this.tableData[this.labelStatus1]);
+        return;
+      }
+      if (
+        !currentRow[currentlabel].TotalHours ||
+        parseInt(currentRow[currentlabel].TotalHours) <= 0
+      ) {
+        this.$message.error("该天休息，上班时间为0");
+
+        sheet.setValue(rowIndex, colIndex, "");
+
+        return;
+      }
+
+      let Qty = parseInt(currentRow.OweQty);
+      let Capacity = parseInt(currentRow.Capacity);
+      if (!Capacity) {
+        this.$message.error("该单据没有产能");
+        return;
+      }
+      let list = [];
+      let editNum = 0;
+      let remainNum = 0;
+      // 填一个数量自动将之后的全清干净，前面的累计 prop2有值
+      this.tableColumns[0].some((x, i) => {
+        if (i <= colIndex) {
+          list.push(currentRow[x.prop]);
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            editNum = parseInt(editNum) + parseInt(currentRow[x.prop]);
+          }
+        } else {
+          if (x.prop2 && i != colIndex && currentRow[x.prop]) {
+            list.push("");
+          } else {
+            list.push(currentRow[x.prop]);
+          }
+        }
+      });
+      remainNum = Qty - editNum;
+
+      if (parseInt(val) > remainNum) {
+        this.$message.error(
+          "输入的数量不能大于剩余排产数，剩余排产数为：" + remainNum
+        );
+        list[colIndex] = "";
+        for (var j = 0; j < this.tableColumns[0].length; j++) {
+          sheet.setArray(rowIndex, j, [list[j]]);
+        }
+        return;
+      } else {
+        // 接着计算下面每一个空格该有的数
+        for (var j = colIndex + 1; j < this.tableColumns[0].length; j++) {
+          if (this.tableColumns[0][j]["prop2"]) {
+            let label = this.tableColumns[0][j].prop + "dy";
+            let obj = currentRow[label];
+            remainNum = remainNum - parseInt(val);
+            let maxNum =
+              (Capacity * obj.TotalHours * obj.DayCapacity) /
+              currentRow.StandardPeoples;
+            maxNum = parseInt(maxNum);
+            if (remainNum <= 0) {
+              list[j] = null;
+            } else {
+              if (remainNum <= maxNum) {
+                list[j] = remainNum;
+                break;
+              } else {
+                list[j] = maxNum;
+                remainNum -= maxNum;
+              }
+            }
+          }
+        }
+        for (var j = 0; j < this.tableColumns[0].length; j++) {
+          sheet.setArray(rowIndex, j, [list[j]]);
+        }
+      }
     },
     // 下达
     async MOPlanSaveToDayPlan() {
