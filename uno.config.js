@@ -1,9 +1,34 @@
 // uno.config.ts
-import { defineConfig, presetAttributify, presetUno } from 'unocss'
+import {
+    defineConfig,
+    presetAttributify,
+    presetIcons,
+    presetTypography,
+    presetUno,
+    presetWebFonts,
+    transformerDirectives,
+    transformerVariantGroup
+} from 'unocss'
 
 export default defineConfig({
+    shortcuts: [
+        // ...
+    ],
+    theme: {
+        colors: {
+            // ...
+        }
+    },
     presets: [
-        presetAttributify({ /* preset options */ }),
-        presetUno()
-    ]
+        presetUno(),
+        presetAttributify(),
+        presetIcons(),
+        presetTypography(),
+        presetWebFonts({
+            fonts: {
+                // ...
+            }
+        })
+    ],
+    transformers: [transformerDirectives(), transformerVariantGroup()]
 })
