@@ -19,7 +19,7 @@
         />
       </div>
     </div>
-    <div class="text-blue">
+    <div class="admin_content pd-0-6">
       <div class="ant-table-title">
         <el-row>
           <el-col :span="8"
