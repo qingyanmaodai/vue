@@ -5,16 +5,16 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 3, 4]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[i].datas"
-          :searchForm="formSearchs[i].forms"
-          :remark="i"
+          :searchData="formSearchs[0].datas"
+          :searchForm="formSearchs[0].forms"
+          :remark="0"
           :isLoading="isLoading"
           :btnForm="btnForm"
-          :signName="i"
-          :Region="Region[i]"
+          :signName="0"
+          :Region="Region[0]"
           @btnClick="btnClick"
         />
       </div>
@@ -24,6 +24,17 @@
         <el-col :span="8"
           ><span class="title">{{ title }}</span>
         </el-col>
+        <el-col :span="16" class="flex_flex_end">
+          <div v-for="(item, y) in Status1" :key="y">
+            <span
+              @click="changeStatus(item, y)"
+              :class="
+                labelStatus1 == item['index'] ? 'statusActive cursor' : 'cursor'
+              "
+              >{{ item.label }}</span
+            >
+            <el-divider direction="vertical"></el-divider></div
+        ></el-col>
       </el-row>
     </div>
     <div class="admin_content flex_grow">
@@ -182,7 +193,7 @@ export default {
       radio: "1",
       formSearchs: [
         {
-          datas: {},
+          datas: { IsFinish: 0 },
           forms: [],
         },
         {
@@ -224,6 +235,11 @@ export default {
       colDialogVisible2: false,
       isConfirmLoading: false,
       Region: [6, 6, 6],
+      Status1: [
+        { label: "未完成", value: 0, index: 0 },
+        { label: "已完成", value: 1, index: 3 },
+        { label: "全部", value: "", index: 4 },
+      ],
     };
   },
   watch: {},
@@ -284,7 +300,7 @@ export default {
           e.preventDefault();
           e.returnValue = false;
 
-          this.dataSave(this.labelStatus1);
+          this.dataSave(0);
           return false;
         }
       };
@@ -448,7 +464,7 @@ export default {
         .then(async (_) => {
           this.adminLoading = true;
 
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
+          let sheet = this.spread[0].getActiveSheet();
           let submitData = sheet.getDataSource();
           submitData.forEach((m) => {
             m["isChecked"] = true;
@@ -580,6 +596,23 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
+        let RoleMapList = this.$store.getters.userInfo.RoleMap;
+        if (RoleMapList.length) {
+          RoleMapList.forEach((item) => {
+            if (item.RoleID === "R2309040001" || item.RoleID === "E01Admin") {
+              //业务经理
+              this.RoleMapStatus = true;
+              return;
+            }
+          });
+        }
+        if (this.RoleMapStatus !== true) {
+          this.$set(
+            this.formSearchs[0]["datas"],
+            "SaleMan",
+            this.userInfo.Account
+          );
+        }
 
         await this.dataSearch(0);
       }
@@ -1099,7 +1132,9 @@ export default {
       });
     },
     changeStatus(item, index) {
-      this.labelStatus1 = index;
+      this.labelStatus1 = item["index"];
+      this.formSearchs[0].datas["IsFinish"] = item.value;
+      this.dataSearch(0);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {

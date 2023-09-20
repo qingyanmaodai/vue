@@ -166,7 +166,7 @@ export default {
   },
   data() {
     return {
-      labelStatus1: 3,
+      labelStatus1: 0,
       spread: [[], []],
       dialogSearchForm: {
         OrderID: "",
@@ -221,11 +221,12 @@ export default {
       colDialogVisible1: false,
       colDialogVisible2: false,
       Status1: [
-        { label: "已完成", value: "1", index: 0 },
-        { label: "未完成", value: "0", index: 3 },
+        { label: "未完成", value: 0, index: 0 },
+        { label: "已完成", value: 1, index: 3 },
         { label: "全部", value: "", index: 4 },
       ],
       Region: [5, 6, 6],
+      RoleMapStatus: false,
     };
   },
   watch: {},
@@ -703,16 +704,22 @@ export default {
           });
           this.$set(this.formSearchs[z], "forms", x);
         });
-        if (this.userInfo.RoleMap.length) {
-          this.userInfo.RoleMap.forEach((role) => {
-            if (role.RoleID === "R2309040001" || role.RoleID === "E01Admin") {
-              this.$set(
-                this.formSearchs[0]["datas"],
-                "SaleMan",
-                this.userInfo.Account
-              );
+        let RoleMapList = this.$store.getters.userInfo.RoleMap;
+        if (RoleMapList.length) {
+          RoleMapList.forEach((item) => {
+            if (item.RoleID === "R2309040001" || item.RoleID === "E01Admin") {
+              //业务经理
+              this.RoleMapStatus = true;
+              return;
             }
           });
+        }
+        if (this.RoleMapStatus !== true) {
+          this.$set(
+            this.formSearchs[0]["datas"],
+            "SaleMan",
+            this.userInfo.Account
+          );
         }
 
         await this.dataSearch(0);
