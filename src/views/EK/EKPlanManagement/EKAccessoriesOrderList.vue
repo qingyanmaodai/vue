@@ -43,7 +43,6 @@
         style="height: 100%"
         v-for="item in [0]"
         :key="item"
-        v-show="labelStatus1 === item"
       >
         <ComSpreadTable
           ref="spreadsheetRef"
