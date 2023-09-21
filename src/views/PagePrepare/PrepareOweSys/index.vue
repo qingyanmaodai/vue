@@ -1,6 +1,6 @@
 <!--备料齐套报表-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -50,7 +50,7 @@
     </div>
 
     <el-dialog title="物料明细查询" :visible.sync="dialogShow" width="80%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           物料明细
           <ComReportTable
@@ -72,7 +72,7 @@
     </el-dialog>
 
     <el-dialog title="全局物料明细查询" :visible.sync="dialogShow2" width="80%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           全局物料明细
           <ComReportTable

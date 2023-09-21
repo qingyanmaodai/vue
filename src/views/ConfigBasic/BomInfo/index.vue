@@ -1,6 +1,6 @@
 <!--BOM清单-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <div class="admin_left el-pagination-tree">
       <ComAsideTree
         ref="asideRef"

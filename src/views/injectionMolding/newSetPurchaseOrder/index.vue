@@ -1,6 +1,6 @@
 <!--入库处理-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -965,7 +965,7 @@ export default {
   }
 }
 
-.container ::v-deep .el-dialog__wrapper {
+.APSContainer ::v-deep .el-dialog__wrapper {
   z-index: 55 !important;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="background: #f3f3f4">
+  <div class="APSContainer" style="background: #f3f3f4">
     <el-container class="home">
       <el-main>
         <div class="home_1">
@@ -219,12 +219,12 @@
 </template>
 
 <script>
-import { GetSearchData } from "@/api/Common";
-import { wjBoardData_1 } from "@/api/Report";
-import echarts from "echarts";
-import { mapState } from "vuex";
+import { GetSearchData } from '@/api/Common';
+import { wjBoardData_1 } from '@/api/Report';
+import * as echarts from 'echarts';
+import { mapState } from 'vuex';
 export default {
-  name: "EastIndex",
+  name: 'EastIndex',
   data() {
     return {
       pieForm: {
@@ -232,78 +232,78 @@ export default {
         Q2: 0,
         Q3: 0,
         Q4: 0,
-        P1: "0%",
+        P1: '0%',
       },
-      img9: require("@/assets/imgs/img9.png"),
+      img9: require('@/assets/imgs/img9.png'),
       head: [
         {
-          label: "今日总计划数",
-          img: require("@/assets/imgs/img10.png"),
-          number: "0",
+          label: '今日总计划数',
+          img: require('@/assets/imgs/img10.png'),
+          number: '0',
         },
         {
-          label: "今日总报工数",
-          img: require("@/assets/imgs/img11.png"),
-          number: "0",
+          label: '今日总报工数',
+          img: require('@/assets/imgs/img11.png'),
+          number: '0',
         },
         {
-          label: "今日总确认数",
-          img: require("@/assets/imgs/img12.png"),
-          number: "0",
+          label: '今日总确认数',
+          img: require('@/assets/imgs/img12.png'),
+          number: '0',
         },
         {
-          label: "今日总达成率",
-          img: require("@/assets/imgs/img13.png"),
-          number: "0",
+          label: '今日总达成率',
+          img: require('@/assets/imgs/img13.png'),
+          number: '0',
         },
       ],
       head2: [
         {
-          label: "需求转换",
-          img: require("@/assets/imgs/img1.png"),
-          path: "DemandTrans",
+          label: '需求转换',
+          img: require('@/assets/imgs/img1.png'),
+          path: 'DemandTrans',
           isUsing: false,
         },
         {
-          label: "销售计划",
-          img: require("@/assets/imgs/img2.png"),
-          path: "SaleScheduling",
+          label: '销售计划',
+          img: require('@/assets/imgs/img2.png'),
+          path: 'SaleScheduling',
           isUsing: false,
         },
         {
-          label: "包装计划",
-          img: require("@/assets/imgs/img3.png"),
-          path: "PackPlan",
+          label: '包装计划',
+          img: require('@/assets/imgs/img3.png'),
+          path: 'PackPlan',
           isUsing: false,
         },
         {
-          label: "当日计划",
-          img: require("@/assets/imgs/img4.png"),
-          path: "PackDayPlan",
+          label: '当日计划',
+          img: require('@/assets/imgs/img4.png'),
+          path: 'PackDayPlan',
           isUsing: false,
         },
         {
-          label: "欠料追踪",
-          img: require("@/assets/imgs/img5.png"),
-          path: "OweInfo",
+          label: '欠料追踪',
+          img: require('@/assets/imgs/img5.png'),
+          path: 'OweInfo',
           isUsing: false,
         },
         {
-          label: "排班配置",
-          img: require("@/assets/imgs/img6.png"),
-          path: "ArrangeInfo",
+          label: '排班配置',
+          img: require('@/assets/imgs/img6.png'),
+          path: 'ArrangeInfo',
           isUsing: false,
         },
         {
-          label: "工艺配置",
-          img: require("@/assets/imgs/img7.png"),
-          path: "CategoryInfo",
+          label: '工艺配置',
+          img: require('@/assets/imgs/img7.png'),
+          path: 'CategoryInfo',
           isUsing: false,
         },
         {
-          label: "产能配置",
-          img: require("@/assets/imgs/img8.png"),
-          path: "CapaticyInfo",
+          label: '产能配置',
+          img: require('@/assets/imgs/img8.png'),
+          path: 'CapaticyInfo',
           isUsing: false,
         },
       ],
@@ -314,18 +314,18 @@ export default {
       dotFour: 0,
       dotFive: 0,
       show: 1,
-      toDay: "",
+      toDay: '',
       option1: {
         color: [
-          "#23d4c9",
-          "#7fe20d",
-          "#1cadf0",
-          "#4d72d9",
-          "#e22bca",
-          "#dcf117",
-          "#ac17f1",
+          '#23d4c9',
+          '#7fe20d',
+          '#1cadf0',
+          '#4d72d9',
+          '#e22bca',
+          '#dcf117',
+          '#ac17f1',
         ],
-        backgroundColor: "#fff",
+        backgroundColor: '#fff',
         grid: {
           left: 10,
           right: 40,
@@ -336,28 +336,28 @@ export default {
         calculable: true,
         series: [
           {
-            name: "",
-            type: "pie",
+            name: '',
+            type: 'pie',
             radius: [10, 70],
-            center: ["50%", "50%"],
-            roseType: "area",
+            center: ['50%', '50%'],
+            roseType: 'area',
             itemStyle: {
               normal: {
                 fontSize: 14,
               },
             },
-            data: [{ name: "包装", value: 100 }],
+            data: [{ name: '包装', value: 100 }],
           },
         ],
       },
       option2: {
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
         },
         legend: {
-          x: "35%",
-          y: "0%",
-          data: ["计划数", "完成数", "达成率（%）"],
+          x: '35%',
+          y: '0%',
+          data: ['计划数', '完成数', '达成率（%）'],
           textStyle: {
             fontSize: 11,
           },
@@ -367,7 +367,7 @@ export default {
         calculable: true,
         xAxis: [
           {
-            type: "category",
+            type: 'category',
             data: [],
             axisLabel: {
               interval: 0,
@@ -388,9 +388,9 @@ export default {
         ],
         yAxis: [
           {
-            type: "value",
+            type: 'value',
             scale: true,
-            name: "",
+            name: '',
             nameTextStyle: {
               fontSize: 11,
             },
@@ -420,8 +420,8 @@ export default {
             },
           },
           {
-            type: "value",
-            name: "",
+            type: 'value',
+            name: '',
             nameTextStyle: {
               fontSize: 11,
             },
@@ -438,9 +438,9 @@ export default {
               show: false,
             },
             axisLabel: {
-              formatter: "{value} %",
+              formatter: '{value} %',
               textStyle: {
-                color: "rgba(255,255,255,.8)",
+                color: 'rgba(255,255,255,.8)',
                 fontSize: 11,
                 // opacity: 0.1,
               },
@@ -448,43 +448,43 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
-                color: ["#fff"],
+                color: ['#fff'],
                 opacity: 0.2,
               },
             },
           },
         ],
-        animationEasing: "cubicOut",
+        animationEasing: 'cubicOut',
         series: [
           {
-            name: "计划数",
-            type: "bar",
+            name: '计划数',
+            type: 'bar',
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#b266ff" },
-                  { offset: 1, color: "#121b87" },
+                  { offset: 0, color: '#b266ff' },
+                  { offset: 1, color: '#121b87' },
                 ]),
               },
             },
             data: [],
           },
           {
-            name: "确认数",
-            type: "bar",
+            name: '确认数',
+            type: 'bar',
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#00f0ff" },
-                  { offset: 1, color: "#032a72" },
+                  { offset: 0, color: '#00f0ff' },
+                  { offset: 1, color: '#032a72' },
                 ]),
               },
             },
             data: [],
           },
           {
-            name: "达成率（%）",
-            type: "line",
+            name: '达成率（%）',
+            type: 'line',
             yAxisIndex: 1,
             smooth: false,
             symbolSize: 5,
@@ -499,36 +499,36 @@ export default {
                   [
                     {
                       offset: 0,
-                      color: "rgba(230, 48, 123, 0.8)",
+                      color: 'rgba(230, 48, 123, 0.8)',
                     },
                     {
                       offset: 0.8,
-                      color: "rgba(230, 48, 123, 0)",
+                      color: 'rgba(230, 48, 123, 0)',
                     },
                   ],
-                  false
+                  false,
                 ),
-                shadowColor: "rgba(0, 0, 0, 0.1)",
+                shadowColor: 'rgba(0, 0, 0, 0.1)',
                 shadowBlur: 10,
               },
             },
-            itemStyle: { normal: { color: "#DA2F78" } },
+            itemStyle: { normal: { color: '#DA2F78' } },
             data: [],
           },
         ],
       },
       dotPage: [
-        { path: "CategoryInfo", isUsing: false },
-        { path: "ProcessInfo", isUsing: false },
-        { path: "CapaticyInfo", isUsing: false },
-        { path: "ArrangeInfo", isUsing: false },
-        { path: "", isUsing: false },
+        { path: 'CategoryInfo', isUsing: false },
+        { path: 'ProcessInfo', isUsing: false },
+        { path: 'CapaticyInfo', isUsing: false },
+        { path: 'ArrangeInfo', isUsing: false },
+        { path: '', isUsing: false },
       ],
     };
   },
   created() {
     let d = new Date();
-    this.toDay = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    this.toDay = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
     this.getEchartOneData();
     this.getEchartTwoData();
     this.judgePage();
@@ -577,14 +577,14 @@ export default {
           name: val,
         });
       } else {
-        this.$message.error("您暂未开通此页面的权限！");
+        this.$message.error('您暂未开通此页面的权限！');
       }
     },
     async getDataOne() {
       let form = {};
-      form["dicID"] = 6721;
-      form["PlanDay"] = [this.toDay, this.toDay];
-      form["OrganizeIDs"] = this.userInfo.CenterID;
+      form['dicID'] = 6721;
+      form['PlanDay'] = [this.toDay, this.toDay];
+      form['OrganizeIDs'] = this.userInfo.CenterID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -595,14 +595,14 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     async getDataTwo() {
       let form = {};
-      form["dicID"] = 1177;
+      form['dicID'] = 1177;
       this.dotOne = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -617,14 +617,14 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     async getDataThree() {
       let form = {};
-      form["dicID"] = 1182;
+      form['dicID'] = 1182;
       this.dotTwo = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -639,14 +639,14 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     async getDataFour() {
       let form = {};
-      form["dicID"] = 5126;
+      form['dicID'] = 5126;
       this.dotThree = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -661,7 +661,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -669,7 +669,7 @@ export default {
     // 获取数据
     async getWjBoardData_1() {
       let form = {};
-      form["MFGOrganizeID"] = this.userInfo.CenterID;
+      form['MFGOrganizeID'] = this.userInfo.CenterID;
       let res = await wjBoardData_1(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -678,19 +678,19 @@ export default {
           this.head[1].number = data.Table1[0].ProducedQty;
           this.head[2].number = data.Table1[0].ConfirmQty;
           if (data.Table1[0].ConfirmQty == 0) {
-            this.head[3].number = "0%";
+            this.head[3].number = '0%';
           } else {
             this.head[3].number =
               (
                 (data.Table1[0].ConfirmQty / data.Table1[0].PlanQty) *
                 100
-              ).toFixed(2) + "%";
+              ).toFixed(2) + '%';
           }
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -698,13 +698,13 @@ export default {
     // 获取本月计划与达成
     async getEchartOneData() {
       let d = new Date();
-      let startMonth = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + "01";
+      let startMonth = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + '01';
       let form = {};
-      form["PlanDay"] = [startMonth, this.toDay];
-      form["fields"] =
-        "isNull(sum(PlanQty),0) as PlanQty,isNull(sum(ConfirmQty),0) as ConfirmQty, cast(isNull(sum(ConfirmQty),0)/isNull(sum(PlanQty),0)*100 as decimal(18,2)) as PlanQtyP,PlanDay";
-      form["groupby"] = "PlanDay";
-      form["dicID"] = 6720;
+      form['PlanDay'] = [startMonth, this.toDay];
+      form['fields'] =
+        'isNull(sum(PlanQty),0) as PlanQty,isNull(sum(ConfirmQty),0) as ConfirmQty, cast(isNull(sum(ConfirmQty),0)/isNull(sum(PlanQty),0)*100 as decimal(18,2)) as PlanQtyP,PlanDay';
+      form['groupby'] = 'PlanDay';
+      form['dicID'] = 6720;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -726,12 +726,12 @@ export default {
           this.option2.series[0].data = PlanQty;
           this.option2.series[1].data = ConfirmQty;
           this.option2.series[2].data = PlanQtyP;
-          this.drawChart("lineChart2", this.option2);
+          this.drawChart('lineChart2', this.option2);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -739,22 +739,22 @@ export default {
     // 获取今日工序占比
     async getEchartTwoData() {
       let form = {};
-      form["fields"] =
-        " ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value ";
-      form["PlanDay"] = [this.toDay, this.toDay];
-      form["groupby"] = " ProcessName";
-      form["dicID"] = 6720;
+      form['fields'] =
+        ' ProcessName as name,isNull(sum(PlanQty),0)  as PlanQty, isNull(sum(ConfirmQty),0) as value ';
+      form['PlanDay'] = [this.toDay, this.toDay];
+      form['groupby'] = ' ProcessName';
+      form['dicID'] = 6720;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
           this.option1.series[0].data = data;
         }
-        this.drawChart("lineChart", this.option1);
+        this.drawChart('lineChart', this.option1);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -778,43 +778,43 @@ export default {
       this.show = 3;
     },
     drawLine() {
-      var echarts = require("echarts");
-      const myCharts3 = echarts.init(document.getElementById("lineChart3"));
+      var echarts = require('echarts');
+      const myCharts3 = echarts.init(document.getElementById('lineChart3'));
       var option3 = {
         legend: {
-          data: ["已达成", "未达成"],
+          data: ['已达成', '未达成'],
         },
         calculable: true,
         xAxis: [
           {
-            type: "category",
+            type: 'category',
             data: [
-              "1日",
-              "4日",
-              "7日",
-              "11日",
-              "15日",
-              "19日",
-              "23日",
-              "27日",
-              "30日",
+              '1日',
+              '4日',
+              '7日',
+              '11日',
+              '15日',
+              '19日',
+              '23日',
+              '27日',
+              '30日',
             ],
           },
         ],
         yAxis: [
           {
-            type: "value",
+            type: 'value',
           },
         ],
         series: [
           {
-            name: "已达成",
-            type: "bar",
+            name: '已达成',
+            type: 'bar',
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#eb1de0" },
-                  { offset: 1, color: "#770371" },
+                  { offset: 0, color: '#eb1de0' },
+                  { offset: 1, color: '#770371' },
                 ]),
               },
             },
@@ -823,34 +823,34 @@ export default {
             ],
             markPoint: {
               data: [
-                { type: "max", name: "最大值" },
-                { type: "min", name: "最小值" },
+                { type: 'max', name: '最大值' },
+                { type: 'min', name: '最小值' },
               ],
             },
             markLine: {
-              data: [{ type: "average", name: "平均值" }],
+              data: [{ type: 'average', name: '平均值' }],
             },
           },
           {
-            name: "未达成",
-            type: "bar",
+            name: '未达成',
+            type: 'bar',
             itemStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "#87cefc" },
-                  { offset: 1, color: "#045f9c" },
+                  { offset: 0, color: '#87cefc' },
+                  { offset: 1, color: '#045f9c' },
                 ]),
               },
             },
             data: [12800, 9900, 11900, 8640, 6287, 5707, 11756, 7822, 14870],
             markPoint: {
               data: [
-                { name: "月最高", value: 6400, xAxis: 10, yAxis: 6400 },
-                { name: "月最低", value: 1260, xAxis: 10, yAxis: 6400 },
+                { name: '月最高', value: 6400, xAxis: 10, yAxis: 6400 },
+                { name: '月最低', value: 1260, xAxis: 10, yAxis: 6400 },
               ],
             },
             markLine: {
-              data: [{ type: "average", name: "平均值" }],
+              data: [{ type: 'average', name: '平均值' }],
             },
           },
         ],
@@ -1035,7 +1035,7 @@ export default {
   color: rgb(153, 153, 153);
 }
 
-.container {
+.APSContainer {
   margin: 10px 10px 0 10px;
   overflow: auto;
 }

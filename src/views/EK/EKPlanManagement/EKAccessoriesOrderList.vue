@@ -1,7 +1,7 @@
 <!-- 配件订单列表 -->
 <template>
   <div
-    class="container flex_column content_height bgWhite"
+    class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
@@ -43,7 +43,6 @@
         style="height: 100%"
         v-for="item in [0, 2, 3]"
         :key="item"
-        v-show="labelStatus1 === item"
       >
         <ComSpreadTable
           ref="spreadsheetRef"

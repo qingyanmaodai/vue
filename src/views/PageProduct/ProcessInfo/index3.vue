@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div>
       <div class="admin_content">
         <div class="ant-table-title">

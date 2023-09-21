@@ -1,6 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div ref="content_up" class="list_content_up">
       <div class="admin_head_2" ref="headRef">
         <ComSearch
@@ -85,7 +85,7 @@
     </div>
 
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComReportTable

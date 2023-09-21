@@ -1,6 +1,6 @@
 <!--生产订单 -->
 <template>
-  <div class="container flex_column content_height bgWhite">
+  <div class="APSContainer flex_column content_height bgWhite">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"

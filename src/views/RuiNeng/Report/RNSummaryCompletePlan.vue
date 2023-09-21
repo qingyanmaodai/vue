@@ -13,7 +13,7 @@
             </div>
           </div>
         </div>
-        <div class="leftCard container">
+        <div class="leftCard APSContainer">
           <div class="admin_head_2" ref="headRef">
             <ComSearch
               ref="searchRef"
@@ -780,7 +780,7 @@ export default {
   .itemCard1:hover {
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   }
-  .container {
+  .APSContainer {
     padding: 0;
   }
 }

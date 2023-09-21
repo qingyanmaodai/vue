@@ -1,6 +1,6 @@
 <!--不达成维护列表-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -128,15 +128,15 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import echarts from "echarts";
-import FileSaver from "file-saver";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import { GetHeader, GetSearchData, ExportData } from "@/api/Common";
-import formatDate from "@/utils/formatDate";
+import XLSX from 'xlsx';
+import * as echarts from 'echarts';
+import FileSaver from 'file-saver';
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import { GetHeader, GetSearchData, ExportData } from '@/api/Common';
+import formatDate from '@/utils/formatDate';
 export default {
-  name: "OrgReport",
+  name: 'OrgReport',
   components: {
     ComSearch,
     ComVxeTable,
@@ -161,19 +161,19 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
       echart_one: {
         title: {
-          text: "",
+          text: '',
         },
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
           formatter: function (params) {
-            var result = params[0].name + "<br>";
+            var result = params[0].name + '<br>';
             params.forEach(function (item, i) {
               result +=
                 '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
@@ -181,44 +181,44 @@ export default {
                 '"></span>';
               result +=
                 item.seriesName +
-                ": " +
+                ': ' +
                 '<span class="growth">' +
                 item.data +
-                "</span><br>";
+                '</span><br>';
             });
             return result;
           },
         },
         legend: [
           {
-            data: ["目标值"],
+            data: ['目标值'],
             textStyle: {
               fontSize: 12,
-              color: "#151515",
-              fontWeight: "900",
+              color: '#151515',
+              fontWeight: '900',
             },
-            top: "0%",
-            align: "right",
-            right: "15%",
+            top: '0%',
+            align: 'right',
+            right: '15%',
           },
           {
-            data: ["实际值"],
+            data: ['实际值'],
             textStyle: {
               fontSize: 12,
-              color: "#151515",
-              fontWeight: "900",
+              color: '#151515',
+              fontWeight: '900',
             },
-            align: "right",
-            top: "7%",
-            right: "15%",
+            align: 'right',
+            top: '7%',
+            right: '15%',
           },
         ],
         offset: 20,
         grid: {
-          left: "2%",
-          right: "2%",
-          top: "25%",
-          bottom: "12%",
+          left: '2%',
+          right: '2%',
+          top: '25%',
+          bottom: '12%',
         },
         toolbox: {
           feature: {
@@ -226,13 +226,13 @@ export default {
           },
         },
         xAxis: {
-          type: "category",
+          type: 'category',
           boundaryGap: true,
           axisLabel: {
             margin: 15,
             interval: 0,
             textStyle: {
-              color: "#151515",
+              color: '#151515',
               fontSize: 13,
             },
           },
@@ -241,24 +241,24 @@ export default {
           },
           axisLine: {
             show: true,
-            symbol: ["none", "none"],
+            symbol: ['none', 'none'],
             symbolOffset: 12,
             lineStyle: {
-              color: "#151515",
+              color: '#151515',
             },
           },
           data: [],
         },
         yAxis: {
-          type: "value",
-          name: "",
+          type: 'value',
+          name: '',
           splitLine: { show: false },
           axisLine: {
             show: false,
-            symbol: ["none", "arrow"],
+            symbol: ['none', 'arrow'],
             symbolOffset: 12,
             lineStyle: {
-              color: "#151515",
+              color: '#151515',
             },
           },
           axisTick: {
@@ -267,27 +267,27 @@ export default {
           axisLabel: {
             show: false,
             textStyle: {
-              color: "#151515",
+              color: '#151515',
               fontSize: 14,
             },
           },
         },
         series: [
           {
-            name: "目标值",
-            type: "bar",
+            name: '目标值',
+            type: 'bar',
             barWidth: 20,
             data: [],
-            barGap: "40%",
+            barGap: '40%',
             label: {
               show: true,
-              position: "top",
-              color: "#151515",
+              position: 'top',
+              color: '#151515',
             },
             itemStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 1, color: "#0386FF" },
-                { offset: 0, color: "#7BF6F9" },
+                { offset: 1, color: '#0386FF' },
+                { offset: 0, color: '#7BF6F9' },
               ]),
             },
             // emphasis: {
@@ -304,19 +304,19 @@ export default {
             // },
           },
           {
-            name: "实际值",
-            type: "bar",
+            name: '实际值',
+            type: 'bar',
             barWidth: 20,
             data: [],
             label: {
               show: true,
-              position: "top",
-              color: "#151515",
+              position: 'top',
+              color: '#151515',
             },
             itemStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#FFD680" },
-                { offset: 1, color: "#FF8368" },
+                { offset: 0, color: '#FFD680' },
+                { offset: 1, color: '#FF8368' },
               ]),
             },
           },
@@ -351,7 +351,7 @@ export default {
       this.right3DColors = [];
       for (let i = 0; i < 20; i++) {
         this.left3DColors.push({
-          type: "linear",
+          type: 'linear',
           x: 0,
           x2: 1,
           y: 0,
@@ -359,24 +359,24 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#88b8FF", // 最左边
+              color: '#88b8FF', // 最左边
             },
             {
               offset: 0.5,
-              color: "#8DC2FF", // 左边的右边 颜色
+              color: '#8DC2FF', // 左边的右边 颜色
             },
             {
               offset: 0.5,
-              color: "#4C71D1", // 右边的左边 颜色
+              color: '#4C71D1', // 右边的左边 颜色
             },
             {
               offset: 1,
-              color: "#4C71D1",
+              color: '#4C71D1',
             },
           ],
         });
         this.right3DColors.push({
-          type: "linear",
+          type: 'linear',
           x: 0,
           x2: 1,
           y: 0,
@@ -384,19 +384,19 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#4FFFC0",
+              color: '#4FFFC0',
             },
             {
               offset: 0.5,
-              color: "#39F2B0",
+              color: '#39F2B0',
             },
             {
               offset: 0.5,
-              color: "#2DE0A0",
+              color: '#2DE0A0',
             },
             {
               offset: 1,
-              color: "#2DE0A0",
+              color: '#2DE0A0',
             },
           ],
         });
@@ -411,17 +411,17 @@ export default {
         echartHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -432,13 +432,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -472,7 +472,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -481,18 +481,18 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 导出多级表头
     async exportmoreExcel(remarkTb) {
       this.adminLoading = true;
-      this.$message.info("数据如若过多可能会加载很慢，请耐心等待！");
+      this.$message.info('数据如若过多可能会加载很慢，请耐心等待！');
       this.generalExportHeader = this.tableColumns[remarkTb];
       let newForm = JSON.parse(
-        JSON.stringify(this.formSearchs[remarkTb].datas)
+        JSON.stringify(this.formSearchs[remarkTb].datas),
       );
       newForm.rows = 0;
       let res = await GetSearchData(newForm);
@@ -501,19 +501,19 @@ export default {
         _this.generalExportData = data;
         _this.$nextTick(() => {
           let $e = _this.$refs.exportTableRef.$el;
-          var fix = $e.querySelector(".el-table__fixed");
+          var fix = $e.querySelector('.el-table__fixed');
           let wb;
           if (fix) {
             wb = XLSX.utils.table_to_book(
               //导出表格类名
-              $e.removeChild(fix)
+              $e.removeChild(fix),
             );
             $e.appendChild(fix);
           } else {
             wb = XLSX.utils.table_to_book($e, { raw: true });
           }
           // _this[searchData](form)
-          _this.exportMoreData(wb, "汇总表");
+          _this.exportMoreData(wb, '汇总表');
         });
       } else {
         _this.$message.error(msg);
@@ -524,9 +524,9 @@ export default {
     exportMoreData(wb, title) {
       /* 获取二进制字符串作为输出 */
       var wbout = XLSX.write(wb, {
-        bookType: "xlsx",
+        bookType: 'xlsx',
         bookSST: true,
-        type: "array",
+        type: 'array',
       });
       try {
         FileSaver.saveAs(
@@ -534,12 +534,12 @@ export default {
           //Blob 表示的不一定是JavaScript原生格式的数据。
           //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
           //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
-          new Blob([wbout], { type: "application/octet-stream" }),
+          new Blob([wbout], { type: 'application/octet-stream' }),
           //设置导出文件名称
-          `${title}.xlsx`
+          `${title}.xlsx`,
         );
       } catch (e) {
-        if (typeof console !== "undefined") this.$message.error(e);
+        if (typeof console !== 'undefined') this.$message.error(e);
       }
       this.adminLoading = false;
       return wbout;
@@ -567,38 +567,38 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[0].datas["IsReceive"] = 1;
+        this.formSearchs[0].datas['IsReceive'] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
     // 获取图表数据
     async getEchartData() {
       let form = {};
-      form["rows"] = 0;
-      form["IsReceive"] = 1;
-      if (this.formSearchs[0].datas["PlanDay"]) {
-        form["PlanDay"] = this.formSearchs[0].datas["PlanDay"];
+      form['rows'] = 0;
+      form['IsReceive'] = 1;
+      if (this.formSearchs[0].datas['PlanDay']) {
+        form['PlanDay'] = this.formSearchs[0].datas['PlanDay'];
       } else {
-        form["PlanDay"] = formatDate.formatOldDate();
+        form['PlanDay'] = formatDate.formatOldDate();
       }
-      form["dicID"] = 7777;
+      form['dicID'] = 7777;
       let manNumber = [];
       let womanNumber = [];
       let xData = [];
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        _this.$set(_this.echart_one.xAxis, "data", []);
+        _this.$set(_this.echart_one.xAxis, 'data', []);
         _this.echart_one.series.forEach((o) => {
           o.data = [];
         });
@@ -608,16 +608,16 @@ export default {
             manNumber.push(x.NoReceiveNum);
             womanNumber.push(x.NoDefendNum);
           });
-          _this.$set(_this.echart_one.xAxis, "data", xData);
-          _this.$set(_this.echart_one.series[0], "data", manNumber);
-          _this.$set(_this.echart_one.series[1], "data", womanNumber);
+          _this.$set(_this.echart_one.xAxis, 'data', xData);
+          _this.$set(_this.echart_one.series[0], 'data', manNumber);
+          _this.$set(_this.echart_one.series[1], 'data', womanNumber);
 
-          _this.drawChart("echart_one", _this.echart_one);
+          _this.drawChart('echart_one', _this.echart_one);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -626,11 +626,11 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
@@ -638,24 +638,24 @@ export default {
     async getTableData(form, remarkTb) {
       this.getEchartData();
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
           data.forEach((x) => {
             if (x.MFGOrganizeID == -1) {
-              this.$set(x, "summary", true);
+              this.$set(x, 'summary', true);
             }
           });
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -663,34 +663,34 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     // 列样式
     cellStyle({ row, column }) {
-      if (column.property == "NoDefendNum") {
+      if (column.property == 'NoDefendNum') {
         return {
-          color: "red",
-          fontWeight: "bold",
+          color: 'red',
+          fontWeight: 'bold',
         };
       }
-      if (column.property == "DefendRate") {
+      if (column.property == 'DefendRate') {
         if (
           parseFloat(row.DefendRate.substring(0, row.DefendRate.length - 1)) <
           95
         ) {
           return {
-            background: "#fb8d8d",
+            background: '#fb8d8d',
           };
         } else {
           return {
-            background: "#aeffae",
+            background: '#aeffae',
           };
         }
       }

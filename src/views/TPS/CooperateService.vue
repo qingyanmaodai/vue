@@ -1,6 +1,6 @@
 <!--菜单设置-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="up_admin" ref="up_admin">
       <div class="admin_head_2" ref="headRef">
         <ComSearch

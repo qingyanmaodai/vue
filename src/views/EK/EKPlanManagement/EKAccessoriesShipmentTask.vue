@@ -1,7 +1,7 @@
 <!-- 配件出货任务 -->
 <template>
   <div
-    class="container flex_column content_height bgWhite"
+    class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">

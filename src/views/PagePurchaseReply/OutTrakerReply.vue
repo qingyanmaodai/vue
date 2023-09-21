@@ -1,6 +1,6 @@
 <!--试产复期-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <el-container>
       <!-- 2022.6.29客户要求取消左侧供应商 -->
       <!-- <el-aside
@@ -137,7 +137,7 @@
       </el-main>
     </el-container>
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
           <ComReportTable

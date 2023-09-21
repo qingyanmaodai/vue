@@ -1,6 +1,6 @@
 <!--欠料追踪表-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <ComSearch
         ref="searchRef"
@@ -238,7 +238,7 @@
     </el-dialog>
 
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           库存列表
           <ComVxeTable

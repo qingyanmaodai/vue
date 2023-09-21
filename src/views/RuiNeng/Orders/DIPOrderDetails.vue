@@ -1,6 +1,6 @@
 <!-- 业务订单明细 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch

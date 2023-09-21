@@ -255,7 +255,7 @@
         </div>
       </div>
       <!-- <div class="listCard">
-        <div class="container" v-loading="adminLoading">
+        <div class="APSContainer" v-loading="adminLoading">
           <div class="admin_head" ref="headRef">
             <ComSearch
               ref="searchRef"
@@ -1809,7 +1809,7 @@ export default {
   .itemCard1:hover {
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
   }
-  .container {
+  .APSContainer {
     padding: 0;
   }
 }

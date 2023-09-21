@@ -1,6 +1,6 @@
 <!-- 计划配套汇总 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="mainTable">
       <div class="admin_head" ref="headRef">
         <ComSearch
@@ -371,7 +371,7 @@ export default {
 .mainTable {
   margin-bottom: 10px;
 }
-.container .admin_head {
+.APSContainer .admin_head {
   margin-bottom: 0px;
 }
 </style>

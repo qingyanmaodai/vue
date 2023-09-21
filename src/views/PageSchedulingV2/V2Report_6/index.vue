@@ -1,6 +1,6 @@
 <!--复期明细表-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <el-container>
       <el-aside v-show="showAside" style="width: auto">
         <div class="admin_left_2">
@@ -635,7 +635,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.container .el-tree {
+.APSContainer .el-tree {
   margin-bottom: 0 !important;
 }
 </style>

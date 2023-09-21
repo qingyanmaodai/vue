@@ -1,6 +1,6 @@
 <!--采购回复-->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <el-container>
       <el-aside v-show="showAside" style="width: auto">
         <div class="admin_left_2" style="height: 100%; overflow: hidden">
@@ -128,7 +128,7 @@
       </el-main>
     </el-container>
     <el-dialog title="料品可用量查询" :visible.sync="dialogShow" width="50%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           采购单
           <ComReportTable

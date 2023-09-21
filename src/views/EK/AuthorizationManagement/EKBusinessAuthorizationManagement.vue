@@ -1,7 +1,7 @@
 <!--物料点检-->
 <template>
   <div
-    class="container flex_column content_height bgWhite"
+    class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <splitpanes class="default-theme">

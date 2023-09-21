@@ -1,6 +1,6 @@
 <!-- 激光月计划 -->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <div v-for="i in [0]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
@@ -22,7 +22,7 @@
           <el-row>
             <el-col :span="8"
               ><span class="title">{{ title }}</span>
-              <span class="title" style="margin-left: 20px">{{ title2 }}</span>
+              <!-- <span class="title" style="margin-left: 20px">{{ title2 }}</span> -->
             </el-col>
             <!-- <el-col :span="16" class="flex_flex_end"
               ><el-divider direction="vertical"></el-divider>
@@ -582,22 +582,22 @@ export default {
           this.$set(this.formSearchs[z], "forms", x);
         });
         //给月计划赋值当月订单总数
-        let res = await GetSearchData({
-          dicID: 5170,
-          fields: "SUM(PlanQty) As PlanQty",
-          ProcessGroupName: "激光",
-          CompletionStatus: 0,
-          PlanDay: [
-            this.$moment().startOf("month").format("YYYY-MM-DD"),
-            this.$moment().endOf("month").format("YYYY-MM-DD"),
-          ],
-        });
-        const {
-          data: [{ PlanQty }],
-        } = res.data;
-        this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
-          PlanQty ? PlanQty : ""
-        }`;
+        // let res = await GetSearchData({
+        //   dicID: 5170,
+        //   fields: "SUM(PlanQty) As PlanQty",
+        //   ProcessGroupName: "激光",
+        //   CompletionStatus: 0,
+        //   PlanDay: [
+        //     this.$moment().startOf("month").format("YYYY-MM-DD"),
+        //     this.$moment().endOf("month").format("YYYY-MM-DD"),
+        //   ],
+        // });
+        // const {
+        //   data: [{ PlanQty }],
+        // } = res.data;
+        // this.title2 = `${this.$moment().format("YYYY年M月")} 订单总数：${
+        //   PlanQty ? PlanQty : ""
+        // }`;
         this.dataSearch(0);
       }
     },

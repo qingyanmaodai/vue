@@ -1,6 +1,6 @@
 <!--物料点检-->
 <template>
-  <div class="container flex_wrap" v-loading="adminLoading">
+  <div class="APSContainer flex_wrap" v-loading="adminLoading">
     <splitpanes class="default-theme">
       <pane size="50">
         <div

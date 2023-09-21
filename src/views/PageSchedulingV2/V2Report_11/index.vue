@@ -1,6 +1,6 @@
 <!--排程齐套报表-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div
       ref="content_up"
       :class="
@@ -109,7 +109,7 @@
     </div>
 
     <el-dialog title="工单查询" :visible.sync="dialogShow" width="70%">
-      <div class="container" style="background-color: #f0f2f5">
+      <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
           <ComReportTable
             :rowKey="'RowNumber'"

@@ -1,6 +1,6 @@
 <!--配件总排期-->
 <template>
-  <div class="container" v-loading="adminLoading">
+  <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
       <!-- <div
         v-for="(item,i) in 5"

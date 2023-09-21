@@ -1,6 +1,6 @@
 <!--组装日计划-->
 <template>
-  <div class="container flex_flex content_height" v-loading="adminLoading">
+  <div class="APSContainer flex_flex content_height" v-loading="adminLoading">
     <div class="flex_column aside" v-if="showAside">
       <div
         class="admin_left_2 border-b-1 flex_column"

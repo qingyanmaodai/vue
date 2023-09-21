@@ -1,6 +1,6 @@
 <!-- 产品库 -->
 <template>
-  <div class="container flex_flex" v-loading="adminLoading">
+  <div class="APSContainer flex_flex" v-loading="adminLoading">
     <div class="admin_container_right">
       <div class="admin_head" ref="headRef">
         <ComSearch
