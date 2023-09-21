@@ -834,13 +834,13 @@ export default {
         this.$message.error("请选择需要操作的数据！");
         return;
       }
-      const hasSchedulingSpecialType = this.selectionData[remarkTb].some(
-        (item) => !item.SchedulingSpecialType
-      );
-      if (hasSchedulingSpecialType) {
-        this.$message.error("存在没有配置类别的数据！");
-        return;
-      }
+      // const hasSchedulingSpecialType = this.selectionData[remarkTb].some(
+      //   (item) => !item.SchedulingSpecialType
+      // );
+      // if (hasSchedulingSpecialType) {
+      //   this.$message.error("存在没有配置类别的数据！");
+      //   return;
+      // }
       let newData = [];
       if (remarkTb === 3) {
         this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
@@ -854,8 +854,8 @@ export default {
                 } else {
                   return true;
                 }
-              })
-            )
+              }),
+            ),
           );
           addData.forEach((item) => {
             item["dicID"] = 125;
@@ -889,8 +889,8 @@ export default {
                 } else {
                   return false;
                 }
-              })
-            )
+              }),
+            ),
           );
           let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
           let SchedulingSpecialIDs = item0["SchedulingSpecialIDs"]?.split(",");
@@ -955,7 +955,7 @@ export default {
             0,
             0,
             new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
+            GCsheets.SheetArea.colHeader,
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
         } else if (
@@ -970,7 +970,7 @@ export default {
               // 创建下拉菜单单元格类型，并设置其选项数据
               let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
               comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
+                GC.Spread.Sheets.CellTypes.EditorValueType.value,
               );
               comboBox.editable(true);
               // 获取下拉菜单的选项数据
@@ -987,7 +987,7 @@ export default {
           cellType.textFalse("");
           cellType.textIndeterminate("");
           cellType.textAlign(
-            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
           );
           cellType.isThreeState(false);
           sheet.getCell(-1, y).cellType(cellType);
@@ -1018,19 +1018,19 @@ export default {
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
@@ -1047,7 +1047,7 @@ export default {
         -1,
         -1,
         -1,
-        this.tableColumns[remarkTb].length
+        this.tableColumns[remarkTb].length,
       );
       let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
       sheet.rowFilter(hideRowFilter);

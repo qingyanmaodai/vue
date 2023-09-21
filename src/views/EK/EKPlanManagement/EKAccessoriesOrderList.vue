@@ -5,16 +5,16 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 3, 4]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 2, 3]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
           :isLoading="isLoading"
           :btnForm="btnForm"
-          :signName="0"
-          :Region="Region[0]"
+          :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -41,7 +41,7 @@
       <div
         class="flex_column"
         style="height: 100%"
-        v-for="item in [0]"
+        v-for="item in [0, 2, 3]"
         :key="item"
         v-show="labelStatus1 === item"
       >
@@ -99,7 +99,6 @@
             :hasSelect="hasSelect[item]"
             :pagination="tablePagination[item]"
             @pageChange="pageChange"
-            @handleRowClick="handleRowClick"
             @pageSize="pageSize"
             @sortChange="sortChange"
             @selectfun="selectFun"
@@ -118,33 +117,6 @@
         >
       </span>
     </el-dialog>
-    <!-- 弹框-->
-    <!-- <DialogOptTable
-      title="指定业务员"
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
-      :Region="Region[2]"
-      width="50%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
-      :isClear="isClear[2]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable> -->
   </div>
 </template>
 
@@ -181,15 +153,12 @@ export default {
     return {
       labelStatus1: 0,
       oldval: null,
-      spread: [[], []],
+      spread: [[], [], [], []],
       dialogSearchForm: {
         OrderID: "",
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      title2: null,
-      drawer: false,
-      delData: [[]],
       radio: "1",
       formSearchs: [
         {
@@ -204,41 +173,40 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
-      tableData: [[], [], []],
-      tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
-      hasSelect: [false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
+      hasSelect: [false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
       ],
       height: "707px",
-      treeHeight: "765px",
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 11181 }, { ID: 10117 }],
+      sysID: [{ ID: 11181 }, { ID: 10117 }, { ID: 11181 }, { ID: 11181 }],
       adminLoading: false,
-      checkBoxCellTypeLine: "",
-      isOpen: true,
-      selectionData: [[], []],
-      NoWorkHour: [],
-      LineViewSort: [],
+      selectionData: [[], [], [], []],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: [false, false, false],
+      isEdit: [false, false, false, false],
       colDialogVisible1: false,
-      colDialogVisible2: false,
       isConfirmLoading: false,
-      Region: [6, 6, 6],
+      Region: [6, 6, 6, 6],
       Status1: [
         { label: "未完成", value: 0, index: 0 },
-        { label: "已完成", value: 1, index: 3 },
-        { label: "全部", value: "", index: 4 },
+        { label: "已完成", value: 1, index: 2 },
+        { label: "全部", value: "", index: 3 },
       ],
     };
   },
@@ -313,22 +281,6 @@ export default {
     selectChanged(newValue, remarkTb) {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
       this.selectionData[remarkTb] = newValue;
-    },
-    // 高度控制
-    setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let newHeight = "";
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem + "px";
-      } else {
-        newHeight = rem + "px";
-      }
-      this.$set(this, "height", newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -437,7 +389,7 @@ export default {
               .map((x) => {
                 x["ElementDeleteFlag"] = 1;
                 return x;
-              })
+              }),
           );
 
           if (newData.length === 0) {
@@ -449,7 +401,7 @@ export default {
             this.selectionData[remarkTb].map((x) => {
               x["ElementDeleteFlag"] = 1;
               return x;
-            })
+            }),
           );
         }
       }
@@ -473,7 +425,7 @@ export default {
             this.adminLoading = true;
             let res = await GetSearch(
               submitData,
-              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1"
+              "/APSAPI/MOPlanSaveToDayPlan?isPlan=1",
             );
             const { result, data, count, msg } = res.data;
             if (result) {
@@ -501,11 +453,6 @@ export default {
           }
         })
         .catch((_) => {});
-    },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -610,7 +557,7 @@ export default {
           this.$set(
             this.formSearchs[0]["datas"],
             "SaleMan",
-            this.userInfo.Account
+            this.userInfo.Account,
           );
         }
 
@@ -645,7 +592,7 @@ export default {
         // });
 
         this.$set(this.tableData, remarkTb, data);
-        if (remarkTb === 0) {
+        if (remarkTb === 0 || remarkTb === 2 || remarkTb === 3) {
           this.setData(remarkTb);
         }
         this.$set(this.tablePagination[remarkTb], "pageTotal", count);
@@ -682,7 +629,7 @@ export default {
             0,
             0,
             new HeaderCheckBoxCellType(),
-            GCsheets.SheetArea.colHeader
+            GCsheets.SheetArea.colHeader,
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
         } else if (
@@ -697,7 +644,7 @@ export default {
               // 创建下拉菜单单元格类型，并设置其选项数据
               let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
               comboBox.editorValueType(
-                GC.Spread.Sheets.CellTypes.EditorValueType.value
+                GC.Spread.Sheets.CellTypes.EditorValueType.value,
               );
               comboBox.editable(true);
               // 获取下拉菜单的选项数据
@@ -714,7 +661,7 @@ export default {
           cellType.textFalse("");
           cellType.textIndeterminate("");
           cellType.textAlign(
-            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
           );
           cellType.isThreeState(false);
           sheet.getCell(-1, y).cellType(cellType);
@@ -745,19 +692,19 @@ export default {
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
         "gray",
-        GC.Spread.Sheets.LineStyle.thin
+        GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
@@ -774,7 +721,7 @@ export default {
         -1,
         -1,
         -1,
-        this.tableColumns[remarkTb].length
+        this.tableColumns[remarkTb].length,
       );
       let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
       sheet.rowFilter(hideRowFilter);
@@ -793,10 +740,10 @@ export default {
             cell.locked(false).foreColor("#2a06ecd9");
           }
           if (
-            rowItem["PlanQty"] &&
+            rowItem["ScheduledQty"] &&
             rowItem["Qty"] &&
             columnItem["prop"] === "CurPlanQty" &&
-            rowItem["PlanQty"] === rowItem["Qty"]
+            Number(rowItem["ScheduledQty"]) === Number(rowItem["Qty"])
           ) {
             cell.locked(true).foreColor("black");
           }
@@ -806,7 +753,7 @@ export default {
           ) {
             Object.keys(rowItem["FColors"]).forEach((key) => {
               const columnIndex = this.tableColumns[0].findIndex(
-                (columnItem) => columnItem.prop === key
+                (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {
                 // 这里使用 rowIndex 和 columnIndex 获取单元格
@@ -821,7 +768,7 @@ export default {
           ) {
             Object.keys(rowItem["BColors"]).forEach((key) => {
               const columnIndex = this.tableColumns[0].findIndex(
-                (columnItem) => columnItem.prop === key
+                (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {
                 // 这里使用 rowIndex 和 columnIndex 获取单元格
@@ -850,14 +797,14 @@ export default {
           var cell = sheet.getCell(
             -1,
             cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
+            GC.Spread.Sheets.SheetArea.viewport,
           );
           //cell.foreColor("#2a06ecd9");
         } else {
           var cell = sheet.getCell(
             -1,
             cellIndex,
-            GC.Spread.Sheets.SheetArea.viewport
+            GC.Spread.Sheets.SheetArea.viewport,
           );
           // cell.foreColor("gray");
         }
@@ -904,13 +851,13 @@ export default {
                 0,
                 _this.sheetSelectRows.length,
                 sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.all
+                GC.Spread.Sheets.CopyToOptions.all,
               );
 
               //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
               sheet.deleteRows(
                 _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                _this.sheetSelectObj.count
+                _this.sheetSelectObj.count,
               );
               // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
             } else {
@@ -922,12 +869,12 @@ export default {
                 0,
                 _this.sheetSelectRows.length,
                 sheet.getColumnCount(),
-                GC.Spread.Sheets.CopyToOptions.all
+                GC.Spread.Sheets.CopyToOptions.all,
               );
               //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
               sheet.deleteRows(
                 _this.sheetSelectObj.start,
-                _this.sheetSelectObj.count
+                _this.sheetSelectObj.count,
               );
             }
             let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
@@ -971,13 +918,13 @@ export default {
 
       function MyContextMenu() {}
       MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-        this.spread[remarkTb]
+        this.spread[remarkTb],
       );
       MyContextMenu.prototype.onOpenMenu = function (
         menuData,
         itemsDataForShown,
         hitInfo,
-        spread
+        spread,
       ) {
         itemsDataForShown.forEach(function (item, index) {
           // console.log(item);
@@ -1002,12 +949,12 @@ export default {
             s.row,
             0,
             s.rowCount,
-            _this.tableColumns[remarkTb].length
+            _this.tableColumns[remarkTb].length,
           );
           _this.sheetSelectObj.start = s.row;
 
           _this.sheetSelectObj.count = s.rowCount;
-        }
+        },
       );
 
       /////////////////表格事件/////////////
@@ -1032,7 +979,7 @@ export default {
           let currentRow = _this.tableData[remarkTb][args.row];
           let currentProp = _this.tableColumns[remarkTb][args.col]["prop"];
           _this.oldval = parseInt(currentRow[currentProp]);
-        }
+        },
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
@@ -1073,13 +1020,14 @@ export default {
             "由" +
             info.oldValue +
             "改变为" +
-            info.newValue
+            info.newValue,
         );
       });
       this.spread[remarkTb].resumePaint();
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
       setTimeout(() => {
+        debugger;
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
     },
@@ -1090,7 +1038,7 @@ export default {
       // 创建下拉菜单单元格类型，并设置其选项数据
       let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
       comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
+        GC.Spread.Sheets.CellTypes.EditorValueType.value,
       );
       comboBox.editable(true);
       // 获取下拉菜单的选项数据
@@ -1134,7 +1082,7 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = item["index"];
       this.formSearchs[0].datas["IsFinish"] = item.value;
-      this.dataSearch(0);
+      this.dataSearch(this.labelStatus1);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
@@ -1165,7 +1113,7 @@ export default {
               item["dicID"] = 11184;
               item["OutType"] = "跟单出";
               return item;
-            })
+            }),
           );
         } else {
           newData = _.cloneDeep(
@@ -1174,7 +1122,7 @@ export default {
               item["dicID"] = 11184;
               item["OutType"] = "单独出";
               return item;
-            })
+            }),
           );
         }
         this.isConfirmLoading = true;
@@ -1198,6 +1146,7 @@ export default {
       errorNum = this.selectionData[0].findIndex((item0) => {
         return (
           Number(item0["OutStockQty"]) === Number(item0["Qty"]) ||
+          Number(item0["CurPlanQty"]) <= 0 ||
           !item0["CurPlanQty"]
         );
       });
