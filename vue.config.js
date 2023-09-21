@@ -8,7 +8,7 @@ function resolve(dir) {
 const name = defaultSettings.title || 'vue Admin Template' // page title
 
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const UnoCSS = require('unocss/webpack').default // unocss
+const UnoCSS = require("@unocss/webpack").default; // unocss
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -70,10 +70,40 @@ module.exports = {
   },
   css: {
     extract: {
-      filename: '[name].[hash:9].css', ignoreOrder: true
+      filename: '[name].[hash:9].css', ignoreOrder: true,
     }
   },
   chainWebpack(config) {
+
+    const fontsRule = config.module.rule('fonts')
+    fontsRule.uses.clear()
+    fontsRule
+      .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+      .use('file-loader')
+      .loader('url-loader')
+      .options({
+        esModule: false,
+        fallback: {
+          loader: 'file-loader',
+          options: {
+            // name: `${ process.env.NODE_ENV === 'production' ? name + '/' : name + '/'}fonts/[name].[hash:8].[ext]`
+            name: `${name}'/fonts/[name].[hash:8].[ext]`
+          }
+        }
+      })
+    config.module
+      .rule("images") // 给规则一个名称（可以是任何字符串）
+      .test(/\.(png|svg|jpe?g|gif)$/) // 正则匹配图片
+      .use("url-loader")
+      .loader("url-loader")
+      .options({
+        esModule: false,
+        name: "images/[name].[hash:8].[ext]",
+      });
+
+
+
+
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {
