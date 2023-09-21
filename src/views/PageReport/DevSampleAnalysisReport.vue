@@ -81,16 +81,16 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import echarts from "echarts";
+import XLSX from 'xlsx';
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
+import { GetHeader, GetSearchData, ExportData, GetSearch } from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import * as echarts from 'echarts';
 export default {
-  name: "DevSampleAnalysisReport",
+  name: 'DevSampleAnalysisReport',
   components: {
     ComSearch,
     ComAsideTree,
@@ -101,23 +101,23 @@ export default {
   data() {
     return {
       parmsBtn2: [
-        { label: "显示次数", value: 0 },
-        { label: "显示占比", value: 1 },
+        { label: '显示次数', value: 0 },
+        { label: '显示占比', value: 1 },
       ],
       radioValue: 0,
       list: [],
       ProportionOption: {
         title: {
-          text: "重复打样分析表",
-          left: "center",
+          text: '重复打样分析表',
+          left: 'center',
         },
         tooltip: {
-          trigger: "item",
-          formatter: "{b}:{c} ({d}%)",
+          trigger: 'item',
+          formatter: '{b}:{c} ({d}%)',
         },
         legend: {
-          orient: "vertical",
-          left: "left",
+          orient: 'vertical',
+          left: 'left',
           textStyle: {
             fontSize: this.computedFontSize(12),
           },
@@ -127,14 +127,14 @@ export default {
         series: [
           {
             color: [],
-            name: "",
-            type: "pie",
-            radius: "50%",
-            center: ["50%", "50%"],
+            name: '',
+            type: 'pie',
+            radius: '50%',
+            center: ['50%', '50%'],
             data: [],
             minAngle: 5,
             label: {
-              formatter: "{b}:{c} ({d}%)",
+              formatter: '{b}:{c} ({d}%)',
               textStyle: {
                 margin: 40,
                 fontSize: this.computedFontSize(14),
@@ -146,24 +146,24 @@ export default {
       },
       NumberOption: {
         tooltip: {
-          trigger: "item",
+          trigger: 'item',
         },
         title: {
-          text: "重复打样分析图",
-          left: "center",
+          text: '重复打样分析图',
+          left: 'center',
         },
         grid: {
-          top: "6%",
-          left: "10%",
-          right: "5%",
-          bottom: "5%",
+          top: '6%',
+          left: '10%',
+          right: '5%',
+          bottom: '5%',
         },
-        color: "#0960bd",
+        color: '#0960bd',
         xAxis: {
-          type: "log",
+          type: 'log',
         },
         yAxis: {
-          type: "category",
+          type: 'category',
           data: [],
           axisLabel: {
             interval: 0,
@@ -173,17 +173,17 @@ export default {
         series: [
           {
             data: [],
-            type: "bar",
-            barMaxWidth: "100", //设置每根柱条最大宽度为50
+            type: 'bar',
+            barMaxWidth: '100', //设置每根柱条最大宽度为50
             //显示数值
             itemStyle: {
               normal: {
                 label: {
                   show: true, //开启显示
-                  position: "right", //在上方显示
+                  position: 'right', //在上方显示
                   textStyle: {
                     //数值样式
-                    color: "black",
+                    color: 'black',
                     fontSize: this.computedFontSize(14),
                   },
                 },
@@ -194,14 +194,14 @@ export default {
       },
       dialogShow: false,
       EditDisabled: false,
-      height1: "360px",
+      height1: '360px',
       labelStatus1: 0,
       //////////////左侧树节点//////////////
       showAside: true,
-      ReplyDate: "",
+      ReplyDate: '',
       treeProps: {
-        label: "SupplierNameCount",
-        children: "children",
+        label: 'SupplierNameCount',
+        children: 'children',
       },
       treeData: [],
       treeListTmp: [],
@@ -229,8 +229,8 @@ export default {
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
       ],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -243,7 +243,7 @@ export default {
       sysID: [{ ID: 9024 }],
       userInfo: {},
       IsPurchaseBoss: false,
-      footerLabel: [""],
+      footerLabel: [''],
     };
   },
   computed: {},
@@ -282,23 +282,23 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -310,7 +310,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 判断按钮权限
@@ -320,7 +320,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -331,19 +331,19 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -351,12 +351,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -367,13 +367,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -408,7 +408,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -428,54 +428,54 @@ export default {
       //因为打样明细用的同个ID，但页面表头展示方式不一致，所以打样分析表表头写死。
       let newList = [
         {
-          ControlType: "textbox",
-          displayName: "成品料号机型",
-          label: "成品料号机型",
-          name: "ProductName",
-          prop: "ProductName",
-          width: "80",
+          ControlType: 'textbox',
+          displayName: '成品料号机型',
+          label: '成品料号机型',
+          name: 'ProductName',
+          prop: 'ProductName',
+          width: '80',
           size: 80,
-          sortable: "custom",
+          sortable: 'custom',
         },
         {
-          ControlType: "textbox",
-          displayName: "纯编码",
-          label: "纯编码",
-          name: "CodeNumber",
-          prop: "CodeNumber",
-          width: "80",
+          ControlType: 'textbox',
+          displayName: '纯编码',
+          label: '纯编码',
+          name: 'CodeNumber',
+          prop: 'CodeNumber',
+          width: '80',
           size: 80,
-          sortable: "custom",
+          sortable: 'custom',
         },
         {
-          ControlType: "textbox",
-          displayName: "申请人",
-          label: "申请人",
-          name: "ApplicatName",
-          prop: "ApplicatName",
-          width: "60",
+          ControlType: 'textbox',
+          displayName: '申请人',
+          label: '申请人',
+          name: 'ApplicatName',
+          prop: 'ApplicatName',
+          width: '60',
           size: 60,
-          sortable: "custom",
+          sortable: 'custom',
         },
         {
-          ControlType: "textbox",
-          displayName: "重复打样总数",
-          label: "重复打样总数",
-          name: "ProofingCount",
-          prop: "ProofingCount",
-          width: "100",
+          ControlType: 'textbox',
+          displayName: '重复打样总数',
+          label: '重复打样总数',
+          name: 'ProofingCount',
+          prop: 'ProofingCount',
+          width: '100',
           size: 100,
-          sortable: "custom",
+          sortable: 'custom',
         },
         {
-          ControlType: "textbox",
-          displayName: "打样次数",
-          label: "打样次数",
-          name: "ProofingCountByPeople",
-          prop: "ProofingCountByPeople",
-          width: "100",
+          ControlType: 'textbox',
+          displayName: '打样次数',
+          label: '打样次数',
+          name: 'ProofingCountByPeople',
+          prop: 'ProofingCountByPeople',
+          width: '100',
           size: 100,
-          sortable: "custom",
+          sortable: 'custom',
         },
       ];
       if (result) {
@@ -502,18 +502,18 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         let formList = []; //因为和明细共用9024表，查询条件列无展示和影响右边图形，所以只取所需。
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
-            if (y.prop === "ApplicatName") {
+            if (y.prop === 'ApplicatName') {
               formList.push(y);
             }
           });
-          this.$set(this.formSearchs[z], "forms", formList);
+          this.$set(this.formSearchs[z], 'forms', formList);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
         this.$nextTick(() => {
@@ -525,11 +525,11 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
@@ -537,22 +537,22 @@ export default {
     async getTableData(form, remarkTb) {
       // let
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["sort"] = "ApplicatBy desc"; //ApplicatBy
-      form["groupby"] = "ProductName,CodeNumber,ApplicatBy,ApplicatName";
-      form["fields"] =
-        "ProductName,CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople";
-      form["dicID"] = form["dicID"];
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
+      form['sort'] = 'ApplicatBy desc'; //ApplicatBy
+      form['groupby'] = 'ProductName,CodeNumber,ApplicatBy,ApplicatName';
+      form['fields'] =
+        'ProductName,CodeNumber,ApplicatBy,ApplicatName,max(ProofingCount) as ProofingCount,max(ProofingCountByPeople) as ProofingCountByPeople';
+      form['dicID'] = form['dicID'];
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -562,14 +562,14 @@ export default {
     async getChartData(form, remarkTb) {
       let forms = {};
       this.$set(this.tableLoading, remarkTb, true);
-      forms["rows"] = 0;
-      forms["page"] = this.tablePagination[remarkTb].pageIndex;
+      forms['rows'] = 0;
+      forms['page'] = this.tablePagination[remarkTb].pageIndex;
       // forms["sort"] = 'ApplicatBy desc';//ApplicatBy
       // forms["fields"] = 'ApplicatBy,ApplicatName,sum(ProofingCount) as ProofingCount';
       // forms["groupby"] = 'ApplicatBy,ApplicatName';
-      forms["ApplicatName"] = form["ApplicatName"];
-      forms["dicID"] = form["dicID"];
-      let res = await GetSearch(forms, "/APSAPI/DevSampleAnalysis");
+      forms['ApplicatName'] = form['ApplicatName'];
+      forms['dicID'] = form['dicID'];
+      let res = await GetSearch(forms, '/APSAPI/DevSampleAnalysis');
       const { result, data, count, msg } = res.data;
       if (result) {
         if (this.radioValue === 0) {
@@ -578,30 +578,30 @@ export default {
           this.list = data;
           data.forEach((item) => {
             xList.push(item.ProofingCount || null); //因为差距大数值过小基本看不见，设置值为null并结合type: 'log',可解决此问题
-            yList.push(item.ProofingCountByPeople || "无");
+            yList.push(item.ProofingCountByPeople || '无');
           });
           this.NumberOption.yAxis.data = yList;
           this.NumberOption.series[0].data = xList;
           this.$nextTick(() => {
-            this.drawChart("NumberOption", this.NumberOption);
+            this.drawChart('NumberOption', this.NumberOption);
           });
         } else {
           let list = [];
           data.forEach((item) => {
             list.push({
               value: item.ProofingCount || null,
-              name: item.ProofingCountByPeople || "无",
+              name: item.ProofingCountByPeople || '无',
             });
           });
           this.ProportionOption.series[0].data = list;
           this.$nextTick(() => {
-            this.drawChart("ProportionOption", this.ProportionOption);
+            this.drawChart('ProportionOption', this.ProportionOption);
           });
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -609,11 +609,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -624,8 +624,8 @@ export default {
     },
     // 可用量查询
     usingSearch(row, prop) {
-      this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      this.formSearchs[1].datas["Remark1"] = "送货";
+      this.formSearchs[1].datas['MaterialID'] = row.MaterialID;
+      this.formSearchs[1].datas['Remark1'] = '送货';
       this.dataSearch(1);
       this.dialogShow = true;
     },

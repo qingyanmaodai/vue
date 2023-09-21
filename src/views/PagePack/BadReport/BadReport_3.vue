@@ -75,17 +75,17 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import echarts from "echarts";
-import FileSaver from "file-saver";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData, GetSearch } from "@/api/Common";
-import formatDate from "@/utils/formatDate";
-import { parse } from "path-to-regexp";
+import XLSX from 'xlsx';
+import * as echarts from 'echarts';
+import FileSaver from 'file-saver';
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComUmyTable from '@/components/ComUmyTable';
+import { GetHeader, GetSearchData, ExportData, GetSearch } from '@/api/Common';
+import formatDate from '@/utils/formatDate';
+import { parse } from 'path-to-regexp';
 export default {
-  name: "BadReport_3",
+  name: 'BadReport_3',
   components: {
     ComSearch,
     ComVxeTable,
@@ -111,20 +111,20 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
       echart_one: {
         title: {
-          text: "",
+          text: '',
         },
-        color: ["#ffba55", "#56ca95", "#6096e6"],
+        color: ['#ffba55', '#56ca95', '#6096e6'],
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
           formatter: function (params) {
-            var result = params[0].name + "<br>";
+            var result = params[0].name + '<br>';
             params.forEach(function (item, i) {
               result +=
                 '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
@@ -132,36 +132,36 @@ export default {
                 '"></span>';
               result +=
                 item.seriesName +
-                ": " +
+                ': ' +
                 '<span class="growth">' +
                 item.data +
-                "</span><br>";
+                '</span><br>';
             });
             return result;
           },
         },
         legend: [
           {
-            data: ["报废数"],
+            data: ['报废数'],
             textStyle: {
               fontSize: 12,
-              color: "#151515",
-              fontWeight: "900",
+              color: '#151515',
+              fontWeight: '900',
             },
-            top: "0%",
-            align: "right",
-            right: "12%",
+            top: '0%',
+            align: 'right',
+            right: '12%',
           },
           {
-            data: ["累计占比"],
+            data: ['累计占比'],
             textStyle: {
               fontSize: 12,
-              color: "#151515",
-              fontWeight: "900",
+              color: '#151515',
+              fontWeight: '900',
             },
-            align: "right",
-            top: "0%",
-            right: "7%",
+            align: 'right',
+            top: '0%',
+            right: '7%',
           },
           // {
           //   data: ["今日复期"],
@@ -177,10 +177,10 @@ export default {
         ],
         offset: 20,
         grid: {
-          left: "2%",
-          right: "2%",
-          top: "25%",
-          bottom: "12%",
+          left: '2%',
+          right: '2%',
+          top: '25%',
+          bottom: '12%',
         },
         toolbox: {
           feature: {
@@ -188,13 +188,13 @@ export default {
           },
         },
         xAxis: {
-          type: "category",
+          type: 'category',
           boundaryGap: true,
           axisLabel: {
             margin: 15,
             interval: 0,
             textStyle: {
-              color: "#151515",
+              color: '#151515',
               fontSize: 13,
             },
           },
@@ -203,25 +203,25 @@ export default {
           },
           axisLine: {
             show: true,
-            symbol: ["none", "none"],
+            symbol: ['none', 'none'],
             symbolOffset: 12,
             lineStyle: {
-              color: "#151515",
+              color: '#151515',
             },
           },
           data: [],
         },
         yAxis: {
           max: 100,
-          type: "value",
-          name: "",
+          type: 'value',
+          name: '',
           splitLine: { show: false },
           axisLine: {
             show: false,
-            symbol: ["none", "arrow"],
+            symbol: ['none', 'arrow'],
             symbolOffset: 12,
             lineStyle: {
-              color: "#151515",
+              color: '#151515',
             },
           },
           axisTick: {
@@ -229,47 +229,47 @@ export default {
           },
           axisLabel: {
             show: false,
-            formatter: "{value}%",
+            formatter: '{value}%',
             textStyle: {
-              color: "#151515",
+              color: '#151515',
               fontSize: 14,
             },
           },
         },
         series: [
           {
-            name: "报废数",
-            type: "bar",
+            name: '报废数',
+            type: 'bar',
             barWidth: 20,
             data: [],
-            barGap: "40%",
+            barGap: '40%',
             label: {
               show: true,
-              position: "top",
-              color: "#151515",
+              position: 'top',
+              color: '#151515',
               formatter: function (params) {
-                if (params.name !== "") {
+                if (params.name !== '') {
                   return params.value;
                 } else {
-                  return "";
+                  return '';
                 }
               },
             },
           },
           {
-            name: "累计占比",
-            type: "line",
+            name: '累计占比',
+            type: 'line',
             barWidth: 20,
             data: [],
             label: {
               show: true,
-              position: "top",
-              color: "#FF2E00",
+              position: 'top',
+              color: '#FF2E00',
               formatter: function (params) {
-                if (params.name !== "") {
-                  return params.value + "%";
+                if (params.name !== '') {
+                  return params.value + '%';
                 } else {
-                  return "";
+                  return '';
                 }
               },
             },
@@ -317,7 +317,7 @@ export default {
       this.right3DColors = [];
       for (let i = 0; i < 20; i++) {
         this.left3DColors.push({
-          type: "linear",
+          type: 'linear',
           x: 0,
           x2: 1,
           y: 0,
@@ -325,24 +325,24 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#88b8FF", // 最左边
+              color: '#88b8FF', // 最左边
             },
             {
               offset: 0.5,
-              color: "#8DC2FF", // 左边的右边 颜色
+              color: '#8DC2FF', // 左边的右边 颜色
             },
             {
               offset: 0.5,
-              color: "#4C71D1", // 右边的左边 颜色
+              color: '#4C71D1', // 右边的左边 颜色
             },
             {
               offset: 1,
-              color: "#4C71D1",
+              color: '#4C71D1',
             },
           ],
         });
         this.right3DColors.push({
-          type: "linear",
+          type: 'linear',
           x: 0,
           x2: 1,
           y: 0,
@@ -350,19 +350,19 @@ export default {
           colorStops: [
             {
               offset: 0,
-              color: "#4FFFC0",
+              color: '#4FFFC0',
             },
             {
               offset: 0.5,
-              color: "#39F2B0",
+              color: '#39F2B0',
             },
             {
               offset: 0.5,
-              color: "#2DE0A0",
+              color: '#2DE0A0',
             },
             {
               offset: 1,
-              color: "#2DE0A0",
+              color: '#2DE0A0',
             },
           ],
         });
@@ -377,17 +377,17 @@ export default {
         echartHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -398,13 +398,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -438,7 +438,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -447,18 +447,18 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 导出多级表头
     async exportmoreExcel(remarkTb) {
       this.adminLoading = true;
-      this.$message.info("数据如若过多可能会加载很慢，请耐心等待！");
+      this.$message.info('数据如若过多可能会加载很慢，请耐心等待！');
       this.generalExportHeader = this.tableColumns[remarkTb];
       let newForm = JSON.parse(
-        JSON.stringify(this.formSearchs[remarkTb].datas)
+        JSON.stringify(this.formSearchs[remarkTb].datas),
       );
       newForm.rows = 0;
       let res = await GetSearchData(newForm);
@@ -467,19 +467,19 @@ export default {
         _this.generalExportData = data;
         _this.$nextTick(() => {
           let $e = _this.$refs.exportTableRef.$el;
-          var fix = $e.querySelector(".el-table__fixed");
+          var fix = $e.querySelector('.el-table__fixed');
           let wb;
           if (fix) {
             wb = XLSX.utils.table_to_book(
               //导出表格类名
-              $e.removeChild(fix)
+              $e.removeChild(fix),
             );
             $e.appendChild(fix);
           } else {
             wb = XLSX.utils.table_to_book($e, { raw: true });
           }
           // _this[searchData](form)
-          _this.exportMoreData(wb, "汇总表");
+          _this.exportMoreData(wb, '汇总表');
         });
       } else {
         _this.$message.error(msg);
@@ -490,9 +490,9 @@ export default {
     exportMoreData(wb, title) {
       /* 获取二进制字符串作为输出 */
       var wbout = XLSX.write(wb, {
-        bookType: "xlsx",
+        bookType: 'xlsx',
         bookSST: true,
-        type: "array",
+        type: 'array',
       });
       try {
         FileSaver.saveAs(
@@ -500,12 +500,12 @@ export default {
           //Blob 表示的不一定是JavaScript原生格式的数据。
           //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
           //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
-          new Blob([wbout], { type: "application/octet-stream" }),
+          new Blob([wbout], { type: 'application/octet-stream' }),
           //设置导出文件名称
-          `${title}.xlsx`
+          `${title}.xlsx`,
         );
       } catch (e) {
-        if (typeof console !== "undefined") this.$message.error(e);
+        if (typeof console !== 'undefined') this.$message.error(e);
       }
       this.adminLoading = false;
       return wbout;
@@ -533,67 +533,67 @@ export default {
         // });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[0].datas["PlanYear"] = new Date().getFullYear();
-        this.formSearchs[0].datas["MFGOrganizeName"] = "一分厂";
+        this.formSearchs[0].datas['PlanYear'] = new Date().getFullYear();
+        this.formSearchs[0].datas['MFGOrganizeName'] = '一分厂';
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
     // 获取图表数据
     async getEchartData(xAxis, data1, data2) {
-      _this.$set(_this.echart_one.xAxis, "data", []);
+      _this.$set(_this.echart_one.xAxis, 'data', []);
       _this.echart_one.series.forEach((o) => {
         o.data = [];
       });
 
-      _this.$set(_this.echart_one.xAxis, "data", xAxis);
-      _this.$set(_this.echart_one.series[0], "data", data1);
-      _this.$set(_this.echart_one.series[1], "data", data2);
-      _this.drawChart("echart_one", _this.echart_one);
+      _this.$set(_this.echart_one.xAxis, 'data', xAxis);
+      _this.$set(_this.echart_one.series[0], 'data', data1);
+      _this.$set(_this.echart_one.series[1], 'data', data2);
+      _this.drawChart('echart_one', _this.echart_one);
     },
     // 验证数据
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
-      form["fields"] =
-        "WorkShopID,WorkShopName,sum(BadQty) as BadQty,sum(ConfirmQty) as ConfirmQty, cast(sum(BadQty)/sum(ConfirmQty) as decimal(18,4)) AS BadRate";
-      form["groupby"] = "WorkShopID,WorkShopName";
-      form["sort"] = "BadQty desc";
-      let res = await GetSearch(form, "/APSAPI/GetBadReport3");
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
+      form['fields'] =
+        'WorkShopID,WorkShopName,sum(BadQty) as BadQty,sum(ConfirmQty) as ConfirmQty, cast(sum(BadQty)/sum(ConfirmQty) as decimal(18,4)) AS BadRate';
+      form['groupby'] = 'WorkShopID,WorkShopName';
+      form['sort'] = 'BadQty desc';
+      let res = await GetSearch(form, '/APSAPI/GetBadReport3');
       console.log(res.data);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let columns = [{ label: "车间", prop: "Tag", width: "80px" }];
+        let columns = [{ label: '车间', prop: 'Tag', width: '80px' }];
 
         let datas = [];
         datas = [
-          { Tag: "生产数", 黑管: 100000 },
-          { Tag: "报废数" },
-          { Tag: "报废率" },
-          { Tag: "占比" },
-          { Tag: "累计占比" },
+          { Tag: '生产数', 黑管: 100000 },
+          { Tag: '报废数' },
+          { Tag: '报废率' },
+          { Tag: '占比' },
+          { Tag: '累计占比' },
         ];
         let newData_1 = [];
         let xAxis = [];
@@ -620,7 +620,7 @@ export default {
             columns.push({
               label: a.WorkShopName,
               prop: a.WorkShopName,
-              width: "80px",
+              width: '80px',
             });
             let TotalRate = (
               (parseFloat(a.BadQty) / totalNumber) *
@@ -629,15 +629,15 @@ export default {
             Total_3 += parseFloat(TotalRate);
             newData_2.push(Total_3.toFixed(2));
 
-            this.$set(datas[0], a.WorkShopName, a.ConfirmQty + "");
-            this.$set(datas[1], a.WorkShopName, a.BadQty + "");
+            this.$set(datas[0], a.WorkShopName, a.ConfirmQty + '');
+            this.$set(datas[1], a.WorkShopName, a.BadQty + '');
             this.$set(
               datas[2],
               a.WorkShopName,
-              (a.BadRate * 100).toFixed(2) + "%"
+              (a.BadRate * 100).toFixed(2) + '%',
             );
-            _this.$set(datas[3], a.WorkShopName, TotalRate + "%");
-            _this.$set(datas[4], a.WorkShopName, Total_3.toFixed(2) + "%");
+            _this.$set(datas[3], a.WorkShopName, TotalRate + '%');
+            _this.$set(datas[4], a.WorkShopName, Total_3.toFixed(2) + '%');
           });
 
           this.$set(this.tableColumns, 0, columns);
@@ -669,7 +669,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -677,40 +677,40 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     // 列样式
     cellStyle({ row, column }) {
-      if (column.property == "Count_1") {
+      if (column.property == 'Count_1') {
         return {
-          background: "#fb8d8d",
+          background: '#fb8d8d',
         };
       }
-      if (column.property == "Count_Rate") {
+      if (column.property == 'Count_Rate') {
         if (
           parseFloat(row.Count_Rate.substring(0, row.Count_Rate.length - 1)) ==
           0
         ) {
           return {
-            background: "#fb8d8d",
+            background: '#fb8d8d',
           };
         } else if (
           parseFloat(row.Count_Rate.substring(0, row.Count_Rate.length - 1)) <
           100
         ) {
           return {
-            background: "#fdfd8f",
+            background: '#fdfd8f',
           };
         } else {
           return {
-            background: "#aeffae",
+            background: '#aeffae',
           };
         }
       }

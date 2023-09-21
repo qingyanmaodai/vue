@@ -230,13 +230,12 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import ComFormDialog from "@/components/ComFormDialog";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
-import { number } from "echarts/lib/export";
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import ComFormDialog from '@/components/ComFormDialog';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
 export default {
-  name: "BadReasonInfo",
+  name: 'BadReasonInfo',
   components: {
     ComSearch,
     ComUmyTable,
@@ -245,47 +244,47 @@ export default {
   data() {
     return {
       title: this.$route.meta.title,
-      Type: "生产异常",
+      Type: '生产异常',
       sureLoading: false,
-      drawerTitle: "新增异常原因",
+      drawerTitle: '新增异常原因',
       adminLoading: false,
       processData: [],
       tinyProcessData: [],
       abnormalForm: [
         {
-          AbnormalReasonID: "",
-          AbnormalCode: "",
-          AbnormalReason: "",
-          BigType: "生产",
+          AbnormalReasonID: '',
+          AbnormalCode: '',
+          AbnormalReason: '',
+          BigType: '生产',
           BadAbnormalType: 1,
-          Remark1: "",
+          Remark1: '',
           dicID: 7779,
         },
         {
-          AbnormalReasonID: "",
-          AbnormalCode: "",
-          AbnormalReason: "",
-          BigType: "",
+          AbnormalReasonID: '',
+          AbnormalCode: '',
+          AbnormalReason: '',
+          BigType: '',
           BadAbnormalType: 2,
-          Remark1: "",
+          Remark1: '',
           dicID: 7779,
         },
       ],
       abnormalRules: [
         {
           AbnormalReason: [
-            { required: true, message: "异常名称为必填项", trigger: "blur" },
+            { required: true, message: '异常名称为必填项', trigger: 'blur' },
           ],
           AbnormalCode: [
-            { required: true, message: "异常编码为必填项", trigger: "blur" },
+            { required: true, message: '异常编码为必填项', trigger: 'blur' },
           ],
         },
         {
           AbnormalReason: [
-            { required: true, message: "异常名称为必填项", trigger: "blur" },
+            { required: true, message: '异常名称为必填项', trigger: 'blur' },
           ],
           AbnormalCode: [
-            { required: true, message: "异常编码为必填项", trigger: "blur" },
+            { required: true, message: '异常编码为必填项', trigger: 'blur' },
           ],
         },
       ],
@@ -301,23 +300,23 @@ export default {
       ],
       btnForm: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
+          ButtonCode: 'save',
+          BtnName: '保存',
           isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'dataSave',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
+          ButtonCode: 'delete',
+          BtnName: '删除',
           isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "delData" },
+          Methods: 'dataDel',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
+          Params: { dataName: 'delData' },
         },
       ],
       tableData: [[]],
@@ -325,7 +324,7 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -349,8 +348,8 @@ export default {
     // 获取细小工序
     async getTinyProcessData() {
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 7774;
+      form['rows'] = 0;
+      form['dicID'] = 7774;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -358,7 +357,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -366,8 +365,8 @@ export default {
     // 获取工序
     async getProcessData() {
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 14;
+      form['rows'] = 0;
+      form['dicID'] = 14;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -375,7 +374,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -388,17 +387,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -409,13 +408,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -449,7 +448,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -458,10 +457,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -469,25 +468,25 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
-          _this.$set(_this.btnForm[index], "isLoading", true);
+          _this.$set(_this.btnForm[index], 'isLoading', true);
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
@@ -509,23 +508,23 @@ export default {
             let ProcessIDTemporary = x.ProcessIDTemporary;
             let TinyProcessIDTemporary = x.TinyProcessIDTemporary;
             let newData1 = x.ProcessID.filter(
-              (x3) => !ProcessIDTemporary.some((y) => y == x3)
+              (x3) => !ProcessIDTemporary.some((y) => y == x3),
             ); //新增
             let newData2 = ProcessIDTemporary.filter(
-              (c) => !x.ProcessID.some((z) => c == z)
+              (c) => !x.ProcessID.some((z) => c == z),
             ); //删除
 
             let newData3 = x.TinyProcessID.filter(
-              (x1) => !TinyProcessIDTemporary.some((y1) => y1 == x1)
+              (x1) => !TinyProcessIDTemporary.some((y1) => y1 == x1),
             ); //新增
             let newData4 = TinyProcessIDTemporary.filter(
-              (c1) => !x.TinyProcessID.some((z1) => c1 == z1)
+              (c1) => !x.TinyProcessID.some((z1) => c1 == z1),
             ); //删除
             if (newData1.length != 0) {
               newData1.forEach((a) => {
                 let obj1 = {};
-                obj1["dicID"] = 7771;
-                obj1["ProcessID"] = a;
+                obj1['dicID'] = 7771;
+                obj1['ProcessID'] = a;
                 childrens.push(obj1);
               });
             }
@@ -533,10 +532,10 @@ export default {
               newData2.forEach((b) => {
                 let newIndex2 = ProcessIDTemporary.findIndex((e) => e == b);
                 let obj2 = {};
-                obj2["dicID"] = 7771;
-                obj2["ElementDeleteFlag"] = 1;
-                obj2["AbnormalApsProcessID"] = parseInt(
-                  x.AbnormalApsProcessID[newIndex2]
+                obj2['dicID'] = 7771;
+                obj2['ElementDeleteFlag'] = 1;
+                obj2['AbnormalApsProcessID'] = parseInt(
+                  x.AbnormalApsProcessID[newIndex2],
                 );
                 childrens.push(obj2);
               });
@@ -545,8 +544,8 @@ export default {
             if (newData3.length != 0) {
               newData3.forEach((c) => {
                 let obj3 = {};
-                obj3["dicID"] = 7772;
-                obj3["TinyProcessID"] = c;
+                obj3['dicID'] = 7772;
+                obj3['TinyProcessID'] = c;
                 childrens.push(obj3);
               });
             }
@@ -554,22 +553,22 @@ export default {
               newData4.forEach((d) => {
                 let obj4 = {};
                 let newIndex4 = TinyProcessIDTemporary.findIndex((f) => f == d);
-                obj4["dicID"] = 7772;
-                obj4["ElementDeleteFlag"] = 1;
-                obj4["AbnormalTinyProcessID"] = parseInt(
-                  x.AbnormalTinyProcessID[newIndex4]
+                obj4['dicID'] = 7772;
+                obj4['ElementDeleteFlag'] = 1;
+                obj4['AbnormalTinyProcessID'] = parseInt(
+                  x.AbnormalTinyProcessID[newIndex4],
                 );
                 childrens.push(obj4);
               });
             }
-            x["childrens"] = childrens;
+            x['childrens'] = childrens;
             submitData.push(x);
           }
         });
       }
       debugger;
       if (submitData.length == 0) {
-        this.$message.error("没有可提交的数据！");
+        this.$message.error('没有可提交的数据！');
         return;
       }
       let res = await SaveData(submitData);
@@ -578,7 +577,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -586,7 +585,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -612,15 +611,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -629,19 +628,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -649,43 +648,43 @@ export default {
           data.forEach((x) => {
             if (x.ProcessID) {
               let ProcessIDString = JSON.parse(
-                JSON.stringify(x.ProcessID)
-              ).split(",");
+                JSON.stringify(x.ProcessID),
+              ).split(',');
               if (ProcessIDString.length != 0) {
                 ProcessIDString.forEach((b) => {
                   b = String(b);
                 });
               }
-              this.$set(x, "ProcessID", ProcessIDString);
-              this.$set(x, "ProcessIDTemporary", ProcessIDString);
+              this.$set(x, 'ProcessID', ProcessIDString);
+              this.$set(x, 'ProcessIDTemporary', ProcessIDString);
             } else {
-              this.$set(x, "ProcessID", []);
-              this.$set(x, "ProcessIDTemporary", []);
+              this.$set(x, 'ProcessID', []);
+              this.$set(x, 'ProcessIDTemporary', []);
             }
             if (x.TinyProcessID) {
               let TinyProcessIDString = JSON.parse(
-                JSON.stringify(x.TinyProcessID)
-              ).split(",");
+                JSON.stringify(x.TinyProcessID),
+              ).split(',');
               let TinyProcessIDString2 = [];
               if (TinyProcessIDString.length != 0) {
                 TinyProcessIDString.forEach((a) => {
                   TinyProcessIDString2.push(parseInt(a));
                 });
               }
-              this.$set(x, "TinyProcessID", TinyProcessIDString2);
-              this.$set(x, "TinyProcessIDTemporary", TinyProcessIDString2);
+              this.$set(x, 'TinyProcessID', TinyProcessIDString2);
+              this.$set(x, 'TinyProcessIDTemporary', TinyProcessIDString2);
             } else {
-              this.$set(x, "TinyProcessID", []);
-              this.$set(x, "TinyProcessIDTemporary", []);
+              this.$set(x, 'TinyProcessID', []);
+              this.$set(x, 'TinyProcessIDTemporary', []);
             }
           });
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -700,7 +699,7 @@ export default {
     // 弹框确定添加
     async sureAdd() {
       let submitData = [];
-      if (this.Type == "生产异常") {
+      if (this.Type == '生产异常') {
         // 工序和细小工序放进childrens
         let obj = this.abnormalForm[0];
         let newData1 = this.abnormalForm[0].ProcessID;
@@ -709,20 +708,20 @@ export default {
         if (newData1.length != 0) {
           newData1.forEach((x) => {
             let newObj = {};
-            newObj["dicID"] = 7771;
-            newObj["ProcessID"] = x;
+            newObj['dicID'] = 7771;
+            newObj['ProcessID'] = x;
             childrens.push(newObj);
           });
         }
         if (newData2.length != 0) {
           newData2.forEach((y) => {
             let newObj2 = {};
-            newObj2["dicID"] = 7772;
-            newObj2["TinyProcessID"] = y;
+            newObj2['dicID'] = 7772;
+            newObj2['TinyProcessID'] = y;
             childrens.push(newObj2);
           });
         }
-        obj["childrens"] = childrens;
+        obj['childrens'] = childrens;
         submitData.push(obj);
       } else {
         submitData.push(this.abnormalForm[1]);
@@ -732,7 +731,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dialogShow = false;
@@ -740,7 +739,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.dialogShow = false;
@@ -748,11 +747,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
