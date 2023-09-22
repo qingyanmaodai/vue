@@ -45,7 +45,6 @@ Vue.use(dataV);
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-import 'uno.css'
 if (process.env.NODE_ENV === "production") {
   const { mockXHR } = require("../mock");
   mockXHR();

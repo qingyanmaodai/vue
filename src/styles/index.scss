@@ -1,9 +1,20 @@
-@import "./variables.scss";
-@import "./mixin.scss";
-@import "./transition.scss";
-@import "./element-ui.scss";
-@import "./sidebar.scss";
-
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+/* 引入tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  svg {
+    display: inline-block;
+  }
+  img {
+    display: inline-block;
+  }
+}
 /* 好看的背景浅色字体深色文本 */
 .span_bg_color {
   font-weight: 700;
@@ -28,8 +39,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
-    Microsoft YaHei, Arial, sans-serif;
+  font-family:
+    Helvetica Neue,
+    Helvetica,
+    PingFang SC,
+    Hiragino Sans GB,
+    Microsoft YaHei,
+    Arial,
+    sans-serif;
 }
 
 .el-menu-item,
@@ -80,7 +97,7 @@ div:focus {
     visibility: hidden;
     display: block;
     font-size: 0;
-    content: " ";
+    content: ' ';
     clear: both;
     height: 0;
   }
@@ -108,7 +125,7 @@ div:focus {
 
   // 竖线
   .el-tree-node::before {
-    content: "";
+    content: '';
     height: 100%;
     width: 1px;
     position: absolute;
@@ -125,7 +142,7 @@ div:focus {
 
   // 横线
   .el-tree-node::after {
-    content: "";
+    content: '';
     width: 24px;
     height: 20px;
     position: absolute;
@@ -177,7 +194,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -810,7 +827,7 @@ ul li .el-tree .el-tree-node__content {
 }
 
 .el-pagination button,
-.el-pagination span:not([class*="suffix"]),
+.el-pagination span:not([class*='suffix']),
 .el-pager li {
   line-height: 25px !important;
   height: 25px !important;

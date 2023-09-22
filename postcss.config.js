@@ -1,8 +1,10 @@
-// https://github.com/michael-ciniawsky/postcss-load-config
-
 module.exports = {
-  'plugins': {
-    // to edit target browsers: use "browserslist" field in package.json
-    'autoprefixer': {}
-  }
-}
+  plugins: [
+    require('tailwindcss'),
+    require('autoprefixer'),
+    require('postcss-px2rem-exclude')({
+      remUnit: 14,
+      exclude: /node_modules|floder_name/i,
+    }),
+  ],
+};
