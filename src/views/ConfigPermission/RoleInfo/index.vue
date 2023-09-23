@@ -112,6 +112,7 @@
                     :label="roleForm.ParentRoleName"
                   >
                     <el-tree
+                      class="tree-line"
                       ref="selectTree"
                       :props="roleProps"
                       :data="roleData"
@@ -289,8 +290,8 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
 import {
   GetHeader,
   GetSearchData,
@@ -301,9 +302,9 @@ import {
   GetFuzzySearchData,
   GetMenus,
   GetMenuRoleBtn,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "RoleInfo",
+  name: 'RoleInfo',
   components: {
     ComSearch,
     ComUmyTable,
@@ -314,10 +315,10 @@ export default {
       ////////////////// Search /////////////////
       sureLoading: false,
       title: this.$route.meta.title,
-      drawerTitle: "新增角色",
+      drawerTitle: '新增角色',
       delData: [[]],
       operationStatus: true,
-      editType: "用户",
+      editType: '用户',
       drawer: false,
       formSearchs: [
         {
@@ -327,21 +328,21 @@ export default {
       ],
       btnForm: [
         {
-          BtnName: "保存",
-          Type: "success",
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataTreeSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataTreeSave',
+          Icon: '',
         },
         {
-          BtnName: "删除",
-          Type: "danger",
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Icon: "",
-          Params: { dataName: "delData" },
+          Size: 'small',
+          Methods: 'dataDel',
+          Icon: '',
+          Params: { dataName: 'delData' },
         },
       ],
       tableData: [[]],
@@ -349,26 +350,26 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       /* 弹框数据 */
-      operationType: "新增角色",
-      Type: "目录",
+      operationType: '新增角色',
+      Type: '目录',
       roleForm: {
-        RoleName: "",
-        RoleID: "",
-        ParentID: "",
-        ParentRoleName: "",
+        RoleName: '',
+        RoleID: '',
+        ParentID: '',
+        ParentRoleName: '',
         Status: 1,
         dicID: 40,
       },
       roleRules: {
         RoleName: [
-          { required: true, message: "请输入角色名称", trigger: "blur" },
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
         ],
       },
-      roleProps: { label: "RoleName", children: "children" },
+      roleProps: { label: 'RoleName', children: 'children' },
       roleData: [],
       menuData: [],
       menuBtnData: [],
@@ -379,26 +380,26 @@ export default {
       isOpen: true,
       isOpen2: true,
       menuProps: {
-        children: "children",
-        label: "MenuName",
+        children: 'children',
+        label: 'MenuName',
       },
       menuBtnProps: {
-        children: "children",
-        label: "MenuName",
+        children: 'children',
+        label: 'MenuName',
       },
       orgForm: {},
       orgData: [],
       orgProps: {
-        children: "children",
-        label: "OrganizeName",
+        children: 'children',
+        label: 'OrganizeName',
       },
       userValue: {
-        Account: "",
-        Name: "",
-        OrganizeName: "",
-        OrganizeID: "",
+        Account: '',
+        Name: '',
+        OrganizeName: '',
+        OrganizeID: '',
         dicID: 41,
-        RoleID: "",
+        RoleID: '',
         ID: null,
       },
       userData: [],
@@ -436,8 +437,8 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -445,12 +446,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -461,13 +462,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -501,7 +502,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -510,10 +511,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 树形数据的保存
     dataTreeSave(remarkTb, index, parms, newData) {
@@ -530,10 +531,10 @@ export default {
         if (submitData.length != 0) {
           this.generalSaveData(submitData, 0, index);
         } else {
-          this.$message.error("没有可保存的数据");
+          this.$message.error('没有可保存的数据');
         }
       } else {
-        this.$message.error("没有可保存的数据");
+        this.$message.error('没有可保存的数据');
       }
     },
     // 递归获取子数据
@@ -562,7 +563,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -570,7 +571,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -596,15 +597,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -613,11 +614,11 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
@@ -627,23 +628,23 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -652,17 +653,17 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetRoles(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -676,33 +677,33 @@ export default {
     // 点击新增菜单或按钮
     async openDrawer(val) {
       for (var name in this.roleForm) {
-        this.roleForm[name] = "";
+        this.roleForm[name] = '';
       }
       this.roleForm.dicID = 40;
       this.roleForm.Status = 1;
       this.operationStatus = val;
       if (val) {
         this.drawer = true;
-        this.drawerTitle = "新增角色";
+        this.drawerTitle = '新增角色';
         if (this.delData[0].length != 0) {
           this.roleForm.ParentID = this.delData[0][0].RoleID;
           this.roleForm.ParentRoleName = this.delData[0][0].RoleName;
         }
       } else {
         if (this.delData[0].length == 0) {
-          this.$message.error("请单击角色列表选择需要配置的角色！");
+          this.$message.error('请单击角色列表选择需要配置的角色！');
           return;
         }
         this.drawer = true;
-        this.editType = "用户";
-        this.drawerTitle = "菜单/按钮配置";
+        this.editType = '用户';
+        this.drawerTitle = '菜单/按钮配置';
         this.$set(this.dialogLoading, 0, true);
         for (let name in this.roleForm) {
           this.roleForm[name] = this.delData[0][0][name];
         }
         let row = this.delData[0][0];
         if (!row.ParentID) {
-          this.roleForm.ParentRoleName = "";
+          this.roleForm.ParentRoleName = '';
         } else {
           let res = await GetSearchData({
             RoleID: row.ParentID,
@@ -715,7 +716,7 @@ export default {
           } else {
             this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
             });
           }
@@ -746,14 +747,14 @@ export default {
                 this.getAllRole();
                 this.$message({
                   message: msg,
-                  type: "success",
+                  type: 'success',
                   dangerouslyUseHTMLString: true,
                 });
                 this.drawer = false;
               } else {
                 this.$message({
                   message: msg,
-                  type: "error",
+                  type: 'error',
                   dangerouslyUseHTMLString: true,
                 });
                 this.drawer = false;
@@ -762,7 +763,7 @@ export default {
           }
         });
       } else {
-        if (this.editType == "菜单") {
+        if (this.editType == '菜单') {
           this.sureLoading = true;
           let menus = _this.$refs.roleMenuTree.getCheckedNodes(false, true);
           // let menus2 = _this.$refs.roleMenuTree.getHalfCheckedNodes();
@@ -774,7 +775,7 @@ export default {
           let submitData = [];
           // menus = menus.concat(menus2);
           let newData = menus.filter(
-            (x) => !this.initialBtnData.some((y) => y.MenuCode == x.MenuCode)
+            (x) => !this.initialBtnData.some((y) => y.MenuCode == x.MenuCode),
           ); //新增
 
           // let newData3 = this.initialBtnData.filter((r) =>
@@ -788,22 +789,22 @@ export default {
           //   });
           // }
           let newData2 = this.initialBtnData.filter(
-            (c) => !menus.some((z) => c.MenuCode == z.MenuCode)
+            (c) => !menus.some((z) => c.MenuCode == z.MenuCode),
           ); //删除
           if (newData.length != 0) {
             newData.forEach((a) => {
               // let obj = {};
               // obj["MenuCode"] = a;
-              a["RoleID"] = this.delData[0][0].RoleID;
-              a["ID"] = -1;
-              a["dicID"] = 42;
+              a['RoleID'] = this.delData[0][0].RoleID;
+              a['ID'] = -1;
+              a['dicID'] = 42;
               submitData.push(a);
             });
           }
           if (newData2.length != 0) {
             newData2.forEach((b) => {
-              b["dicID"] = 42;
-              b["ElementDeleteFlag"] = 1;
+              b['dicID'] = 42;
+              b['ElementDeleteFlag'] = 1;
               submitData.push(b);
             });
           }
@@ -813,19 +814,19 @@ export default {
               this.getRoleMenu(this.delData[0][0].RoleID);
               this.$message({
                 message: msg,
-                type: "success",
+                type: 'success',
                 dangerouslyUseHTMLString: true,
               });
             } else {
               this.$message({
                 message: msg,
-                type: "error",
+                type: 'error',
                 dangerouslyUseHTMLString: true,
               });
             }
             this.sureLoading = false;
           });
-        } else if (this.editType == "按钮") {
+        } else if (this.editType == '按钮') {
           this.sureLoading = true;
           let btns = _this.$refs.menuBtnTree.getCheckedNodes();
           let btns2 = _this.$refs.menuBtnTree.getHalfCheckedNodes();
@@ -839,34 +840,34 @@ export default {
           let newData = btns.filter(
             (x) =>
               !this.initialBtnData2.some(
-                (y) => y.ButtonMenuMapID == x.ButtonMenuMapID
-              )
+                (y) => y.ButtonMenuMapID == x.ButtonMenuMapID,
+              ),
           ); //新增
           let newData3 = this.initialBtnData.filter((r) =>
-            btns2.some((t) => r.ButtonMenuMapID == t.ButtonMenuMapID)
+            btns2.some((t) => r.ButtonMenuMapID == t.ButtonMenuMapID),
           ); // 本来有的值但是变成半选状态需要更新
           if (newData3.length != 0) {
             newData3.forEach((p) => {
-              p["dicID"] = 42;
-              p["TempKey"] = 1;
+              p['dicID'] = 42;
+              p['TempKey'] = 1;
               submitData.push(p);
             });
           }
           let newData2 = this.initialBtnData2.filter(
-            (c) => !btns.some((z) => c.ButtonMenuMapID == z.ButtonMenuMapID)
+            (c) => !btns.some((z) => c.ButtonMenuMapID == z.ButtonMenuMapID),
           ); //删除
           if (newData.length != 0) {
             newData.forEach((a) => {
-              a["RoleID"] = this.delData[0][0].RoleID;
-              a["ID"] = -1;
-              a["dicID"] = 31;
+              a['RoleID'] = this.delData[0][0].RoleID;
+              a['ID'] = -1;
+              a['dicID'] = 31;
               submitData.push(a);
             });
           }
           if (newData2.length != 0) {
             newData2.forEach((b) => {
-              b["dicID"] = 31;
-              b["ElementDeleteFlag"] = 1;
+              b['dicID'] = 31;
+              b['ElementDeleteFlag'] = 1;
               submitData.push(b);
             });
           }
@@ -878,13 +879,13 @@ export default {
               this.GetMenuRoleBtn(this.delData[0][0].RoleID);
               this.$message({
                 message: msg,
-                type: "success",
+                type: 'success',
                 dangerouslyUseHTMLString: true,
               });
             } else {
               this.$message({
                 message: msg,
-                type: "error",
+                type: 'error',
                 dangerouslyUseHTMLString: true,
               });
             }
@@ -909,14 +910,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -934,11 +935,11 @@ export default {
       this.$refs.formRef_two.blur();
     },
     handleCommand0(val) {
-      this.$confirm("确定要删除所有用户数据吗？")
+      this.$confirm('确定要删除所有用户数据吗？')
         .then((_) => {
           _this.userData.forEach((x) => {
-            x["ElementDeleteFlag"] = 1;
-            x["dicID"] = 41;
+            x['ElementDeleteFlag'] = 1;
+            x['dicID'] = 41;
           });
           _this.returnResultData(_this.userData).then((res) => {
             const { result, msg } = res.data;
@@ -959,13 +960,13 @@ export default {
         this.isOpen = true;
         this.changeTreeNodeStatus(
           this.$refs.roleMenuTree.store.root,
-          this.isOpen
+          this.isOpen,
         );
       } else if (val == 3) {
         this.isOpen = false;
         this.changeTreeNodeStatus(
           this.$refs.roleMenuTree.store.root,
-          this.isOpen
+          this.isOpen,
         );
       }
     },
@@ -977,13 +978,13 @@ export default {
         this.isOpen2 = true;
         this.changeTreeNodeStatus(
           this.$refs.menuBtnTree.store.root,
-          this.isOpen2
+          this.isOpen2,
         );
       } else if (val == 3) {
         this.isOpen2 = false;
         this.changeTreeNodeStatus(
           this.$refs.menuBtnTree.store.root,
-          this.isOpen2
+          this.isOpen2,
         );
       }
     },
@@ -1005,7 +1006,7 @@ export default {
       let res = await GetMenus({
         dicID: 1,
         MenuCode: null,
-        MenuName: "",
+        MenuName: '',
         IsEnable: 1,
       });
       const { result, data, count, msg } = res.data;
@@ -1015,21 +1016,21 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     // 获取所有角色
     async getAllRole() {
-      let res = await GetRoles({ dicID: 40, RoleID: null, RoleName: "" });
+      let res = await GetRoles({ dicID: 40, RoleID: null, RoleName: '' });
       const { result, data, count, msg } = res.data;
       if (result) {
         this.roleData = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1042,7 +1043,7 @@ export default {
       let res = await GetMenuRoleBtn({
         dicID: 48,
         RoleID: RoleID,
-        ParentCode: "null",
+        ParentCode: 'null',
       });
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1051,7 +1052,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1062,7 +1063,7 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         _this.$set(this.dialogLoading, 2, false);
-        this.$set(this, "checkdBtnCodes2", []);
+        this.$set(this, 'checkdBtnCodes2', []);
         this.$refs.menuBtnTree.setCheckedKeys([]);
 
         // if (this.checkdBtnCodes2.length != 0) {
@@ -1080,7 +1081,7 @@ export default {
       } else {
         _this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         _this.$set(_this.dialogLoading, 2, false);
@@ -1099,14 +1100,14 @@ export default {
         this.userData = [];
         setTimeout(() => {
           this.$nextTick(() => {
-            _this.$set(_this, "userData", data);
+            _this.$set(_this, 'userData', data);
           });
         }, 1500);
       } else {
         this.$set(this.dialogLoading, 0, false);
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1116,15 +1117,15 @@ export default {
       this.$set(this.dialogLoading, 1, true);
       let res = await GetSearch(
         { dicID: 42, RoleID: RoleID, rows: 0 },
-        "/APSAPI/GetRoleMenu"
+        '/APSAPI/GetRoleMenu',
       );
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.$set(this, "checkdBtnCodes", []);
+        this.$set(this, 'checkdBtnCodes', []);
         this.$refs.roleMenuTree.setCheckedKeys([]);
         if (data) {
-          this.checkdBtnCodes = data["Table1"].map((item) => item.MenuCode);
-          this.initialBtnData = [...data["Table"], ...data["Table1"]];
+          this.checkdBtnCodes = data['Table1'].map((item) => item.MenuCode);
+          this.initialBtnData = [...data['Table'], ...data['Table1']];
         }
         // data.forEach((x) => {
         //   if (x.TempKey != 1) {
@@ -1136,27 +1137,27 @@ export default {
         this.$set(this.dialogLoading, 1, false);
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     getDialogData(val, index) {
-      if (val == "菜单") {
+      if (val == '菜单') {
         // 获取角色下的菜单
         this.getAllMenu();
-      } else if (val == "按钮") {
+      } else if (val == '按钮') {
         // 获取角色下菜单下的按钮
         this.GetMenuRoleBtn(this.delData[0][0].RoleID);
       }
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -1175,7 +1176,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -1200,16 +1201,16 @@ export default {
             _this.getRoleUser(_this.delData[0][0].RoleID, null);
             _this.GetMenuRoleBtn(_this.delData[0][0].RoleID);
             _this.$message.success(msg);
-            _this.userValue.Account = "";
-            _this.userValue.Name = "";
-            _this.userValue.OrganizeID = "";
-            _this.userValue.OrganizeName = "";
+            _this.userValue.Account = '';
+            _this.userValue.Name = '';
+            _this.userValue.OrganizeID = '';
+            _this.userValue.OrganizeName = '';
           } else {
             _this.$message.error(msg);
           }
         });
       } else {
-        this.$message.error("请输入有效的账户信息！");
+        this.$message.error('请输入有效的账户信息！');
       }
     },
     // 查询用户
@@ -1218,10 +1219,10 @@ export default {
     },
     // 删除用户
     delRoleUser(item) {
-      this.$confirm("确定要删除该用户吗？")
+      this.$confirm('确定要删除该用户吗？')
         .then((_) => {
-          item["ElementDeleteFlag"] = 1;
-          item["dicID"] = 41;
+          item['ElementDeleteFlag'] = 1;
+          item['dicID'] = 41;
           let newData = [];
           newData.push(item);
           _this.returnResultData(newData).then((res) => {

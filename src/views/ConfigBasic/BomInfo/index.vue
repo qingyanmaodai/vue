@@ -26,7 +26,7 @@
       />
     </div>
     <div class="admin_container_right">
-      <div class="admin_head_3" ref="headRef">
+      <!-- <div class="admin_head_3" ref="headRef">
         <div style="text-align: right">
           <el-button
             plain
@@ -55,7 +55,7 @@
           :formController="formControllerParent"
           :formRules="formRules"
         ></ComForm>
-      </div>
+      </div> -->
       <div class="admin_head_4">
         <ComSearch
           ref="searchRef"
@@ -582,12 +582,12 @@ export default {
     // 高度控制
     setHeight() {
       this.treeHeight = document.documentElement.clientHeight - 250 + 'px';
-      let headHeight = this.$refs.headRef.offsetHeight;
+      // let headHeight = this.$refs.headRef.offsetHeight;
       let rem =
         document.documentElement.clientHeight -
-        headHeight -
+        40 -
         this.$store.getters.reduceHeight;
-      let newHeight = rem - 40 + 'px';
+      let newHeight = rem + 'px';
       this.$set(this, 'height', newHeight);
     },
     // 编辑行

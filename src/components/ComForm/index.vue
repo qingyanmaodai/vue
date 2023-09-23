@@ -75,6 +75,7 @@
                 :label="formData[newItem.prop]"
               >
                 <el-tree
+                  class="tree-line"
                   ref="treeRef"
                   :props="newItem.treeProps"
                   :data="newItem.treeData"
@@ -295,12 +296,12 @@ export default {
     //表单域标签的的宽度
     labelWidth: {
       type: String,
-      default: "100px",
+      default: '100px',
     },
     //单个文本框标签的的宽度
     labelWidthItem: {
       type: String,
-      default: "100px",
+      default: '100px',
     },
   },
   data() {
@@ -330,10 +331,10 @@ export default {
   methods: {
     //选中树的节点
     selectHandleNodeClick(data, node) {
-      this.$emit("getCategoryName", data, node);
+      this.$emit('getCategoryName', data, node);
     },
     selectHandleNodeClick2(data, node) {
-      this.$emit("getTreeName", data, node);
+      this.$emit('getTreeName', data, node);
     },
     openInnerDialog(methods, data, node) {
       this.$emit(methods, data, node);
@@ -341,31 +342,31 @@ export default {
     //懒加载
     loadNode(node, resolve) {
       if (node.level == 0) {
-        this.$emit("loadfirstnode", resolve);
+        this.$emit('loadfirstnode', resolve);
       }
       if (node.level >= 1) {
-        this.$emit("loadchildnode", node, resolve);
+        this.$emit('loadchildnode', node, resolve);
       }
     },
     // 操作选择的数据
     operation(methods, val) {
       if (methods) {
-        this.$emit("methods", val);
+        this.$emit('methods', val);
       }
     },
     // 远程搜索
     fetchSuggertions(val, cb, methods) {
-      this.$emit("fetchSuggertions", val, cb, methods);
+      this.$emit('fetchSuggertions', val, cb, methods);
     },
     // 获取远程搜索数据
     getRemote(newItem, methods) {
-      this.$emit("getRemote", newItem, methods);
+      this.$emit('getRemote', newItem, methods);
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.comForm ::v-deep input[type="number"] {
+.comForm ::v-deep input[type='number'] {
   -moz-appearance: textfield;
 }
 .comForm ::v-deep .el-select {

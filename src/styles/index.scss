@@ -108,11 +108,11 @@ div:focus {
 .tree-line {
   .el-tree-node {
     position: relative;
-    padding-left: 15px; // 缩进量
+    padding-left: 16px; // 缩进量
   }
 
   .el-tree-node__children {
-    padding-left: 15px; // 缩进量
+    padding-left: 16px; // 缩进量
   }
 
   // 竖线
@@ -159,11 +159,11 @@ div:focus {
 
     // 叶子节点（无子节点）
     &.is-leaf {
+      font-size: 0px; //无子节点则隐藏该坐标
       color: transparent;
     }
   }
 }
-
 #app {
   // padding: 10px;
   color: #606266;
@@ -199,11 +199,6 @@ input[type='number'] {
 
 .el-select-dropdown__item.selected {
   font-weight: normal;
-}
-
-ul li .el-tree .el-tree-node__content {
-  height: auto;
-  padding: 0 20px;
 }
 
 .el-tree-node__label {
@@ -402,9 +397,9 @@ ul li .el-tree .el-tree-node__content {
     margin: 5px;
   }
 
-  .tree-line .el-tree-node {
-    padding-left: 0 !important;
-  }
+  // .tree-line .el-tree-node {
+  //   padding-left: 0 !important;
+  // }
 
   .hr-line-dashed {
     border-top: 1px dashed #0960bd;
@@ -541,26 +536,6 @@ ul li .el-tree .el-tree-node__content {
   margin-top: 8vh !important;
 }
 
-/* 表格样式 */
-// .elx-table--wrapper .elx-table--title {
-//   padding: 0 0 8px 0 !important;
-// }
-
-// .elx-table--header {
-//   margin-bottom: -8px !important;
-//   padding-bottom: 0px !important;
-//   min-width: 8px !important;
-//   overflow: scroll !important;
-// }
-
-// .elx-table--body {
-//   overflow: scroll;
-//   // height: calc(100%);
-// }
-// .elx-empty-normal {
-//   margin: auto 0 !important;
-// }
-
 .flex {
   display: flex;
   align-items: center;
@@ -630,9 +605,9 @@ ul li .el-tree .el-tree-node__content {
   height: 28px;
 }
 
-.el-tree-node__content {
-  padding: 0 5px 0 0 !important;
-}
+// .el-tree-node__content {
+//   padding: 0 5px 0 0 !important;
+// }
 
 .flex_flex_end {
   display: flex !important;
@@ -1029,18 +1004,8 @@ label {
   justify-content: flex-end;
 }
 
-.bgDriver {
-  height: 10px;
-  background: #f3f3f4;
-  width: 100%;
-}
-
 .margin_top15 {
   margin: 15px 0 10px 0;
-}
-
-.margin_top_10 {
-  margin-top: 10px;
 }
 
 .padding_lr0 {
@@ -1475,10 +1440,6 @@ label {
 }
 .pd-0-6 {
   padding: 0 6px !important;
-}
-
-.width-100px {
-  width: 100px;
 }
 .truncate-text {
   white-space: nowrap;

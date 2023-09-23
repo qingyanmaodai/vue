@@ -76,6 +76,7 @@
               :label="formData[newItem.prop]"
             >
               <el-tree
+                class="tree-line"
                 ref="treeRef"
                 :props="newItem.treeProps"
                 :data="newItem.treeData"
@@ -318,17 +319,17 @@ export default {
       if (val) {
         this.$refs.formData.validate((valid) => {
           if (valid) {
-            this.$emit("dialogBtnClick", val);
+            this.$emit('dialogBtnClick', val);
           }
         });
       } else {
-        this.$emit("dialogBtnClick", val);
+        this.$emit('dialogBtnClick', val);
       }
     },
     // 关闭
     close(done) {
       done();
-      this.$emit("dialogBtnClick", false);
+      this.$emit('dialogBtnClick', false);
     },
   },
 };

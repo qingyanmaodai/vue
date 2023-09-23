@@ -129,6 +129,7 @@
                     :label="menuForm.ParentMenuName"
                   >
                     <el-tree
+                      class="tree-line"
                       ref="selectTree"
                       :props="treeProps"
                       :data="treeData"
@@ -273,9 +274,9 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import ComVxeTable from "@/components/ComVxeTable";
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import ComVxeTable from '@/components/ComVxeTable';
 
 import {
   GetHeader,
@@ -283,9 +284,9 @@ import {
   ExportData,
   SaveData,
   GetMenus,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "MenuInfo",
+  name: 'MenuInfo',
   components: {
     ComSearch,
     ComUmyTable,
@@ -296,8 +297,8 @@ export default {
       ////////////////// Search /////////////////
       adminLoading: false,
       title: this.$route.meta.title,
-      drawerTitle: "新增菜单/按钮",
-      dialogTitle: "",
+      drawerTitle: '新增菜单/按钮',
+      dialogTitle: '',
       checkdBtnCodes: [],
       drawer: false,
       formSearchs: [
@@ -312,21 +313,21 @@ export default {
       ],
       btnForm: [
         {
-          BtnName: "保存",
-          Type: "success",
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataTreeSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataTreeSave',
+          Icon: '',
         },
         {
-          BtnName: "删除",
-          Type: "danger",
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Icon: "",
-          Params: { dataName: "delData" },
+          Size: 'small',
+          Methods: 'dataDel',
+          Icon: '',
+          Params: { dataName: 'delData' },
         },
       ],
       sysID: [{ ID: 1 }, { ID: 61 }],
@@ -341,43 +342,43 @@ export default {
       ],
       selectionDefaultData: [[], []],
       selectionData: [[], []],
-      height: "707px",
-      height2: "500px",
+      height: '707px',
+      height2: '500px',
       showPagination: true,
       tagRemark: 0,
       /* 弹框数据 */
-      Type: "菜单",
+      Type: '菜单',
       sureLoading: false,
       menuForm: {
         dicID: 1,
-        MenuName: "",
-        MenuCode: "",
-        ParentCode: "",
-        ParentMenuName: "",
-        Url: "",
-        Component: "",
-        Name: "",
+        MenuName: '',
+        MenuCode: '',
+        ParentCode: '',
+        ParentMenuName: '',
+        Url: '',
+        Component: '',
+        Name: '',
         Hidden: false,
         IsEnable: 1,
         keepAlive: false,
         ViewSort: 1,
-        Ico: "",
+        Ico: '',
         Status: 1,
       },
       menuRules: {
         MenuName: [
-          { required: true, message: "请输入菜单名称", trigger: "blur" },
+          { required: true, message: '请输入菜单名称', trigger: 'blur' },
         ],
-        Url: [{ required: true, message: "请输入路由地址", trigger: "blur" }],
-        ViewSort: [{ required: true, message: "请输入排序", trigger: "blur" }],
+        Url: [{ required: true, message: '请输入路由地址', trigger: 'blur' }],
+        ViewSort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
       },
-      treeProps: { label: "MenuName", children: "children" },
+      treeProps: { label: 'MenuName', children: 'children' },
       treeData: [],
       btnData: [],
       isOpen: false,
       btnProps: {
-        children: "children",
-        label: "ButtonName",
+        children: 'children',
+        label: 'ButtonName',
       },
       isLoading: false,
       initialBtnData: [],
@@ -408,16 +409,16 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {
-      this.$set(row, "update", true);
+      this.$set(row, 'update', true);
     },
     // 删除行
     delRow(row) {
-      this.$confirm("确定要删除该菜单嘛？")
+      this.$confirm('确定要删除该菜单嘛？')
         .then((_) => {})
         .catch((_) => {});
     },
@@ -428,12 +429,12 @@ export default {
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -444,13 +445,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -484,7 +485,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -493,18 +494,18 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -521,7 +522,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.getAllMenu();
@@ -529,7 +530,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -540,7 +541,7 @@ export default {
         let submitData = [];
         this.tableData[remarkTb].forEach((x) => {
           if (x.update) {
-            x["dicID"] = 1;
+            x['dicID'] = 1;
             submitData.push(x);
           }
           if (x.children && x.children.length != 0) {
@@ -550,10 +551,10 @@ export default {
         if (submitData.length != 0) {
           this.generalSaveData(submitData, 0, index);
         } else {
-          this.$message.error("没有可保存的数据");
+          this.$message.error('没有可保存的数据');
         }
       } else {
-        this.$message.error("没有可保存的数据");
+        this.$message.error('没有可保存的数据');
       }
     },
     // 递归获取子数据
@@ -561,7 +562,7 @@ export default {
       submitData.concat(row.children);
       row.children.forEach((x) => {
         if (x.update) {
-          x["dicID"] = 1;
+          x['dicID'] = 1;
           submitData.push(x);
         }
         if (x.children && x.children.length != 0) {
@@ -575,24 +576,24 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
-            obj["dicID"] = 1;
+            obj['ElementDeleteFlag'] = 1;
+            obj['dicID'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -607,13 +608,13 @@ export default {
         this.getAllMenu();
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -633,8 +634,8 @@ export default {
         datas.some((m, i) => {
           m.forEach((n, index) => {
             // 进行验证
-            if (n.prop == "MenuCode" || n.prop == "MenuName") {
-              this.$set(n, "treeNode", true);
+            if (n.prop == 'MenuCode' || n.prop == 'MenuName') {
+              this.$set(n, 'treeNode', true);
             }
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
@@ -643,22 +644,22 @@ export default {
               });
             }
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
             }
           });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         await this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
@@ -668,19 +669,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res;
       if (remarkTb == 0) {
         res = await GetMenus(form);
@@ -692,13 +693,13 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.selectionDefaultData[remarkTb] = this.tableData[remarkTb].filter(
-          (item) => item.isChecked == true
+          (item) => item.isChecked == true,
         );
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -706,18 +707,18 @@ export default {
     resetForm() {
       return {
         dicID: 1,
-        MenuName: "",
-        MenuCode: "",
-        ParentCode: "",
-        ParentMenuName: "",
-        Url: "",
-        Component: "",
-        Name: "",
+        MenuName: '',
+        MenuCode: '',
+        ParentCode: '',
+        ParentMenuName: '',
+        Url: '',
+        Component: '',
+        Name: '',
         Hidden: false,
         IsEnable: 1,
         keepAlive: false,
         ViewSort: 1,
-        Ico: "",
+        Ico: '',
         Status: 1,
       };
     },
@@ -726,11 +727,11 @@ export default {
       this.tagRremark = val;
       if (val == 1) {
         this.drawer = true;
-        this.drawerTitle = "新增菜单";
-        this.dialogTitle = "新增";
-        this.Type = "菜单";
+        this.drawerTitle = '新增菜单';
+        this.dialogTitle = '新增';
+        this.Type = '菜单';
         for (var name in this.menuForm) {
-          this.menuForm[name] = "";
+          this.menuForm[name] = '';
         }
         let query = this.resetForm();
         for (name in query) {
@@ -740,20 +741,20 @@ export default {
         if (this.delData[0].length != 0) {
           let row = this.delData[0][0];
           this.menuForm.ParentMenuName = row.MenuName;
-          this.menuForm.MenuCode = "";
+          this.menuForm.MenuCode = '';
           this.menuForm.ParentCode = row.MenuCode;
         }
       } else {
         if (this.delData[0].length != 0) {
-          this.drawerTitle = "修改菜单/按钮";
-          this.dialogTitle = "修改";
+          this.drawerTitle = '修改菜单/按钮';
+          this.dialogTitle = '修改';
           let row = this.delData[0][0];
           this.drawer = true;
           for (let name in row) {
             this.menuForm[name] = row[name];
           }
           if (!row.ParentCode) {
-            this.menuForm.ParentMenuName = "";
+            this.menuForm.ParentMenuName = '';
           } else {
             let res = await GetSearchData({
               MenuCode: row.ParentCode,
@@ -767,7 +768,7 @@ export default {
             } else {
               this.$message({
                 message: msg,
-                type: "error",
+                type: 'error',
                 dangerouslyUseHTMLString: true,
               });
             }
@@ -775,23 +776,23 @@ export default {
           // 获取这个菜单下的按钮
           this.getMenuBtn(row.MenuCode);
         } else {
-          this.$message.error("请单击需要修改的菜单！");
+          this.$message.error('请单击需要修改的菜单！');
         }
       }
     },
     async sureAdd() {
       // 弹框确定添加
-      if (this.Type == "按钮") {
-        this.$set(this, "sureLoading", true);
+      if (this.Type == '按钮') {
+        this.$set(this, 'sureLoading', true);
         //将所选的数据和默认的数据做对比
 
         this.selectionData[1] =
           this.$refs.ComVxeTable.$refs.vxeTable.getCheckboxRecords();
-        console.log(this.selectionData[1], "this.selectionData[1]");
+        console.log(this.selectionData[1], 'this.selectionData[1]');
         let sendData = this.selectionDefaultData[1]
           .map((item) => {
             const findVal = this.selectionData[1].find(
-              (val) => val.ButtonID === item.ButtonID
+              (val) => val.ButtonID === item.ButtonID,
             );
             if (findVal) {
               return item;
@@ -807,17 +808,17 @@ export default {
               .filter(
                 (item) =>
                   !this.selectionDefaultData[1].some(
-                    (val) => val.ButtonID === item.ButtonID
-                  )
+                    (val) => val.ButtonID === item.ButtonID,
+                  ),
               )
-              .map((item) => ({ ...item, Status: 1 }))
+              .map((item) => ({ ...item, Status: 1 })),
           );
         if (sendData.length === 0) {
-          this.$message.error("请选择需要修改的按钮！");
-          this.$set(this, "sureLoading", false);
+          this.$message.error('请选择需要修改的按钮！');
+          this.$set(this, 'sureLoading', false);
           return;
         }
-        await this.dataSave(1, "", "", sendData);
+        await this.dataSave(1, '', '', sendData);
         console.log(2);
 
         this.sureLoading = false;
@@ -833,13 +834,13 @@ export default {
                 _this.$refs.menuForm.resetFields();
                 this.$message({
                   message: msg,
-                  type: "success",
+                  type: 'success',
                   dangerouslyUseHTMLString: true,
                 });
               } else {
                 this.$message({
                   message: msg,
-                  type: "error",
+                  type: 'error',
                   dangerouslyUseHTMLString: true,
                 });
               }
@@ -885,7 +886,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -895,7 +896,7 @@ export default {
       let res = await GetMenus({
         dicID: 1,
         MenuCode: null,
-        MenuName: "",
+        MenuName: '',
         IsEnable: 1,
       });
       const { result, data, count, msg } = res.data;
@@ -905,7 +906,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }

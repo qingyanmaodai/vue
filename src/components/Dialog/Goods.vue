@@ -14,6 +14,7 @@
         <span style="height: 40px; display: block">产品类别</span>
         <div class="hr-line-dashed" />
         <el-tree
+          class="tree-line"
           ref="GoodsTree"
           node-key="MaterialType"
           default-expand-all
@@ -75,23 +76,23 @@
 
 <script>
 var _this;
-import ComVxeTable from "@/components/ComVxeTable";
-import { GetGoodsInfo, UpdateGoodsInfo, GetGoodsData } from "@/api/Basic";
-import { GetSearchData, GetHeader } from "@/api/Common";
-import isObjEmpty from "@/utils/isObjEmpty";
+import ComVxeTable from '@/components/ComVxeTable';
+import { GetGoodsInfo, UpdateGoodsInfo, GetGoodsData } from '@/api/Basic';
+import { GetSearchData, GetHeader } from '@/api/Common';
+import isObjEmpty from '@/utils/isObjEmpty';
 export default {
   components: { ComVxeTable },
   data() {
     return {
-      height: "", //内容高度
-      MaterialName: "", //查询条件
+      height: '', //内容高度
+      MaterialName: '', //查询条件
       treeProps: {
-        label: "MaterialType",
-        children: "children",
-        isLeaf: "isLeaf",
+        label: 'MaterialType',
+        children: 'children',
+        isLeaf: 'isLeaf',
       },
       Selection: [],
-      rowKey: "MaterialID",
+      rowKey: 'MaterialID',
       tableData: [],
       tableColumns: [[]],
       tableHeader: [
@@ -148,7 +149,7 @@ export default {
         pageSize: 50,
         pageTotal: 1,
       },
-      MaterialType: "成品",
+      MaterialType: '成品',
     };
   },
   props: {
@@ -156,11 +157,11 @@ export default {
       type: Array,
       default: function () {
         return [
-          { MaterialType: "成品" },
-          { MaterialType: "半成品" },
-          { MaterialType: "原材料" },
-          { MaterialType: "整机" },
-          { MaterialType: "PCBA" },
+          { MaterialType: '成品' },
+          { MaterialType: '半成品' },
+          { MaterialType: '原材料' },
+          { MaterialType: '整机' },
+          { MaterialType: 'PCBA' },
         ];
       },
     },
@@ -188,7 +189,7 @@ export default {
         this.tableData = [];
         this.pagination.pageIndex = 1;
         this.$nextTick(function () {
-          _this.$refs.GoodsTree.setCurrentKey("成品");
+          _this.$refs.GoodsTree.setCurrentKey('成品');
         });
         this.GetGoodsData();
       }
@@ -215,15 +216,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
       }
     },
@@ -231,11 +232,11 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
@@ -270,14 +271,14 @@ export default {
         this.loading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     // 分页导航
     pageChange(val) {
-      this.$set(this.pagination, "pageIndex", val);
+      this.$set(this.pagination, 'pageIndex', val);
       this.GetGoodsData();
     },
     //查询产品
@@ -292,7 +293,7 @@ export default {
     },
     //新增产品跳转至产品信息列表页面
     toGoodsPage: function () {
-      this.$emit("toGoodsPage");
+      this.$emit('toGoodsPage');
     },
     // 选中的选框
     selectFun(data) {
@@ -300,7 +301,7 @@ export default {
     },
     // 单击行
     handleRowClick(row, column, event) {
-      this.$set(row, "update", true);
+      this.$set(row, 'update', true);
     },
     // 异步树叶子节点懒加载逻辑
     loadNode(node, resolve) {
@@ -326,7 +327,7 @@ export default {
     },
     //添加不关闭
     addNoClose: function () {
-      this.$emit("addGoods", {
+      this.$emit('addGoods', {
         Selection: this.Selection,
         GoodsDialog: this.GoodsDialog,
       });
@@ -335,7 +336,7 @@ export default {
     },
     //添加并关闭
     addClose: function () {
-      this.$emit("addGoods", {
+      this.$emit('addGoods', {
         Selection: this.Selection,
         GoodsDialog: !this.GoodsDialog,
       });
@@ -344,23 +345,23 @@ export default {
     },
     //取消
     cancel: function () {
-      this.$emit("cancel", !this.GoodsDialog);
+      this.$emit('cancel', !this.GoodsDialog);
       this.Selection = [];
       this.$refs.PurchaseRequisition.$refs.vxeTable.clearCheckboxRow();
     },
     // 样式控制
     cellStyle({ row, column }) {
-      if (column.property == "IsHavMold") {
-        if (row["IsHavMold"] == "无") {
+      if (column.property == 'IsHavMold') {
+        if (row['IsHavMold'] == '无') {
           return {
-            background: "#fd7c7c",
+            background: '#fd7c7c',
           };
         }
       }
     },
   },
   mounted() {
-    this.height = window.innerHeight - 500 + "px";
+    this.height = window.innerHeight - 500 + 'px';
   },
 };
 </script>
