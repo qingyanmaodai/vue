@@ -43,6 +43,7 @@
         style="height: 100%"
         v-for="item in [0, 2, 3]"
         :key="item"
+        v-show="labelStatus1 === item"
       >
         <ComSpreadTable
           ref="spreadsheetRef"
@@ -1026,7 +1027,6 @@ export default {
       this.adminLoading = false;
       this.tableLoading[remarkTb] = false;
       setTimeout(() => {
-        debugger;
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
     },
@@ -1080,7 +1080,7 @@ export default {
     },
     changeStatus(item, index) {
       this.labelStatus1 = item['index'];
-      this.formSearchs[0].datas['IsFinish'] = item.value;
+      this.formSearchs[this.labelStatus1].datas['IsFinish'] = item.value;
       this.dataSearch(this.labelStatus1);
     },
     // 选择数据
