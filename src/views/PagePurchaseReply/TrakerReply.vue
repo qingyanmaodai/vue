@@ -735,7 +735,9 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], 'forms', x);
+          if (z !== 2) {
+            this.$set(this.formSearchs[z], 'forms', x);
+          }
         });
         this.getTotalOweNum();
         if (this.isBoss) {
