@@ -10,7 +10,7 @@ import { constantRoutes } from "@/router";
 
 NProgress.configure({ showSpinner: false }); // 封装的进度条
 
-const whiteList = ["/login", "/board"]; // 路由白名单列表，把路由添加到这个数组，不用登陆也可以访问
+const whiteList = ["/login", "/BoardScreen", "/ProductionAndSalesPlanScreen"]; // 路由白名单列表，把路由添加到这个数组，不用登陆也可以访问
 
 router.beforeEach(async (to, from, next) => {
   // 请求路由时进度条开始

@@ -38,8 +38,13 @@ export let constantRoutes = [
     hidden: true,
   },
   {
-    path: "/board",
-    component: () => import("@/views/board/index"),
+    path: "/BoardScreen",
+    component: () => import("@/views/BoardScreen/index"),
+    hidden: true,
+  },
+  {
+    path: "/ProductionAndSalesPlanScreen",
+    component: () => import("@/views/BoardScreen/ProductionAndSalesPlanScreen"),
     hidden: true,
   },
 
