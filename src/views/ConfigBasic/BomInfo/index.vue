@@ -845,8 +845,8 @@ export default {
         } else {
           self.formSearchs[1].datas['MasterCode'] =
             data && data.children[0].MasterCode;
-          // self.formSearchs[1].datas["ParentID"] =
-          //   data && data.children[0].ParentID;
+          self.formSearchs[1].datas['ParentID'] =
+            data && data.children[0].ParentID;
         }
       } else {
         self.formSearchs[1].datas['MasterCode'] = data && data.MasterCode;
