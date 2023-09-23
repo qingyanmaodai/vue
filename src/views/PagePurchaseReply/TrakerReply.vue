@@ -153,7 +153,6 @@
     <el-dialog title="历史复期明细查询" :visible.sync="dialogShow2" width="50%">
       <div class="APSContainer" style="background-color: #f0f2f5">
         <div class="admin_content">
-          采购单
           <ComReportTable
             :rowKey="'RowNumber'"
             :height="height1"
@@ -735,9 +734,7 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          if (z !== 2) {
-            this.$set(this.formSearchs[z], 'forms', x);
-          }
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTotalOweNum();
         if (this.isBoss) {
