@@ -109,7 +109,7 @@ import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import '@grapecity/spread-sheets/js/zh.js';
 import { mapState } from 'vuex';
 GC.Spread.Common.CultureManager.culture('zh-cn');
-import ComSearch from '@/components/ComSearch';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComBatchEdit from '@/components/ComBatchEdit';
 import ComSpreadTable from '@/components/ComSpreadTable';
 import ComVxeTable from '@/components/ComVxeTable';

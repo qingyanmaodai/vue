@@ -234,20 +234,20 @@
 
 <script>
 var _this;
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComSpreadTable from "@/components/ComSpreadTable";
-import ComReportTable from "@/components/ComReportTable";
-import DialogTable from "@/components/Dialog/dialogTable";
-import DialogOptTable from "@/components/Dialog/dialogOptTable";
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
+import { Splitpanes, Pane } from 'splitpanes';
+import 'splitpanes/dist/splitpanes.css';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComSpreadTable from '@/components/ComSpreadTable';
+import ComReportTable from '@/components/ComReportTable';
+import DialogTable from '@/components/Dialog/dialogTable';
+import DialogOptTable from '@/components/Dialog/dialogOptTable';
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
 const GCsheets = GC.Spread.Sheets;
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
 import {
   GetHeader,
   GetSearchData,
@@ -255,9 +255,9 @@ import {
   SaveData,
   GetServerTime,
   GetSearch,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "MainLineSettings",
+  name: 'MainLineSettings',
   components: {
     ComSearch,
     ComVxeTable,
@@ -271,7 +271,7 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      footerLabel: [""],
+      footerLabel: [''],
       selectionData: [[], [], [], [], [], [], []],
       title: this.$route.meta.title,
       includeFields: [[], [], []],
@@ -289,7 +289,7 @@ export default {
           formsAll: [],
         },
         {
-          datas: { ProductType: "产品" },
+          datas: { ProductType: '产品' },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -344,14 +344,14 @@ export default {
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
-      OrderNo: "",
-      OrderNoValue: "",
+      OrderNo: '',
+      OrderNoValue: '',
       OrderNos: [{}, {}, {}, {}],
       sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 125 }, { ID: 11173 }],
       isEdit: [false, false, true, false, false, false, false],
       Region: [2, 2, 1, 3],
       userInfo: {},
-      selectedIndex: "0",
+      selectedIndex: '0',
       colDialogVisible3: false,
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
@@ -367,7 +367,7 @@ export default {
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
-    console.log(this.$route.meta.btns, "this.$route.meta.btns");
+    console.log(this.$route.meta.btns, 'this.$route.meta.btns');
     this.judgeBtn(this.btnForm);
   },
   mounted() {},
@@ -376,18 +376,18 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
+          if (item.ButtonCode == 'save') {
             //假如signName为空，则所有表都显示保存按钮而且全部可编辑，假如不为空，则控制哪个表才可以编辑
-            if (!item["signName"] || item["signName"].length === 0) {
+            if (!item['signName'] || item['signName'].length === 0) {
               this.isEdit.fill(true);
-            } else if (item["signName"] && item["signName"].length > 0) {
-              item["signName"].map((item) => {
+            } else if (item['signName'] && item['signName'].length > 0) {
+              item['signName'].map((item) => {
                 this.$set(this.isEdit, item, true);
               });
             }
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
@@ -400,12 +400,12 @@ export default {
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -416,13 +416,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -442,29 +442,29 @@ export default {
       let materialNameIndex = -1;
       let codeIndex = -1;
       this.tableColumns[2].forEach((item, index) => {
-        if (item["prop"] === "MaterialName") {
+        if (item['prop'] === 'MaterialName') {
           materialNameIndex = index;
-        } else if (item["prop"] === "Code") {
+        } else if (item['prop'] === 'Code') {
           codeIndex = index;
         }
       });
       if (Number(this.selectedIndex) === 0) {
-        this.formSearchs[2].datas["MaterialTypeID"] = null;
-        this.formSearchs[2].datas["ProductPlatformType"] = "产品";
+        this.formSearchs[2].datas['MaterialTypeID'] = null;
+        this.formSearchs[2].datas['ProductPlatformType'] = '产品';
         if (materialNameIndex !== -1) {
-          this.$set(this.tableColumns[2][materialNameIndex], "visible", true);
+          this.$set(this.tableColumns[2][materialNameIndex], 'visible', true);
         }
         if (codeIndex !== -1) {
-          this.$set(this.tableColumns[2][codeIndex], "visible", true);
+          this.$set(this.tableColumns[2][codeIndex], 'visible', true);
         }
       } else if (Number(this.selectedIndex) === 1) {
-        this.formSearchs[2].datas["MaterialID"] = null;
-        this.formSearchs[2].datas["ProductPlatformType"] = "产品族";
+        this.formSearchs[2].datas['MaterialID'] = null;
+        this.formSearchs[2].datas['ProductPlatformType'] = '产品族';
         if (materialNameIndex !== -1) {
-          this.$set(this.tableColumns[2][materialNameIndex], "visible", false);
+          this.$set(this.tableColumns[2][materialNameIndex], 'visible', false);
         }
         if (codeIndex !== -1) {
-          this.$set(this.tableColumns[2][codeIndex], "visible", false);
+          this.$set(this.tableColumns[2][codeIndex], 'visible', false);
         }
       }
       this.dataSearch(Number(this.selectedIndex));
@@ -485,7 +485,7 @@ export default {
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
-      console.log(this.isClear, "this.isClear");
+      console.log(this.isClear, 'this.isClear');
       this.tablePagination[remarkTb].pageIndex = 1;
       await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
@@ -495,7 +495,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -511,10 +511,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -544,8 +544,8 @@ export default {
         }
       }
       if (changeRecords.length == 0) {
-        this.$set(this, "adminLoading", false);
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
       if (changeRecords.length > 0 && remarkTb === 0) {
@@ -553,10 +553,10 @@ export default {
           // 动态检验必填项
           changeRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2["prop"]];
+              let content = item1[item2['prop']];
               if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(`${item2["label"]}不能为空，请选择`);
-                this.$set(this, "adminLoading", false);
+                this.$message.error(`${item2['label']}不能为空，请选择`);
+                this.$set(this, 'adminLoading', false);
                 return;
               }
             });
@@ -590,22 +590,22 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         if (remarkTb === 0 || remarkTb === 1) {
-          this.formSearchs[2].datas["MaterialID"] = null;
-          this.formSearchs[2].datas["MaterialTypeID"] = null;
+          this.formSearchs[2].datas['MaterialID'] = null;
+          this.formSearchs[2].datas['MaterialTypeID'] = null;
         }
         await this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 获取表头数据
@@ -625,7 +625,7 @@ export default {
               });
             }
             //从列获取下拉数据源
-            if (n.DataSourceID && n.ControlType === "combobox" && i === 0) {
+            if (n.DataSourceID && n.ControlType === 'combobox' && i === 0) {
               this.DataSourceList[i] = {
                 [n.DataSourceName]: n.items,
                 ...this.DataSourceList[i],
@@ -635,9 +635,9 @@ export default {
               this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
-              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -654,16 +654,16 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z], "formsAll", formsAll[z]);
+          this.$set(this.formSearchs[z], 'forms', x);
+          this.$set(this.formSearchs[z], 'formsAll', formsAll[z]);
         });
         await this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
@@ -673,19 +673,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
@@ -732,11 +732,11 @@ export default {
         // }
         // }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -744,11 +744,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -757,18 +757,18 @@ export default {
     async selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
       if (remarkTb === 0) {
-        this.formSearchs[2].datas["MaterialID"] = null;
-        this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
-          .map((item) => item["MaterialID"])
-          .join(",");
+        this.formSearchs[2].datas['MaterialID'] = null;
+        this.formSearchs[2].datas['MaterialID'] = this.selectionData[remarkTb]
+          .map((item) => item['MaterialID'])
+          .join(',');
         await this.dataSearch(2);
       } else if (remarkTb === 1) {
-        this.formSearchs[2].datas["MaterialTypeID"] = null;
-        this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
+        this.formSearchs[2].datas['MaterialTypeID'] = null;
+        this.formSearchs[2].datas['MaterialTypeID'] = this.selectionData[
           remarkTb
         ]
-          .map((item) => item["MaterialTypeID"])
-          .join(",");
+          .map((item) => item['MaterialTypeID'])
+          .join(',');
         await this.dataSearch(2);
       }
     },
@@ -776,18 +776,18 @@ export default {
     async handleRowClick(data, remarkTb) {
       this.selectionData[remarkTb] = data;
       if (remarkTb === 0) {
-        this.formSearchs[2].datas["MaterialID"] = null;
-        this.formSearchs[2].datas["MaterialID"] = this.selectionData[remarkTb]
-          .map((item) => item["MaterialID"])
-          .join(",");
+        this.formSearchs[2].datas['MaterialID'] = null;
+        this.formSearchs[2].datas['MaterialID'] = this.selectionData[remarkTb]
+          .map((item) => item['MaterialID'])
+          .join(',');
         await this.dataSearch(2);
       } else if (remarkTb === 1) {
-        this.formSearchs[2].datas["MaterialTypeID"] = null;
-        this.formSearchs[2].datas["MaterialTypeID"] = this.selectionData[
+        this.formSearchs[2].datas['MaterialTypeID'] = null;
+        this.formSearchs[2].datas['MaterialTypeID'] = this.selectionData[
           remarkTb
         ]
-          .map((item) => item["MaterialTypeID"])
-          .join(",");
+          .map((item) => item['MaterialTypeID'])
+          .join(',');
         await this.dataSearch(2);
       }
     },
@@ -796,19 +796,19 @@ export default {
       // 获取修改记录
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (!this.addNum) {
-        this.$message.error("请输入需要添加的行数!");
+        this.$message.error('请输入需要添加的行数!');
         return;
       }
       // 下拉数据是需要获取数据源
       for (let x = 0; x < this.addNum; x++) {
         let obj = {
-          dicID: this.sysID[remarkTb]["ID"],
+          dicID: this.sysID[remarkTb]['ID'],
           RowNumber: _.uniqueId(),
         };
         this.tableColumns[remarkTb].map((item) => {
           obj[item.prop] = null;
-          obj["update"] = true;
-          if (item.prop === "Status") {
+          obj['update'] = true;
+          if (item.prop === 'Status') {
             obj[item.prop] = 1;
           }
           for (let key in this.DataSourceList[remarkTb]) {
@@ -822,7 +822,7 @@ export default {
     },
     LinkLine(remarkTb) {
       if (this.selectionData[Number(this.selectedIndex)].length === 0) {
-        this.$message.error("请选择需要绑定的数据！");
+        this.$message.error('请选择需要绑定的数据！');
         return;
       }
       this.colDialogVisible3 = true;
@@ -831,7 +831,7 @@ export default {
     //添加产品机台
     async confirmDialog(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       // const hasSchedulingSpecialType = this.selectionData[remarkTb].some(
@@ -847,10 +847,10 @@ export default {
           let addData = JSON.parse(
             JSON.stringify(
               this.selectionData[remarkTb].filter((item3) => {
-                if (item0["OrganizeIDs"]) {
-                  let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
-                  console.log(item3["OrganizeID"]);
-                  return !OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
+                if (item0['OrganizeIDs']) {
+                  let OrganizeIDs = item0['OrganizeIDs']?.split(',');
+                  console.log(item3['OrganizeID']);
+                  return !OrganizeIDs.some((OID) => OID == item3['OrganizeID']);
                 } else {
                   return true;
                 }
@@ -858,11 +858,11 @@ export default {
             ),
           );
           addData.forEach((item) => {
-            item["dicID"] = 125;
+            item['dicID'] = 125;
             if (Number(this.selectedIndex) === 0) {
-              item["MaterialID"] = item0["MaterialID"];
+              item['MaterialID'] = item0['MaterialID'];
             } else if (Number(this.selectedIndex) === 1) {
-              item["MaterialTypeID"] = item0["MaterialTypeID"];
+              item['MaterialTypeID'] = item0['MaterialTypeID'];
             }
           });
           newData = newData.concat(addData);
@@ -874,7 +874,7 @@ export default {
     //删除产品机台
     async cancelDialog(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       let newData = [];
@@ -883,29 +883,29 @@ export default {
           let addData = JSON.parse(
             JSON.stringify(
               this.selectionData[remarkTb].filter((item3) => {
-                if (item0["OrganizeIDs"]) {
-                  let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
-                  return OrganizeIDs.some((OID) => OID == item3["OrganizeID"]);
+                if (item0['OrganizeIDs']) {
+                  let OrganizeIDs = item0['OrganizeIDs']?.split(',');
+                  return OrganizeIDs.some((OID) => OID == item3['OrganizeID']);
                 } else {
                   return false;
                 }
               }),
             ),
           );
-          let OrganizeIDs = item0["OrganizeIDs"]?.split(",");
-          let SchedulingSpecialIDs = item0["SchedulingSpecialIDs"]?.split(",");
+          let OrganizeIDs = item0['OrganizeIDs']?.split(',');
+          let SchedulingSpecialIDs = item0['SchedulingSpecialIDs']?.split(',');
           addData.forEach((item) => {
-            item["dicID"] = 125;
+            item['dicID'] = 125;
             let newIndex = OrganizeIDs.findIndex((OID) => {
-              return item["OrganizeID"] == OID;
+              return item['OrganizeID'] == OID;
             });
-            item["SchedulingSpecialID"] = SchedulingSpecialIDs[newIndex];
+            item['SchedulingSpecialID'] = SchedulingSpecialIDs[newIndex];
             if (Number(this.selectedIndex) === 0) {
-              item["MaterialID"] = item0["MaterialID"];
-              item["ElementDeleteFlag"] = 1;
+              item['MaterialID'] = item0['MaterialID'];
+              item['ElementDeleteFlag'] = 1;
             } else if (Number(this.selectedIndex) === 1) {
-              item["MaterialTypeID"] = item0["MaterialTypeID"];
-              item["ElementDeleteFlag"] = 1;
+              item['MaterialTypeID'] = item0['MaterialTypeID'];
+              item['ElementDeleteFlag'] = 1;
             }
           });
           newData = newData.concat(addData);
@@ -918,16 +918,16 @@ export default {
     async dataDel(remarkTb, index, parms) {
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
-          obj["ElementDeleteFlag"] = 1;
+          obj['ElementDeleteFlag'] = 1;
           newData.push(obj);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -946,10 +946,10 @@ export default {
       sheet.setDataSource(this.tableData[remarkTb]);
       // 渲染列
       this.tableColumns[remarkTb].forEach((x, y) => {
-        x["name"] = x["prop"];
-        x["displayName"] = x["label"];
-        x["width"] = parseInt(x.width);
-        if (x.prop === "isChecked") {
+        x['name'] = x['prop'];
+        x['displayName'] = x['label'];
+        x['width'] = parseInt(x.width);
+        if (x.prop === 'isChecked') {
           // 选框
           sheet.setCellType(
             0,
@@ -959,8 +959,8 @@ export default {
           );
           x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
         } else if (
-          x.ControlType === "comboboxMultiple" ||
-          x.ControlType === "combobox"
+          x.ControlType === 'comboboxMultiple' ||
+          x.ControlType === 'combobox'
         ) {
           this.tableData[remarkTb].map((item, index) => {
             if (x.DataSourceID && x.DataSourceName) {
@@ -980,28 +980,28 @@ export default {
               cell.cellType(comboBox);
             }
           });
-        } else if (x.ControlType === "checkbox") {
+        } else if (x.ControlType === 'checkbox') {
           let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-          cellType.caption("");
-          cellType.textTrue("");
-          cellType.textFalse("");
-          cellType.textIndeterminate("");
+          cellType.caption('');
+          cellType.textTrue('');
+          cellType.textFalse('');
+          cellType.textIndeterminate('');
           cellType.textAlign(
             GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
           );
           cellType.isThreeState(false);
           sheet.getCell(-1, y).cellType(cellType);
         } else if (
-          x.DataType == "datetime" ||
-          x.DataType === "varchar" ||
-          x.DataType === "nvarchar"
+          x.DataType == 'datetime' ||
+          x.DataType === 'varchar' ||
+          x.DataType === 'nvarchar'
         ) {
-          x.formatter = "@";
+          x.formatter = '@';
         }
 
         //行，start,end
         if (x.isEdit) {
-          sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
+          sheet.getCell(-1, y).locked(false).foreColor('#2a06ecd9');
         }
       });
       //渲染列
@@ -1013,23 +1013,23 @@ export default {
 
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
-        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
       defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-        "gray",
+        'gray',
         GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-        "gray",
+        'gray',
         GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-        "gray",
+        'gray',
         GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-        "gray",
+        'gray',
         GC.Spread.Sheets.LineStyle.thin,
       );
       defaultStyle.showEllipsis = true;
@@ -1068,10 +1068,10 @@ export default {
       let lineIDIndex = 0;
       this.tableColumns[remarkTb].forEach((m) => {
         //行，start,end
-        if (m.prop == "ViewSort") {
+        if (m.prop == 'ViewSort') {
           viewSortIndex = cellIndex;
         }
-        if (m.prop == "LineID") {
+        if (m.prop == 'LineID') {
           lineIDIndex = cellIndex;
         }
         //行，start,end

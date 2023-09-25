@@ -271,18 +271,18 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import ComFormDialog from "@/components/ComFormDialog";
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import ComFormDialog from '@/components/ComFormDialog';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   UpdateProcess,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "ProcessInfo",
+  name: 'ProcessInfo',
   components: {
     ComSearch,
     ComUmyTable,
@@ -296,7 +296,7 @@ export default {
       processDialog: false,
       adminLoading: false,
       title: this.$route.meta.title,
-      title2: "工序列表",
+      title2: '工序列表',
       drawer: false,
       formSearchs: [
         {
@@ -324,58 +324,58 @@ export default {
       parmsBtn: [
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
           },
           {
-            ButtonCode: "delete",
-            BtnName: "删除",
-            Type: "danger",
+            ButtonCode: 'delete',
+            BtnName: '删除',
+            Type: 'danger',
             Ghost: true,
-            Size: "small",
-            Methods: "dataDel",
-            Params: { dataName: "selectionData" },
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataDel',
+            Params: { dataName: 'selectionData' },
+            Icon: '',
           },
         ],
         [],
         [],
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
             Params: {},
           },
         ],
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
           },
           {
-            ButtonCode: "delete",
-            BtnName: "删除",
-            Type: "danger",
+            ButtonCode: 'delete',
+            BtnName: '删除',
+            Type: 'danger',
             Ghost: true,
-            Size: "small",
-            Methods: "dataDel",
-            Params: { dataName: "selectionData" },
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataDel',
+            Params: { dataName: 'selectionData' },
+            Icon: '',
           },
         ],
       ],
@@ -393,7 +393,7 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
       delData: [[], [], [], [], []],
-      height: "300px",
+      height: '300px',
       showPagination: true,
       tagRemark: 0,
       isLoading: [false, false, false, false, false],
@@ -401,90 +401,90 @@ export default {
       Region: [5, 5, 5, 5, 1],
       isEdit: false,
       Status1: [
-        { label: "全部", value: "" },
-        { label: "未配工序", value: "" },
+        { label: '全部', value: '' },
+        { label: '未配工序', value: '' },
       ],
       Status2: [
-        { label: "配置工序", value: 1, title: "工序列表" },
-        { label: "关联产品", value: 2, title: "产品列表" },
-        { label: "工序产能", value: 3, title: "工序产能列表" },
+        { label: '配置工序', value: 1, title: '工序列表' },
+        { label: '关联产品', value: 2, title: '产品列表' },
+        { label: '工序产能', value: 3, title: '工序产能列表' },
       ],
       labelStatus1: 0,
       labelStatus2: 1,
-      currentRow: "",
+      currentRow: '',
       //////////////新增弹框//////////////
       formData: {
-        ProcessGroupName: "",
-        ProcessGroupID: "",
-        Remark1: "",
+        ProcessGroupName: '',
+        ProcessGroupID: '',
+        Remark1: '',
         Status: 1,
         dicID: 1175,
       },
       formData2: {
-        ProcessName: "",
-        ProcessID: "",
-        SchedulingType: "",
+        ProcessName: '',
+        ProcessID: '',
+        SchedulingType: '',
         IsScheduling: true,
         IsAcquisition: true,
         Status: 1,
         dicID: 1182,
       },
       formController: [
-        { label: "工艺名称", prop: "ProcessGroupName", type: "input" },
-        { label: "发料方式", prop: "Remark1", type: "input" },
+        { label: '工艺名称', prop: 'ProcessGroupName', type: 'input' },
+        { label: '发料方式', prop: 'Remark1', type: 'input' },
         {
-          label: "状态",
-          prop: "Status",
-          type: "radioGroupLabel",
+          label: '状态',
+          prop: 'Status',
+          type: 'radioGroupLabel',
           radioGroups: [
-            { label: "启用", value: 1 },
-            { label: "禁用", value: 0 },
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
           ],
         },
       ],
       formController2: [
-        { label: "工序名称", prop: "ProcessName", type: "input" },
+        { label: '工序名称', prop: 'ProcessName', type: 'input' },
         {
-          label: "排产方式",
-          prop: "SchedulingType",
-          type: "select",
+          label: '排产方式',
+          prop: 'SchedulingType',
+          type: 'select',
           select: [
-            { label: "产线", value: "产线" },
-            { label: "机台", value: "机台" },
-            { label: "机模", value: "机模" },
+            { label: '产线', value: '产线' },
+            { label: '机台', value: '机台' },
+            { label: '机模', value: '机模' },
           ],
         },
         {
-          label: "是否排产",
-          prop: "IsScheduling",
-          type: "switch",
+          label: '是否排产',
+          prop: 'IsScheduling',
+          type: 'switch',
         },
         {
-          label: "是否采集",
-          prop: "IsAcquisition",
-          type: "switch",
+          label: '是否采集',
+          prop: 'IsAcquisition',
+          type: 'switch',
         },
         {
-          label: "状态",
-          prop: "Status",
-          type: "radioGroupLabel",
+          label: '状态',
+          prop: 'Status',
+          type: 'radioGroupLabel',
           radioGroups: [
-            { label: "启用", value: 1 },
-            { label: "禁用", value: 0 },
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
           ],
         },
       ],
       formRules: {
         ProcessGroupName: [
-          { required: true, message: "工艺名称为必填项", trigger: "blur" },
+          { required: true, message: '工艺名称为必填项', trigger: 'blur' },
         ],
       },
       formRules2: {
         ProcessGroupName: [
-          { required: true, message: "工序名称为必填项", trigger: "blur" },
+          { required: true, message: '工序名称为必填项', trigger: 'blur' },
         ],
         SchedulingType: [
-          { required: true, message: "排产方式为必填项", trigger: "change" },
+          { required: true, message: '排产方式为必填项', trigger: 'change' },
         ],
       },
     };
@@ -511,7 +511,7 @@ export default {
           let newBtn = [];
           let newData = [];
           routeBtn.forEach((x) => {
-            if (x.ButtonCode == "edit") {
+            if (x.ButtonCode == 'edit') {
               permission = true;
             }
             if (this.parmsBtn[i].length != 0) {
@@ -526,7 +526,7 @@ export default {
           this.$set(this.btnForm, i, newBtn);
         }
       }
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -539,20 +539,20 @@ export default {
         headHeight2 -
         this.$store.getters.reduceHeight;
       if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem - 7 + "px";
+        newHeight = rem - 7 + 'px';
       } else {
-        newHeight = rem - 10 + "px";
+        newHeight = rem - 10 + 'px';
       }
       this.height = newHeight;
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 滚动
@@ -567,13 +567,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -611,7 +611,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -620,10 +620,10 @@ export default {
     async dataExport(remarkTb) {
       this.isLoading[remarkTb] = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.isLoading[remarkTb] = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -631,25 +631,25 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请勾选需要操作的数据！");
+          this.$message.error('请勾选需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
-          _this.$set(_this.btnForm[remarkTb][index], "isLoading", true);
+          _this.$set(_this.btnForm[remarkTb][index], 'isLoading', true);
           _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {});
@@ -663,14 +663,14 @@ export default {
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -686,7 +686,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -694,7 +694,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
 
@@ -706,7 +706,7 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
+          this.$message.error('请选择需要操作的数据！');
           return;
         } else {
           newData = this.selectionData[remarkTb];
@@ -724,9 +724,9 @@ export default {
               // 全删
               obj.ToList.forEach((y, j) => {
                 let row = {};
-                row["ElementDeleteFlag"] = 1;
-                row["dicID"] = 7900;
-                row["ProcessConcatLevelTwoID"] =
+                row['ElementDeleteFlag'] = 1;
+                row['dicID'] = 7900;
+                row['ProcessConcatLevelTwoID'] =
                   obj.ProcessConcatLevelTwoIDs[j];
                 newData_2.push(row);
               });
@@ -738,32 +738,32 @@ export default {
               // 全增
               obj.LevelIDs.forEach((y) => {
                 let row = {};
-                row["ProcessID"] = obj.ProcessID;
-                row["LevelTwoProcessID"] = y;
-                let newTag = obj["二级工序"].filter(
-                  (v) => v.LevelTwoProcessID == y
+                row['ProcessID'] = obj.ProcessID;
+                row['LevelTwoProcessID'] = y;
+                let newTag = obj['二级工序'].filter(
+                  (v) => v.LevelTwoProcessID == y,
                 );
-                row["LevelTwoProcessName"] = newTag[0].LevelTwoProcessName;
-                row["dicID"] = 7900;
+                row['LevelTwoProcessName'] = newTag[0].LevelTwoProcessName;
+                row['dicID'] = 7900;
                 newData_2.push(row);
               });
             } else {
               let Data1 = obj.LevelIDs.filter(
-                (w) => !obj.ToList.some((q) => q == w)
+                (w) => !obj.ToList.some((q) => q == w),
               ); //新增
               let Data2 = obj.ToList.filter(
-                (c) => !obj.LevelIDs.some((z) => c == z)
+                (c) => !obj.LevelIDs.some((z) => c == z),
               ); //删除
               if (Data1.length != 0) {
                 Data1.forEach((a) => {
                   let row1 = {};
-                  row1["LevelTwoProcessID"] = a;
-                  row1["ProcessID"] = obj.ProcessID;
-                  let newTag = obj["二级工序"].filter(
-                    (v) => v.LevelTwoProcessID == a
+                  row1['LevelTwoProcessID'] = a;
+                  row1['ProcessID'] = obj.ProcessID;
+                  let newTag = obj['二级工序'].filter(
+                    (v) => v.LevelTwoProcessID == a,
                   );
-                  row1["LevelTwoProcessName"] = newTag[0].LevelTwoProcessName;
-                  row1["dicID"] = 7900;
+                  row1['LevelTwoProcessName'] = newTag[0].LevelTwoProcessName;
+                  row1['dicID'] = 7900;
                   newData_2.push(row1);
                 });
               }
@@ -774,10 +774,10 @@ export default {
                     return w == b;
                   });
                   debugger;
-                  row2["ElementDeleteFlag"] = 1;
-                  row2["ProcessConcatLevelTwoID"] =
+                  row2['ElementDeleteFlag'] = 1;
+                  row2['ProcessConcatLevelTwoID'] =
                     obj.ProcessConcatLevelTwoIDs[newIndex];
-                  row2["dicID"] = 7900;
+                  row2['dicID'] = 7900;
                   newData_2.push(row2);
                 });
               }
@@ -793,7 +793,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -801,7 +801,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -829,25 +829,25 @@ export default {
               });
             }
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
-              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           // 判断查询的长度
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
         this.getTableData(this.formSearchs[0].datas, 0);
@@ -855,7 +855,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -882,7 +882,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -891,19 +891,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
@@ -911,17 +911,17 @@ export default {
           if (data.length != 0) {
             data.forEach((a) => {
               if (a.LevelIDs) {
-                a.LevelIDs = a.LevelIDs.split(",");
-                a.LevelIDs = JSON.parse("[" + String(a.LevelIDs) + "]");
-                this.$set(a, "ToList", a.LevelIDs);
+                a.LevelIDs = a.LevelIDs.split(',');
+                a.LevelIDs = JSON.parse('[' + String(a.LevelIDs) + ']');
+                this.$set(a, 'ToList', a.LevelIDs);
               } else {
                 a.LevelIDs = [];
-                this.$set(a, "ToList", []);
+                this.$set(a, 'ToList', []);
               }
 
               if (a.ProcessConcatLevelTwoIDs) {
                 a.ProcessConcatLevelTwoIDs =
-                  a.ProcessConcatLevelTwoIDs.split(",");
+                  a.ProcessConcatLevelTwoIDs.split(',');
               } else {
                 a.ProcessConcatLevelTwoIDs = [];
               }
@@ -931,11 +931,11 @@ export default {
 
         this.$set(this.tableData, remarkTb, data);
 
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -945,9 +945,9 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       if (index == 0) {
-        this.formSearchs[0].datas["ProcessCount"] = "";
+        this.formSearchs[0].datas['ProcessCount'] = '';
       } else {
-        this.formSearchs[0].datas["ProcessCount"] = 0;
+        this.formSearchs[0].datas['ProcessCount'] = 0;
       }
       this.dataSearch(0);
     },
@@ -962,7 +962,7 @@ export default {
     // 单击获取工艺
     handleRowClick(row, remarkTb) {
       this.currentRow = row;
-      this.formSearchs[1].datas["ProcessGroupID"] = row.ProcessGroupID;
+      this.formSearchs[1].datas['ProcessGroupID'] = row.ProcessGroupID;
       this.dataSearch(1);
     },
     // 新增工艺
@@ -978,9 +978,9 @@ export default {
         ? (this.loseCategory = 0)
         : (this.loseCategory = 1);
       if (this.loseCategory == 0) {
-        this.formSearchs[2].datas["ProcessCount"] = 0;
+        this.formSearchs[2].datas['ProcessCount'] = 0;
       } else {
-        this.formSearchs[2].datas["ProcessCount"] = "";
+        this.formSearchs[2].datas['ProcessCount'] = '';
       }
       this.dataSearch(2);
     },
@@ -992,14 +992,14 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -1017,14 +1017,14 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(4);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -1037,9 +1037,9 @@ export default {
     // 向右往工艺添加工序
     addProcess() {
       if (this.selectionData[4].length == 0) {
-        this.$message.error("请勾选工序！");
+        this.$message.error('请勾选工序！');
       } else if (!this.currentRow) {
-        this.$message.error("请单击选择工艺！");
+        this.$message.error('请单击选择工艺！');
       } else {
         this.selectionData[4].forEach((x) => {
           if (
@@ -1048,13 +1048,13 @@ export default {
             }) == -1
           ) {
             let obj = JSON.parse(JSON.stringify(x));
-            obj["ProcessGroupInfoID"] = "";
-            obj["IsAdd"] = true;
-            obj["dicID"] = 1176;
-            obj["ProcessGroupID"] = this.currentRow.ProcessGroupID;
-            obj["ProcessGroupName"] = this.currentRow.ProcessGroupName;
-            obj["ProcessGroupName"] = this.currentRow.ProcessGroupName;
-            obj["IsScheduling"] = true;
+            obj['ProcessGroupInfoID'] = '';
+            obj['IsAdd'] = true;
+            obj['dicID'] = 1176;
+            obj['ProcessGroupID'] = this.currentRow.ProcessGroupID;
+            obj['ProcessGroupName'] = this.currentRow.ProcessGroupName;
+            obj['ProcessGroupName'] = this.currentRow.ProcessGroupName;
+            obj['IsScheduling'] = true;
             this.tableData[1].unshift(obj);
           }
         });
@@ -1070,8 +1070,8 @@ export default {
           childrens.push(x);
         }
       });
-      this.currentRow["childrens"] = childrens;
-      this.currentRow["dicID"] = 1175;
+      this.currentRow['childrens'] = childrens;
+      this.currentRow['dicID'] = 1175;
       let newData = [];
       newData.push(this.currentRow);
       this.generalSaveData(newData, 1, 0);
@@ -1084,9 +1084,9 @@ export default {
     // 产品与工艺关联
     setContact() {
       if (this.selectionData[2].length == 0) {
-        this.$message.error("请勾选产品！");
+        this.$message.error('请勾选产品！');
       } else if (!this.currentRow) {
-        this.$message.error("请单击选择工艺！");
+        this.$message.error('请单击选择工艺！');
       } else {
         this.selectionData[2].some((x, i) => {
           let obj = {
@@ -1105,7 +1105,7 @@ export default {
         if (i == this.selectionData[2].length - 1) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(2);
@@ -1113,26 +1113,26 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     // 编辑
     editRow(row, index, remarkTb) {
-      this.$set(row, "update", true);
+      this.$set(row, 'update', true);
     },
     // 删除
     delRow(row, index, remarkTb) {
-      if (row["IsAdd"]) {
+      if (row['IsAdd']) {
         this.tableData[remarkTb].splice(index, 1);
       } else {
-        this.$confirm("有新添加的工序要先保存哟，确定要删除这条数据吗？")
+        this.$confirm('有新添加的工序要先保存哟，确定要删除这条数据吗？')
           .then((_) => {
             let childrens = [];
-            row["ElementDeleteFlag"] = 1;
-            row["ProcessGroupID"] = this.currentRow.ProcessGroupID;
-            this.currentRow["childrens"] = childrens;
+            row['ElementDeleteFlag'] = 1;
+            row['ProcessGroupID'] = this.currentRow.ProcessGroupID;
+            this.currentRow['childrens'] = childrens;
             let newData = [];
             newData.push(_this.currentRow);
             _this.generalSaveData(newData, 2, 0);

@@ -66,24 +66,24 @@
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComSpreadTable from "@/components/ComSpreadTable";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '@grapecity/spread-sheets/js/zh.js';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComSpreadTable from '@/components/ComSpreadTable';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetSearch,
-} from "@/api/Common";
-import DialogTable from "@/components/Dialog/dialogTable";
+} from '@/api/Common';
+import DialogTable from '@/components/Dialog/dialogTable';
 export default {
-  name: "POOrderUpdate",
+  name: 'POOrderUpdate',
   components: {
     ComSearch,
     ComVxeTable,
@@ -95,7 +95,7 @@ export default {
       dialogSearchForm: {},
       colDialogVisible: false,
       ////////////////// Search /////////////////
-      footerLabel: ["", "", "", "", "", "", ""],
+      footerLabel: ['', '', '', '', '', '', ''],
       sysID: [
         { ID: 5156 },
         { ID: 5615 },
@@ -114,11 +114,11 @@ export default {
       // ],
       title: this.$route.meta.title,
       labelStatus1: 0,
-      PrepareDate: "",
+      PrepareDate: '',
       adminLoading: false,
       checkdBtnCodes: [],
       drawer: false,
-      height: "707px",
+      height: '707px',
       formSearchs: [
         {
           datas: {},
@@ -167,7 +167,7 @@ export default {
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -180,7 +180,7 @@ export default {
       losePrepareDate2: 1,
       ruleForm: {
         LineIDs: [],
-        ProducedDate: "",
+        ProducedDate: '',
       },
       lines: [],
     };
@@ -208,11 +208,11 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+          if (item.ButtonCode == 'save') {
+            this.$set(this, 'isEdit', true);
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
@@ -226,7 +226,7 @@ export default {
     // 跳转至页面配置
     toPageSetting(id) {
       this.$router.push({
-        name: "FieldInfo",
+        name: 'FieldInfo',
         params: {
           ID: id,
         },
@@ -242,21 +242,21 @@ export default {
         sheet.reset();
         // 渲染列
         this.tableColumns[remarkTb].forEach((x, y) => {
-          x["name"] = x["prop"];
-          x["displayName"] = x["label"];
-          x["width"] = parseInt(x.width);
-          if (x.prop === "isChecked") {
+          x['name'] = x['prop'];
+          x['displayName'] = x['label'];
+          x['width'] = parseInt(x.width);
+          if (x.prop === 'isChecked') {
             // 选框
             sheet.setCellType(
               0,
               0,
               new HeaderCheckBoxCellType(),
-              GCsheets.SheetArea.colHeader
+              GCsheets.SheetArea.colHeader,
             );
             x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
           } else if (
-            x.ControlType === "comboboxMultiple" ||
-            x.ControlType === "combobox"
+            x.ControlType === 'comboboxMultiple' ||
+            x.ControlType === 'combobox'
           ) {
             // colInfos.push({
             //   name: x.prop,
@@ -273,11 +273,11 @@ export default {
               }
             });
           } else if (
-            x.DataType == "datetime" ||
-            x.DataType === "varchar" ||
-            x.DataType === "nvarchar"
+            x.DataType == 'datetime' ||
+            x.DataType === 'varchar' ||
+            x.DataType === 'nvarchar'
           ) {
-            x.formatter = "@";
+            x.formatter = '@';
             // colInfos.push({
             //   name: x.prop,
             //   displayName: x.label,
@@ -288,7 +288,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor('#2a06ecd9');
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -308,38 +308,38 @@ export default {
           this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
             // 获取当前单元格
             const cell = sheet.getCell(rowIndex, columnIndex);
-            cell.foreColor("black");
-            cell.backColor("white");
-            if (columnItem["isEdit"]) {
-              cell.locked(false).foreColor("#2a06ecd9");
+            cell.foreColor('black');
+            cell.backColor('white');
+            if (columnItem['isEdit']) {
+              cell.locked(false).foreColor('#2a06ecd9');
             }
             if (
-              Object.prototype.toString.call(rowItem["FColors"]) ===
-              "[object Object]"
+              Object.prototype.toString.call(rowItem['FColors']) ===
+              '[object Object]'
             ) {
-              Object.keys(rowItem["FColors"]).forEach((key) => {
+              Object.keys(rowItem['FColors']).forEach((key) => {
                 const columnIndex = this.tableColumns[0].findIndex(
-                  (columnItem) => columnItem.prop === key
+                  (columnItem) => columnItem.prop === key,
                 );
                 if (columnIndex !== -1) {
                   // 这里使用 rowIndex 和 columnIndex 获取单元格
                   const cell = sheet.getCell(rowIndex, columnIndex);
-                  cell.foreColor(rowItem["FColors"][key]);
+                  cell.foreColor(rowItem['FColors'][key]);
                 }
               });
             }
             if (
-              Object.prototype.toString.call(rowItem["BColors"]) ===
-              "[object Object]"
+              Object.prototype.toString.call(rowItem['BColors']) ===
+              '[object Object]'
             ) {
-              Object.keys(rowItem["BColors"]).forEach((key) => {
+              Object.keys(rowItem['BColors']).forEach((key) => {
                 const columnIndex = this.tableColumns[0].findIndex(
-                  (columnItem) => columnItem.prop === key
+                  (columnItem) => columnItem.prop === key,
                 );
                 if (columnIndex !== -1) {
                   // 这里使用 rowIndex 和 columnIndex 获取单元格
                   const cell = sheet.getCell(rowIndex, columnIndex);
-                  cell.backColor(rowItem["BColors"][key]);
+                  cell.backColor(rowItem['BColors'][key]);
                 }
               });
             }
@@ -354,10 +354,10 @@ export default {
           -1,
           -1,
           -1,
-          this.tableColumns[remarkTb].length
+          this.tableColumns[remarkTb].length,
         );
         let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange
+          cellrange,
         );
         sheet.rowFilter(hideRowFilter);
 
@@ -374,12 +374,12 @@ export default {
           -1,
           1,
           -1,
-          GC.Spread.Sheets.SheetArea.colHeader
+          GC.Spread.Sheets.SheetArea.colHeader,
         );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.foreColor('000000d9');
+        colHeaderStyle.backColor('#f3f3f3');
         colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif',
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
@@ -387,12 +387,12 @@ export default {
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport
+          GC.Spread.Sheets.SheetArea.viewport,
         );
         defaultStyle.showEllipsis = true;
         // 冻结
@@ -417,7 +417,7 @@ export default {
         sheet.options.protectionOptions.allowFilter = true;
         sheet.options.allowUserDragDrop = true;
       } catch (error) {
-        console.log("表格渲染的错误信息:", error);
+        console.log('表格渲染的错误信息:', error);
       }
       // this.spread[remarkTb].refresh(); //重新定位宽高度
     },
@@ -428,7 +428,7 @@ export default {
       // 创建下拉菜单单元格类型，并设置其选项数据
       let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
       comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
+        GC.Spread.Sheets.CellTypes.EditorValueType.value,
       );
       comboBox.editable(true);
       // 获取下拉菜单的选项数据
@@ -459,16 +459,16 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {
-      this.$set(row, "update", true);
+      this.$set(row, 'update', true);
     },
     // 删除行
     delRow(row) {
-      this.$confirm("确定要删除该菜单嘛？")
+      this.$confirm('确定要删除该菜单嘛？')
         .then((_) => {})
         .catch((_) => {});
     },
@@ -479,12 +479,12 @@ export default {
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -495,13 +495,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -535,7 +535,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -549,18 +549,18 @@ export default {
     },
     // 行内样式
     cellStyle0({ row, column }) {
-      if (column.property == "IsCompleteInspect") {
-        if (row.IsCompleteInspect == "未开始") {
+      if (column.property == 'IsCompleteInspect') {
+        if (row.IsCompleteInspect == '未开始') {
           return {
-            backgroundColor: "#ff7b7b",
+            backgroundColor: '#ff7b7b',
           };
-        } else if (row.IsCompleteInspect == "进行中") {
+        } else if (row.IsCompleteInspect == '进行中') {
           return {
-            backgroundColor: "#fdfd8f",
+            backgroundColor: '#fdfd8f',
           };
-        } else if (row.IsCompleteInspect == "已完成") {
+        } else if (row.IsCompleteInspect == '已完成') {
           return {
-            backgroundColor: "#9fff9f",
+            backgroundColor: '#9fff9f',
           };
         }
       }
@@ -569,10 +569,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存返回结果自己处理事件
     async returnResultData(newData) {
@@ -589,24 +589,24 @@ export default {
         datas.some((m, i) => {
           m.some((n, index) => {
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
-              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
 
@@ -617,19 +617,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       this.$set(this.tableLoading, remarkTb, false);
@@ -642,11 +642,11 @@ export default {
 
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -672,13 +672,13 @@ export default {
         this.dataSearch(1);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }

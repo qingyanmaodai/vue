@@ -86,7 +86,7 @@
 var _this;
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import ComSearch from '@/components/ComSearch';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';

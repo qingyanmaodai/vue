@@ -60,9 +60,9 @@
  * 支持条件查询
  */
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import { GetSearchData, GetHeader, ExportData } from "@/api/Common";
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import { GetSearchData, GetHeader, ExportData } from '@/api/Common';
 export default {
   components: { ComVxeTable, ComSearch },
   props: {
@@ -110,12 +110,12 @@ export default {
     //弹框的标题
     title: {
       type: String,
-      default: "",
+      default: '',
     },
     // 弹框宽度
     width: {
       type: String,
-      default: "50%",
+      default: '50%',
     },
     // 底部内容
     showFooter: {
@@ -159,7 +159,7 @@ export default {
     //表格高度
     height: {
       type: String,
-      default: "100%",
+      default: '100%',
     },
     // 选中的数据
     checkData: {
@@ -271,7 +271,7 @@ export default {
     Dialog: {
       handler: function (newValue, oldValue) {
         if (!newValue) {
-          this.$emit("closeDialog", newValue);
+          this.$emit('closeDialog', newValue);
         }
       },
       deep: true,
@@ -285,33 +285,33 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.$emit("selectFunCall", data, remarkTb, row);
+      this.$emit('selectFunCall', data, remarkTb, row);
     },
     // 关闭弹框
     closeDialog() {
-      this.$emit("closeDialog", false);
+      this.$emit('closeDialog', false);
     },
     // 确定
     async confirmDialog() {
       this.isConfirmLoading = true;
-      await this.$emit("confirmDialog", this.remark);
+      await this.$emit('confirmDialog', this.remark);
       this.isConfirmLoading = false;
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$emit("pageChangeCall", val, remarkTb, filtertb);
+      this.$emit('pageChangeCall', val, remarkTb, filtertb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$emit("pageSizeCall", val, remarkTb, filtertb);
+      this.$emit('pageSizeCall', val, remarkTb, filtertb);
     },
     // 排序
     sortChange(order, prop, remarkTb, filtertb, row, index) {
-      this.$emit("sortChangeCall", order, prop, remarkTb, filtertb, row, index);
+      this.$emit('sortChangeCall', order, prop, remarkTb, filtertb, row, index);
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
-      this.$emit("btnClickCall", methods, parms, index, remarkTb);
+      this.$emit('btnClickCall', methods, parms, index, remarkTb);
     },
     // 获取表头数据
     // async getTableHeader() {

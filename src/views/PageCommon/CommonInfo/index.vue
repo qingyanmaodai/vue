@@ -132,19 +132,19 @@
 <script>
 var _this;
 // let rand = Math.random();
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComFormDialog from "@/components/ComFormDialog";
-import ComBatchEdit from "@/components/ComBatchEdit";
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComFormDialog from '@/components/ComFormDialog';
+import ComBatchEdit from '@/components/ComBatchEdit';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetSearch,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "CommonInfo",
+  name: 'CommonInfo',
   components: {
     ComSearch,
     ComVxeTable,
@@ -172,7 +172,7 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 100, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -189,8 +189,8 @@ export default {
       dataColumns: false,
       isBatch: false,
       DVBatch: null,
-      OrderNo: "",
-      OrderNoValue: "",
+      OrderNo: '',
+      OrderNoValue: '',
       OrderNos: [[]],
     };
   },
@@ -224,7 +224,7 @@ export default {
       const value = params.get(key);
       if (value !== null) {
         this[key] =
-          typeof variableMappings[key] === "function"
+          typeof variableMappings[key] === 'function'
             ? variableMappings[key](value)
             : value;
       }
@@ -250,11 +250,11 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+          if (item.ButtonCode == 'save') {
+            this.$set(this, 'isEdit', true);
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     // 高度控制
     setHeight() {
@@ -264,17 +264,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -285,13 +285,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -326,10 +326,10 @@ export default {
     dataReset(remarkTb) {
       console.log(
         this.formSearchs[remarkTb].datas,
-        "this.formSearchs[remarkTb].datas"
+        'this.formSearchs[remarkTb].datas',
       );
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID" || name != "QueryParams") {
+        if (name != 'dicID' || name != 'QueryParams') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -340,7 +340,7 @@ export default {
         if (this.formSearchs[remarkTb].forms.length) {
           // 判断是否是页面显示的查询条件，是的字段才清空
           this.formSearchs[remarkTb].forms.forEach((element) => {
-            if (element["prop"] === name) {
+            if (element['prop'] === name) {
               this.formSearchs[remarkTb].datas[name] = null;
             }
           });
@@ -351,10 +351,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
@@ -364,16 +364,16 @@ export default {
       let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
+        this.$message.error('请单击需要操作的数据！');
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
-          obj["ElementDeleteFlag"] = 1;
+          obj['ElementDeleteFlag'] = 1;
           newData.push(obj);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -401,8 +401,8 @@ export default {
         }
       }
       if (changeRecords.length == 0) {
-        this.$set(this, "adminLoading", false);
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
       if (changeRecords.length > 0 && !newData) {
@@ -410,11 +410,11 @@ export default {
           // 动态检验必填项
           changeRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2["prop"]];
+              let content = item1[item2['prop']];
               if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(`${item2["label"]}不能为空，请选择`);
-                this.$set(this, "adminLoading", false);
-                throw new Error("报错了");
+                this.$message.error(`${item2['label']}不能为空，请选择`);
+                this.$set(this, 'adminLoading', false);
+                throw new Error('报错了');
               }
             });
           });
@@ -425,18 +425,18 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 获取表头数据
@@ -448,7 +448,7 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           m.some((n, index) => {
-            if (n.prop == "Operation" || n.label == "操作") {
+            if (n.prop == 'Operation' || n.label == '操作') {
               this.newTag = index;
               return true;
             }
@@ -460,7 +460,7 @@ export default {
               });
             }
             //从列获取下拉数据源
-            if (n.DataSourceID && n.ControlType === "combobox") {
+            if (n.DataSourceID && n.ControlType === 'combobox') {
               this.DataSourceList[i] = {
                 [n.DataSourceName]: n.items,
                 ...this.DataSourceList[i],
@@ -470,36 +470,36 @@ export default {
               this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
-              this.Region[i] = n["Region"] ? n["Region"] : this.Region[i];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(
             this.OrderNos,
             i,
-            m.filter((item) => item["isEdit"] === true)
+            m.filter((item) => item['isEdit'] === true),
           );
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
-          this.$set(this.formSearchs[z], "formsAll", formsAll[z]);
+          this.$set(this.formSearchs[z], 'forms', x);
+          this.$set(this.formSearchs[z], 'formsAll', formsAll[z]);
         });
         this.adminLoading = false;
         if (this.newTag != -1) {
           this.tableColumns.splice(this.newTag, 1);
         }
-        this.formSearchs[0].datas["dicID"] = this.ID;
+        this.formSearchs[0].datas['dicID'] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
@@ -507,19 +507,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
@@ -527,11 +527,11 @@ export default {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -539,11 +539,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -553,7 +553,7 @@ export default {
       // 获取修改记录
       const $table = this.$refs.ComVxeTable.$refs.vxeTable;
       if (!this.addNum) {
-        this.$message.error("请输入需要添加的行数!");
+        this.$message.error('请输入需要添加的行数!');
         return;
       }
       // 下拉数据是需要获取数据源
@@ -564,11 +564,11 @@ export default {
         };
         this.tableColumns[remarkTb].map((item) => {
           obj[item.prop] = null;
-          obj["update"] = true;
-          if (item.prop === "Status") {
+          obj['update'] = true;
+          if (item.prop === 'Status') {
             obj[item.prop] = 1;
           }
-          console.log(this.DataSourceList, "this.DataSourceList");
+          console.log(this.DataSourceList, 'this.DataSourceList');
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
               obj[key] = this.DataSourceList[remarkTb][key];
@@ -576,47 +576,47 @@ export default {
           }
         });
 
-        console.log("this.addNum", this.addNum);
+        console.log('this.addNum', this.addNum);
         $table.insert(obj);
 
         // this.tableData[remarkTb].unshift(obj);
       }
 
-      console.log("this.tableData[remarkTb]", this.tableData[remarkTb]);
+      console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
     },
     // 行内样式
     cellStyle0({ row, column }) {
       let style = {}; // 创建一个空的样式对象
       const key = column.property;
       if (
-        Object.prototype.toString.call(row["FColors"]) === "[object Object]" &&
-        key in row["FColors"]
+        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
+        key in row['FColors']
       ) {
-        style.color = row["FColors"][key]; // 设置背景颜色
+        style.color = row['FColors'][key]; // 设置背景颜色
       }
       if (
-        Object.prototype.toString.call(row["BColors"]) === "[object Object]" &&
-        key in row["BColors"]
+        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
+        key in row['BColors']
       ) {
-        style.backgroundColor = row["BColors"][key]; // 设置背景颜色
+        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
       }
       return style; // 返回样式对象
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
-        this.$message.error("请选择需要修改的值");
+        this.$message.error('请选择需要修改的值');
         return;
       }
       if (this.tableData[remarkTb].length === 0) {
-        this.$message.error("当前表格无数据");
+        this.$message.error('当前表格无数据');
         return;
       }
       if (this.selectionData[remarkTb].length === 0) {
-        this.$message.error("请选择需要批量修改的行");
+        this.$message.error('请选择需要批量修改的行');
         return;
       }
       this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-        if (rowItem["isChecked"] === true) {
+        if (rowItem['isChecked'] === true) {
           rowItem[OrderNo] = OrderNoValue;
         }
       });
