@@ -7,16 +7,14 @@ function setRem() {
   const scale = document.documentElement.clientWidth / 1920;
 
   // 设置页面根节点字体大小（“Math.min(scale, 2)” 指最高放大比例为2，可根据实际业务需求调整）
-  document.documentElement.style.fontSize = baseSize * Math.min(scale, 2) + 'px';
+  document.documentElement.style.fontSize = baseSize * Math.min(scale, 10) + 'px';
   //   document.documentElement.style.fontSize = scale + 'px'
 }
 // 初始化
 setRem();
 // 改变窗口大小时重新设置 rem
 window.onresize = function () {
-  setTimeout(() => {
-    setRem()
-  }, 300)
+  setRem()
 }
 
 

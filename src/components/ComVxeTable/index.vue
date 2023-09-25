@@ -128,7 +128,7 @@
                           scope.row,
                           scope.row[i.prop],
                           i.prop,
-                          scope.$rowIndex
+                          scope.$rowIndex,
                         )
                       "
                       >{{ x2.name }}</span
@@ -147,7 +147,7 @@
                         scope.row,
                         scope.row[i.prop],
                         i.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     :type="o.type"
@@ -196,7 +196,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                       >
@@ -211,7 +211,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                         @keyup.enter.native="
@@ -220,7 +220,7 @@
                             scope.row,
                             scope.row[x.prop],
                             x.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                         type="number"
@@ -244,7 +244,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                       ></el-input>
@@ -268,7 +268,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                       >
@@ -307,7 +307,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                         v-model="scope.row[i.prop]"
@@ -329,7 +329,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                         v-model="scope.row[i.prop]"
@@ -365,7 +365,7 @@
                             scope.row,
                             scope.row[i.prop],
                             i.prop,
-                            scope.$rowIndex
+                            scope.$rowIndex,
                           )
                         "
                       ></el-checkbox>
@@ -388,7 +388,7 @@
                             fetchsuggertions(
                               queryString,
                               cb,
-                              i.component.methods
+                              i.component.methods,
                             );
                           }
                         "
@@ -490,7 +490,7 @@
                       scope.row,
                       scope.row[x.prop],
                       x.prop,
-                      scope.$rowIndex
+                      scope.$rowIndex,
                     )
                   "
                   >{{ x2.name }}</span
@@ -509,7 +509,7 @@
                     scope.row,
                     scope.row[x.prop],
                     x.prop,
-                    scope.$rowIndex
+                    scope.$rowIndex,
                   )
                 "
                 :type="o.type"
@@ -553,7 +553,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     @change="
@@ -562,7 +562,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-input>
@@ -576,7 +576,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     :disabled="scope.row[x.component.disabled]"
@@ -586,7 +586,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     type="number"
@@ -611,7 +611,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-input>
@@ -631,7 +631,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   >
@@ -675,7 +675,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     v-model="scope.row[x.prop]"
@@ -697,7 +697,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     v-model="scope.row[x.prop]"
@@ -735,7 +735,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-checkbox>
@@ -949,8 +949,8 @@
   </div>
 </template>
 <script>
-import XEUtils from "xe-utils";
-import { GetSearchData } from "@/api/Common";
+import XEUtils from 'xe-utils';
+import { GetSearchData } from '@/api/Common';
 export default {
   props: {
     // 是否显示底部合计
@@ -1058,7 +1058,7 @@ export default {
     },
     footerLabel: {
       type: String,
-      default: "",
+      default: '',
       required: false,
     },
     pagination: {
@@ -1074,7 +1074,7 @@ export default {
     height: {
       type: String,
       required: false,
-      default: "600px",
+      default: '600px',
     },
     rowKey: {
       type: String,
@@ -1164,14 +1164,14 @@ export default {
   },
   data() {
     return {
-      Prompt: "",
+      Prompt: '',
       PromptVisible: false,
       SettingVisible: false,
       multipleSelection: [],
       getPickerTime(row = {}) {
         return {
           disabledDate(time) {
-            if (row.hasOwnProperty("PreStartDate") && row.PreStartDate) {
+            if (row.hasOwnProperty('PreStartDate') && row.PreStartDate) {
               return time.getTime() < new Date(row.PreStartDate).getTime();
             }
           },
@@ -1185,7 +1185,7 @@ export default {
       colspan: [],
       colspanDel: [],
       scrollTop: 0,
-      theme: "#409EFF",
+      theme: '#409EFF',
       isChangeColor: true,
       lastClickedRow: null,
     };
@@ -1194,31 +1194,31 @@ export default {
     // 跳转至页面配置
     toPageSetting() {
       if (this.sysID == 35) {
-        this.$emit("oneselftSysID", 35);
+        this.$emit('oneselftSysID', 35);
       } else {
         this.$router.push({
-          name: "FieldInfo",
+          name: 'FieldInfo',
           params: { ID: this.sysID },
         });
       }
       // 解决其他页面弹框状态下跳转到配置表弹框不关闭的bug
-      this.$emit("toPageSetting");
+      this.$emit('toPageSetting');
     },
     // 编辑行
     editRow(row, index) {
-      this.$emit("editRow", row, index, this.remark);
+      this.$emit('editRow', row, index, this.remark);
     },
     // 删除行
     delRow(row, index) {
-      this.$emit("delRow", row, index, this.remark);
+      this.$emit('delRow', row, index, this.remark);
     },
     // 表头颜色控制
     updateStyle(isLook, isEdit) {
       if (isLook) {
-        return "fontBlueInkColor";
+        return 'fontBlueInkColor';
       }
       if (isEdit) {
-        return "fontBluesInkColor";
+        return 'fontBluesInkColor';
       }
     },
     // 合并取几列
@@ -1282,7 +1282,7 @@ export default {
       let fields;
       if (this.tableHeader) {
         fields = this.tableHeader.map((item) => {
-          if (item["isMerge"]) {
+          if (item['isMerge']) {
             return item.prop;
           }
         });
@@ -1353,7 +1353,7 @@ export default {
     },
     // row:本行数据 route：要跳转的路由路径 跳转要传的参数routeId
     handleActive(row, routerName, prop) {
-      this.$emit("toPage", row, prop);
+      this.$emit('toPage', row, prop);
       // this.$router.push({
       //   name: routerName.name,
       //   query: { row: row },
@@ -1374,61 +1374,64 @@ export default {
     // 表格的回车事件
     operation2(methods, row, val, prop, index) {
       this.$emit(
-        "keyupEnter",
+        'keyupEnter',
         row,
         val,
         prop,
         index,
         this.remark,
-        this.filtertb
+        this.filtertb,
       );
     },
     // 选择一页显示多少数据
     pageSize(val) {
-      this.$emit("pageSize", val, this.remark, this.filtertb);
+      this.$emit('pageSize', val, this.remark, this.filtertb);
     },
     // 分页导航
     pageChange(val) {
-      this.$emit("pageChange", val, this.remark, this.filtertb);
+      this.$emit('pageChange', val, this.remark, this.filtertb);
     },
     //后端排序
     sortChange({ column }) {
       //调用父组件方法
       this.$refs.vxeTable.clearCheckboxRow();
       this.$emit(
-        "sortChange",
+        'sortChange',
         column.order,
         column.property,
         this.remark,
-        this.filtertb
+        this.filtertb,
       );
     },
     // 单击行
     handleRowClick({ row, column, rowIndex }) {
       // 如果是勾选框单元格，则取消行点击的触发
-
-      if (column.type !== "checkbox") {
+      if (column.type !== 'checkbox') {
         if (this.isToggleCheckbox) {
           this.$refs.vxeTable.toggleCheckboxRow(row);
           row = this.$refs.vxeTable.getCheckboxRecords(true);
-          this.$emit("handleRowClick", row, this.remark, column);
+          this.$emit('handleRowClick', row, this.remark, column);
           return;
         }
-        this.$emit("handleRowClick", row, this.remark, column);
+        // 如果是勾选框单元格，则取消行点击的触发
+        if (row !== this.lastClickedRow) {
+          this.$emit('handleRowClick', row, this.remark, column);
+          this.lastClickedRow = row;
+        }
       }
     },
     // 双击行
     handleRowdbClick({ row, column }) {
       if (this.isEdit && !row.update) {
-        this.$set(row, "update", true);
+        this.$set(row, 'update', true);
       }
-      this.$emit("handleRowdbClick", row, this.remark);
+      this.$emit('handleRowdbClick', row, this.remark);
     },
     // 选择操作
     handleSelectionChange({ records, row }) {
       if (this.isMultiple) {
         this.multipleSelection = records;
-        this.$emit("selectfun", this.multipleSelection, this.remark);
+        this.$emit('selectfun', this.multipleSelection, this.remark);
       } else {
         this.multipleSelection = [];
         if (records.length > 1) {
@@ -1436,7 +1439,7 @@ export default {
           this.$refs.vxeTable.setCheckboxRow(row, true);
         }
         this.multipleSelection.push(row);
-        this.$emit("selectfun", this.multipleSelection, this.remark);
+        this.$emit('selectfun', this.multipleSelection, this.remark);
       }
     },
     //合并同一名称
@@ -1493,7 +1496,7 @@ export default {
     // },
     //可编辑列加背景颜色
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
-      let className = "";
+      let className = '';
       return className;
     },
     // 禁用勾选
@@ -1504,11 +1507,11 @@ export default {
         } else {
           return false; //不可勾选
         }
-      } else if (row.hasOwnProperty("IsSelectInit") == false) {
+      } else if (row.hasOwnProperty('IsSelectInit') == false) {
         return true; //可勾选
       } else if (
-        row.hasOwnProperty("IsSelectInit") &&
-        row.IsSelectInit == "true"
+        row.hasOwnProperty('IsSelectInit') &&
+        row.IsSelectInit == 'true'
       ) {
         return true;
       } else {
@@ -1534,23 +1537,23 @@ export default {
       // 筛选的字段
       let property = filters.property;
       // this.remark 操作的表格下标
-      this.$emit("filterChange", val, property, this.remark);
-      console.log("filters", filters);
-      console.log("tableHeader", this.tableHeader);
+      this.$emit('filterChange', val, property, this.remark);
+      console.log('filters', filters);
+      console.log('tableHeader', this.tableHeader);
     },
     // 显示隐藏列
     toolbarCustomEvent(params) {
       const visibleColumn = this.$refs.vxeTable.getColumns();
       switch (params.type) {
-        case "confirm": {
+        case 'confirm': {
           //确认
           break;
         }
-        case "reset": {
+        case 'reset': {
           //还原
           break;
         }
-        case "close": {
+        case 'close': {
           //关闭
           break;
         }
@@ -1558,7 +1561,7 @@ export default {
     },
     filterRecoverMethod({ option }) {
       // 如果是自定义筛选模板，当为点击确认时，该选项将被恢复为默认值
-      option.data = "";
+      option.data = '';
     },
 
     // 底部合计栏
@@ -1569,7 +1572,7 @@ export default {
       const footerData = [
         columns.map((column, columnIndex) => {
           if (columnIndex === 0) {
-            return "合计";
+            return '合计';
           }
           if (this.includeFields.includes(column.property)) {
             return XEUtils.sum(data, column.property);
@@ -1581,10 +1584,10 @@ export default {
     },
     async getFooterRemark() {
       let form = {};
-      form["dicID"] = 33;
-      form["page"] = 1;
-      form["rows"] = 0;
-      form["DictionaryID"] = this.sysID;
+      form['dicID'] = 33;
+      form['page'] = 1;
+      form['rows'] = 0;
+      form['DictionaryID'] = this.sysID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1622,13 +1625,13 @@ export default {
         if ((this.isSpanMethods || this.fixSpanMethods) && this.tableHeader) {
           this.header();
         }
-        this.$set(this, "tableHeader", newValue);
+        this.$set(this, 'tableHeader', newValue);
       },
       deep: true,
     },
     height: {
       handler(newValue, oldValue) {
-        this.$set(this, "height", newValue);
+        this.$set(this, 'height', newValue);
       },
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
       immediate: true,
@@ -1648,7 +1651,7 @@ export default {
         if (newValue) {
           if (this.multipleSelection.length != 0) {
             this.$refs.vxeTable.clearCheckboxRow();
-            this.$set(this, "multipleSelection", []);
+            this.$set(this, 'multipleSelection', []);
           }
         }
       },
@@ -1657,7 +1660,7 @@ export default {
     },
     multipleSelection: {
       handler(newValue) {
-        this.$emit("selectChanged", newValue, this.remark);
+        this.$emit('selectChanged', newValue, this.remark);
       },
       immediate: true,
       deep: true, // 启用深度监听
@@ -1666,8 +1669,8 @@ export default {
   computed: {
     tableHeaderChange() {
       let modifiedTableHeader = this.tableHeader.map((item) => {
-        if (item["width"] == 0) {
-          item["visible"] = false;
+        if (item['width'] == 0) {
+          item['visible'] = false;
         }
         return {
           ...item,
@@ -1677,7 +1680,7 @@ export default {
       if (this.hasSelect) {
         //删除带有选择的一列
         modifiedTableHeader = modifiedTableHeader.filter(
-          (item) => item.prop !== "isChecked"
+          (item) => item.prop !== 'isChecked',
         );
       }
       //重新渲染列

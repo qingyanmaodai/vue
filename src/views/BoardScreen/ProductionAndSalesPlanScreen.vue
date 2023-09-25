@@ -1,91 +1,138 @@
 <template>
   <div id="Screen">
     <div class="el-header">
-      <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1"></svg-icon>
-    </div>
-    <!-- <div
-      class="el-header"
-      :style="{
-        backgroundImage: `url(${headBg})`,
-      }"
-    >
-      <div class="logo"></div>
-      <h1>JG-APS物料采购看板</h1>
+      <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
+      <div
+        class="logo"
+        :style="{
+          backgroundImage: `url(${logo})`,
+        }"
+      ></div>
+      <div class="textTitle">JG-APS物料采购看板</div>
       <div class="showTime">{{ todayDate }}</div>
-    </div> -->
-    <div class="mainbox">
-      <div class="row1">
-        <div class="panel two line">
+    </div>
+    <div class="mainbox flex-grow overflow-hidden">
+      <div class="h-full flex">
+        <div class="panel h-full w-8/12 !mr-[10px]">
           <div class="chartHead">
             <div class="panel-footer"></div>
             <h2>出货计划</h2>
           </div>
           <div
-            class="chart1 flex_colummn"
+            class="chartContent flex flex-col"
             element-loading-background="#060765"
           >
-            <div class="tableHead"></div>
-            <VueSeamlessScroll :data="tableData[0]" class="warp">
-              <ul class="item">
-                <li v-for="(item, index) in tableData[0]" :key="index">
-                  <span class="title" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
-                  <span class="date" v-text="item.AllUnIssuedQty"></span>
+            <div class="tableHead flex !px-[10px] text-white w-full">
+              <div
+                v-for="(column, index) in tableColumns[0]"
+                :key="'tableHead' + index"
+                class="flex"
+                :class="
+                  index < tableColumns[0].length - 1 ? '!mr-[10px]' : '!mr-0'
+                "
+                :style="getColumnStyle(tableColumns[0], column)"
+              >
+                {{ column.label }}
+              </div>
+            </div>
+            <VueSeamlessScroll
+              :data="tableData[0]"
+              class="warp"
+              :class-option="{
+                step: 1,
+              }"
+            >
+              <ul class="!px-[10px]">
+                <li
+                  v-for="(item, index) in tableData[0]"
+                  :key="'data' + index"
+                  class="flex"
+                >
+                  <div
+                    v-for="(column, colIndex) in tableColumns[0]"
+                    :key="'column' + colIndex"
+                    class="truncate"
+                    :class="
+                      colIndex < tableColumns[0].length - 1
+                        ? '!mr-[10px]'
+                        : '!mr-0'
+                    "
+                    :style="getColumnStyle(tableColumns[0], column)"
+                  >
+                    {{ tableData[0][index][column.prop] }}
+                  </div>
                 </li>
               </ul>
             </VueSeamlessScroll>
           </div>
         </div>
-        <div class="panel two pie">
-          <div class="chartHead">
-            <div class="panel-footer"></div>
-
-            <h2>物料需求汇总</h2>
+        <div class="h-full w-4/12 flex flex-col">
+          <div class="!mb-[10px] h-25/100 w-full flex">
+            <div class="h-full w-1/2 !mr-[10px] relative">
+              <svg-icon
+                icon-class="ScreenBase1"
+                class="ScreenBase1"
+                className="!h-full !w-full !absolute"
+              />
+              <div
+                class="h-full w-full flex flex-col items-center justify-between relative"
+              >
+                <div
+                  class="ScreenBaseNum absolute"
+                  style="top: 20%; height: 30%"
+                >
+                  4,930
+                </div>
+                <div
+                  class="ScreenBaseTitle absolute"
+                  style="bottom: 30%; height: 20%"
+                >
+                  今日订单总量
+                </div>
+              </div>
+            </div>
+            <div class="h-full w-1/2 relative">
+              <svg-icon
+                icon-class="ScreenBase1"
+                class="ScreenBase1"
+                className="!h-full !w-full !absolute"
+              />
+              <div
+                class="h-full w-full flex flex-col items-center justify-between relative"
+              >
+                <div
+                  class="ScreenBaseNum absolute"
+                  style="top: 20%; height: 30%"
+                >
+                  8,342
+                </div>
+                <div
+                  class="ScreenBaseTitle absolute"
+                  style="bottom: 30%; height: 20%"
+                >
+                  今日未完成数量
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="chart1" element-loading-background="#060765"></div>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="panel three circle">
-          <div class="chartHead">
-            <div class="panel-footer"></div>
+          <div class="panel h-45/100 w-full !mb-[10px]">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
 
-            <h2>本月出货趋势</h2>
-          </div>
-          <div class="chart2" ref="chart1"></div>
-          <div class="panel-footer"></div>
-        </div>
-        <div class="panel three circle">
-          <div class="chartHead">
+              <h2>近七天出货对比</h2>
+            </div>
+            <div class="chartContent" ref="chart1"></div>
             <div class="panel-footer"></div>
-
-            <h2>本月出货部门占比</h2>
           </div>
-          <div class="chart2" ref="chart2"></div>
-        </div>
-        <div class="panel three bar1">
-          <div class="chartHead">
+          <div class="panel h-30/100 w-full" style="height: 30%">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
+
+              <h2>本月指标</h2>
+            </div>
+            <div class="chartContent" ref="chart2"></div>
             <div class="panel-footer"></div>
-
-            <h2>近一周计划达成趋势</h2>
           </div>
-          <div
-            class="chart2"
-            v-loading="tableLoading[2]"
-            element-loading-background="#060765"
-          ></div>
         </div>
       </div>
     </div>
@@ -101,6 +148,7 @@ import logo from '../../../public/images/logo.png';
 import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
+import ComVxeTable from '@/components/ComVxeTable';
 export default {
   name: 'ProductionAndSalesPlanScreen',
   data() {
@@ -113,7 +161,7 @@ export default {
       chartData1: [],
       chartData2: [[], []],
       chartTotal1: 2562,
-      sysID: [{ ID: 5610 }, { ID: 5610 }, { ID: 5610 }],
+      sysID: [{ ID: 10103 }, { ID: 5610 }, { ID: 5610 }],
       chart: [],
       chartOptions: [],
       tableColumns: [[], [], []],
@@ -156,6 +204,7 @@ export default {
   },
   components: {
     VueSeamlessScroll,
+    ComVxeTable,
   },
   watch: {},
   created() {
@@ -165,13 +214,7 @@ export default {
   },
   async mounted() {
     //初始化图表;
-    this.chart = [
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
-      this.$refs.chart4,
-      this.$refs.chart5,
-    ];
+    this.chart = [this.$refs.chart1, this.$refs.chart2];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -182,6 +225,25 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
+    getColumnStyle(columns, column) {
+      const totalWidth = columns.reduce(
+        (sum, col) => sum + parseFloat(col.width || 0),
+        0,
+      );
+      if (column) {
+        const percentage = (parseFloat(column.width) / totalWidth) * 100;
+        return {
+          width: `${percentage}%`,
+        };
+      } else {
+        return columns.map((column) => {
+          const percentage = (parseFloat(column.width) / totalWidth) * 100;
+          return {
+            width: `${percentage}%`,
+          };
+        });
+      }
+    },
     // 渲染echart图
     barData(id, option) {
       // echarts.dispose(id);
@@ -208,7 +270,7 @@ export default {
           }),
         );
         this.adminLoading = false;
-        // await this.getEcharts();
+        await this.getEcharts();
       }
     },
     async getEcharts() {
@@ -223,149 +285,206 @@ export default {
       }
       this.chartOptions = [
         {
-          textStyle: {
-            fontSize: fontSize(14),
-          },
-          color: ['#00FFFF', '#0085FF', '#BC4EFF', '#FF35A2', '#1EAF72'],
-          legend: {
-            itemGap: fontSize(20),
-            orient: 'vertical',
-            left: '50%',
-            top: 'center',
-            icon: 'circle',
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
-            itemStyle: {},
-            textStyle: {
-              color: '#fff',
-              padding: [0, 0, 0, 12],
-            },
-            formatter: function (name) {
-              let prefect;
-              _this.chartData1.map((item) => {
-                if (item.name == name) {
-                  prefect =
-                    ((item.value / _this.chartTotal1) * 100).toFixed(2) + '%';
-                }
-              });
-              return name + '      ' + prefect;
-            },
-          },
           grid: {
-            left: '10%',
             containLabel: true,
+            bottom: 0,
+            left: fontSize(10),
+            right: fontSize(10),
           },
-          series: [
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          legend: {
+            top: fontSize(10),
+            right: fontSize(10),
+            data: ['计划出货', '实际出货'],
+            itemWidth: fontSize(18),
+            itemHeight: fontSize(18),
+            itemGap: fontSize(30),
+            textStyle: {
+              fontSize: fontSize(18),
+              color: '#C9D2FA',
+              padding: [0, 0, 0, fontSize(10)],
+            },
+          },
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: ['1号', '2号', '3号', '4号', '5号', '6号', '7号'],
+            axisLabel: {
+              show: true,
+              fontSize: fontSize(18),
+              color: '#C9D2FA',
+            },
+            axisLine: {
+              show: false,
+              lineStyle: {
+                show: false,
+                color: '#F3F3F3',
+                width: 2,
+              },
+            },
+
+            axisTick: {
+              show: false,
+            },
+          },
+          yAxis: [
             {
-              name: '数据来源',
-              type: 'pie',
-              radius: ['65%', '80%'],
-              center: ['25%', '50%'],
-              avoidLabelOverlap: false,
-              labelLine: {
+              // name: '单位:万',
+              // type: 'value',
+              // nameTextStyle: {
+              //   color: '#444444',
+              // },
+              axisLabel: {
+                interval: 0,
+                show: true,
+                fontSize: fontSize(18),
+                color: '#C9D2FA',
+              },
+              axisLine: {
+                show: false,
+                // lineStyle: {
+                //   color: "#F3F3F3",
+                //   width: 2
+                // }
+              },
+              axisTick: {
                 show: false,
               },
-              data: this.chartData1,
-              itemStyle: {
-                labelLine: {
-                  show: false,
-                },
-                // color: function (params) {
-                //自定义颜色
-                // return params.data.color;
-                // },
-              },
-              label: {
-                //饼图中间文字设置
-                fontSize: fontSize(18),
-                show: true,
-                position: 'center',
-                color: '#fff',
-                formatter: '总数量' + '\n\n' + this.chartTotal1,
-              },
-              emphasis: {
-                label: {
-                  show: true,
-                  // fontSize: "14",
-                  // fontWeight: "bold",
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed',
+                  color: '#3E4A82',
                 },
               },
             },
           ],
+          series: [
+            {
+              name: '计划出货',
+              type: 'bar',
+              silent: true,
+              itemStyle: {
+                normal: {
+                  color: '#2F8FFF',
+                },
+              },
+              data: [120, 75, 90, 102, 130, 75, 99],
+            },
+            {
+              name: '实际出货',
+              type: 'bar',
+              silent: true,
+              itemStyle: {
+                normal: {
+                  color: '#47B558',
+                },
+              },
+              data: [102, 130, 75, 99, 120, 75, 90],
+            },
+          ],
         },
         {
-          textStyle: {
-            fontSize: fontSize(14),
+          // backgroundColor: '#fff',
+          // title: {
+          //   text: "注册资金",
+          //   subtext: "2016年",
+          //   x: "center",
+          //   y: "center",
+          //   textStyle: {
+          //     fontWeight: "normal",
+          //     fontSize: 16
+          //   }
+          // },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}:({d}%)',
+          },
+          legend: {
+            top: '0',
+            left: 'center',
+            orient: 'horizontal',
+            // right: "0%",
+            // bottom: "0",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
+            textStyle: {
+              fontSize: fontSize(12),
+            },
+            itemStyle: {
+              borderRadius: '50%', // 将图例项的形状设定为圆形
+            },
+            data: this.tableData[2].map((item) => item['WorkShopName']),
           },
           grid: {
-            left: '2%',
-            right: '2%',
-            bottom: '5%',
-            top: '10%',
-            containLabel: true, //是否包含刻度标签
-          },
-          // 图表数据
-          xAxis: {
-            type: 'category',
-            data: this.chartData2[0],
-            axisLine: {
-              lineStyle: {
-                color: '#75A1F4',
-              },
-            },
-            axisLabel: {
-              interval: 0,
-              margin: 15,
-              color: '#BEE0FF',
-              fontSize: fontSize(14),
-              formatter: function (value) {
-                if (value.length > 6) {
-                  return value.substring(0, 6) + '...'; // 只显示前6个字符
-                } else {
-                  return value;
-                }
-              },
-            },
-            axisTick: {
-              show: false,
-            },
-          },
-          yAxis: {
-            type: 'value',
-            splitNumber: 4, // 刻度数量为 4
-            inverse: true,
-            splitLine: {
-              lineStyle: {
-                color: '#4B4CCE',
-                type: 'dashed',
-              },
-            },
-            axisTick: {
-              show: false,
-            },
-            axisLabel: {
-              fontSize: fontSize(14),
-            },
-            axisLine: {
-              show: false,
-
-              lineStyle: {
-                color: '#75A1F4',
-              },
-            },
+            containLabel: true,
           },
           series: [
             {
-              data: this.chartData2[1],
-              type: 'bar',
-              itemStyle: {
-                color: '#00FFFF',
-              },
-              barWidth: '30%',
+              type: 'pie',
+              selectedMode: 'single',
+              radius: ['30%', '60%'],
+              color: [
+                '#23CF9C',
+                '#578FFB',
+                '#6E40F2',
+                '#FF61E6',
+                '#E82074',
+                '#FBA806',
+              ],
+              center: ['50%', '60%'],
               label: {
+                position: 'inner',
+                formatter: '{d}%',
                 show: true,
-                position: 'top',
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: 1,
+                fontSize: fontSize(12),
+                formatter: function (params) {
+                  // let percent = 0;
+                  // let total = 0;
+                  // for (var i = 0; i < this.tableData[2].length; i++) {
+                  //   total += scaleData[i].value;
+                  // }
+                  // percent = ((params.value / total) * 100).toFixed(0);
+                  if (params.name !== '') {
+                    // return params.name + '\n' + params.data.data;
+                    if (params.name.length > 4) {
+                      return (
+                        params.name.slice(
+                          0,
+                          Math.ceil(params.name.length / 2),
+                        ) +
+                        '\n' +
+                        params.name.slice(Math.ceil(params.name.length / 2)) +
+                        '\n' +
+                        params.percent +
+                        '%'
+                      );
+                    } else {
+                      return params.name + params.percent + '%';
+                    }
+                  } else {
+                    return '';
+                  }
+                },
               },
+              labelLine: {
+                normal: {
+                  show: false,
+                },
+              },
+              data: this.tableData[2].map((item) => {
+                return {
+                  value: item['S1'],
+                  name: item['WorkShopName'],
+                };
+              }),
             },
           ],
         },
@@ -402,7 +521,6 @@ export default {
       return `${year}年${month}月${day}日 ${weekDayName}`;
     },
     // 获取表格数据
-    // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
       form['rows'] = this.tablePagination[remarkTb].pageSize;
@@ -421,59 +539,6 @@ export default {
       }
 
       this.$set(this.tableLoading, remarkTb, false);
-    },
-    async getEchartsData1() {
-      let res = await GetSearchData(
-        {
-          dicID: 9037,
-          groupby: 'Dept',
-          fields: 'SUM(DemandQty) as DemandQty,Dept',
-          sort: 'DemandQty desc',
-        },
-        '6E8BF76C6BA5B0D8',
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartTotal1 = data.reduce(
-          (accumulator, current) => accumulator + current.DemandQty,
-          0,
-        );
-        this.chartData1 = data.map((item) => ({
-          value: item.DemandQty,
-          name: item.Dept,
-        }));
-        console.log(this.chartData1, 'this.chartData2[0]');
-      } else {
-        this.$message({
-          message: msg,
-          type: 'error',
-          dangerouslyUseHTMLString: true,
-        });
-      }
-    },
-    async getEchartsData2() {
-      let res = await GetSearchData(
-        {
-          dicID: 9062,
-          sort: 'OweQty',
-          page: 1,
-          rows: 6,
-        },
-        '6E8BF76C6BA5B0D8',
-      );
-      const { result, data, msg } = res.data;
-      if (result) {
-        this.chartData2[0] = data.map(
-          (item) => item.MaterialName.split(' ')[0],
-        );
-        this.chartData2[1] = data.map((item) => item.OweQty);
-      } else {
-        this.$message({
-          message: msg,
-          type: 'error',
-          dangerouslyUseHTMLString: true,
-        });
-      }
     },
   },
 };
@@ -496,6 +561,8 @@ export default {
   background-size: cover;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .el-header {
   position: relative;
@@ -506,6 +573,7 @@ export default {
   .ScreenHeader1 {
     width: 100%;
     height: 100%;
+    position: absolute;
   }
   .logo {
     position: absolute;
@@ -516,13 +584,16 @@ export default {
     // background: url(./FSZM.png) no-repeat;
     background-size: 100% 100%;
   }
-  h1 {
-    font-size: 38px;
-    color: #fff;
-    text-align: center;
-    height: 90px;
+  .textTitle {
+    position: relative;
+    font-family: PingFang SC;
+    font-size: 36px;
     font-weight: 600;
-    line-height: 90px;
+    line-height: 87px;
+    letter-spacing: 0em;
+    text-align: center;
+    box-shadow: 0px 0px 10px 0px rgba(16, 94, 217, 1);
+    color: rgba(221, 234, 255, 1);
   }
   .showTime {
     position: absolute;
@@ -535,43 +606,36 @@ export default {
   }
 }
 .mainbox {
-  width: 100%;
-  height: calc(100% - 87px);
-  // min-width: 1024px;
-  // max-width: 1920px;
   padding: 10px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  .row1 {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    height: 64%;
+  .ScreenBaseNum {
+    color: #fff;
+    font-family: Revalia;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
   }
-  .row2 {
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    height: 34%;
+  .ScreenBaseTitle {
+    color: #8aceff;
+    text-align: center;
+    font-family: PingFang SC;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    align-self: center; /* 第二个元素在中线位置 */
   }
 }
 .panel {
   position: relative;
-  &.two {
-    width: 49.5%;
-    height: 100%;
-  }
-  &.three {
-    width: 32.5%;
-    height: 100%;
-  }
   border: 1px solid rgba(76, 130, 194, 1);
   box-shadow: 0px 7px 15px 0px rgba(32, 69, 143, 1) inset;
   background: linear-gradient(0deg, #030a2c, #030a2c),
     linear-gradient(0deg, #4c82c2, #4c82c2);
-  margin-bottom: 10px;
   clip-path: polygon(
     100% 0%,
     100% calc(100% - 10px),
@@ -617,7 +681,7 @@ export default {
     text-align: left;
     color: rgba(0, 178, 255, 1);
   }
-  .chart1 {
+  .chartContent {
     .tableHead {
       height: 50px;
       background: rgba(53, 64, 117, 1);
@@ -635,41 +699,10 @@ export default {
         margin: 0 auto;
         li,
         a {
-          display: block;
           height: 50px;
           line-height: 50px;
-          display: grid;
           font-size: 18px;
-          gap: 10px; /* 元素之间的间隔为10px */
-          grid-auto-flow: column; /* 水平排列元素 */
         }
-      }
-    }
-  }
-  .chart2 {
-    padding: 9px 12px;
-    overflow: hidden;
-    height: calc(100% - 48px);
-  }
-  ::v-deep.dv-scroll-board {
-    overflow: hidden;
-    font-size: 18px;
-    .header {
-      background-color: rgba(0, 255, 255, 0.2) !important;
-      border-bottom: 2px solid #00ffff;
-      color: #00ffff;
-      font-weight: 400;
-      height: 50px;
-      .header-item {
-        height: 50px !important;
-        line-height: 50px !important;
-      }
-    }
-    .rows {
-      .row-item {
-        height: 50px !important;
-        line-height: 50px !important;
-        color: #bee0ff;
       }
     }
   }
