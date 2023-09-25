@@ -12,8 +12,6 @@
         @btnClick="btnClick"
         :signName="0"
         :defaultShow="false"
-        :defaultResetShow="false"
-        :defaultExportShow="false"
       />
     </div>
     <div>
@@ -74,14 +72,14 @@
 </template>
 <script>
 var _this;
-import XLSX from "xlsx";
+import XLSX from 'xlsx';
 const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import ComSearch from "@/components/ComSearch";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '@grapecity/spread-sheets/js/zh.js';
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import ComSearch from '@/components/ComSearch';
 import {
   GetHeader,
   GetSearch,
@@ -89,10 +87,10 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
-} from "@/api/Common";
-import { SalesPlanProcessMaterialDay } from "@/api/PagePack";
+} from '@/api/Common';
+import { SalesPlanProcessMaterialDay } from '@/api/PagePack';
 export default {
-  name: "ImportPack",
+  name: 'ImportPack',
   components: {
     ComSearch,
   },
@@ -116,40 +114,40 @@ export default {
       btnForm: [],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "查询",
-          Type: "primary",
+          ButtonCode: 'save',
+          BtnName: '查询',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSearch",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSearch',
+          Icon: '',
           isLoading: false,
           signName: 0,
-          Params: "0",
+          Params: '0',
         },
         {
-          ButtonCode: "save",
-          BtnName: "第一步：解析",
-          Type: "primary",
+          ButtonCode: 'save',
+          BtnName: '第一步：解析',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "checkSys",
-          Icon: "",
+          Size: 'small',
+          Methods: 'checkSys',
+          Icon: '',
           isLoading: false,
           signName: 0,
-          Params: "0",
+          Params: '0',
         },
         {
-          ButtonCode: "save",
-          BtnName: "第二步：导入",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '第二步：导入',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSave',
+          Icon: '',
           isLoading: false,
           signName: 0,
-          Params: "1",
+          Params: '1',
         },
       ],
       tableData: [[]],
@@ -157,8 +155,8 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
-      height: "740px",
-      height2: "735px",
+      height: '740px',
+      height2: '735px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -199,10 +197,10 @@ export default {
     // 确认导入
     sureImport() {
       if (this.fileList.length == 0) {
-        this.$message.error("请先选择文件");
+        this.$message.error('请先选择文件');
         return;
       } else if (this.fileList.length > 1) {
-        this.$message.error("仅支持一个文件上传");
+        this.$message.error('仅支持一个文件上传');
       } else {
         _this.importExcel(this.file);
       }
@@ -216,7 +214,7 @@ export default {
       reader.onload = function (e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
-          type: "binary",
+          type: 'binary',
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
@@ -251,7 +249,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 判断按钮权限
@@ -261,7 +259,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -272,8 +270,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -282,17 +280,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 33 + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 33 + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -303,13 +301,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -333,7 +331,7 @@ export default {
       let date = new Date().getTime();
       let date1 = new Date(this.formSearchs[0].datas.AutoDays[0]).getTime();
       if (date1 < date) {
-        this.$message.error("开始日期只能是今天之后！");
+        this.$message.error('开始日期只能是今天之后！');
         return;
       }
       this.tagRemark = remarkTb;
@@ -349,7 +347,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -358,10 +356,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 获取表头数据
     async getTableHeader() {
@@ -384,22 +382,22 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.setData();
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -408,30 +406,30 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, Columns, msg } = res.data;
       if (result) {
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         this.setData(data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -463,7 +461,7 @@ export default {
       for (var i = 0; i < 1000; i++) {
         let obj = {};
         colInfos.forEach((m) => {
-          obj[m.name] = "";
+          obj[m.name] = '';
         });
         this.tableData[0].push(obj);
       }
@@ -476,32 +474,32 @@ export default {
         -1,
         1,
         -1,
-        GC.Spread.Sheets.SheetArea.colHeader
+        GC.Spread.Sheets.SheetArea.colHeader,
       );
-      row.backColor("#f3f3f3");
-      row.foreColor("#000000d9");
-      row.font("12px basefontRegular, Roboto, Helvetica, Arial, sans-serif");
+      row.backColor('#f3f3f3');
+      row.foreColor('#000000d9');
+      row.font('12px basefontRegular, Roboto, Helvetica, Arial, sans-serif');
       var defaultStyle = new GC.Spread.Sheets.Style();
       defaultStyle.font =
-        "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+        '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
 
       defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
       defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-        "1px solid #CCCCCC",
-        GC.Spread.Sheets.LineStyle.min
+        '1px solid #CCCCCC',
+        GC.Spread.Sheets.LineStyle.min,
       );
       defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-        "1px solid #CCCCCC",
-        GC.Spread.Sheets.LineStyle.min
+        '1px solid #CCCCCC',
+        GC.Spread.Sheets.LineStyle.min,
       );
       defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-        "1px solid transparent",
-        GC.Spread.Sheets.LineStyle.min
+        '1px solid transparent',
+        GC.Spread.Sheets.LineStyle.min,
       );
       defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-        "1px solid transparent",
-        GC.Spread.Sheets.LineStyle.min
+        '1px solid transparent',
+        GC.Spread.Sheets.LineStyle.min,
       );
       defaultStyle.showEllipsis = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
@@ -526,7 +524,7 @@ export default {
     },
     // 解析
     async checkSys(a, b, type) {
-      this.$confirm("确定要解析吗，解析之后会将结果返回再确定是否导入！")
+      this.$confirm('确定要解析吗，解析之后会将结果返回再确定是否导入！')
         .then(async (_) => {
           this.adminLoading = true;
           let submitData = [];
@@ -543,19 +541,19 @@ export default {
             }
             dirtyItems.push(obj);
           }
-          let res = await GetSearch(dirtyItems, "/APSAPI/CheckHWPlan");
+          let res = await GetSearch(dirtyItems, '/APSAPI/CheckHWPlan');
           const { data, result, msg, listErrorRows } = res.data;
           if (result) {
             this.$message({
               message: msg,
-              type: "success",
+              type: 'success',
               dangerouslyUseHTMLString: true,
             });
             sheet.setDataSource(data);
             if (data.length != 0) {
               data.forEach((m, i) => {
                 //改变颜色，行，列，-1为全部
-                sheet.getCell(i, -1).backColor("");
+                sheet.getCell(i, -1).backColor('');
               });
             }
             this.adminLoading = false;
@@ -567,13 +565,13 @@ export default {
               if (listErrorRows.length != 0) {
                 listErrorRows.forEach((m) => {
                   //改变颜色，行，列，-1为全部
-                  sheet.getCell(m, -1).backColor("red");
+                  sheet.getCell(m, -1).backColor('red');
                 });
               }
             }
             this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
             });
             this.adminLoading = false;
@@ -583,7 +581,7 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      this.$confirm("确定要导入吗，解析错误的不会导入进去哦！")
+      this.$confirm('确定要导入吗，解析错误的不会导入进去哦！')
         .then(async (_) => {
           _this.adminLoading = true;
           let res = null;
@@ -594,13 +592,13 @@ export default {
             let obj = JSON.parse(JSON.stringify(dirtyRows[i]));
             if (dirtyRows[i].Code) {
               obj.dicID = 7806;
-              obj["MaterialName"] = dirtyRows[i].Code;
-              obj["ProcessID"] = "P202106171344021";
-              obj["RowNumber"] = i;
-              obj["PlanQty"] = dirtyRows[i].AllPlanQty;
-              obj["MaterialID"] = "";
-              obj["LineID"] = "";
-              obj["SalesPlanProcessMaterialDayID"] = "0";
+              obj['MaterialName'] = dirtyRows[i].Code;
+              obj['ProcessID'] = 'P202106171344021';
+              obj['RowNumber'] = i;
+              obj['PlanQty'] = dirtyRows[i].AllPlanQty;
+              obj['MaterialID'] = '';
+              obj['LineID'] = '';
+              obj['SalesPlanProcessMaterialDayID'] = '0';
               dirtyItems.push(obj);
             }
           }
@@ -612,7 +610,7 @@ export default {
             _this.adminLoading = false;
             _this.$message({
               message: msg,
-              type: "success",
+              type: 'success',
               dangerouslyUseHTMLString: true,
             });
             _this.dataSearch(remarkTb);
@@ -620,7 +618,7 @@ export default {
             _this.adminLoading = false;
             _this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
             });
           }

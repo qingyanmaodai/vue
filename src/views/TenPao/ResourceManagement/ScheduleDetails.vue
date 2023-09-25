@@ -149,7 +149,7 @@
 var _this;
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import ComSearch from '@/components/ComSearch/index2';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
 import ComBatchEdit from '@/components/ComBatchEdit';

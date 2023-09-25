@@ -94,7 +94,6 @@
               @btnClick="btnClick"
               :signName="item"
               :Region="Region[item]"
-              :defaultResetShow="false"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
