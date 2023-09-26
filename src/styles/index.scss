@@ -37,12 +37,6 @@ body {
     sans-serif;
 }
 
-.el-menu-item,
-.el-submenu__title {
-  height: 42px;
-  line-height: 42px;
-}
-
 label {
   font-weight: 700;
 }
@@ -929,8 +923,22 @@ label {
   margin: 10px 0;
 }
 
+.el-menu-item,
+.el-submenu__title {
+  height: 42px !important;
+  line-height: 42px !important;
+}
 .el-menu-item {
   padding-left: 25px !important;
+}
+
+.el-submenu__title {
+  padding-left: 10px !important;
+}
+
+.el-submenu .el-menu-item {
+  padding: 0 20px !important;
+  position: relative !important;
 }
 
 .iconBtn {
@@ -1096,15 +1104,6 @@ label {
   position: absolute;
   right: 10px;
   top: 39%;
-}
-
-.el-submenu__title {
-  padding-left: 10px !important;
-}
-
-.el-submenu .el-menu-item {
-  padding: 0 20px !important;
-  position: relative !important;
 }
 
 .dangerIconBtn {
