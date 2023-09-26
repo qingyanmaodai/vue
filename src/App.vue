@@ -118,4 +118,10 @@ input[type='number'] {
 .el-textarea__inner {
   padding: 0 2px !important;
 }
+.el-input--mini .el-input__inner,
+.el-input--mini .el-input__icon,
+.el-textarea__inner {
+  line-height: 22px !important;
+  height: 22px !important;
+}
 </style>

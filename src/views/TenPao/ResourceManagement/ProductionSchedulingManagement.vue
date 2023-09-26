@@ -971,9 +971,14 @@ export default {
         this.formSearchs[2].datas['SalesOrderDetailID'] =
           row.SalesOrderDetailID;
         this.formSearchs[2].datas['Code'] = row.Code;
+        this.formSearchs[2].datas['CustomerID'] = row.CustomerID;
         // this.formSearchs[2].datas['LineNum'] = row.LineNum;
         await this.dataSearch(2);
         this.selectionData[2] = [];
+        this.SalesLineNum = '';
+        this.SalesDeliveryDate = '';
+        this.FrontDate = '';
+        this.SalesOrderNo = '';
         if (this.tableData[2] && this.tableData[2][0]) {
           let row = this.tableData[2][0];
           this.SalesLineNum = row['SalesLineNum'];
