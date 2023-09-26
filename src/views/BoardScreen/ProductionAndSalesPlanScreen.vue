@@ -389,102 +389,337 @@ export default {
           ],
         },
         {
-          // backgroundColor: '#fff',
-          // title: {
-          //   text: "注册资金",
-          //   subtext: "2016年",
-          //   x: "center",
-          //   y: "center",
-          //   textStyle: {
-          //     fontWeight: "normal",
-          //     fontSize: 16
-          //   }
-          // },
+          series: (function () {
+            var result = [];
+            [
+              {
+                name: '电压',
+                value: 220,
+                unit: 'V',
+                pos: ['16.6%', '25%'],
+                range: [0, 400],
+              },
+              {
+                name: '电流',
+                value: 32,
+                unit: 'A',
+                pos: ['49.8%', '25%'],
+                range: [0, 60],
+              },
+              {
+                name: '功率因数',
+                value: 0.9,
+                pos: ['83%', '25%'],
+                range: [0.1, 1.0],
+                splitNum: 9,
+              },
+            ].forEach(function (item) {
+              result.push(
+                // 外围刻度
+                {
+                  type: 'gauge',
+                  center: item.pos,
+                  radius: '33.33%', // 1行3个
+                  splitNumber: item.splitNum || 10,
+                  min: item.range[0],
+                  max: item.range[1],
+                  startAngle: 225,
+                  endAngle: -45,
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      width: 2,
+                      shadowBlur: 0,
+                      color: [[1, '#03b7c9']],
+                    },
+                  },
+                  axisTick: {
+                    show: true,
+                    lineStyle: {
+                      color: '#03b7c9',
+                      width: 1,
+                    },
+                    length: -5,
+                    splitNumber: 10,
+                  },
+                  splitLine: {
+                    show: true,
+                    length: -14,
+                    lineStyle: {
+                      color: '#03b7c9',
+                    },
+                  },
+                  axisLabel: {
+                    distance: -20,
+                    textStyle: {
+                      color: '#03b7c9',
+                      fontSize: '14',
+                      fontWeight: 'bold',
+                    },
+                  },
+                  pointer: {
+                    show: 0,
+                  },
+                  detail: {
+                    show: 0,
+                  },
+                },
+
+                // 内侧指针、数值显示
+                {
+                  name: item.name,
+                  type: 'gauge',
+                  center: item.pos,
+                  radius: '30.33%',
+                  startAngle: 225,
+                  endAngle: -45,
+                  min: item.range[0],
+                  max: item.range[1],
+                  axisLine: {
+                    show: true,
+                    lineStyle: {
+                      width: 16,
+                      color: [[1, 'rgba(255,255,255,.1)']],
+                    },
+                  },
+                  axisTick: {
+                    show: 0,
+                  },
+                  splitLine: {
+                    show: 0,
+                  },
+                  axisLabel: {
+                    show: 0,
+                  },
+                  pointer: {
+                    show: true,
+                    length: '105%',
+                  },
+                  detail: {
+                    show: true,
+                    offsetCenter: [0, '100%'],
+                    textStyle: {
+                      fontSize: 20,
+                      color: '#fff',
+                    },
+                    formatter: [
+                      '{value} ' + (item.unit || ''),
+                      '{name|' + item.name + '}',
+                    ].join('\n'),
+                    rich: {
+                      name: {
+                        fontSize: 14,
+                        lineHeight: 30,
+                        color: '#ddd',
+                      },
+                    },
+                  },
+                  itemStyle: {
+                    normal: {
+                      color: '#03b7c9',
+                    },
+                  },
+                  data: [
+                    {
+                      value: item.value,
+                    },
+                  ],
+                },
+              );
+            });
+            return result;
+          })(),
+        },
+        {
+          backgroundColor: '#0E1327',
           tooltip: {
-            trigger: 'item',
-            formatter: '{b}:({d}%)',
+            formatter: '{a} <br/>{b} : {c}%',
           },
-          legend: {
-            top: '0',
-            left: 'center',
-            orient: 'horizontal',
-            // right: "0%",
-            // bottom: "0",
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
-            textStyle: {
-              fontSize: fontSize(12),
-            },
-            itemStyle: {
-              borderRadius: '50%', // 将图例项的形状设定为圆形
-            },
-            data: this.tableData[2].map((item) => item['WorkShopName']),
-          },
-          grid: {
-            containLabel: true,
-          },
+
           series: [
             {
-              type: 'pie',
-              selectedMode: 'single',
-              radius: ['30%', '60%'],
-              color: [
-                '#23CF9C',
-                '#578FFB',
-                '#6E40F2',
-                '#FF61E6',
-                '#E82074',
-                '#FBA806',
-              ],
-              center: ['50%', '60%'],
-              label: {
-                position: 'inner',
-                formatter: '{d}%',
+              type: 'gauge',
+              radius: '40%',
+              startAngle: '225',
+              endAngle: '-45',
+              pointer: {
                 show: true,
-                color: '#fff',
-                textBorderColor: 'inherit',
-                textBorderWidth: 1,
-                fontSize: fontSize(12),
-                formatter: function (params) {
-                  // let percent = 0;
-                  // let total = 0;
-                  // for (var i = 0; i < this.tableData[2].length; i++) {
-                  //   total += scaleData[i].value;
-                  // }
-                  // percent = ((params.value / total) * 100).toFixed(0);
-                  if (params.name !== '') {
-                    // return params.name + '\n' + params.data.data;
-                    if (params.name.length > 4) {
-                      return (
-                        params.name.slice(
-                          0,
-                          Math.ceil(params.name.length / 2),
-                        ) +
-                        '\n' +
-                        params.name.slice(Math.ceil(params.name.length / 2)) +
-                        '\n' +
-                        params.percent +
-                        '%'
-                      );
-                    } else {
-                      return params.name + params.percent + '%';
-                    }
-                  } else {
-                    return '';
-                  }
+              },
+              detail: {
+                formatter: function (value) {
+                  var num = Math.round(value);
+                  return '{bule|dB}{white|}' + '{size|' + '}';
+                },
+                rich: {
+                  white: {
+                    fontSize: 50,
+                    color: '#fff',
+                    fontWeight: '500',
+                    padding: [-150, 0, 0, 0],
+                  },
+                  bule: {
+                    fontSize: 70,
+                    fontFamily: 'DINBold',
+                    color: '#fff',
+                    fontWeight: '700',
+                    padding: [-120, 0, 0, 0],
+                  },
+                  radius: {
+                    width: 350,
+                    height: 80,
+                    // lineHeight:80,
+                    borderWidth: 1,
+                    borderColor: '#0092F2',
+                    fontSize: 50,
+                    color: '#fff',
+                    backgroundColor: '#1B215B',
+                    borderRadius: 20,
+                    textAlign: 'center',
+                  },
+                  size: {
+                    height: 400,
+                    padding: [100, 0, 0, 0],
+                  },
+                },
+                offsetCenter: ['0%', '55%'],
+              },
+              data: [
+                {
+                  value: 120,
+                  name: '噪音检测',
+                },
+              ],
+              title: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: [
+                    [
+                      1,
+                      new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        {
+                          offset: 0,
+                          color: '#5CF9FE', // 0% 处的颜色
+                        },
+                        {
+                          offset: 0.17,
+                          color: '#468EFD', // 100% 处的颜色
+                        },
+                        {
+                          offset: 0.9,
+                          color: '#468EFD', // 100% 处的颜色
+                        },
+                        {
+                          offset: 1,
+                          color: '#5CF9FE', // 100% 处的颜色
+                        },
+                      ]),
+                    ],
+                    // [[0.91, color],
+                    // [1, '#FFF']],
+                  ],
+                  width: 25,
+                  // shadowBlur: 15,
+                  // shadowColor: '#B0C4DE',
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 0,
+                  opacity: 1,
                 },
               },
-              labelLine: {
-                normal: {
-                  show: false,
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                show: false,
+                length: 25,
+                lineStyle: {
+                  color: '#00377a',
+                  width: 2,
+                  type: 'solid',
                 },
               },
-              data: this.tableData[2].map((item) => {
-                return {
-                  value: item['S1'],
-                  name: item['WorkShopName'],
-                };
-              }),
+              axisLabel: {
+                show: false,
+              },
+              animationDuration: 4000,
+            },
+            {
+              name: '灰色内圈', //刻度背景
+              type: 'gauge',
+              z: 2,
+              radius: '30%',
+              startAngle: '225',
+              endAngle: '-45',
+              //center: ["50%", "75%"], //整体的位置设置
+              axisLine: {
+                // 坐标轴线
+                lineStyle: {
+                  // 属性lineStyle控制线条样式
+                  color: [[1, '#018DFF']],
+                  fontSize: 20,
+                  width: 2,
+                  opacity: 1, //刻度背景宽度
+                },
+              },
+              splitLine: {
+                show: false,
+              },
+              axisLabel: {
+                show: false,
+              },
+              pointer: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              detail: {
+                show: 0,
+              },
+            },
+            {
+              name: '白色圈刻度',
+              type: 'gauge',
+              radius: '30%',
+              startAngle: 225, //刻度起始
+              endAngle: -45, //刻度结束
+              min: 0,
+              max: 120,
+              splitNumber: 6,
+              z: 4,
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                length: 16, //刻度节点线长度
+                lineStyle: {
+                  width: 2,
+                  color: '#018DFF',
+                }, //刻度节点线
+              },
+              axisLabel: {
+                color: 'rgba(255,255,255,8)',
+                fontSize: 24,
+              }, //刻度节点文字颜色
+              pointer: {
+                show: false,
+              },
+              axisLine: {
+                lineStyle: {
+                  opacity: 0,
+                },
+              },
+              detail: {
+                show: false,
+              },
+              data: [
+                {
+                  value: 0,
+                  name: '',
+                },
+              ],
             },
           ],
         },
