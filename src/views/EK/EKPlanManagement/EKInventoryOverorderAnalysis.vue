@@ -33,6 +33,20 @@
                 ><span class="title">{{ title }}</span></el-col
               >
               <el-col :span="20" class="flex_flex_end">
+                <!-- 批量修改组件 -->
+                <div
+                  v-for="i in [0]"
+                  :key="'Edit' + i"
+                  v-show="isBatch"
+                  style="height: 100%"
+                >
+                  <ComBatchEdit
+                    :OrderNos="OrderNos[0]"
+                    @changeProp="changeProp"
+                    :OrderNo="DVBatch"
+                    :remark="0"
+                  />
+                </div>
                 <div v-for="(item, y) in Status1" :key="y">
                   <span
                     @click="changeStatus(item, y)"
@@ -88,19 +102,15 @@ import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
-import ComReportTable from '@/components/ComReportTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
-import ComFormDialog from '@/components/ComFormDialog';
 import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
 export default {
   name: 'EKInventoryOverorderAnalysis',
   components: {
     ComSearch,
     ComVxeTable,
-    ComReportTable,
     Splitpanes,
     Pane,
-    ComFormDialog,
     DialogOptTable,
   },
   data() {
@@ -111,7 +121,9 @@ export default {
       includeFields: [[], [], [], []],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            AnalyiseStatus: '未分析',
+          },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -150,14 +162,14 @@ export default {
       isLoading: false,
       adminLoading: false,
       Status1: [
-        { label: '未分析', value: '' },
-        { label: '超期未分析', value: '0' },
-        { label: '已分析', value: '1' },
-        { label: '全部', value: '1' },
+        { label: '未分析', value: '未分析' },
+        { label: '超期未分析', value: '超期未分析' },
+        { label: '已分析', value: '已分析' },
+        { label: '全部', value: '' },
       ],
       Region: [5, 5, 5],
-      labelStatus1: 1,
-      sysID: [{ ID: 7844 }],
+      labelStatus1: 0,
+      sysID: [{ ID: 10113 }, { ID: 10113 }, { ID: 10113 }, { ID: 10113 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       clickRow: null,
@@ -165,6 +177,8 @@ export default {
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
+      OrderNo: '',
+      OrderNos: [[]],
     };
   },
   watch: {},
@@ -334,7 +348,6 @@ export default {
         }
       }
       let res = await SaveData(changeRecords);
-      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -503,61 +516,27 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas['Status'] = item.value;
+      this.formSearchs[0].datas['AnalyiseStatus'] = item.value;
       this.dataSearch(0);
     },
-    SubmitEvent(remarkTb, index, parms) {
-      let newData = [];
-      if (this.selectionData[0].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
+        this.$message.error('请选择需要修改的值');
         return;
-      } else {
-        newData = _.cloneDeep(
-          this.selectionData[0].map((x) => {
-            x['Status'] = 1;
-            return x;
-          }),
-        );
-        _this.dataSave(0, index, null, newData);
       }
-      // this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-      //   .then((_) => {
-      //     _this.dataSave(remarkTb, index, null, newData);
-      //   })
-      //   .catch((_) => {});
-    },
-    AuditPassed(remarkTb, index, parms) {
-      let newData = [];
-      if (this.selectionData[0].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
+      if (this.tableData[remarkTb].length === 0) {
+        this.$message.error('当前表格无数据');
         return;
-      } else {
-        newData = _.cloneDeep(
-          this.selectionData[0].map((x) => {
-            x['Status'] = 2;
-            x['CheckStatus'] = '正常';
-            x['Checked'] = '人工判断通过';
-            return x;
-          }),
-        );
-        _this.dataSave(0, index, null, newData);
       }
-    },
-    AuditNotPassed(remarkTb, index, parms) {
-      let newData = [];
-      if (this.selectionData[0].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error('请选择需要批量修改的行');
         return;
-      } else {
-        newData = _.cloneDeep(
-          this.selectionData[0].map((x) => {
-            x['Status'] = 4;
-            x['CheckStatus'] = '异常';
-            return x;
-          }),
-        );
-        _this.dataSave(0, index, null, newData);
       }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem['isChecked'] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
+      });
     },
   },
 };
