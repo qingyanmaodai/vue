@@ -34,16 +34,11 @@
               >
               <el-col :span="20" class="flex_flex_end">
                 <!-- 批量修改组件 -->
-                <div
-                  v-for="i in [0]"
-                  :key="'Edit' + i"
-                  v-show="isBatch"
-                  style="height: 100%"
-                >
+                <div v-for="i in [0]" :key="'Edit' + i" style="height: 100%">
                   <ComBatchEdit
                     :OrderNos="OrderNos[0]"
                     @changeProp="changeProp"
-                    :OrderNo="DVBatch"
+                    :OrderNo="''"
                     :remark="0"
                   />
                 </div>
@@ -104,6 +99,7 @@ import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
+import ComBatchEdit from '@/components/ComBatchEdit';
 export default {
   name: 'EKInventoryOverorderAnalysis',
   components: {
@@ -112,6 +108,7 @@ export default {
     Splitpanes,
     Pane,
     DialogOptTable,
+    ComBatchEdit,
   },
   data() {
     return {
