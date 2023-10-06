@@ -1181,7 +1181,6 @@ export default {
       console.log(params, 'params');
       let arr = this.getSelectionData();
       if (this.ruleForm.LineIDs.length == 0 && false) {
-        this.$message.error('请选择生产线再转入日计划！');
       } else {
         if (this.selectionData[remarkTb].length == 0) {
           this.$message.error('请选择需要转入日计划的数据！');
@@ -1229,9 +1228,9 @@ export default {
               if (isOk) {
                 d['LineIDs'] = this.ruleForm.LineIDs;
                 d['ProducedDate'] = this.ruleForm.ProducedDate;
-                if (d['ExceptProcessID'] == 1) {
+                if (d['ExceptProcessID'] == 2) {
                   d['ProcessID'] = params.ProcessID;
-                } else if (d['ExceptProcessID'] == 2) {
+                } else if (d['ExceptProcessID'] == 1) {
                   d['ProcessID'] = 'P202309161637202';
                 }
                 d['LineID'] = null;
