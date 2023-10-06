@@ -613,7 +613,7 @@ export default {
 
         cellIndex++;
       });
-      var colindexs = [1, 2, 3, 4, 5];
+      var colindexs = [1, 2, 3, 4, 5, 12];
       this.tableData[1].forEach((row, index) => {
         let cellIndex = 0;
         this.tableColumns[1].forEach((m, num) => {
