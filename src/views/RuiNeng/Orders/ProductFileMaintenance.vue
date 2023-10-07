@@ -29,7 +29,7 @@
             <ComBatchEdit
               :OrderNos="OrderNos[0]"
               @changeProp="changeProp"
-              :OrderNo="'Extend22'"
+              :OrderNo="DVBatch"
               :remark="0"
             />
           </div>
@@ -235,6 +235,7 @@ export default {
       storageProperty: null,
       palletQuantity: null,
       otherProperty: null,
+      DVBatch: null,
       storagePropertyItems: [
         {
           title: '是',
@@ -257,6 +258,19 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
+    const params = new URLSearchParams(this.$route.meta.TargetFor);
+    const variableMappings = {
+      DVBatch: (value) => value,
+    };
+    Object.keys(variableMappings).forEach((key) => {
+      const value = params.get(key);
+      if (value !== null) {
+        this[key] =
+          typeof variableMappings[key] === 'function'
+            ? variableMappings[key](value)
+            : value;
+      }
+    });
   },
   mounted() {
     setTimeout(() => {

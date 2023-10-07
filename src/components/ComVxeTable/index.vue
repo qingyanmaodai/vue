@@ -63,7 +63,7 @@
           :field="x.prop"
           :visible="x.visible"
           :title="x.label"
-          :min-width="x.width"
+          :width="x.width"
           :fixed="x.fix"
           :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
           :filter-method="filterMethod"

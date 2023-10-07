@@ -150,7 +150,7 @@ import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
 import ComVxeTable from '@/components/ComVxeTable';
 export default {
-  name: 'ProductionAndSalesPlanScreen',
+  name: 'Screen10',
   data() {
     return {
       chartHead: chartHead,
@@ -389,204 +389,49 @@ export default {
           ],
         },
         {
-          series: (function () {
-            var result = [];
-            [
-              {
-                name: '电压',
-                value: 220,
-                unit: 'V',
-                pos: ['16.6%', '25%'],
-                range: [0, 400],
-              },
-              {
-                name: '电流',
-                value: 32,
-                unit: 'A',
-                pos: ['49.8%', '25%'],
-                range: [0, 60],
-              },
-              {
-                name: '功率因数',
-                value: 0.9,
-                pos: ['83%', '25%'],
-                range: [0.1, 1.0],
-                splitNum: 9,
-              },
-            ].forEach(function (item) {
-              result.push(
-                // 外围刻度
-                {
-                  type: 'gauge',
-                  center: item.pos,
-                  radius: '33.33%', // 1行3个
-                  splitNumber: item.splitNum || 10,
-                  min: item.range[0],
-                  max: item.range[1],
-                  startAngle: 225,
-                  endAngle: -45,
-                  axisLine: {
-                    show: true,
-                    lineStyle: {
-                      width: 2,
-                      shadowBlur: 0,
-                      color: [[1, '#03b7c9']],
-                    },
-                  },
-                  axisTick: {
-                    show: true,
-                    lineStyle: {
-                      color: '#03b7c9',
-                      width: 1,
-                    },
-                    length: -5,
-                    splitNumber: 10,
-                  },
-                  splitLine: {
-                    show: true,
-                    length: -14,
-                    lineStyle: {
-                      color: '#03b7c9',
-                    },
-                  },
-                  axisLabel: {
-                    distance: -20,
-                    textStyle: {
-                      color: '#03b7c9',
-                      fontSize: '14',
-                      fontWeight: 'bold',
-                    },
-                  },
-                  pointer: {
-                    show: 0,
-                  },
-                  detail: {
-                    show: 0,
-                  },
-                },
-
-                // 内侧指针、数值显示
-                {
-                  name: item.name,
-                  type: 'gauge',
-                  center: item.pos,
-                  radius: '30.33%',
-                  startAngle: 225,
-                  endAngle: -45,
-                  min: item.range[0],
-                  max: item.range[1],
-                  axisLine: {
-                    show: true,
-                    lineStyle: {
-                      width: 16,
-                      color: [[1, 'rgba(255,255,255,.1)']],
-                    },
-                  },
-                  axisTick: {
-                    show: 0,
-                  },
-                  splitLine: {
-                    show: 0,
-                  },
-                  axisLabel: {
-                    show: 0,
-                  },
-                  pointer: {
-                    show: true,
-                    length: '105%',
-                  },
-                  detail: {
-                    show: true,
-                    offsetCenter: [0, '100%'],
-                    textStyle: {
-                      fontSize: 20,
-                      color: '#fff',
-                    },
-                    formatter: [
-                      '{value} ' + (item.unit || ''),
-                      '{name|' + item.name + '}',
-                    ].join('\n'),
-                    rich: {
-                      name: {
-                        fontSize: 14,
-                        lineHeight: 30,
-                        color: '#ddd',
-                      },
-                    },
-                  },
-                  itemStyle: {
-                    normal: {
-                      color: '#03b7c9',
-                    },
-                  },
-                  data: [
-                    {
-                      value: item.value,
-                    },
-                  ],
-                },
-              );
-            });
-            return result;
-          })(),
-        },
-        {
           backgroundColor: '#0E1327',
           tooltip: {
             formatter: '{a} <br/>{b} : {c}%',
           },
-
           series: [
             {
               type: 'gauge',
-              radius: '40%',
+              radius: '60%',
+              center: ['20%', '40%'],
               startAngle: '225',
               endAngle: '-45',
               pointer: {
                 show: true,
+                length: '60%',
+                width: fontSize(4),
+                itemStyle: {
+                  color: '#2F8FFF',
+                },
+              },
+              anchor: {
+                show: true,
+                showAbove: true,
+                size: fontSize(4),
+                itemStyle: {
+                  color: '#030A2C',
+                },
               },
               detail: {
-                formatter: function (value) {
-                  var num = Math.round(value);
-                  return '{bule|dB}{white|}' + '{size|' + '}';
-                },
-                rich: {
-                  white: {
-                    fontSize: 50,
-                    color: '#fff',
-                    fontWeight: '500',
-                    padding: [-150, 0, 0, 0],
-                  },
-                  bule: {
-                    fontSize: 70,
-                    fontFamily: 'DINBold',
-                    color: '#fff',
-                    fontWeight: '700',
-                    padding: [-120, 0, 0, 0],
-                  },
-                  radius: {
-                    width: 350,
-                    height: 80,
-                    // lineHeight:80,
-                    borderWidth: 1,
-                    borderColor: '#0092F2',
-                    fontSize: 50,
-                    color: '#fff',
-                    backgroundColor: '#1B215B',
-                    borderRadius: 20,
-                    textAlign: 'center',
-                  },
-                  size: {
-                    height: 400,
-                    padding: [100, 0, 0, 0],
-                  },
-                },
-                offsetCenter: ['0%', '55%'],
+                formatter: '{value}%',
+                fontSize: fontSize(24),
+                color: '#fff',
+                offsetCenter: [0, '110%'],
               },
               data: [
                 {
-                  value: 120,
-                  name: '噪音检测',
+                  value: 90.12,
+                  name: '排产达成',
+                  title: {
+                    offsetCenter: ['0%', '150%'],
+                    fontSize: fontSize(18),
+                    color: '#C9D2FA',
+                    show: true,
+                  },
                 },
               ],
               title: {
@@ -596,31 +441,10 @@ export default {
                 show: true,
                 lineStyle: {
                   color: [
-                    [
-                      1,
-                      new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                        {
-                          offset: 0,
-                          color: '#5CF9FE', // 0% 处的颜色
-                        },
-                        {
-                          offset: 0.17,
-                          color: '#468EFD', // 100% 处的颜色
-                        },
-                        {
-                          offset: 0.9,
-                          color: '#468EFD', // 100% 处的颜色
-                        },
-                        {
-                          offset: 1,
-                          color: '#5CF9FE', // 100% 处的颜色
-                        },
-                      ]),
-                    ],
-                    // [[0.91, color],
-                    // [1, '#FFF']],
+                    [1 / 2, '#2F8FFF'],
+                    [1, '#566093'],
                   ],
-                  width: 25,
+                  width: fontSize(10),
                   // shadowBlur: 15,
                   // shadowColor: '#B0C4DE',
                   shadowOffsetX: 0,
@@ -628,98 +452,193 @@ export default {
                   opacity: 1,
                 },
               },
-              axisTick: {
-                show: false,
-              },
-              splitLine: {
-                show: false,
-                length: 25,
-                lineStyle: {
-                  color: '#00377a',
-                  width: 2,
-                  type: 'solid',
-                },
-              },
               axisLabel: {
                 show: false,
-              },
+              }, //刻度标签。
+              axisTick: {
+                splitNumber: 3,
+                distance: fontSize(4),
+                show: true,
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(2),
+              }, //刻度样式
+              splitLine: {
+                show: true,
+                distance: fontSize(4),
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(4),
+              }, //分隔线样式
               animationDuration: 4000,
             },
             {
-              name: '灰色内圈', //刻度背景
               type: 'gauge',
-              z: 2,
-              radius: '30%',
+              radius: '60%',
+              center: ['50%', '40%'],
               startAngle: '225',
               endAngle: '-45',
-              //center: ["50%", "75%"], //整体的位置设置
-              axisLine: {
-                // 坐标轴线
-                lineStyle: {
-                  // 属性lineStyle控制线条样式
-                  color: [[1, '#018DFF']],
-                  fontSize: 20,
-                  width: 2,
-                  opacity: 1, //刻度背景宽度
+              pointer: {
+                show: true,
+                length: '60%',
+                width: fontSize(4),
+                itemStyle: {
+                  color: '#4ACBAC',
                 },
               },
-              splitLine: {
-                show: false,
-              },
-              axisLabel: {
-                show: false,
-              },
-              pointer: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-              detail: {
-                show: 0,
-              },
-            },
-            {
-              name: '白色圈刻度',
-              type: 'gauge',
-              radius: '30%',
-              startAngle: 225, //刻度起始
-              endAngle: -45, //刻度结束
-              min: 0,
-              max: 120,
-              splitNumber: 6,
-              z: 4,
-              axisTick: {
-                show: false,
-              },
-              splitLine: {
-                length: 16, //刻度节点线长度
-                lineStyle: {
-                  width: 2,
-                  color: '#018DFF',
-                }, //刻度节点线
-              },
-              axisLabel: {
-                color: 'rgba(255,255,255,8)',
-                fontSize: 24,
-              }, //刻度节点文字颜色
-              pointer: {
-                show: false,
-              },
-              axisLine: {
-                lineStyle: {
-                  opacity: 0,
+              anchor: {
+                show: true,
+                showAbove: true,
+                size: fontSize(4),
+                itemStyle: {
+                  color: '#030A2C',
                 },
               },
               detail: {
-                show: false,
+                formatter: '{value}%',
+                fontSize: fontSize(24),
+                color: '#fff',
+                offsetCenter: [0, '110%'],
               },
               data: [
                 {
-                  value: 0,
-                  name: '',
+                  value: 39.53,
+                  name: '出货达成',
+                  title: {
+                    offsetCenter: ['0%', '150%'],
+                    fontSize: fontSize(18),
+                    color: '#C9D2FA',
+                    show: true,
+                  },
                 },
               ],
+              title: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: [
+                    [1 / 2, '#4ACBAC'],
+                    [1, '#566093'],
+                  ],
+                  width: fontSize(10),
+                  // shadowBlur: 15,
+                  // shadowColor: '#B0C4DE',
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 0,
+                  opacity: 1,
+                },
+              },
+              axisLabel: {
+                show: false,
+              }, //刻度标签。
+              axisTick: {
+                splitNumber: 3,
+                distance: fontSize(4),
+                show: true,
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(2),
+              }, //刻度样式
+              splitLine: {
+                show: true,
+                distance: fontSize(4),
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(4),
+              }, //分隔线样式
+              animationDuration: 4000,
+            },
+            {
+              type: 'gauge',
+              radius: '60%',
+              center: ['80%', '40%'],
+              startAngle: '225',
+              endAngle: '-45',
+              pointer: {
+                show: true,
+                length: '60%',
+                width: fontSize(4),
+                itemStyle: {
+                  color: '#BC53EE',
+                },
+              },
+              anchor: {
+                show: true,
+                showAbove: true,
+                size: fontSize(4),
+                itemStyle: {
+                  color: '#030A2C',
+                },
+              },
+              detail: {
+                formatter: '{value}%',
+                fontSize: fontSize(24),
+                color: '#fff',
+                offsetCenter: [0, '110%'],
+              },
+              data: [
+                {
+                  value: 85.34,
+                  name: '计划配套率',
+                  title: {
+                    offsetCenter: ['0%', '150%'],
+                    fontSize: fontSize(18),
+                    color: '#C9D2FA',
+                    show: true,
+                  },
+                },
+              ],
+              title: {
+                show: false,
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: [
+                    [1 / 2, '#BC53EE'],
+                    [1, '#566093'],
+                  ],
+                  width: fontSize(10),
+                  // shadowBlur: 15,
+                  // shadowColor: '#B0C4DE',
+                  shadowOffsetX: 0,
+                  shadowOffsetY: 0,
+                  opacity: 1,
+                },
+              },
+              axisLabel: {
+                show: false,
+              }, //刻度标签。
+              axisTick: {
+                splitNumber: 3,
+                distance: fontSize(4),
+                show: true,
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(2),
+              }, //刻度样式
+              splitLine: {
+                show: true,
+                distance: fontSize(4),
+                lineStyle: {
+                  color: '#566093',
+                  width: fontSize(2),
+                },
+                length: fontSize(4),
+              }, //分隔线样式
+              animationDuration: 4000,
             },
           ],
         },
