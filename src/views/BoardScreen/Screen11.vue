@@ -114,17 +114,41 @@
               <div class="h-full flex flex-col justify-center gap-[10]">
                 <div class="ScreenBaseNum">383</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
-                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
+                <div
+                  class="relative ScreenBase4 flex justify-center items-center"
+                >
+                  <svg-icon
+                    icon-class="ScreenBase4"
+                    class="ScreenBase4 !absolute"
+                  />
+                  <div class="ScreenBaseTitle">计划数</div>
+                </div>
               </div>
               <div class="h-full flex flex-col justify-center gap-[10]">
                 <div class="ScreenBaseNum">162</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
-                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
+                <div
+                  class="relative ScreenBase4 flex justify-center items-center"
+                >
+                  <svg-icon
+                    icon-class="ScreenBase4"
+                    class="ScreenBase4 !absolute"
+                  />
+                  <div class="ScreenBaseTitle">已完成</div>
+                </div>
               </div>
               <div class="h-full flex flex-col justify-center gap-[10]">
                 <div class="ScreenBaseNum">53</div>
                 <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
-                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
+                <div
+                  class="relative ScreenBase4 flex justify-center items-center"
+                >
+                  <svg-icon
+                    icon-class="ScreenBase4"
+                    class="ScreenBase4 !absolute"
+                  />
+                  <div class="ScreenBaseTitle">未完成</div>
+                </div>
               </div>
             </div>
             <div class="panel h-50/100 w-full">
@@ -794,11 +818,11 @@ export default {
         },
         {
           grid: {
-            bottom: fontSize(10),
+            containLabel: true,
+            bottom: -fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
             right: fontSize(10),
-            containLabel: true,
           },
           tooltip: {
             trigger: 'axis',
@@ -1035,7 +1059,7 @@ export default {
     line-height: normal;
   }
   .ScreenBaseTitle {
-    color: #8aceff;
+    color: #c9d2fa;
     text-align: center;
     font-family: PingFang SC;
     font-size: 18px;
@@ -1043,6 +1067,7 @@ export default {
     font-weight: 500;
     line-height: normal;
     align-self: center; /* 第二个元素在中线位置 */
+    position: absolute;
   }
 }
 .panel {

@@ -1004,10 +1004,7 @@ export default {
             this.formSearchs[z].datas,
             'Accounts',
             this.accountsValue
-              ? [
-                  '$' + `${this.userInfo['Account']}` + '$',
-                  '$' + `${this.accountsValue}` + '$',
-                ]
+              ? ['$' + `${this.accountsValue}` + '$']
               : ['$' + `${this.userInfo['Account']}` + '$'],
           );
         });

@@ -1414,10 +1414,10 @@ export default {
           return;
         }
         // 如果是勾选框单元格，则取消行点击的触发
-        if (row !== this.lastClickedRow) {
-          this.$emit('handleRowClick', row, this.remark, column);
-          this.lastClickedRow = row;
-        }
+        // if (row !== this.lastClickedRow ) {
+        this.$emit('handleRowClick', row, this.remark, column);
+        //   this.lastClickedRow = row;
+        // }
       }
     },
     // 双击行
