@@ -22,6 +22,9 @@
           highlight: true,
           checkField: 'isChecked',
         }"
+        :resizable-config="{
+          minWidth: '16',
+        }"
         :scroll-x="{
           enabled: scrollEnable,
         }"

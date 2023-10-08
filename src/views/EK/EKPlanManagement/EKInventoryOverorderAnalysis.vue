@@ -38,7 +38,7 @@
                   <ComBatchEdit
                     :OrderNos="OrderNos[0]"
                     @changeProp="changeProp"
-                    :OrderNo="''"
+                    :OrderNo="DVBatch"
                     :remark="0"
                   />
                 </div>
@@ -81,7 +81,6 @@
               @sortChange="sortChange"
               @selectfun="selectFun"
               :keepSource="true"
-              :scrollEnable="false"
             />
           </div>
         </div>
@@ -174,6 +173,7 @@ export default {
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
+      DVBatch: null,
       OrderNo: '',
       OrderNos: [[]],
     };
@@ -183,6 +183,24 @@ export default {
     _this = this;
     this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
+    const params = new URLSearchParams(this.$route.meta.TargetFor);
+    const variableMappings = {
+      addNum: (value) => Number(value),
+      addStep: (value) => Number(value),
+      isBatch: (value) => JSON.parse(value),
+      DVBatch: (value) => value,
+      scrollEnable: (value) => JSON.parse(value),
+      dataColumns: (value) => JSON.parse(value),
+    };
+    Object.keys(variableMappings).forEach((key) => {
+      const value = params.get(key);
+      if (value !== null) {
+        this[key] =
+          typeof variableMappings[key] === 'function'
+            ? variableMappings[key](value)
+            : value;
+      }
+    });
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
@@ -395,6 +413,11 @@ export default {
               this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item['isEdit'] === true),
+          );
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮

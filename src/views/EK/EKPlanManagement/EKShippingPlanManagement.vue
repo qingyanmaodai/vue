@@ -104,32 +104,86 @@
       </div>
     </el-dialog>
     <!-- 弹框-->
-    <DialogOptTable
-      title="指定业务员"
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
-      :Region="Region[2]"
-      width="50%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
-      :isClear="isClear[2]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable>
+    <el-dialog
+      :title="'计划调整'"
+      :visible.sync="colDialogVisible2"
+      width="70%"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
+      ><div
+        style="
+          height: 60vh;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <div class="ant-table-title">
+          <el-row> </el-row>
+        </div>
+        <div v-for="item in [2]" :key="item" class="flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :tableData="tableData[item]"
+            :tableHeader="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :isToolbar="false"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :hasSelect="true"
+            :isEdit="isEdit[item]"
+            :isClear="isClear[item]"
+            :keepSource="true"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+          />
+        </div>
+        <div style="height: 40px; margin-top: 6px">
+          <el-row>
+            <el-col :span="6">
+              <div>
+                原因:<el-select
+                  clearable
+                  filterable
+                  size="small"
+                  placeholder="请选择原因"
+                  v-model="ChangeReason"
+                >
+                  <el-option
+                    v-for="(item, i) in ChangeReasonArray"
+                    :key="i"
+                    :label="item.value"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </div>
+            </el-col>
+            <el-col :span="6"
+              ><span class="title">
+                <div>
+                  备注:
+                  <el-input
+                    size="small"
+                    v-model="Extend1"
+                    style="width: 160px"
+                    placeholder="请输入备注"
+                  ></el-input>
+                </div> </span
+            ></el-col>
+          </el-row>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="Reschedule()">重算排期</el-button>
+        <el-button type="primary" @click="dataSave2()">确定</el-button>
+        <el-button @click="colDialogVisible2 = false">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -212,7 +266,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 10127 }],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -1382,8 +1436,8 @@ export default {
     },
     //指定人员
     async DesignatedPerson(remarkTb) {
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
+      if (this.selectionData[remarkTb].length !== 1) {
+        this.$message.error('请选择需要操作的数据且仅为一条！');
         return;
       }
       this.colDialogVisible2 = true;
