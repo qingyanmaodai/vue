@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 3, 4]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 3, 4, 5]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[0].datas"
@@ -224,6 +228,7 @@ export default {
         { label: '未完成', value: 0, index: 0 },
         { label: '已完成', value: 1, index: 3 },
         { label: '全部', value: '', index: 4 },
+        { label: '试产', value: 2, index: 5 },
       ],
       Region: [5, 6, 6],
       RoleMapStatus: false,
