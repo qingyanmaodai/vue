@@ -12,155 +12,185 @@
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
-      <div class="h-full flex">
-        <div class="h-full w-30/100 flex flex-col !mr-[10px]">
-          <div class="panel h-34/100 w-full !mb-[10px]">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
+      <div class="h-full flex gap-[10px]">
+        <div class="h-full w-30/100 flex flex-col gap-[10px]">
+          <div class="h-70/100 w-full flex flex-col gap-[10px]">
+            <div class="panel h-50/100 w-full">
+              <div class="chartHead">
+                <div class="panel-footer"></div>
 
-              <h2>计划每日按车间占比</h2>
+                <h2>计划每日按车间占比</h2>
+              </div>
+              <div class="chartContent" ref="chart0"></div>
             </div>
-            <div class="chartContent" ref="chart0"></div>
-            <div class="panel-footer"></div>
-          </div>
-          <div class="panel h-33/100 w-full !mb-[10px]">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
+            <div class="panel h-50/100 w-full">
+              <div class="chartHead">
+                <div class="panel-footer"></div>
 
-              <h2>近七天出货对比</h2>
+                <h2>近七天出货对比</h2>
+              </div>
+              <div class="chartContent" ref="chart1"></div>
             </div>
-            <div class="chartContent" ref="chart1"></div>
-            <div class="panel-footer"></div>
           </div>
-          <div class="panel h-33/100 w-full">
+
+          <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
 
               <h2>当日工段占比</h2>
             </div>
             <div class="chartContent" ref="chart2"></div>
-            <div class="panel-footer"></div>
           </div>
         </div>
-        <div class="panel h-full w-40/100 !mr-[10px]">
-          <div class="chartHead">
-            <div class="panel-footer"></div>
-            <h2>出货计划</h2>
-          </div>
-          <div
-            class="chartContent flex flex-col"
-            element-loading-background="#060765"
-          >
-            <div class="tableHead flex !px-[10px] text-white w-full">
-              <div
-                v-for="(column, index) in tableColumns[0]"
-                :key="'tableHead' + index"
-                class="flex"
-                :class="
-                  index < tableColumns[0].length - 1 ? '!mr-[10px]' : '!mr-0'
-                "
-                :style="getColumnStyle(tableColumns[0], column)"
+        <div class="h-full w-40/100 flex flex-col gap-[10px]">
+          <div class="panel h-70/100 w-full">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
+              <h2>出货计划</h2>
+            </div>
+            <div
+              class="chartContent flex flex-col"
+              element-loading-background="#060765"
+            >
+              <div class="tableHead flex !px-[10px] text-white w-full">
+                <div
+                  v-for="(column, index) in tableColumns[0]"
+                  :key="'tableHead' + index"
+                  class="flex"
+                  :class="
+                    index < tableColumns[0].length - 1 ? '!mr-[10px]' : '!mr-0'
+                  "
+                  :style="getColumnStyle(tableColumns[0], column)"
+                >
+                  {{ column.label }}
+                </div>
+              </div>
+              <VueSeamlessScroll
+                :data="tableData[0]"
+                class="warp"
+                :class-option="{
+                  step: 1,
+                }"
               >
-                {{ column.label }}
+                <ul class="!px-[10px]">
+                  <li
+                    v-for="(item, index) in tableData[0]"
+                    :key="'data' + index"
+                    class="flex"
+                  >
+                    <div
+                      v-for="(column, colIndex) in tableColumns[0]"
+                      :key="'column' + colIndex"
+                      class="truncate"
+                      :class="
+                        colIndex < tableColumns[0].length - 1
+                          ? '!mr-[10px]'
+                          : '!mr-0'
+                      "
+                      :style="getColumnStyle(tableColumns[0], column)"
+                    >
+                      {{ tableData[0][index][column.prop] }}
+                    </div>
+                  </li>
+                </ul>
+              </VueSeamlessScroll>
+            </div>
+          </div>
+          <div class="panel h-30/100 w-full">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
+
+              <h2>近一周订单完成概览</h2>
+            </div>
+            <div class="chartContent" ref="chart3"></div>
+          </div>
+        </div>
+
+        <div class="h-full w-30/100 flex flex-col gap-[10px]">
+          <div class="h-70/100 w-full flex flex-col gap-[10px]">
+            <div
+              class="h-50/100 w-full upper-right-element flex justify-center gap-[50px]"
+            >
+              <div class="h-full flex flex-col justify-center gap-[10]">
+                <div class="ScreenBaseNum">383</div>
+                <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
+                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
+              </div>
+              <div class="h-full flex flex-col justify-center gap-[10]">
+                <div class="ScreenBaseNum">162</div>
+                <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
+                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
+              </div>
+              <div class="h-full flex flex-col justify-center gap-[10]">
+                <div class="ScreenBaseNum">53</div>
+                <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
+                <svg-icon icon-class="ScreenBase4" class="ScreenBase4" />
               </div>
             </div>
-            <VueSeamlessScroll
-              :data="tableData[0]"
-              class="warp"
-              :class-option="{
-                step: 1,
-              }"
-            >
-              <ul class="!px-[10px]">
-                <li
-                  v-for="(item, index) in tableData[0]"
-                  :key="'data' + index"
-                  class="flex"
-                >
+            <div class="panel h-50/100 w-full">
+              <div class="chartHead">
+                <div class="panel-footer"></div>
+                <h2>昨日落产计划</h2>
+              </div>
+              <div
+                class="chartContent flex flex-col"
+                element-loading-background="#060765"
+              >
+                <div class="tableHead flex !px-[10px] text-white w-full">
                   <div
-                    v-for="(column, colIndex) in tableColumns[0]"
-                    :key="'column' + colIndex"
-                    class="truncate"
+                    v-for="(column, index) in tableColumns[0]"
+                    :key="'tableHead' + index"
+                    class="flex"
                     :class="
-                      colIndex < tableColumns[0].length - 1
+                      index < tableColumns[0].length - 1
                         ? '!mr-[10px]'
                         : '!mr-0'
                     "
                     :style="getColumnStyle(tableColumns[0], column)"
                   >
-                    {{ tableData[0][index][column.prop] }}
+                    {{ column.label }}
                   </div>
-                </li>
-              </ul>
-            </VueSeamlessScroll>
-          </div>
-        </div>
-        <div class="h-full w-30/100 flex flex-col">
-          <div class="!mb-[10px] h-25/100 w-full flex">
-            <div class="h-full w-1/2 !mr-[10px] relative">
-              <svg-icon
-                icon-class="ScreenBase1"
-                class="ScreenBase1"
-                className="!h-full !w-full !absolute"
-              />
-              <div
-                class="h-full w-full flex flex-col items-center justify-between relative"
-              >
-                <div
-                  class="ScreenBaseNum absolute"
-                  style="top: 20%; height: 30%"
-                >
-                  4,930
                 </div>
-                <div
-                  class="ScreenBaseTitle absolute"
-                  style="bottom: 30%; height: 20%"
+                <VueSeamlessScroll
+                  :data="tableData[0]"
+                  class="warp"
+                  :class-option="{
+                    step: 1,
+                  }"
                 >
-                  今日订单总量
-                </div>
-              </div>
-            </div>
-            <div class="h-full w-1/2 relative">
-              <svg-icon
-                icon-class="ScreenBase1"
-                class="ScreenBase1"
-                className="!h-full !w-full !absolute"
-              />
-              <div
-                class="h-full w-full flex flex-col items-center justify-between relative"
-              >
-                <div
-                  class="ScreenBaseNum absolute"
-                  style="top: 20%; height: 30%"
-                >
-                  8,342
-                </div>
-                <div
-                  class="ScreenBaseTitle absolute"
-                  style="bottom: 30%; height: 20%"
-                >
-                  今日未完成数量
-                </div>
+                  <ul class="!px-[10px]">
+                    <li
+                      v-for="(item, index) in tableData[0]"
+                      :key="'data' + index"
+                      class="flex"
+                    >
+                      <div
+                        v-for="(column, colIndex) in tableColumns[0]"
+                        :key="'column' + colIndex"
+                        class="truncate"
+                        :class="
+                          colIndex < tableColumns[0].length - 1
+                            ? '!mr-[10px]'
+                            : '!mr-0'
+                        "
+                        :style="getColumnStyle(tableColumns[0], column)"
+                      >
+                        {{ tableData[0][index][column.prop] }}
+                      </div>
+                    </li>
+                  </ul>
+                </VueSeamlessScroll>
               </div>
             </div>
           </div>
-          <div class="panel h-45/100 w-full !mb-[10px]">
+
+          <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>近七天出货对比</h2>
+              <h2>落产原因分析</h2>
             </div>
-            <div class="chartContent"></div>
-            <div class="panel-footer"></div>
-          </div>
-          <div class="panel h-30/100 w-full" style="height: 30%">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-
-              <h2>本月指标</h2>
-            </div>
-            <div class="chartContent"></div>
-            <div class="panel-footer"></div>
+            <div class="chartContent" ref="chart4"></div>
           </div>
         </div>
       </div>
@@ -242,7 +272,13 @@ export default {
   },
   async mounted() {
     //初始化图表;
-    this.chart = [this.$refs.chart0, this.$refs.chart1, this.$refs.chart2];
+    this.chart = [
+      this.$refs.chart0,
+      this.$refs.chart1,
+      this.$refs.chart2,
+      this.$refs.chart3,
+      this.$refs.chart4,
+    ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -405,6 +441,7 @@ export default {
           grid: {
             containLabel: true,
             bottom: 0,
+            top: fontSize(10),
             left: fontSize(10),
             right: fontSize(10),
           },
@@ -414,24 +451,25 @@ export default {
               type: 'shadow',
             },
           },
-          legend: {
-            top: fontSize(10),
-            right: fontSize(10),
-            data: ['负荷情况'],
-            itemWidth: fontSize(18),
-            itemHeight: fontSize(18),
-            itemGap: fontSize(30),
-            textStyle: {
-              fontSize: fontSize(18),
-              color: '#C9D2FA',
-              padding: [0, 0, 0, fontSize(10)],
-            },
-          },
+          // legend: {
+          //   top: fontSize(10),
+          //   right: fontSize(10),
+          //   data: ['负荷情况'],
+          //   itemWidth: fontSize(18),
+          //   itemHeight: fontSize(18),
+          //   itemGap: fontSize(30),
+          //   textStyle: {
+          //     fontSize: fontSize(18),
+          //     color: '#C9D2FA',
+          //     padding: [0, 0, 0, fontSize(10)],
+          //   },
+          // },
           xAxis: {
             // name: "班级",
             triggerEvent: true,
             data: ['ASSY-02', 'ASSY-03', 'ASSY-04', 'ASSY-05', 'ASSY-06'],
             axisLabel: {
+              interval: 0,
               show: true,
               fontSize: fontSize(18),
               color: '#C9D2FA',
@@ -458,17 +496,16 @@ export default {
               // },
               splitNumber: 4,
               axisLabel: {
-                interval: 0,
                 show: true,
                 fontSize: fontSize(18),
                 color: '#C9D2FA',
+                formatter: function (value) {
+                  // 在标签后面添加百分号
+                  return value + '%';
+                },
               },
               axisLine: {
                 show: false,
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
               },
               axisTick: {
                 show: false,
@@ -487,10 +524,22 @@ export default {
               type: 'bar',
               silent: true,
               itemStyle: {
-                color: '#2F8FFF',
+                color: function (params) {
+                  return params.value > 100 ? '#DE4646' : '#2F8FFF';
+                },
               },
               barWidth: fontSize(30),
               data: [96, 108, 99, 89, 94],
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(14),
+                color: '#fff',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value + '%';
+                },
+              },
               markLine: {
                 symbol: 'none', // 可以设置标记点的样式，这里设置为 'none'
                 lineStyle: {
@@ -502,271 +551,23 @@ export default {
                   {
                     name: '安全线',
                     yAxis: 100,
+                    label: {
+                      show: true,
+                      position: 'start', // 设置标签文本的位置为起始位置
+                      color: '#51D365',
+                      formatter: '安全线', // 显示标签文本为 "安全线"
+                    },
                   },
                 ],
-                label: {
-                  show: false,
-                },
+                // label: {
+                //   show: false,
+                // },
                 silent: true,
-                animation: true,
+                // animation: true,
               },
             },
           ],
         },
-        // {
-        //   backgroundColor: '#0E1327',
-        //   tooltip: {
-        //     formatter: '{a} <br/>{b} : {c}%',
-        //   },
-        //   series: [
-        //     {
-        //       type: 'gauge',
-        //       radius: '60%',
-        //       center: ['20%', '40%'],
-        //       startAngle: '225',
-        //       endAngle: '-45',
-        //       pointer: {
-        //         show: true,
-        //         length: '60%',
-        //         width: fontSize(4),
-        //         itemStyle: {
-        //           color: '#2F8FFF',
-        //         },
-        //       },
-        //       anchor: {
-        //         show: true,
-        //         showAbove: true,
-        //         size: fontSize(4),
-        //         itemStyle: {
-        //           color: '#030A2C',
-        //         },
-        //       },
-        //       detail: {
-        //         formatter: '{value}%',
-        //         fontSize: fontSize(24),
-        //         color: '#fff',
-        //         offsetCenter: [0, '110%'],
-        //       },
-        //       data: [
-        //         {
-        //           value: 90.12,
-        //           name: '排产达成',
-        //           title: {
-        //             offsetCenter: ['0%', '150%'],
-        //             fontSize: fontSize(18),
-        //             color: '#C9D2FA',
-        //             show: true,
-        //           },
-        //         },
-        //       ],
-        //       title: {
-        //         show: false,
-        //       },
-        //       axisLine: {
-        //         show: true,
-        //         lineStyle: {
-        //           color: [
-        //             [1 / 2, '#2F8FFF'],
-        //             [1, '#566093'],
-        //           ],
-        //           width: fontSize(10),
-        //           // shadowBlur: 15,
-        //           // shadowColor: '#B0C4DE',
-        //           shadowOffsetX: 0,
-        //           shadowOffsetY: 0,
-        //           opacity: 1,
-        //         },
-        //       },
-        //       axisLabel: {
-        //         show: false,
-        //       }, //刻度标签。
-        //       axisTick: {
-        //         splitNumber: 3,
-        //         distance: fontSize(4),
-        //         show: true,
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(2),
-        //       }, //刻度样式
-        //       splitLine: {
-        //         show: true,
-        //         distance: fontSize(4),
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(4),
-        //       }, //分隔线样式
-        //       animationDuration: 4000,
-        //     },
-        //     {
-        //       type: 'gauge',
-        //       radius: '60%',
-        //       center: ['50%', '40%'],
-        //       startAngle: '225',
-        //       endAngle: '-45',
-        //       pointer: {
-        //         show: true,
-        //         length: '60%',
-        //         width: fontSize(4),
-        //         itemStyle: {
-        //           color: '#4ACBAC',
-        //         },
-        //       },
-        //       anchor: {
-        //         show: true,
-        //         showAbove: true,
-        //         size: fontSize(4),
-        //         itemStyle: {
-        //           color: '#030A2C',
-        //         },
-        //       },
-        //       detail: {
-        //         formatter: '{value}%',
-        //         fontSize: fontSize(24),
-        //         color: '#fff',
-        //         offsetCenter: [0, '110%'],
-        //       },
-        //       data: [
-        //         {
-        //           value: 39.53,
-        //           name: '出货达成',
-        //           title: {
-        //             offsetCenter: ['0%', '150%'],
-        //             fontSize: fontSize(18),
-        //             color: '#C9D2FA',
-        //             show: true,
-        //           },
-        //         },
-        //       ],
-        //       title: {
-        //         show: false,
-        //       },
-        //       axisLine: {
-        //         show: true,
-        //         lineStyle: {
-        //           color: [
-        //             [1 / 2, '#4ACBAC'],
-        //             [1, '#566093'],
-        //           ],
-        //           width: fontSize(10),
-        //           // shadowBlur: 15,
-        //           // shadowColor: '#B0C4DE',
-        //           shadowOffsetX: 0,
-        //           shadowOffsetY: 0,
-        //           opacity: 1,
-        //         },
-        //       },
-        //       axisLabel: {
-        //         show: false,
-        //       }, //刻度标签。
-        //       axisTick: {
-        //         splitNumber: 3,
-        //         distance: fontSize(4),
-        //         show: true,
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(2),
-        //       }, //刻度样式
-        //       splitLine: {
-        //         show: true,
-        //         distance: fontSize(4),
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(4),
-        //       }, //分隔线样式
-        //       animationDuration: 4000,
-        //     },
-        //     {
-        //       type: 'gauge',
-        //       radius: '60%',
-        //       center: ['80%', '40%'],
-        //       startAngle: '225',
-        //       endAngle: '-45',
-        //       pointer: {
-        //         show: true,
-        //         length: '60%',
-        //         width: fontSize(4),
-        //         itemStyle: {
-        //           color: '#BC53EE',
-        //         },
-        //       },
-        //       anchor: {
-        //         show: true,
-        //         showAbove: true,
-        //         size: fontSize(4),
-        //         itemStyle: {
-        //           color: '#030A2C',
-        //         },
-        //       },
-        //       detail: {
-        //         formatter: '{value}%',
-        //         fontSize: fontSize(24),
-        //         color: '#fff',
-        //         offsetCenter: [0, '110%'],
-        //       },
-        //       data: [
-        //         {
-        //           value: 85.34,
-        //           name: '计划配套率',
-        //           title: {
-        //             offsetCenter: ['0%', '150%'],
-        //             fontSize: fontSize(18),
-        //             color: '#C9D2FA',
-        //             show: true,
-        //           },
-        //         },
-        //       ],
-        //       title: {
-        //         show: false,
-        //       },
-        //       axisLine: {
-        //         show: true,
-        //         lineStyle: {
-        //           color: [
-        //             [1 / 2, '#BC53EE'],
-        //             [1, '#566093'],
-        //           ],
-        //           width: fontSize(10),
-        //           // shadowBlur: 15,
-        //           // shadowColor: '#B0C4DE',
-        //           shadowOffsetX: 0,
-        //           shadowOffsetY: 0,
-        //           opacity: 1,
-        //         },
-        //       },
-        //       axisLabel: {
-        //         show: false,
-        //       }, //刻度标签。
-        //       axisTick: {
-        //         splitNumber: 3,
-        //         distance: fontSize(4),
-        //         show: true,
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(2),
-        //       }, //刻度样式
-        //       splitLine: {
-        //         show: true,
-        //         distance: fontSize(4),
-        //         lineStyle: {
-        //           color: '#566093',
-        //           width: fontSize(2),
-        //         },
-        //         length: fontSize(4),
-        //       }, //分隔线样式
-        //       animationDuration: 4000,
-        //     },
-        //   ],
-        // },
         {
           tooltip: {
             trigger: 'item',
@@ -844,6 +645,262 @@ export default {
                 { value: '29', name: '镭射' },
               ],
             },
+          ],
+        },
+        {
+          grid: {
+            containLabel: true,
+            bottom: fontSize(10),
+            top: fontSize(10),
+            left: fontSize(10),
+            right: fontSize(10),
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          // legend: {
+          //   top: fontSize(10),
+          //   right: fontSize(10),
+          //   data: ['负荷情况'],
+          //   itemWidth: fontSize(18),
+          //   itemHeight: fontSize(18),
+          //   itemGap: fontSize(30),
+          //   textStyle: {
+          //     fontSize: fontSize(18),
+          //     color: '#C9D2FA',
+          //     padding: [0, 0, 0, fontSize(10)],
+          //   },
+          // },
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: [
+              '一部一车间',
+              '一部二车间',
+              '二部一车间',
+              '二部三车间',
+              '新能源',
+              '四部一车间',
+            ],
+            axisLabel: {
+              interval: 0,
+              show: true,
+              fontSize: fontSize(18),
+              color: '#C9D2FA',
+            },
+            axisLine: {
+              show: false,
+              lineStyle: {
+                show: false,
+                color: '#F3F3F3',
+                width: 2,
+              },
+            },
+
+            axisTick: {
+              show: false,
+            },
+          },
+          yAxis: [
+            {
+              // name: '单位:万',
+              // type: 'value',
+              // nameTextStyle: {
+              //   color: '#444444',
+              // },
+              splitNumber: 2,
+              axisLabel: {
+                show: true,
+                fontSize: fontSize(18),
+                color: '#C9D2FA',
+                // formatter: function (value) {
+                //   // 在标签后面添加百分号
+                //   return value + '%';
+                // },
+              },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed',
+                  color: '#3E4A82',
+                },
+              },
+            },
+            {
+              splitNumber: 2,
+              position: 'right', // 放在右边
+              axisLabel: {
+                show: true,
+                fontSize: fontSize(18),
+                color: '#C9D2FA',
+                formatter: function (value) {
+                  // 在标签后面添加百分号
+                  return value + '%';
+                },
+              },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed',
+                  color: '#3E4A82',
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: '负荷情况',
+              type: 'bar',
+              silent: true,
+              itemStyle: {
+                color: '#2F8FFF',
+              },
+              barWidth: fontSize(30),
+              data: [200, 108, 200, 40, 210, 130],
+              // label: {
+              //   show: true, // 显示标签
+              //   position: 'top', // 标签显示在柱状图的上方
+              //   fontSize: fontSize(14),
+              //   color: '#fff',
+              //   formatter: function (params) {
+              //     // 在标签文本后添加百分号
+              //     return params.value + '%';
+              //   },
+              // },
+            },
+            {
+              name: '折线图名称',
+              type: 'line',
+              yAxisIndex: 1, // 与第二个 y 轴关联
+              itemStyle: {
+                color: 'yellow', // 设置折线颜色为黄色
+              },
+              data: [100, 80, 120, 60, 90, 70], // 折线图的数据
+            },
+          ],
+        },
+        {
+          grid: {
+            bottom: fontSize(10),
+            top: fontSize(10),
+            left: fontSize(10),
+            right: fontSize(10),
+            containLabel: true,
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'none',
+            },
+            // formatter: function (params) {
+            //   return (
+            //     params[0].name +
+            //     '<br/>' +
+            //     "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
+            //     params[0].seriesName +
+            //     ' : ' +
+            //     Number(
+            //       (params[0].value.toFixed(4) / 10000).toFixed(2),
+            //     ).toLocaleString() +
+            //     ' 万元<br/>'
+            //   );
+            // },
+          },
+          xAxis: {
+            show: false,
+            type: 'value',
+          },
+          yAxis: [
+            {
+              type: 'category',
+              // inverse: true,
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#C9D2FA',
+                  fontSize: fontSize(16),
+                },
+              },
+              splitLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLine: {
+                show: false,
+              },
+              data: ['物料异常', '欠员', '工艺缺失', '欠料', '机械故障'],
+            },
+            // {
+            //   type: 'category',
+            //   inverse: true,
+            //   axisTick: 'none',
+            //   axisLine: 'none',
+            //   show: true,
+            //   axisLabel: {
+            //     textStyle: {
+            //       color: '#ffffff',
+            //       fontSize: fontSize(12),
+            //     },
+            //     // formatter: function (value) {
+            //     //   if (value >= 10000) {
+            //     //     return (value / 10000).toLocaleString() + '万';
+            //     //   } else {
+            //     //     return value.toLocaleString();
+            //     //   }
+            //     // },
+            //   },
+            //   data: [45, 26, 14, 12, 5],
+            // },
+          ],
+          series: [
+            {
+              name: '金额',
+              type: 'bar',
+              zlevel: 1,
+              itemStyle: {
+                normal: {
+                  barBorderRadius: 30,
+                  color: '#2F8FFF',
+                },
+              },
+              label: {
+                show: true, // 显示标签
+                position: 'right',
+                fontSize: fontSize(16),
+                color: '#fff',
+                offset: [fontSize(10), 0],
+              },
+              barWidth: fontSize(16),
+              data: [45, 26, 14, 12, 5],
+            },
+            // {
+            //   name: '背景',
+            //   type: 'bar',
+            //   barWidth: 20,
+            //   barGap: '-100%',
+            //   data: [50000000, 50000000, 50000000, 50000000, 1],
+            //   itemStyle: {
+            //     normal: {
+            //       color: 'rgba(24,31,68,1)',
+            //       barBorderRadius: 30,
+            //     },
+            //   },
+            // },
           ],
         },
       ];
@@ -1085,5 +1142,18 @@ export default {
   width: 40px;
   box-shadow: 0px 7px 15px 0px rgba(32, 69, 143, 1) inset;
   transform: rotate(315deg);
+}
+.upper-right-element {
+  border: 1px solid rgba(76, 130, 194, 1);
+  background: linear-gradient(0deg, #030a2c, #030a2c),
+    linear-gradient(0deg, #4c82c2, #4c82c2);
+}
+.ScreenBase2 {
+  width: 125px;
+  height: 84px;
+}
+.ScreenBase4 {
+  width: 144px;
+  height: 36px;
 }
 </style>
