@@ -119,7 +119,7 @@ export default {
       formSearchs: [
         {
           datas: {
-            AnalyiseStatus: '未分析',
+            AnalyiseStatus: 0,
           },
           forms: [],
           required: [], //获取必填项
@@ -159,9 +159,9 @@ export default {
       isLoading: false,
       adminLoading: false,
       Status1: [
-        { label: '未分析', value: '未分析' },
-        { label: '超期未分析', value: '超期未分析' },
-        { label: '已分析', value: '已分析' },
+        { label: '未分析', value: 0 },
+        { label: '超期未分析', value: 1 },
+        { label: '已分析', value: 2 },
         { label: '全部', value: '' },
       ],
       Region: [5, 5, 5],
