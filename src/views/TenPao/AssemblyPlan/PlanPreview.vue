@@ -915,7 +915,7 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
@@ -923,7 +923,7 @@ export default {
       this.tablePagination[remarkTb].pageIndex = 1;
       this.formSearchs[remarkTb].datas['ControlID'] =
         this.userInfo.WorkFlowInstanceID;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       }, 500);
@@ -1009,7 +1009,7 @@ export default {
           );
         });
         this.formSearchs[1].datas['ProductionStatus'] = [26]; //默认待排
-        this.dataSearch(1);
+        await this.dataSearch(1);
       }
     },
     // 验证数据

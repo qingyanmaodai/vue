@@ -2,13 +2,8 @@
   <div id="Screen">
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
-      <div
-        class="logo"
-        :style="{
-          backgroundImage: `url(${logo})`,
-        }"
-      ></div>
-      <div class="textTitle">JG-APS物料采购看板</div>
+      <img class="logo" :src="logo" mode="heightFix" />
+      <div class="textTitle">APS生产计划看板</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
@@ -52,13 +47,13 @@
               class="chartContent flex flex-col"
               element-loading-background="#060765"
             >
-              <div class="tableHead flex !px-[10px] text-white w-full">
+              <div class="tableHead flex px-[10px] text-white w-full">
                 <div
                   v-for="(column, index) in tableColumns[0]"
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? '!mr-[10px]' : '!mr-0'
+                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
                   "
                   :style="getColumnStyle(tableColumns[0], column)"
                 >
@@ -72,7 +67,7 @@
                   step: 1,
                 }"
               >
-                <ul class="!px-[10px]">
+                <ul class="px-[10px]">
                   <li
                     v-for="(item, index) in tableData[0]"
                     :key="'data' + index"
@@ -111,7 +106,7 @@
             <div
               class="h-50/100 w-full upper-right-element flex justify-center gap-[50px]"
             >
-              <div class="h-full flex flex-col justify-center gap-[10]">
+              <div class="h-full flex flex-col justify-center gap-[10%]">
                 <div class="ScreenBaseNum">383</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
@@ -166,9 +161,7 @@
                     :key="'tableHead' + index"
                     class="flex"
                     :class="
-                      index < tableColumns[0].length - 1
-                        ? '!mr-[10px]'
-                        : '!mr-0'
+                      index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
                     "
                     :style="getColumnStyle(tableColumns[0], column)"
                   >
@@ -182,7 +175,7 @@
                     step: 1,
                   }"
                 >
-                  <ul class="!px-[10px]">
+                  <ul class="px-[10px]">
                     <li
                       v-for="(item, index) in tableData[0]"
                       :key="'data' + index"
@@ -194,8 +187,8 @@
                         class="truncate"
                         :class="
                           colIndex < tableColumns[0].length - 1
-                            ? '!mr-[10px]'
-                            : '!mr-0'
+                            ? 'mr-[10px]'
+                            : 'mr-0'
                         "
                         :style="getColumnStyle(tableColumns[0], column)"
                       >
@@ -227,7 +220,6 @@ var _this;
 import * as echarts from 'echarts';
 import { debounce } from 'lodash';
 import chartHead from '@/assets/imgs/chartHead.png';
-import logo from '../../../public/images/logo.png';
 import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
@@ -237,7 +229,7 @@ export default {
   data() {
     return {
       chartHead: chartHead,
-      logo: logo,
+      logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
       tableLoading: [false, false, false], //每个表加载
       todayDate: '',
@@ -306,8 +298,7 @@ export default {
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
-    // await this.getTableHeader();
-    await this.getEcharts();
+    await this.getTableHeader();
   },
   beforeDestroy() {
     // 在组件销毁时，移除 resize 事件监听器
@@ -1016,10 +1007,9 @@ export default {
   }
   .logo {
     position: absolute;
-    height: 29px;
-    width: 131px;
-    left: 104px;
-    top: 20px;
+    height: 50px;
+    left: 80px;
+    top: 10px;
     // background: url(./FSZM.png) no-repeat;
     background-size: 100% 100%;
   }
@@ -1142,6 +1132,9 @@ export default {
           height: 50px;
           line-height: 50px;
           font-size: 18px;
+        }
+        li:nth-child(even) {
+          background-color: #0f1740;
         }
       }
     }

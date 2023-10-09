@@ -2,18 +2,13 @@
   <div id="Screen">
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
-      <div
-        class="logo"
-        :style="{
-          backgroundImage: `url(${logo})`,
-        }"
-      ></div>
-      <div class="textTitle">JG-APS物料采购看板</div>
+      <img class="logo" :src="logo" mode="heightFix" />
+      <div class="textTitle">APS产销计划看板</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
-      <div class="h-full flex">
-        <div class="panel h-full w-8/12 !mr-[10px]">
+      <div class="h-full flex gap-[10px]">
+        <div class="panel h-full w-65/100">
           <div class="chartHead">
             <div class="panel-footer"></div>
             <h2>出货计划</h2>
@@ -22,13 +17,13 @@
             class="chartContent flex flex-col"
             element-loading-background="#060765"
           >
-            <div class="tableHead flex !px-[10px] text-white w-full">
+            <div class="tableHead flex px-[10px] text-white w-full">
               <div
                 v-for="(column, index) in tableColumns[0]"
                 :key="'tableHead' + index"
                 class="flex"
                 :class="
-                  index < tableColumns[0].length - 1 ? '!mr-[10px]' : '!mr-0'
+                  index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
                 "
                 :style="getColumnStyle(tableColumns[0], column)"
               >
@@ -42,7 +37,7 @@
                 step: 1,
               }"
             >
-              <ul class="!px-[10px]">
+              <ul class="px-[10px]">
                 <li
                   v-for="(item, index) in tableData[0]"
                   :key="'data' + index"
@@ -54,8 +49,8 @@
                     class="truncate"
                     :class="
                       colIndex < tableColumns[0].length - 1
-                        ? '!mr-[10px]'
-                        : '!mr-0'
+                        ? 'mr-[10px]'
+                        : 'mr-0'
                     "
                     :style="getColumnStyle(tableColumns[0], column)"
                   >
@@ -66,13 +61,12 @@
             </VueSeamlessScroll>
           </div>
         </div>
-        <div class="h-full w-4/12 flex flex-col">
-          <div class="!mb-[10px] h-25/100 w-full flex">
-            <div class="h-full w-1/2 !mr-[10px] relative">
+        <div class="h-full w-35/100 flex flex-col">
+          <div class="mb-[10px] h-25/100 w-full flex">
+            <div class="h-full w-1/2 mr-[10px] relative">
               <svg-icon
                 icon-class="ScreenBase1"
-                class="ScreenBase1"
-                className="!h-full !w-full !absolute"
+                class="ScreenBase1 h-full w-full absolute"
               />
               <div
                 class="h-full w-full flex flex-col items-center justify-between relative"
@@ -92,11 +86,7 @@
               </div>
             </div>
             <div class="h-full w-1/2 relative">
-              <svg-icon
-                icon-class="ScreenBase1"
-                class="ScreenBase1"
-                className="!h-full !w-full !absolute"
-              />
+              <svg-icon icon-class="ScreenBase1" class="ScreenBase1" />
               <div
                 class="h-full w-full flex flex-col items-center justify-between relative"
               >
@@ -115,7 +105,7 @@
               </div>
             </div>
           </div>
-          <div class="panel h-45/100 w-full !mb-[10px]">
+          <div class="panel h-45/100 w-full mb-[10px]">
             <div class="chartHead">
               <div class="panel-footer"></div>
 
@@ -144,7 +134,6 @@ var _this;
 import * as echarts from 'echarts';
 import { debounce } from 'lodash';
 import chartHead from '@/assets/imgs/chartHead.png';
-import logo from '../../../public/images/logo.png';
 import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
@@ -154,7 +143,7 @@ export default {
   data() {
     return {
       chartHead: chartHead,
-      logo: logo,
+      logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
       tableLoading: [false, false, false], //每个表加载
       todayDate: '',
@@ -731,10 +720,9 @@ export default {
   }
   .logo {
     position: absolute;
-    height: 29px;
-    width: 131px;
-    left: 104px;
-    top: 20px;
+    height: 50px;
+    left: 80px;
+    top: 10px;
     // background: url(./FSZM.png) no-repeat;
     background-size: 100% 100%;
   }
@@ -857,6 +845,9 @@ export default {
           line-height: 50px;
           font-size: 18px;
         }
+        li:nth-child(even) {
+          background-color: #0f1740;
+        }
       }
     }
   }
@@ -881,5 +872,10 @@ export default {
   width: 40px;
   box-shadow: 0px 7px 15px 0px rgba(32, 69, 143, 1) inset;
   transform: rotate(315deg);
+}
+.ScreenBase1 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 </style>

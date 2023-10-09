@@ -54,12 +54,12 @@
 
 <script>
 var _this;
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import DialogTable from "@/components/Dialog/dialogTable";
+import { Splitpanes, Pane } from 'splitpanes';
+import 'splitpanes/dist/splitpanes.css';
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
+import DialogTable from '@/components/Dialog/dialogTable';
 import {
   GetHeader,
   GetSearchData,
@@ -67,9 +67,9 @@ import {
   SaveData,
   GetServerTime,
   GetSearch,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "OrderChangeManagement",
+  name: 'OrderChangeManagement',
   components: {
     ComSearch,
     ComVxeTable,
@@ -81,13 +81,15 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      footerLabel: [""],
+      footerLabel: [''],
       selectionData: [[], []],
       title: this.$route.meta.title,
       includeFields: [[], []],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            CreatedBy: this.$store.getters.userInfo.Account,
+          },
           forms: [],
           required: [], //获取必填项
         },
@@ -110,26 +112,26 @@ export default {
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
-      OrderNo: "",
-      OrderNoValue: "",
+      OrderNo: '',
+      OrderNoValue: '',
       OrderNos: [],
       Status1: [
-        { label: "待确认", value: "未开始" },
-        { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" },
+        { label: '待确认', value: '未开始' },
+        { label: '已完成', value: '已完成' },
+        { label: '全部', value: '' },
       ],
       Status2: [
-        { label: "全部", value: 0 },
-        { label: "未点检", value: 1 },
-        { label: "异常", value: 2 },
-        { label: "已领未点", value: 3 },
+        { label: '全部', value: 0 },
+        { label: '未点检', value: 1 },
+        { label: '异常', value: 2 },
+        { label: '已领未点', value: 3 },
       ],
       labelStatus1: 0,
       labelStatus2: 0,
       sysID: [{ ID: 7970 }, { ID: 11149 }],
       isEdit: [true, false],
       userInfo: {},
-      selectedIndex: "1",
+      selectedIndex: '1',
       addNum: 1,
       DataSourceList: [{}],
     };
@@ -150,26 +152,26 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            if (!item["signName"] || item["signName"].length === 0) {
+          if (item.ButtonCode == 'save') {
+            if (!item['signName'] || item['signName'].length === 0) {
               this.isEdit.fill(true);
-            } else if (item["signName"] && item["signName"].length > 0) {
-              item["signName"].map((item) => {
+            } else if (item['signName'] && item['signName'].length > 0) {
+              item['signName'].map((item) => {
                 this.$set(this.isEdit, item, true);
               });
             }
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -180,13 +182,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -220,7 +222,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -236,10 +238,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -266,22 +268,22 @@ export default {
           // updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-      console.log(updateRecords, "updateRecords", this.$refs);
+      console.log(updateRecords, 'updateRecords', this.$refs);
       if (updateRecords.length == 0) {
-        this.$set(this, "adminLoading", false);
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      console.log(updateRecords, "updateRecords.length");
+      console.log(updateRecords, 'updateRecords.length');
       if (updateRecords.length > 0 && remarkTb === 0) {
         if (this.formSearchs[remarkTb].required.length) {
           // 动态检验必填项
           updateRecords.map((item1, index1) => {
             this.formSearchs[remarkTb].required.map((item2, index2) => {
-              let content = item1[item2["prop"]];
+              let content = item1[item2['prop']];
               if (!content && (content !== 0) & (content !== false)) {
-                this.$message.error(`${item2["label"]}不能为空，请选择`);
-                this.$set(this, "adminLoading", false);
+                this.$message.error(`${item2['label']}不能为空，请选择`);
+                this.$set(this, 'adminLoading', false);
                 return;
               }
             });
@@ -315,18 +317,18 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 获取表头数据
@@ -346,7 +348,7 @@ export default {
               });
             }
             //从列获取下拉数据源
-            if (n.DataSourceID && n.ControlType === "combobox" && i === 0) {
+            if (n.DataSourceID && n.ControlType === 'combobox' && i === 0) {
               this.DataSourceList[i] = {
                 [n.DataSourceName]: n.items,
                 ...this.DataSourceList[i],
@@ -356,8 +358,8 @@ export default {
               this.formSearchs[i].required.push(n);
             }
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
             }
           });
           this.$set(this.OrderNos, i, m);
@@ -370,63 +372,65 @@ export default {
                 label: item.label,
               };
             });
-          console.log(this.OrderNos, "this.OrderNo");
+          console.log(this.OrderNos, 'this.OrderNo');
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
-          this.$set(
-            this.formSearchs[z].datas,
-            "Accounts",
-            this.userInfo.Account
-          );
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           if (z === 0) {
-            x = [
-              {
-                type: "Daterange",
-                label: "日期",
-                width: null,
-                prop: "Days",
-                placeholder: "请输入日期",
-                methods: null,
-                options: null,
-                dicID: "11150",
-                icon: null,
-                multiple: false,
-                value: [
-                  this.$moment().format("YYYY-MM-DD"),
-                  this.$moment().add(30, "days").format("YYYY-MM-DD"),
-                ],
-              },
-            ].concat(x);
-          } else if (z === 1) {
-            x = [
-              {
-                type: "Daterange",
-                label: "日期",
-                width: null,
-                prop: "Days",
-                placeholder: "请输入日期",
-                methods: null,
-                options: null,
-                dicID: "11149",
-                icon: null,
-                multiple: false,
-                value: [
-                  this.$moment().format("YYYY-MM-DD"),
-                  this.$moment().add(30, "days").format("YYYY-MM-DD"),
-                ],
-              },
-            ].concat(x);
+            this.$set(
+              this.formSearchs[z].datas,
+              'CreatedBy',
+              this.userInfo.Account,
+            );
           }
+          // if (z === 0) {
+          //   x = [
+          //     {
+          //       type: 'Daterange',
+          //       label: '日期',
+          //       width: null,
+          //       prop: 'Days',
+          //       placeholder: '请输入日期',
+          //       methods: null,
+          //       options: null,
+          //       dicID: '11150',
+          //       icon: null,
+          //       multiple: false,
+          //       value: [
+          //         this.$moment().format('YYYY-MM-DD'),
+          //         this.$moment().add(30, 'days').format('YYYY-MM-DD'),
+          //       ],
+          //     },
+          //   ].concat(x);
+          // } else if (z === 1) {
+          //   x = [
+          //     {
+          //       type: 'Daterange',
+          //       label: '日期',
+          //       width: null,
+          //       prop: 'Days',
+          //       placeholder: '请输入日期',
+          //       methods: null,
+          //       options: null,
+          //       dicID: '11149',
+          //       icon: null,
+          //       multiple: false,
+          //       value: [
+          //         this.$moment().format('YYYY-MM-DD'),
+          //         this.$moment().add(30, 'days').format('YYYY-MM-DD'),
+          //       ],
+          //     },
+          //   ].concat(x);
+          // }
           x.forEach((y, n) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
@@ -436,19 +440,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
@@ -466,11 +470,11 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -478,11 +482,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -490,7 +494,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsCompleteInspect"] = item.value;
+      this.formSearchs[0].datas['IsCompleteInspect'] = item.value;
       this.$set(this.tableData, 1, []);
       this.dataSearch(0);
     },
@@ -500,15 +504,15 @@ export default {
     },
     // 行内样式
     cellStyle({ row, column }) {
-      if (column.property == "OrderNo") {
+      if (column.property == 'OrderNo') {
         if (row.InspectStatus == 2) {
           return {
-            backgroundColor: "#ff7b7b",
+            backgroundColor: '#ff7b7b',
           };
         } else {
           if (row.InspectStatus == 1) {
             return {
-              backgroundColor: "#9fff9f",
+              backgroundColor: '#9fff9f',
             };
           }
         }
@@ -519,16 +523,16 @@ export default {
       let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
-          obj["ElementDeleteFlag"] = 1;
+          obj['ElementDeleteFlag'] = 1;
           newData.push(obj);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -537,22 +541,22 @@ export default {
     //取消变更
     async CancelChanges(remarkTb, index, parms) {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       this.selectionData[0].forEach((item) => {
-        item["Status"] = 3;
+        item['Status'] = 3;
       });
       await this.dataSave(remarkTb, index, null, this.selectionData[0]);
     },
     //提交变更
     async CommitChanges(remarkTb, index, parms) {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       let errorStatus = this.selectionData[0].findIndex((item) => {
-        return item["Status"] !== 0;
+        return item['Status'] !== 0;
       });
       if (errorStatus !== -1) {
         this.$message.error(`第${errorStatus + 1}行数据已经提交`);
@@ -561,13 +565,13 @@ export default {
       this.adminLoading = true;
       let res = await GetSearch(
         this.selectionData[0],
-        "/APSAPI/UpdateSAPOrderStartDate"
+        '/APSAPI/UpdateSAPOrderStartDate',
       );
       const { data, result, msg } = res.data;
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         // 对应匹配并更新表格数据
@@ -575,7 +579,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }

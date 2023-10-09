@@ -904,9 +904,6 @@ export default {
         .catch((_) => {});
     },
     async dataSave2(remarkTb, index, parms) {
-      this.selectionData[2] = this.tableData[2].filter(
-        (item) => item['isChecked'] === true,
-      );
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -918,6 +915,10 @@ export default {
         this.$message.error('选择保存的数据中没有变更日期');
         return;
       }
+      if (!this.ChangeReason) {
+        this.$message.error('没有填写原因');
+        return;
+      }
 
       let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
       updateRecords.forEach((item) => {
@@ -927,6 +928,7 @@ export default {
         item['Extend1'] = this.Extend1;
         item['StartDate'] = item['ERPStartDate'];
         item['EndDate'] = item['ERPEndDate'];
+        item['DataSource'] = '计划提交';
         item['dicID'] = 5644;
       });
       let res = await SaveData(updateRecords);
@@ -1009,15 +1011,21 @@ export default {
           dangerouslyUseHTMLString: true,
         });
         if (data) {
+          const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
           // 对应匹配并更新表格数据
           data.forEach((newData) => {
             const rowIndex = this.tableData[2].findIndex(
               (row) => row.OrderID === newData.OrderID,
             );
+
             if (rowIndex !== -1) {
-              this.tableData[2].splice(rowIndex, 1, newData);
+              $table.remove(this.tableData[2][rowIndex]);
+              $table.insertAt(newData, rowIndex);
+
+              // this.tableData[2].splice(rowIndex, 1, newData);
             }
           });
+          this.selectionData[2] = $table.getCheckboxRecords();
         }
       } else {
         this.$message({

@@ -1477,18 +1477,44 @@ label {
 .w-30\/100 {
   width: 30%;
 }
+.w-35\/100 {
+  width: 35%;
+}
 .w-40\/100 {
   width: 40%;
 }
 .w-50\/100 {
   width: 50%;
 }
-
+.w-60\/100 {
+  width: 60%;
+}
+.w-65\/100 {
+  width: 65%;
+}
+.w-70\/100 {
+  width: 70%;
+}
 .mt-25\/100 {
   margin-top: 25%;
 }
+
+.px-\[10px\] {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+.mr-0 {
+  margin-right: 0px !important;
+}
+.mr-\[10px\] {
+  margin-right: 10px !important;
+}
+
+.mb-\[10px\] {
+  margin-bottom: 10px !important;
+}
 .gap-\[10px\] {
-  gap: 10px;
+  gap: 10px !important;
 }
 .gap-\[30px\] {
   gap: 30px;
@@ -1496,6 +1522,6 @@ label {
 .gap-\[50px\] {
   gap: 50px;
 }
-.gap-\[10\] {
+.gap-\[10\%\] {
   gap: 10%;
 }
