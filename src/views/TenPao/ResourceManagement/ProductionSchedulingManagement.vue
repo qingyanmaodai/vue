@@ -167,6 +167,22 @@
             >
           </el-row>
         </div>
+        <div class="ant-table-title">
+          <el-row>
+            <el-col :span="24" class="flex_flex_end">
+              <!-- 批量修改组件 -->
+              <div v-for="i in [2]" :key="'Edit' + i" style="height: 100%">
+                <ComBatchEdit
+                  :OrderNos="OrderNos[2]"
+                  @changeProp="changeProp"
+                  :OrderNo="'NewStartDate'"
+                  :remark="2"
+                />
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+
         <div v-for="item in [2]" :key="item" class="flex_grow">
           <ComVxeTable
             :ref="`tableRef${item}`"
@@ -249,7 +265,8 @@
 var _this;
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import ComSearch from '@/components/ComSearch';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComBatchEdit from '@/components/ComBatchEdit';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComSpreadTable from '@/components/ComSpreadTable';
 import ComReportTable from '@/components/ComReportTable';
@@ -274,6 +291,7 @@ export default {
     ComSearch,
     ComVxeTable,
     ComReportTable,
+    ComBatchEdit,
     Splitpanes,
     Pane,
     DialogTable,
@@ -342,9 +360,6 @@ export default {
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
-      OrderNo: '',
-      OrderNoValue: '',
-      OrderNos: [],
       Status1: [
         { label: '待确认', value: '未开始' },
         { label: '已完成', value: '已完成' },
@@ -383,6 +398,10 @@ export default {
       SalesDeliveryDate: null,
       FrontDate: null,
       IgnoreSunday: true,
+      DVBatch: null,
+      OrderNo: '',
+      OrderNoValue: '',
+      OrderNos: [[], [], []],
     };
   },
   watch: {},
@@ -621,16 +640,11 @@ export default {
               this.hasSelect[i] = n['IsSelect'];
             }
           });
-          this.$set(this.OrderNos, i, m);
-
-          this.OrderNos[i] = this.OrderNos[i]
-            .filter((item) => item.isEdit)
-            .map((item) => {
-              return {
-                value: item.prop,
-                label: item.label,
-              };
-            });
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item['isEdit'] === true),
+          );
           console.log(this.OrderNos, 'this.OrderNo');
         });
         // 获取查询的初始化字段 组件 按钮
@@ -647,7 +661,7 @@ export default {
                 type: 'Daterange',
                 label: '日期',
                 width: null,
-                prop: 'Days',
+                prop: 'ERPStartDate',
                 placeholder: '请输入日期',
                 methods: null,
                 options: null,
@@ -666,7 +680,7 @@ export default {
                 type: 'Daterange',
                 label: '日期',
                 width: null,
-                prop: 'Days',
+                prop: 'ERPStartDate',
                 placeholder: '请输入日期',
                 methods: null,
                 options: null,
@@ -1002,17 +1016,19 @@ export default {
     },
     //重算
     async Reschedule() {
+      const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
+      this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
       }
-      this.selectionData[2].forEach((item) => {
-        item['IgnoreSunday'] = this.IgnoreSunday;
-      });
-      let res = await GetSearch(
-        this.selectionData[2],
-        '/APSAPI/CalculationStartDate',
+      let newData = _.cloneDeep(
+        this.selectionData[2].map((item) => {
+          item['IgnoreSunday'] = this.IgnoreSunday;
+          return item;
+        }),
       );
+      let res = await GetSearch(newData, '/APSAPI/CalculationStartDate');
       const { data, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1021,21 +1037,25 @@ export default {
           dangerouslyUseHTMLString: true,
         });
         if (data) {
-          const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
           // 对应匹配并更新表格数据
           data.forEach((newData) => {
             const rowIndex = this.tableData[2].findIndex(
               (row) => row.OrderID === newData.OrderID,
             );
-
+            console.log(rowIndex, 'rowIndex');
             if (rowIndex !== -1) {
-              $table.remove(this.tableData[2][rowIndex]);
-              $table.insertAt(newData, rowIndex);
+              // 确保 rowIndex 在有效范围内
+              if (rowIndex === this.tableData[2].length - 1) {
+                $table.remove(this.tableData[2][rowIndex]);
 
+                $table.insertAt(newData, -1);
+              } else {
+                $table.remove(this.tableData[2][rowIndex]);
+                $table.insertAt(newData, rowIndex);
+              }
               // this.tableData[2].splice(rowIndex, 1, newData);
             }
           });
-          this.selectionData[2] = $table.getCheckboxRecords();
         }
       } else {
         this.$message({
@@ -1044,6 +1064,21 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
+    },
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
+        this.$message.error('请选择需要修改的值');
+        return;
+      }
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error('请选择需要批量修改的行');
+        return;
+      }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem['isChecked'] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
+      });
     },
     // 渲染数据
     setData(remarkTb) {
