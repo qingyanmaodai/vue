@@ -206,9 +206,7 @@ export default {
       delData: [[]],
       formSearchs: [
         {
-          datas: {
-            IsFinish: 0,
-          },
+          datas: {},
           forms: [],
         },
         {
@@ -741,25 +739,7 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        let RoleMapList = this.$store.getters.userInfo.RoleMap;
-        if (RoleMapList.length) {
-          RoleMapList.forEach((item) => {
-            if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
-              //业务经理
-              this.RoleMapStatus = true;
-              return;
-            }
-          });
-        }
-        if (this.RoleMapStatus !== true) {
-          this.$set(
-            this.formSearchs[0]['datas'],
-            'SaleMan',
-            this.userInfo.Account,
-          );
-        }
-
-        await this.dataSearch(0);
+        await this.changeStatus({ label: '未完成', value: 0, index: 0 }, 0);
         this.adminLoading = false;
       }
     },
@@ -1480,10 +1460,28 @@ export default {
       }
     },
     // 改变状态
-    changeStatus(item, index) {
+    async changeStatus(item, index) {
+      let RoleMapList = this.$store.getters.userInfo.RoleMap;
+      if (RoleMapList.length) {
+        RoleMapList.forEach((item) => {
+          if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
+            //业务经理
+            this.RoleMapStatus = true;
+            return;
+          }
+        });
+      }
+      this.formSearchs[0].datas['SaleMan'] = null;
+      if (this.RoleMapStatus !== true && index !== 3) {
+        this.$set(
+          this.formSearchs[0]['datas'],
+          'SaleMan',
+          this.userInfo.Account,
+        );
+      }
       this.labelStatus1 = item['index'];
       this.formSearchs[0].datas['IsFinish'] = item.value;
-      this.dataSearch(0);
+      await this.dataSearch(0);
     },
   },
 };
