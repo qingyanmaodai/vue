@@ -954,12 +954,22 @@ export default {
       //获取原因数据源
       if (remarkTb === 1) {
         let res = await GetSearch(
-          { DataSourceID: 'D2307210001' },
-          '/APSAPI/GetDataSource',
+          {
+            AbnormalType: '计划变更',
+            dicID: 7770,
+            page: 1,
+            rows: 0,
+          },
+          '/APSAPI/APSData',
         );
         const { result, data, count, msg } = res.data;
         if (result) {
-          this.ChangeReasonArray = data;
+          this.ChangeReasonArray = data.map((item) => {
+            return {
+              label: item.SmallType,
+              value: item.SmallType,
+            };
+          });
         } else {
           this.$message({
             message: msg,

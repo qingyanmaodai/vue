@@ -1,7 +1,7 @@
 <!--组织信息-->
 <template>
   <div class="APSContainer flex_flex" v-loading="adminLoading">
-    <div class="admin_left">
+    <div>
       <ComAsideTree
         ref="asideRef"
         :treeData="treeData"
@@ -13,7 +13,7 @@
         @handleNodeClick="handleNodeClick"
       />
     </div>
-    <div class="admin_container">
+    <div class="flex_grow">
       <div class="admin_head" ref="headRef">
         <ComSearch
           ref="searchRef"
@@ -176,21 +176,21 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComUmyTable from "@/components/ComUmyTable";
+import XLSX from 'xlsx';
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComUmyTable from '@/components/ComUmyTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetOrgData,
-} from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+} from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "UserInfo",
+  name: 'UserInfo',
   components: {
     ComSearch,
     ComAsideTree,
@@ -201,30 +201,30 @@ export default {
     return {
       //////////////左侧树节点//////////////
       treeProps: {
-        label: "OrganizeName",
-        children: "children",
+        label: 'OrganizeName',
+        children: 'children',
       },
       ///////////////新增弹框//////////////
       dialogShow: false,
       dialogShow2: false,
       formData: {
-        Account: "",
-        Pwd: "",
-        Name: "",
-        OrganizeName: "",
-        OrganizeID: "",
-        Sex: "",
-        UserType: "",
-        PositionID: "",
-        Tel: "",
+        Account: '',
+        Pwd: '',
+        Name: '',
+        OrganizeName: '',
+        OrganizeID: '',
+        Sex: '',
+        UserType: '',
+        PositionID: '',
+        Tel: '',
         dicID: 25,
       },
       formData2: {
-        OrganizeName: "",
-        OrganizeID: "",
-        Sex: "",
-        Extend1: "",
-        UserType: "",
+        OrganizeName: '',
+        OrganizeID: '',
+        Sex: '',
+        Extend1: '',
+        UserType: '',
         Status: 1,
         dicID: 25,
       },
@@ -233,87 +233,87 @@ export default {
       treeData: [],
       treeListTmp: [],
       formController: [
-        { label: "账号", prop: "Account", type: "input" },
-        { label: "密码", prop: "Pwd", type: "input" },
-        { label: "姓名", prop: "Name", type: "input" },
+        { label: '账号', prop: 'Account', type: 'input' },
+        { label: '密码', prop: 'Pwd', type: 'input' },
+        { label: '姓名', prop: 'Name', type: 'input' },
         {
-          label: "组织",
-          prop: "OrganizeName",
-          type: "selectTree",
-          methods: "selectHandleNodeClick",
-          treeProps: { label: "OrganizeName", children: "children" },
+          label: '组织',
+          prop: 'OrganizeName',
+          type: 'selectTree',
+          methods: 'selectHandleNodeClick',
+          treeProps: { label: 'OrganizeName', children: 'children' },
           treeData: [],
         },
         {
-          label: "性别",
-          prop: "Sex",
-          type: "select",
+          label: '性别',
+          prop: 'Sex',
+          type: 'select',
           select: [
-            { label: "男", value: 1 },
-            { label: "女", value: 2 },
+            { label: '男', value: 1 },
+            { label: '女', value: 2 },
           ],
         },
-        { label: "电话", prop: "Tel", type: "input", inputType: "number" },
+        { label: '电话', prop: 'Tel', type: 'input', inputType: 'number' },
         {
-          label: "人员属性",
-          prop: "UserType",
-          type: "select",
+          label: '人员属性',
+          prop: 'UserType',
+          type: 'select',
           select: [],
         },
         {
-          label: "岗位",
-          prop: "PositionID",
-          type: "select",
+          label: '岗位',
+          prop: 'PositionID',
+          type: 'select',
           select: [],
         },
       ],
       formController2: [
         {
-          label: "组织",
-          prop: "OrganizeName",
-          type: "selectTree",
-          methods: "selectHandleNodeClick2",
-          treeProps: { label: "OrganizeName", children: "children" },
+          label: '组织',
+          prop: 'OrganizeName',
+          type: 'selectTree',
+          methods: 'selectHandleNodeClick2',
+          treeProps: { label: 'OrganizeName', children: 'children' },
           treeData: [],
         },
         {
-          label: "性别",
-          prop: "Sex",
-          type: "select",
+          label: '性别',
+          prop: 'Sex',
+          type: 'select',
           select: [
-            { label: "男", value: 1 },
-            { label: "女", value: 2 },
+            { label: '男', value: 1 },
+            { label: '女', value: 2 },
           ],
         },
         {
-          label: "岗位",
-          prop: "Extend1",
-          type: "input",
+          label: '岗位',
+          prop: 'Extend1',
+          type: 'input',
         },
         {
-          label: "人员属性",
-          prop: "UserType",
-          type: "select",
+          label: '人员属性',
+          prop: 'UserType',
+          type: 'select',
           select: [],
         },
         {
-          label: "状态",
-          prop: "Status",
-          type: "input",
-          inputType: "number",
+          label: '状态',
+          prop: 'Status',
+          type: 'input',
+          inputType: 'number',
         },
       ],
       formRules: {
-        Account: [{ required: true, message: "账号为必填项", trigger: "blur" }],
-        Pwd: [{ required: true, message: "密码为必填项", trigger: "blur" }],
-        Name: [{ required: true, message: "姓名为必填项", trigger: "blur" }],
+        Account: [{ required: true, message: '账号为必填项', trigger: 'blur' }],
+        Pwd: [{ required: true, message: '密码为必填项', trigger: 'blur' }],
+        Name: [{ required: true, message: '姓名为必填项', trigger: 'blur' }],
         OrganizeName: [
-          { required: true, message: "组织为必填项", trigger: "change" },
+          { required: true, message: '组织为必填项', trigger: 'change' },
         ],
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawerTitle: "新增人员",
+      drawerTitle: '新增人员',
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -324,33 +324,33 @@ export default {
       ],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSave',
+          Icon: '',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          Type: "danger",
+          ButtonCode: 'delete',
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Params: { dataName: "selectionData" },
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataDel',
+          Params: { dataName: 'selectionData' },
+          Icon: '',
         },
         {
-          ButtonCode: "import",
-          BtnName: "导入",
-          Type: "primary",
+          ButtonCode: 'import',
+          BtnName: '导入',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "dataImport",
-          Params: "",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataImport',
+          Params: '',
+          Icon: '',
         },
       ],
       selectionData: [[]],
@@ -360,8 +360,8 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 30, pageTotal: 0 }],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -394,23 +394,23 @@ export default {
   },
   methods: {
     async getUserType() {
-      let res = await GetSearchData({ dicID: 43, StatusType: "人员属性" });
+      let res = await GetSearchData({ dicID: 43, StatusType: '人员属性' });
       const { result, data, count, msg } = res.data;
       if (result) {
         if (data.length != 0) {
           let newData = [];
           data.forEach((x) => {
             let obj = {};
-            obj["label"] = x.StatusName;
-            obj["value"] = x.StatusID;
+            obj['label'] = x.StatusName;
+            obj['value'] = x.StatusID;
             newData.push(obj);
           });
-          this.$set(this.formController[6], "select", newData);
+          this.$set(this.formController[6], 'select', newData);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -423,16 +423,16 @@ export default {
           let newData = [];
           data.forEach((x) => {
             let obj = {};
-            obj["label"] = x.PositionName;
-            obj["value"] = x.PositionID;
+            obj['label'] = x.PositionName;
+            obj['value'] = x.PositionID;
             newData.push(obj);
           });
-          this.$set(this.formController[7], "select", newData);
+          this.$set(this.formController[7], 'select', newData);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -450,7 +450,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.OrganizeName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -479,10 +479,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 导入模板
     dataImport() {
@@ -493,12 +493,12 @@ export default {
     // 确认导入
     sureImport() {
       if (this.fileList.length == 0) {
-        this.$message.error("请先选择文件");
+        this.$message.error('请先选择文件');
         return;
       } else if (this.fileList.length > 1) {
-        this.$message.error("仅支持一个文件上传");
+        this.$message.error('仅支持一个文件上传');
       } else {
-        this.$confirm("确定要导入人员模板吗？")
+        this.$confirm('确定要导入人员模板吗？')
           .then((_) => {
             _this.importExcel(this.file);
           })
@@ -514,7 +514,7 @@ export default {
       reader.onload = function (e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
-          type: "binary",
+          type: 'binary',
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
@@ -532,13 +532,13 @@ export default {
         let DataList = [];
         importData[0].sheet.forEach((m) => {
           var obj = {};
-          obj["Name"] = m["姓名"];
-          obj["Account"] = m["账号"];
-          obj["Pwd"] = m["密码"];
-          obj["OrganizeID"] = m["组织"];
-          obj["Sex"] = m["性别"];
-          obj["EntryDate"] = m["入职日期"];
-          obj["dicID"] = 3007;
+          obj['Name'] = m['姓名'];
+          obj['Account'] = m['账号'];
+          obj['Pwd'] = m['密码'];
+          obj['OrganizeID'] = m['组织'];
+          obj['Sex'] = m['性别'];
+          obj['EntryDate'] = m['入职日期'];
+          obj['dicID'] = 3007;
           DataList.push(obj);
         });
         let res = await SaveData(DataList);
@@ -548,31 +548,31 @@ export default {
           this.dataSearch(0);
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
       }
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -584,7 +584,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 获取组织
@@ -602,24 +602,24 @@ export default {
       if (result) {
         this.treeData = JSON.parse(JSON.stringify(data));
         this.formController[3].treeData = data;
-        this.treeData.unshift({ OrganizeID: -1, OrganizeName: "未配组织人员" });
+        this.treeData.unshift({ OrganizeID: -1, OrganizeName: '未配组织人员' });
         this.treeListTmp = this.treeData;
         if (data.length != 0) {
           this.$nextTick(function () {
             if (_this.$$refs) {
               _this.$refs.asideRef.$refs.asideTree.setCurrentKey(
-                data[0].OrganizeID
+                data[0].OrganizeID,
               );
             }
           });
-          this.formSearchs[0].datas["OrganizeIDs"] = data[0].OrganizeID;
-          this.formSearchs[0].datas["dicID"] = 3007;
+          this.formSearchs[0].datas['OrganizeIDs'] = data[0].OrganizeID;
+          this.formSearchs[0].datas['dicID'] = 3007;
           this.getTableData(this.formSearchs[0].datas, 0);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -631,7 +631,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -642,20 +642,20 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -663,12 +663,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -679,13 +679,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -719,7 +719,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -746,7 +746,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -755,7 +755,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -771,22 +771,22 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -802,14 +802,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -835,15 +835,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
       }
     },
@@ -851,19 +851,19 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -873,11 +873,11 @@ export default {
         //   });
         // }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -886,20 +886,20 @@ export default {
     // 点击新增用户
     openDrawer() {
       for (var name in this.formData) {
-        this.formData[name] = "";
-        this.formData["dicID"] = 3007;
+        this.formData[name] = '';
+        this.formData['dicID'] = 3007;
       }
       if (this.clickData && this.clickData.OrganizeID != -1) {
-        this.$set(this.formData, "OrganizeID", this.clickData.OrganizeID);
-        this.$set(this.formData, "OrganizeName", this.clickData.OrganizeName);
+        this.$set(this.formData, 'OrganizeID', this.clickData.OrganizeID);
+        this.$set(this.formData, 'OrganizeName', this.clickData.OrganizeName);
       }
       this.dialogShow = true;
     },
     // 点击批量修改数据
     openDrawer2() {
       for (var name in this.formData2) {
-        this.formData2[name] = "";
-        this.formData2["dicID"] = 3007;
+        this.formData2[name] = '';
+        this.formData2['dicID'] = 3007;
       }
       this.dialogShow2 = true;
     },
@@ -912,7 +912,7 @@ export default {
         this.generalSaveData(newData, 0, 0);
       } else {
         for (let name in this.formData) {
-          this.formData[name] = "";
+          this.formData[name] = '';
         }
       }
     },
@@ -920,7 +920,7 @@ export default {
     dialogBtnClick2(val) {
       if (val) {
         if (this.selectionData[0].length == 0) {
-          this.$refs.error("请选择数据进行批量修改！");
+          this.$refs.error('请选择数据进行批量修改！');
           return;
         }
         this.selectionData[0].forEach((x) => {
@@ -934,7 +934,7 @@ export default {
         this.dialogShow2 = false;
       } else {
         for (let name in this.formData) {
-          this.formData[name] = "";
+          this.formData[name] = '';
         }
         this.dialogShow2 = false;
       }
@@ -942,12 +942,12 @@ export default {
     // 单击出来组织人员
     handleNodeClick(data, node) {
       this.clickData = data;
-      if (data.OrganizeID == "-1") {
-        this.$set(this.formSearchs[0].datas, "OrganizeID", data.OrganizeID);
-        this.$set(this.formSearchs[0].datas, "OrganizeIDs", "");
+      if (data.OrganizeID == '-1') {
+        this.$set(this.formSearchs[0].datas, 'OrganizeID', data.OrganizeID);
+        this.$set(this.formSearchs[0].datas, 'OrganizeIDs', '');
       } else {
-        this.$set(this.formSearchs[0].datas, "OrganizeID", "");
-        this.$set(this.formSearchs[0].datas, "OrganizeIDs", data.OrganizeID);
+        this.$set(this.formSearchs[0].datas, 'OrganizeID', '');
+        this.$set(this.formSearchs[0].datas, 'OrganizeIDs', data.OrganizeID);
       }
       this.dataSearch(0);
     },
@@ -965,11 +965,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });

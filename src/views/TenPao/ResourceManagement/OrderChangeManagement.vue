@@ -2,23 +2,38 @@
 <template>
   <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
-      <div class="admin_head" ref="headRef">
+      <div
+        v-for="i in [0, 1, 2, 3]"
+        :key="i + 'head'"
+        class="admin_head_2"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :searchMoreForm="formSearchs[i].formsAll"
+          :remark="i"
           :isLoading="isLoading"
+          :signName="i"
+          :Region="Region[i]"
           :btnForm="btnForm"
           @btnClick="btnClick"
-          :signName="0"
         />
       </div>
       <div class="ant-table-title pd-0-6" ref="headRef_2">
         <el-row>
           <el-col :span="4"
             ><span class="title">{{ title }}</span></el-col
-          >
+          ><el-col :span="20" class="flex_flex_end">
+            <div v-for="(item, y) in Status1" :key="y">
+              <span
+                @click="changeStatus(item, y)"
+                :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider></div
+          ></el-col>
           <!-- <el-col :span="20" class="flex_flex_end">
                 <span>新增行数：</span>
                 <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"
@@ -26,26 +41,32 @@
                 <el-divider direction="vertical"></el-divider></el-col> -->
         </el-row>
       </div>
-      <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+      <div
+        v-for="item in [0, 1, 2, 3]"
+        :key="item"
+        class="admin_content flex_grow"
+        v-show="labelStatus1 === item"
+      >
         <ComVxeTable
           :ref="`tableRef${item}`"
           :rowKey="'RowNumber'"
           height="100%"
+          :isToolbar="false"
+          :isEdit="isEdit[item]"
           :tableData="tableData[item]"
           :tableHeader="tableColumns[item]"
           :tableLoading="tableLoading[item]"
-          :isToolbar="false"
           :remark="item"
+          :cellStyle="cellStyle0"
           :sysID="sysID[item]['ID']"
-          :hasSelect="true"
-          :isEdit="isEdit[item]"
           :isClear="isClear[item]"
-          :keepSource="true"
+          :hasSelect="hasSelect[item]"
           :pagination="tablePagination[item]"
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
+          :keepSource="true"
         />
       </div>
     </div>
@@ -56,7 +77,7 @@
 var _this;
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import ComSearch from '@/components/ComSearch';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
 import DialogTable from '@/components/Dialog/dialogTable';
@@ -82,14 +103,22 @@ export default {
     return {
       ////////////////// Search /////////////////
       footerLabel: [''],
-      selectionData: [[], []],
+      selectionData: [[], [], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], []],
+      includeFields: [[], [], [], []],
       formSearchs: [
         {
-          datas: {
-            CreatedBy: this.$store.getters.userInfo.Account,
-          },
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
           forms: [],
           required: [], //获取必填项
         },
@@ -100,12 +129,14 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false, false],
-      isClear: [false, false],
-      hasSelect: [false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
+      hasSelect: [false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
       ],
@@ -116,22 +147,16 @@ export default {
       OrderNoValue: '',
       OrderNos: [],
       Status1: [
-        { label: '待确认', value: '未开始' },
-        { label: '已完成', value: '已完成' },
+        { label: '待提交', value: 0 },
+        { label: '已提交', value: 2 },
         { label: '全部', value: '' },
+        { label: 'ERP变更', value: 'ERP变更' },
       ],
-      Status2: [
-        { label: '全部', value: 0 },
-        { label: '未点检', value: 1 },
-        { label: '异常', value: 2 },
-        { label: '已领未点', value: 3 },
-      ],
+      Region: [6, 6, 6, 6],
       labelStatus1: 0,
-      labelStatus2: 0,
-      sysID: [{ ID: 7970 }, { ID: 11149 }],
-      isEdit: [true, false],
+      sysID: [{ ID: 7970 }, { ID: 7970 }, { ID: 7970 }, { ID: 7970 }],
+      isEdit: [true, false, false, false],
       userInfo: {},
-      selectedIndex: '1',
       addNum: 1,
       DataSourceList: [{}],
     };
@@ -372,57 +397,17 @@ export default {
                 label: item.label,
               };
             });
-          console.log(this.OrderNos, 'this.OrderNo');
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
-          if (z === 0) {
+          if (z === 0 || z === 1) {
             this.$set(
               this.formSearchs[z].datas,
               'CreatedBy',
               this.userInfo.Account,
             );
           }
-          // if (z === 0) {
-          //   x = [
-          //     {
-          //       type: 'Daterange',
-          //       label: '日期',
-          //       width: null,
-          //       prop: 'Days',
-          //       placeholder: '请输入日期',
-          //       methods: null,
-          //       options: null,
-          //       dicID: '11150',
-          //       icon: null,
-          //       multiple: false,
-          //       value: [
-          //         this.$moment().format('YYYY-MM-DD'),
-          //         this.$moment().add(30, 'days').format('YYYY-MM-DD'),
-          //       ],
-          //     },
-          //   ].concat(x);
-          // } else if (z === 1) {
-          //   x = [
-          //     {
-          //       type: 'Daterange',
-          //       label: '日期',
-          //       width: null,
-          //       prop: 'Days',
-          //       placeholder: '请输入日期',
-          //       methods: null,
-          //       options: null,
-          //       dicID: '11149',
-          //       icon: null,
-          //       multiple: false,
-          //       value: [
-          //         this.$moment().format('YYYY-MM-DD'),
-          //         this.$moment().add(30, 'days').format('YYYY-MM-DD'),
-          //       ],
-          //     },
-          //   ].concat(x);
-          // }
           x.forEach((y, n) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
@@ -432,6 +417,7 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
+        this.formSearchs[0].datas['Status'] = 0;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -494,9 +480,14 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas['IsCompleteInspect'] = item.value;
-      this.$set(this.tableData, 1, []);
-      this.dataSearch(0);
+      this.formSearchs[index].datas['DataSource'] = null;
+      this.formSearchs[index].datas['Status'] = null;
+      if (index !== 3) {
+        this.formSearchs[index].datas['Status'] = item.value;
+      } else if (index === 3) {
+        this.formSearchs[index].datas['DataSource'] = item.value;
+      }
+      this.dataSearch(index);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
@@ -540,33 +531,38 @@ export default {
     },
     //取消变更
     async CancelChanges(remarkTb, index, parms) {
-      if (this.selectionData[0].length == 0) {
+      if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
       }
-      this.selectionData[0].forEach((item) => {
-        item['Status'] = 3;
-      });
-      await this.dataSave(remarkTb, index, null, this.selectionData[0]);
+      let newData = _.cloneDeep(
+        this.selectionData[remarkTb].map((x) => {
+          x['Status'] = 5;
+          return x;
+        }),
+      );
+      await this.dataSave(remarkTb, index, null, newData);
     },
     //提交变更
     async CommitChanges(remarkTb, index, parms) {
-      if (this.selectionData[0].length == 0) {
+      if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
       }
-      let errorStatus = this.selectionData[0].findIndex((item) => {
-        return item['Status'] !== 0;
-      });
-      if (errorStatus !== -1) {
-        this.$message.error(`第${errorStatus + 1}行数据已经提交`);
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[0],
-        '/APSAPI/UpdateSAPOrderStartDate',
+      let newData = _.cloneDeep(
+        this.selectionData[remarkTb].map((x) => {
+          return x;
+        }),
       );
+      // let errorStatus = this.selectionData[remarkTb].findIndex((item) => {
+      //   return item['Status'] !== 0;
+      // });
+      // if (errorStatus !== -1) {
+      //   this.$message.error(`第${errorStatus + 1}行数据已经提交`);
+      //   return;
+      // }
+      this.adminLoading = true;
+      let res = await GetSearch(newData, '/APSAPI/UpdateSAPOrderStartDate');
       const { data, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -584,6 +580,24 @@ export default {
         });
       }
       this.adminLoading = false;
+    },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
+      if (
+        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
+        key in row['FColors']
+      ) {
+        style.color = row['FColors'][key]; // 设置背景颜色
+      }
+      if (
+        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
+        key in row['BColors']
+      ) {
+        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+      }
+      return style; // 返回样式对象
     },
   },
 };

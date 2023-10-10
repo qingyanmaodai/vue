@@ -105,7 +105,7 @@
     </el-dialog>
     <!-- 弹框-->
     <el-dialog
-      :title="'计划调整'"
+      :title="'指定业务员'"
       :visible.sync="colDialogVisible2"
       width="70%"
       :close-on-click-modal="false"
@@ -119,7 +119,11 @@
         "
       >
         <div class="ant-table-title">
-          <el-row> </el-row>
+          <el-row class="px-[10px]"
+            >您正在指定{{ SalesOrderNo }}订单，{{
+              Customer
+            }}客户的业务人员，勾选表示选定人员，非勾选表示未选定</el-row
+          >
         </div>
         <div v-for="item in [2]" :key="item" class="flex_grow">
           <ComVxeTable
@@ -143,44 +147,10 @@
             @selectfun="selectFun"
           />
         </div>
-        <div style="height: 40px; margin-top: 6px">
-          <el-row>
-            <el-col :span="6">
-              <div>
-                原因:<el-select
-                  clearable
-                  filterable
-                  size="small"
-                  placeholder="请选择原因"
-                  v-model="ChangeReason"
-                >
-                  <el-option
-                    v-for="(item, i) in ChangeReasonArray"
-                    :key="i"
-                    :label="item.value"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-            </el-col>
-            <el-col :span="6"
-              ><span class="title">
-                <div>
-                  备注:
-                  <el-input
-                    size="small"
-                    v-model="Extend1"
-                    style="width: 160px"
-                    placeholder="请输入备注"
-                  ></el-input>
-                </div> </span
-            ></el-col>
-          </el-row>
-        </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="Reschedule()">重算排期</el-button>
-        <el-button type="primary" @click="dataSave2()">确定</el-button>
+        <el-button type="primary" @click="Reschedule(2)">确认提交</el-button>
+        <el-button type="success" @click="dataSave2()">恢复默认</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
@@ -266,7 +236,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 10127 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -286,6 +256,9 @@ export default {
       ],
       Region: [5, 6, 6],
       RoleMapStatus: false,
+      SalesOrderNo: null,
+      Customer: null,
+      linkData: [],
     };
   },
   watch: {},
@@ -680,7 +653,7 @@ export default {
       const sheet = this.spread[remarkTb]?.getActiveSheet();
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      if (sheet.isEditing()) {
+      if (sheet && sheet.isEditing()) {
         sheet.endEdit();
       }
       // 获取修改记录
@@ -812,9 +785,21 @@ export default {
           this.$set(this.tableColumns, i, m);
         });
         this.$set(this.tableData, remarkTb, data);
+        if (remarkTb === 2) {
+          data.forEach((item) => {
+            if (item['IsSelected'] === 1) {
+              // item["isChecked"] = true;
+              this.$set(item, 'isChecked', true);
+            }
+          });
+          // this.linkTableData = data.filter((item) => {
+          //   return item['isChecked'];
+          // });
+        }
         if (remarkTb === 0 || remarkTb === 1) {
           this.setData(remarkTb);
         }
+
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -1213,8 +1198,7 @@ export default {
       );
       this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
-
-        _this.computedNum(args.row, args.col, args.editingText);
+        // _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
         //   sheet.setArray(args.row, i, [2021]);
         // }
@@ -1440,27 +1424,38 @@ export default {
         this.$message.error('请选择需要操作的数据且仅为一条！');
         return;
       }
+      this.SalesOrderNo = this.selectionData[remarkTb][0]['SalesOrderNo'];
+      this.Customer = this.selectionData[remarkTb][0]['Customer'];
       this.colDialogVisible2 = true;
-      this.dataSearch(2);
+
+      let res = await GetSearchData({ rows: 0, page: 1, dicID: 10127 });
+      const { result, data, count, msg, Columns } = res.data;
+      if (result) {
+        this.$set(this, 'linkData', data);
+      }
+      // this.formSearchs[2].datas.OrderID = this.selectionData[remarkTb][0]['ID'];
+
+      await this.dataSearch(2);
     },
     //添加产品机台
-    async confirmDialog(remarkTb) {
+    async Reschedule(remarkTb) {
       if (remarkTb === 2) {
-        if (this.selectionData[remarkTb].length !== 1) {
-          this.$message.error('请选择某位业务员');
-          return;
-        }
         let newData;
-
         newData = _.cloneDeep(
-          this.selectionData[0].map((item) => {
+          this.selectionData[2].map((item) => {
             item.SaleMan = this.selectionData[2][0]['Account'];
-            item.dicID = 10136;
+            item.CustomerID = this.selectionData[2][0]['CustomerID'];
+            item.OrderID = this.selectionData[2][0]['OrderID'];
+            item.SalesOrderDetailID =
+              this.selectionData[2][0]['SalesOrderDetailID'];
+            item.CreatedBy = this.userInfo.Account;
+            item.Status = 1;
+            item.IsSelected = 1;
             return item;
           }),
         );
-        await this.dataSave(0, null, null, newData);
-        this.colDialogVisible2 = false;
+        await this.dataSave(2, null, null, newData);
+        // this.colDialogVisible2 = false;
       }
     },
     // 改变状态
