@@ -150,7 +150,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Reschedule(2)">确认提交</el-button>
-        <el-button type="success" @click="dataSave2()">恢复默认</el-button>
+        <el-button type="success" @click="dataSearch(2)">恢复默认</el-button>
         <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
@@ -219,24 +219,29 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
-      tableData: [[], [], []],
-      tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
-      hasSelect: [false, false, false],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
+      hasSelect: [false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: '707px',
       treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -258,7 +263,7 @@ export default {
       RoleMapStatus: false,
       SalesOrderNo: null,
       Customer: null,
-      linkData: [],
+      linkTableData: [],
     };
   },
   watch: {},
@@ -784,18 +789,23 @@ export default {
         Columns.some((m, i) => {
           this.$set(this.tableColumns, i, m);
         });
-        this.$set(this.tableData, remarkTb, data);
+        this.linkTableData = [];
         if (remarkTb === 2) {
-          data.forEach((item) => {
-            if (item['IsSelected'] === 1) {
-              // item["isChecked"] = true;
-              this.$set(item, 'isChecked', true);
+          data.forEach((item1) => {
+            // 使用find方法在第二个数组中查找匹配的SaleMan
+            const matching = this.tableData[3].find(
+              (item2) => item2.SaleMan === item1.Account,
+            );
+            // 如果找到匹配的SaleMan，将isChecked设置为true
+            if (matching) {
+              item1.isChecked = true;
+              this.linkTableData.push(matching);
             }
           });
-          // this.linkTableData = data.filter((item) => {
-          //   return item['isChecked'];
-          // });
         }
+
+        this.$set(this.tableData, remarkTb, data);
+
         if (remarkTb === 0 || remarkTb === 1) {
           this.setData(remarkTb);
         }
@@ -1427,35 +1437,46 @@ export default {
       this.SalesOrderNo = this.selectionData[remarkTb][0]['SalesOrderNo'];
       this.Customer = this.selectionData[remarkTb][0]['Customer'];
       this.colDialogVisible2 = true;
-
-      let res = await GetSearchData({ rows: 0, page: 1, dicID: 10127 });
-      const { result, data, count, msg, Columns } = res.data;
-      if (result) {
-        this.$set(this, 'linkData', data);
-      }
-      // this.formSearchs[2].datas.OrderID = this.selectionData[remarkTb][0]['ID'];
-
+      this.formSearchs[3].datas.SalesOrderDetailID =
+        this.selectionData[remarkTb][0]['SalesOrderDetailID'];
+      await this.dataSearch(3);
       await this.dataSearch(2);
     },
     //添加产品机台
     async Reschedule(remarkTb) {
       if (remarkTb === 2) {
-        let newData;
-        newData = _.cloneDeep(
-          this.selectionData[2].map((item) => {
-            item.SaleMan = this.selectionData[2][0]['Account'];
-            item.CustomerID = this.selectionData[2][0]['CustomerID'];
-            item.OrderID = this.selectionData[2][0]['OrderID'];
-            item.SalesOrderDetailID =
-              this.selectionData[2][0]['SalesOrderDetailID'];
-            item.CreatedBy = this.userInfo.Account;
-            item.Status = 1;
-            item.IsSelected = 1;
-            return item;
-          }),
+        let newData = [];
+        //添加
+        let addData1 = this.selectionData[2].filter(
+          (item0) =>
+            !this.linkTableData.some((item3) => {
+              return item3['SaleMan'] === item0['Account'];
+            }),
         );
+        addData1.forEach((item) => {
+          item['dicID'] = 10127;
+          item['SalesOrderDetailID'] =
+            this.selectionData[0][0]['SalesOrderDetailID'];
+          item['SaleMan'] = item['Account'];
+        });
+        newData = newData.concat(addData1);
+
+        //删除
+        let addData2 = this.linkTableData.filter(
+          (item0) =>
+            !this.selectionData[2].some((item3) => {
+              return item3['Account'] === item0['SaleMan'];
+            }),
+        );
+
+        addData2.forEach((item) => {
+          item['dicID'] = 10127;
+          item['ElementDeleteFlag'] = 1;
+        });
+
+        newData = newData.concat(addData2);
         await this.dataSave(2, null, null, newData);
-        // this.colDialogVisible2 = false;
+        this.colDialogVisible2 = false;
       }
     },
     // 改变状态

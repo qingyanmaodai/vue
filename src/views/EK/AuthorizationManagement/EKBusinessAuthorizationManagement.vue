@@ -152,7 +152,7 @@
     </splitpanes>
     <!-- 弹框-->
     <DialogOptTable
-      title="关联用户"
+      title="关联客户"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
@@ -651,6 +651,10 @@ export default {
         //     return item["isChecked"];
         //   });
         // }
+        if (remarkTb === 0) {
+          debugger;
+          this.$set(this.tableData, 1, []);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
