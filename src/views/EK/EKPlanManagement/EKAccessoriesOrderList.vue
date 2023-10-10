@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 2, 3]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 2, 3, 4]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -41,7 +45,7 @@
       <div
         class="flex_column"
         style="height: 100%"
-        v-for="item in [0, 2, 3]"
+        v-for="item in [0, 2, 3, 4]"
         :key="item"
         v-show="labelStatus1 === item"
       >
@@ -162,7 +166,11 @@ export default {
       radio: '1',
       formSearchs: [
         {
-          datas: { IsFinish: 0 },
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
           forms: [],
         },
         {
@@ -179,12 +187,13 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
-      hasSelect: [false, false, false, false],
+      tableData: [[], [], [], [], []],
+      tableColumns: [[], [], [], [], []],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
@@ -194,19 +203,26 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 11181 }, { ID: 10117 }, { ID: 11181 }, { ID: 11181 }],
+      sysID: [
+        { ID: 11181 },
+        { ID: 10117 },
+        { ID: 11181 },
+        { ID: 11181 },
+        { ID: 11181 },
+      ],
       adminLoading: false,
       selectionData: [[], [], [], []],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: [false, false, false, false],
+      isEdit: [false, false, false, false, false],
       colDialogVisible1: false,
       isConfirmLoading: false,
-      Region: [6, 6, 6, 6],
+      Region: [6, 6, 6, 6, 6],
       Status1: [
         { label: '未完成', value: 0, index: 0 },
         { label: '已完成', value: 1, index: 2 },
         { label: '全部', value: '', index: 3 },
+        { label: '预测单', value: 2, index: 4 },
       ],
     };
   },
@@ -543,25 +559,8 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        let RoleMapList = this.$store.getters.userInfo.RoleMap;
-        if (RoleMapList.length) {
-          RoleMapList.forEach((item) => {
-            if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
-              //业务经理
-              this.RoleMapStatus = true;
-              return;
-            }
-          });
-        }
-        if (this.RoleMapStatus !== true) {
-          this.$set(
-            this.formSearchs[0]['datas'],
-            'SaleMan',
-            this.userInfo.Account,
-          );
-        }
-
-        await this.dataSearch(0);
+        await this.changeStatus({ label: '未完成', value: 0, index: 0 }, 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
@@ -592,7 +591,12 @@ export default {
         // });
 
         this.$set(this.tableData, remarkTb, data);
-        if (remarkTb === 0 || remarkTb === 2 || remarkTb === 3) {
+        if (
+          remarkTb === 0 ||
+          remarkTb === 2 ||
+          remarkTb === 3 ||
+          remarkTb === 4
+        ) {
           this.setData(remarkTb);
         }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
@@ -1079,6 +1083,24 @@ export default {
       });
     },
     changeStatus(item, index) {
+      let RoleMapList = this.$store.getters.userInfo.RoleMap;
+      if (RoleMapList.length) {
+        RoleMapList.forEach((item) => {
+          if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
+            //业务经理
+            this.RoleMapStatus = true;
+            return;
+          }
+        });
+      }
+      this.formSearchs[0].datas['SaleMan'] = null;
+      if (this.RoleMapStatus !== true && index !== 3) {
+        this.$set(
+          this.formSearchs[0]['datas'],
+          'SaleMan',
+          this.userInfo.Account,
+        );
+      }
       this.labelStatus1 = item['index'];
       this.formSearchs[this.labelStatus1].datas['IsFinish'] = item.value;
       this.dataSearch(this.labelStatus1);

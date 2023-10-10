@@ -65,6 +65,7 @@
         v-if="OrderNoObj.ControlType === 'datebox'"
         v-model="OrderNoValue"
         size="small"
+        type="date"
       ></el-date-picker>
       <!-- 日期时间 -->
       <el-date-picker
@@ -128,66 +129,52 @@ export default {
   },
   data() {
     return {
-      OrderNoObj: { ControlType: "textbox" },
-      OrderNoValue: "",
+      OrderNoObj: { ControlType: 'textbox' },
+      OrderNoValue: '',
       localOrderNo: this.OrderNo, // 创建一个局部属性来存储 prop 的值
     };
   },
-  created() {},
-  mounted() {},
-  watch: {
-    OrderNos: {
-      handler: function (val, oldVal) {
-        if (val) {
-          this.$nextTick(() => {
-            this.handleChange(this.OrderNo);
-          });
-        }
+  created() {
+    this.$watch(
+      'OrderNos',
+      (newVal, oldVal) => {
+        this.handleChange(this.localOrderNo);
       },
-      // 深度观察监听
-      deep: true,
-    },
-    // isLoading: {
-    //   handler: function (val, oldVal) {
-    //     this.isLoading = val;
-    //   },
-    //   // 深度观察监听
-    //   deep: true,
-    // },
+      { deep: true, immediate: true },
+    );
   },
+  mounted() {},
+  // watch: {
+  //   OrderNos: {
+  //     handler: function (val, oldVal) {
+  //       // if (val) {
+  //       // this.$nextTick(() => {
+  //       this.handleChange(this.OrderNo);
+  //       // });
+  //       // }
+  //     },
+  //     // 深度观察监听
+  //     deep: true,
+  //   },
+  // },
   computed: {},
   methods: {
     changeProp() {
       this.$emit(
-        "changeProp",
+        'changeProp',
         this.remark,
         this.localOrderNo,
-        this.OrderNoValue
+        this.OrderNoValue,
       );
     },
     handleChange(value) {
       this.OrderNoObj = this.OrderNos.find((item) => {
-        return item["prop"] === value;
+        return item['prop'] === value;
       });
-      if (!this.OrderNoObj) {
-        this.OrderNoObj = { ControlType: "textbox" };
-      }
-      this.OrderNoValue = "";
-      // console.log(value, objIndex, "objIndex");
-
-      // if (objIndex !== -1) {
-      //   // this.form[y]["queryType"] = this.searchMoreForm[objIndex]["queryType"];
-      //   // this.searchMoreForm[objIndex][] = this.form[y]["value"];
-      //   // this.$set(this.searchData);
-      //   this.$set(
-      //     this.searchData["QueryParams"],
-      //     y,
-      //     JSON.parse(JSON.stringify(this.searchMoreForm[objIndex]))
-      //   );
-      //   // if (this.searchData.hasOwnProperty(value)) {
-      //   //   this.searchData["QueryParams"][y][value] = this.searchData[value];
-      //   // }
+      // if (!this.OrderNoObj) {
+      //   this.OrderNoObj = { ControlType: 'textbox' };
       // }
+      this.OrderNoValue = '';
     },
   },
 };
