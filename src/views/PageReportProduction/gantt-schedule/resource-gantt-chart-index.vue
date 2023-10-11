@@ -80,21 +80,21 @@
   </div>
 </template>
 <script>
-import GSTC from "./plugin/gstc.esm.min.js";
+import GSTC from './plugin/gstc.esm.min.js';
 // import GSTC from "gantt-schedule-timeline-calendar/dist/gstc.wasm.esm.min.js";
-import "gantt-schedule-timeline-calendar/dist/style.css";
-import { Plugin as TimelinePointer } from "gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min.js";
+import 'gantt-schedule-timeline-calendar/dist/style.css';
+import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min.js';
 // import { Plugin as Selection } from "gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min.js";
 // import { Plugin as ItemResizing } from "gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min.js";
 // import { Plugin as ItemMovement } from "gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min.js";
-import { Plugin as CalendarScroll } from "gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min.js";
-import { Plugin as ProgressBar } from "gantt-schedule-timeline-calendar/dist/plugins/progress-bar.esm.min.js";
-import { Plugin as TimeBookmarks } from "gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min.js";
-import { Plugin as DependencyLines } from "gantt-schedule-timeline-calendar/dist/plugins/dependency-lines.esm.min.js";
-import ComSearch from "@/components/ComSearch";
-import tippy from "tippy.js";
-import "tippy.js/dist/tippy.css"; // optional for styling
-import { GetHeader, GetSearchData, GetSearch, ExportData } from "@/api/Common";
+import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min.js';
+import { Plugin as ProgressBar } from 'gantt-schedule-timeline-calendar/dist/plugins/progress-bar.esm.min.js';
+import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min.js';
+import { Plugin as DependencyLines } from 'gantt-schedule-timeline-calendar/dist/plugins/dependency-lines.esm.min.js';
+import ComSearch from '@/components/ComSearch';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'; // optional for styling
+import { GetHeader, GetSearchData, GetSearch, ExportData } from '@/api/Common';
 let gstc, state, that;
 globalThis.GSTC = gstc; //全局对象
 globalThis.state = state; //全局对象
@@ -103,9 +103,9 @@ const dateApi = GSTC.api.date;
 const bookmarks = {
   now: {
     time: GSTC.api.date().valueOf(),
-    label: "Now",
+    label: 'Now',
     style: {
-      background: "#3498DB",
+      background: '#3498DB',
     },
   },
 };
@@ -120,20 +120,20 @@ function setTippyContent(element, data) {
     return element._tippy.destroy();
   // @ts-ignore
   if (itemData && !itemData.detached && !element._tippy)
-    tippy(element, { trigger: "mouseenter click", allowHTML: true });
+    tippy(element, { trigger: 'mouseenter click', allowHTML: true });
   if (!element._tippy) return;
   const tooltipContent = `
-      <p>资源名称：${data.item.LineName ? data.item.LineName : ""}</p>
-      <p>生产订单：${data.item.OrderNo ? data.item.OrderNo : ""}</p>
+      <p>资源名称：${data.item.LineName ? data.item.LineName : ''}</p>
+      <p>生产订单：${data.item.OrderNo ? data.item.OrderNo : ''}</p>
       <p>工段名称：${
-        data.item.ProcessPartName ? data.item.ProcessPartName : ""
+        data.item.ProcessPartName ? data.item.ProcessPartName : ''
       }</p>
-      <p>物料编码：${data.item.Code ? data.item.Code : ""}</p>
-      <p>物料规格：${data.item.Spec ? data.item.Spec : ""}</p>
+      <p>物料编码：${data.item.Code ? data.item.Code : ''}</p>
+      <p>物料规格：${data.item.Spec ? data.item.Spec : ''}</p>
       </p>
-      <p>开始时间：${data.item.StartTime ? data.item.StartTime : ""}</p>
-      <p>结束时间：${data.item.EndTime ? data.item.EndTime : ""}</p>
-      <p>订单数量：${data.item.PlanQty ? data.item.PlanQty : ""}</p>
+      <p>开始时间：${data.item.StartTime ? data.item.StartTime : ''}</p>
+      <p>结束时间：${data.item.EndTime ? data.item.EndTime : ''}</p>
+      <p>订单数量：${data.item.PlanQty ? data.item.PlanQty : ''}</p>
       `;
   element._tippy.setContent(tooltipContent);
 }
@@ -155,38 +155,38 @@ function itemTippy(element, data) {
 const days = [
   {
     zoomTo: 20, // we want to display this format for all zoom levels until 100
-    period: "day",
+    period: 'day',
     periodIncrement: 1,
     format({ timeStart }) {
       // return timeStart.format('DD MMMM YYYY (dddd)'); // full list of formats: https://day.js.org/docs/en/display/format
-      return timeStart.format("YYYY/MM/DD");
+      return timeStart.format('YYYY/MM/DD');
     },
   },
   {
     zoomTo: 21, // we want to display this format for all zoom levels until 100
-    period: "month",
+    period: 'month',
     periodIncrement: 1,
     format({ timeStart }) {
       // return timeStart.format('DD MMMM YYYY (dddd)'); // full list of formats: https://day.js.org/docs/en/display/format
-      return timeStart.format("YYYY/MM");
+      return timeStart.format('YYYY/MM');
     },
   },
   {
     zoomTo: 26, // we want to display this format for all zoom levels until 100
-    period: "year",
+    period: 'year',
     periodIncrement: 1,
     format({ timeStart }) {
       // return timeStart.format('DD MMMM YYYY (dddd)'); // full list of formats: https://day.js.org/docs/en/display/format
-      return timeStart.format("YYYY");
+      return timeStart.format('YYYY');
     },
   },
   {
     zoomTo: 100, // we want to display this format for all zoom levels until 100
-    period: "day",
+    period: 'day',
     periodIncrement: 1,
     format({ timeStart }) {
       // return timeStart.format('DD MMMM YYYY (dddd)'); // full list of formats: https://day.js.org/docs/en/display/format
-      return timeStart.format("YYYY/MM/DD");
+      return timeStart.format('YYYY/MM/DD');
     },
   },
 ];
@@ -194,98 +194,98 @@ const days = [
 const hours = [
   {
     zoomTo: 16.5, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 1,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 17, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 2,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 17.5, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 3,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 18, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 4,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 18.5, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 6,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 19, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 8,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 19.5, // we want to display this format for all zoom levels until 100
-    period: "hour",
+    period: 'hour',
     periodIncrement: 12,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("HH"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('HH'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 21, // we want to display this format for all zoom levels until 100
-    period: "day",
+    period: 'day',
     periodIncrement: 1,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("DD"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('DD'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
   {
     zoomTo: 26, // we want to display this format for all zoom levels until 100
-    period: "month",
+    period: 'month',
     periodIncrement: 1,
     main: true,
     format({ timeStart }) {
-      return timeStart.format("MM"); // full list of formats: https://day.js.org/docs/en/display/format
+      return timeStart.format('MM'); // full list of formats: https://day.js.org/docs/en/display/format
     },
   },
 ];
 
 export default {
-  name: "resource-gantt-chart-index",
+  name: 'resource-gantt-chart-index',
   components: {
     ComSearch,
   },
   data() {
     return {
-      weekStartDate: "",
-      weekEndDate: "",
-      beforeDay: "",
-      afterDay: "",
+      weekStartDate: '',
+      weekEndDate: '',
+      beforeDay: '',
+      afterDay: '',
       customHightSize: 30,
       customWidthSize: 2,
       colData: {},
@@ -319,7 +319,7 @@ export default {
         innerHeight: 900, //以像素为单位的图表高度
         // headerHeight:70,//标题和日历的高度（以像素为单位）
         // autoInnerHeight: true, //如果要在组件大小的父元素更改时自动计算 innerHeight
-        licenseKey: "111",
+        licenseKey: '111',
         plugins: [
           TimelinePointer(), //时间线指针插件，必须在selection, resizing and movement之前
           // Selection(), //区域选择单元格填充颜色
@@ -382,36 +382,36 @@ export default {
           slots: {},
         },
         locale: {
-          name: "zh",
-          Now: "Now",
+          name: 'zh',
+          Now: 'Now',
           // "X-Scale": "调整X时间轴：",
           // "Y-Scale": "调整Y时间轴：",
           // "Task list width": "列表栏宽度：",
           // "Before/After": "前后距离：",
           // "Display task list": "列表栏",
-          weekdays: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+          weekdays: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
           months: [
-            "一月",
-            "二月",
-            "三月",
-            "四月",
-            "五月",
-            "六月",
-            "七月",
-            "八月",
-            "九月",
-            "十月",
-            "十一月",
-            "十二月",
+            '一月',
+            '二月',
+            '三月',
+            '四月',
+            '五月',
+            '六月',
+            '七月',
+            '八月',
+            '九月',
+            '十月',
+            '十一月',
+            '十二月',
           ],
         },
         actions: {
-          "chart-timeline-items-row-item": [itemTippy],
+          'chart-timeline-items-row-item': [itemTippy],
         },
         slots: {},
       },
       treeData: [],
-      strokeColor: "#BFEFFF",
+      strokeColor: '#BFEFFF',
       tableHeight: 443,
       updataTableHeight: this.$_.debounce(() => {
         this.computTableHeight(true);
@@ -419,7 +419,7 @@ export default {
     };
   },
   created() {
-    window.addEventListener("resize", this.updataTableHeight);
+    window.addEventListener('resize', this.updataTableHeight);
   },
   async mounted() {
     that = this;
@@ -430,7 +430,7 @@ export default {
       this.config.innerHeight = this.tableHeight;
       state = GSTC.api.stateFromConfig(this.config);
       gstc = GSTC({
-        element: this.$refs["gstc"],
+        element: this.$refs['gstc'],
         state,
       });
     });
@@ -471,17 +471,17 @@ export default {
 
       let s =
         now.getFullYear() +
-        "-" +
-        (month < 10 ? "0" + month : month) +
-        "-" +
-        (date < 10 ? "0" + date : date);
+        '-' +
+        (month < 10 ? '0' + month : month) +
+        '-' +
+        (date < 10 ? '0' + date : date);
       return s;
     },
     // 假日标记，rows写入非工作日，属性必填，值可为空，否则报错
     onCellCreateVacation({ time, row, vido, content }) {
       if (
         row.vacations &&
-        row.vacations.includes(time.leftGlobalDate.format("YYYY-MM-DD"))
+        row.vacations.includes(time.leftGlobalDate.format('YYYY-MM-DD'))
       ) {
         return vido.html`<div title="休息日" style="height:100%"><div style="
         font-size: 14px;
@@ -497,13 +497,13 @@ export default {
     },
     // 随机色
     getRandomColor() {
-      var color = "#";
+      var color = '#';
       for (var i = 0; i < 6; i++)
         color += parseInt(Math.random() * 16).toString(16);
-      if (color === "#fffff") {
-        color = "#1EBC61";
-      } else if (color === "#000000") {
-        color = "#0EAC51";
+      if (color === '#fffff') {
+        color = '#1EBC61';
+      } else if (color === '#000000') {
+        color = '#0EAC51';
       }
       this.strokeColor = color;
       return color;
@@ -511,11 +511,11 @@ export default {
     // 配置发生改变更新
     configUpdate(minStartTime, maxEndTime) {
       setTimeout(() => {
-        state.update("config", (config) => {
+        state.update('config', (config) => {
           config.list.rows = this.rowsData;
           config.chart.items = this.itemsData;
           config.chart.time.from = dateApi(minStartTime).valueOf();
-          config.chart.time.to = dateApi(maxEndTime).endOf("day").valueOf();
+          config.chart.time.to = dateApi(maxEndTime).endOf('day').valueOf();
           config.innerHeight = this.tableHeight;
           config.list.columns.data = this.colData;
           config.chart.item.height = this.customHightSize;
@@ -534,9 +534,9 @@ export default {
       const self = this;
       self.adminLoading = true;
       self.$set(self.tableLoading, remarkTb, true);
-      form["rows"] = 0;
-      form["page"] = self.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearch(form, "/APSAPI/GetGantt");
+      form['rows'] = 0;
+      form['page'] = self.tablePagination[remarkTb].pageIndex;
+      let res = await GetSearch(form, '/APSAPI/GetGantt');
       const { result, data, count, msg, content } = res.data;
       self.treeData = [];
       self.rowsData = {};
@@ -546,7 +546,7 @@ export default {
           if (data.length) {
             const date = GSTC.api.date;
             // 赋值条数
-            self.$set(self.tablePagination[remarkTb], "pageTotal", data.length);
+            self.$set(self.tablePagination[remarkTb], 'pageTotal', data.length);
 
             self.$nextTick(() => {
               let list = _.cloneDeep(data);
@@ -571,29 +571,29 @@ export default {
                     PlanQty: list[i].PlanQty,
                     HasQty: list[i].HasQty,
                     StartDate: list[i].StartDate
-                      ? self.$moment(list[i].StartDate).format("YYYY-MM-DD")
-                      : "",
+                      ? self.$moment(list[i].StartDate).format('YYYY-MM-DD')
+                      : '',
                     StartTime: list[i].StartTime
                       ? self
                           .$moment(list[i].StartTime)
-                          .format("YYYY-MM-DD HH:mm:ss")
-                      : "",
+                          .format('YYYY-MM-DD HH:mm:ss')
+                      : '',
                     EndTime: list[i].EndTime
                       ? self
                           .$moment(list[i].EndTime)
-                          .format("YYYY-MM-DD HH:mm:ss")
-                      : "",
+                          .format('YYYY-MM-DD HH:mm:ss')
+                      : '',
                     time: {
                       start: list[i].StartTime
                         ? date(list[i].StartTime).valueOf()
-                        : "",
+                        : '',
                       end: list[i].EndTime
                         ? date(list[i].EndTime).valueOf()
-                        : "",
+                        : '',
                     },
                     // progress:list[x].Exend1?list[x].Exend1: 0, //进度条百分比
                     vacations: list[i].vacations, //非工作日
-                    type: "milestone", //类型task、milestone、project
+                    type: 'milestone', //类型task、milestone、project
                     // collapsed: true, //树结构默认收缩
                     style: {
                       background: list[i].bgCodor,
@@ -634,29 +634,29 @@ export default {
                         StartDate: children[x].StartDate
                           ? self
                               .$moment(children[x].StartDate)
-                              .format("YYYY-MM-DD")
-                          : "",
+                              .format('YYYY-MM-DD')
+                          : '',
                         StartTime: children[x].StartTime
                           ? self
                               .$moment(children[x].StartTime)
-                              .format("YYYY-MM-DD HH:mm:ss")
-                          : "",
+                              .format('YYYY-MM-DD HH:mm:ss')
+                          : '',
                         EndTime: children[x].EndTime
                           ? self
                               .$moment(children[x].EndTime)
-                              .format("YYYY-MM-DD HH:mm:ss")
-                          : "",
+                              .format('YYYY-MM-DD HH:mm:ss')
+                          : '',
                         time: {
                           start: children[x].StartTime
                             ? date(children[x].StartTime).valueOf()
-                            : "",
+                            : '',
                           end: children[x].EndTime
                             ? date(children[x].EndTime).valueOf()
-                            : "",
+                            : '',
                         },
                         progress: children[x].Exend1 ? children[x].Exend1 : 0, //进度条百分比
                         vacations: list[i].vacations, //非工作日
-                        type: "milestone", //类型task、milestone、project
+                        type: 'milestone', //类型task、milestone、project
                         // collapsed: true, //树结构默认收缩
                         style: {
                           background: children[x].bgCodor,
@@ -685,7 +685,7 @@ export default {
         } else {
           self.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -700,7 +700,7 @@ export default {
     // 动态计算表格高度
     computTableHeight() {
       const contentH =
-        document.getElementsByClassName("main-container")[0].offsetHeight;
+        document.getElementsByClassName('main-container')[0].offsetHeight;
       const height = contentH - 300;
       this.tableHeight = height < 200 ? 800 : height;
     },
@@ -717,16 +717,16 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       debugger;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -744,7 +744,7 @@ export default {
       let newBtn = [];
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -755,7 +755,7 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
+      this.$set(this, 'btnForm', newBtn);
     },
     // 获取表头数据
     async getTableHeader() {
@@ -776,12 +776,12 @@ export default {
               });
             }
             obj = {
-              [n["prop"]]: {
-                id: n["prop"],
-                data: n["prop"],
-                width: Number(n["width"]),
+              [n['prop']]: {
+                id: n['prop'],
+                data: n['prop'],
+                width: Number(n['width']),
                 header: {
-                  content: n["label"],
+                  content: n['label'],
                 },
                 hidden: false,
               },
@@ -791,23 +791,25 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         // 初始化时默认上线日期
-        this.weekStartDate = this.getWeek(0, 0); // 获取本周开始日期
-        this.weekEndDate = this.getWeek(0, 1); // 获取本周结束日期
-        this.formSearchs[this.tagRemark].datas["StartDate"] = [];
-        this.formSearchs[this.tagRemark].datas["StartDate"][0] =
+        // this.weekStartDate = this.getWeek(0, 0); // 获取本周开始日期
+        // this.weekEndDate = this.getWeek(0, 1); // 获取本周结束日期
+        this.weekStartDate = this.$moment().format('YYYY-MM-DD'); // 获取本周开始日期
+        this.weekEndDate = this.$moment().add(30, 'days').format('YYYY-MM-DD'); // 获取本周结束日期
+        this.formSearchs[this.tagRemark].datas['StartDate'] = [];
+        this.formSearchs[this.tagRemark].datas['StartDate'][0] =
           this.weekStartDate;
-        this.formSearchs[this.tagRemark].datas["StartDate"][1] =
+        this.formSearchs[this.tagRemark].datas['StartDate'][1] =
           this.weekEndDate;
         await this.dataSearch(0);
       }
@@ -816,23 +818,23 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 查询
     dataSearch(remarkTb) {
-      if (!this.formSearchs[remarkTb].datas["StartDate"]) {
-        this.$message.error("请选择上线日期！");
+      if (!this.formSearchs[remarkTb].datas['StartDate']) {
+        this.$message.error('请选择上线日期！');
         return;
       }
       //每次查询获取图标日期
-      this.beforeDay = this.formSearchs[remarkTb].datas["StartDate"][0];
-      this.afterDay = this.formSearchs[remarkTb].datas["StartDate"][1];
+      this.beforeDay = this.formSearchs[remarkTb].datas['StartDate'][0];
+      this.afterDay = this.formSearchs[remarkTb].datas['StartDate'][1];
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
@@ -846,7 +848,7 @@ export default {
     // 跳转至页面配置
     toPageSetting() {
       this.$router.push({
-        name: "FieldInfo",
+        name: 'FieldInfo',
         params: { ID: this.sysID[this.tagRemark].ID },
       });
     },
@@ -855,7 +857,7 @@ export default {
         let height = val;
         height = val;
         this.config.chart.item.height = val;
-        state.update("config.chart", (chart) => {
+        state.update('config.chart', (chart) => {
           chart.item.height = height;
           return chart;
         });
@@ -878,13 +880,13 @@ export default {
           zoom -= val;
         }
         this.$nextTick(() => {
-          state.update("config.chart", (chart) => {
+          state.update('config.chart', (chart) => {
             chart.time.zoom = zoom;
             return chart;
           });
         });
-        console.log("zoom", zoom);
-        console.log("customWidthSize", this.customWidthSize);
+        console.log('zoom', zoom);
+        console.log('customWidthSize', this.customWidthSize);
       }
     },
     refresh() {
@@ -913,25 +915,25 @@ export default {
                 PlanQty: list[i].PlanQty,
                 HasQty: list[i].HasQty,
                 StartDate: list[i].StartDate
-                  ? this.$moment(list[i].StartDate).format("YYYY-MM-DD")
-                  : "",
+                  ? this.$moment(list[i].StartDate).format('YYYY-MM-DD')
+                  : '',
                 StartTime: list[i].StartTime
                   ? this.$moment(list[i].StartTime).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      'YYYY-MM-DD HH:mm:ss',
                     )
-                  : "",
+                  : '',
                 EndTime: list[i].EndTime
-                  ? this.$moment(list[i].EndTime).format("YYYY-MM-DD HH:mm:ss")
-                  : "",
+                  ? this.$moment(list[i].EndTime).format('YYYY-MM-DD HH:mm:ss')
+                  : '',
                 time: {
                   start: list[i].StartTime
                     ? date(list[i].StartTime).valueOf()
-                    : "",
-                  end: list[i].EndTime ? date(list[i].EndTime).valueOf() : "",
+                    : '',
+                  end: list[i].EndTime ? date(list[i].EndTime).valueOf() : '',
                 },
                 // progress:list[x].Exend1?list[x].Exend1: 0, //进度条百分比
                 vacations: list[i].vacations, //非工作日
-                type: "milestone", //类型task、milestone、project
+                type: 'milestone', //类型task、milestone、project
                 // collapsed: true, //树结构默认收缩
                 style: {
                   background: list[i].bgCodor,
@@ -952,7 +954,7 @@ export default {
 
               for (let x = 0; x < children.length; x++) {
                 num++;
-                console.log("children[x]", children[x]);
+                console.log('children[x]', children[x]);
                 let itemsObj = {
                   [num]: {
                     seq: children[x].RowNumber, //列序号
@@ -968,29 +970,29 @@ export default {
                     HasQty: children[x].HasQty,
                     OrderNo: children[x].OrderNo,
                     StartDate: children[x].StartDate
-                      ? this.$moment(children[x].StartDate).format("YYYY-MM-DD")
-                      : "",
+                      ? this.$moment(children[x].StartDate).format('YYYY-MM-DD')
+                      : '',
                     StartTime: children[x].StartTime
                       ? this.$moment(children[x].StartTime).format(
-                          "YYYY-MM-DD HH:mm:ss"
+                          'YYYY-MM-DD HH:mm:ss',
                         )
-                      : "",
+                      : '',
                     EndTime: children[x].EndTime
                       ? this.$moment(children[x].EndTime).format(
-                          "YYYY-MM-DD HH:mm:ss"
+                          'YYYY-MM-DD HH:mm:ss',
                         )
-                      : "",
+                      : '',
                     time: {
                       start: children[x].StartTime
                         ? date(children[x].StartTime).valueOf()
-                        : "",
+                        : '',
                       end: children[x].EndTime
                         ? date(children[x].EndTime).valueOf()
-                        : "",
+                        : '',
                     },
                     progress: children[x].Exend1 ? children[x].Exend1 : 0, //进度条百分比
                     vacations: list[i].vacations, //非工作日
-                    type: "milestone", //类型task、milestone、project
+                    type: 'milestone', //类型task、milestone、project
                     // collapsed: true, //树结构默认收缩
                     style: {
                       background: children[x].bgCodor,
