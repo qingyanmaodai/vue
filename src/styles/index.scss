@@ -1410,7 +1410,9 @@ label {
 .el-dialog__close {
   color: #fff !important;
 }
-
+.dfooterContent {
+  height: 40px;
+}
 .redColorText {
   height: 28px;
   color: #ed5736;
@@ -1435,7 +1437,7 @@ label {
 }
 
 .bgWhite {
-  background: #fff;
+  background: #fff !important;
 }
 .gray {
   background: #eef0f3;

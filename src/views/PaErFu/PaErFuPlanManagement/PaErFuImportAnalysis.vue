@@ -106,6 +106,7 @@
 var _this;
 const GCsheets = GC.Spread.Sheets;
 import '@grapecity/spread-sheets-vue';
+import XLSX from 'xlsx';
 import GC from '@grapecity/spread-sheets';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import '@grapecity/spread-sheets/js/zh.js';

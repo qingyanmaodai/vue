@@ -1692,6 +1692,12 @@ export default {
       });
       return modifiedTableHeader;
     },
+    multipleSelection() {
+      let CheckNum = this.tableData.filter(
+        (item) => item['isChecked'] === true,
+      );
+      return CheckNum;
+    },
   },
   activated() {
     // // 在 keep-alive 钩子函数中，显示之后手动调用
