@@ -2,7 +2,7 @@
 <template>
   <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -50,7 +50,7 @@
     </div>
     <div
       class="admin_content flex_grow"
-      v-for="item in [1, 2]"
+      v-for="item in [1, 2, 3]"
       :key="item"
       v-show="labelStatus1 === item"
       id="tableContainer"
@@ -72,7 +72,7 @@
     </div>
     <div
       class="admin_content flex_grow"
-      v-for="item in [0, 3]"
+      v-for="item in [0, 4]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -166,7 +166,8 @@ export default {
         { label: '待排订单', value: 0 },
         { label: '滚动周计划', value: 1 },
         { label: '暂停', value: 2 },
-        { label: '已完成', value: 3 },
+        { label: '已排订单', value: 3 },
+        { label: '已完成', value: 4 },
       ],
       title: this.$route.meta.title,
       resultMsg: '',
@@ -185,36 +186,47 @@ export default {
           forms: [],
         },
         {
+          datas: { ProductionStatus: [21, 22, 23] },
+          forms: [],
+        },
+        {
           datas: { CompletionStatus: 1 },
           forms: [],
         },
       ],
-      selectionData: [[], [], [], []],
+      selectionData: [[], [], [], [], []],
       btnForm: [],
       isLoading: false,
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
-      hasSelect: [false, false, false, false],
+      tableData: [[], [], [], [], []],
+      tableColumns: [[], [], [], [], []],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
       Region: [6, 6, 6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
       height: '707px',
       treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
-      isEdit: [false, false, false, false],
+      isEdit: [false, false, false, false, false],
       clickData: {},
       adminLoading: false,
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 9013 }, { ID: 11168 }, { ID: 11168 }, { ID: 9013 }],
+      sysID: [
+        { ID: 9013 },
+        { ID: 11168 },
+        { ID: 11168 },
+        { ID: 11168 },
+        { ID: 9013 },
+      ],
       userInfo: {},
       ruleForm: {
         LineIDs: [],
@@ -1155,7 +1167,7 @@ export default {
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        if (remarkTb == 1 || remarkTb == 2) {
+        if (remarkTb == 1 || remarkTb == 2 || remarkTb == 3) {
           this.setData(remarkTb);
         }
       } else {
