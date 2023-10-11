@@ -326,7 +326,7 @@ export default {
       labelStatus1: 0,
       labelStatus2: 0,
       sysID: [
-        { ID: 11150 },
+        { ID: 14197 },
         { ID: 10108 },
         { ID: 5139 },
         { ID: 11148 },
@@ -894,13 +894,13 @@ export default {
         this.SalesDeliveryDate = '';
         this.FrontDate = '';
         this.SalesOrderNo = '';
-        if (this.tableData[1] && this.tableData[1][0]) {
-          let row = this.tableData[1][0];
-          this.SalesLineNum = row['SalesLineNum'];
-          this.SalesDeliveryDate = row['SalesDeliveryDate'];
-          this.FrontDate = row['FrontDate'];
-          this.SalesOrderNo = row['SalesOrderNo'];
-        }
+        // if (this.tableData[1] && this.tableData[1][0]) {
+        //   let row = this.tableData[1][0];
+        //   this.SalesLineNum = row['SalesLineNum'];
+        //   this.SalesDeliveryDate = row['SalesDeliveryDate'];
+        //   this.FrontDate = row['FrontDate'];
+        //   this.SalesOrderNo = row['SalesOrderNo'];
+        // }
       }
     },
     //重算

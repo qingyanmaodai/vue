@@ -57,14 +57,14 @@
           <div class="secondCard">
             <div class="itemCard1">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[1]['label'] }}</div>
+                <div class="echartTitle">{{ result1[1]['label'] }}</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
             </div>
             <div class="itemCard2">
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">{{ label[2]['label'] }}</div>
+                  <div class="echartTitle">{{ result1[2]['label'] }}</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -90,7 +90,7 @@
               </div>
               <div class="itemCard">
                 <div class="echartHead">
-                  <div class="echartTitle">{{ label[3]['label'] }}</div>
+                  <div class="echartTitle">{{ result1[3]['label'] }}</div>
                   <!-- <el-button-group>
                     <el-button
                       :class="{
@@ -119,7 +119,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[4]['label'] }}</div>
+                <div class="echartTitle">{{ result1[4]['label'] }}</div>
               </div>
               <div class="echartBody">
                 <ComReportTable
@@ -153,7 +153,7 @@
             </div>
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[5]['label'] }}</div>
+                <div class="echartTitle">{{ result1[5]['label'] }}</div>
               </div>
               <div class="echartBody">
                 <ComReportTable
@@ -185,7 +185,7 @@
           <div class="firstCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[6]['label'] }}</div>
+                <div class="echartTitle">{{ result1[6]['label'] }}</div>
               </div>
               <div class="echartBody">
                 <div class="xnode">
@@ -219,7 +219,7 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[7]['label'] }}</div>
+                <div class="echartTitle">{{ result1[7]['label'] }}</div>
                 <!-- <el-button-group>
                   <el-button
                     :class="{
@@ -247,7 +247,7 @@
           <div class="thirdCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ label[8]['label'] }}</div>
+                <div class="echartTitle">{{ result1[8]['label'] }}</div>
               </div>
               <div class="echartBody" ref="chart5"></div>
             </div>
@@ -459,20 +459,11 @@ export default {
           forms: [],
         },
         {
-          datas: {
-            fields:
-              "SUM(PlanQty) as S1,sum(HasQty) AS S2,FORMAT(PlanDay,'MM-dd') as PlanDay",
-            groupby: "FORMAT(PlanDay,'MM-dd')",
-            // sort: "PlanDay desc",
-          },
+          datas: {},
           forms: [],
         },
         {
-          datas: {
-            fields: 'SUM(PlanQty) AS S1,WorkShopName',
-            groupby: 'WorkShopName',
-            // PlanDay: this.currentDate,
-          },
+          datas: {},
           forms: [],
         },
         {
@@ -494,47 +485,24 @@ export default {
           forms: [],
         },
         {
-          datas: {
-            fields: 'SUM(PlanQty) AS S1,SUM(HasQty) as S2,WorkShopName',
-            groupby: 'WorkShopName',
-          },
+          datas: {},
           forms: [],
         },
         {
           datas: {},
           forms: [],
         },
-        // {
-        //   datas: {
-        //     fields: "COUNT(*) AS C1",
-        //   },
-        //   forms: [],
-        // },
-        // {
-        //   datas: {
-        //     fields: "COUNT(*) AS C1",
-        //   },
-        //   forms: [],
-        // },
-        // {
-        //   datas: {
-        //     fields: "COUNT(*) AS C1",
-        //   },
-        //   forms: [],
-        // },
-        // {
-        //   datas: {
-        //     fields: "COUNT(*) AS C1",
-        //     ConfigInfo: "未配置",
-        //   },
-        //   forms: [],
-        // },
-        // {
-        //   datas: {
-        //     // fields: "SUM(CASE WHEN E2<0 THEN 1 ELSE 0 END) as C1",
-        //   },
-        //   forms: [],
-        // },
+      ],
+      result1: [
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
+        { label: null, fields: null, groupby: null },
       ],
       sysID: [
         { ID: 7917 },
@@ -546,26 +514,6 @@ export default {
         { ID: 5170 },
         { ID: 5170 },
         { ID: 5170 },
-        // { ID: 7844 },
-        // { ID: 7920 },
-        // { ID: 7776 },
-        // { ID: 7922 },
-        // { ID: 5170 },
-      ],
-      label: [
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
-        { label: null },
       ],
       currentDate: '',
       //echart部分
@@ -650,7 +598,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.tableData[1].map((item) => item['PlanDay']),
+            data: this.tableData[1].map((item) => item['Name1']),
             axisLabel: {
               interval: 1,
               show: true,
@@ -753,7 +701,7 @@ export default {
             itemStyle: {
               borderRadius: '50%', // 将图例项的形状设定为圆形
             },
-            data: this.tableData[2].map((item) => item['WorkShopName']),
+            data: this.tableData[2].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -817,7 +765,7 @@ export default {
               data: this.tableData[2].map((item) => {
                 return {
                   value: item['S1'],
-                  name: item['WorkShopName'],
+                  name: item['Name1'],
                 };
               }),
             },
@@ -949,7 +897,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.tableData[7].map((item) => item['WorkShopName']),
+            data: this.tableData[7].map((item) => item['Name1']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -1361,10 +1309,16 @@ export default {
 
       if (result1) {
         this.sysID = data1.map((item) => {
-          return { ID: item.sysID };
+          return {
+            ID: item.sysID,
+          };
         });
-        this.label = data1.map((item) => {
-          return { label: item.label };
+        this.result1 = data1.map((item) => {
+          return {
+            label: item.label,
+            fields: item.fields,
+            groupby: item.groupby,
+          };
         });
       }
       let res = await GetHeader(this.sysID);
@@ -1385,14 +1339,26 @@ export default {
             //   this.tablePagination[i]["pageSize"] = n["pageSize"];
             // }
           });
-
-          // this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
 
         await Promise.all(
           forms.map(async (x, z) => {
             this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+            if (this.result1[z].fields) {
+              this.$set(
+                this.formSearchs[z].datas,
+                'fields',
+                this.result1[z].fields,
+              );
+            }
+            if (this.result1[z].groupby) {
+              this.$set(
+                this.formSearchs[z].datas,
+                'groupby',
+                this.result1[z].groupby,
+              );
+            }
             if (z === 7) {
               this.formSearchs[z].datas['PlanDay'] = this.$moment()
                 .subtract(1, 'days')
