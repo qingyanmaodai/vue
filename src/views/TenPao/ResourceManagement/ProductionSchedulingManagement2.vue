@@ -107,7 +107,7 @@
           </pane>
           <pane :size="60" class="flex flex-col bgWhite">
             <div
-              v-for="item in [1]"
+              v-for="item in [2]"
               :key="item"
               class="flex_grow w-full"
               style="padding-bottom: 2px"
