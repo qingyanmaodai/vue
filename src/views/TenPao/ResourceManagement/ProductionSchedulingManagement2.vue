@@ -16,16 +16,33 @@
               :signName="0"
             />
           </div>
-          <!-- <div class="ant-table-title" ref="headRef_2">
+          <div class="ant-table-title pd-0-6 text-red">
             <el-row>
-              <el-col :span="4"><span class="title">{{ title }}</span></el-col>
+              <el-col :span="4"
+                ><span class="title">{{ title }}</span></el-col
+              >
               <el-col :span="20" class="flex_flex_end">
-                <span>新增行数：</span>
-                <el-input-number v-model.trim="addNum" :min="1" :max="100" :step="10" placeholder="请输入"
-                  size="small"></el-input-number>
-                <el-divider direction="vertical"></el-divider></el-col>
+                <!-- 批量修改组件 -->
+                <!-- <div v-for="i in [0]" :key="'Edit' + i" style="height: 100%">
+                  <ComBatchEdit
+                    :OrderNos="OrderNos[0]"
+                    @changeProp="changeProp"
+                    :OrderNo="DVBatch"
+                    :remark="0"
+                  />
+                </div> -->
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus1 == y ? 'statusActive cursor' : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
+                  <el-divider direction="vertical"></el-divider></div
+              ></el-col>
             </el-row>
-          </div> -->
+          </div>
           <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
               :ref="`tableRef${item}`"
@@ -102,10 +119,26 @@
                 @sortChange="sortChange"
                 @selectfun="selectFun"
                 @selectChanged="selectChanged"
+                @handleRowClick="handleRowClick"
               />
             </div>
           </pane>
           <pane :size="60" class="flex flex-col bgWhite">
+            <div class="ant-table-title w-full">
+              <el-row>
+                <el-col :span="24" class="flex_flex_end">
+                  批量修改
+                  <div v-for="i in [2]" :key="'Edit' + i" style="height: 100%">
+                    <ComBatchEdit
+                      :OrderNos="OrderNos[2]"
+                      @changeProp="changeProp"
+                      :OrderNo="'NewStartDate'"
+                      :remark="2"
+                    />
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
             <div
               v-for="item in [2]"
               :key="item"
@@ -187,21 +220,6 @@
             </div>
           </pane>
         </splitpanes>
-        <!-- <div class="ant-table-title">
-          <el-row>
-            <el-col :span="24" class="flex_flex_end">
-              批量修改组件
-              <div v-for="i in [2]" :key="'Edit' + i" style="height: 100%">
-                <ComBatchEdit
-                  :OrderNos="OrderNos[2]"
-                  @changeProp="changeProp"
-                  :OrderNo="'NewStartDate'"
-                  :remark="2"
-                />
-              </div>
-            </el-col>
-          </el-row>
-        </div> -->
 
         <!-- <div style="height: 40px; margin-top: 6px">
           <el-row>
@@ -227,6 +245,7 @@ import '@grapecity/spread-sheets-vue';
 import GC from '@grapecity/spread-sheets';
 const GCsheets = GC.Spread.Sheets;
 GC.Spread.Common.CultureManager.culture('zh-cn');
+import { mapState } from 'vuex';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import { HeaderCheckBoxCellType } from '@/static/data.js';
 import {
@@ -324,18 +343,10 @@ export default {
         { label: '已领未点', value: 3 },
       ],
       labelStatus1: 0,
+      labelStatus1Row: 0,
       labelStatus2: 0,
-      sysID: [
-        { ID: 14197 },
-        { ID: 10108 },
-        { ID: 5139 },
-        { ID: 11148 },
-        { ID: 1180 },
-        { ID: 11142 },
-        { ID: 133 },
-      ],
+      sysID: [{ ID: 14197 }, { ID: 10108 }, { ID: 5139 }],
       isEdit: [false, false, true, false, false, false, false],
-      userInfo: {},
       selectedIndex: '1',
       colDialogVisible2: false,
       colDialogVisible5: false,
@@ -357,16 +368,84 @@ export default {
     };
   },
   watch: {},
-  created() {
+  async created() {
     _this = this;
     this.adminLoading = true;
-    this.userInfo = this.$store.getters.userInfo;
-    this.getTableHeader();
+    // this.userInfo = this.$store.getters.userInfo;
+    let res1 = await GetSearch(
+      {
+        dicID: 14197,
+        page: 1,
+        rows: 0,
+        fields: 'Account,Name',
+        groupby: 'Account,Name',
+        sort: 'Account',
+      },
+      '/APSAPI/APSData',
+    );
+    const { result: result1, data: data1, msg: msg1 } = res1.data;
+    if (result1) {
+      this.Status1 = data1
+        .map((item) => {
+          return {
+            label: item.Name,
+            value: item.Account,
+          };
+        })
+        .concat({
+          label: '全部',
+          value: '',
+        });
+      this.labelStatus1 = this.Status1.findIndex(
+        (item) => item === this.userInfo.Account,
+      );
+      if (this.labelStatus1 === -1) {
+        // 如果没有找到匹配项，将labelStatus1设置为最后一个选项的索引
+        this.labelStatus1 = this.Status1.length - 1;
+      }
+    } else {
+      this.$message({
+        message: msg1,
+        type: 'error',
+        dangerouslyUseHTMLString: true,
+      });
+    }
+    await this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() {},
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
+  },
+  async mounted() {
+    let res = await GetSearch(
+      {
+        AbnormalType: '计划变更',
+        dicID: 7770,
+        page: 1,
+        rows: 0,
+      },
+      '/APSAPI/APSData',
+    );
+    const { result, data, count, msg } = res.data;
+    if (result) {
+      this.ChangeReasonArray = data.map((item) => {
+        return {
+          label: item.SmallType,
+          value: item.SmallType,
+        };
+      });
+    } else {
+      this.$message({
+        message: msg,
+        type: 'error',
+        dangerouslyUseHTMLString: true,
+      });
+    }
+  },
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
@@ -601,11 +680,11 @@ export default {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
-          this.$set(
-            this.formSearchs[z].datas,
-            'Accounts',
-            `$${this.userInfo.Account}$`,
-          );
+          // this.$set(
+          //   this.formSearchs[z].datas,
+          //   'Accounts',
+          //   `$${this.userInfo.Account}$`,
+          // );
           if (z === 0) {
             x = [
               {
@@ -655,6 +734,7 @@ export default {
           this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
+        this.changeStatus(this.Status1[this.labelStatus1], this.labelStatus1);
         this.adminLoading = false;
       }
     },
@@ -692,9 +772,9 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        // if (remarkTb === 0) {
-        //   this.setData(remarkTb);
-        // }
+        if (remarkTb === 1) {
+          this.$set(this.tableData, 2, []);
+        }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -716,11 +796,9 @@ export default {
         });
       });
     },
-    // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas['IsCompleteInspect'] = item.value;
-      this.$set(this.tableData, 1, []);
+      this.formSearchs[0].datas['Account'] = item.value;
       this.dataSearch(0);
     },
     // 选择数据
@@ -811,81 +889,58 @@ export default {
         })
         .catch((_) => {});
     },
-    // async dataSave2(remarkTb, index, parms) {
-    //   if (this.selectionData[2].length == 0) {
-    //     this.$message.error('请选择需要操作的数据！');
-    //     return;
-    //   }
-    //   const HasData = this.selectionData[2].some(
-    //     (row) => !row.NewStartDate || !row.NewEndDate,
-    //   );
-    //   if (HasData) {
-    //     this.$message.error('选择保存的数据中没有变更日期');
-    //     return;
-    //   }
-    //   if (!this.ChangeReason) {
-    //     this.$message.error('没有填写原因');
-    //     return;
-    //   }
+    async dataSave2(remarkTb, index, parms) {
+      if (this.selectionData[2].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      }
+      const HasData = this.selectionData[2].some(
+        (row) => !row.NewStartDate || !row.NewEndDate,
+      );
+      if (HasData) {
+        this.$message.error('选择保存的数据中没有变更日期');
+        return;
+      }
+      if (!this.ChangeReason) {
+        this.$message.error('没有填写原因');
+        return;
+      }
 
-    //   let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
-    //   updateRecords.forEach((item) => {
-    //     console.log(item, 'item');
-    //     item['ChangeReason'] = this.ChangeReason;
-    //     item['Status'] = 0;
-    //     item['Extend1'] = this.Extend1;
-    //     item['StartDate'] = item['ERPStartDate'];
-    //     item['EndDate'] = item['ERPEndDate'];
-    //     item['DataSource'] = '计划提交';
-    //     item['dicID'] = 5644;
-    //   });
-    //   let res = await SaveData(updateRecords);
-    //   const { datas, forms, result, msg } = res.data;
-    //   if (result) {
-    //     this.$message({
-    //       message: msg,
-    //       type: 'success',
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //     this.colDialogVisible2 = false;
-    //     // this.dataSearch(remarkTb);
-    //   } else {
-    //     this.$message({
-    //       message: msg,
-    //       type: 'error',
-    //       dangerouslyUseHTMLString: true,
-    //     });
-    //   }
-    // },
+      let updateRecords = JSON.parse(JSON.stringify(this.selectionData[2]));
+      updateRecords.forEach((item) => {
+        console.log(item, 'item');
+        item['ChangeReason'] = this.ChangeReason;
+        item['Status'] = 0;
+        item['Extend1'] = this.Extend1;
+        item['StartDate'] = item['ERPStartDate'];
+        item['EndDate'] = item['ERPEndDate'];
+        item['DataSource'] = '计划提交';
+        item['dicID'] = 5644;
+      });
+      console.log(updateRecords, 'updateRecords');
+      return;
+      let res = await SaveData(updateRecords);
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.colDialogVisible2 = false;
+        // this.dataSearch(remarkTb);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+      }
+    },
     //双击事件
     async handleRowdbClick(row, remarkTb) {
       //获取原因数据源
       if (remarkTb === 0) {
-        // let res = await GetSearch(
-        //   {
-        //     AbnormalType: '计划变更',
-        //     dicID: 7770,
-        //     page: 1,
-        //     rows: 0,
-        //   },
-        //   '/APSAPI/APSData',
-        // );
-        // const { result, data, count, msg } = res.data;
-        // if (result) {
-        //   this.ChangeReasonArray = data.map((item) => {
-        //     return {
-        //       label: item.SmallType,
-        //       value: item.SmallType,
-        //     };
-        //   });
-        // } else {
-        //   this.$message({
-        //     message: msg,
-        //     type: 'error',
-        //     dangerouslyUseHTMLString: true,
-        //   });
-        // }
-
         this.colDialogVisible2 = true;
         this.formSearchs[1].datas['OrganizeID'] = row.OrganizeID;
         await this.dataSearch(1);
@@ -955,18 +1010,18 @@ export default {
       }
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');
         return;
       }
+      this.selectionData[remarkTb] = $table.getCheckboxRecords();
       if (this.selectionData[remarkTb].length === 0) {
         this.$message.error('请选择需要批量修改的行');
         return;
       }
-      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-        if (rowItem['isChecked'] === true) {
-          rowItem[OrderNo] = OrderNoValue;
-        }
+      this.selectionData[remarkTb].forEach((rowItem, rowIndex) => {
+        rowItem[OrderNo] = OrderNoValue;
       });
     },
     // 渲染数据
