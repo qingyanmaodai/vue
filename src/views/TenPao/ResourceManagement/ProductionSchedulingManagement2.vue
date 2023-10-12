@@ -213,6 +213,7 @@
                 @selectfun="selectFun"
                 @selectChanged="selectChanged"
                 :cellStyle="cellStyle"
+                @handleRowClick="handleRowClick"
               />
             </div>
             <div
@@ -822,9 +823,9 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        if (remarkTb === 1) {
-          this.$set(this.tableData, 2, []);
-        }
+        // if (remarkTb === 1) {
+        //   this.$set(this.tableData, 2, []);
+        // }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -857,10 +858,10 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      if (remarkTb === 1) {
-        this.formSearchs[2].datas['SalesOrderDetailID'] =
+      if (remarkTb === 2) {
+        this.formSearchs[1].datas['SalesOrderDetailID'] =
           row.SalesOrderDetailID;
-        this.dataSearch(2);
+        this.dataSearch(1);
       }
     },
     AddEvent(index) {
@@ -992,21 +993,15 @@ export default {
       //获取原因数据源
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
-        this.formSearchs[1].datas['OrganizeID'] = row.OrganizeID;
-        // this.formSearchs[1].datas['WERKS'] = row.WERKS;
+        this.formSearchs[1].datas['OrganizeNames'] = row.OrganizeName;
+        this.formSearchs[2].datas['Extend9'] = row.OrganizeName;
         await this.dataSearch(1);
+        await this.dataSearch(2);
         this.selectionData[1] = [];
-        this.SalesLineNum = '';
-        this.SalesDeliveryDate = '';
-        this.FrontDate = '';
-        this.SalesOrderNo = '';
-        // if (this.tableData[1] && this.tableData[1][0]) {
-        //   let row = this.tableData[1][0];
-        //   this.SalesLineNum = row['SalesLineNum'];
-        //   this.SalesDeliveryDate = row['SalesDeliveryDate'];
-        //   this.FrontDate = row['FrontDate'];
-        //   this.SalesOrderNo = row['SalesOrderNo'];
-        // }
+        // this.SalesLineNum = '';
+        // this.SalesDeliveryDate = '';
+        // this.FrontDate = '';
+        // this.SalesOrderNo = '';
       }
     },
     //重算

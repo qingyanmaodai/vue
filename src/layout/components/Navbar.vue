@@ -188,7 +188,7 @@ export default {
     },
     // 全屏
     MessageEvent() {
-      screenfull.toggle();
+      // screenfull.toggle();
     },
     async logout() {
       await this.$store.dispatch('user/logout');
@@ -370,19 +370,5 @@ a:hover {
   cursor: pointer;
   color: #0960bd;
   text-decoration: none;
-}
-.red-point {
-  position: relative;
-}
-
-.red-point::before {
-  content: ' ';
-  border: 3px solid red; /*设置红色*/
-  border-radius: 3px; /*设置圆角*/
-  position: absolute;
-  z-index: 1000;
-  right: 0%;
-  margin-right: -5px;
-  margin-top: -5px;
 }
 </style>
