@@ -1066,18 +1066,18 @@ export default {
       }
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');
         return;
       }
+      this.selectionData[remarkTb] = $table.getCheckboxRecords();
       if (this.selectionData[remarkTb].length === 0) {
         this.$message.error('请选择需要批量修改的行');
         return;
       }
-      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-        if (rowItem['isChecked'] === true) {
-          rowItem[OrderNo] = OrderNoValue;
-        }
+      this.selectionData[remarkTb].forEach((rowItem, rowIndex) => {
+        rowItem[OrderNo] = OrderNoValue;
       });
     },
     // 渲染数据
