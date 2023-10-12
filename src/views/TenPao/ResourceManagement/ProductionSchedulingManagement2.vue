@@ -4,16 +4,23 @@
     <splitpanes class="default-theme" horizontal>
       <pane :size="100">
         <div class="flex_column" style="width: 100%; height: 100%">
-          <div class="admin_head" ref="headRef">
+          <div
+            v-for="i in [0]"
+            :key="i + 'head'"
+            class="admin_head_2"
+            ref="headRef"
+          >
             <ComSearch
               ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
+              :searchData="formSearchs[i].datas"
+              :searchForm="formSearchs[i].forms"
+              :searchMoreForm="formSearchs[i].formsAll"
+              :remark="i"
               :isLoading="isLoading"
+              :signName="i"
+              :Region="Region[i]"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="0"
             />
           </div>
           <div class="ant-table-title pd-0-6 text-red">
@@ -98,8 +105,27 @@
         style="overflow-x: hidden; display: flex; flex-direction: column"
       >
         <splitpanes class="default-theme">
-          <pane :size="40">
-            <div v-for="item in [1]" :key="item" class="h-full flex_grow">
+          <pane :size="40" class="flex flex-col bgWhite">
+            <div
+              v-for="i in [1]"
+              :key="i + 'head'"
+              class="admin_head_2 w-full"
+              ref="headRef"
+            >
+              <ComSearch
+                ref="searchRef"
+                :searchData="formSearchs[i].datas"
+                :searchForm="formSearchs[i].forms"
+                :searchMoreForm="formSearchs[i].formsAll"
+                :remark="i"
+                :isLoading="isLoading"
+                :signName="i"
+                :Region="Region[i]"
+                :btnForm="btnForm"
+                @btnClick="btnClick"
+              />
+            </div>
+            <div v-for="item in [1]" :key="item" class="flex_grow w-full">
               <ComVxeTable
                 :ref="`tableRef${item}`"
                 :rowKey="'RowNumber'"
@@ -126,6 +152,25 @@
             </div>
           </pane>
           <pane :size="60" class="flex flex-col bgWhite">
+            <div
+              v-for="i in [2]"
+              :key="i + 'head'"
+              class="admin_head_2 w-full"
+              ref="headRef"
+            >
+              <ComSearch
+                ref="searchRef"
+                :searchData="formSearchs[i].datas"
+                :searchForm="formSearchs[i].forms"
+                :searchMoreForm="formSearchs[i].formsAll"
+                :remark="i"
+                :isLoading="isLoading"
+                :signName="i"
+                :Region="Region[i]"
+                :btnForm="btnForm"
+                @btnClick="btnClick"
+              />
+            </div>
             <div class="ant-table-title w-full">
               <el-row>
                 <el-col :span="24" class="flex_flex_end">
@@ -331,6 +376,7 @@ export default {
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
       ],
+      Region: [6, 6, 6],
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
@@ -672,6 +718,7 @@ export default {
             if (index === 1) {
               this.tablePagination[i]['pageSize'] = n['pageSize'];
               this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(
@@ -893,6 +940,8 @@ export default {
         .catch((_) => {});
     },
     async dataSave2(remarkTb, index, parms) {
+      const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
+      this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -917,11 +966,9 @@ export default {
         item['Extend1'] = this.Extend1;
         item['StartDate'] = item['ERPStartDate'];
         item['EndDate'] = item['ERPEndDate'];
-        item['DataSource'] = '计划提交';
+        item['DataSource'] = 'APS变更';
         item['dicID'] = 5644;
       });
-      console.log(updateRecords, 'updateRecords');
-      return;
       let res = await SaveData(updateRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
@@ -946,6 +993,7 @@ export default {
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
         this.formSearchs[1].datas['OrganizeID'] = row.OrganizeID;
+        this.formSearchs[1].datas['WERKS'] = row.WERKS;
         await this.dataSearch(1);
         this.selectionData[1] = [];
         this.SalesLineNum = '';

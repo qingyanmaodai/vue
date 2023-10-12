@@ -4,16 +4,23 @@
     <splitpanes class="default-theme" horizontal>
       <pane :size="60">
         <div class="flex_column" style="width: 100%; height: 100%">
-          <div class="admin_head" ref="headRef">
+          <div
+            v-for="i in [0]"
+            :key="i + 'head'"
+            class="admin_head_2"
+            ref="headRef"
+          >
             <ComSearch
               ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
+              :searchData="formSearchs[i].datas"
+              :searchForm="formSearchs[i].forms"
+              :searchMoreForm="formSearchs[i].formsAll"
+              :remark="i"
               :isLoading="isLoading"
+              :signName="i"
+              :Region="Region[i]"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="0"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -68,21 +75,22 @@
       <pane :size="40">
         <div class="flex_column" style="width: 100%; height: 100%">
           <div
-            class="admin_head"
+            v-for="i in [1]"
+            :key="i + 'head'"
+            class="admin_head_2"
             ref="headRef"
-            v-for="item in [1, 2, 3]"
-            :key="item + 'head'"
-            v-show="Number(selectedIndex) === item"
           >
             <ComSearch
               ref="searchRef"
-              :searchData="formSearchs[item].datas"
-              :searchForm="formSearchs[item].forms"
-              :remark="item"
+              :searchData="formSearchs[i].datas"
+              :searchForm="formSearchs[i].forms"
+              :searchMoreForm="formSearchs[i].formsAll"
+              :remark="i"
               :isLoading="isLoading"
+              :signName="i"
+              :Region="Region[i]"
               :btnForm="btnForm"
               @btnClick="btnClick"
-              :signName="item"
             />
           </div>
           <!-- <div class="ant-table-title" ref="headRef_2">
@@ -341,6 +349,7 @@ export default {
           required: [], //获取必填项
         },
       ],
+      Region: [6, 6, 6],
       btnForm: [],
       tableData: [[], [], [], [], [], [], []],
       spread: [],
@@ -638,6 +647,7 @@ export default {
             if (index === 1) {
               this.tablePagination[i]['pageSize'] = n['pageSize'];
               this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(
@@ -918,6 +928,8 @@ export default {
         .catch((_) => {});
     },
     async dataSave2(remarkTb, index, parms) {
+      const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
+      this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -942,7 +954,7 @@ export default {
         item['Extend1'] = this.Extend1;
         item['StartDate'] = item['ERPStartDate'];
         item['EndDate'] = item['ERPEndDate'];
-        item['DataSource'] = '计划提交';
+        item['DataSource'] = 'APS变更';
         item['dicID'] = 5644;
       });
       let res = await SaveData(updateRecords);
