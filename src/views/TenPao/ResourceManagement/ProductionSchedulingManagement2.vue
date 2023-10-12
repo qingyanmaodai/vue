@@ -66,6 +66,7 @@
               @handleRowClick="handleRowClick"
               @handleRowdbClick="handleRowdbClick"
               @selectChanged="selectChanged"
+              :cellStyle="cellStyle"
             />
             <!-- <ComSpreadTable
               ref="spreadsheetRef"
@@ -120,6 +121,7 @@
                 @selectfun="selectFun"
                 @selectChanged="selectChanged"
                 @handleRowClick="handleRowClick"
+                :cellStyle="cellStyle"
               />
             </div>
           </pane>
@@ -165,6 +167,7 @@
                 @sortChange="sortChange"
                 @selectfun="selectFun"
                 @selectChanged="selectChanged"
+                :cellStyle="cellStyle"
               />
             </div>
             <div
@@ -1353,6 +1356,24 @@ export default {
       setTimeout(() => {
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
+    },
+    // 行内样式
+    cellStyle({ row, column }) {
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
+      if (
+        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
+        key in row['FColors']
+      ) {
+        style.color = row['FColors'][key]; // 设置背景颜色
+      }
+      if (
+        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
+        key in row['BColors']
+      ) {
+        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+      }
+      return style; // 返回样式对象
     },
   },
 };
