@@ -53,7 +53,7 @@ export default {
     },
     title: {
       type: String,
-      default: "",
+      default: '',
     },
     nodekey: {
       type: String,
@@ -67,7 +67,7 @@ export default {
     },
     treeHeight: {
       type: String,
-      default: "500px",
+      default: '500px',
     },
   },
   data() {
@@ -76,7 +76,7 @@ export default {
       dataTree: {},
       nodeTree: {},
       isOpen: true,
-      Value: "",
+      Value: '',
     };
   },
   computed: {},
@@ -98,33 +98,33 @@ export default {
     handleNodeClick(data, node) {
       this.dataTree = data;
       this.nodeTree = node;
-      this.$emit("handleNodeClick", data, node);
+      this.$emit('handleNodeClick', data, node);
     },
     checkChange(data) {
-      this.$emit("checkChange", data);
+      this.$emit('checkChange', data);
     },
     check(data) {
-      this.$emit("check", data);
+      this.$emit('check', data);
     },
     //删除节点
     deleteTree() {
       if (this.nodeTree.data == undefined) {
-        this.$message.error("请选择一条数据进行操作");
+        this.$message.error('请选择一条数据进行操作');
       } else {
-        this.$emit("deleteTree", this.nodeTree);
+        this.$emit('deleteTree', this.nodeTree);
       }
     },
     //修改节点
     editTree() {
       if (this.nodeTree.data == undefined) {
-        this.$message.error("请选择一条数据进行操作");
+        this.$message.error('请选择一条数据进行操作');
       } else {
-        this.$emit("editTree", this.nodeTree);
+        this.$emit('editTree', this.nodeTree);
       }
     },
     //添加节点
     addTree() {
-      this.$emit("addTree");
+      this.$emit('addTree');
     },
     // 下拉选择事件
     handleCommand(val) {
@@ -151,7 +151,7 @@ export default {
     },
     // 查询车间
     searchTree(OrganizeName) {
-      this.$emit("searchTree", this.Value);
+      this.$emit('searchTree', this.Value);
     },
   },
 };

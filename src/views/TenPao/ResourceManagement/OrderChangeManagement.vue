@@ -3,7 +3,7 @@
   <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="flex_column" style="width: 100%; height: 100%">
       <div
-        v-for="i in [0, 1, 2, 3]"
+        v-for="i in [0, 1, 2, 3, 4, 5]"
         :key="i + 'head'"
         class="admin_head_2"
         v-show="labelStatus1 === i"
@@ -42,7 +42,7 @@
         </el-row>
       </div>
       <div
-        v-for="item in [0, 1, 2, 3]"
+        v-for="item in [0, 1, 2, 3, 4, 5]"
         :key="item"
         class="admin_content flex_grow"
         v-show="labelStatus1 === item"
@@ -103,10 +103,20 @@ export default {
     return {
       ////////////////// Search /////////////////
       footerLabel: [''],
-      selectionData: [[], [], [], []],
+      selectionData: [[], [], [], [], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], [], [], []],
+      includeFields: [[], [], [], [], [], []],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
         {
           datas: {},
           forms: [],
@@ -129,12 +139,14 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
-      hasSelect: [false, false, false, false],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false],
       tablePagination: [
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
@@ -149,13 +161,22 @@ export default {
       Status1: [
         { label: '待提交', value: 0 },
         { label: '已提交', value: 2 },
+        { label: '同步中', value: 6 },
+        { label: '同步失败', value: 7 },
         { label: '全部', value: '' },
         { label: 'ERP变更', value: 'ERP变更' },
       ],
-      Region: [6, 6, 6, 6],
+      Region: [6, 6, 6, 6, 6, 6],
       labelStatus1: 0,
-      sysID: [{ ID: 7970 }, { ID: 7970 }, { ID: 7970 }, { ID: 7970 }],
-      isEdit: [true, false, false, false],
+      sysID: [
+        { ID: 7970 },
+        { ID: 7970 },
+        { ID: 7970 },
+        { ID: 7970 },
+        { ID: 7970 },
+        { ID: 7970 },
+      ],
+      isEdit: [true, false, false, false, false, false],
       userInfo: {},
       addNum: 1,
       DataSourceList: [{}],
@@ -482,9 +503,9 @@ export default {
       this.labelStatus1 = index;
       this.formSearchs[index].datas['DataSource'] = null;
       this.formSearchs[index].datas['Status'] = null;
-      if (index !== 3) {
+      if (index !== 5) {
         this.formSearchs[index].datas['Status'] = item.value;
-      } else if (index === 3) {
+      } else if (index === 5) {
         this.formSearchs[index].datas['DataSource'] = item.value;
       }
       this.dataSearch(index);

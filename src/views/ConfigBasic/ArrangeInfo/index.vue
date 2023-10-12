@@ -1,7 +1,7 @@
 <!--排班信息-->
 <template>
   <div class="APSContainer flex_flex" v-loading="adminLoading">
-    <div class="admin_left">
+    <div>
       <ComCheckboxTree
         ref="asideRef"
         :treeData="treeData"
@@ -13,7 +13,7 @@
         @check="check"
       />
     </div>
-    <div class="admin_container">
+    <div class="flex_grow">
       <div>
         <div class="admin_content">
           <div class="bgFFF">
@@ -146,7 +146,7 @@
                   <template slot="dateCell" slot-scope="{ data }">
                     <div :class="data.isSelected ? 'is-selected' : ''">
                       <span v-if="calenderData.length === 0">
-                        {{ data.day.split("-").slice(1).join("-") }}
+                        {{ data.day.split('-').slice(1).join('-') }}
                       </span>
                     </div>
                     <div v-for="(item, index) in calenderData" :key="index">
@@ -155,7 +155,7 @@
                         v-if="item.WorkingDate.indexOf(data.day) != -1"
                       >
                         <span>
-                          {{ data.day.split("-").slice(1).join("-") }}
+                          {{ data.day.split('-').slice(1).join('-') }}
                         </span>
                         <el-checkbox
                           v-model="item.ElementDeleteFlag"
@@ -235,9 +235,9 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComCheckboxTree from "@/components/ComCheckboxTree";
-import ComUmyTable from "@/components/ComUmyTable";
+import ComSearch from '@/components/ComSearch';
+import ComCheckboxTree from '@/components/ComCheckboxTree';
+import ComUmyTable from '@/components/ComUmyTable';
 import {
   GetHeader,
   GetSearchData,
@@ -248,11 +248,11 @@ import {
   GetOrgData,
   SaveWorkingTimes,
   SaveLineWorkingTimes,
-} from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+} from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "ArrangeInfo",
+  name: 'ArrangeInfo',
   components: {
     ComSearch,
     ComCheckboxTree,
@@ -265,94 +265,94 @@ export default {
       pickerOptions: {
         shortcuts: [
           {
-            text: "最近一周",
+            text: '最近一周',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             },
           },
           {
-            text: "最近一个月",
+            text: '最近一个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             },
           },
           {
-            text: "最近三个月",
+            text: '最近三个月',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             },
           },
         ],
       },
-      dataPicker: "",
-      largeOrSmall: "大周",
-      WorkingTimesID: "",
-      WorkingTimesID2: "",
+      dataPicker: '',
+      largeOrSmall: '大周',
+      WorkingTimesID: '',
+      WorkingTimesID2: '',
       IsCicle: false,
       WorkingTimesIDs: [],
       tableData: [
         {
-          empty: "上班人数",
-          Week1: "",
-          Week2: "",
-          Week3: "",
-          Week4: "",
-          Week5: "",
-          Week6: "",
-          Week7: "",
+          empty: '上班人数',
+          Week1: '',
+          Week2: '',
+          Week3: '',
+          Week4: '',
+          Week5: '',
+          Week6: '',
+          Week7: '',
           disabled: false,
         },
         {
-          empty: "上班时长",
-          Week1: "",
-          Week2: "",
-          Week3: "",
-          Week4: "",
-          Week5: "",
-          Week6: "",
-          Week7: "",
+          empty: '上班时长',
+          Week1: '',
+          Week2: '',
+          Week3: '',
+          Week4: '',
+          Week5: '',
+          Week6: '',
+          Week7: '',
           disabled: false,
         },
         {
-          empty: "加班时长",
-          Week1: "",
-          Week2: "",
-          Week3: "",
-          Week4: "",
-          Week5: "",
-          Week6: "",
-          Week7: "",
+          empty: '加班时长',
+          Week1: '',
+          Week2: '',
+          Week3: '',
+          Week4: '',
+          Week5: '',
+          Week6: '',
+          Week7: '',
           disabled: false,
         },
         {
-          empty: "累计时长",
-          Week1: "",
-          Week2: "",
-          Week3: "",
-          Week4: "",
-          Week5: "",
-          Week6: "",
-          Week7: "",
+          empty: '累计时长',
+          Week1: '',
+          Week2: '',
+          Week3: '',
+          Week4: '',
+          Week5: '',
+          Week6: '',
+          Week7: '',
           disabled: true,
         },
       ],
       tableHeader: [
-        { label: "周一", prop: "Week1" },
-        { label: "周二", prop: "Week2" },
-        { label: "周三", prop: "Week3" },
-        { label: "周四", prop: "Week4" },
-        { label: "周五", prop: "Week5" },
-        { label: "周六", prop: "Week6" },
-        { label: "周日", prop: "Week7" },
+        { label: '周一', prop: 'Week1' },
+        { label: '周二', prop: 'Week2' },
+        { label: '周三', prop: 'Week3' },
+        { label: '周四', prop: 'Week4' },
+        { label: '周五', prop: 'Week5' },
+        { label: '周六', prop: 'Week6' },
+        { label: '周日', prop: 'Week7' },
       ],
       calenderData: [],
       calendarMonth: new Date(),
@@ -360,12 +360,12 @@ export default {
       //////////////左侧树节点//////////////
       treeData: [],
       treeProps: {
-        label: "OrganizeName",
-        children: "children",
+        label: 'OrganizeName',
+        children: 'children',
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawerTitle: "新增人员",
+      drawerTitle: '新增人员',
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -376,23 +376,23 @@ export default {
       ],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSave',
+          Icon: '',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          Type: "danger",
+          ButtonCode: 'delete',
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Params: { dataName: "delData" },
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataDel',
+          Params: { dataName: 'delData' },
+          Icon: '',
         },
       ],
       btnForm: [],
@@ -400,7 +400,7 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 30, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -408,7 +408,7 @@ export default {
       currentMonth: this.zero(new Date().getMonth() + 1),
       currentYear: new Date().getFullYear(),
       treeListTmp: [],
-      treeHeight: "790px",
+      treeHeight: '790px',
       lines: [],
       days: 0, //当月天数
     };
@@ -427,7 +427,7 @@ export default {
           this.days = this.getDays(this.currentYear, this.currentMonth); // 判断当前月有多少天
           let firstYearMonth = `${this.currentYear}-${this.currentMonth}-01`;
           let lastYearMonth = `${this.currentYear}-${this.currentMonth}-${this.days}`;
-          this.formSearchs[0].datas["WorkingDate"] = [
+          this.formSearchs[0].datas['WorkingDate'] = [
             firstYearMonth,
             lastYearMonth,
           ];
@@ -463,7 +463,7 @@ export default {
     totalTimesChange(scope) {
       if (scope.rowIndex != 0) {
         // 上班/加班时间发生改变时计算累加时长
-        let name = "Week" + scope.columnIndex;
+        let name = 'Week' + scope.columnIndex;
         let workTimes = this.tableData[1][name] ? this.tableData[1][name] : 0;
         let overTimes = this.tableData[2][name] ? this.tableData[2][name] : 0;
         this.tableData[3][name] = parseFloat(workTimes) + parseFloat(overTimes);
@@ -490,7 +490,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.OrganizeName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -518,13 +518,13 @@ export default {
     // 添加属性
     setCalender(Year, Month) {
       this.days = this.getDays(Year, Month); // 判断当前月有多少天
-      let WorkingTimesID = "";
+      let WorkingTimesID = '';
       if (this.WorkingTimesIDs.length != 0) {
         WorkingTimesID = this.WorkingTimesIDs[0].WorkingTimesID;
       }
-      let firstYearMonth = String(Year) + "-" + String(Month) + "-" + +"01";
-      let lastYearMonth = String(Year) + "-" + String(Month) + "-" + this.days;
-      this.formSearchs[0].datas["WorkingDate"] = [
+      let firstYearMonth = String(Year) + '-' + String(Month) + '-' + +'01';
+      let lastYearMonth = String(Year) + '-' + String(Month) + '-' + this.days;
+      this.formSearchs[0].datas['WorkingDate'] = [
         firstYearMonth,
         lastYearMonth,
       ];
@@ -545,11 +545,11 @@ export default {
         this.treeData = JSON.parse(JSON.stringify(data));
         this.treeListTmp = this.treeData;
         this.adminLoading = false;
-        this.formSearchs[0].datas["dicID"] = 97;
+        this.formSearchs[0].datas['dicID'] = 97;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -562,7 +562,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -573,20 +573,20 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -612,7 +612,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -624,7 +624,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -632,7 +632,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -648,22 +648,22 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -677,13 +677,13 @@ export default {
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -704,26 +704,26 @@ export default {
         this.cicleName(this.lines[0].TotalPeoples, false);
       }
       if (this.lines.length == 1) {
-        this.formSearchs[0].datas["OrganizeID"] = this.lines[0].OrganizeID;
+        this.formSearchs[0].datas['OrganizeID'] = this.lines[0].OrganizeID;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
     zero(num) {
       if (Number(num) < 10) {
-        return "0" + num;
+        return '0' + num;
       } else {
         return num;
       }
     },
     cicleName(val, tag) {
       let index = 8;
-      if (this.largeOrSmall == "小周") {
+      if (this.largeOrSmall == '小周') {
         index = 7;
       } else {
         index = 6;
       }
       for (var i = 1; i < index; i++) {
-        let name = "Week" + i;
+        let name = 'Week' + i;
         this.tableData[0][name] = val;
         this.tableData[0].disabled = tag;
       }
@@ -742,7 +742,7 @@ export default {
         TotalPeoples = this.lines[0].TotalPeoples;
       }
       if (this.lines == 0) {
-        this.$message.error("请选择要配置班次的线别！");
+        this.$message.error('请选择要配置班次的线别！');
         this.WorkingTimesID = null;
         return;
       }
@@ -750,13 +750,13 @@ export default {
         return x.WorkingTimesID == val;
       });
       let index = 0;
-      if (this.largeOrSmall == "小周") {
+      if (this.largeOrSmall == '小周') {
         index = 7;
       } else {
         index = 6;
       }
       for (var i = 1; i < index; i++) {
-        let name = "Week" + i;
+        let name = 'Week' + i;
         this.tableData[1][name] = newData[0].WorkHour;
         this.tableData[2][name] = newData[0].OverTimeHour;
         this.tableData[3][name] =
@@ -773,12 +773,12 @@ export default {
     //批量设置单个日历班次
     changeWorkingTimesID2(val) {
       if (this.lines == 0 || this.lines > 1) {
-        this.$message.error("请选择仅限一条班次！");
+        this.$message.error('请选择仅限一条班次！');
         this.WorkingTimesID2 = null;
         return;
       }
       const newData = this.WorkingTimesIDs.find(
-        (x) => x.WorkingTimesID === val
+        (x) => x.WorkingTimesID === val,
       );
       this.calenderData.forEach((item) => {
         if (item.ElementDeleteFlag === 0) {
@@ -791,8 +791,8 @@ export default {
     // 获取这个班次的具体时间
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.days;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.days;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -800,11 +800,11 @@ export default {
         //对没有返回的值进行默认值处理
         for (let i = 0; i < this.days; i++) {
           const date = `${this.currentYear}-${this.currentMonth}-${this.zero(
-            i + 1
+            i + 1,
           )}`;
           const found = data.find((obj) => obj.WorkingDate === date);
           if (found) {
-            found["ElementDeleteFlag"] = 0;
+            found['ElementDeleteFlag'] = 0;
             this.calenderData.push(found); // 如果找到了，直接添加到结果数组中
           } else {
             // 如果没有找到，则根据日期生成一个新的对象
@@ -812,21 +812,21 @@ export default {
               ElementDeleteFlag: 1,
               WorkingDate: date,
               dicID: 97,
-              OverTime: "",
-              Peoples: "",
-              WorkHour: "",
-              WorkingTimesID: "",
-              TotalHours: "",
-              OrganizeID: this.formSearchs[0].datas["OrganizeID"],
+              OverTime: '',
+              Peoples: '',
+              WorkHour: '',
+              WorkingTimesID: '',
+              TotalHours: '',
+              OrganizeID: this.formSearchs[0].datas['OrganizeID'],
             });
           }
         }
-        console.log(this.calenderData, "this.calenderData");
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        console.log(this.calenderData, 'this.calenderData');
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -846,7 +846,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -855,43 +855,43 @@ export default {
     saveWork() {
       let submitData = [];
       if (this.lines.length == 0) {
-        this.$message.error("请勾选左侧的线别！");
+        this.$message.error('请勾选左侧的线别！');
       } else if (!this.dataPicker) {
-        this.$message.error("请选择要配置的日期范围！");
+        this.$message.error('请选择要配置的日期范围！');
       } else if (!this.WorkingTimesID) {
-        this.$message.error("请选择班次！");
+        this.$message.error('请选择班次！');
       } else {
-        this.$confirm("确定要保存配置的排班吗？")
+        this.$confirm('确定要保存配置的排班吗？')
           .then((_) => {
             let BSDay = 1;
-            if (_this.largeOrSmall == "小周") {
+            if (_this.largeOrSmall == '小周') {
               BSDay = 0;
             }
             _this.lines.forEach((x) => {
               let obj = {};
-              obj["OrganizeID"] = x.OrganizeID;
-              obj["WorkingTimesID"] = _this.WorkingTimesID;
-              obj["StartDate"] = _this.dataPicker[0];
-              obj["EndDate"] = _this.dataPicker[1];
-              obj["IsBSDay"] = _this.IsCicle;
-              obj["BSDay"] = BSDay;
-              obj["children"] = [];
+              obj['OrganizeID'] = x.OrganizeID;
+              obj['WorkingTimesID'] = _this.WorkingTimesID;
+              obj['StartDate'] = _this.dataPicker[0];
+              obj['EndDate'] = _this.dataPicker[1];
+              obj['IsBSDay'] = _this.IsCicle;
+              obj['BSDay'] = BSDay;
+              obj['children'] = [];
               for (var i = 1; i < 8; i++) {
                 let obj2 = {};
-                let name = "Week" + i;
+                let name = 'Week' + i;
                 if (i == 7) {
-                  obj2["WeekDay"] = 0;
+                  obj2['WeekDay'] = 0;
                 } else {
-                  obj2["WeekDay"] = i;
+                  obj2['WeekDay'] = i;
                 }
                 if (_this.tableData[0][name]) {
-                  obj2["Peoples"] = _this.tableData[0][name];
+                  obj2['Peoples'] = _this.tableData[0][name];
                 } else {
-                  obj2["Peoples"] = x.TotalPeoples;
+                  obj2['Peoples'] = x.TotalPeoples;
                 }
-                obj2["H1"] = _this.tableData[1][name];
-                obj2["H2"] = _this.tableData[2][name];
-                obj["children"].push(obj2);
+                obj2['H1'] = _this.tableData[1][name];
+                obj2['H2'] = _this.tableData[2][name];
+                obj['children'].push(obj2);
               }
               submitData.push(obj);
             });
@@ -903,7 +903,7 @@ export default {
     // 清空表格数据
     clearTable() {
       for (var i = 1; i < 8; i++) {
-        let name = "Week" + i;
+        let name = 'Week' + i;
         this.tableData[0][name] = null;
         this.tableData[1][name] = null;
         this.tableData[2][name] = null;
@@ -925,14 +925,14 @@ export default {
         this.$refs.asideRef.$refs.asideTree.setCheckedKeys([]);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -945,9 +945,9 @@ export default {
           return x.OrganizeTypeID == 6;
         });
       if (this.lines.length == 0 || this.lines.length > 1) {
-        this.$message.error("仅限勾选一条线别保存排班配置！");
+        this.$message.error('仅限勾选一条线别保存排班配置！');
       } else {
-        this.$confirm("确定要保存当前线别的月份排班吗？")
+        this.$confirm('确定要保存当前线别的月份排班吗？')
           .then(async (_) => {
             //对数据进行筛选
             const resultArr = this.calenderData.filter((item) => {
@@ -959,7 +959,7 @@ export default {
               _this.adminLoading = false;
               _this.$message({
                 message: msg,
-                type: "success",
+                type: 'success',
                 dangerouslyUseHTMLString: true,
               });
               this.getTableData(this.formSearchs[0].datas, 0);
@@ -967,7 +967,7 @@ export default {
               _this.adminLoading = false;
               _this.$message({
                 message: msg,
-                type: "error",
+                type: 'error',
                 dangerouslyUseHTMLString: true,
               });
             }

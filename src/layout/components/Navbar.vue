@@ -22,6 +22,16 @@
         <el-tooltip
           class="item"
           effect="dark"
+          content="消息"
+          placement="bottom"
+        >
+          <i class="el-icon-bell" @click="MessageEvent"></i>
+        </el-tooltip>
+      </div>
+      <div class="content_icon">
+        <el-tooltip
+          class="item"
+          effect="dark"
           content="全屏"
           placement="bottom"
         >
@@ -90,13 +100,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import screenfull from "screenfull";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
-import ThemePicker from "@/components/ThemePicker";
-import ComFormDialog from "@/components/ComFormDialog";
-import { SaveData } from "@/api/Common.js";
+import { mapGetters } from 'vuex';
+import screenfull from 'screenfull';
+import Breadcrumb from '@/components/Breadcrumb';
+import Hamburger from '@/components/Hamburger';
+import ThemePicker from '@/components/ThemePicker';
+import ComFormDialog from '@/components/ComFormDialog';
+import { SaveData } from '@/api/Common.js';
 export default {
   components: {
     Breadcrumb,
@@ -106,78 +116,82 @@ export default {
   },
   data() {
     return {
-      apsurl: "",
+      apsurl: '',
       userInfo: {},
-      UserName: "",
+      UserName: '',
       dialogShow: false,
       formData: {
-        Account: "",
+        Account: '',
         // Pwd: "",
-        NewPwd: "",
-        SurePwd: "",
+        NewPwd: '',
+        SurePwd: '',
       },
       formController: [
-        { label: "账号", prop: "Account", type: "input", disabled: true },
+        { label: '账号', prop: 'Account', type: 'input', disabled: true },
         // { label: "密码", prop: "Pwd", type: "input", disabled: true },
         {
-          label: "新密码",
-          prop: "NewPwd",
-          type: "input",
-          inputType: "password",
+          label: '新密码',
+          prop: 'NewPwd',
+          type: 'input',
+          inputType: 'password',
         },
         {
-          label: "确认密码",
-          prop: "SurePwd",
-          type: "input",
-          inputType: "password",
+          label: '确认密码',
+          prop: 'SurePwd',
+          type: 'input',
+          inputType: 'password',
         },
       ],
       formRules: {
         NewPwd: [
-          { required: true, message: "新密码为必填项", trigger: "blur" },
+          { required: true, message: '新密码为必填项', trigger: 'blur' },
         ],
         SurePwd: [
-          { required: true, message: "二次密码为必填项", trigger: "blur" },
+          { required: true, message: '二次密码为必填项', trigger: 'blur' },
         ],
       },
     };
   },
   created() {
-    this.apsurl = localStorage.getItem("apsurl");
-    this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    this.apsurl = localStorage.getItem('apsurl');
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (this.userInfo) {
       this.UserName = this.userInfo.UserName;
     }
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"]),
+    ...mapGetters(['sidebar', 'avatar']),
   },
   methods: {
     // 跳转到首页
     jumpHome() {
       let indexNum = -1;
       indexNum = _.findIndex(this.$store.getters.routers, function (o) {
-        if (o.children && o.children[0].meta.title === "首页") {
+        if (o.children && o.children[0].meta.title === '首页') {
           return o;
         }
       });
       if (indexNum > -1) {
         this.$router.push({
-          path: "/" + this.$store.getters.routers[indexNum].children[0].path,
+          path: '/' + this.$store.getters.routers[indexNum].children[0].path,
         });
       } else {
-        this.$router.push("/");
+        this.$router.push('/');
       }
     },
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar');
     },
     // 全屏
     screen() {
       screenfull.toggle();
     },
+    // 全屏
+    MessageEvent() {
+      screenfull.toggle();
+    },
     async logout() {
-      await this.$store.dispatch("user/logout");
+      await this.$store.dispatch('user/logout');
       window.localStorage.clear();
       window.location.reload();
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
@@ -194,26 +208,26 @@ export default {
       let obj = {};
       if (val) {
         if (this.formData.NewPwd != this.formData.SurePwd) {
-          this.$message.error("两次输入的密码不一致！");
+          this.$message.error('两次输入的密码不一致！');
           return;
         }
-        obj["Account"] = this.formData.Account;
-        obj["Pwd"] = this.formData.NewPwd;
-        obj["dicID"] = 25;
+        obj['Account'] = this.formData.Account;
+        obj['Pwd'] = this.formData.NewPwd;
+        obj['dicID'] = 25;
         newData.push(obj);
         let res = await SaveData(newData);
         const { result, data, count, msg } = res.data;
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.logout();
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -224,8 +238,8 @@ export default {
       }
     },
     themeChange(val) {
-      this.$store.dispatch("settings/changeSetting", {
-        key: "theme",
+      this.$store.dispatch('settings/changeSetting', {
+        key: 'theme',
         value: val,
       });
     },
@@ -356,5 +370,19 @@ a:hover {
   cursor: pointer;
   color: #0960bd;
   text-decoration: none;
+}
+.red-point {
+  position: relative;
+}
+
+.red-point::before {
+  content: ' ';
+  border: 3px solid red; /*设置红色*/
+  border-radius: 3px; /*设置圆角*/
+  position: absolute;
+  z-index: 1000;
+  right: 0%;
+  margin-right: -5px;
+  margin-top: -5px;
 }
 </style>
