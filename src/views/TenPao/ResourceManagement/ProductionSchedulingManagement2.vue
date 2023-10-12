@@ -993,7 +993,7 @@ export default {
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
         this.formSearchs[1].datas['OrganizeID'] = row.OrganizeID;
-        this.formSearchs[1].datas['WERKS'] = row.WERKS;
+        // this.formSearchs[1].datas['WERKS'] = row.WERKS;
         await this.dataSearch(1);
         this.selectionData[1] = [];
         this.SalesLineNum = '';
