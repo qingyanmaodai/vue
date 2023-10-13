@@ -996,7 +996,7 @@ export default {
         this.formSearchs[1].datas['SalesOrderDetailID'] = null;
         this.formSearchs[1].datas['OrganizeNames'] = null;
         this.formSearchs[2].datas['DefaultLineName'] = null;
-        this.formSearchs[1].datas['OrganizeNames'] = `$+${row.OrganizeName}+$`;
+        this.formSearchs[1].datas['OrganizeNames'] = `$${row.OrganizeName}$`;
         this.formSearchs[2].datas['DefaultLineName'] = row.OrganizeName;
         await this.dataSearch(1);
         await this.dataSearch(2);
