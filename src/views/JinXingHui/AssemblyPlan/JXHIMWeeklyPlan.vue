@@ -186,7 +186,7 @@ export default {
           forms: [],
         },
         {
-          datas: { ProductionStatus: [21, 22, 23] },
+          datas: { ProductionStatus: [21, 22, 23], CompletionStatus: 0 },
           forms: [],
         },
         {
@@ -224,7 +224,7 @@ export default {
         { ID: 9013 },
         { ID: 11168 },
         { ID: 11168 },
-        { ID: 11168 },
+        { ID: 9013 },
         { ID: 9013 },
       ],
       userInfo: {},
