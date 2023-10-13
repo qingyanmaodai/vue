@@ -127,9 +127,9 @@
                 :stretch="true"
               >
                 <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
-                <el-tab-pane label="月计划" name="1"></el-tab-pane>
-                <el-tab-pane label="周计划" name="2"></el-tab-pane>
-                <el-tab-pane label="日计划" name="3"></el-tab-pane>
+                <!-- <el-tab-pane label="月计划" name="1"></el-tab-pane> -->
+                <el-tab-pane label="滚动周计划" name="2"></el-tab-pane>
+                <el-tab-pane label="滚动日计划" name="3"></el-tab-pane>
               </el-tabs>
               <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
@@ -776,11 +776,11 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
-          this.$set(
-            this.formSearchs[i]['datas'],
-            'Accounts',
-            this.userInfo.Account,
-          );
+          // this.$set(
+          //   this.formSearchs[i]['datas'],
+          //   'Accounts',
+          //   this.userInfo.Account,
+          // );
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
