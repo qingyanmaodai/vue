@@ -993,15 +993,13 @@ export default {
       //获取原因数据源
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
+        this.formSearchs[1].datas['SalesOrderDetailID'] = null;
+        this.formSearchs[1].datas['OrganizeNames'] = null;
+        this.formSearchs[2].datas['DefaultLineName'] = null;
         this.formSearchs[1].datas['OrganizeNames'] = row.OrganizeName;
-        this.formSearchs[2].datas['Extend9'] = row.OrganizeName;
+        this.formSearchs[2].datas['DefaultLineName'] = row.OrganizeName;
         await this.dataSearch(1);
         await this.dataSearch(2);
-        this.selectionData[1] = [];
-        // this.SalesLineNum = '';
-        // this.SalesDeliveryDate = '';
-        // this.FrontDate = '';
-        // this.SalesOrderNo = '';
       }
     },
     //重算

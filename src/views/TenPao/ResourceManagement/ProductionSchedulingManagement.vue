@@ -159,7 +159,7 @@
           flex-direction: column;
         "
       >
-        <div class="ant-table-title">
+        <!-- <div class="ant-table-title">
           <el-row>
             <el-col :span="6"
               ><span class="title">销售订单：{{ SalesOrderNo }}</span></el-col
@@ -174,7 +174,7 @@
               ><span class="title">前置期： {{ FrontDate }} </span></el-col
             >
           </el-row>
-        </div>
+        </div> -->
         <div class="ant-table-title">
           <el-row>
             <el-col :span="24" class="flex_flex_end">
@@ -187,6 +187,9 @@
                   :remark="2"
                 />
               </div>
+              <el-button type="success" size="small" @click="1"
+                >按顺序重算排期</el-button
+              >
             </el-col>
           </el-row>
         </div>
@@ -1013,16 +1016,16 @@ export default {
         // this.formSearchs[2].datas['LineNum'] = row.LineNum;
         await this.dataSearch(2);
         this.selectionData[2] = [];
-        this.SalesLineNum = '';
-        this.SalesDeliveryDate = '';
-        this.FrontDate = '';
-        this.SalesOrderNo = '';
+        // this.SalesLineNum = '';
+        // this.SalesDeliveryDate = '';
+        // this.FrontDate = '';
+        // this.SalesOrderNo = '';
         if (this.tableData[2] && this.tableData[2][0]) {
           let row = this.tableData[2][0];
-          this.SalesLineNum = row['SalesLineNum'];
-          this.SalesDeliveryDate = row['SalesDeliveryDate'];
-          this.FrontDate = row['FrontDate'];
-          this.SalesOrderNo = row['SalesOrderNo'];
+          // this.SalesLineNum = row['SalesLineNum'];
+          // this.SalesDeliveryDate = row['SalesDeliveryDate'];
+          // this.FrontDate = row['FrontDate'];
+          // this.SalesOrderNo = row['SalesOrderNo'];
         }
       }
     },
