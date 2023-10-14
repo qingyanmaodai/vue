@@ -801,7 +801,7 @@ export default {
             itemStyle: {
               borderRadius: '50%', // 将图例项的形状设定为圆形
             },
-            data: this.tableData[2].map((item) => item['Name1']),
+            data: this.tableData[3].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -831,7 +831,7 @@ export default {
                 formatter: function (params) {
                   // let percent = 0;
                   // let total = 0;
-                  // for (var i = 0; i < this.tableData[2].length; i++) {
+                  // for (var i = 0; i < this.tableData[3].length; i++) {
                   //   total += scaleData[i].value;
                   // }
                   // percent = ((params.value / total) * 100).toFixed(0);
@@ -862,7 +862,7 @@ export default {
                   show: false,
                 },
               },
-              data: this.tableData[2].map((item) => {
+              data: this.tableData[3].map((item) => {
                 return {
                   value: item['S1'],
                   name: item['Name1'],
