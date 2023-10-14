@@ -783,46 +783,25 @@ export default {
           //     fontSize: 16
           //   }
           // },
-          // tooltip: {
-          //   show: false,
-          //   trigger: "item",
-          //   formatter: "{b}: {c} ({d}%)"
-          // },
-          // legend: {
-          //   type: "scroll",
-          //   orient: "vertical",
-          //   right: "0%",
-          //   top: "center",
-          //   itemWidth: fontSize(10),
-          //   itemHeight: fontSize(10),
-          //   textStyle: {
-          //     fontSize: fontSize(12),
-          //   },
-          //   itemStyle: {
-          //     borderRadius: "50%", // 将图例项的形状设定为圆形
-          //   },
-          //   data: [
-          //     "回货周期<6天",
-          //     "6天<回货周期<15天",
-          //     "15天<回货周期<30天",
-          //     "回货周期>30天",
-          //     "灌胶老练",
-          //     "印刷",
-          //   ],
-          // },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}:({d}%)',
+          },
           legend: {
             top: '0',
             left: 'center',
-            // doesn't perfectly work with our tricks, disable it
-            // selectedMode: false,
+            orient: 'horizontal',
+            // right: "0%",
+            // bottom: "0",
+            itemWidth: fontSize(10),
+            itemHeight: fontSize(10),
             textStyle: {
               fontSize: fontSize(12),
             },
-            itemWidth: fontSize(10),
-            itemHeight: fontSize(10),
             itemStyle: {
               borderRadius: '50%', // 将图例项的形状设定为圆形
             },
+            data: this.tableData[2].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -830,7 +809,7 @@ export default {
           series: [
             {
               type: 'pie',
-              // selectedMode: "single",
+              selectedMode: 'single',
               radius: ['30%', '60%'],
               color: [
                 '#23CF9C',
@@ -842,11 +821,40 @@ export default {
               ],
               center: ['50%', '60%'],
               label: {
-                normal: {
-                  position: 'inner',
-                  formatter: '{d}%',
-                  fontSize: fontSize(10),
-                  color: '#fff',
+                position: 'inner',
+                formatter: '{d}%',
+                show: true,
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: 1,
+                fontSize: fontSize(12),
+                formatter: function (params) {
+                  // let percent = 0;
+                  // let total = 0;
+                  // for (var i = 0; i < this.tableData[2].length; i++) {
+                  //   total += scaleData[i].value;
+                  // }
+                  // percent = ((params.value / total) * 100).toFixed(0);
+                  if (params.name !== '') {
+                    // return params.name + '\n' + params.data.data;
+                    if (params.name.length > 4) {
+                      return (
+                        params.name.slice(
+                          0,
+                          Math.ceil(params.name.length / 2),
+                        ) +
+                        '\n' +
+                        params.name.slice(Math.ceil(params.name.length / 2)) +
+                        '\n' +
+                        params.percent +
+                        '%'
+                      );
+                    } else {
+                      return params.name + params.percent + '%';
+                    }
+                  } else {
+                    return '';
+                  }
                 },
               },
               labelLine: {
@@ -854,24 +862,12 @@ export default {
                   show: false,
                 },
               },
-              data: [
-                {
-                  value: 3661,
-                  name: '回货周期<6天',
-                },
-                {
-                  value: 5713,
-                  name: '6天<回货周期<15天',
-                },
-                {
-                  value: 9938,
-                  name: '15天<回货周期<30天',
-                },
-                {
-                  value: 17623,
-                  name: '回货周期>30天',
-                },
-              ],
+              data: this.tableData[2].map((item) => {
+                return {
+                  value: item['S1'],
+                  name: item['Name1'],
+                };
+              }),
             },
           ],
         },
