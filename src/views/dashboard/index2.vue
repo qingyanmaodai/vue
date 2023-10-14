@@ -1371,7 +1371,9 @@ export default {
                 this.$moment().add(2, 'days').format('YYYY-MM-DD'),
               ];
             }
-            await this.getTableData(this.formSearchs[z].datas, z);
+            if (this.sysID[z].ID) {
+              await this.getTableData(this.formSearchs[z].datas, z);
+            }
           }),
         );
         this.adminLoading = false;

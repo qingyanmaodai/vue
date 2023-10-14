@@ -64,7 +64,7 @@
                 :data="tableData[0]"
                 class="warp"
                 :class-option="{
-                  step: 1,
+                  step: 0.1,
                 }"
               >
                 <ul class="px-[10px]">
@@ -119,7 +119,7 @@
                   <div class="ScreenBaseTitle">计划数</div>
                 </div>
               </div>
-              <div class="h-full flex flex-col justify-center gap-[10]">
+              <div class="h-full flex flex-col justify-center gap-[10%]">
                 <div class="ScreenBaseNum">162</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
@@ -132,7 +132,7 @@
                   <div class="ScreenBaseTitle">已完成</div>
                 </div>
               </div>
-              <div class="h-full flex flex-col justify-center gap-[10]">
+              <div class="h-full flex flex-col justify-center gap-[10%]">
                 <div class="ScreenBaseNum">53</div>
                 <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
                 <div
@@ -172,7 +172,7 @@
                   :data="tableData[0]"
                   class="warp"
                   :class-option="{
-                    step: 1,
+                    step: 0,
                   }"
                 >
                   <ul class="px-[10px]">

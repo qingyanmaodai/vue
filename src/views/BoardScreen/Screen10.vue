@@ -34,7 +34,7 @@
               :data="tableData[0]"
               class="warp"
               :class-option="{
-                step: 1,
+                step: 0.25,
               }"
             >
               <ul class="px-[10px]">

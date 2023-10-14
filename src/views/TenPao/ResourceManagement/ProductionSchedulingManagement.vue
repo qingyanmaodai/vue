@@ -54,6 +54,7 @@
               @sortChange="sortChange"
               @selectfun="selectFun"
               @handleRowClick="handleRowClick"
+              :cellStyle="cellStyle"
             />
             <!-- <ComSpreadTable
               ref="spreadsheetRef"
@@ -139,6 +140,7 @@
                 iconOpen: 'vxe-icon-square-minus-fill',
                 iconClose: 'vxe-icon-square-plus-fill',
               }"
+              :cellStyle="cellStyle"
             />
           </div>
         </div>
@@ -214,6 +216,7 @@
             @pageSize="pageSize"
             @sortChange="sortChange"
             @selectfun="selectFun"
+            :cellStyle="cellStyle"
           />
         </div>
         <div style="height: 40px; margin-top: 6px">
@@ -833,38 +836,22 @@ export default {
       }
     },
     // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == 'IsCompleteInspect') {
-        if (row.IsCompleteInspect == '未开始') {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else if (row.IsCompleteInspect == '进行中') {
-          return {
-            backgroundColor: '#fdfd8f',
-          };
-        } else if (row.IsCompleteInspect == '已完成') {
-          return {
-            backgroundColor: '#9fff9f',
-          };
-        }
-      }
-    },
-    // 行内样式
     cellStyle({ row, column }) {
-      if (column.property == 'OrderNo') {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: '#9fff9f',
-            };
-          }
-        }
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
+      if (
+        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
+        key in row['FColors']
+      ) {
+        style.color = row['FColors'][key]; // 设置背景颜色
       }
+      if (
+        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
+        key in row['BColors']
+      ) {
+        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+      }
+      return style; // 返回样式对象
     },
     // 增行
     addRow(remarkTb) {
