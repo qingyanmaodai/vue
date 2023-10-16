@@ -706,9 +706,7 @@ export default {
               type: 'bar',
               silent: true,
               itemStyle: {
-                normal: {
-                  color: '#578FFB',
-                },
+                color: '#578FFB',
               },
               data: this.tableData[1].map((item) => item['S1']),
             },
@@ -717,9 +715,7 @@ export default {
               type: 'bar',
               silent: true,
               itemStyle: {
-                normal: {
-                  color: '#23CF9C',
-                },
+                color: '#23CF9C',
               },
               data: this.tableData[1].map((item) => item['S2']),
             },
@@ -812,9 +808,7 @@ export default {
                 },
               },
               labelLine: {
-                normal: {
-                  show: false,
-                },
+                show: false,
               },
               data: this.tableData[2].map((item) => {
                 return {
@@ -912,9 +906,7 @@ export default {
                 },
               },
               labelLine: {
-                normal: {
-                  show: false,
-                },
+                show: false,
               },
               data: this.tableData[3].map((item) => {
                 return {
@@ -1002,9 +994,7 @@ export default {
               silent: true,
               barWidth: fontSize(14),
               itemStyle: {
-                normal: {
-                  color: '#578FFB',
-                },
+                color: '#578FFB',
               },
               data: this.tableData[7].map((item) => item['S1']),
             },
@@ -1014,9 +1004,7 @@ export default {
               silent: true,
               barWidth: fontSize(14),
               itemStyle: {
-                normal: {
-                  color: '#23CF9C',
-                },
+                color: '#23CF9C',
               },
               data: this.tableData[7].map((item) => item['S2']),
             },
@@ -1102,27 +1090,25 @@ export default {
               symbolSize: 8,
               zlevel: 3,
               areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: '#0090FF30',
-                      },
-                      {
-                        offset: 1,
-                        color: '#0090FF10',
-                      },
-                    ],
-                    false,
-                  ),
-                  shadowColor: '#0090FF10',
-                  shadowBlur: 10,
-                },
+                color: new echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: '#0090FF30',
+                    },
+                    {
+                      offset: 1,
+                      color: '#0090FF10',
+                    },
+                  ],
+                  false,
+                ),
+                shadowColor: '#0090FF10',
+                shadowBlur: 10,
               },
               data: [100, 138, 350, 173, 180, 150, 180, 230],
             },
@@ -1134,27 +1120,25 @@ export default {
               symbolSize: 8,
               zlevel: 3,
               areaStyle: {
-                normal: {
-                  color: new echarts.graphic.LinearGradient(
-                    0,
-                    0,
-                    0,
-                    1,
-                    [
-                      {
-                        offset: 0,
-                        color: '#36CE9E30',
-                      },
-                      {
-                        offset: 1,
-                        color: '#36CE9E10',
-                      },
-                    ],
-                    false,
-                  ),
-                  shadowColor: '#36CE9E10',
-                  shadowBlur: 10,
-                },
+                color: new echarts.graphic.LinearGradient(
+                  0,
+                  0,
+                  0,
+                  1,
+                  [
+                    {
+                      offset: 0,
+                      color: '#36CE9E30',
+                    },
+                    {
+                      offset: 1,
+                      color: '#36CE9E10',
+                    },
+                  ],
+                  false,
+                ),
+                shadowColor: '#36CE9E10',
+                shadowBlur: 10,
               },
               data: [233, 233, 200, 180, 199, 233, 210, 180],
             },
