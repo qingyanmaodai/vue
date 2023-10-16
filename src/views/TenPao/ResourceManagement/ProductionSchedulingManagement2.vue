@@ -773,7 +773,7 @@ export default {
                 label: '产品编码',
                 width: null,
                 prop: 'Code',
-                placeholder: '产品编码',
+                placeholder: '请输入产品编码',
                 methods: null,
                 options: null,
                 dicID: '11150',

@@ -21,10 +21,9 @@
             >
               <el-form-item :label="x.label" :name="x.prop">
                 <el-input
-                  v-if="x.type === null"
+                  v-if="!x.type"
                   v-model="searchData[x.prop]"
                   size="small"
-                  type="number"
                   @keyup.enter.native="btnClick('dataSearch')"
                 ></el-input>
                 <!-- 输入框 -->
