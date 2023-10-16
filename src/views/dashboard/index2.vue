@@ -494,15 +494,69 @@ export default {
         },
       ],
       result1: [
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
-        { label: null, fields: null, groupby: null },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
       ],
       sysID: [
         { ID: 7917 },
@@ -1314,6 +1368,8 @@ export default {
             label: item.label,
             fields: item.fields,
             groupby: item.groupby,
+            sort: item.sort,
+            DataFilter: item.DataFilter,
           };
         });
       }
@@ -1353,6 +1409,20 @@ export default {
                 this.formSearchs[z].datas,
                 'groupby',
                 this.result1[z].groupby,
+              );
+            }
+            if (this.result1[z].sort) {
+              this.$set(
+                this.formSearchs[z].datas,
+                'sort',
+                this.result1[z].sort,
+              );
+            }
+            if (this.result1[z].DataFilter) {
+              this.$set(
+                this.formSearchs[z].datas,
+                'DataFilter',
+                this.result1[z].DataFilter,
               );
             }
             if (z === 7) {
