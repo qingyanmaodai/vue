@@ -73,7 +73,7 @@
               @handleRowClick="handleRowClick"
               @handleRowdbClick="handleRowdbClick"
               @selectChanged="selectChanged"
-              :cellStyle="cellStyle"
+              :cellStyle="cellStyle0"
             />
             <!-- <ComSpreadTable
               ref="spreadsheetRef"
@@ -99,6 +99,7 @@
       :visible.sync="colDialogVisible2"
       width="100%"
       :close-on-click-modal="false"
+      :destroy-on-close="true"
       :modal-append-to-body="false"
       ><div
         class="flex_grow"
@@ -447,7 +448,7 @@ export default {
           value: '',
         });
       this.labelStatus1 = this.Status1.findIndex(
-        (item) => item === this.userInfo.Account,
+        (item) => item['value'] === this.userInfo.Account,
       );
       if (this.labelStatus1 === -1) {
         // 如果没有找到匹配项，将labelStatus1设置为最后一个选项的索引
@@ -754,6 +755,32 @@ export default {
                   this.$moment().add(30, 'days').format('YYYY-MM-DD'),
                 ],
               },
+              {
+                type: null,
+                label: '销售订单',
+                width: null,
+                prop: 'SalesOrderNo',
+                placeholder: '请输入销售订单',
+                methods: null,
+                options: null,
+                dicID: '11150',
+                icon: null,
+                multiple: false,
+                value: '',
+              },
+              {
+                type: null,
+                label: '产品编码',
+                width: null,
+                prop: 'Code',
+                placeholder: '产品编码',
+                methods: null,
+                options: null,
+                dicID: '11150',
+                icon: null,
+                multiple: false,
+                value: '',
+              },
             ].concat(x);
           } else if (z === 1) {
             x = [
@@ -860,7 +887,7 @@ export default {
     handleRowClick(row, remarkTb) {
       if (remarkTb === 2) {
         this.formSearchs[1].datas['SalesOrderDetailID'] =
-          row.SalesOrderDetailID;
+          row.SalesOrderDetailID || 'N/A';
         this.dataSearch(1);
       }
     },
@@ -994,11 +1021,12 @@ export default {
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
         this.formSearchs[1].datas['SalesOrderDetailID'] = null;
-        this.formSearchs[1].datas['OrganizeNames'] = null;
+        // this.formSearchs[1].datas['OrganizeNames'] = null;
         this.formSearchs[2].datas['DefaultLineName'] = null;
-        this.formSearchs[1].datas['OrganizeNames'] = `$${row.OrganizeName}$`;
+        // this.formSearchs[1].datas['OrganizeNames'] = `$${row.OrganizeName}$`;
         this.formSearchs[2].datas['DefaultLineName'] = row.OrganizeName;
-        await this.dataSearch(1);
+        this.$set(this.tableData, 1, []);
+        // await this.dataSearch(1);
         await this.dataSearch(2);
       }
     },
@@ -1413,6 +1441,35 @@ export default {
         key in row['BColors']
       ) {
         style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+      }
+      return style; // 返回样式对象
+    },
+    // 行内样式
+    cellStyle0({ row, column }) {
+      let style = {}; // 创建一个空的样式对象
+      const key = column.property;
+      if (
+        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
+        key in row['FColors']
+      ) {
+        style.color = row['FColors'][key]; // 设置背景颜色
+      }
+      if (
+        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
+        key in row['BColors']
+      ) {
+        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+      }
+      let propObject = this.tableColumns[0].find(
+        (item) => item['prop'] === key,
+      );
+      if (
+        propObject &&
+        propObject['prop2'] &&
+        row[key] &&
+        row[key].includes('(')
+      ) {
+        style.fontWeight = 'bold';
       }
       return style; // 返回样式对象
     },

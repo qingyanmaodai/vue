@@ -7,7 +7,7 @@
           <div class="secondCard">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">计划配套趋势</div>
+                <div class="echartTitle">计划配套明细</div>
               </div>
               <div class="echartBody" ref="chart1"></div>
             </div>
@@ -73,7 +73,7 @@ import {
   GetSearch,
 } from '@/api/Common';
 export default {
-  name: 'TBSummaryCompletePlan',
+  name: 'TBHomogenizedAnalysis',
   components: {
     ComSearch,
     ComVxeTable,
@@ -241,7 +241,7 @@ export default {
       this.chartOptions = [
         {
           title: {
-            text: 'XXXXX 排产订单齐套率趋势',
+            text: 'XXXXX 排产订单T+7齐套分析',
             textStyle: {
               align: 'center',
               color: '#000',
@@ -282,17 +282,6 @@ export default {
               '插件3线',
               '丝印组',
               '激光组',
-              '宁波1线',
-              '宁波2线',
-              '宁波3线',
-              '宁波4线',
-              '宁波5线',
-              '宁波6线',
-              '宁波7线',
-              '宁波8线',
-              '新昌1线',
-              '新昌2线',
-              '新昌3线',
             ],
             axisLabel: {
               interval: 0,
@@ -343,49 +332,41 @@ export default {
             },
           ],
           series: [
-            // {
-            //   name: '计划任务',
-            //   type: 'bar',
-            //   barWidth: fontSize(15),
-            //   silent: true,
-            //   itemStyle: {
-            //     normal: {
-            //       color: '#009B4C',
-            //     },
-            //   },
-            //   data: [
-            //     100, 25, 6, 6, 66, 26, 55, 51, 54, 44, 58, 66, 15, 96, 87, 26,
-            //     84, 86, 64, 56,
-            //   ],
-            // },
-            // {
-            //   name: '配套任务',
-            //   type: 'bar',
-            //   barWidth: fontSize(15),
-            //   silent: true,
-            //   itemStyle: {
-            //     normal: {
-            //       color: '#40AAF6',
-            //     },
-            //   },
-            //   data: [
-            //     84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
-            //     75, 52, 25, 63,
-            //   ],
-            // },
+            {
+              name: '计划任务',
+              type: 'bar',
+              barWidth: fontSize(15),
+              silent: true,
+              itemStyle: {
+                normal: {
+                  color: '#009B4C',
+                },
+              },
+              data: [100, 25, 6, 6, 66, 26, 55, 51, 54],
+            },
+            {
+              name: '配套任务',
+              type: 'bar',
+              barWidth: fontSize(15),
+              silent: true,
+              itemStyle: {
+                normal: {
+                  color: '#40AAF6',
+                },
+              },
+              data: [84, 86, 64, 56, 51, 54, 44, 58, 66],
+            },
             {
               name: '计划齐套趋势',
-              type: 'line',
+              type: 'bar',
+              barWidth: fontSize(15),
               silent: true,
               itemStyle: {
                 normal: {
                   color: '#FA9A09',
                 },
               },
-              data: [
-                84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
-                75, 52, 25, 63,
-              ],
+              data: [84, 86, 64, 56, 51, 54, 44, 58, 66],
             },
           ],
         },
