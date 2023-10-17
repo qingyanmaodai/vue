@@ -5,16 +5,16 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
           :remark="0"
           :isLoading="isLoading"
           :btnForm="btnForm"
-          :signName="0"
-          :Region="Region[0]"
+          :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -38,6 +38,18 @@
                 :editable="false"
               >
               </el-date-picker>
+            </div>
+            <div v-for="(item, y) in Status1" :key="y">
+              <span
+                @click="changeStatus(item, y)"
+                :class="
+                  labelStatus1 == item['index']
+                    ? 'statusActive cursor'
+                    : 'cursor'
+                "
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider>
             </div>
             <!-- <div v-for="(item, y) in Status1" :key="y">
               <span
@@ -304,6 +316,12 @@ export default {
       sysID: [{ ID: 9005 }],
       // sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
       fileList: [],
+      Status1: [
+        { label: '本月预测计划', value: 0, index: 0 },
+        { label: '下月预测计划', value: 1, index: 1 },
+        { label: '历史预测计划', value: '', index: 2 },
+        // { label: '预测单', value: 2, index: 4 },
+      ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -315,12 +333,6 @@ export default {
       isEdit: [false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
-      Status1: [
-        { label: '未完成', value: 0, index: 0 },
-        { label: '已完成', value: 1, index: 3 },
-        { label: '全部', value: '', index: 4 },
-        { label: '预测单', value: 2, index: 5 },
-      ],
       Region: [5, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
@@ -720,7 +732,7 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      // this.adminLoading = true;
+      this.adminLoading = true;
       const sheet = this.spread[remarkTb]?.getActiveSheet();
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
@@ -750,7 +762,13 @@ export default {
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      let res = await SaveData(changeRecords);
+      changeRecords.forEach((x) => {
+        x.item['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
+        x.item['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
+        submitData.push(x.item);
+      });
+      let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
+      // let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -793,7 +811,6 @@ export default {
               this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
-          this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -1536,26 +1553,26 @@ export default {
     },
     // 改变状态
     async changeStatus(item, index) {
-      let RoleMapList = this.$store.getters.userInfo.RoleMap;
-      if (RoleMapList.length) {
-        RoleMapList.forEach((item) => {
-          if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
-            //业务经理
-            this.RoleMapStatus = true;
-            return;
-          }
-        });
-      }
-      this.formSearchs[0].datas['SaleMan'] = null;
-      if (this.RoleMapStatus !== true && index !== 3) {
-        this.$set(
-          this.formSearchs[0]['datas'],
-          'SaleMan',
-          this.userInfo.Account,
-        );
-      }
+      // let RoleMapList = this.$store.getters.userInfo.RoleMap;
+      // if (RoleMapList.length) {
+      //   RoleMapList.forEach((item) => {
+      //     if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
+      //       //业务经理
+      //       this.RoleMapStatus = true;
+      //       return;
+      //     }
+      //   });
+      // }
+      // this.formSearchs[0].datas['SaleMan'] = null;
+      // if (this.RoleMapStatus !== true && index !== 3) {
+      //   this.$set(
+      //     this.formSearchs[0]['datas'],
+      //     'SaleMan',
+      //     this.userInfo.Account,
+      //   );
+      // }
       this.labelStatus1 = item['index'];
-      this.formSearchs[0].datas['IsFinish'] = item.value;
+      // this.formSearchs[0].datas['IsFinish'] = item.value;
       await this.dataSearch(0);
     },
     // 导入并分析模板
@@ -1630,7 +1647,9 @@ export default {
                 i < this.tableColumns[this.tagRemark].length;
                 i++
               ) {
+                console.log();
                 let item = this.tableColumns[this.tagRemark][i];
+                console.log(typeof item.label, typeof key, item, key);
                 if (item.label === key) {
                   if (item.DataType === 'datetime') {
                     if (m[key] && !this.isValidDate(m[key])) {
@@ -1669,41 +1688,57 @@ export default {
                     } else {
                       return;
                     }
+                  } else if (item.prop2) {
+                    //对动态列判断
+                    if (Number(m[key]) > 0) {
+                      obj['PlanDay'] = item['prop2'];
+                      obj['PlanQty'] = m[key];
+                      obj['dicID'] = _this.sysID[_this.tagRemark].ID;
+                      obj['Account'] = _this.$store.getters.userInfo.Account;
+                      obj['row'] = m.__rowNum__;
+                      // 需要使用...obj 不然值回写有问题
+                      DataList.push({ ...obj });
+                    }
                   } else {
                     obj[item.prop] = m[key];
                   }
-                } else if (isNaN(key) && !isNaN(Date.parse(key))) {
+                } else if (
+                  isNaN(key) &&
+                  !isNaN(Date.parse(key)) &&
+                  item.prop2 &&
+                  item.DataType === 'datetime'
+                ) {
                   //导入日期并且数大于0才导入
                   // 列为日期的格式
                   isDate = true;
                   if (Number(m[key]) > 0) {
-                    obj['PlanDay'] = this.$moment(key).format('YYYY-MM-DD');
+                    // obj['PlanDay'] = this.$moment(key).format('YYYY-MM-DD');
+                    obj['PlanDay'] = key;
                     obj['PlanQty'] = m[key];
                     obj['dicID'] = _this.sysID[_this.tagRemark].ID;
                     obj['Account'] = _this.$store.getters.userInfo.Account;
                     obj['row'] = m.__rowNum__;
                     // 需要使用...obj 不然值回写有问题
                     DataList.push({ ...obj });
-                    break;
                   }
                 }
               }
             }
           }
           // 以下为固定入参
-          if (!isDate) {
-            obj['dicID'] = this.sysID[this.tagRemark].ID;
-            (obj['SDate'] = _this.machineCycle.length
-              ? _this.machineCycle[0]
-              : ''),
-              (obj['Edate'] = _this.machineCycle.length
-                ? _this.machineCycle[1]
-                : ''),
-              (obj['Account'] = this.$store.getters.userInfo.Account);
-            obj['row'] = m.__rowNum__;
-            // 需要使用...obj 不然值回写有问题
-            DataList.push({ ...obj });
-          }
+          // if (!isDate) {
+          //   obj['dicID'] = this.sysID[this.tagRemark].ID;
+          //   (obj['SDate'] = _this.machineCycle.length
+          //     ? _this.machineCycle[0]
+          //     : ''),
+          //     (obj['Edate'] = _this.machineCycle.length
+          //       ? _this.machineCycle[1]
+          //       : ''),
+          //     (obj['Account'] = this.$store.getters.userInfo.Account);
+          //   obj['row'] = m.__rowNum__;
+          //   // 需要使用...obj 不然值回写有问题
+          //   DataList.push({ ...obj });
+          // }
         });
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {

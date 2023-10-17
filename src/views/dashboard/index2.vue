@@ -593,11 +593,11 @@ export default {
     // var style = window.getComputedStyle("echartBody");
     //初始化图表;
     this.chart = [
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
-      this.$refs.chart4,
-      this.$refs.chart5,
+      echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
+      echarts.init(this.$refs.chart3),
+      echarts.init(this.$refs.chart4),
+      echarts.init(this.$refs.chart5),
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
@@ -615,9 +615,10 @@ export default {
       this.$set(this, 'btnForm', routeBtn);
     },
     // 渲染echart图
-    barData(id, option) {
+    barData(item, option) {
       // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+      item.setOption(option);
+      // echarts.init(id).setOption(option);
     },
     async getEcharts() {
       //获取屏幕宽度并计算比例
@@ -656,9 +657,7 @@ export default {
             axisLabel: {
               interval: 1,
               show: true,
-              textStyle: {
-                color: '#000',
-              },
+              color: '#000',
             },
             axisLine: {
               lineStyle: {
@@ -678,9 +677,7 @@ export default {
               axisLabel: {
                 interval: 0,
                 show: true,
-                textStyle: {
-                  color: '#444444',
-                },
+                color: '#444444',
               },
               axisLine: {
                 show: false,
@@ -943,9 +940,7 @@ export default {
             axisLabel: {
               interval: 0,
               show: true,
-              textStyle: {
-                color: '#000',
-              },
+              color: '#000',
             },
             axisLine: {
               lineStyle: {
@@ -965,9 +960,7 @@ export default {
               axisLabel: {
                 interval: 0,
                 show: true,
-                textStyle: {
-                  color: '#444444',
-                },
+                color: '#444444',
               },
               axisLine: {
                 show: false,
@@ -1041,9 +1034,7 @@ export default {
               boundaryGap: false,
               axisLabel: {
                 formatter: '{value}月',
-                textStyle: {
-                  color: '#333',
-                },
+                color: '#333',
               },
               axisLine: {
                 lineStyle: {
@@ -1058,9 +1049,7 @@ export default {
               type: 'value',
               name: '单位：万',
               axisLabel: {
-                textStyle: {
-                  color: '#666',
-                },
+                color: '#666',
               },
               nameTextStyle: {
                 color: '#666',
@@ -1148,15 +1137,14 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          echarts.init(item).resize();
+          item.resize();
         });
       }, 100);
-    },
-    handleWindowResize() {
-      this.getEcharts();
     },
     handleConsumeBtnClick(index) {
       if (
@@ -1378,54 +1366,53 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
 
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-            if (this.result1[z].fields) {
-              this.$set(
-                this.formSearchs[z].datas,
-                'fields',
-                this.result1[z].fields,
-              );
-            }
-            if (this.result1[z].groupby) {
-              this.$set(
-                this.formSearchs[z].datas,
-                'groupby',
-                this.result1[z].groupby,
-              );
-            }
-            if (this.result1[z].sort) {
-              this.$set(
-                this.formSearchs[z].datas,
-                'sort',
-                this.result1[z].sort,
-              );
-            }
-            if (this.result1[z].DataFilter) {
-              this.$set(
-                this.formSearchs[z].datas,
-                'DataFilter',
-                this.result1[z].DataFilter,
-              );
-            }
-            if (z === 7) {
-              this.formSearchs[z].datas['PlanDay'] = this.$moment()
-                .subtract(1, 'days')
-                .format('YYYY-MM-DD');
-              // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
-            }
-            if (z === 5) {
-              this.formSearchs[z].datas['DemandDate'] = [
-                this.currentDate,
-                this.$moment().add(2, 'days').format('YYYY-MM-DD'),
-              ];
-            }
-            if (this.sysID[z].ID) {
-              await this.getTableData(this.formSearchs[z].datas, z);
-            }
-          }),
-        );
+        // await Promise.all(
+        const tableDataPromises = forms.map(async (x, z) => {
+          this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+          if (this.result1[z].fields) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'fields',
+              this.result1[z].fields,
+            );
+          }
+          if (this.result1[z].groupby) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'groupby',
+              this.result1[z].groupby,
+            );
+          }
+          if (this.result1[z].sort) {
+            this.$set(this.formSearchs[z].datas, 'sort', this.result1[z].sort);
+          }
+          if (this.result1[z].DataFilter) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'DataFilter',
+              this.result1[z].DataFilter,
+            );
+          }
+          if (z === 7) {
+            this.formSearchs[z].datas['PlanDay'] = this.$moment()
+              .subtract(1, 'days')
+              .format('YYYY-MM-DD');
+            // this.formSearchs[z].datas["PlanDay"] = this.currentDate;
+          }
+          if (z === 5) {
+            this.formSearchs[z].datas['DemandDate'] = [
+              this.currentDate,
+              this.$moment().add(2, 'days').format('YYYY-MM-DD'),
+            ];
+          }
+          if (this.sysID[z].ID) {
+            return this.getTableData(this.formSearchs[z].datas, z);
+          }
+        });
+        // 使用Promise.all等待所有getTableData函数执行完成
+        await Promise.allSettled(tableDataPromises);
+        // await Promise.all(tableDataPromises);
+        // );
         this.adminLoading = false;
         await this.getEcharts();
       }

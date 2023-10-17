@@ -514,7 +514,6 @@ export default {
         this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
         this.tag = this.searchForm.length % 7;
         this.col = 24 - 3 * this.tag;
-        console.log(this.col, 'this.col', this.circle);
         if (this.searchForm.length == 7 || this.circle >= 2) {
           this.isSpread = true;
           this.tagRemark = 0;

@@ -171,9 +171,9 @@ export default {
       this.OrderNoObj = this.OrderNos.find((item) => {
         return item['prop'] === value;
       });
-      // if (!this.OrderNoObj) {
-      //   this.OrderNoObj = { ControlType: 'textbox' };
-      // }
+      if (!this.OrderNoObj) {
+        this.OrderNoObj = { ControlType: 'textbox' };
+      }
       this.OrderNoValue = '';
     },
   },
