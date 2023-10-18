@@ -59,7 +59,7 @@
         <vxe-column min-width="60" v-if="IsIndex" title="序号"></vxe-column>
         <vxe-column
           v-for="(x, z) in tableHeaderChange"
-          :key="z"
+          :key="z + x['prop']"
           :resizable="true"
           :tree-node="x.treeNode ? x.treeNode : false"
           :sortable="x.sortable == 'custom' ? true : false"
