@@ -1000,6 +1000,7 @@ export default {
         item['dicID'] = 5644;
       });
       let res = await SaveData(updateRecords);
+      await this.dataSearch(2);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1007,7 +1008,7 @@ export default {
           type: 'success',
           dangerouslyUseHTMLString: true,
         });
-        this.colDialogVisible2 = false;
+        // this.colDialogVisible2 = false;
         // this.dataSearch(remarkTb);
       } else {
         this.$message({
