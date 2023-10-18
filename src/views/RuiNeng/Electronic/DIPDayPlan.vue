@@ -295,6 +295,8 @@ export default {
       ],
       userInfo: {},
       spread: [],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   computed: {},

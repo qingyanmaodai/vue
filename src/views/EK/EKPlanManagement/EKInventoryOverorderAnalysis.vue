@@ -205,6 +205,8 @@ export default {
       DVBatch: null,
       OrderNo: '',
       OrderNos: [[]],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
   watch: {},

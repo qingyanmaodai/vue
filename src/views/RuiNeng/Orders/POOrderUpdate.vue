@@ -178,6 +178,8 @@ export default {
       isEdit: false,
       losePrepareDate: 1,
       losePrepareDate2: 1,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       ruleForm: {
         LineIDs: [],
         ProducedDate: '',

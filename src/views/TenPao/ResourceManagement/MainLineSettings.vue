@@ -354,6 +354,8 @@ export default {
       colDialogVisible3: false,
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       clickRow: null,
       linkTableData: [],
     };

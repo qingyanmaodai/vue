@@ -290,6 +290,8 @@ export default {
         { ID: 9053 },
       ],
       userInfo: {},
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       spread: [],
     };
   },

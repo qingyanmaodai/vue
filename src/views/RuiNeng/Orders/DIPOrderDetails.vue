@@ -228,6 +228,8 @@ export default {
       isEdit: true,
       RoleMapStatus: false,
       BatchDelete: false,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       CreatedBy: '',
     };
   },

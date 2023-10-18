@@ -263,6 +263,8 @@ export default {
       fileList: [],
       file: [],
       selectionData: [[]],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       ImportParams: '',
       isEdit: true,
       RoleMapStatus: false,

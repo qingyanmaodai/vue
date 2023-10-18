@@ -379,6 +379,8 @@ export default {
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
       ],
       Region: [6, 6, 6],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,

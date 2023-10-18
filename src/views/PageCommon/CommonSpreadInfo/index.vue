@@ -164,6 +164,8 @@ export default {
       addStep: 1,
       scrollEnable: true,
       dataColumns: false,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
   },
 

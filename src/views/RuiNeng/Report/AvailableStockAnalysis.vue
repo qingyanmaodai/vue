@@ -209,6 +209,8 @@ export default {
         { ID: 10075 },
         { ID: 10075 },
       ],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       userInfo: {},
       title2: null,
     };

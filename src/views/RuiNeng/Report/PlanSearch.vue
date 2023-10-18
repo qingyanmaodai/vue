@@ -224,7 +224,7 @@ import {
 } from '@/api/Common';
 import ComFormDialog from '@/components/ComFormDialog';
 export default {
-  name: 'AssemblyDayPlan',
+  name: 'PlanSearch',
   components: {
     ComSearch,
     ComAsideTree,
@@ -319,6 +319,8 @@ export default {
       fileList: [],
       file: [],
       sysID: [{ ID: 7833 }, { ID: 7908 }, { ID: 7915 }, { ID: 7910 }],
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       userInfo: {},
       spread: [],
     };

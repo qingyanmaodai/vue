@@ -414,6 +414,8 @@ export default {
       FrontDate: null,
       IgnoreSunday: true,
       DVBatch: null,
+      sheetSelectRows: [],
+      sheetSelectObj: { start: 0, end: 0, count: 0 },
       OrderNo: '',
       OrderNoValue: '',
       OrderNos: [[], [], []],
