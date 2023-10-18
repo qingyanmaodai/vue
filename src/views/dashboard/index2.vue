@@ -1367,7 +1367,7 @@ export default {
         // 获取查询的初始化字段 组件 按钮
 
         // await Promise.all(
-        const tableDataPromises = forms.map(async (x, z) => {
+        forms.map(async (x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
           if (this.result1[z].fields) {
             this.$set(
@@ -1406,15 +1406,16 @@ export default {
             ];
           }
           if (this.sysID[z].ID) {
-            return this.getTableData(this.formSearchs[z].datas, z);
+            await this.getTableData(this.formSearchs[z].datas, z);
+            await this.getEcharts();
           }
         });
         // 使用Promise.all等待所有getTableData函数执行完成
-        await Promise.allSettled(tableDataPromises);
+        // await Promise.allSettled(tableDataPromises);
         // await Promise.all(tableDataPromises);
         // );
         this.adminLoading = false;
-        await this.getEcharts();
+        // await this.getEcharts();
       }
     },
     // 验证数据

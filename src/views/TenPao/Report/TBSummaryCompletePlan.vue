@@ -166,24 +166,15 @@ export default {
           forms: [],
         },
         {
-          datas: {
-            fields:
-              "SUM(PlanQty) as S1,sum(HasQty) AS S2,FORMAT(PlanDay,'MM-dd') as PlanDay",
-            groupby: "FORMAT(PlanDay,'MM-dd')",
-            // sort: "PlanDay desc",
-          },
+          datas: {},
           forms: [],
         },
         {
-          datas: {
-            fields: 'SUM(PlanQty) AS S1,WorkShopName',
-            groupby: 'WorkShopName',
-            // PlanDay: this.currentDate,
-          },
+          datas: {},
           forms: [],
         },
       ],
-      sysID: [{ ID: 7921 }, { ID: 5170 }, { ID: 5170 }],
+      sysID: [{ ID: 14200 }],
       label: [{ label: null }, { label: null }, { label: null }],
       currentDate: '',
       //echart部分

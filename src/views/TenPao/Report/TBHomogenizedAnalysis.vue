@@ -183,7 +183,7 @@ export default {
           forms: [],
         },
       ],
-      sysID: [{ ID: 7921 }, { ID: 5170 }, { ID: 5170 }],
+      sysID: [{ ID: 14201 }],
       label: [{ label: null }, { label: null }, { label: null }],
       currentDate: '',
       //echart部分
