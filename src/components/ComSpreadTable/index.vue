@@ -44,7 +44,7 @@
           background
           @size-change="pageSize"
           :current-page="pagination.pageIndex"
-          :page-sizes="[20, 200, 500, 1000, 2000, 3000, 5000, 10000]"
+          :page-sizes="[20, 100, 200, 500, 1000, 2000, 3000, 5000, 10000]"
           :page-size="pagination.pageSize"
           :total="pagination.pageTotal"
           @current-change="pageChange"
@@ -56,13 +56,13 @@
   </div>
 </template>
 <script>
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
 const GCsheets = GC.Spread.Sheets;
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import { GetSearchData } from "@/api/Common";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import { GetSearchData } from '@/api/Common';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
 
 export default {
   components: {},
@@ -114,7 +114,7 @@ export default {
     },
     height: {
       type: String,
-      default: "600px",
+      default: '600px',
     },
   },
   data() {
@@ -127,7 +127,7 @@ export default {
   computed: {
     multipleSelection() {
       let CheckNum = this.tableData.filter(
-        (item) => item["isChecked"] === true
+        (item) => item['isChecked'] === true,
       );
       return CheckNum;
     },
@@ -135,7 +135,7 @@ export default {
   watch: {
     multipleSelection: {
       handler(newValue) {
-        this.$emit("selectChanged", newValue, this.remark);
+        this.$emit('selectChanged', newValue, this.remark);
       },
       deep: true, // 启用深度监听
     },
@@ -151,10 +151,10 @@ export default {
     // 跳转至页面配置
     toPageSetting() {
       if (this.sysID == 35) {
-        this.$emit("oneselftSysID", 35);
+        this.$emit('oneselftSysID', 35);
       } else {
         this.$router.push({
-          name: "FieldInfo",
+          name: 'FieldInfo',
           params: { ID: this.sysID },
         });
       }
@@ -164,22 +164,22 @@ export default {
     // 初始化SpreadJS
     initSpread: function () {
       this.spread = this.$refs.gcSpreadSheets.spread;
-      this.$emit("workbookInitialized", this.spread, this.remark);
+      this.$emit('workbookInitialized', this.spread, this.remark);
     },
     // 选择一页显示多少数据
     pageSize(val) {
-      this.$emit("pageSize", val, this.remark);
+      this.$emit('pageSize', val, this.remark);
     },
     // 分页导航
     pageChange(val) {
-      this.$emit("pageChange", val, this.remark);
+      this.$emit('pageChange', val, this.remark);
     },
     async getFooterRemark() {
       let form = {};
-      form["dicID"] = 33;
-      form["page"] = 1;
-      form["rows"] = 0;
-      form["DictionaryID"] = this.sysID;
+      form['dicID'] = 33;
+      form['page'] = 1;
+      form['rows'] = 0;
+      form['DictionaryID'] = this.sysID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
