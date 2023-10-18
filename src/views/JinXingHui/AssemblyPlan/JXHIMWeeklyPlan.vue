@@ -2,7 +2,7 @@
 <template>
   <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2, 3, 4, 5]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -72,7 +72,7 @@
     </div>
     <div
       class="admin_content flex_grow"
-      v-for="item in [0, 4]"
+      v-for="item in [0, 4, 5]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -168,6 +168,7 @@ export default {
         { label: '暂停', value: 2 },
         { label: '已排订单', value: 3 },
         { label: '已完成', value: 4 },
+        { label: '全部', value: '' },
       ],
       title: this.$route.meta.title,
       resultMsg: '',
@@ -193,25 +194,28 @@ export default {
           datas: { CompletionStatus: 1 },
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
-      selectionData: [[], [], [], [], []],
+      selectionData: [[], [], [], [], [], []],
       btnForm: [],
       isLoading: false,
-      tableData: [[], [], [], [], []],
-      tableColumns: [[], [], [], [], []],
-      tableLoading: [false, false, false, false, false],
-      isClear: [false, false, false, false, false],
-      hasSelect: [false, false, false, false, false],
-      Region: [6, 6, 6, 6],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false],
+      Region: [6, 6, 6, 6, 6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 10000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
-      height: '707px',
-      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: [false, false, false, false, false],
@@ -224,6 +228,7 @@ export default {
         { ID: 9013 },
         { ID: 11168 },
         { ID: 11168 },
+        { ID: 9013 },
         { ID: 9013 },
         { ID: 9013 },
       ],
@@ -251,11 +256,11 @@ export default {
     const params = new URLSearchParams(this.$route.meta.TargetFor);
     this.accountsValue = params.get('accounts');
   },
-  activated() {
-    if (this.spread[this.labelStatus1]) {
-      this.spread[this.labelStatus1].refresh();
-    }
-  },
+  // activated() {
+  //   if (this.spread[this.labelStatus1]) {
+  //     this.spread[this.labelStatus1].refresh();
+  //   }
+  // },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
     // 创建一个 ResizeObserver 实例
