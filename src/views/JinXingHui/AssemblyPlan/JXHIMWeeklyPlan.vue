@@ -191,7 +191,7 @@ export default {
           forms: [],
         },
         {
-          datas: { CompletionStatus: 1 },
+          datas: { CompletionStatus: 1, ProductionStatus: 25 },
           forms: [],
         },
         {
