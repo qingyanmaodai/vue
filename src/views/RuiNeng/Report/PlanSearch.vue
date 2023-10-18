@@ -458,23 +458,21 @@ export default {
         //     };
         //   });
         // }
-        // console.log(newTree, "newTree");
         this.treeData = JSON.parse(JSON.stringify(data));
-        // this.treeData.unshift({
-        //   OrganizeID: -1,
-        //   OrganizeName: "全部",
-        // });
-        console.log(this.treeData, 'this.treeData');
+        this.treeData.unshift({
+          OrganizeID: -1,
+          OrganizeName: '全部',
+        });
         this.treeListTmp = this.treeData;
         // this.getTableData(
         //   this.formSearchs[this.selectedIndex].datas,
         //   Number(this.selectedIndex)
         // );
-        if (data.length != 0) {
+        if (this.treeData.length != 0) {
           this.$nextTick(function () {
-            _this.$refs.asideTree.setCurrentKey(data[0].OrganizeID);
+            _this.$refs.asideTree.setCurrentKey(this.treeData[0].OrganizeID);
           });
-          this.handleNodeClick(data[0]);
+          this.handleNodeClick(this.treeData[0]);
         }
       } else {
         this.$message({
@@ -554,13 +552,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.isClear, remarkTb, true);
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -950,8 +948,8 @@ export default {
       );
 
       defaultStyle.showEllipsis = true;
+      defaultStyle.wordWrap = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
-
       // 冻结第一列
       if (this.tableColumns[remarkTb][0]['FixCount']) {
         // 冻结
@@ -960,22 +958,60 @@ export default {
 
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
       //改变字体颜色
-      this.tableData[remarkTb].forEach((row, rowIndex) => {
-        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-          const key = column.prop;
-
-          // // 获取当前单元格
-          // const cell = sheet.getCell(rowIndex, columnIndex);
-          // if (row["IsToMainPlan"] && row["IsToMainPlan"] === "已排") {
-          //   cell.locked(true);
-          // }
-          // if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
-          // }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        sheet.autoFitRow(rowIndex);
+        this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor('black');
+          cell.backColor('white');
+          if (columnItem['isEdit']) {
+            cell.locked(false).foreColor('#2a06ecd9');
+          }
+          if (
+            rowItem['ScheduledQty'] &&
+            rowItem['Qty'] &&
+            columnItem['prop'] === 'CurPlanQty' &&
+            Number(rowItem['ScheduledQty']) === Number(rowItem['Qty'])
+          ) {
+            cell.locked(true).foreColor('black');
+          }
+          if (
+            Object.prototype.toString.call(rowItem['FColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['FColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem['FColors'][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem['BColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['BColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (columnItem) => columnItem.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem['BColors'][key]);
+              }
+            });
+          }
         });
       });
-
       sheet.options.isProtected = true;
       sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.protectionOptions.allowResizeRows = true;
+
       sheet.options.protectionOptions.allowInsertRows = true;
       sheet.options.protectionOptions.allowDeleteRows = true;
       sheet.options.protectionOptions.allowSelectLockedCells = true;
@@ -1111,13 +1147,20 @@ export default {
       });
     },
     // 单击线体
-    handleNodeClick(data, node) {
+    async handleNodeClick(data, node) {
       this.clickData[0] = data;
       this.formSearchs[this.selectedIndex].datas['WorkShopID'] =
-        data.OrganizeID;
+        data.OrganizeID === -1 ? '' : data.OrganizeID;
       this.formSearchs[this.selectedIndex].datas['LineID'] = '';
-      this.dataSearch(this.selectedIndex);
-      this.getLineData(data.OrganizeID === -1 ? '' : data.OrganizeID);
+      await this.getLineData(data.OrganizeID === -1 ? '' : data.OrganizeID);
+      if (this.treeData1.length != 0) {
+        this.$nextTick(function () {
+          _this.$refs.asideTree1.setCurrentKey(this.treeData1[0].OrganizeID);
+        });
+        this.handleNodeClick1(this.treeData1[0]);
+      } else {
+        await this.dataSearch(this.selectedIndex);
+      }
     },
     // 获取线别数据
     async getLineData(OrganizeIDs) {
@@ -1129,24 +1172,12 @@ export default {
       });
       const { data, forms, result, msg } = res.data;
       if (result) {
-        let newData = [];
-        this.treeData1 = data;
         this.treeListTmp1 = data;
-        // this.adminLoading = false;
-        // if (data.length != 0) {
-        //   data.forEach((x) => {
-        //     newData.push({ text: x.OrganizeName, value: x.OrganizeID });
-        //   });
-        // }
-        // this.lineOptions = data;
-        // this.lines = newData;
-        // this.checkBoxCellTypeLine = new GCsheets.CellTypes.ComboBox();
-        // this.checkBoxCellTypeLine.editorValueType(
-        //   GC.Spread.Sheets.CellTypes.EditorValueType.value
-        // );
-        // this.checkBoxCellTypeLine.items(newData);
-        // this.checkBoxCellTypeLine.itemHeight(24);
-        // this.getTableData(this.formSearchs[0].datas, 0);
+        this.treeData1 = JSON.parse(JSON.stringify(data));
+        this.treeData1.unshift({
+          OrganizeID: -1,
+          OrganizeName: '全部',
+        });
       } else {
         this.adminLoading = false;
         this.$message({
@@ -1158,11 +1189,11 @@ export default {
     },
     // 单击线体
     handleNodeClick1(data, node) {
-      this.clickData[1] = data;
+      this.clickData[1] = data.OrganizeID === -1 ? '' : data.OrganizeID;
       this.$set(
         this.formSearchs[this.selectedIndex].datas,
         'LineID',
-        data.OrganizeID,
+        data.OrganizeID === -1 ? '' : data.OrganizeID,
       );
       this.dataSearch(this.selectedIndex);
     },

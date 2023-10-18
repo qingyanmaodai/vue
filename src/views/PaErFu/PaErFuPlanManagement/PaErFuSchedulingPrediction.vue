@@ -377,7 +377,7 @@ export default {
       }
     }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
     resizeObserver.observe(tableContainer);
-    this.keyDown();
+    // this.keyDown();
   },
   methods: {
     // 更新表格高度的函数
@@ -410,21 +410,21 @@ export default {
       this.$set(this, 'btnForm', routeBtn);
     },
     // 监听键盘
-    keyDown() {
-      document.onkeydown = (e) => {
-        //事件对象兼容
-        let e1 =
-          e || event || window.event || arguments.callee.caller.arguments[0];
+    // keyDown() {
+    //   document.onkeydown = (e) => {
+    //     //事件对象兼容
+    //     let e1 =
+    //       e || event || window.event || arguments.callee.caller.arguments[0];
 
-        if (e.ctrlKey && e.keyCode == 83) {
-          e.preventDefault();
-          e.returnValue = false;
+    //     if (e.ctrlKey && e.keyCode == 83) {
+    //       e.preventDefault();
+    //       e.returnValue = false;
 
-          this.dataSave(0);
-          return false;
-        }
-      };
-    },
+    //       this.dataSave(0);
+    //       return false;
+    //     }
+    //   };
+    // },
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
@@ -763,9 +763,8 @@ export default {
         return;
       }
       changeRecords.forEach((x) => {
-        x.item['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
-        x.item['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
-        submitData.push(x.item);
+        x['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
+        x['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
       });
       let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
       // let res = await SaveData(changeRecords);

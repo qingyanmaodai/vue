@@ -641,6 +641,18 @@ export default {
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
+      Columns.some((m, i) => {
+        m.forEach((n, index) => {
+          // 进行验证
+          this.verifyDta(n);
+          if (n.childrens && n.children.length != 0) {
+            n.childrens.forEach((x) => {
+              this.verifyDta(x);
+            });
+          }
+          this.$set(this.tableColumns, remarkTb, m);
+        });
+      });
       if (result) {
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
