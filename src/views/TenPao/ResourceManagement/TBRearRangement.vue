@@ -152,16 +152,38 @@
       width="30%"
       :modal-append-to-body="false"
     >
-      <div class="flex-wrap boxContent">
+      <div class="flex-wrap boxContent mb-[20px]">
         <div
           class="boxItem"
           v-for="(item, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
           :key="'box' + item"
           :class="index === labelStatus2 ? 'active' : ''"
+          @click="changeStatus2(item, index)"
         >
           111
         </div>
       </div>
+      <div class="mr-[10px] mb-[20px]">
+        <span class="mr-[10px]">预计关闭时间</span>
+        <el-date-picker
+          v-model="machineCycle"
+          type="date"
+          size="small"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择"
+        >
+        </el-date-picker>
+        <span class="ml-[10px]" style="color: #bcbcbc">(非必选)</span>
+      </div>
+
+      <el-button
+        class="el-dialog-button"
+        type="primary"
+        size="small"
+        @click="updateNumber(0)"
+      >
+        提交
+      </el-button>
       <!-- <div class="custom-dialog" :style="dialogStyle">
         <div class="ant-table-title pd-0-6">
           您选择的配件任务单即将生成，请选择这批配件单的出货方式。
@@ -211,6 +233,16 @@
         >
       </span> -->
     </el-dialog>
+    <!-- 新增用户弹框 -->
+    <ComFormDialog
+      ref="btnForm"
+      :title="'插入计划表'"
+      :dialogShow="dialogShow"
+      :formData="formData"
+      :formRules="formRules"
+      :formController="formController"
+      @dialogBtnClick="dialogBtnClick"
+    />
   </div>
 </template>
 
@@ -219,6 +251,7 @@ var _this;
 import { Splitpanes, Pane } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComFormDialog from '@/components/ComFormDialog';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
 import ComBatchEdit from '@/components/ComBatchEdit';
@@ -238,12 +271,14 @@ export default {
     ComBatchEdit,
     Splitpanes,
     Pane,
+    ComFormDialog,
   },
   data() {
     return {
       ////////////////// Search /////////////////
       footerLabel: [''],
       expendColl: false,
+      machineCycle: '',
       expendCollText: '收缩',
       selectionData: [[], []],
       title: this.$route.meta.title,
@@ -269,6 +304,44 @@ export default {
           forms: [],
         },
       ],
+      //////////////新增弹框//////////////
+      dialogShow: false,
+      formData: {
+        InsertDate: '',
+        ProductionOrganization: '',
+        Sequence: '',
+        type: [],
+      },
+      formController: [
+        { label: '插入日期', prop: 'InsertDate', type: 'date' },
+        { label: '生产组织', prop: 'ProductionOrganization', type: 'input' },
+        { label: '顺序', prop: 'Sequence', type: 'input' },
+        {
+          label: '活动性质',
+          prop: 'type',
+          type: 'checkboxGroup',
+          checkbox: [
+            {
+              label: '忽略工时',
+              prop: 'IgnoreWorkingHours',
+              // type: 'checkbox',
+            },
+            {
+              label: '多笔落产一起重排',
+              prop: 'MultipleOrdersRescheduledTogether',
+              // type: 'checkbox',
+            },
+          ],
+        },
+      ],
+      formRules: {
+        // ButtonName: [
+        //   { required: true, message: '按钮名称为必填项', trigger: 'blur' },
+        // ],
+        // ButtonCode: [
+        //   { required: true, message: '按钮编码为必填项', trigger: 'blur' },
+        // ],
+      },
       parmsBtn: [],
       parmsBtn2: [
         {
@@ -309,7 +382,7 @@ export default {
       Status1: [
         { label: '当前计划表', value: '未开始', index: 1 },
         { label: '产线负荷表', value: '已完成', index: 2 },
-        { label: '全部', value: '', index: 3 },
+        { label: '调整排班', value: '', index: 3 },
       ],
       labelStatus1: 1,
       labelStatus2: 0,
@@ -556,6 +629,10 @@ export default {
       this.$set(this.tableData, 1, []);
       this.dataSearch(0);
     },
+    changeStatus2(item, index) {
+      this.labelStatus2 = index;
+    },
+
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
@@ -595,6 +672,35 @@ export default {
     HangEvent() {
       this.colDialogVisible1 = true;
     },
+    InsertSchedule() {
+      this.dialogShow = true;
+    },
+    // 工艺弹框确定添加
+    async dialogBtnClick(val) {
+      if (val) {
+        console.log(val, 'val');
+        // let res = await SaveData([this.formData]);
+        // const { result, data, count, msg } = res.data;
+        // if (result) {
+        //   this.$message({
+        //     message: msg,
+        //     type: 'success',
+        //     dangerouslyUseHTMLString: true,
+        //   });
+        //   this.dataSearch(0);
+        // } else {
+        //   this.$message({
+        //     message: msg,
+        //     type: 'error',
+        //     dangerouslyUseHTMLString: true,
+        //   });
+        // }
+        this.dialogShow = false;
+      } else {
+        _this.$refs.btnForm.$refs.formData.resetFields();
+        _this.dialogShow = false;
+      }
+    },
   },
 };
 </script>
@@ -621,9 +727,13 @@ export default {
 }
 ::v-deep .el-dialog__body {
   // height: 70vh !important;
-  padding: 40px !important;
+  padding: 30px !important;
   overflow: auto;
   display: flex;
   flex-direction: column;
+}
+.el-dialog-button {
+  width: 100px;
+  border-radius: 5px !important;
 }
 </style>

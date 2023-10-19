@@ -139,6 +139,7 @@ export default {
         [{ C1: '' }],
         [{ C1: '' }],
       ],
+      chartData: [],
       tableColumns: [[], [], [], [], [], [], [], []],
       tableLoading: [false, false, false, false, false, false, false, false],
       isLoading: false,
@@ -193,15 +194,15 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.currentDate = this.$moment().format('YYYY-MM-DD');
-    this.getTableHeader();
   },
   activated() {},
   async mounted() {
     //初始化图表;
-    this.chart = [this.$refs.chart1];
+    this.chart = [echarts.init(this.$refs.chart1)];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
+    await this.getTableHeader();
   },
   methods: {
     //按钮权限
@@ -215,9 +216,8 @@ export default {
       this.$set(this, 'btnForm', routeBtn);
     },
     // 渲染echart图
-    barData(id, option) {
-      // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+    barData(item, option) {
+      item.setOption(option);
     },
     async getEcharts() {
       //获取屏幕宽度并计算比例
@@ -231,16 +231,16 @@ export default {
       }
       this.chartOptions = [
         {
-          title: {
-            text: 'XXXXX 排产订单齐套率趋势',
-            textStyle: {
-              align: 'center',
-              color: '#000',
-              fontSize: fontSize(16),
-            },
-            top: '0',
-            left: 'center',
-          },
+          // title: {
+          //   text: 'XXXXX 排产订单齐套率趋势',
+          //   textStyle: {
+          //     align: 'center',
+          //     color: '#000',
+          //     fontSize: fontSize(16),
+          //   },
+          //   top: '0',
+          //   left: 'center',
+          // },
           grid: {
             containLabel: true,
             bottom: 0,
@@ -263,28 +263,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: [
-              'SMT1线',
-              'SMT2线',
-              'AI1线',
-              'AI2线',
-              '插件1线',
-              '插件2线',
-              '插件3线',
-              '丝印组',
-              '激光组',
-              '宁波1线',
-              '宁波2线',
-              '宁波3线',
-              '宁波4线',
-              '宁波5线',
-              '宁波6线',
-              '宁波7线',
-              '宁波8线',
-              '新昌1线',
-              '新昌2线',
-              '新昌3线',
-            ],
+            data: this.chartData.map((item) => item['prop']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -384,15 +363,14 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          echarts.init(item).resize();
+          item.resize();
         });
       }, 100);
-    },
-    handleWindowResize() {
-      this.getEcharts();
     },
     handleConsumeBtnClick(index) {
       if (
@@ -616,10 +594,10 @@ export default {
               }
             });
             await this.getTableData(this.formSearchs[z].datas, z);
+            await this.getEcharts();
           }),
         );
         this.adminLoading = false;
-        await this.getEcharts();
       }
     },
     // 验证数据
@@ -655,6 +633,16 @@ export default {
       });
       if (result) {
         this.$set(this.tableData, remarkTb, data);
+        if (this.chartData.length === 0) {
+          this.$set(
+            this,
+            'chartData',
+            Columns[0].filter((item) => {
+              return item['prop2'];
+            }),
+          );
+          console.log(this.chartData, 'chartData');
+        }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -705,18 +693,10 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    .leftCard {
-      width: 100%;
-      height: 55%;
-      background: #fff;
-      margin-right: 10px;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+
     .rightCard {
       width: 100%;
-      height: 45%;
+      height: 30%;
       display: flex;
       margin-bottom: 10px;
       .secondCard {
@@ -731,6 +711,14 @@ export default {
           width: 100%;
         }
       }
+    }
+    .leftCard {
+      width: 100%;
+      height: 70%;
+      background: #fff;
+      margin-right: 10px;
+      display: flex;
+      flex-direction: column;
     }
   }
 

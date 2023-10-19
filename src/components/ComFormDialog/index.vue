@@ -193,12 +193,15 @@
           ></el-checkbox>
           <el-checkbox-group
             v-else-if="newItem.type == 'checkboxGroup'"
-            v-for="(item2, index2) in newItem.checkbox"
-            :key="index2"
             v-model="formData[newItem.prop]"
             :disabled="newItem.disabled"
           >
-            <el-checkbox :label="newItem.label" name="type" />
+            <el-checkbox
+              v-for="(item2, index2) in newItem.checkbox"
+              :key="index2"
+              :label="item2.label"
+              name="type"
+            />
           </el-checkbox-group>
           <el-radio-group
             v-else-if="newItem.type == 'radioGroupLabel'"
