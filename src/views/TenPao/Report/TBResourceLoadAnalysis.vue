@@ -348,12 +348,12 @@ export default {
       colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
-      radioValue0: 0,
+      radioValue0: 1,
       radioValue1: 1,
       parmsBtn2: [
-        { label: '显示工时', value: 0 },
-        { label: '显示负荷', value: 1 },
-        { label: '显示数量', value: 2 },
+        { label: '显示工时', value: 1 },
+        { label: '显示负荷', value: 2 },
+        { label: '显示数量', value: 3 },
       ],
     };
   },
@@ -589,7 +589,7 @@ export default {
         });
 
         // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        this.formSearchs[0].datas['PrepareStatus'] = 1;
+        this.formSearchs[0].datas['viewType'] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -701,7 +701,8 @@ export default {
       this.selectionData[remarkTb] = newValue;
     },
     radioChange(val) {
-      this.dataSearch(this.tagRemark);
+      this.formSearchs[0].datas['viewType'] = val;
+      this.dataSearch(0);
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {

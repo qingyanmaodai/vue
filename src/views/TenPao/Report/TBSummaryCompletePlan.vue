@@ -6,9 +6,9 @@
         <div class="rightCard">
           <div class="secondCard">
             <div class="itemCard">
-              <div class="echartHead">
+              <!-- <div class="echartHead">
                 <div class="echartTitle">计划配套趋势</div>
-              </div>
+              </div> -->
               <div class="echartBody" ref="chart1"></div>
             </div>
           </div>
@@ -162,16 +162,16 @@ export default {
       }
       this.chartOptions = [
         {
-          // title: {
-          //   text: 'XXXXX 排产订单齐套率趋势',
-          //   textStyle: {
-          //     align: 'center',
-          //     color: '#000',
-          //     fontSize: fontSize(16),
-          //   },
-          //   top: '0',
-          //   left: 'center',
-          // },
+          title: {
+            text: '排产订单齐套率趋势',
+            textStyle: {
+              align: 'center',
+              color: '#000',
+              fontSize: fontSize(16),
+            },
+            top: '0',
+            left: 'center',
+          },
           grid: {
             containLabel: true,
             bottom: 0,

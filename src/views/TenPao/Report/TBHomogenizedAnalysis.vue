@@ -6,9 +6,9 @@
         <div class="rightCard">
           <div class="secondCard">
             <div class="itemCard">
-              <div class="echartHead">
+              <!-- <div class="echartHead">
                 <div class="echartTitle">计划配套明细</div>
-              </div>
+              </div> -->
               <div class="echartBody" ref="chart1"></div>
             </div>
           </div>
@@ -162,7 +162,7 @@ export default {
       this.chartOptions = [
         {
           title: {
-            text: 'XXXXX 排产订单T+7齐套分析',
+            text: '排产订单齐套分析',
             textStyle: {
               align: 'center',
               color: '#000',
