@@ -676,16 +676,6 @@ export default {
       }
       return rgbaColor;
     },
-    // 行内样式
-    cellStyle7({ row, column }) {
-      if (column.property == 'OweQty') {
-        if (row['OweQty'] < 0) {
-          return {
-            color: 'red',
-          };
-        }
-      }
-    },
   },
 };
 </script>

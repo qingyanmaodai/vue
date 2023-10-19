@@ -40,7 +40,6 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
               :hasSelect="hasSelect[item]"
@@ -243,9 +242,9 @@ export default {
         { label: '已完成', value: '已完成' },
         { label: '全部', value: '' },
       ],
-      Region: [1, 2],
+      Region: [1, 2, 2],
       labelStatus1: 0,
-      sysID: [{ ID: 7833 }, { ID: 7757 }, { ID: 5633 }],
+      sysID: [{ ID: 15199 }, { ID: 7757 }, { ID: 5633 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: '1',
@@ -636,24 +635,6 @@ export default {
         });
         $table.insert(obj);
       }
-    },
-    // 行内样式
-    cellStyle0({ row, column }) {
-      let style = {}; // 创建一个空的样式对象
-      const key = column.property;
-      if (
-        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
-        key in row['FColors']
-      ) {
-        style.color = row['FColors'][key]; // 设置背景颜色
-      }
-      if (
-        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
-        key in row['BColors']
-      ) {
-        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
-      }
-      return style; // 返回样式对象
     },
     // 工序弹框确定添加
     async dialogBtnClick1(val) {
