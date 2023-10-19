@@ -160,6 +160,7 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
+      chartData: [],
       formSearchs: [
         {
           datas: {},
@@ -207,7 +208,7 @@ export default {
   activated() {},
   async mounted() {
     //初始化图表;
-    this.chart = [this.$refs.chart1];
+    this.chart = [echarts.init(this.$refs.chart1)];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -224,9 +225,8 @@ export default {
       this.$set(this, 'btnForm', routeBtn);
     },
     // 渲染echart图
-    barData(id, option) {
-      // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+    barData(item, option) {
+      item.setOption(option);
     },
     async getEcharts() {
       //获取屏幕宽度并计算比例
@@ -272,17 +272,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: [
-              'SMT1线',
-              'SMT2线',
-              'AI1线',
-              'AI2线',
-              '插件1线',
-              '插件2线',
-              '插件3线',
-              '丝印组',
-              '激光组',
-            ],
+            data: this.chartData.map((item) => item['prop']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -374,15 +364,14 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          echarts.init(item).resize();
+          item.resize();
         });
       }, 100);
-    },
-    handleWindowResize() {
-      this.getEcharts();
     },
     handleConsumeBtnClick(index) {
       if (
@@ -631,20 +620,29 @@ export default {
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
-      Columns.some((m, i) => {
-        m.forEach((n, index) => {
-          // 进行验证
-          this.verifyDta(n);
-          if (n.childrens && n.children.length != 0) {
-            n.childrens.forEach((x) => {
-              this.verifyDta(x);
-            });
-          }
-          this.$set(this.tableColumns, remarkTb, m);
-        });
-      });
       if (result) {
+        Columns.some((m, i) => {
+          m.forEach((n, index) => {
+            // 进行验证
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach((x) => {
+                this.verifyDta(x);
+              });
+            }
+            this.$set(this.tableColumns, remarkTb, m);
+          });
+        });
         this.$set(this.tableData, remarkTb, data);
+        if (this.chartData.length === 0) {
+          this.$set(
+            this,
+            'chartData',
+            Columns[0].filter((item) => {
+              return item['prop2'];
+            }),
+          );
+        }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -697,16 +695,15 @@ export default {
     height: 100%;
     .leftCard {
       width: 100%;
-      height: 55%;
+      height: 70%;
       background: #fff;
       margin-right: 10px;
       display: flex;
       flex-direction: column;
-      height: 100%;
     }
     .rightCard {
       width: 100%;
-      height: 45%;
+      height: 30%;
       display: flex;
       margin-bottom: 10px;
       .secondCard {
