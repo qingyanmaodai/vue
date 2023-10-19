@@ -68,7 +68,7 @@
           :title="x.label"
           :min-width="x.width"
           :fixed="x.fix"
-          :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
+          :filters="EnableColumnFiltering ? [{ data: '' }] : ''"
           :filter-method="filterMethod"
           :filter-recover-method="filterRecoverMethod"
           :align="x.align"
@@ -96,7 +96,7 @@
               :tree-node="x.treeNode ? x.treeNode : false"
               :key="k"
               :fixed="i.fix"
-              :filters="x.filters ? [{ data: '' }] : [{ data: '' }]"
+              :filters="EnableColumnFiltering ? [{ data: '' }] : ''"
               :filter-method="filterMethod"
               :filter-recover-method="filterRecoverMethod"
             >
@@ -963,6 +963,11 @@ export default {
     },
     // 是否显示底部内容
     footerContent: {
+      type: Boolean,
+      default: true,
+    },
+    // 是否开启列筛选
+    EnableColumnFiltering: {
       type: Boolean,
       default: true,
     },

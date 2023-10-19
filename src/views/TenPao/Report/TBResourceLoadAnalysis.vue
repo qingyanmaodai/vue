@@ -64,6 +64,7 @@
           @handleRowdbClick="handleRowdbClick"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @toPage="toPage"
           :keepSource="true"
           :footerContent="true"
         />
@@ -84,7 +85,11 @@
         <div class="ant-table-title pd-0-6" ref="headRef_2">
           <el-row>
             <el-col :span="12">
-              <el-radio-group v-model="radioValue1" size="small">
+              <el-radio-group
+                v-model="radioValue1"
+                size="small"
+                @change="handleRadioChange"
+              >
                 <el-radio-button :label="1">生产排程</el-radio-button>
                 <el-radio-button :label="2">排版设置</el-radio-button>
               </el-radio-group></el-col
@@ -434,13 +439,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -719,24 +724,30 @@ export default {
     },
     handleClick(tab, event) {
       console.log(tab, event);
-      this.formSearchs[1].datas['PlanWeeks'] = '';
-      this.formSearchs[1].datas['PlanDays'] = '';
-      if (tab.name === '1') {
-        this.formSearchs[1].datas['PlanWeeks'] = 12;
-      } else if (tab.name === '2') {
-        this.formSearchs[1].datas['PlanDays'] = 50;
-      }
-      this.selectedIndex = tab.name;
-      this.dataSearch(1);
-    },
-    handleClick(tab, event) {
-      console.log(tab, event);
-      this.formSearchs[this.selectedIndex].datas['WorkShopID'] =
-        this.clickData[0]?.OrganizeID;
-      this.formSearchs[this.selectedIndex].datas['LineID'] =
-        this.clickData[1]?.OrganizeID;
       this.selectedIndex = tab.name;
       this.dataSearch(this.selectedIndex);
+    },
+    // 打开工单分析
+    async toPage(row, prop) {
+      this.radioValue1 = 1;
+      this.selectedIndex = '1';
+      if (prop == 'OrganizeName') {
+        const organizeName = row.OrganizeName;
+        for (let i = 1; i <= 4; i++) {
+          if (i === 2) {
+            this.formSearchs[i].datas['OrganizeName'] = '';
+            this.formSearchs[i].datas['OrganizeName'] = organizeName;
+          } else {
+            this.formSearchs[i].datas['LineName'] = '';
+            this.formSearchs[i].datas['LineName'] = organizeName;
+          }
+        }
+        await this.dataSearch(1);
+        this.colDialogVisible2 = true;
+      }
+    },
+    handleRadioChange(val) {
+      this.dataSearch(val);
     },
     // 行内样式
     cellStyle({ row, column }) {
