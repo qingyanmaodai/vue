@@ -948,7 +948,7 @@ export default {
       );
 
       defaultStyle.showEllipsis = true;
-      defaultStyle.wordWrap = true;
+      // defaultStyle.wordWrap = true;
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
       // 冻结第一列
       if (this.tableColumns[remarkTb][0]['FixCount']) {
@@ -959,7 +959,7 @@ export default {
       this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
       //改变字体颜色
       this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-        sheet.autoFitRow(rowIndex);
+        // sheet.autoFitRow(rowIndex);
         this.tableColumns[remarkTb].forEach((columnItem, columnIndex) => {
           // 获取当前单元格
           const cell = sheet.getCell(rowIndex, columnIndex);

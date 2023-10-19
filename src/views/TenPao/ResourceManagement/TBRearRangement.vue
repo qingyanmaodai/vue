@@ -153,7 +153,14 @@
       :modal-append-to-body="false"
     >
       <div class="flex-wrap boxContent">
-        <div class="boxItem" v-for="item in 8" :key="'box' + item">111</div>
+        <div
+          class="boxItem"
+          v-for="(item, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8]"
+          :key="'box' + item"
+          :class="index === labelStatus2 ? 'active' : ''"
+        >
+          111
+        </div>
       </div>
       <!-- <div class="custom-dialog" :style="dialogStyle">
         <div class="ant-table-title pd-0-6">
@@ -305,6 +312,7 @@ export default {
         { label: '全部', value: '', index: 3 },
       ],
       labelStatus1: 1,
+      labelStatus2: 0,
       sysID: [{ ID: 14200 }, { ID: 14200 }, { ID: 14200 }, { ID: 14200 }],
       isEdit: [false, false, false, false, false],
       colDialogVisible1: false,
@@ -599,6 +607,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  &.active {
+    background-color: #409eff;
+    color: #fff;
+    border: 1px solid #409eff;
+  }
 }
 .boxContent {
   display: flex;
