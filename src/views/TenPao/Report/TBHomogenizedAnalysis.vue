@@ -85,7 +85,9 @@ export default {
       isEdit: [false],
       adminLoading: false,
       tableData: [[], []],
+      chartData: [],
       tableColumns: [[], []],
+      dataFooter: [[], []],
       tableLoading: [false, false],
       isLoading: false,
       isClear: [false, false],
@@ -95,7 +97,6 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
       ],
-      chartData: [],
       formSearchs: [
         {
           datas: {},
@@ -253,7 +254,23 @@ export default {
                   color: '#009B4C',
                 },
               },
-              data: [100, 25, 6, 6, 66, 26, 55, 51, 54],
+              data: this.chartData.map((item) => {
+                let percentageValue = null;
+                if (item.children && item.children.length > 0) {
+                  const childrenItem = item.children;
+                  childrenItem.map((citem) => {
+                    if (citem.prop.includes('A')) {
+                      percentageValue = parseFloat(
+                        this.dataFooter[0][0][citem.prop],
+                      );
+                      // if (isNaN(percentageValue)) {
+                      //   return null; // 处理无效的百分比值
+                      // }
+                    }
+                  });
+                }
+                return percentageValue;
+              }),
             },
             {
               name: '配套任务',
@@ -265,7 +282,23 @@ export default {
                   color: '#40AAF6',
                 },
               },
-              data: [84, 86, 64, 56, 51, 54, 44, 58, 66],
+              data: this.chartData.map((item) => {
+                let percentageValue = null;
+                if (item.children && item.children.length > 0) {
+                  const childrenItem = item.children;
+                  childrenItem.map((citem) => {
+                    if (citem.prop.includes('B')) {
+                      percentageValue = parseFloat(
+                        this.dataFooter[0][0][citem.prop],
+                      );
+                      // if (isNaN(percentageValue)) {
+                      //   return null; // 处理无效的百分比值
+                      // }
+                    }
+                  });
+                }
+                return percentageValue;
+              }),
             },
             {
               name: '计划齐套趋势',
@@ -277,7 +310,23 @@ export default {
                   color: '#FA9A09',
                 },
               },
-              data: [84, 86, 64, 56, 51, 54, 44, 58, 66],
+              data: this.chartData.map((item) => {
+                let percentageValue = null;
+                if (item.children && item.children.length > 0) {
+                  const childrenItem = item.children;
+                  childrenItem.map((citem) => {
+                    if (citem.prop.includes('C')) {
+                      percentageValue = parseFloat(
+                        this.dataFooter[0][0][citem.prop],
+                      );
+                      // if (isNaN(percentageValue)) {
+                      //   return null; // 处理无效的百分比值
+                      // }
+                    }
+                  });
+                }
+                return percentageValue;
+              }),
             },
           ],
         },
@@ -540,7 +589,7 @@ export default {
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
+      const { result, data, count, msg, Columns, dataFooter } = res.data;
       if (result) {
         Columns.some((m, i) => {
           m.forEach((n, index) => {
@@ -555,16 +604,19 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        if (this.chartData.length === 0) {
-          this.$set(
-            this,
-            'chartData',
-            Columns[0].filter((item) => {
-              return item['prop2'];
-            }),
-          );
+        if (dataFooter && dataFooter.length > 0) {
+          this.$set(this.dataFooter, remarkTb, dataFooter);
         }
+        this.$set(
+          this,
+          'chartData',
+          Columns[0].filter((item) => {
+            return item['prop2'];
+          }),
+        );
+        console.log(this.chartData, 'chartData');
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        await this.getEcharts();
       } else {
         this.$message({
           message: msg,
