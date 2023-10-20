@@ -95,7 +95,7 @@
               :align="i.align"
               :tree-node="i.treeNode ? i.treeNode : false"
               :key="k"
-              :min-width="i.width"
+              :width="i.width"
               :fixed="i.fix"
               :filters="EnableColumnFiltering ? [{ data: '' }] : null"
               :filter-method="filterMethod"
