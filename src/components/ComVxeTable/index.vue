@@ -89,13 +89,13 @@
           </template>
           <template v-if="x.children">
             <vxe-column
+              v-for="(i, k) in x.children"
               :field="i.prop"
               :title="i.label"
-              v-for="(i, k) in x.children"
               :align="i.align"
-              :tree-node="x.treeNode ? x.treeNode : false"
+              :tree-node="i.treeNode ? i.treeNode : false"
               :key="k"
-              :min-width="x.width"
+              :min-width="i.width"
               :fixed="i.fix"
               :filters="EnableColumnFiltering ? [{ data: '' }] : null"
               :filter-method="filterMethod"
