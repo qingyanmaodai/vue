@@ -348,7 +348,7 @@ export default {
       OrderNos: [{}, {}, {}, {}],
       sysID: [{ ID: 11171 }, { ID: 11172 }, { ID: 125 }, { ID: 11173 }],
       isEdit: [false, false, true, false, false, false, false],
-      Region: [2, 2, 1, 3],
+      Region: [6, 6, 6, 6],
       userInfo: {},
       selectedIndex: '0',
       colDialogVisible3: false,

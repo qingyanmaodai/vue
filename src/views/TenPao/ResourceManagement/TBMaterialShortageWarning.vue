@@ -242,7 +242,7 @@ export default {
         { label: '已完成', value: '已完成' },
         { label: '全部', value: '' },
       ],
-      Region: [1, 2, 2],
+      Region: [6, 6, 6],
       labelStatus1: 0,
       sysID: [{ ID: 15199 }, { ID: 7757 }, { ID: 5633 }],
       isEdit: [false, false, false, false],

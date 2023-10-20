@@ -16,7 +16,7 @@
               :remark="0"
               :isLoading="isLoading"
               :signName="0"
-              :Region="1"
+              :Region="Region[0]"
               :btnForm="btnForm"
               @btnClick="btnClick"
             />
@@ -348,7 +348,7 @@ export default {
         { label: '已完成', value: '已完成' },
         { label: '全部', value: '' },
       ],
-      Region: [1, 2],
+      Region: [6, 6],
       labelStatus1: 0,
       sysID: [{ ID: 11172 }, { ID: 11171 }, { ID: 11171 }, { ID: 1180 }],
       isEdit: [false, false, false, false],
