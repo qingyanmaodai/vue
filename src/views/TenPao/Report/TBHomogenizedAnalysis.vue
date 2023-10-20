@@ -212,7 +212,7 @@ export default {
           },
           yAxis: [
             {
-              name: '百分比',
+              name: '数量',
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
@@ -220,7 +220,7 @@ export default {
               axisLabel: {
                 interval: 0,
                 show: true,
-                formatter: '{value}%',
+                // formatter: '{value}%',
                 textStyle: {
                   color: '#444444',
                 },
@@ -245,7 +245,7 @@ export default {
           ],
           series: [
             {
-              name: '计划任务',
+              name: '齐套数',
               type: 'bar',
               barWidth: fontSize(15),
               silent: true,
@@ -253,6 +253,16 @@ export default {
                 normal: {
                   color: '#009B4C',
                 },
+              },
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#000',
+                // formatter: function (params) {
+                //   // 在标签文本后添加百分号
+                //   return params.value + '%';
+                // },
               },
               data: this.chartData.map((item) => {
                 let percentageValue = null;
@@ -273,14 +283,24 @@ export default {
               }),
             },
             {
-              name: '配套任务',
+              name: '不齐套数',
               type: 'bar',
               barWidth: fontSize(15),
               silent: true,
               itemStyle: {
                 normal: {
-                  color: '#40AAF6',
+                  color: '#DE4646',
                 },
+              },
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#000',
+                // formatter: function (params) {
+                //   // 在标签文本后添加百分号
+                //   return params.value + '%';
+                // },
               },
               data: this.chartData.map((item) => {
                 let percentageValue = null;
@@ -300,34 +320,34 @@ export default {
                 return percentageValue;
               }),
             },
-            {
-              name: '计划齐套趋势',
-              type: 'bar',
-              barWidth: fontSize(15),
-              silent: true,
-              itemStyle: {
-                normal: {
-                  color: '#FA9A09',
-                },
-              },
-              data: this.chartData.map((item) => {
-                let percentageValue = null;
-                if (item.children && item.children.length > 0) {
-                  const childrenItem = item.children;
-                  childrenItem.map((citem) => {
-                    if (citem.prop.includes('C')) {
-                      percentageValue = parseFloat(
-                        this.dataFooter[0][0][citem.prop],
-                      );
-                      // if (isNaN(percentageValue)) {
-                      //   return null; // 处理无效的百分比值
-                      // }
-                    }
-                  });
-                }
-                return percentageValue;
-              }),
-            },
+            // {
+            //   name: '计划齐套趋势',
+            //   type: 'bar',
+            //   barWidth: fontSize(15),
+            //   silent: true,
+            //   itemStyle: {
+            //     normal: {
+            //       color: '#FA9A09',
+            //     },
+            //   },
+            //   data: this.chartData.map((item) => {
+            //     let percentageValue = null;
+            //     if (item.children && item.children.length > 0) {
+            //       const childrenItem = item.children;
+            //       childrenItem.map((citem) => {
+            //         if (citem.prop.includes('C')) {
+            //           percentageValue = parseFloat(
+            //             this.dataFooter[0][0][citem.prop],
+            //           );
+            //           // if (isNaN(percentageValue)) {
+            //           //   return null; // 处理无效的百分比值
+            //           // }
+            //         }
+            //       });
+            //     }
+            //     return percentageValue;
+            //   }),
+            // },
           ],
         },
       ];

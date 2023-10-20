@@ -287,6 +287,16 @@ export default {
                   color: '#FA9A09',
                 },
               },
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#000',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value + '%';
+                },
+              },
               data: this.chartData.map((item) => {
                 const percentageValue = parseFloat(
                   this.dataFooter[0][0][item.prop],
