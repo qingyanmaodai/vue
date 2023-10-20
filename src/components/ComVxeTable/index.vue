@@ -1599,19 +1599,33 @@ export default {
     footerMethod({ columns, data }) {
       let footerData = [];
       if (this.showFooter) {
-        footerData = [
-          columns.map((column, columnIndex) => {
-            if (columnIndex === 0) {
-              return '合计';
-            }
-            if (this.includeFields.includes(column.property)) {
-              return XEUtils.sum(data, column.property);
-            }
-            return null;
-          }),
-        ];
-      }
-      if (this.dataFooter && this.dataFooter.length > 0) {
+        if (this.includeFields && this.includeFields.length > 0) {
+          footerData = [
+            columns.map((column, columnIndex) => {
+              if (columnIndex === 0) {
+                return '合计';
+              }
+              if (this.includeFields.includes(column.property)) {
+                return XEUtils.sum(data, column.property);
+              }
+              return null;
+            }),
+          ];
+        }
+        if (this.dataFooter && this.dataFooter.length > 0) {
+          footerData = footerData.concat([
+            columns.map((column) => {
+              const key = column.property;
+              let value = null;
+              this.dataFooter.forEach((footerItem) => {
+                if (footerItem.hasOwnProperty(key)) {
+                  value = footerItem[key];
+                }
+              });
+              return value;
+            }),
+          ]);
+        }
       }
       return footerData;
     },

@@ -51,6 +51,8 @@
               :footerContent="true"
               :scrollEnable="false"
               :EnableColumnFiltering="false"
+              :showFooter="true"
+              :dataFooter="dataFooter[0]"
             />
           </div>
         </div>
@@ -285,10 +287,15 @@ export default {
                   color: '#FA9A09',
                 },
               },
-              data: [
-                84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
-                75, 52, 25, 63,
-              ],
+              data: this.chartData.map((item) => {
+                const percentageValue = parseFloat(
+                  this.dataFooter[0][0][item.prop],
+                );
+                if (isNaN(percentageValue)) {
+                  return null; // 处理无效的百分比值
+                }
+                return percentageValue;
+              }),
             },
           ],
         },
@@ -449,8 +456,8 @@ export default {
     },
     // 单击行
     handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
+      // this.delData[remarkTb] = [];
+      // this.delData[remarkTb].push(row);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -551,7 +558,7 @@ export default {
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
+      const { result, data, count, msg, Columns, dataFooter } = res.data;
       if (result) {
         Columns.some((m, i) => {
           m.forEach((n, index) => {
@@ -566,18 +573,18 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.dataFooter, remarkTb, data);
-        if (this.chartData.length === 0) {
-          this.$set(
-            this,
-            'chartData',
-            Columns[0].filter((item) => {
-              return item['prop2'];
-            }),
-          );
+        if (dataFooter && dataFooter.length > 0) {
+          this.$set(this.dataFooter, remarkTb, dataFooter);
         }
-        this.getEcharts();
+        this.$set(
+          this,
+          'chartData',
+          Columns[0].filter((item) => {
+            return item['prop2'];
+          }),
+        );
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        await this.getEcharts();
       } else {
         this.$message({
           message: msg,
