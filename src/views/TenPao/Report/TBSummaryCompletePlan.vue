@@ -88,6 +88,7 @@ export default {
       tableData: [[], []],
       chartData: [],
       tableColumns: [[], []],
+      dataFooter: [[], []],
       tableLoading: [false, false],
       isLoading: false,
       isClear: [false, false],
@@ -121,6 +122,7 @@ export default {
   created() {
     _this = this;
     let routeBtn = this.$route;
+
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
@@ -525,7 +527,7 @@ export default {
               }
             });
             await this.getTableData(this.formSearchs[z].datas, z);
-            await this.getEcharts();
+            // await this.getEcharts();
           }),
         );
         this.adminLoading = false;
@@ -564,6 +566,7 @@ export default {
           });
         });
         this.$set(this.tableData, remarkTb, data);
+        this.$set(this.dataFooter, remarkTb, data);
         if (this.chartData.length === 0) {
           this.$set(
             this,
@@ -573,6 +576,7 @@ export default {
             }),
           );
         }
+        this.getEcharts();
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({

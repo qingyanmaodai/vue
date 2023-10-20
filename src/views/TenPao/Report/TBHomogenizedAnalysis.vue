@@ -616,7 +616,7 @@ export default {
     height: 100%;
     .leftCard {
       width: 100%;
-      height: 70%;
+      height: 80%;
       background: #fff;
       margin-right: 10px;
       display: flex;
@@ -624,7 +624,7 @@ export default {
     }
     .rightCard {
       width: 100%;
-      height: 30%;
+      height: 20%;
       display: flex;
       margin-bottom: 10px;
       .secondCard {

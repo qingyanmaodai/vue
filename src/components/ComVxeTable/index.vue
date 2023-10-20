@@ -68,7 +68,7 @@
           :title="x.label"
           :min-width="x.width"
           :fixed="x.fix"
-          :filters="EnableColumnFiltering ? [{ data: '' }] : ''"
+          :filters="EnableColumnFiltering ? [{ data: '' }] : null"
           :filter-method="filterMethod"
           :filter-recover-method="filterRecoverMethod"
           :align="x.align"
@@ -95,9 +95,9 @@
               :align="i.align"
               :tree-node="x.treeNode ? x.treeNode : false"
               :key="k"
-              :width="x.width"
+              :min-width="x.width"
               :fixed="i.fix"
-              :filters="EnableColumnFiltering ? [{ data: '' }] : ''"
+              :filters="EnableColumnFiltering ? [{ data: '' }] : null"
               :filter-method="filterMethod"
               :filter-recover-method="filterRecoverMethod"
             >
@@ -962,6 +962,12 @@ export default {
       type: Boolean,
       default: false,
     },
+    dataFooter: {
+      type: Array,
+      default: function () {
+        return [];
+      },
+    },
     // 是否显示底部内容
     footerContent: {
       type: Boolean,
@@ -1591,20 +1597,22 @@ export default {
 
     // 底部合计栏
     footerMethod({ columns, data }) {
-      if (!this.showFooter) {
-        return;
+      let footerData = [];
+      if (this.showFooter) {
+        footerData = [
+          columns.map((column, columnIndex) => {
+            if (columnIndex === 0) {
+              return '合计';
+            }
+            if (this.includeFields.includes(column.property)) {
+              return XEUtils.sum(data, column.property);
+            }
+            return null;
+          }),
+        ];
       }
-      const footerData = [
-        columns.map((column, columnIndex) => {
-          if (columnIndex === 0) {
-            return '合计';
-          }
-          if (this.includeFields.includes(column.property)) {
-            return XEUtils.sum(data, column.property);
-          }
-          return null;
-        }),
-      ];
+      if (this.dataFooter && this.dataFooter.length > 0) {
+      }
       return footerData;
     },
     async getFooterRemark() {

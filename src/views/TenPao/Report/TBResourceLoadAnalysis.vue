@@ -66,13 +66,14 @@
           @sortChange="sortChange"
           @toPage="toPage"
           :keepSource="true"
+          :scrollEnable="false"
           :footerContent="true"
         />
       </div>
     </div>
     <!-- 弹框-->
     <el-dialog
-      :title="'计划调整'"
+      :title="'查看计划'"
       :visible.sync="colDialogVisible2"
       width="80%"
       :close-on-click-modal="false"
@@ -286,7 +287,6 @@ export default {
       title: this.$route.meta.title,
       includeFields: [[], [], [], [], []],
       hasSelect: [false, false, false, false, false],
-      selectedIndex: '0',
       formSearchs: [
         {
           datas: {},
@@ -343,7 +343,7 @@ export default {
       ],
       isEdit: [false, false, false, false, false],
       userInfo: {},
-      selectedIndex: '1',
+      selectedIndex: '4',
       Region: [6, 6, 6, 6, 6],
       colDialogVisible2: false,
       colDialogVisible4: false,
@@ -731,20 +731,19 @@ export default {
     // 打开工单分析
     async toPage(row, prop) {
       this.radioValue1 = 1;
-      this.selectedIndex = '1';
+      this.selectedIndex = '4';
       if (prop == 'OrganizeName') {
         const organizeName = row.OrganizeName;
         for (let i = 1; i <= 4; i++) {
+          this.dataReset(i);
           if (i === 2) {
-            this.formSearchs[i].datas['OrganizeName'] = '';
             this.formSearchs[i].datas['OrganizeName'] = organizeName;
           } else {
-            this.formSearchs[i].datas['LineName'] = '';
             this.formSearchs[i].datas['LineName'] = organizeName;
           }
         }
-        await this.dataSearch(1);
         this.colDialogVisible2 = true;
+        await this.dataSearch(4);
       }
     },
     handleRadioChange(val) {
