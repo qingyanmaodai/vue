@@ -1725,19 +1725,19 @@ export default {
             }
           }
           // 以下为固定入参
-          // if (!isDate) {
-          //   obj['dicID'] = this.sysID[this.tagRemark].ID;
-          //   (obj['SDate'] = _this.machineCycle.length
-          //     ? _this.machineCycle[0]
-          //     : ''),
-          //     (obj['Edate'] = _this.machineCycle.length
-          //       ? _this.machineCycle[1]
-          //       : ''),
-          //     (obj['Account'] = this.$store.getters.userInfo.Account);
-          //   obj['row'] = m.__rowNum__;
-          //   // 需要使用...obj 不然值回写有问题
-          //   DataList.push({ ...obj });
-          // }
+          if (!isDate) {
+            obj['dicID'] = this.sysID[this.tagRemark].ID;
+            (obj['SDate'] = _this.machineCycle.length
+              ? _this.machineCycle[0]
+              : ''),
+              (obj['Edate'] = _this.machineCycle.length
+                ? _this.machineCycle[1]
+                : ''),
+              (obj['Account'] = this.$store.getters.userInfo.Account);
+            obj['row'] = m.__rowNum__;
+            // 需要使用...obj 不然值回写有问题
+            DataList.push({ ...obj });
+          }
         });
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
