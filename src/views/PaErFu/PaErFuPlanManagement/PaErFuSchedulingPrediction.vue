@@ -1075,9 +1075,9 @@ export default {
             });
           }
           // 设置行颜色，最终判断有错误整行底色红色
-          if (rowItem['DBResult'] && rowItem['DBResult'].indexOf('错误') > -1) {
-            sheet.getCell(index, -1).backColor('red');
-          }
+          // if (rowItem['DBResult'] && rowItem['DBResult'].indexOf('错误') > -1) {
+          //   sheet.getCell(index, -1).backColor('red');
+          // }
         });
       });
 
@@ -1637,6 +1637,7 @@ export default {
         let propName = '';
         let split = []; //存储需求到料日期过期信息
         let groupList = [];
+        console.log(importData[0], 'importData[0]');
         importData[0].sheet.forEach((m, y) => {
           for (let key in m) {
             if (this.tableColumns[this.tagRemark].length) {
@@ -1646,9 +1647,8 @@ export default {
                 i < this.tableColumns[this.tagRemark].length;
                 i++
               ) {
-                console.log();
                 let item = this.tableColumns[this.tagRemark][i];
-                console.log(typeof item.label, typeof key, item, key);
+                // console.log(typeof item.label, typeof key, item, key);
                 if (item.label === key) {
                   if (item.DataType === 'datetime') {
                     if (m[key] && !this.isValidDate(m[key])) {
@@ -1701,12 +1701,13 @@ export default {
                   } else {
                     obj[item.prop] = m[key];
                   }
-                } else if (
-                  isNaN(key) &&
-                  !isNaN(Date.parse(key)) &&
-                  item.prop2 &&
-                  item.DataType === 'datetime'
-                ) {
+                }
+              }
+              if (isNaN(key) && !isNaN(Date.parse(key))) {
+                const isNotInHeaders = !this.tableColumns[this.tagRemark].some(
+                  (header) => header.label === key,
+                );
+                if (isNotInHeaders) {
                   //导入日期并且数大于0才导入
                   // 列为日期的格式
                   isDate = true;
@@ -1724,20 +1725,20 @@ export default {
               }
             }
           }
-          // 以下为固定入参
-          if (!isDate) {
-            obj['dicID'] = this.sysID[this.tagRemark].ID;
-            (obj['SDate'] = _this.machineCycle.length
-              ? _this.machineCycle[0]
-              : ''),
-              (obj['Edate'] = _this.machineCycle.length
-                ? _this.machineCycle[1]
-                : ''),
-              (obj['Account'] = this.$store.getters.userInfo.Account);
-            obj['row'] = m.__rowNum__;
-            // 需要使用...obj 不然值回写有问题
-            DataList.push({ ...obj });
-          }
+          // // 以下为固定入参
+          // if (!isDate) {
+          //   obj['dicID'] = this.sysID[this.tagRemark].ID;
+          //   (obj['SDate'] = _this.machineCycle.length
+          //     ? _this.machineCycle[0]
+          //     : ''),
+          //     (obj['Edate'] = _this.machineCycle.length
+          //       ? _this.machineCycle[1]
+          //       : ''),
+          //     (obj['Account'] = this.$store.getters.userInfo.Account);
+          //   obj['row'] = m.__rowNum__;
+          //   // 需要使用...obj 不然值回写有问题
+          //   DataList.push({ ...obj });
+          // }
         });
         // 必填校验
         if (this.formSearchs[this.tagRemark].required.length) {
@@ -1788,6 +1789,8 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
+        console.log(DataList, 'DataList');
+        return;
         let res = await GetSearch(
           DataList,
           '/APSAPI/ImportManualForecast?isDel=' + this.ImportParams,
