@@ -1,7 +1,7 @@
 import { NEWLOGIN, OrgData } from "@/api/user";
 import { getToken, setToken, removeToken } from "@/utils/auth";
 import { resetRouter } from "@/router";
-import { Message } from "element-ui";
+import { Message, MessageBox } from "element-ui";
 // import { formatDate } from '@/utils/formatDate'
 
 const getDefaultState = () => {
@@ -72,11 +72,11 @@ const actions = {
             setToken(res.data.token);
             //获取动态菜单，动态渲染首页
             commit("SET_MENU", res.data.dev_Account.MenuVue);
-            if (res.data.ValidityDays <= 30) {
-              Message({
-                message: "软件即将在" + res.data.ValidityDays + "天后（" + res.data.ValidityDate + "）到期，请联系软件供应商，谢谢！",
-                type: 'error',
-                duration: 0,
+            if (res.data.ValidityDays && res.data.ValidityDays <= 30) {
+              MessageBox({
+                title: "系统提醒",
+                message: "尊敬的系统用户，您好！贵司的APS系统将在" + res.data.ValidityDate + "到期，仅剩" + res.data.ValidityDays + "天，为不影响继续使用，请联系软件服务商及时续费，感谢您的信赖和支持！",
+                type: 'warning',
                 dangerouslyUseHTMLString: true,
                 showClose: true,
               })
