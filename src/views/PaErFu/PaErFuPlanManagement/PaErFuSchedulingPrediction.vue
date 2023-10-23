@@ -1640,6 +1640,7 @@ export default {
         console.log(importData[0], 'importData[0]');
         importData[0].sheet.forEach((m, y) => {
           for (let key in m) {
+            let obj = {};
             if (this.tableColumns[this.tagRemark].length) {
               // 判断是否和配置里的取名一致，一致才可导入
               for (
@@ -1648,7 +1649,6 @@ export default {
                 i++
               ) {
                 let item = this.tableColumns[this.tagRemark][i];
-                // console.log(typeof item.label, typeof key, item, key);
                 if (item.label === key) {
                   if (item.DataType === 'datetime') {
                     if (m[key] && !this.isValidDate(m[key])) {
