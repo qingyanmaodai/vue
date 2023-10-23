@@ -655,7 +655,7 @@ export default {
             triggerEvent: true,
             data: this.tableData[1].map((item) => item['Name1']),
             axisLabel: {
-              interval: 1,
+              interval: 0,
               show: true,
               color: '#000',
             },
@@ -669,7 +669,7 @@ export default {
           },
           yAxis: [
             {
-              name: '单位:PCS',
+              name: '单位:万',
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
@@ -706,6 +706,16 @@ export default {
                 color: '#578FFB',
               },
               data: this.tableData[1].map((item) => item['S1']),
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#000',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value.toFixed(1);
+                },
+              },
             },
             {
               name: '完成数',
@@ -715,6 +725,16 @@ export default {
                 color: '#23CF9C',
               },
               data: this.tableData[1].map((item) => item['S2']),
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#000',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value.toFixed(1);
+                },
+              },
             },
           ],
         },
@@ -1342,6 +1362,7 @@ export default {
             groupby: item.groupby,
             sort: item.sort,
             DataFilter: item.DataFilter,
+            rows: item.erows,
           };
         });
       }
@@ -1393,6 +1414,9 @@ export default {
               this.result1[z].DataFilter,
             );
           }
+          if (this.result1[z].rows) {
+            this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
+          }
           if (z === 7) {
             this.formSearchs[z].datas['PlanDay'] = this.$moment()
               .subtract(1, 'days')
@@ -1433,8 +1457,8 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['rows'] = this.tablePagination[remarkTb].pageSize;
-      form['page'] = this.tablePagination[remarkTb].pageIndex;
+      // form['rows'] = this.tablePagination[remarkTb].pageSize;
+      // form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (remarkTb === 0 && res.data) {
@@ -1452,6 +1476,13 @@ export default {
       }
       if (result) {
         this.$set(this.tableData, remarkTb, data);
+        if (remarkTb === 1) {
+          this.tableData[remarkTb].sort((a, b) => {
+            const dateA = new Date(a.Name2);
+            const dateB = new Date(b.Name2);
+            return dateA - dateB;
+          });
+        }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({

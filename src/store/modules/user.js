@@ -72,6 +72,16 @@ const actions = {
             setToken(res.data.token);
             //获取动态菜单，动态渲染首页
             commit("SET_MENU", res.data.dev_Account.MenuVue);
+            if (res.data.ValidityDays <= 30) {
+              Message({
+                message: "软件即将在" + res.data.ValidityDays + "天后（" + res.data.ValidityDate + "）到期，请联系软件供应商，谢谢！",
+                type: 'error',
+                duration: 0,
+                dangerouslyUseHTMLString: true,
+                showClose: true,
+              })
+            }
+
           } else {
             Message.error(res.data.msg);
           }
