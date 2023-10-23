@@ -1613,18 +1613,46 @@ export default {
           ];
         }
         if (this.dataFooter && this.dataFooter.length > 0) {
-          footerData = footerData.concat([
+          function getValues(columns, data) {
+            const result = [];
             columns.map((column) => {
-              const key = column.property;
-              let value = null;
-              this.dataFooter.forEach((footerItem) => {
-                if (footerItem.hasOwnProperty(key)) {
-                  value = footerItem[key];
-                }
-              });
-              return value;
-            }),
-          ]);
+              if (column.children) {
+                const childValues = getValues(column.children, data);
+                result.push(...childValues);
+              } else if (column.prop in data) {
+                result.push(data[column.prop]);
+              }
+            });
+
+            return result;
+          }
+          footerData = [getValues(this.tableHeaderChange, this.dataFooter[0])];
+          // footerData = footerData.concat([
+          //   this.tableHeaderChange.map((column) => {
+          //     const key = column.prop;
+          //     let value = null;
+          //     console.log(column, 'column');
+          //     if (column.children && column.children.length > 0) {
+          //       column.children.map((column) => {
+          //         let value = null;
+          //         const key = column.prop;
+          //         this.dataFooter.forEach((footerItem) => {
+          //           if (footerItem.hasOwnProperty(key)) {
+          //             value = footerItem[key];
+          //           }
+          //         });
+          //         return value;
+          //       });
+          //     } else {
+          //       this.dataFooter.forEach((footerItem) => {
+          //         if (footerItem.hasOwnProperty(key)) {
+          //           value = footerItem[key];
+          //         }
+          //       });
+          //       return value;
+          //     }
+          //   }),
+          // ]);
         }
       }
       return footerData;

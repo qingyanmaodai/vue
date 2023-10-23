@@ -50,6 +50,8 @@
               :keepSource="true"
               :footerContent="true"
               :scrollEnable="false"
+              :showFooter="true"
+              :dataFooter="dataFooter[0]"
               :EnableColumnFiltering="false"
             />
           </div>
@@ -507,8 +509,8 @@ export default {
     },
     // 单击行
     handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
+      // this.delData[remarkTb] = [];
+      // this.delData[remarkTb].push(row);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
