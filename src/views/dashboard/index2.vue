@@ -669,7 +669,7 @@ export default {
           },
           yAxis: [
             {
-              name: '单位:万',
+              name: '单位:PCS',
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
