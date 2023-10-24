@@ -1625,14 +1625,14 @@ export default {
         importData[0].sheet.forEach((m, y) => {
           let obj = {};
           for (let key in m) {
-            if (this.tableColumns[this.tagRemark].length) {
+            if (this.tableColumns[this.labelStatus1].length) {
               // 判断是否和配置里的取名一致，一致才可导入
               for (
                 let i = 0;
-                i < this.tableColumns[this.tagRemark].length;
+                i < this.tableColumns[this.labelStatus1].length;
                 i++
               ) {
-                let item = this.tableColumns[this.tagRemark][i];
+                let item = this.tableColumns[this.labelStatus1][i];
                 if (item.label === key) {
                   if (item.DataType === 'datetime') {
                     if (m[key] && !this.isValidDate(m[key])) {
@@ -1689,9 +1689,9 @@ export default {
                 }
               }
               if (isNaN(key) && !isNaN(Date.parse(key))) {
-                const isNotInHeaders = !this.tableColumns[this.tagRemark].some(
-                  (header) => header.label === key,
-                );
+                const isNotInHeaders = !this.tableColumns[
+                  this.labelStatus1
+                ].some((header) => header.label === key);
                 if (isNotInHeaders) {
                   //导入日期并且数大于0才导入
                   // 列为日期的格式
@@ -1774,8 +1774,6 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        console.log(DataList, 'DataList');
-        return;
         let res = await GetSearch(
           DataList,
           '/APSAPI/ImportManualForecast?isDel=' + this.ImportParams,
