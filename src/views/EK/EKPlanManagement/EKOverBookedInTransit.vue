@@ -630,7 +630,7 @@ export default {
               comboBox.editorValueType(
                 GC.Spread.Sheets.CellTypes.EditorValueType.value,
               );
-              comboBox.editable(true);
+              // comboBox.editable(true);
               // 获取下拉菜单的选项数据
               comboBox.items(newData);
               comboBox.itemHeight(24);

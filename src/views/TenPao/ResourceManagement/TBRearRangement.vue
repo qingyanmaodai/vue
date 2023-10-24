@@ -386,7 +386,7 @@ export default {
       ],
       labelStatus1: 1,
       labelStatus2: 0,
-      sysID: [{ ID: 14200 }, { ID: 14200 }, { ID: 14200 }, { ID: 14200 }],
+      sysID: [{ ID: 14200 }, { ID: 14200 }, { ID: 14199 }, { ID: 97 }],
       isEdit: [false, false, false, false, false],
       colDialogVisible1: false,
       userInfo: {},
