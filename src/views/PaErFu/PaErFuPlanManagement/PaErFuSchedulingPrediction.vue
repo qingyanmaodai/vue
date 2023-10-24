@@ -10,7 +10,7 @@
           ref="searchRef"
           :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
-          :remark="0"
+          :remark="i"
           :isLoading="isLoading"
           :btnForm="btnForm"
           :signName="i"
@@ -70,8 +70,9 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0]"
+      v-for="item in [0, 1, 2]"
       :key="item"
+      v-show="labelStatus1 === item"
     >
       <ComSpreadTable
         ref="spreadsheetRef"
@@ -260,7 +261,7 @@ export default {
     return {
       dialogImport: false,
       labelStatus1: 0,
-      spread: [[], []],
+      spread: [[], [], []],
       machineCycle: '',
       dialogSearchForm: {
         OrderID: '',
@@ -313,7 +314,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 9005 }],
+      sysID: [{ ID: 9005 }, { ID: 9005 }, { ID: 9005 }],
       // sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
       fileList: [],
       Status1: [
@@ -349,8 +350,8 @@ export default {
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
     _this.machineCycle = [
-      formatDates.formatTodayDate(),
-      formatDates.formatOneMonthDate(),
+      this.$moment().startOf('month').format('YYYY-MM-DD'),
+      this.$moment().endOf('month').format('YYYY-MM-DD'),
     ];
   },
   // activated() {
@@ -372,7 +373,7 @@ export default {
         if (entry.target === tableContainer) {
           // 在这里执行你的操作，例如刷新 SpreadJS
           // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
-          this.spread[0].refresh();
+          this.spread[this.labelStatus1].refresh();
         }
       }
     }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
@@ -821,6 +822,13 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
+          if (z === 0 || z === 1) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'YearMonth',
+              this.$moment().format('YYYYMM'),
+            );
+          }
           this.$set(this.formSearchs[z], 'forms', x);
         });
         await this.changeStatus({ label: '未完成', value: 0, index: 0 }, 0);
@@ -853,28 +861,15 @@ export default {
       if (result) {
         // 获取每个表头
         Columns.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
+          m.forEach((n, index) => {
+            this.$set(this.tableColumns, remarkTb, m);
+          });
         });
         this.linkTableData = [];
-        if (remarkTb === 2) {
-          data.forEach((item1) => {
-            // 使用find方法在第二个数组中查找匹配的SaleMan
-            const matching = this.tableData[3].find(
-              (item2) => item2.SaleMan === item1.Account,
-            );
-            // 如果找到匹配的SaleMan，将isChecked设置为true
-            if (matching) {
-              item1.isChecked = true;
-              this.linkTableData.push(matching);
-            }
-          });
-        }
 
         this.$set(this.tableData, remarkTb, data);
 
-        if (remarkTb === 0 || remarkTb === 1) {
-          this.setData(remarkTb);
-        }
+        this.setData(remarkTb);
 
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
@@ -1014,8 +1009,10 @@ export default {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
-
-      sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      if (this.tableColumns[remarkTb][0]['FixCount']) {
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      }
 
       // 列筛选
       // 参数2 开始列
@@ -1552,27 +1549,8 @@ export default {
     },
     // 改变状态
     async changeStatus(item, index) {
-      // let RoleMapList = this.$store.getters.userInfo.RoleMap;
-      // if (RoleMapList.length) {
-      //   RoleMapList.forEach((item) => {
-      //     if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
-      //       //业务经理
-      //       this.RoleMapStatus = true;
-      //       return;
-      //     }
-      //   });
-      // }
-      // this.formSearchs[0].datas['SaleMan'] = null;
-      // if (this.RoleMapStatus !== true && index !== 3) {
-      //   this.$set(
-      //     this.formSearchs[0]['datas'],
-      //     'SaleMan',
-      //     this.userInfo.Account,
-      //   );
-      // }
       this.labelStatus1 = item['index'];
-      // this.formSearchs[0].datas['IsFinish'] = item.value;
-      await this.dataSearch(0);
+      await this.dataSearch(index);
     },
     // 导入并分析模板
     dataImport(remarkTb, index, params) {
@@ -1639,8 +1617,8 @@ export default {
         let groupList = [];
         console.log(importData[0], 'importData[0]');
         importData[0].sheet.forEach((m, y) => {
+          let obj = {};
           for (let key in m) {
-            let obj = {};
             if (this.tableColumns[this.tagRemark].length) {
               // 判断是否和配置里的取名一致，一致才可导入
               for (
@@ -1687,7 +1665,10 @@ export default {
                     } else {
                       return;
                     }
-                  } else if (item.prop2) {
+                  } else {
+                    obj[item.prop] = m[key];
+                  }
+                  if (item.prop2) {
                     //对动态列判断
                     if (Number(m[key]) > 0) {
                       obj['PlanDay'] = item['prop2'];
@@ -1698,8 +1679,6 @@ export default {
                       // 需要使用...obj 不然值回写有问题
                       DataList.push({ ...obj });
                     }
-                  } else {
-                    obj[item.prop] = m[key];
                   }
                 }
               }
@@ -1789,8 +1768,8 @@ export default {
         }
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
-        // console.log(DataList, 'DataList');
-        // return;
+        console.log(DataList, 'DataList');
+        return;
         let res = await GetSearch(
           DataList,
           '/APSAPI/ImportManualForecast?isDel=' + this.ImportParams,
