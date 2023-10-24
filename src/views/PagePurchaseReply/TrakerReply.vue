@@ -53,8 +53,8 @@
                     <span class="title">{{ title }}</span>
                   </el-col>
                   <el-col :span="20" class="flex_flex_end">
-                    <span>采购员：{{ formSearchs[0].datas['POTracker'] }}</span>
-                    <el-divider direction="vertical"></el-divider>
+                    <!-- <span>采购员：{{ formSearchs[0].datas['POTracker'] }}</span> -->
+                    <!-- <el-divider direction="vertical"></el-divider>
                     <el-date-picker
                       v-model="ReplyDate"
                       type="date"
@@ -62,8 +62,8 @@
                       value-format="yyyy-MM-dd"
                       placeholder="复期"
                     >
-                    </el-date-picker>
-                    <el-divider direction="vertical"></el-divider>
+                    </el-date-picker> -->
+                    <!-- <el-divider direction="vertical"></el-divider>
                     <el-button
                       type="primary"
                       size="mini"
@@ -71,15 +71,15 @@
                     >
                       批量回复日期
                     </el-button>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button
+                    <el-divider direction="vertical"></el-divider> -->
+                    <!-- <el-button
                       type="warning"
                       size="mini"
                       @click="changeDate(1)"
                     >
                       批量二次回复日期
                     </el-button>
-                    <el-divider direction="vertical"></el-divider>
+                    <el-divider direction="vertical"></el-divider> -->
                     <el-button
                       type="success "
                       size="mini"

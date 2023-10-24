@@ -765,7 +765,7 @@ export default {
       }
       changeRecords.forEach((x) => {
         x['SDate'] = this.formSearchs[remarkTb].datas['SDate'];
-        x['Edate'] = this.formSearchs[remarkTb].datas['EDate'];
+        x['Edate'] = this.formSearchs[remarkTb].datas['Edate'];
       });
       let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
       // let res = await SaveData(changeRecords);
@@ -835,7 +835,7 @@ export default {
             );
             this.$set(
               this.formSearchs[z].datas,
-              'EDate',
+              'Edate',
               this.$moment().endOf('month').format('YYYY-MM-DD'),
             );
             this.$set(this.formSearchs[z].datas, 'Status', 1);
@@ -855,7 +855,7 @@ export default {
             );
             this.$set(
               this.formSearchs[z].datas,
-              'EDate',
+              'Edate',
               this.$moment()
                 .add(1, 'months')
                 .endOf('month')
