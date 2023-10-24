@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -26,7 +26,7 @@
             ><span class="title">{{ title }}</span>
           </el-col>
           <el-col :span="16" class="flex_flex_end">
-            <div style="margin-right: 10px">
+            <!-- <div style="margin-right: 10px">
               <span>日期范围</span>
               <el-date-picker
                 v-model="machineCycle"
@@ -38,7 +38,7 @@
                 :editable="false"
               >
               </el-date-picker>
-            </div>
+            </div> -->
             <div v-for="(item, y) in Status1" :key="y">
               <span
                 @click="changeStatus(item, y)"
@@ -70,7 +70,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2]"
+      v-for="item in [0, 1]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -314,13 +314,13 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 9005 }, { ID: 9005 }, { ID: 9005 }],
+      sysID: [{ ID: 9005 }, { ID: 9005 }],
       // sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
       fileList: [],
       Status1: [
         { label: '本月预测计划', value: 0, index: 0 },
         { label: '下月预测计划', value: 1, index: 1 },
-        { label: '历史预测计划', value: '', index: 2 },
+        // { label: '历史预测计划', value: '', index: 2 },
         // { label: '预测单', value: 2, index: 4 },
       ],
       adminLoading: false,
@@ -764,8 +764,8 @@ export default {
         return;
       }
       changeRecords.forEach((x) => {
-        x['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
-        x['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
+        x['SDate'] = this.formSearchs[remarkTb].datas['SDate'];
+        x['Edate'] = this.formSearchs[remarkTb].datas['EDate'];
       });
       let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
       // let res = await SaveData(changeRecords);
@@ -828,16 +828,47 @@ export default {
               'YearMonth',
               this.$moment().format('YYYYMM'),
             );
+            this.$set(
+              this.formSearchs[z].datas,
+              'SDate',
+              this.$moment().startOf('month').format('YYYY-MM-DD'),
+            );
+            this.$set(
+              this.formSearchs[z].datas,
+              'EDate',
+              this.$moment().endOf('month').format('YYYY-MM-DD'),
+            );
+            this.$set(this.formSearchs[z].datas, 'Status', 1);
           } else if (z === 1) {
             this.$set(
               this.formSearchs[z].datas,
               'YearMonth',
               this.$moment().add(1, 'months').format('YYYYMM'),
             );
+            this.$set(
+              this.formSearchs[z].datas,
+              'SDate',
+              this.$moment()
+                .add(1, 'months')
+                .startOf('month')
+                .format('YYYY-MM-DD'),
+            );
+            this.$set(
+              this.formSearchs[z].datas,
+              'EDate',
+              this.$moment()
+                .add(1, 'months')
+                .endOf('month')
+                .format('YYYY-MM-DD'),
+            );
+            this.$set(this.formSearchs[z].datas, 'Status', 1);
           }
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        await this.changeStatus({ label: '未完成', value: 0, index: 0 }, 0);
+        await this.changeStatus(
+          { label: '本月预测计划', value: 0, index: 0 },
+          0,
+        );
         this.adminLoading = false;
       }
     },
@@ -856,8 +887,8 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
-      form['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
+      // form['SDate'] = this.machineCycle.length ? this.machineCycle[0] : '';
+      // form['Edate'] = this.machineCycle.length ? this.machineCycle[1] : '';
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       form['dicID'] = this.sysID[remarkTb]['ID'];
