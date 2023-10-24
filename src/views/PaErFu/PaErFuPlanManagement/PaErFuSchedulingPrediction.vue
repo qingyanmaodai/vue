@@ -822,11 +822,17 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          if (z === 0 || z === 1) {
+          if (z === 0) {
             this.$set(
               this.formSearchs[z].datas,
               'YearMonth',
               this.$moment().format('YYYYMM'),
+            );
+          } else if (z === 1) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'YearMonth',
+              this.$moment().add(1, 'months').format('YYYYMM'),
             );
           }
           this.$set(this.formSearchs[z], 'forms', x);
