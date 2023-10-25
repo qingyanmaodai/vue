@@ -142,9 +142,26 @@
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>近一周欠料趋势图</h2>
+              <h2>欠料统计</h2>
             </div>
-            <div class="chartContent" ref="chart2"></div>
+            <div class="chartContent">
+              <div class="h-full w-full flex justify-center">
+                <div
+                  class="w-40/100 h-full flex flex-col items-center justify-center mb-[5%]"
+                >
+                  <div class="ScreenBaseNum">64,945</div>
+                  <div class="ScreenBaseTitle">欠料总数</div>
+                  <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
+                </div>
+                <div
+                  class="w-40/100 h-full flex flex-col items-center justify-center ml-[5%]"
+                >
+                  <div class="ScreenBaseNum">462</div>
+                  <div class="ScreenBaseTitle">影响订单</div>
+                  <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
+                </div>
+              </div>
+            </div>
           </div>
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
@@ -242,11 +259,10 @@ export default {
   async mounted() {
     //初始化图表;
     this.chart = [
-      this.$refs.chart0,
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
-      this.$refs.chart4,
+      echarts.init(this.$refs.chart0),
+      echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
+      echarts.init(this.$refs.chart3),
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
@@ -279,9 +295,10 @@ export default {
       }
     },
     // 渲染echart图
-    barData(id, option) {
+    barData(item, option) {
       // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+      item.setOption(option);
+      // echarts.init(id).setOption(option);
     },
 
     // 获取表头数据
@@ -297,14 +314,13 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
 
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-            await this.getTableData(this.formSearchs[z].datas, z);
-          }),
-        );
+        forms.map(async (x, z) => {
+          this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+          await this.getTableData(this.formSearchs[z].datas, z);
+          await this.getEcharts();
+        });
         this.adminLoading = false;
-        await this.getEcharts();
+        // await this.getEcharts();
       }
     },
     async getEcharts() {
@@ -346,7 +362,7 @@ export default {
           series: [
             {
               type: 'pie',
-              // selectedMode: "single",
+              selectedMode: 'single',
               radius: ['50%', '80%'],
               center: ['40%', '50%'],
               color: [
@@ -366,27 +382,23 @@ export default {
                 '#D70303',
               ],
               label: {
-                normal: {
-                  position: 'inner',
-                  formatter: '{d}%',
-                  show: true,
-                  color: '#fff',
-                  textBorderColor: 'inherit',
-                  textBorderWidth: 1,
-                  fontSize: fontSize(16),
-                  formatter: function (params) {
-                    if (params.name !== '') {
-                      return params.percent + '%';
-                    } else {
-                      return '';
-                    }
-                  },
+                position: 'inner',
+                formatter: '{d}%',
+                show: true,
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: 1,
+                fontSize: fontSize(16),
+                formatter: function (params) {
+                  if (params.name !== '') {
+                    return params.percent + '%';
+                  } else {
+                    return '';
+                  }
                 },
               },
               labelLine: {
-                normal: {
-                  show: false,
-                },
+                show: false,
               },
               data: [
                 { value: '36', name: '前加工' },
@@ -597,7 +609,116 @@ export default {
               itemStyle: {
                 color: '#2F8FFF', // 设置折线颜色为黄色
               },
+              lineStyle: {
+                width: fontSize(4),
+              },
               data: [100, 80, 120, 60, 90, 70, 70], // 折线图的数据
+            },
+          ],
+        },
+        {
+          // title: {
+          //   text: "雷达图",
+          //   top: 10,
+          //   left: "center",
+          //   textStyle: {
+          //     fontSize: 18,
+          //     fontWeight: 400,
+          //   },
+          // },
+          textStyle: {
+            // 全局字体样式
+            color: '#C9D2FA',
+            fontSize: fontSize(14),
+          },
+          // legend: {
+          //   bottom: 0,
+          //   left: "center",
+          //   itemBorderRadius: 8,
+          //   data: [
+          //     "Chars Bosh",
+          //   ],
+          // },
+          tooltip: {
+            // 提示框组件
+            trigger: 'item', // 触发类型 可选为：'axis' | 'item' | 'none'
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: 'line', // 默认为直线，可选为：'line' | 'shadow'
+              shadowStyle: {
+                color: 'rgba(204, 214, 235, 0.247059)',
+              },
+            },
+          },
+          radar: {
+            // shape: 'circle',
+            splitNumber: 3,
+            grid: {
+              left: fontSize(10),
+              right: fontSize(10),
+              bottom: fontSize(10),
+              containLabel: true,
+            },
+            splitArea: {
+              show: false,
+            },
+            splitLine: {
+              lineStyle: {
+                color: ['#254678'],
+              },
+            },
+            axisLine: {
+              lineStyle: {
+                color: '#254678',
+              },
+            },
+            indicator: [
+              {
+                name: '欠料',
+                max: 100,
+              },
+              {
+                name: '人员不够',
+                max: 100,
+              },
+              {
+                name: '机械故障',
+                max: 100,
+              },
+              {
+                name: '模具异常',
+                max: 100,
+              },
+              {
+                name: '来料不良',
+                max: 100,
+              },
+            ],
+          },
+          series: [
+            {
+              name: '雷达图',
+              type: 'radar',
+              symbol: 'none',
+              areaStyle: {
+                color: '#31C2FF', // 调色盘颜色列表。
+                opacity: 0.4,
+              },
+              itemStyle: {
+                lineStyle: {
+                  width: 2,
+                },
+              },
+              emphasis: {
+                areaStyle: {
+                  opacity: 0.8,
+                },
+              },
+              data: [
+                {
+                  value: [50, 46, 80, 30, 60],
+                },
+              ],
             },
           ],
         },
@@ -605,15 +726,14 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          echarts.init(item).resize();
+          item.resize();
         });
       }, 100);
-    },
-    handleWindowResize() {
-      this.getEcharts();
     },
     showtime() {
       const now = new Date();
@@ -740,7 +860,9 @@ export default {
     font-weight: 500;
     line-height: normal;
     align-self: center; /* 第二个元素在中线位置 */
-    position: absolute;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    // position: absolute;
   }
 }
 .panel {
@@ -849,12 +971,17 @@ export default {
   background: linear-gradient(0deg, #030a2c, #030a2c),
     linear-gradient(0deg, #4c82c2, #4c82c2);
 }
+.flex-container div::before,
+.flex-container div::after {
+  content: '';
+  flex: 0.15;
+}
 .ScreenBase2 {
   width: 125px;
   height: 84px;
 }
-.ScreenBase4 {
-  width: 144px;
-  height: 36px;
+.ScreenBase5 {
+  width: 158px;
+  height: 62px;
 }
 </style>

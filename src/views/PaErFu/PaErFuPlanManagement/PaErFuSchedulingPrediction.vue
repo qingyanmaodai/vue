@@ -127,6 +127,32 @@
       </el-dialog>
     </div>
     <!-- 弹框-->
+    <DialogOptTable
+      title="添加产品"
+      :tableDialog="colDialogVisible2"
+      :sysID="sysID[2]['ID']"
+      :isEdit="isEdit[2]"
+      :remark="2"
+      width="80%"
+      :hasSelect="hasSelect[2]"
+      @closeDialog="colDialogVisible2 = false"
+      @btnClickCall="btnClick"
+      :searchForm="formSearchs[2]"
+      :btnForm="btnForm"
+      :isToolbar="false"
+      :isConfirmBtn="true"
+      :table-data="tableData[2]"
+      :table-header="tableColumns[2]"
+      :table-loading="tableLoading[2]"
+      :table-pagination="tablePagination[2]"
+      :isClear="isClear[2]"
+      @confirmDialog="confirmDialog"
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
+    <!-- 弹框-->
     <!-- <el-dialog
       :title="'拆分订单'"
       :visible.sync="colDialogVisible1"
@@ -270,7 +296,6 @@ export default {
       title: this.$route.meta.title,
       title2: null,
       drawer: false,
-      delData: [[]],
       formSearchs: [
         {
           datas: {},
@@ -314,7 +339,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 9005 }, { ID: 9005 }],
+      sysID: [{ ID: 9005 }, { ID: 9005 }, { ID: 1180 }],
       // sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
       fileList: [],
       Status1: [
@@ -326,7 +351,7 @@ export default {
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
-      selectionData: [[], []],
+      selectionData: [[], [], []],
       NoWorkHour: [],
       LineViewSort: [],
       sheetSelectRows: [],
@@ -334,7 +359,7 @@ export default {
       isEdit: [false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
-      Region: [5, 6, 6],
+      Region: [6, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
       Customer: null,
@@ -727,10 +752,7 @@ export default {
         .catch((_) => {});
     },
     // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
+    handleRowClick(row, remarkTb) {},
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
@@ -902,8 +924,9 @@ export default {
         this.linkTableData = [];
 
         this.$set(this.tableData, remarkTb, data);
-
-        this.setData(remarkTb);
+        if (remarkTb === 0 || remarkTb === 1) {
+          this.setData(remarkTb);
+        }
 
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
@@ -1543,6 +1566,25 @@ export default {
         this.selectionData[remarkTb][0]['SalesOrderDetailID'];
       await this.dataSearch(3);
       await this.dataSearch(2);
+    },
+    async addRow(remarkTb) {
+      this.colDialogVisible2 = true;
+      await this.dataSearch(2);
+    },
+    //添加产品机台
+    async confirmDialog(remarkTb) {
+      let newData;
+      if (remarkTb === 2) {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x['dicID'] = 9005;
+            return x;
+          }),
+        );
+      }
+
+      await this.dataSave(this.labelStatus1, null, null, newData);
+      this.colDialogVisible2 = false;
     },
     //添加产品机台
     async Reschedule(remarkTb) {
