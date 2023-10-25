@@ -278,6 +278,51 @@
         </div> -->
       </div>
     </el-dialog>
+    <!-- 弹框-->
+    <el-dialog
+      :title="'调整排期'"
+      class="el-dialog2"
+      :visible.sync="colDialogVisible3"
+      width="20%"
+      :close-on-click-modal="false"
+      :destroy-on-close="true"
+      :modal-append-to-body="false"
+      ><div
+        class="flex_grow"
+        style="overflow-x: hidden; display: flex; flex-direction: column"
+      >
+        <el-form
+          ref="formData"
+          :model="formData"
+          label-width="80px"
+          class="dialogForm"
+          @submit.native.prevent
+        >
+          <el-form-item
+            v-for="(newItem, index) in formController"
+            :key="index"
+            :label="newItem.label"
+            :prop="newItem.prop"
+            v-show="!newItem.IsShow"
+            ><el-input
+              size="small"
+              v-model="formData[newItem.prop]"
+              v-if="newItem.type == 'input'"
+              :type="newItem.inputType || 'text'"
+              :rows="1"
+              :placeholder="newItem.placeholder"
+              :disabled="newItem.disabled"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="colDialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="confirmDialog(null, 2)"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -363,6 +408,10 @@ export default {
         },
       ],
       btnForm: [],
+      formData: {
+        AdjustDay: '',
+      },
+      formController: [{ label: '调整排期', prop: 'AdjustDay', type: 'input' }],
       tableData: [[], [], [], [], [], [], []],
       spread: [],
       tableColumns: [[], [], [], [], [], [], []],
@@ -402,6 +451,7 @@ export default {
       isEdit: [false, false, true, false, false, false, false],
       selectedIndex: '1',
       colDialogVisible2: false,
+      colDialogVisible3: false,
       colDialogVisible5: false,
       colDialogVisible6: false,
       addNum: 1,
@@ -650,25 +700,6 @@ export default {
               }
             });
           });
-          // for (let i = 0; i < updateRecords.length; i++) {
-          //   for (
-          //     let x = 0;
-          //     x < this.formSearchs[remarkTb].required.length;
-          //     x++
-          //   ) {
-          //     let content =
-          //       updateRecords[i][
-          //       this.formSearchs[remarkTb].required[x]["prop"]
-          //       ];
-          //     if (!content && (content !== 0) & (content !== false)) {
-          //       this.$message.error(
-          //         `${this.formSearchs[remarkTb].required[x]["label"]}不能为空，请选择`
-          //       );
-          //       this.$set(this, "adminLoading", false);
-          //       return;
-          //     }
-          //   }
-          // }
         }
       }
       let res;
@@ -938,16 +969,24 @@ export default {
       console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
     },
     //添加产品机台
-    confirmDialog(data) {
-      let tagNumber = Number(this.selectedIndex);
-      data.map((item) => {
-        item['RAMID'] = this.formSearchs[tagNumber]['datas']['RAMID'];
-        item['dicID'] = this.sysID[tagNumber]['ID'];
-      });
-      this.colDialogVisible2 = false;
-      this.colDialogVisible5 = false;
-      this.colDialogVisible6 = false;
-      this.dataSave(tagNumber, null, null, data);
+    confirmDialog(data, remarkTb) {
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      this.selectionData[remarkTb] = $table.getCheckboxRecords();
+      if (remarkTb === 2) {
+        this.selectionData[remarkTb].forEach((x) => {
+          if (x['NewStartDate']) {
+            x['NewStartDate'] = this.$moment(x['NewStartDate'])
+              .add(this.formData['AdjustDay'], 'days')
+              .format('YYYY-MM-DD');
+          }
+          if (x['NewEndDate']) {
+            x['NewEndDate'] = this.$moment(x['NewEndDate'])
+              .add(this.formData['AdjustDay'], 'days')
+              .format('YYYY-MM-DD');
+          }
+        });
+        this.colDialogVisible3 = false;
+      }
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -957,11 +996,12 @@ export default {
         this.$message.error('请选择需要操作的数据！');
         return;
       } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj['ElementDeleteFlag'] = 1;
-          newData.push(obj);
-        });
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x['ElementDeleteFlag'] = 1;
+            return x;
+          }),
+        );
       }
       this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
@@ -1036,7 +1076,7 @@ export default {
     //重算
     async Reschedule() {
       const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
-      this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
+      this.selectionData[2] = $table.getCheckboxRecords();
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -1429,6 +1469,23 @@ export default {
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
     },
+    // 调整排期
+    async AdjustSchedule(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.formData['AdjustDay'] = '';
+        this.colDialogVisible3 = true;
+        // newData = _.cloneDeep(
+        // this.selectionData[remarkTb].map((x) => {
+
+        //   return x;
+        // }),
+        // );
+      }
+    },
     // 行内样式
     cellStyle({ row, column }) {
       let style = {}; // 创建一个空的样式对象
@@ -1499,5 +1556,19 @@ export default {
 }
 ::v-deep .el-dialog__close {
   color: #fff !important;
+}
+::v-deep .el-dialog2 {
+  .el-dialog {
+    margin-top: 20vh !important;
+    height: 25vh !important;
+    .el-dialog__body {
+      padding: 40px !important;
+      flex-grow: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 </style>
