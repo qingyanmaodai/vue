@@ -788,7 +788,7 @@ export default {
       }
     },
     // 获取表头数据
-    async getTableHeader() {
+    async getTableHeader(remarkTb) {
       let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
@@ -865,10 +865,7 @@ export default {
           }
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        await this.changeStatus(
-          { label: '本月预测计划', value: 0, index: 0 },
-          0,
-        );
+        await this.changeStatus(this.Status1[remarkTb], remarkTb);
         this.adminLoading = false;
       }
     },
@@ -1812,9 +1809,9 @@ export default {
         const { result, data, count, msg } = res.data;
         if (result) {
           this.adminLoading = false;
-          // this.dataSearch(this.tagRemark);
+          // this.dataSearch(this.labelStatus1);
           // 导入可能存在表头格式不一样，需要更新
-          this.getTableHeader();
+          await this.getTableHeader(this.labelStatus1);
           this.$message({
             message: msg,
             type: 'success',
