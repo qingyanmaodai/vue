@@ -348,7 +348,7 @@ export default {
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
-    this.getTableHeader();
+    this.getTableHeader(0);
     _this.machineCycle = [
       this.$moment().startOf('month').format('YYYY-MM-DD'),
       this.$moment().endOf('month').format('YYYY-MM-DD'),
