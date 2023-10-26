@@ -196,11 +196,11 @@ export default {
     };
   },
   watch: {},
-  created() {
+  async created() {
     _this = this;
     this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
-    this.GetWorkshop();
+    await this.GetWorkshop();
     this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
@@ -450,8 +450,8 @@ export default {
           this.$set(this.formSearchs[z], 'forms', x);
           this.$set(this.formSearchs[z], 'formsAll', formsAll[z]);
         });
-
-        this.getTableData(this.formSearchs[0].datas, 0);
+        this.changeStatus(this.Status1[this.labelStatus1], this.labelStatus1);
+        // this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
     },
@@ -597,7 +597,7 @@ export default {
           .map((item) => {
             return {
               label: item.OrganizeName,
-              value: item.OrganizeTypeID,
+              value: item.OrganizeID,
             };
           })
           .concat({
@@ -618,6 +618,12 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
+    },
+    changeStatus(item, index) {
+      console.log(this.Status1, '1');
+      this.labelStatus1 = index;
+      this.formSearchs[0].datas['WorkShopIDs'] = item.value;
+      this.dataSearch(0);
     },
   },
 };
