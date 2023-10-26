@@ -234,7 +234,7 @@ export default {
         },
         {
           datas: {
-            CreatedBy: this.$store.getters.userInfo.Account,
+            // CreatedBy: this.$store.getters.userInfo.Account,
           }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
@@ -294,27 +294,27 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
-    let RoleMapList = this.$store.getters.userInfo.RoleMap;
-    if (RoleMapList.length) {
-      RoleMapList.forEach((item) => {
-        if (
-          item.RoleID === 'R2305080001' ||
-          item.RoleID === 'R2306050001' ||
-          item.RoleID === 'R2309060001'
-        ) {
-          //业务经理
-          this.RoleMapStatus = true;
-          return;
-        }
-        if (item.RoleID === 'R2306050001') {
-          //业务订单明细批量删除
-          this.BatchDelete = true;
-          return;
-        }
-      });
-    }
-    this.CreatedBy =
-      this.RoleMapStatus === true ? '' : this.$store.getters.userInfo.Account;
+    // let RoleMapList = this.$store.getters.userInfo.RoleMap;
+    // if (RoleMapList.length) {
+    //   RoleMapList.forEach((item) => {
+    //     if (
+    //       item.RoleID === 'R2305080001' ||
+    //       item.RoleID === 'R2306050001' ||
+    //       item.RoleID === 'R2309060001'
+    //     ) {
+    //       //业务经理
+    //       this.RoleMapStatus = true;
+    //       return;
+    //     }
+    //     if (item.RoleID === 'R2306050001') {
+    //       //业务订单明细批量删除
+    //       this.BatchDelete = true;
+    //       return;
+    //     }
+    //   });
+    // }
+    // this.CreatedBy =
+    //   this.RoleMapStatus === true ? '' : this.$store.getters.userInfo.Account;
   },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
@@ -540,7 +540,7 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
-      form['CreatedBy'] = this.CreatedBy;
+      // form['CreatedBy'] = this.CreatedBy;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
