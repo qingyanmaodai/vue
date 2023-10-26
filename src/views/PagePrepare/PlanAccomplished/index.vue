@@ -504,9 +504,9 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
-      this.clickRow = row;
-      this.formSearchs[1].datas['SaleMan'] = row['Account'];
-      await this.dataSearch(this.selectedIndex);
+      // this.clickRow = row;
+      // this.formSearchs[1].datas['SaleMan'] = row['Account'];
+      // await this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
       console.log(tab, event);
