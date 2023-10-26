@@ -24,20 +24,20 @@
         <el-row>
           <el-col :span="12" class="flex"> </el-col>
           <el-col :span="12" class="flex_flex_end">
-            <a
+            <!-- <a
               style="color: #ec0d1f; margin-right: 30px"
               :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
               target="_blank"
               class="font_size_1"
               >【逻辑说明文档】</a
-            >
-            <a
+            > -->
+            <!-- <a
               style="color: #0960bd; margin-right: 30px"
               :href="`${apsurl}` + '/业务订单明细导入模板.xlsx'"
               target="_blank"
               class="font_size_1"
               >业务订单明细导入模板</a
-            >
+            > -->
             <!-- 下拉框 -->
             <el-select
               v-model="colorType"
@@ -251,21 +251,22 @@ export default {
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 10108 }, { ID: 10108 }],
+      sysID: [{ ID: 10116 }, { ID: 10108 }],
       colorStatus: [
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
       ],
       Status1: [
         {
-          label: '未完成',
-          value: { IsPoDetailFinish: 0 },
+          label: '待转入',
+          value: { IsPoDetailFinish: '' },
         },
         {
-          label: '已完成',
-          value: { IsPoDetailFinish: 1 },
+          label: '有变更',
+          value: { IsPoDetailFinish: '' },
         },
-        { label: '全部', value: { IsPoDetailFinish: '' } },
+        { label: '主计划', value: { IsPoDetailFinish: '' } },
+        { label: '计划调序', value: { IsPoDetailFinish: '' } },
       ],
       spread: [], //excel初始
       fileList: [],
@@ -512,13 +513,7 @@ export default {
           this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
-        this.changeStatus(
-          {
-            label: '未完成',
-            value: { IsPoDetailFinish: 0 },
-          },
-          0,
-        );
+        this.changeStatus(this.Status1[0], 0);
       } else {
         this.adminLoading = false;
         this.$message({
@@ -770,7 +765,11 @@ export default {
 
         defaultStyle.showEllipsis = true;
         // 冻结
-        sheet.frozenColumnCount(this.tableColumns[remarkTb][1].FixCount);
+        // 冻结第一列
+        if (this.tableColumns[remarkTb][0]['FixCount']) {
+          // 冻结
+          sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+        }
 
         this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
         this.spread[remarkTb].options.scrollbarMaxAlign = true;
