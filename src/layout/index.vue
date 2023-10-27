@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain, TagsView } from "./components";
-import ResizeMixin from "./mixin/ResizeHandler";
+import { Navbar, Sidebar, AppMain, TagsView } from './components';
+import ResizeMixin from './mixin/ResizeHandler';
 
 export default {
-  name: "Layout",
+  name: 'Layout',
   components: {
     Navbar,
     Sidebar,
@@ -49,21 +49,41 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === "mobile",
+        mobile: this.device === 'mobile',
       };
     },
   },
   methods: {
-    handleClickOutside() {
-      this.$store.dispatch("app/closeSideBar", { withoutAnimation: false });
+    updateMarginLeft(sidebarDiv, contentDiv, fixedHeaderDiv) {
+      const floatDivWidth = sidebarDiv.offsetWidth;
+      contentDiv.style.marginLeft = floatDivWidth + 'px';
+      fixedHeaderDiv.style.width = `calc(100% - ${floatDivWidth}px)`;
     },
+    handleClickOutside() {
+      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false });
+    },
+  },
+  mounted() {
+    const sidebarDiv = document.querySelector('.sidebar-container');
+    const contentDiv = document.querySelector('.main-container');
+    const fixedHeaderDiv = document.querySelector('.fixed-header');
+    console.log(sidebarDiv, 'sidebarDiv', contentDiv);
+    // 创建一个ResizeObserver实例来监听sidebarDiv的宽度变化
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === sidebarDiv) {
+          this.updateMarginLeft(sidebarDiv, contentDiv, fixedHeaderDiv);
+        }
+      }
+    });
+    resizeObserver.observe(sidebarDiv);
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-@import "~@/styles/variables.scss";
+@import '~@/styles/mixin.scss';
+@import '~@/styles/variables.scss';
 
 .app-wrapper {
   @include clearfix;
@@ -90,7 +110,8 @@ export default {
   top: 0;
   right: 0;
   z-index: 9;
-  width: calc(100% - #{$sideBarWidth});
+  // width: calc(100% - #{$sideBarWidth});
+  width: 100%;
   transition: width 0.28s;
 }
 

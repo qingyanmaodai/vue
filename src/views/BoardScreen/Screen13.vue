@@ -8,6 +8,61 @@
     </div>
     <div class="mainbox flex-grow overflow-hidden">
       <div class="h-full flex gap-[10px]">
+        <div class="h-full w-70/100 flex flex-col gap-[10px]">
+          <div class="panel h-full w-full">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
+              <h2>出货计划</h2>
+            </div>
+            <div
+              class="chartContent flex flex-col"
+              element-loading-background="#060765"
+            >
+              <div class="tableHead flex px-[10px] text-white w-full">
+                <div
+                  v-for="(column, index) in tableColumns[0]"
+                  :key="'tableHead' + index"
+                  class="flex"
+                  :class="
+                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                  "
+                  :style="getColumnStyle(tableColumns[0], column)"
+                >
+                  {{ column.label }}
+                </div>
+              </div>
+              <VueSeamlessScroll
+                :data="tableData[0]"
+                class="warp"
+                :class-option="{
+                  step: 0.1,
+                }"
+              >
+                <ul class="px-[10px]">
+                  <li
+                    v-for="(item, index) in tableData[0]"
+                    :key="'data' + index"
+                    class="flex"
+                  >
+                    <div
+                      v-for="(column, colIndex) in tableColumns[0]"
+                      :key="'column' + colIndex"
+                      class="truncate"
+                      :class="
+                        colIndex < tableColumns[0].length - 1
+                          ? '!mr-[10px]'
+                          : '!mr-0'
+                      "
+                      :style="getColumnStyle(tableColumns[0], column)"
+                    >
+                      {{ tableData[0][index][column.prop] }}
+                    </div>
+                  </li>
+                </ul>
+              </VueSeamlessScroll>
+            </div>
+          </div>
+        </div>
         <div class="h-full w-30/100 flex flex-col gap-[10px]">
           <div class="h-70/100 w-full flex flex-col gap-[10px]">
             <div class="panel h-50/100 w-full">
@@ -82,104 +137,6 @@
             </div>
           </div>
         </div>
-        <div class="h-full w-40/100 flex flex-col gap-[10px]">
-          <div class="panel h-full w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>出货计划</h2>
-            </div>
-            <div
-              class="chartContent flex flex-col"
-              element-loading-background="#060765"
-            >
-              <div class="tableHead flex px-[10px] text-white w-full">
-                <div
-                  v-for="(column, index) in tableColumns[0]"
-                  :key="'tableHead' + index"
-                  class="flex"
-                  :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
-                  "
-                  :style="getColumnStyle(tableColumns[0], column)"
-                >
-                  {{ column.label }}
-                </div>
-              </div>
-              <VueSeamlessScroll
-                :data="tableData[0]"
-                class="warp"
-                :class-option="{
-                  step: 0.1,
-                }"
-              >
-                <ul class="px-[10px]">
-                  <li
-                    v-for="(item, index) in tableData[0]"
-                    :key="'data' + index"
-                    class="flex"
-                  >
-                    <div
-                      v-for="(column, colIndex) in tableColumns[0]"
-                      :key="'column' + colIndex"
-                      class="truncate"
-                      :class="
-                        colIndex < tableColumns[0].length - 1
-                          ? '!mr-[10px]'
-                          : '!mr-0'
-                      "
-                      :style="getColumnStyle(tableColumns[0], column)"
-                    >
-                      {{ tableData[0][index][column.prop] }}
-                    </div>
-                  </li>
-                </ul>
-              </VueSeamlessScroll>
-            </div>
-          </div>
-        </div>
-
-        <div class="h-full w-30/100 flex flex-col gap-[10px]">
-          <div class="panel h-30/100 w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>欠料统计</h2>
-            </div>
-            <div class="chartContent">
-              <div class="h-full w-full flex justify-center">
-                <div
-                  class="w-40/100 h-full flex flex-col items-center justify-center mb-[5%]"
-                >
-                  <div class="ScreenBaseNum">64,945</div>
-                  <div class="ScreenBaseTitle">欠料总数</div>
-                  <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
-                </div>
-                <div
-                  class="w-40/100 h-full flex flex-col items-center justify-center ml-[5%]"
-                >
-                  <div class="ScreenBaseNum">462</div>
-                  <div class="ScreenBaseTitle">影响订单</div>
-                  <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel h-30/100 w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>近一周欠料趋势图</h2>
-            </div>
-            <div class="chartContent" ref="chart2"></div>
-          </div>
-
-          <div class="panel h-40/100 w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-
-              <h2>欠料原因分析</h2>
-            </div>
-            <div class="chartContent" ref="chart3"></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -195,7 +152,7 @@ import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
 import ComVxeTable from '@/components/ComVxeTable';
 export default {
-  name: 'Screen12',
+  name: 'Screen13',
   data() {
     return {
       chartHead: chartHead,
@@ -261,8 +218,6 @@ export default {
     this.chart = [
       echarts.init(this.$refs.chart0),
       echarts.init(this.$refs.chart1),
-      echarts.init(this.$refs.chart2),
-      echarts.init(this.$refs.chart3),
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
