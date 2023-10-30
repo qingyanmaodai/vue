@@ -64,8 +64,8 @@
           </div>
         </div>
         <div class="h-full w-30/100 flex flex-col gap-[10px]">
-          <div class="h-70/100 w-full flex flex-col gap-[10px]">
-            <div class="panel h-50/100 w-full">
+          <div class="h-full w-full flex flex-col gap-[10px]">
+            <div class="panel h-30/100 w-full">
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
@@ -73,7 +73,7 @@
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
-            <div class="panel h-50/100 w-full">
+            <div class="panel h-40/100 w-full">
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
@@ -81,59 +81,14 @@
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
-          </div>
 
-          <div class="panel h-30/100 w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>欠料明细</h2>
-            </div>
-            <div
-              class="chartContent flex flex-col"
-              element-loading-background="#060765"
-            >
-              <div class="tableHead flex !px-[10px] text-white w-full">
-                <div
-                  v-for="(column, index) in tableColumns[0]"
-                  :key="'tableHead' + index"
-                  class="flex"
-                  :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
-                  "
-                  :style="getColumnStyle(tableColumns[0], column)"
-                >
-                  {{ column.label }}
-                </div>
+            <div class="panel h-30/100 w-full">
+              <div class="chartHead">
+                <div class="panel-footer"></div>
+
+                <h2>计划达成排行棒</h2>
               </div>
-              <VueSeamlessScroll
-                :data="tableData[0]"
-                class="warp"
-                :class-option="{
-                  step: 0,
-                }"
-              >
-                <ul class="px-[10px]">
-                  <li
-                    v-for="(item, index) in tableData[0]"
-                    :key="'data' + index"
-                    class="flex"
-                  >
-                    <div
-                      v-for="(column, colIndex) in tableColumns[0]"
-                      :key="'column' + colIndex"
-                      class="truncate"
-                      :class="
-                        colIndex < tableColumns[0].length - 1
-                          ? 'mr-[10px]'
-                          : 'mr-0'
-                      "
-                      :style="getColumnStyle(tableColumns[0], column)"
-                    >
-                      {{ tableData[0][index][column.prop] }}
-                    </div>
-                  </li>
-                </ul>
-              </VueSeamlessScroll>
+              <div class="chartContent" ref="chart2"></div>
             </div>
           </div>
         </div>
@@ -218,6 +173,7 @@ export default {
     this.chart = [
       echarts.init(this.$refs.chart0),
       echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
@@ -290,6 +246,148 @@ export default {
       }
       this.chartOptions = [
         {
+          grid: {
+            containLabel: true,
+            bottom: fontSize(10),
+            top: fontSize(40),
+            left: fontSize(10),
+            right: fontSize(10),
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          legend: {
+            top: fontSize(0),
+            right: fontSize(10),
+            data: ['制一部', '制二部', '制三部', '制四部'],
+            // itemWidth: fontSize(10),
+            // itemHeight: fontSize(10),
+            itemGap: fontSize(10),
+            textStyle: {
+              fontSize: fontSize(18),
+              color: '#C9D2FA',
+              // padding: [0, 0, 0, fontSize(10)],
+            },
+          },
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: ['6日', '7日', '8日', '9日', '10日', '11日', '12日'],
+            axisLabel: {
+              interval: 0,
+              show: true,
+              fontSize: fontSize(18),
+              color: '#C9D2FA',
+            },
+            axisLine: {
+              show: false,
+              lineStyle: {
+                show: false,
+                color: '#F3F3F3',
+                width: 2,
+              },
+            },
+
+            axisTick: {
+              show: false,
+            },
+          },
+          yAxis: [
+            {
+              // name: '单位:万',
+              // type: 'value',
+              // nameTextStyle: {
+              //   color: '#444444',
+              // },
+              splitNumber: 2,
+              axisLabel: {
+                show: true,
+                fontSize: fontSize(18),
+                color: '#C9D2FA',
+                formatter: function (value) {
+                  // 在标签后面添加百分号
+                  return value + '%';
+                },
+              },
+              axisLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed',
+                  color: '#3E4A82',
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: '制一部',
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: fontSize(6),
+
+              // yAxisIndex: 1, // 与第二个 y 轴关联
+              itemStyle: {
+                color: '#8E35FF',
+              },
+              lineStyle: {
+                width: fontSize(4),
+              },
+              data: [100, 80, 120, 60, 90, 70, 70], // 折线图的数据
+            },
+            {
+              name: '制二部',
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: fontSize(6),
+
+              // yAxisIndex: 1, // 与第二个 y 轴关联
+              itemStyle: {
+                color: '#FFB933',
+              },
+              lineStyle: {
+                width: fontSize(4),
+              },
+              data: [60, 70, 90, 40, 50, 80, 60], // 折线图的数据
+            },
+            {
+              name: '制三部',
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: fontSize(6),
+              // yAxisIndex: 1, // 与第二个 y 轴关联
+              itemStyle: {
+                color: '#44C558',
+              },
+              lineStyle: {
+                width: fontSize(4),
+              },
+              data: [90, 70, 40, 70, 80, 65, 73], // 折线图的数据
+            },
+            {
+              name: '制四部',
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: fontSize(6),
+              // yAxisIndex: 1, // 与第二个 y 轴关联
+              itemStyle: {
+                color: '#2F8FFF',
+              },
+              lineStyle: {
+                width: fontSize(4),
+              },
+              data: [85, 81, 12, 50, 40, 40, 70], // 折线图的数据
+            },
+          ],
+        },
+        {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
@@ -309,7 +407,7 @@ export default {
               fontSize: fontSize(18),
               padding: [0, 0, 0, fontSize(10)],
             },
-            data: ['前加工', 'SMT', '注塑', '镭射'],
+            data: ['制一部', '制二部', '制三部', '制四部'],
           },
           grid: {
             containLabel: true,
@@ -356,10 +454,10 @@ export default {
                 show: false,
               },
               data: [
-                { value: '36', name: '前加工' },
-                { value: '48', name: 'SMT' },
-                { value: '31', name: '注塑' },
-                { value: '29', name: '镭射' },
+                { value: '36', name: '制一部' },
+                { value: '48', name: '制二部' },
+                { value: '31', name: '制三部' },
+                { value: '29', name: '制四部' },
               ],
             },
           ],
@@ -415,7 +513,7 @@ export default {
               axisLine: {
                 show: false,
               },
-              data: ['物料异常', '欠员', '工艺缺失', '欠料', '机械故障'],
+              data: ['H3-3', 'D2', 'D3-B', 'H6', 'A01'],
             },
             // {
             //   type: 'category',
@@ -473,208 +571,6 @@ export default {
             //     },
             //   },
             // },
-          ],
-        },
-        {
-          grid: {
-            containLabel: true,
-            bottom: fontSize(10),
-            top: fontSize(10),
-            left: fontSize(10),
-            right: fontSize(10),
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow',
-            },
-          },
-          // legend: {
-          //   top: fontSize(10),
-          //   right: fontSize(10),
-          //   data: ['负荷情况'],
-          //   itemWidth: fontSize(18),
-          //   itemHeight: fontSize(18),
-          //   itemGap: fontSize(30),
-          //   textStyle: {
-          //     fontSize: fontSize(18),
-          //     color: '#C9D2FA',
-          //     padding: [0, 0, 0, fontSize(10)],
-          //   },
-          // },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
-            data: ['6日', '7日', '8日', '9日', '10日', '11日', '12日'],
-            axisLabel: {
-              interval: 0,
-              show: true,
-              fontSize: fontSize(18),
-              color: '#C9D2FA',
-            },
-            axisLine: {
-              show: false,
-              lineStyle: {
-                show: false,
-                color: '#F3F3F3',
-                width: 2,
-              },
-            },
-
-            axisTick: {
-              show: false,
-            },
-          },
-          yAxis: [
-            {
-              // name: '单位:万',
-              // type: 'value',
-              // nameTextStyle: {
-              //   color: '#444444',
-              // },
-              splitNumber: 2,
-              axisLabel: {
-                show: true,
-                fontSize: fontSize(18),
-                color: '#C9D2FA',
-                // formatter: function (value) {
-                //   // 在标签后面添加百分号
-                //   return value + '%';
-                // },
-              },
-              axisLine: {
-                show: false,
-              },
-              axisTick: {
-                show: false,
-              },
-              splitLine: {
-                lineStyle: {
-                  type: 'dashed',
-                  color: '#3E4A82',
-                },
-              },
-            },
-          ],
-          series: [
-            {
-              name: '折线图名称',
-              type: 'line',
-              // yAxisIndex: 1, // 与第二个 y 轴关联
-              itemStyle: {
-                color: '#2F8FFF', // 设置折线颜色为黄色
-              },
-              lineStyle: {
-                width: fontSize(4),
-              },
-              data: [100, 80, 120, 60, 90, 70, 70], // 折线图的数据
-            },
-          ],
-        },
-        {
-          // title: {
-          //   text: "雷达图",
-          //   top: 10,
-          //   left: "center",
-          //   textStyle: {
-          //     fontSize: 18,
-          //     fontWeight: 400,
-          //   },
-          // },
-          textStyle: {
-            // 全局字体样式
-            color: '#C9D2FA',
-            fontSize: fontSize(14),
-          },
-          // legend: {
-          //   bottom: 0,
-          //   left: "center",
-          //   itemBorderRadius: 8,
-          //   data: [
-          //     "Chars Bosh",
-          //   ],
-          // },
-          tooltip: {
-            // 提示框组件
-            trigger: 'item', // 触发类型 可选为：'axis' | 'item' | 'none'
-            axisPointer: {
-              // 坐标轴指示器，坐标轴触发有效
-              type: 'line', // 默认为直线，可选为：'line' | 'shadow'
-              shadowStyle: {
-                color: 'rgba(204, 214, 235, 0.247059)',
-              },
-            },
-          },
-          radar: {
-            // shape: 'circle',
-            splitNumber: 3,
-            grid: {
-              left: fontSize(10),
-              right: fontSize(10),
-              bottom: fontSize(10),
-              containLabel: true,
-            },
-            splitArea: {
-              show: false,
-            },
-            splitLine: {
-              lineStyle: {
-                color: ['#254678'],
-              },
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#254678',
-              },
-            },
-            indicator: [
-              {
-                name: '欠料',
-                max: 100,
-              },
-              {
-                name: '人员不够',
-                max: 100,
-              },
-              {
-                name: '机械故障',
-                max: 100,
-              },
-              {
-                name: '模具异常',
-                max: 100,
-              },
-              {
-                name: '来料不良',
-                max: 100,
-              },
-            ],
-          },
-          series: [
-            {
-              name: '雷达图',
-              type: 'radar',
-              symbol: 'none',
-              areaStyle: {
-                color: '#31C2FF', // 调色盘颜色列表。
-                opacity: 0.4,
-              },
-              itemStyle: {
-                lineStyle: {
-                  width: 2,
-                },
-              },
-              emphasis: {
-                areaStyle: {
-                  opacity: 0.8,
-                },
-              },
-              data: [
-                {
-                  value: [50, 46, 80, 30, 60],
-                },
-              ],
-            },
           ],
         },
       ];
