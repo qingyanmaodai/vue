@@ -974,13 +974,23 @@ export default {
       this.selectionData[remarkTb] = $table.getCheckboxRecords();
       if (remarkTb === 2) {
         this.selectionData[remarkTb].forEach((x) => {
-          if (x['NewStartDate']) {
-            x['NewStartDate'] = this.$moment(x['NewStartDate'])
+          // if (x['NewStartDate']) {
+          //   x['NewStartDate'] = this.$moment(x['NewStartDate'])
+          //     .add(this.formData['AdjustDay'], 'days')
+          //     .format('YYYY-MM-DD');
+          // }
+          // if (x['NewEndDate']) {
+          //   x['NewEndDate'] = this.$moment(x['NewEndDate'])
+          //     .add(this.formData['AdjustDay'], 'days')
+          //     .format('YYYY-MM-DD');
+          // }
+          if (x['ERPStartDate']) {
+            x['NewStartDate'] = this.$moment(x['ERPStartDate'])
               .add(this.formData['AdjustDay'], 'days')
               .format('YYYY-MM-DD');
           }
-          if (x['NewEndDate']) {
-            x['NewEndDate'] = this.$moment(x['NewEndDate'])
+          if (x['ERPEndDate']) {
+            x['NewEndDate'] = this.$moment(x['ERPEndDate'])
               .add(this.formData['AdjustDay'], 'days')
               .format('YYYY-MM-DD');
           }
