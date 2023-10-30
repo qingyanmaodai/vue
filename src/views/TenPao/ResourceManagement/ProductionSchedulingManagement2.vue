@@ -1486,6 +1486,39 @@ export default {
         // );
       }
     },
+    // 释放
+    async FreedEvent(remarkTb, index, parms) {
+      this.adminLoading = false;
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      this.selectionData[remarkTb] = $table.getCheckboxRecords();
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            return x;
+          }),
+        );
+        let res = await GetSearch(newData, '/APSAPI/TPOrderToREL');
+        const { data, result, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          await this.dataSearch(remarkTb);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
     // 行内样式
     cellStyle({ row, column }) {
       let style = {}; // 创建一个空的样式对象
