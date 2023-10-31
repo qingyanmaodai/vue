@@ -67,7 +67,7 @@ export default {
     const sidebarDiv = document.querySelector('.sidebar-container');
     const contentDiv = document.querySelector('.main-container');
     const fixedHeaderDiv = document.querySelector('.fixed-header');
-    console.log(sidebarDiv, 'sidebarDiv', contentDiv);
+    // console.log(sidebarDiv, 'sidebarDiv', contentDiv);
     // 创建一个ResizeObserver实例来监听sidebarDiv的宽度变化
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {

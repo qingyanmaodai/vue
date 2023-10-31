@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i">
+      <div v-for="i in [0, 1, 2, 3]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -80,18 +80,19 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0]"
+      v-for="item in [0, 1, 2, 3]"
       :key="item"
+      v-show="labelStatus1 === item"
     >
       <ComSpreadTable
         ref="spreadsheetRef"
         :height="'100%'"
-        :tableData="tableData[0]"
-        :tableColumns="tableColumns[0]"
-        :tableLoading="tableLoading[0]"
-        :remark="0"
-        :sysID="sysID[0]['ID']"
-        :pagination="tablePagination[0]"
+        :tableData="tableData[item]"
+        :tableColumns="tableColumns[item]"
+        :tableLoading="tableLoading[item]"
+        :remark="item"
+        :sysID="sysID[item]['ID']"
+        :pagination="tablePagination[item]"
         @pageChange="pageChange"
         @pageSize="pageSize"
         @workbookInitialized="workbookInitialized"
@@ -99,7 +100,7 @@
       />
     </div>
     <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
-      <div v-for="item in [1]" :key="item">
+      <div v-for="item in [4]" :key="item">
         <ComSearch
           class="margin_bottom_10 dialog_search"
           ref="searchRef"
@@ -226,32 +227,52 @@ export default {
       formSearchs: [
         //不同标签页面的查询条件
         {
-          datas: {
-            // CreatedBy: this.CreatedBy
-          }, //查询入参
+          datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
         {
-          datas: {
-            // CreatedBy: this.$store.getters.userInfo.Account,
-          }, //查询入参
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
       ],
-      tableData: [[], []], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[], []], //表格表头列
-      tableLoading: [false, false], //每个表加载
-      isClear: [false, false],
-      hasSelect: [false, false],
-      Region: [5, 5],
+      tableData: [[], [], [], [], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], [], [], [], []], //表格表头列
+      tableLoading: [false, false, false, false, false], //每个表加载
+      isClear: [false, false, false, false, false],
+      hasSelect: [false, false, false, false, false],
+      Region: [6, 6, 6, 6, 6],
       tablePagination: [
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 10116 }, { ID: 10108 }],
+      sysID: [
+        { ID: 10116 },
+        { ID: 10116 },
+        { ID: 10075 },
+        { ID: 10116 },
+        { ID: 10108 },
+      ],
       colorStatus: [
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
@@ -551,9 +572,8 @@ export default {
           this.tableColumns[remarkTb] = Columns[0];
         }
         this.$set(this.tableLoading, remarkTb, false);
-        if (remarkTb === 0) {
-          this.setData(remarkTb);
-        }
+
+        await this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -995,12 +1015,12 @@ export default {
       cell.cellType(comboBox);
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 重置
     dataReset(remarkTb) {
@@ -1039,9 +1059,9 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas['IsPoDetailFinish'] =
+      this.formSearchs[this.labelStatus1].datas['IsPoDetailFinish'] =
         item.value['IsPoDetailFinish'];
-      this.dataSearch(0);
+      this.dataSearch(this.labelStatus1);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -1503,6 +1523,45 @@ export default {
     addPlan() {
       this.dataSearch(1);
       this.newDataDialog = true;
+    },
+    // 转入主计划
+    async ToMainPlan(remarkTb, index, parms) {
+      this.adminLoading = false;
+      // const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      // this.selectionData[remarkTb] = $table.getCheckboxRecords();
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            return x;
+          }),
+        );
+        this.$confirm(
+          '有选中' + newData.length + '行数据，是否确认转入主计划？',
+        )
+          .then(async (_) => {
+            let res = await GetSearch(newData, '/APSAPI/APSTOSalesMainPlan');
+            const { data, result, msg } = res.data;
+            if (result) {
+              this.$message({
+                message: msg,
+                type: 'success',
+                dangerouslyUseHTMLString: true,
+              });
+              await this.dataSearch(remarkTb);
+            } else {
+              this.$message({
+                message: msg,
+                type: 'error',
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          })
+          .catch((_) => {});
+      }
     },
     // 确定添加这些排程进来
     async sureAddNewData() {

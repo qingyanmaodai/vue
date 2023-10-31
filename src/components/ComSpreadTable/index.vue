@@ -142,7 +142,6 @@ export default {
   },
   mounted() {
     this.initSpread();
-    console.log(this.height, 111111);
   },
   created() {
     this.getFooterRemark();
