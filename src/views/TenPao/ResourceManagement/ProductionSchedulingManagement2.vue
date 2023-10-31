@@ -106,7 +106,7 @@
         style="overflow-x: hidden; display: flex; flex-direction: column"
       >
         <splitpanes class="default-theme">
-          <pane :size="40" class="flex flex-col bgWhite">
+          <pane :size="25" class="flex flex-col bgWhite">
             <div
               v-for="i in [1]"
               :key="i + 'head'"
@@ -152,7 +152,7 @@
               />
             </div>
           </pane>
-          <pane :size="60" class="flex flex-col bgWhite">
+          <pane :size="75" class="flex flex-col bgWhite">
             <div
               v-for="i in [2]"
               :key="i + 'head'"

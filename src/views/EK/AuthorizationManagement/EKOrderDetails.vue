@@ -269,7 +269,7 @@ export default {
       sysID: [
         { ID: 10116 },
         { ID: 10116 },
-        { ID: 10075 },
+        { ID: 10077 },
         { ID: 10116 },
         { ID: 10108 },
       ],
@@ -1562,6 +1562,26 @@ export default {
           })
           .catch((_) => {});
       }
+    },
+    // 退回
+    async backData(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请单击需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj['ElementDeleteFlag'] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
     // 确定添加这些排程进来
     async sureAddNewData() {
