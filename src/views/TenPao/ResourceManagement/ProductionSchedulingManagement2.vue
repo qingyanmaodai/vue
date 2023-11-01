@@ -1073,7 +1073,7 @@ export default {
       }
     },
     //添加产品机台
-    confirmDialog(data, remarkTb) {
+    async confirmDialog(data, remarkTb) {
       if (remarkTb === 2) {
         const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
         this.selectionData[remarkTb] = $table.getCheckboxRecords();
@@ -1114,7 +1114,23 @@ export default {
             return x;
           }),
         ).concat(this.tableData[3]);
-        this.dataSave(2, null, null, newData);
+        let res = await GetSearch(newData, '/APSAPI/SplitOrder');
+        const { data, result, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          await this.dataSearch(2);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        // this.dataSave(2, null, null, newData);
         this.colDialogVisible4 = false;
       }
     },
