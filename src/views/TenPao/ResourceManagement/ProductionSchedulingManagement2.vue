@@ -124,6 +124,7 @@
                 :Region="Region[i]"
                 :btnForm="btnForm"
                 @btnClick="btnClick"
+                :defaultResetShow="false"
               />
             </div>
             <div v-for="item in [1]" :key="item" class="flex_grow w-full">
@@ -170,6 +171,7 @@
                 :Region="Region[i]"
                 :btnForm="btnForm"
                 @btnClick="btnClick"
+                :defaultResetShow="false"
               />
             </div>
             <div class="ant-table-title w-full">
@@ -323,6 +325,67 @@
         >
       </span>
     </el-dialog>
+    <!-- 弹框-->
+    <el-dialog
+      :title="'拆分订单'"
+      class="el-dialog3"
+      :visible.sync="colDialogVisible4"
+      :width="'60%'"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
+    >
+      <!-- <div class="admin_head" ref="headRef">
+        <ComSearch
+          ref="searchRef"
+          :searchData="searchForm['datas']"
+          :searchForm="searchForm['forms']"
+          :remark="remark"
+          :btnForm="btnForm"
+          :signName="remark"
+          :Region="Region[remark]"
+          @btnClick="btnClick"
+        />
+      </div> -->
+      <div class="ant-table-title">
+        <el-row>
+          <el-col :span="24" class="flex_flex_end">
+            <el-button type="primary" size="mini" @click="addRow(3)"
+              >新增</el-button
+            >
+            <el-divider direction="vertical"></el-divider>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="admin_content flex_grow">
+        <ComVxeTable
+          ref="ComVxeTable"
+          :isToolbar="false"
+          :isEdit="true"
+          :hasSelect="false"
+          :remark="3"
+          :row-key="'RowNumber'"
+          :height="'100%'"
+          :sysID="5139"
+          :tableData="tableData[3]"
+          :tableHeader="tableColumns[3]"
+          :tableLoading="tableLoading[3]"
+          :pagination="tablePagination[3]"
+          :isClear="isClear[3]"
+          @pageChange="pageChange"
+          @pageSize="pageSize"
+          @sortChange="sortChange"
+          @selectfun="selectFun"
+          :cell-style="cellStyle"
+          :footerContent="false"
+        />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="colDialogVisible4 = false">取 消</el-button>
+        <el-button type="primary" @click="confirmDialog(null, 3)"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -343,6 +406,7 @@ GC.Spread.Common.CultureManager.culture('zh-cn');
 import { mapState } from 'vuex';
 import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
 import { HeaderCheckBoxCellType } from '@/static/data.js';
+import DialogOptTable from '@/components/Dialog/dialogOptTable';
 import {
   GetHeader,
   GetSearchData,
@@ -362,6 +426,7 @@ export default {
     Pane,
     DialogTable,
     ComSpreadTable,
+    DialogOptTable,
   },
   data() {
     return {
@@ -427,7 +492,7 @@ export default {
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
       ],
-      Region: [6, 6, 6],
+      Region: [6, 6, 6, 6],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       tagRemark: 0,
@@ -447,11 +512,12 @@ export default {
       labelStatus1: 0,
       labelStatus1Row: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 14197 }, { ID: 10108 }, { ID: 5139 }],
+      sysID: [{ ID: 14197 }, { ID: 10108 }, { ID: 5139 }, { ID: 5139 }],
       isEdit: [false, false, true, false, false, false, false],
       selectedIndex: '1',
       colDialogVisible2: false,
       colDialogVisible3: false,
+      colDialogVisible4: false,
       colDialogVisible5: false,
       colDialogVisible6: false,
       addNum: 1,
@@ -467,7 +533,7 @@ export default {
       DVBatch: null,
       OrderNo: '',
       OrderNoValue: '',
-      OrderNos: [[], [], []],
+      OrderNos: [[], [], [], []],
     };
   },
   watch: {},
@@ -866,33 +932,103 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
-      if (result) {
-        // 获取每个表头
-        Columns.some((m, i) => {
-          m.forEach((n, index) => {
-            // 进行验证
-            this.verifyDta(n);
-            if (n.childrens && n.children.length != 0) {
-              n.childrens.forEach((x) => {
-                this.verifyDta(x);
-              });
-            }
-            this.$set(this.tableColumns, remarkTb, m);
-          });
+      if (remarkTb === 3) {
+        this.tablePagination[3].pageSize = 0;
+        this.$set(this.tableLoading, 3, true);
+        this.$set(this.tableColumns, 3, [
+          {
+            label: '行号',
+            prop: 'seq',
+            width: '60',
+            IsEdit: false,
+            fix: 'left',
+            align: 'left',
+            ControlType: 'textbox',
+          },
+          {
+            label: '新数量',
+            prop: 'NewQty1',
+            width: '100',
+            IsEdit: true,
+            fix: 'left',
+            align: 'left',
+            ControlType: 'textbox',
+            component: { type: 'input', inputType: 'text' },
+          },
+          {
+            label: '原开始时间',
+            prop: 'ERPStartDate',
+            width: '100',
+            IsEdit: true,
+            fix: 'left',
+            align: 'left',
+            ControlType: 'textbox',
+            component: { type: 'date' },
+          },
+          {
+            label: '原结束时间',
+            prop: 'ERPEndDate',
+            width: '100',
+            IsEdit: true,
+            fix: 'left',
+            align: 'left',
+            ControlType: 'textbox',
+            component: { type: 'date' },
+          },
+          {
+            label: '卸货点',
+            prop: 'DefaultLineName',
+            width: '100',
+            IsEdit: true,
+            fix: 'left',
+            align: 'left',
+            ControlType: 'textbox',
+            component: { type: 'input', inputType: 'text' },
+          },
+        ]);
+        // 创建一个包含十个空对象的数组
+        let arrayObjects = Array.from({ length: 10 }, (_, index) => ({
+          seq: index + 1,
+        }));
+        let newArray = arrayObjects.map((obj, index) => {
+          obj.seq = index + 1; // 设置seq属性从1到10
+          obj['ERPStartDate'] = this.selectionData[2][0]['ERPStartDate'];
+          obj['ERPEndDate'] = this.selectionData[2][0]['ERPEndDate'];
+          obj['DefaultLineName'] = this.selectionData[2][0]['DefaultLineName'];
+          obj['update'] = true;
+          obj['dicID'] = 5139;
+          obj['IsNew'] = 1;
+          return obj;
         });
-        this.$set(this.tableData, remarkTb, data);
-        // if (remarkTb === 1) {
-        //   this.$set(this.tableData, 2, []);
-        // }
-        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        setTimeout(() => {
+          this.$set(this.tableData, 3, newArray);
+        });
       } else {
-        this.$message({
-          message: msg,
-          type: 'error',
-          dangerouslyUseHTMLString: true,
-        });
+        let res = await GetSearchData(form);
+        const { result, data, count, msg, Columns } = res.data;
+        if (result) {
+          // 获取每个表头
+          Columns.some((m, i) => {
+            m.forEach((n, index) => {
+              // 进行验证
+              this.verifyDta(n);
+              if (n.childrens && n.children.length != 0) {
+                n.childrens.forEach((x) => {
+                  this.verifyDta(x);
+                });
+              }
+              this.$set(this.tableColumns, remarkTb, m);
+            });
+          });
+          this.$set(this.tableData, remarkTb, data);
+          this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
@@ -936,54 +1072,12 @@ export default {
         this.colDialogVisible6 = true;
       }
     },
-    // 增行
-    addRow(remarkTb) {
-      if (!this.addNum) {
-        this.$message.error('请输入需要添加的行数!');
-        return;
-      }
-      // 下拉数据是需要获取数据源
-      for (let x = 0; x < this.addNum; x++) {
-        let obj = {
-          dicID: this.sysID[remarkTb].ID,
-          rowNum: _.uniqueId('rowNum_'),
-        };
-        this.tableColumns[remarkTb].map((item) => {
-          obj[item.prop] = null;
-          obj['update'] = true;
-          if (item.prop === 'Status') {
-            obj[item.prop] = 1;
-          }
-          for (let key in this.DataSourceList[remarkTb]) {
-            if (item.DataSourceName === key) {
-              obj[key] = this.DataSourceList[remarkTb][key];
-            }
-          }
-        });
-
-        console.log('this.addNum', this.addNum);
-
-        this.tableData[remarkTb].unshift(obj);
-      }
-
-      console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
-    },
     //添加产品机台
     confirmDialog(data, remarkTb) {
-      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      this.selectionData[remarkTb] = $table.getCheckboxRecords();
       if (remarkTb === 2) {
+        const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+        this.selectionData[remarkTb] = $table.getCheckboxRecords();
         this.selectionData[remarkTb].forEach((x) => {
-          // if (x['NewStartDate']) {
-          //   x['NewStartDate'] = this.$moment(x['NewStartDate'])
-          //     .add(this.formData['AdjustDay'], 'days')
-          //     .format('YYYY-MM-DD');
-          // }
-          // if (x['NewEndDate']) {
-          //   x['NewEndDate'] = this.$moment(x['NewEndDate'])
-          //     .add(this.formData['AdjustDay'], 'days')
-          //     .format('YYYY-MM-DD');
-          // }
           if (x['ERPStartDate']) {
             x['NewStartDate'] = this.$moment(x['ERPStartDate'])
               .add(this.formData['AdjustDay'], 'days')
@@ -996,6 +1090,32 @@ export default {
           }
         });
         this.colDialogVisible3 = false;
+      }
+      if (remarkTb === 3) {
+        const totalNewQty = this.tableData[3].reduce(
+          (total, obj) =>
+            Number(obj.NewQty1) ? total + Number(obj.NewQty1) : total,
+          0,
+        );
+        console.log(
+          totalNewQty,
+          Number(this.selectionData[2][0]['Qty']),
+          'totalNewQty',
+        );
+
+        if (totalNewQty >= Number(this.selectionData[2][0]['Qty'])) {
+          this.$message.error('拆分数量大于或者等于原数量');
+          return;
+        }
+        let newData = _.cloneDeep(
+          this.selectionData[2].map((x) => {
+            x['IsNew'] = 0;
+            x['NewQty1'] = Number(x['Qty']) - totalNewQty;
+            return x;
+          }),
+        ).concat(this.tableData[3]);
+        this.dataSave(2, null, null, newData);
+        this.colDialogVisible4 = false;
       }
     },
     // 删除
@@ -1496,6 +1616,17 @@ export default {
         // );
       }
     },
+    //拆单
+    async splitOrder(remarkTb, index, parms) {
+      if (remarkTb === 2) {
+        if (this.selectionData[2].length !== 1) {
+          this.$message.error('请选择一条数据进行操作');
+        } else {
+          await this.dataSearch(3);
+          this.colDialogVisible4 = true;
+        }
+      }
+    },
     // 释放
     async FreedEvent(remarkTb, index, parms) {
       this.adminLoading = false;
@@ -1514,10 +1645,10 @@ export default {
         let res = await GetSearch(newData, '/APSAPI/TPOrderToREL');
         const { data, result, msg } = res.data;
         if (result) {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
+          this.$alert(msg, '提示', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true, // 使用这个选项
+            callback: (action) => {},
           });
           await this.dataSearch(remarkTb);
         } else {
@@ -1546,6 +1677,40 @@ export default {
         style.backgroundColor = row['BColors'][key]; // 设置背景颜色
       }
       return style; // 返回样式对象
+    },
+    // 增行
+    addRow(remarkTb) {
+      // 获取修改记录
+      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < 1; x++) {
+        let obj = {
+          dicID: this.sysID[3].ID,
+          rowNum: _.uniqueId('rowNum_'),
+          DefaultLineName: this.selectionData[2][0]['DefaultLineName'],
+          ERPEndDate: this.selectionData[2][0]['ERPEndDate'],
+          ERPStartDate: this.selectionData[2][0]['ERPStartDate'],
+          update: true,
+          dicID: 5139,
+          IsNew: 1,
+          seq: this.tableData[remarkTb].length + 1,
+        };
+        console.log(obj, 'obj');
+        this.tableColumns[remarkTb].map((item) => {
+          // obj[item.prop] = null;
+          if (item.prop === 'Status') {
+            obj[item.prop] = 1;
+          }
+          // for (let key in this.DataSourceList[remarkTb]) {
+          //   if (item.DataSourceName === key) {
+          //     obj[key] = this.DataSourceList[remarkTb][key];
+          //   }
+          // }
+        });
+        this.tableData[remarkTb].push(obj);
+        // $table.insertAt(obj, -1);
+      }
+      console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
     },
     // 行内样式
     cellStyle0({ row, column }) {
@@ -1611,6 +1776,19 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  }
+}
+::v-deep .el-dialog3 {
+  .el-dialog {
+    margin-top: 10vh !important;
+    height: 80vh !important;
+    .el-dialog__body {
+      padding: 2px !important;
+      flex-grow: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
   }
 }

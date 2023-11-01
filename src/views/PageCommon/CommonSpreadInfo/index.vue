@@ -233,6 +233,11 @@ export default {
     });
   },
   methods: {
+    activated() {
+      if (this.spread[this.tagRemark]) {
+        this.spread[this.tagRemark].refresh();
+      }
+    },
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
