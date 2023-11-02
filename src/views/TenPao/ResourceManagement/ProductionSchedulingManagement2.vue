@@ -346,11 +346,17 @@
           @btnClick="btnClick"
         />
       </div> -->
-      <div class="ant-table-title">
+      <div class="ant-table-title pd-0-6">
         <el-row>
-          <el-col :span="24" class="flex_flex_end">
+          <el-col :span="6" class="flex"> 生产订单:{{ OOrderNo }} </el-col>
+          <el-col :span="6" class="flex"> 原数量:{{ OQty }} </el-col>
+          <el-col :span="6" class="flex"> 新数量:{{ ONewQty }} </el-col>
+          <el-col :span="6" class="flex_flex_end">
             <el-button type="primary" size="mini" @click="addRow(3)"
               >新增</el-button
+            >
+            <el-button type="danger" size="mini" @click="deleteRow(3)"
+              >删除</el-button
             >
             <el-divider direction="vertical"></el-divider>
           </el-col>
@@ -361,9 +367,9 @@
           ref="ComVxeTable"
           :isToolbar="false"
           :isEdit="true"
-          :hasSelect="false"
+          :hasSelect="true"
           :remark="3"
-          :row-key="'RowNumber'"
+          :rowKey="'RowNumber'"
           :height="'100%'"
           :sysID="5139"
           :tableData="tableData[3]"
@@ -515,6 +521,9 @@ export default {
       sysID: [{ ID: 14197 }, { ID: 10108 }, { ID: 5139 }, { ID: 5139 }],
       isEdit: [false, false, true, false, false, false, false],
       selectedIndex: '1',
+      OOrderNo: false,
+      OQty: false,
+      // ONewQty: false,
       colDialogVisible2: false,
       colDialogVisible3: false,
       colDialogVisible4: false,
@@ -588,6 +597,11 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+    ONewQty: function () {
+      return this.tableData[3].reduce((total, obj) => {
+        return Number(obj.NewQty1) ? total + Number(obj.NewQty1) : total;
+      }, 0);
+    },
   },
   async mounted() {
     let res = await GetSearch(
@@ -986,17 +1000,15 @@ export default {
             component: { type: 'input', inputType: 'text' },
           },
         ]);
+        let arrayObjects = _.cloneDeep(this.selectionData[2]);
         // 创建一个包含十个空对象的数组
-        let arrayObjects = Array.from({ length: 10 }, (_, index) => ({
-          seq: index + 1,
-        }));
+        // let arrayObjects = Array.from({ length: 10 }, (_, index) => ({
+        //   seq: index + 1,
+        // }));
         let newArray = arrayObjects.map((obj, index) => {
           obj.seq = index + 1; // 设置seq属性从1到10
-          obj['ERPStartDate'] = this.selectionData[2][0]['ERPStartDate'];
-          obj['ERPEndDate'] = this.selectionData[2][0]['ERPEndDate'];
-          obj['DefaultLineName'] = this.selectionData[2][0]['DefaultLineName'];
-          obj['update'] = true;
-          obj['dicID'] = 5139;
+          obj.isChecked = false;
+          obj.NewQty1 = 0;
           obj['IsNew'] = 1;
           return obj;
         });
@@ -1097,14 +1109,16 @@ export default {
             Number(obj.NewQty1) ? total + Number(obj.NewQty1) : total,
           0,
         );
-        console.log(
-          totalNewQty,
-          Number(this.selectionData[2][0]['Qty']),
-          'totalNewQty',
-        );
+        const error = this.tableData[3].some((obj) => {
+          return !obj['NewQty1'];
+        });
 
         if (totalNewQty >= Number(this.selectionData[2][0]['Qty'])) {
           this.$message.error('拆分数量大于或者等于原数量');
+          return;
+        }
+        if (error) {
+          this.$message.error('订单中不含有新数量');
           return;
         }
         let newData = _.cloneDeep(
@@ -1130,7 +1144,6 @@ export default {
             dangerouslyUseHTMLString: true,
           });
         }
-        // this.dataSave(2, null, null, newData);
         this.colDialogVisible4 = false;
       }
     },
@@ -1639,6 +1652,9 @@ export default {
           this.$message.error('请选择一条数据进行操作');
         } else {
           await this.dataSearch(3);
+          this.OOrderNo = this.selectionData[2][0]['OrderNo'];
+          this.OQty = this.selectionData[2][0]['Qty'];
+          this.ONewQty = 0;
           this.colDialogVisible4 = true;
         }
       }
@@ -1696,37 +1712,46 @@ export default {
     },
     // 增行
     addRow(remarkTb) {
-      // 获取修改记录
-      const $table = this.$refs.ComVxeTable.$refs.vxeTable;
-      // 下拉数据是需要获取数据源
-      for (let x = 0; x < 1; x++) {
-        let obj = {
-          dicID: this.sysID[3].ID,
-          rowNum: _.uniqueId('rowNum_'),
-          DefaultLineName: this.selectionData[2][0]['DefaultLineName'],
-          ERPEndDate: this.selectionData[2][0]['ERPEndDate'],
-          ERPStartDate: this.selectionData[2][0]['ERPStartDate'],
-          update: true,
-          dicID: 5139,
-          IsNew: 1,
-          seq: this.tableData[remarkTb].length + 1,
-        };
-        console.log(obj, 'obj');
-        this.tableColumns[remarkTb].map((item) => {
-          // obj[item.prop] = null;
-          if (item.prop === 'Status') {
-            obj[item.prop] = 1;
-          }
-          // for (let key in this.DataSourceList[remarkTb]) {
-          //   if (item.DataSourceName === key) {
-          //     obj[key] = this.DataSourceList[remarkTb][key];
-          //   }
-          // }
-        });
-        this.tableData[remarkTb].push(obj);
-        // $table.insertAt(obj, -1);
+      if (remarkTb === 3) {
+        // 获取修改记录
+        const $table = this.$refs.ComVxeTable.$refs.vxeTable;
+        // 下拉数据是需要获取数据源
+        for (let x = 0; x < 1; x++) {
+          let obj = _.cloneDeep(this.selectionData[2][0]);
+          obj['IsNew'] = 1;
+          obj['RowNumber'] = _.uniqueId('RowNumber');
+          obj['seq'] = this.tableData[remarkTb].length + 1;
+          obj['isChecked'] = false;
+          obj['NewQty1'] = 0;
+          this.tableColumns[remarkTb].map((item) => {
+            // obj[item.prop] = null;
+            if (item.prop === 'Status') {
+              obj[item.prop] = 1;
+            }
+            // for (let key in this.DataSourceList[remarkTb]) {
+            //   if (item.DataSourceName === key) {
+            //     obj[key] = this.DataSourceList[remarkTb][key];
+            //   }
+            // }
+          });
+          this.tableData[remarkTb].push(obj);
+          // $table.insertAt(obj, -1);
+        }
       }
-      console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
+    },
+    deleteRow(remarkTb) {
+      if (remarkTb === 3) {
+        // 遍历this.tableData[3]中的数据对象
+        for (let i = this.tableData[3].length - 1; i >= 0; i--) {
+          const dataObject = this.tableData[3][i];
+
+          // 检查isChecked属性是否为true
+          if (dataObject.isChecked === true) {
+            // 从this.tableData[3]中移除该数据对象
+            this.tableData[3].splice(i, 1);
+          }
+        }
+      }
     },
     // 行内样式
     cellStyle0({ row, column }) {
