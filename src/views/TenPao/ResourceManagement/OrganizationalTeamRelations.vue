@@ -175,18 +175,6 @@
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
     ></DialogOptTable>
-    <!-- <DialogTable
-      title="添加产品"
-      :tableDialog="colDialogVisible4"
-      :sysID="sysID[4]['ID']"
-      width="80%"
-      :hasSelect="true"
-      @closeDialog="colDialogVisible4 = false"
-      :searchForm="formSearchs[4]"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      @confirmDialog="confirmDialog"
-    ></DialogTable> -->
   </div>
 </template>
 
@@ -223,7 +211,6 @@ export default {
       selectionData: [[], [], []],
       title: this.$route.meta.title,
       includeFields: [[], [], []],
-      colDialogVisible2: false,
       formSearchs: [
         {
           datas: {},
@@ -232,34 +219,29 @@ export default {
           formsAll: [],
         },
         {
-          datas: {
-            IsConfig: '是',
-          },
+          datas: {},
           forms: [],
           required: [], //获取必填项
           formsAll: [],
         },
         {
-          datas: {
-            IsConfig: '否',
-          },
+          datas: {},
           forms: [],
           required: [], //获取必填项
           formsAll: [],
         },
       ],
       btnForm: [],
-      Region: [2, 1, 1, 6],
-      tableData: [[], [], []],
-      tableColumns: [[], [], []],
-      tableLoading: [false, false, false],
-      isClear: [false, false, false],
+      Region: [6, 6, 6, 6],
+      tableData: [[], [], [], []],
+      tableColumns: [[], [], [], []],
+      tableLoading: [false, false, false, false],
+      isClear: [false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
-      height: '707px',
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
@@ -269,10 +251,11 @@ export default {
         { label: '全部', value: '' },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 1182 }, { ID: 11162 }, { ID: 11162 }],
+      sysID: [{ ID: 15208 }, { ID: 15207 }, { ID: 11162 }],
       isEdit: [false, false, false],
       userInfo: {},
       selectedIndex: '1',
+      colDialogVisible2: false,
       colDialogVisible3: false,
       colDialogVisible4: false,
       clickRow: null,
@@ -292,11 +275,7 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() {
-    // setTimeout(() => {
-    //   this.setHeight();
-    // }, 600);
-  },
+  mounted() {},
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
@@ -313,16 +292,6 @@ export default {
           }
         });
       this.$set(this, 'btnForm', routeBtn);
-    },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + 'px';
-      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -404,22 +373,12 @@ export default {
         this.$message.error('请单击需要操作的数据！');
         return;
       } else {
-        if (remarkTb === 1) {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x['ProcessID'] = '';
-              x['ProcessName'] = '';
-              return x;
-            }),
-          );
-        } else {
-          newData = _.cloneDeep(
-            this.selectionData[remarkTb].map((x) => {
-              x['ElementDeleteFlag'] = 1;
-              return x;
-            }),
-          );
-        }
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x['ElementDeleteFlag'] = 1;
+            return x;
+          }),
+        );
       }
       this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
@@ -439,52 +398,8 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      // const sheet = this.spread[remarkTb]?.getActiveSheet();
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      // if (sheet && sheet.isEditing()) {
-      //   sheet.endEdit();
-      // }
-      // if (remarkTb === 1) {
-      //   let newData1 = this.linkTableData.filter(
-      //     (x) =>
-      //       !this.selectionData[1].some(
-      //         (y) => y.ProcessChildID === x.ProcessChildID
-      //       )
-      //   );
-      //   console.log(this.linkTableData, this.selectionData[1]);
-      //   newData1.forEach((newDataItem) => {
-      //     const matchingRow = this.tableData[1].find(
-      //       (tableDataRow) =>
-      //         tableDataRow.ProcessChildID === newDataItem.ProcessChildID
-      //     );
-      //     if (matchingRow) {
-      //       matchingRow.ProcessName = null;
-      //       matchingRow.ProcessID = null;
-      //     }
-      //   });
-      //   console.log(newData1, "newData1");
-      //   let newData2 = this.selectionData[1].filter(
-      //     (c) =>
-      //       !this.linkTableData.some(
-      //         (z) => c.ProcessChildID == z.ProcessChildID
-      //       )
-      //   );
-      //   newData2.forEach((newDataItem) => {
-      //     const matchingRow = this.tableData[1].find(
-      //       (tableDataRow) =>
-      //         tableDataRow.ProcessChildID === newDataItem.ProcessChildID
-      //     );
-      //     if (matchingRow) {
-      //       matchingRow.ProcessName = this.clickRow["ProcessName"];
-      //       matchingRow.ProcessID = this.clickRow["ProcessID"];
-      //     }
-      //   });
-      //   console.log(newData2, "newData2");
-
-      //   // newData = [].concat(newData1, newData2);
-      // }
-      console.log(newData, 'newData');
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -519,7 +434,6 @@ export default {
         }
       }
       let res = await SaveData(changeRecords);
-      // let res = await GetSearch(updateRecords, "/APSAPI/SaveData10093");
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -610,17 +524,9 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        // if (remarkTb === 1) {
-        //   data.forEach((item) => {
-        //     if (item["ProcessID"] === this.clickRow["ProcessID"]) {
-        //       // item["isChecked"] = true;
-        //       this.$set(item, "isChecked", true);
-        //     }
-        //   });
-        //   this.linkTableData = data.filter((item) => {
-        //     return item["isChecked"];
-        //   });
-        // }
+        if (remarkTb === 0) {
+          this.$set(this.tableData, 1, []);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
@@ -651,7 +557,7 @@ export default {
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
       if (remarkTb === 0) {
-        this.formSearchs[1].datas['ProcessID'] = row['ProcessID'];
+        this.formSearchs[1].datas['OrganizeID'] = row['OrganizeID'];
       }
       await this.dataSearch(Number(this.selectedIndex));
     },
@@ -668,24 +574,6 @@ export default {
       // if (index === 2) {
       //   this.colDialogVisible4 = true;
       // }
-    },
-    // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == 'IsCompleteInspect') {
-        if (row.IsCompleteInspect == '未开始') {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else if (row.IsCompleteInspect == '进行中') {
-          return {
-            backgroundColor: '#fdfd8f',
-          };
-        } else if (row.IsCompleteInspect == '已完成') {
-          return {
-            backgroundColor: '#9fff9f',
-          };
-        }
-      }
     },
     // 增行
     addRow(remarkTb) {
@@ -724,22 +612,6 @@ export default {
         }
         this.colDialogVisible2 = true;
         this.dataSearch(2);
-      }
-    },
-    // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == 'OrderNo') {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: '#9fff9f',
-            };
-          }
-        }
       }
     },
   },
