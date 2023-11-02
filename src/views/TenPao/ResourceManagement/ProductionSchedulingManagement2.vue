@@ -348,9 +348,9 @@
       </div> -->
       <div class="ant-table-title pd-0-6">
         <el-row>
-          <el-col :span="6" class="flex"> 生产订单:{{ OOrderNo }} </el-col>
-          <el-col :span="6" class="flex"> 原数量:{{ OQty }} </el-col>
-          <el-col :span="6" class="flex"> 新数量:{{ ONewQty }} </el-col>
+          <el-col :span="6" class="flex"> 生产订单: {{ OOrderNo }} </el-col>
+          <el-col :span="6" class="flex"> 原数量: {{ OQty }} </el-col>
+          <el-col :span="6" class="flex"> 新数量: {{ ONewQty }} </el-col>
           <el-col :span="6" class="flex_flex_end">
             <el-button type="primary" size="mini" @click="addRow(3)"
               >新增</el-button
@@ -598,9 +598,12 @@ export default {
       userInfo: (state) => state.user.userInfo,
     }),
     ONewQty: function () {
-      return this.tableData[3].reduce((total, obj) => {
-        return Number(obj.NewQty1) ? total + Number(obj.NewQty1) : total;
-      }, 0);
+      return (
+        this.OQty -
+        this.tableData[3].reduce((total, obj) => {
+          return Number(obj.NewQty1) ? total + Number(obj.NewQty1) : total;
+        }, 0)
+      );
     },
   },
   async mounted() {
@@ -1001,10 +1004,6 @@ export default {
           },
         ]);
         let arrayObjects = _.cloneDeep(this.selectionData[2]);
-        // 创建一个包含十个空对象的数组
-        // let arrayObjects = Array.from({ length: 10 }, (_, index) => ({
-        //   seq: index + 1,
-        // }));
         let newArray = arrayObjects.map((obj, index) => {
           obj.seq = index + 1; // 设置seq属性从1到10
           obj.isChecked = false;
@@ -1128,6 +1127,7 @@ export default {
             return x;
           }),
         ).concat(this.tableData[3]);
+        this.adminLoading = true;
         let res = await GetSearch(newData, '/APSAPI/SplitOrder');
         const { data, result, msg } = res.data;
         if (result) {
@@ -1144,6 +1144,7 @@ export default {
             dangerouslyUseHTMLString: true,
           });
         }
+        this.adminLoading = false;
         this.colDialogVisible4 = false;
       }
     },
@@ -1719,7 +1720,7 @@ export default {
         for (let x = 0; x < 1; x++) {
           let obj = _.cloneDeep(this.selectionData[2][0]);
           obj['IsNew'] = 1;
-          obj['RowNumber'] = _.uniqueId('RowNumber');
+          obj['_X_ROW_KEY'] = _.uniqueId('row__');
           obj['seq'] = this.tableData[remarkTb].length + 1;
           obj['isChecked'] = false;
           obj['NewQty1'] = 0;
@@ -1737,6 +1738,7 @@ export default {
           this.tableData[remarkTb].push(obj);
           // $table.insertAt(obj, -1);
         }
+        console.log(this.tableData[remarkTb], 'this.tableData[remarkTb]');
       }
     },
     deleteRow(remarkTb) {
