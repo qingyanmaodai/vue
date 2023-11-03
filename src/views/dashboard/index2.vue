@@ -592,7 +592,13 @@ export default {
   async mounted() {
     // var style = window.getComputedStyle("echartBody");
     //初始化图表;
-
+    this.chart = [
+      echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
+      echarts.init(this.$refs.chart3),
+      echarts.init(this.$refs.chart4),
+      echarts.init(this.$refs.chart5),
+    ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);

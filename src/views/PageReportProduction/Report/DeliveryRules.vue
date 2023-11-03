@@ -27,6 +27,7 @@
                 v-model.trim="addNum"
                 :min="1"
                 :max="100"
+                size="small"
                 :step="10"
                 placeholder="请输入"
               ></el-input-number>
@@ -74,17 +75,17 @@
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import ComSearch from "@/components/ComSearch";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
-import { mapState } from "vuex";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '@grapecity/spread-sheets/js/zh.js';
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import ComSearch from '@/components/ComSearch';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
+import { mapState } from 'vuex';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
 export default {
-  name: "DeliveryRules",
+  name: 'DeliveryRules',
   components: {
     ComSearch,
   },
@@ -93,37 +94,37 @@ export default {
       addNum: 1,
       depList: [],
       title: this.$route.meta.title, //表名
-      height: "740px",
+      height: '740px',
       adminLoading: false, //加载状态
       tagRemark: 0, //当前表下标
       btnForm: [], //拥有的按钮权限
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
+          ButtonCode: 'save',
+          BtnName: '保存',
           isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'dataSave',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
         },
         {
-          ButtonCode: "save",
-          BtnName: "新增",
+          ButtonCode: 'save',
+          BtnName: '新增',
           isLoading: false,
-          Methods: "addRow",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'addRow',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
+          ButtonCode: 'delete',
+          BtnName: '删除',
           isLoading: false,
-          Methods: "deleteRow",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'deleteRow',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
         },
       ],
       formSearchs: [
@@ -143,8 +144,8 @@ export default {
       ],
       sysID: [{ ID: 8992 }],
       spread: null, //excel初始
-      checkBoxCellTypeRuleType: "",
-      checkBoxCellTypeSuplier: "",
+      checkBoxCellTypeRuleType: '',
+      checkBoxCellTypeSuplier: '',
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       headerList: [],
       selectionData: [[]],
@@ -192,13 +193,13 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 跳转至属性配置
     toPageSetting(id) {
       this.$router.push({
-        name: "FieldInfo",
+        name: 'FieldInfo',
         params: { ID: id },
       });
     },
@@ -216,7 +217,7 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
+      this.$set(this, 'btnForm', newBtn);
     },
     // 获取表头
     async getTableHeader() {
@@ -230,7 +231,7 @@ export default {
           this.$set(this.tableColumns, i, m);
           m.forEach((y) => {
             // 获取表头需要下拉配置的项
-            if (y.ControlType == "combobox" && y.isEdit && y.DataSourceID) {
+            if (y.ControlType == 'combobox' && y.isEdit && y.DataSourceID) {
               this.dataSourceDate = {
                 ...this.dataSourceDate,
                 ...{ [y.prop]: [] },
@@ -240,12 +241,12 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
             // 通过表头对应获取数据源
             for (let obj in this.dataSourceDate) {
@@ -260,7 +261,7 @@ export default {
               }
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
           this.getTableData(this.formSearchs[z].datas, z);
         });
         this.adminLoading = false;
@@ -268,7 +269,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -277,18 +278,18 @@ export default {
     async getTableData(params, index) {
       this.tagRemark = index;
       this.$set(this.tableLoading, index, true);
-      params["rows"] = this.tablePagination[index].pageSize;
-      params["page"] = this.tablePagination[index].pageIndex;
+      params['rows'] = this.tablePagination[index].pageSize;
+      params['page'] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, index, data);
-        this.$set(this.tablePagination[index], "pageTotal", count);
+        this.$set(this.tablePagination[index], 'pageTotal', count);
         this.setData();
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -305,10 +306,10 @@ export default {
         let cellIndex = 0;
         let colInfos = [];
         this.tableColumns[this.tagRemark].forEach((x) => {
-          if (x.ControlType == "combobox" && x.isEdit) {
+          if (x.ControlType == 'combobox' && x.isEdit) {
             var cellType = new GC.Spread.Sheets.CellTypes.ComboBox();
             cellType.editorValueType(
-              GC.Spread.Sheets.CellTypes.EditorValueType.value
+              GC.Spread.Sheets.CellTypes.EditorValueType.value,
             );
             cellType.items(this.dataSourceDate[x.prop]);
             cellType.editable(true);
@@ -319,12 +320,12 @@ export default {
               cellType: cellType,
               size: parseInt(x.width),
             });
-          } else if (x.DataType == "varchar" || x.DataType == "nvarchar") {
+          } else if (x.DataType == 'varchar' || x.DataType == 'nvarchar') {
             colInfos.push({
               name: x.prop,
               displayName: x.label,
               size: parseInt(x.width),
-              formatter: "@", //类型为字符串时转为字符串，以免数字开头为0被清情况
+              formatter: '@', //类型为字符串时转为字符串，以免数字开头为0被清情况
             });
           } else {
             colInfos.push({
@@ -341,7 +342,7 @@ export default {
         // 参数4 结束列
         var cellrange = new GC.Spread.Sheets.Range(-1, -1, -1, cellIndex);
         var hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange
+          cellrange,
         );
         sheet.rowFilter(hideRowFilter);
 
@@ -358,12 +359,12 @@ export default {
           -1,
           1,
           -1,
-          GC.Spread.Sheets.SheetArea.colHeader
+          GC.Spread.Sheets.SheetArea.colHeader,
         );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.foreColor('000000d9');
+        colHeaderStyle.backColor('#f3f3f3');
         colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif',
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
@@ -371,23 +372,23 @@ export default {
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport
+          GC.Spread.Sheets.SheetArea.viewport,
         );
 
         sheet.setCellType(
           0,
           0,
           new HeaderCheckBoxCellType(),
-          GCsheets.SheetArea.colHeader
+          GCsheets.SheetArea.colHeader,
         );
         let checkbox = {
-          name: "isChecked",
-          displayName: "选择",
+          name: 'isChecked',
+          displayName: '选择',
           cellType: new GC.Spread.Sheets.CellTypes.CheckBox(),
           size: 100,
         };
@@ -397,7 +398,7 @@ export default {
 
         var insertRowsCopyStyle = {
           canUndo: true,
-          name: "insertRowsCopyStyle",
+          name: 'insertRowsCopyStyle',
           execute: function (context, options, isUndo) {
             var Commands = GC.Spread.Sheets.Commands;
             if (isUndo) {
@@ -416,12 +417,12 @@ export default {
                   0,
                   _this.sheetSelectRows.length,
                   sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.all
+                  GC.Spread.Sheets.CopyToOptions.all,
                 );
 
                 sheet.deleteRows(
                   _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                  _this.sheetSelectObj.count
+                  _this.sheetSelectObj.count,
                 );
               } else {
                 //从上面往下面插入
@@ -432,15 +433,15 @@ export default {
                   0,
                   _this.sheetSelectRows.length,
                   sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.all
+                  GC.Spread.Sheets.CopyToOptions.all,
                 );
                 sheet.deleteRows(
                   _this.sheetSelectObj.start,
-                  _this.sheetSelectObj.count
+                  _this.sheetSelectObj.count,
                 );
               }
               let count = sheet.getRowCount(
-                GC.Spread.Sheets.SheetArea.viewport
+                GC.Spread.Sheets.SheetArea.viewport,
               );
 
               let lineID = _this.sheetSelectRows[0][lineIDIndex];
@@ -469,7 +470,7 @@ export default {
         };
         this.spread
           .commandManager()
-          .register("insertRowsCopyStyle", insertRowsCopyStyle);
+          .register('insertRowsCopyStyle', insertRowsCopyStyle);
         // 冻结列
         sheet.frozenColumnCount(this.tableColumns[0][1].FixCount);
         //渲染数据源
@@ -481,7 +482,7 @@ export default {
         this.spread.options.tabStripVisible = false; //是否显示表单标签
         //一定要放在渲染完后
       } catch (error) {
-        console.log("表格渲染的错误信息:", error);
+        console.log('表格渲染的错误信息:', error);
       }
     },
     // 查询
@@ -495,7 +496,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -511,19 +512,19 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 当前第几页
     pageChange(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 保存
@@ -534,13 +535,13 @@ export default {
       if (newData.length != 0) {
         newData.forEach((x) => {
           if (x.item.SuplierCode) {
-            x.item["dicID"] = 8992;
+            x.item['dicID'] = 8992;
             submitData.push(x.item);
           }
         });
       }
       if (submitData.length == 0) {
-        this.$message.error("没修改过任何数据或供应商代码为空！");
+        this.$message.error('没修改过任何数据或供应商代码为空！');
         return;
       }
       this.adminLoading = true;
@@ -551,14 +552,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -566,7 +567,7 @@ export default {
     // 行新增
     addRow() {
       if (!this.addNum) {
-        this.$message.error("请输入需要添加的行数!");
+        this.$message.error('请输入需要添加的行数!');
         return;
       }
 
@@ -577,7 +578,7 @@ export default {
         for (let x = 0; x < this.addNum; x++) {
           let list = [
             {
-              rowNum: _.uniqueId("rowNum_"), //随机生成数
+              rowNum: _.uniqueId('rowNum_'), //随机生成数
             },
           ];
           this.tableData[this.tagRemark] = [
@@ -600,13 +601,13 @@ export default {
       this.getSelectionData();
       this.$nextTick(() => {
         if (this.selectionData[this.tagRemark].length == 0) {
-          this.$message.error("请选择需要删除的数据！");
+          this.$message.error('请选择需要删除的数据！');
           return;
         } else {
-          this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "info",
+          this.$confirm('删除不可恢复，确定要删除吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'info',
           })
             .then(async () => {
               let sheet = this.spread.getActiveSheet();
@@ -625,7 +626,7 @@ export default {
                           if (o.rowNum != item.rowNum) {
                             return o;
                           }
-                        }
+                        },
                       );
                       // this.setData();
                       //渲染数据源
@@ -649,14 +650,14 @@ export default {
                     this.adminLoading = false;
                     this.$message({
                       message: msg,
-                      type: "success",
+                      type: 'success',
                       dangerouslyUseHTMLString: true,
                     });
                   } else {
                     this.adminLoading = false;
                     this.$message({
                       message: msg,
-                      type: "error",
+                      type: 'error',
                       dangerouslyUseHTMLString: true,
                     });
                   }
@@ -683,3 +684,17 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-input-number {
+  line-height: 32px !important;
+  height: 100% !important;
+  .el-input__inner {
+    height: 34px !important;
+  }
+  .el-input-number__decrease,
+  .el-input-number__increase {
+    top: 1px;
+    width: 34px;
+  }
+}
+</style>

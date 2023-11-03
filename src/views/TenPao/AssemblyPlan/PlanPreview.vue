@@ -1457,3 +1457,17 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-input-number {
+  line-height: 32px !important;
+  height: 100% !important;
+  .el-input__inner {
+    height: 34px !important;
+  }
+  .el-input-number__decrease,
+  .el-input-number__increase {
+    top: 1px;
+    width: 34px;
+  }
+}
+</style>
