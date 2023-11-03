@@ -1,6 +1,9 @@
 <!--设备与工装汇总-->
 <template>
-  <div class="APSContainer flex_column content_height" v-loading="adminLoading">
+  <div
+    class="APSContainer flex_column content_height"
+    v-loading.fullscreen.lock="adminLoading"
+  >
     <splitpanes class="default-theme" horizontal>
       <pane :size="100">
         <div class="flex_column" style="width: 100%; height: 100%">
@@ -522,7 +525,7 @@ export default {
       isEdit: [false, false, true, false, false, false, false],
       selectedIndex: '1',
       OOrderNo: false,
-      OQty: false,
+      OQty: 0,
       // ONewQty: false,
       colDialogVisible2: false,
       colDialogVisible3: false,

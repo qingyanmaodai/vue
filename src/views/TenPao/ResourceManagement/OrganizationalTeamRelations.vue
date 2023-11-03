@@ -47,7 +47,6 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
               :hasSelect="hasSelect[item]"
@@ -55,8 +54,10 @@
               @pageChange="pageChange"
               @handleRowClick="handleRowClick"
               @pageSize="pageSize"
+              @selectfun="selectFun"
               @sortChange="sortChange"
               :keepSource="true"
+              :isToggleCheckbox="false"
               :footerContent="true"
             />
           </div>
@@ -151,7 +152,7 @@
     </splitpanes>
     <!-- 弹框-->
     <DialogOptTable
-      title="关联工艺"
+      title="关联班组"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
       :isEdit="isEdit[2]"
@@ -251,7 +252,7 @@ export default {
         { label: '全部', value: '' },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 15208 }, { ID: 15207 }, { ID: 11162 }],
+      sysID: [{ ID: 15208 }, { ID: 15207 }, { ID: 15206 }],
       isEdit: [false, false, false],
       userInfo: {},
       selectedIndex: '1',
@@ -387,13 +388,53 @@ export default {
         .catch((_) => {});
     },
     //添加产品机台
-    confirmDialog(remark) {
-      this.selectionData[remark].forEach((item) => {
-        item.ProcessName = this.clickRow['ProcessName'];
-        item.ProcessID = this.clickRow['ProcessID'];
-      });
-      this.dataSave(1, null, null, this.selectionData[remark]);
-      this.colDialogVisible2 = false;
+    async confirmDialog(remarkTb) {
+      if (remarkTb === 2) {
+        let newData = [];
+        //添加
+        let addData1 = this.selectionData[2].filter(
+          (item0) =>
+            !this.linkTableData.some((item3) => {
+              return item3['OrganizeTeamID'] === item0['OrganizeTeamID'];
+            }),
+        );
+        addData1.forEach((item) => {
+          item['dicID'] = 15205;
+          item['OrganizeID'] = this.clickRow['OrganizeID'];
+          item['ID'] = '';
+
+          // item['OrganizeTeamID'] = item['OrganizeTeamID'];
+        });
+        newData = newData.concat(addData1);
+
+        //删除
+        let addData2 = this.linkTableData.filter(
+          (item0) =>
+            !this.selectionData[2].some((item3) => {
+              return item3['OrganizeTeamID'] === item0['OrganizeTeamID'];
+            }),
+        );
+
+        addData2.forEach((item) => {
+          item['dicID'] = 15205;
+          item['ElementDeleteFlag'] = 1;
+          item['ID'] = '';
+        });
+
+        newData = newData.concat(addData2);
+        this.adminLoading = true;
+        await this.dataSave(1, null, null, newData);
+        this.adminLoading = false;
+
+        this.colDialogVisible2 = false;
+      }
+
+      // this.selectionData[remark].forEach((item) => {
+      //   item.ProcessName = this.clickRow['ProcessName'];
+      //   item.ProcessID = this.clickRow['ProcessID'];
+      // });
+      // this.dataSave(1, null, null, this.selectionData[remark]);
+      // this.colDialogVisible2 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -527,7 +568,24 @@ export default {
         if (remarkTb === 0) {
           this.$set(this.tableData, 1, []);
         }
-        this.$set(this.tableData, remarkTb, data);
+        this.linkTableData = [];
+
+        if (remarkTb === 2) {
+          data.forEach((item1) => {
+            // 使用find方法在第二个数组中查找匹配的SaleMan
+            const matching = this.tableData[1].find(
+              (item2) => item2.OrganizeTeamID === item1.OrganizeTeamID,
+            );
+            // 如果找到匹配的OrganizeTeamID，将isChecked设置为true
+            if (matching) {
+              item1.isChecked = true;
+              this.linkTableData.push(matching);
+            }
+          });
+          this.$set(this.tableData, remarkTb, data);
+        } else {
+          this.$set(this.tableData, remarkTb, data);
+        }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -557,6 +615,7 @@ export default {
     async handleRowClick(row, remarkTb) {
       this.clickRow = row;
       if (remarkTb === 0) {
+        this.clickRow = row;
         this.formSearchs[1].datas['OrganizeID'] = row['OrganizeID'];
       }
       await this.dataSearch(Number(this.selectedIndex));
@@ -568,7 +627,7 @@ export default {
     },
     AddEvent(index) {
       if (index === 1) {
-        this.colDialogVisible2 = true;
+        // this.colDialogVisible2 = true;
         // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
       }
       // if (index === 2) {
@@ -604,14 +663,18 @@ export default {
         $table.insert(obj);
       }
     },
-    LinkData(remarkTb) {
+    async LinkData(remarkTb) {
       if (remarkTb == 1) {
+        // if (this.selectionData[0].length !== 1) {
+        //   this.$message.error('请选择需要操作的数据且仅为一条！');
+        //   return;
+        // }
         if (!this.clickRow) {
           this.$message.error('请点击需要绑定的数据！');
           return;
         }
         this.colDialogVisible2 = true;
-        this.dataSearch(2);
+        await this.dataSearch(2);
       }
     },
   },
