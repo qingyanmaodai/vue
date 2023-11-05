@@ -222,7 +222,6 @@ export default {
       isBatch: (value) => JSON.parse(value),
       DVBatch: (value) => value,
       scrollEnable: (value) => JSON.parse(value),
-      dataColumns: (value) => JSON.parse(value),
     };
     Object.keys(variableMappings).forEach((key) => {
       const value = params.get(key);

@@ -163,7 +163,6 @@ export default {
       addNum: 1,
       addStep: 1,
       scrollEnable: true,
-      dataColumns: false,
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
     };
@@ -201,7 +200,6 @@ export default {
       addNum: (value) => Number(value),
       addStep: (value) => Number(value),
       scrollEnable: (value) => JSON.parse(value),
-      dataColumns: (value) => JSON.parse(value),
     };
     Object.keys(variableMappings).forEach((key) => {
       const value = params.get(key);
@@ -489,7 +487,7 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (this.dataColumns) {
+        if (Columns && Columns.length != 0) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
         this.$set(this.tableData, remarkTb, data);

@@ -186,7 +186,6 @@ export default {
       addNum: 1,
       addStep: null,
       scrollEnable: true,
-      dataColumns: false,
       isBatch: false,
       DVBatch: null,
       OrderNo: '',
@@ -218,7 +217,6 @@ export default {
       isBatch: (value) => JSON.parse(value),
       DVBatch: (value) => value,
       scrollEnable: (value) => JSON.parse(value),
-      dataColumns: (value) => JSON.parse(value),
     };
     Object.keys(variableMappings).forEach((key) => {
       const value = params.get(key);
@@ -523,7 +521,10 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        if (this.dataColumns) {
+        if (Columns && Columns.length != 0) {
+          Columns[0].some((n, i) => {
+            this.verifyDta(n);
+          });
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
         this.$set(this.tableData, remarkTb, data);
