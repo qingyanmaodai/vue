@@ -1169,6 +1169,7 @@ export default {
         dicID: 36,
         OrganizeTypeID: 6,
         OrganizeIDs: OrganizeIDs,
+        Status: 1,
       });
       const { data, forms, result, msg } = res.data;
       if (result) {

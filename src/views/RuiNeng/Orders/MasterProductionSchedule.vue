@@ -108,7 +108,7 @@
           <el-col :span="4"
             ><span class="title">拆分编辑完请保存 </span></el-col
           >
-          <el-col :span="24" class="flex_flex_end"
+          <el-col :span="20" class="flex_flex_end"
             ><el-divider direction="vertical"></el-divider>
             <el-button type="primary" size="mini" @click="changeEvent(1)">
               确定拆分
@@ -265,7 +265,7 @@ export default {
         { label: '数量+时间+线体+托盘', value: '' },
         { label: '综合分析', value: '' },
         { label: '全部', value: 1 },
-        // { label: "业务订单分析", value: 1 },
+        { label: '需求排产分析', value: '' },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -342,7 +342,7 @@ export default {
         { ID: 10075 },
         { ID: 10136 },
         { ID: 10075 },
-        { ID: 10109 },
+        { ID: 15210 },
         { ID: 10109 },
         { ID: 5646 },
       ],

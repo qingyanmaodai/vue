@@ -99,6 +99,7 @@
     </splitpanes>
     <!-- 弹框-->
     <el-dialog
+      class="el-dialog1"
       :title="'计划调整'"
       :visible.sync="colDialogVisible2"
       width="100%"
@@ -276,12 +277,6 @@
             </div>
           </pane>
         </splitpanes>
-
-        <!-- <div style="height: 40px; margin-top: 6px">
-          <el-row>
-            
-          </el-row>
-        </div> -->
       </div>
     </el-dialog>
     <!-- 弹框-->
@@ -289,7 +284,7 @@
       :title="'调整排期'"
       class="el-dialog2"
       :visible.sync="colDialogVisible3"
-      width="20%"
+      width="25%"
       :close-on-click-modal="false"
       :destroy-on-close="true"
       :modal-append-to-body="false"
@@ -301,7 +296,6 @@
           ref="formData"
           :model="formData"
           label-width="80px"
-          class="dialogForm"
           @submit.native.prevent
         >
           <el-form-item
@@ -323,10 +317,21 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="colDialogVisible3 = false">取 消</el-button>
-        <el-button type="primary" @click="confirmDialog(null, 2)"
-          >确 定</el-button
+        <span
+          style="
+            color: #000000d9;
+            float: left;
+            text-align: center;
+            height: 100%;
+          "
+          >正数:延后 负数:提前</span
         >
+        <div>
+          <el-button @click="colDialogVisible3 = false">取 消</el-button>
+          <el-button type="primary" @click="confirmDialog(null, 2)"
+            >确 定</el-button
+          >
+        </div>
       </span>
     </el-dialog>
     <!-- 弹框-->
@@ -338,18 +343,6 @@
       :close-on-click-modal="false"
       :modal-append-to-body="false"
     >
-      <!-- <div class="admin_head" ref="headRef">
-        <ComSearch
-          ref="searchRef"
-          :searchData="searchForm['datas']"
-          :searchForm="searchForm['forms']"
-          :remark="remark"
-          :btnForm="btnForm"
-          :signName="remark"
-          :Region="Region[remark]"
-          @btnClick="btnClick"
-        />
-      </div> -->
       <div class="ant-table-title pd-0-6">
         <el-row>
           <el-col :span="6" class="flex"> 生产订单: {{ OOrderNo }} </el-col>
@@ -486,7 +479,7 @@ export default {
       formData: {
         AdjustDay: '',
       },
-      formController: [{ label: '调整排期', prop: 'AdjustDay', type: 'input' }],
+      formController: [{ label: '调整天数', prop: 'AdjustDay', type: 'input' }],
       tableData: [[], [], [], [], [], [], []],
       spread: [],
       tableColumns: [[], [], [], [], [], [], []],
@@ -1461,11 +1454,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-::v-deep .el-dialog {
-  margin-top: 0 !important;
-  height: 100vh !important;
-  display: flex;
-  flex-direction: column;
+::v-deep .el-dialog1 {
+  .el-dialog {
+    margin-top: 0 !important;
+    height: 100vh !important;
+    display: flex;
+    flex-direction: column;
+  }
 }
 ::v-deep .el-dialog__header {
   background-color: #409eff !important;
@@ -1483,15 +1478,19 @@ export default {
 }
 ::v-deep .el-dialog2 {
   .el-dialog {
-    margin-top: 20vh !important;
-    height: 25vh !important;
+    margin-top: 30vh !important;
     .el-dialog__body {
-      padding: 40px !important;
+      padding: 30px !important;
       flex-grow: 1;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 }

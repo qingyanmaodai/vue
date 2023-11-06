@@ -736,10 +736,12 @@ export default {
         const organizeName = row.OrganizeName;
         for (let i = 1; i <= 4; i++) {
           this.dataReset(i);
-          if (i === 2) {
+          if (i === 4 || i === 2) {
             this.formSearchs[i].datas['OrganizeName'] = organizeName;
-          } else {
+          } else if (i === 3) {
             this.formSearchs[i].datas['LineName'] = organizeName;
+          } else if (i === 1) {
+            this.formSearchs[i].datas['DefaultLineName'] = organizeName;
           }
         }
         this.colDialogVisible2 = true;
