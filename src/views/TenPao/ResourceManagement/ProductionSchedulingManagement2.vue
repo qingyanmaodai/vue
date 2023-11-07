@@ -1351,6 +1351,7 @@ export default {
             callback: (action) => {},
           });
           await this.dataSearch(remarkTb);
+          this.adminLoading = false;
         } else {
           this.$message({
             message: msg,
