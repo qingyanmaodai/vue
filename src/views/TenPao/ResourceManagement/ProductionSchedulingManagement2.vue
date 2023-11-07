@@ -1351,7 +1351,6 @@ export default {
             callback: (action) => {},
           });
           await this.dataSearch(remarkTb);
-          this.adminLoading = false;
         } else {
           this.$message({
             message: msg,
@@ -1359,6 +1358,7 @@ export default {
             dangerouslyUseHTMLString: true,
           });
         }
+        this.adminLoading = false;
       }
     },
     // 行内样式

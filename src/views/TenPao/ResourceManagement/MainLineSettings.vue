@@ -288,7 +288,7 @@ export default {
           formsAll: [],
         },
         {
-          datas: { ProductType: '产品' },
+          datas: { ProductPlatformType: '产品' },
           forms: [],
           required: [], //获取必填项
           formsAll: [],
@@ -434,11 +434,7 @@ export default {
       }
     },
     handleClick(tab, event) {
-      // console.log(tab, event);
       this.clickRow = null;
-      // if (condition) {
-
-      // }
       this.selectedIndex = tab.name;
       let materialNameIndex = -1;
       let codeIndex = -1;
@@ -691,47 +687,18 @@ export default {
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
-        // Columns.some((m, i) => {
-        //   m.forEach((n, index) => {
-        //     // 进行验证
-        //     this.verifyDta(n);
-        //     if (n.childrens && n.children.length != 0) {
-        //       n.childrens.forEach((x) => {
-        //         this.verifyDta(x);
-        //       });
-        //     }
-        //     this.$set(this.tableColumns, remarkTb, m);
-        //   });
-        // });
-        // if (remarkTb === 3) {
-        // if (Number(this.selectedIndex) === 0) {
-        // data
-        //   .filter((item2) => {
-        //     return this.tableData[2].some(
-        //       (item1) => item2["OrganizeID"] === item1["OrganizeID"]
-        //     );
-        //   })
-        //   .forEach((item2) => {
-        //     item2["isChecked"] = true;
-        //   });
-        // this.linkTableData = data.filter((item) => {
-        //   return item["isChecked"];
-        // });
-        // } else if (Number(this.selectedIndex) === 1) {
-        //   data
-        //     .filter((item2) => {
-        //       return this.tableData[2].some(
-        //         (item1) => item2["OrganizeID"] === item1["OrganizeID"]
-        //       );
-        //     })
-        //     .forEach((item2) => {
-        //       item2["isChecked"] = true;
-        //     });
-        //   this.linkTableData = data.filter((item) => {
-        //     return item["isChecked"];
-        //   });
-        // }
-        // }
+        Columns.some((m, i) => {
+          m.forEach((n, index) => {
+            // 进行验证
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach((x) => {
+                this.verifyDta(x);
+              });
+            }
+            this.$set(this.tableColumns, remarkTb, m);
+          });
+        });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
@@ -821,10 +788,36 @@ export default {
         $table.insert(obj);
       }
     },
-    LinkLine(remarkTb) {
+    async LinkLine(remarkTb) {
       if (this.selectionData[Number(this.selectedIndex)].length === 0) {
         this.$message.error('请选择需要绑定的数据！');
         return;
+      }
+      let form = {};
+      if (Number(this.selectedIndex) === 0) {
+        form['ProductPlatformType'] = '产品';
+        form['MaterialID'] = this.selectionData[remarkTb]
+          .map((item) => item['MaterialID'])
+          .join(',');
+      } else if (Number(this.selectedIndex) === 1) {
+        form['ProductPlatformType'] = '产品族';
+        form['MaterialTypeID'] = this.selectionData[remarkTb]
+          .map((item) => item['MaterialTypeID'])
+          .join(',');
+      }
+      form['rows'] = 0;
+      form['dicID'] = 125;
+      let res = await GetSearchData(form);
+      const { result, data, msg } = res.data;
+      if (result) {
+        // 获取每个表头
+        this.$set(this, 'linkTableData', data);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
       }
       this.colDialogVisible3 = true;
       this.dataSearch(3);
@@ -845,32 +838,40 @@ export default {
       let newData = [];
       if (remarkTb === 3) {
         this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
-          let addData = JSON.parse(
-            JSON.stringify(
-              this.selectionData[remarkTb].filter((item3) => {
-                if (item0['OrganizeIDs']) {
-                  let OrganizeIDs = item0['OrganizeIDs']?.split(',');
-                  console.log(item3['OrganizeID']);
-                  return !OrganizeIDs.some((OID) => OID == item3['OrganizeID']);
-                } else {
-                  return true;
-                }
-              }),
-            ),
-          );
-          addData.forEach((item) => {
-            item['dicID'] = 125;
+          this.selectionData[remarkTb].forEach((item3) => {
+            let matchingItem;
             if (Number(this.selectedIndex) === 0) {
-              item['MaterialID'] = item0['MaterialID'];
+              matchingItem = _.cloneDeep(
+                this.linkTableData.find(
+                  (iteml) =>
+                    iteml.MaterialID === item0.MaterialID &&
+                    iteml.OrganizeID === item3.OrganizeID,
+                ),
+              );
             } else if (Number(this.selectedIndex) === 1) {
-              item['MaterialTypeID'] = item0['MaterialTypeID'];
+              matchingItem = _.cloneDeep(
+                this.linkTableData.find(
+                  (iteml) =>
+                    iteml.MaterialTypeID === item0.MaterialTypeID &&
+                    iteml.OrganizeID === item3.OrganizeID,
+                ),
+              );
+            }
+            if (!matchingItem) {
+              let addData = _.cloneDeep(item3);
+              if (Number(this.selectedIndex) === 0) {
+                addData['MaterialID'] = item0['MaterialID'];
+              } else if (Number(this.selectedIndex) === 1) {
+                addData['MaterialTypeID'] = item0['MaterialTypeID'];
+              }
+              addData['dicID'] = 125;
+              newData.push(addData);
             }
           });
-          newData = newData.concat(addData);
         });
+        this.colDialogVisible3 = false;
+        await this.dataSave(Number(this.selectedIndex), null, null, newData);
       }
-      this.colDialogVisible3 = false;
-      await this.dataSave(Number(this.selectedIndex), null, null, newData);
     },
     //删除产品机台
     async cancelDialog(remarkTb) {

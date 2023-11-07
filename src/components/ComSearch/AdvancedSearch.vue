@@ -40,6 +40,7 @@
                   v-model="searchData[x.prop]"
                   filterable
                   :multiple="x.multiple"
+                  collapse-tags
                   size="small"
                   clearable
                   style="width: 100%"

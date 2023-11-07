@@ -92,7 +92,7 @@
                 @change="handleRadioChange"
               >
                 <el-radio-button :label="1">生产排程</el-radio-button>
-                <el-radio-button :label="2">排版设置</el-radio-button>
+                <el-radio-button :label="2">排班设置</el-radio-button>
               </el-radio-group></el-col
             >
             <el-col :span="12" class="flex_flex_end"> </el-col>
@@ -243,11 +243,6 @@
             :cellStyle="cellStyle"
           />
         </div>
-        <!-- <div style="height: 40px; margin-top: 6px">
-          <el-row>
-            
-          </el-row>
-        </div> -->
       </div>
     </el-dialog>
   </div>
@@ -736,11 +731,7 @@ export default {
         const organizeName = row.OrganizeName;
         for (let i = 1; i <= 4; i++) {
           this.dataReset(i);
-          if (i === 4 || i === 2) {
-            this.formSearchs[i].datas['OrganizeName'] = organizeName;
-          } else if (i === 3) {
-            this.formSearchs[i].datas['LineName'] = organizeName;
-          } else if (i === 1) {
+          if (i !== 2) {
             this.formSearchs[i].datas['DefaultLineName'] = organizeName;
           }
         }
