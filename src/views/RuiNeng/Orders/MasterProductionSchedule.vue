@@ -5,7 +5,7 @@
       <el-main style="padding: 0; margin: 0">
         <div class="admin_container_2" style="width: 100%">
           <div class="admin_head" ref="headRef">
-            <div v-for="i in [0, 3, 5]" :key="i" v-show="labelStatus2 === i">
+            <div v-for="i in [0, 1, 4]" :key="i" v-show="labelStatus2 === i">
               <ComSearch
                 ref="searchRef"
                 :searchData="formSearchs[i].datas"
@@ -78,7 +78,7 @@
               </div>
               <div
                 class="flex_column"
-                v-for="item in [0, 3, 5]"
+                v-for="item in [0, 1, 4]"
                 :key="item"
                 v-show="item === labelStatus2"
               >
@@ -260,12 +260,12 @@ export default {
       labelStatus1: 0,
       labelStatus2: 0,
       Status1: [
+        { label: '要货与排产分析', value: '' },
         { label: '分配数量', value: -1 },
         { label: '数量+时间+线体', value: 0 },
         { label: '数量+时间+线体+托盘', value: '' },
         { label: '综合分析', value: '' },
         { label: '全部', value: 1 },
-        { label: '需求排产分析', value: '' },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
@@ -276,7 +276,9 @@ export default {
       spread: [[], [], [], [], [], [], [], []],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            // EmptyDemand: null,
+          },
           forms: [],
         },
         {
@@ -337,12 +339,12 @@ export default {
       fileList: [],
       file: [],
       sysID: [
+        { ID: 15210 },
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10075 },
         { ID: 10136 },
         { ID: 10075 },
-        { ID: 15210 },
         { ID: 10109 },
         { ID: 5646 },
       ],
@@ -681,7 +683,6 @@ export default {
             '/APSAPI/TOProcessPlanFromSalesOrder',
           );
           const { datas, forms, result, msg } = res.data;
-          console.log(result, 'result');
           if (result) {
             this.adminLoading = false;
             this.$message({
@@ -709,53 +710,34 @@ export default {
         this.$message.error('请选择需要操作的数据！');
         return;
       }
-      const errorNum1 = this.selectionData[remarkTb].findIndex(
-        (item) => item['DataSource'] === '业务',
-      );
-      if (errorNum1 !== -1) {
-        this.$message.error(`操作的数据中含有业务订单`);
-        return;
+      let newData = [];
+      if (
+        remarkTb === 1 ||
+        remarkTb === 2 ||
+        remarkTb === 3 ||
+        remarkTb === 5
+      ) {
+        const errorNum1 = this.selectionData[remarkTb].findIndex(
+          (item) => item['DataSource'] === '业务',
+        );
+        if (errorNum1 !== -1) {
+          this.$message.error(`操作的数据中含有业务订单`);
+          return;
+        }
       }
-      this.$confirm(
-        '确定要删除的【' + this.selectionData[remarkTb].length + '】数据吗',
-      )
+      newData = _.cloneDeep(
+        this.selectionData[remarkTb].map((x) => {
+          x['ElementDeleteFlag'] = 1;
+          return x;
+        }),
+      );
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗')
         .then((_) => {
-          this.selectionData[remarkTb].forEach((x) => {
-            if (x['DataSource'] === '手工' || x['DataSource'] === '拆单') {
-              x['ElementDeleteFlag'] = 1;
-            }
-          });
           this.adminLoading = true;
-          _this.dataSave(remarkTb, index, null, this.selectionData[remarkTb]);
+          _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
-    // 通用直接保存
-    // async generalSaveData(newData, remarkTb, index) {
-    //   if (newData.length == 0) {
-    //     this.$message.error("没有提交保存的数据！");
-    //     return;
-    //   }
-    //   this.adminLoading = true;
-    //   let res = await SaveData(newData);
-    //   const { result, data, count, msg } = res.data;
-    //   if (result) {
-    //     this.dataSearch(remarkTb);
-    //     this.adminLoading = false;
-    //     this.$message({
-    //       message: msg,
-    //       type: "success",
-    //       dangerouslyUseHTMLString: true
-    //     });
-    //   } else {
-    //     this.adminLoading = false;
-    //     this.$message({
-    //       message: msg,
-    //       type: "error",
-    //       dangerouslyUseHTMLString: true
-    //     });
-    //   }
-    // },
     // 获取表头数据
     async getTableHeader() {
       let IDs = this.sysID;
@@ -784,7 +766,7 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        await this.dataSearch(0);
+        await this.dataSearch(1);
         this.adminLoading = false;
       }
     },
@@ -812,11 +794,7 @@ export default {
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        if (
-          this.labelStatus1 === 3 ||
-          this.labelStatus1 === 5 ||
-          remarkTb === 7
-        ) {
+        if (remarkTb === 4 || remarkTb === 0 || remarkTb === 7) {
           this.setData(remarkTb);
         }
       } else {
@@ -827,197 +805,11 @@ export default {
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
-      if (this.labelStatus1 !== 3 && this.labelStatus1 !== 5) {
+      if (remarkTb !== 4 && remarkTb !== 0) {
         this.changeStatus(null, this.labelStatus1);
       }
     },
     // excle表数据渲染
-    // setData(remarkTb) {
-    //   try {
-    //     console.log(this.spread, "this.spread");
-    //     this.spread[remarkTb].suspendPaint();
-    //     // 获取活动表单
-    //     let sheet = this.spread[remarkTb].getActiveSheet();
-    //     // 重置表单
-    //     sheet.reset();
-    //     //渲染数据源
-    //     sheet.setDataSource(this.tableData[remarkTb]);
-    //     // 渲染列
-    //     this.tableColumns[remarkTb].forEach((x, y) => {
-    //       x["name"] = x["prop"];
-    //       x["displayName"] = x["label"];
-    //       x["width"] = parseInt(x.width);
-    //       if (x.prop === "isChecked") {
-    //         // 选框
-    //         sheet.setCellType(
-    //           0,
-    //           0,
-    //           new HeaderCheckBoxCellType(),
-    //           GCsheets.SheetArea.colHeader
-    //         );
-    //         x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-    //       } else if (
-    //         x.ControlType === "comboboxMultiple" ||
-    //         x.ControlType === "combobox"
-    //       ) {
-    //         // colInfos.push({
-    //         //   name: x.prop,
-    //         //   displayName: x.label,
-    //         //   cellType: "",
-    //         //   size: parseInt(x.width)
-    //         // });
-    //         let newData = [];
-    //         // let list = null;
-    //         this.tableData[remarkTb].map((item, index) => {
-    //           if (x.DataSourceID && x.DataSourceName) {
-    //             newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-    //             this.bindComboBoxToCell(sheet, index, y, newData);
-    //           }
-    //         });
-    //       } else if (
-    //         x.DataType == "datetime" ||
-    //         x.DataType === "varchar" ||
-    //         x.DataType === "nvarchar"
-    //       ) {
-    //         x.formatter = "@";
-    //         // colInfos.push({
-    //         //   name: x.prop,
-    //         //   displayName: x.label,
-    //         //   size: parseInt(x.width),
-    //         //   formatter: "@" //字符串格式
-    //         // });
-    //       }
-
-    //       //行，start,end
-    //       if (x.isEdit) {
-    //         sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
-    //         // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-    //         // let cell = sheet.getCell(
-    //         //   -1,
-    //         //   cellIndex,
-    //         //   GC.Spread.Sheets.SheetArea.viewport
-    //         // );
-    //         // cell.foreColor("#2a06ecd9");
-    //       }
-    //       // cellIndex++;
-    //     });
-    //     //渲染列
-    //     sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
-    //     //改变字体颜色
-    //     this.tableData[remarkTb].forEach((row, rowIndex) => {
-    //       this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-    //         const key = column.prop;
-
-    //         // 获取当前单元格
-    //         const cell = sheet.getCell(rowIndex, columnIndex);
-
-    //         // 获取颜色
-    //         // if (row && row.colorMapping && row.colorMapping[key]) {
-    //         //   const color = row.colorMapping[key];
-    //         //   cell.style({
-    //         //     backColor: color,
-    //         //     foreColor: "#FFFFFF"
-    //         //   });
-    //         //   // 其他代码
-    //         // }
-    //         if (row["IsToMainPlan"] && row["IsToMainPlan"] === "已排") {
-    //           cell.locked(true);
-    //           // sheet.setCellType(rowIndex, columnIndex, "");
-    //         }
-    //         if (row["Result"] !== "正常" && row["Result"] && columnIndex < 5) {
-    //           cell.backColor("#FF0000");
-    //           // cell.style({
-    //           //   foreColor: "#FF0000"
-    //           // });
-    //         }
-    //         // const color = row.colorMapping[key];
-
-    //         // 如果该属性有颜色信息，则设置单元格样式
-    //         // if (color) {
-    //         //   // const style = new GC.Spread.Sheets.Style();
-    //         //   cell.backColor(color);
-    //         //   cell.foreColor("#FFFFFF"); // 假设背景色为 color 的单元格的字体颜色为白色
-    //         // }
-    //       });
-    //     });
-
-    //     // 列筛选
-    //     // 参数2 开始列
-    //     // 参数3
-    //     // 参数4 结束列
-    //     let cellrange = new GC.Spread.Sheets.Range(
-    //       -1,
-    //       -1,
-    //       -1,
-    //       this.tableColumns[remarkTb].length
-    //     );
-    //     let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-    //       cellrange
-    //     );
-    //     sheet.rowFilter(hideRowFilter);
-
-    //     // 设置整个列头的背景色和前景色。
-    //     /**
-    //      * 参数1:表示行
-    //      * 参数2:列，-1表示
-    //      * 参数3:
-    //      * 参数4:
-    //      * 参数5:
-    //      */
-    //     let colHeaderStyle = sheet.getRange(
-    //       0,
-    //       -1,
-    //       1,
-    //       -1,
-    //       GC.Spread.Sheets.SheetArea.colHeader
-    //     );
-    //     colHeaderStyle.foreColor("000000d9");
-    //     colHeaderStyle.backColor("#f3f3f3");
-    //     colHeaderStyle.font(
-    //       "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
-    //     );
-    //     colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
-    //     colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
-
-    //     //设置数据渲染的单元格默认的样式
-    //     var defaultStyle = new GC.Spread.Sheets.Style();
-    //     defaultStyle.font =
-    //       "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
-    //     defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-    //     defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
-    //     sheet.setDefaultStyle(
-    //       defaultStyle,
-    //       GC.Spread.Sheets.SheetArea.viewport
-    //     );
-    //     defaultStyle.showEllipsis = true;
-    //     if (this.tableColumns[remarkTb][0]["FixCount"]) {
-    //       // 冻结
-    //       sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
-    //     }
-
-    //     this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
-    //     // this.spread[remarkTb].options.scrollbarMaxAlign = true;
-    //     // this.spread[remarkTb].options.scrollByPixel = true;
-
-    //     this.spread[remarkTb].resumePaint();
-    //     sheet.options.isProtected = true;
-    //     sheet.options.protectionOptions.allowResizeColumns = true;
-    //     sheet.options.protectionOptions.allowInsertRows = true;
-    //     sheet.options.protectionOptions.allowDeleteRows = true;
-    //     sheet.options.protectionOptions.allowSelectLockedCells = true;
-    //     sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-    //     sheet.options.protectionOptions.allowDeleteColumns = true;
-    //     sheet.options.protectionOptions.allowInsertColumns = true;
-    //     sheet.options.protectionOptions.allowDargInsertRows = true;
-    //     sheet.options.protectionOptions.allowDragInsertColumns = true;
-    //     sheet.options.protectionOptions.allowSort = true;
-    //     sheet.options.protectionOptions.allowFilter = true;
-    //     sheet.options.allowUserDragDrop = true;
-    //   } catch (error) {
-    //     console.log("表格渲染的错误信息:", error);
-    //   }
-    //   // this.spread[remarkTb].refresh(); //重新定位宽高度
-    // },
     setData(remarkTb) {
       //sheet获取
       this.spread[remarkTb].suspendPaint();
@@ -1149,8 +941,10 @@ export default {
           if (columnItem['isEdit']) {
             cell.locked(false).foreColor('#2a06ecd9');
           }
-          if (!rowItem['MOQty']) {
-            cell.backColor('#FFFF00');
+          if (remarkTb !== 4 && remarkTb !== 0) {
+            if (!rowItem['MOQty']) {
+              cell.backColor('#FFFF00');
+            }
           }
           if (
             Object.prototype.toString.call(rowItem['FColors']) ===
@@ -1274,98 +1068,16 @@ export default {
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
     },
-    // 行内列样式
-    cellStyle({ row, column }) {
-      if (
-        column.property == 'JudgeResult' &&
-        row['JudgeResult'] == '缺采购单'
-      ) {
-        return {
-          background: '#ff7b7b',
-        };
-      } else if (
-        column.property == 'JudgeResult' &&
-        row['JudgeResult'] == '在途不足'
-      ) {
-        return {
-          background: '#ffced6',
-        };
-      } else if (
-        column.property == 'JudgeResult' &&
-        row['JudgeResult'] == '待复期'
-      ) {
-        return {
-          background: '#fdfd8f',
-        };
-      } else if (
-        (column.property == 'JudgeResult' && row['JudgeResult'] == '满足') ||
-        (column.property == 'IsReplyStatusName' &&
-          row['IsReplyStatusName'] == '是')
-      ) {
-        return {
-          background: '#9fff9f',
-        };
-      }
-
-      if (column.property == 'OnloadQty') {
-        return {
-          color: 'blue',
-        };
-      }
-      if (column.property == 'RealOweQty') {
-        return {
-          color: 'red',
-        };
-      }
-      if (
-        column.property == 'ReplyQty' &&
-        parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
-      ) {
-        return {
-          background: '#ff7b7b',
-        };
-      }
-
-      if (row.ReplyDate && !row.SecondReplyDate) {
-        if (
-          column.property == 'ReplyDate' &&
-          new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
-        ) {
-          return {
-            background: '#ff7b7b',
-          };
-        }
-      }
-
-      if (row.SecondReplyDate) {
-        if (
-          column.property == 'SecondReplyDate' &&
-          new Date(row.SecondReplyDate).getTime() >
-            new Date(row.LastDate).getTime()
-        ) {
-          return {
-            background: '#ff7b7b',
-          };
-        }
-      }
-
-      if (column.property == 'OncheckQty') {
-        if (
-          parseFloat(row.OncheckQty) >=
-          parseFloat(row.StockQtyAllocationPrepare)
-        ) {
-          return {
-            background: '#9fff9f',
-          };
-        }
-      }
-    },
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
       let changeColumns = [[]];
+
       if (index === 0) {
-        changeColumns[0] = this.Columns[0].filter(
+        this.labelStatus2 = 0;
+        this.dataSearch(0);
+      } else if (index === 1) {
+        changeColumns[1] = this.Columns[1].filter(
           (item) =>
             item['label'] !== '预计生产日期' &&
             item['label'] !== '线体' &&
@@ -1373,37 +1085,34 @@ export default {
             item['label'] !== '每托数量' &&
             item['label'] !== '托板数',
         );
-        this.$set(this.tableColumns, 0, changeColumns[0]);
-        this.labelStatus2 = 0;
-        this.setData(0);
-      } else if (index === 1) {
-        changeColumns[0] = this.Columns[0].filter(
+        this.$set(this.tableColumns, 1, changeColumns[1]);
+        this.labelStatus2 = 1;
+        this.setData(1);
+      } else if (index === 2) {
+        changeColumns[1] = this.Columns[1].filter(
           (item) =>
             item['label'] !== '标准人员' &&
             item['label'] !== '每托数量' &&
             item['label'] !== '托板数',
         );
-        this.$set(this.tableColumns, 0, changeColumns[0]);
-        this.labelStatus2 = 0;
-        this.setData(0);
-      } else if (index === 2) {
-        changeColumns[0] = this.Columns[0].filter(
+        this.$set(this.tableColumns, 1, changeColumns[1]);
+        this.labelStatus2 = 1;
+        this.setData(1);
+      } else if (index === 3) {
+        changeColumns[1] = this.Columns[1].filter(
           (item) => item['label'] !== '标准人员',
         );
-        this.$set(this.tableColumns, 0, changeColumns[0]);
-        this.labelStatus2 = 0;
-        this.setData(0);
-      } else if (index === 3) {
-        this.labelStatus2 = 3;
-        this.dataSearch(3);
+        this.$set(this.tableColumns, 1, changeColumns[1]);
+        this.labelStatus2 = 1;
+        this.setData(1);
       } else if (index === 4) {
-        changeColumns[0] = this.Columns[0];
-        this.$set(this.tableColumns, 0, changeColumns[0]);
-        this.labelStatus2 = 0;
-        this.setData(0);
+        this.labelStatus2 = 4;
+        this.dataSearch(4);
       } else if (index === 5) {
-        this.labelStatus2 = 5;
-        this.dataSearch(5);
+        changeColumns[1] = this.Columns[1];
+        this.$set(this.tableColumns, 1, changeColumns[1]);
+        this.labelStatus2 = 1;
+        this.setData(1);
       }
     },
     // 拆单
@@ -1421,17 +1130,18 @@ export default {
       );
 
       targetColumns = targetColumns.filter(
-        (item) =>
-          item.label == '生产订单' ||
-          item.label == '分配数' ||
-          item.label == '计划数',
+        (item) => item.prop == 'SalesOrderNo' || item.label == '分配数',
       );
-      targetColumns.push({
-        label: '拆单数量',
-        prop: 'SQty',
-      });
+      const columnConfigs = [
+        { label: '计划数', prop: 'PlanQty' },
+        { label: '拆单数量', prop: 'SQty' },
+        // 添加更多列配置
+      ];
+      for (const config of columnConfigs) {
+        targetColumns.push(config);
+      }
       targetColumns.map((item) => {
-        item['width'] = 250;
+        item['width'] = 200;
         if (item.label === '拆单数量') {
           item['isEdit'] = true;
         } else {
@@ -1475,7 +1185,6 @@ export default {
         //处理脏数据
         arr.forEach((item) => {
           this.copyRowFormat(item, sheet);
-          console.log(item, 'item');
         });
 
         this.$nextTick(() => {
