@@ -167,7 +167,7 @@ export default {
       this.chartOptions = [
         {
           title: {
-            text: '超送金额',
+            text: '超送趋势图',
             textStyle: {
               align: 'center',
               color: '#000',
@@ -216,7 +216,7 @@ export default {
           },
           yAxis: [
             {
-              name: '数量',
+              name: '金额（元）',
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
@@ -224,7 +224,7 @@ export default {
               axisLabel: {
                 interval: 0,
                 show: true,
-                formatter: '{value}%',
+                // formatter: '{value}%',
                 textStyle: {
                   color: '#444444',
                 },
