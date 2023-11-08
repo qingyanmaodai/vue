@@ -215,6 +215,7 @@
                 :isClear="isClear[item]"
                 :keepSource="true"
                 :pagination="tablePagination[item]"
+                :scrollEnable="false"
                 @pageChange="pageChange"
                 @pageSize="pageSize"
                 @sortChange="sortChange"
