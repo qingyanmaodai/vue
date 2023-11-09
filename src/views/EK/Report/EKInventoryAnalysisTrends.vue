@@ -14,34 +14,57 @@
           </div>
         </div>
         <div class="leftCard APSContainer">
-          <div class="admin_head_2" ref="headRef">
+          <div
+            class="admin_head_2 flex justify-between"
+            ref="headRef"
+            v-for="i in [0, 1]"
+            :key="i + 'head'"
+            v-show="labelStatus1 === i"
+          >
+            <div v-for="(item, y) in Status1" :key="y">
+              <span
+                @click="changeStatus(item, y)"
+                :class="
+                  labelStatus2 == item['index2']
+                    ? 'statusActive cursor'
+                    : 'cursor'
+                "
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider>
+            </div>
             <ComSearch
+              class="flex-grow"
               ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
+              :searchData="formSearchs[i].datas"
+              :searchForm="formSearchs[i].forms"
+              :remark="i"
               :btnForm="btnForm"
-              :signName="0"
-              :Region="Region[0]"
+              :signName="i"
+              :Region="Region[i]"
               @btnClick="btnClick"
             />
           </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <div
+            v-for="item in [0, 1]"
+            :key="item"
+            class="admin_content flex_grow"
+            v-show="labelStatus1 === item"
+          >
             <ComVxeTable
               :ref="`tableRef${item}`"
               :rowKey="'RowNumber'"
               height="100%"
               :isToolbar="false"
-              :isEdit="isEdit[0]"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :sysID="sysID[0]['ID']"
-              :isClear="isClear[0]"
+              :isEdit="isEdit[item]"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :isClear="isClear[item]"
               :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[0]"
+              :pagination="tablePagination[item]"
               @pageChange="pageChange"
               @handleRowClick="handleRowClick"
               @pageSize="pageSize"
@@ -52,7 +75,7 @@
               :scrollEnable="false"
               :EnableColumnFiltering="false"
               :showFooter="true"
-              :dataFooter="dataFooter[0]"
+              :dataFooter="dataFooter[item]"
             />
           </div>
         </div>
@@ -76,7 +99,7 @@ import {
   GetSearch,
 } from '@/api/Common';
 export default {
-  name: 'EKSuperTrendChart',
+  name: 'EKInventoryAnalysisTrends',
   components: {
     ComSearch,
     ComVxeTable,
@@ -84,7 +107,7 @@ export default {
   },
   data() {
     return {
-      isEdit: [false],
+      isEdit: [false, false],
       adminLoading: false,
       btnForm: [],
       tableData: [[], []],
@@ -98,8 +121,10 @@ export default {
       Region: [6, 6],
       tablePagination: [
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 15, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
+      labelStatus1: 0,
+      labelStatus2: 0,
       formSearchs: [
         {
           datas: {},
@@ -110,7 +135,7 @@ export default {
           forms: [],
         },
       ],
-      sysID: [{ ID: 11176 }],
+      sysID: [{ ID: 11145 }, { ID: 11146 }],
       currentDate: '',
       //echart部分
       chart: [],
@@ -118,6 +143,16 @@ export default {
       handleWindowResizeDebounced: null,
       selected1Index: 0,
       selected2Index: 0,
+      Status1: [
+        { label: '需求金额', value: 1, index: 0, index2: 0 },
+        { label: '已领金额', value: 2, index: 0, index2: 1 },
+        { label: '未领金额', value: 3, index: 0, index2: 2 },
+        { label: '库存金额', value: 4, index: 1, index2: 3 },
+        { label: '消耗库存金额', value: 5, index: 1, index2: 4 },
+        { label: '消耗后库存金额', value: 6, index: 1, index2: 5 },
+        { label: '在途金额', value: 7, index: 0, index2: 6 },
+        { label: '消耗在途金额', value: 8, index: 0, index2: 7 },
+      ],
     };
   },
   watch: {},
@@ -167,7 +202,7 @@ export default {
       this.chartOptions = [
         {
           title: {
-            text: '超送趋势图',
+            text: '库存分析趋势图',
             textStyle: {
               align: 'center',
               color: '#000',
@@ -190,7 +225,11 @@ export default {
           },
           legend: {
             right: 0,
-            data: ['计划任务', '配套任务', '超送金额'],
+            data: [
+              '计划任务',
+              '配套任务',
+              this.Status1[this.labelStatus2]['label'],
+            ],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
             itemGap: fontSize(10),
@@ -198,7 +237,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: this.chartData.map((item) => item['InStockDate']),
+            data: this.chartData.map((item) => item['SaveDate']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -279,7 +318,7 @@ export default {
             //   ],
             // },
             {
-              name: '超送金额',
+              name: this.Status1[this.labelStatus2]['label'],
               type: 'line',
               silent: true,
               itemStyle: {
@@ -297,7 +336,7 @@ export default {
                   // return params.value + '%';
                 },
               },
-              data: this.chartData.map((item) => item['OverAmount']),
+              data: this.chartData.map((item) => item['Amount']),
               // this.chartData.map((item) => {
               //   const percentageValue = parseFloat(
               //     this.dataFooter[0][0][item.prop],
@@ -534,20 +573,21 @@ export default {
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-            x.forEach((y) => {
-              if (y.prop && y.value) {
-                this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-              } else {
-                this.$set(this.formSearchs[z].datas, [y.prop], '');
-              }
-            });
-            await this.getTableData(this.formSearchs[z].datas, z);
-            // await this.getEcharts();
-          }),
-        );
+        // await Promise.all(
+        //   forms.map(async (x, z) => {
+        //     this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+        //     x.forEach((y) => {
+        //       if (y.prop && y.value) {
+        //         this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+        //       } else {
+        //         this.$set(this.formSearchs[z].datas, [y.prop], '');
+        //       }
+        //     });
+        //     await this.getTableData(this.formSearchs[z].datas, z);
+        //     // await this.getEcharts();
+        //   }),
+        // );
+        this.changeStatus(this.Status1[this.labelStatus2], 0);
         this.adminLoading = false;
       }
     },
@@ -609,6 +649,13 @@ export default {
           });
         });
       });
+    },
+    changeStatus(item, index) {
+      this.formSearchs[item['index']].datas['AmountType'] = item['value'];
+      this.labelStatus1 = item['index'];
+      this.labelStatus2 = item['index2'];
+      console.log(this.labelStatus1, this.labelStatus2);
+      this.dataSearch(this.labelStatus1);
     },
     hexToRgba(hex, opacity) {
       let rgbaColor = '';
