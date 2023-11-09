@@ -2,7 +2,7 @@
 <template>
   <el-container>
     <el-main>
-      <div class="firstNode">
+      <div class="firstNode APSContainer">
         <div class="rightCard">
           <div class="secondCard">
             <div class="itemCard">
@@ -56,6 +56,33 @@
             />
           </div>
         </div>
+        <!-- 弹框-->
+        <DialogOptTable
+          title="齐套率查询"
+          :tableDialog="colDialogVisible1"
+          :sysID="sysID[1]['ID']"
+          :isEdit="isEdit[1]"
+          :remark="1"
+          width="80%"
+          :hasSelect="hasSelect[1]"
+          @closeDialog="colDialogVisible1 = false"
+          @btnClickCall="btnClick"
+          :searchForm="formSearchs[1]"
+          :btnForm="btnForm"
+          :isToolbar="false"
+          :isConfirmBtn="true"
+          :showFooter="false"
+          :table-data="tableData[1]"
+          :table-header="tableColumns[1]"
+          :table-loading="tableLoading[1]"
+          :table-pagination="tablePagination[1]"
+          :isClear="isClear[1]"
+          @confirmDialog="confirmDialog"
+          @pageChangeCall="pageChange"
+          @pageSizeCall="pageSize"
+          @sortChangeCall="sortChange"
+          @selectFunCall="selectFun"
+        ></DialogOptTable>
       </div>
     </el-main>
   </el-container>
@@ -66,6 +93,7 @@ let _this;
 import ComSearch from '@/components/ComSearch/AdvancedSearch';
 import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
+import DialogOptTable from '@/components/Dialog/dialogOptTable';
 import * as echarts from 'echarts';
 import { debounce } from 'lodash';
 import {
@@ -81,6 +109,7 @@ export default {
     ComSearch,
     ComVxeTable,
     ComReportTable,
+    DialogOptTable,
   },
   data() {
     return {
@@ -110,7 +139,7 @@ export default {
           forms: [],
         },
       ],
-      sysID: [{ ID: 14200 }],
+      sysID: [{ ID: 14200 }, { ID: 5157 }],
       currentDate: '',
       //echart部分
       chart: [],
@@ -118,6 +147,7 @@ export default {
       handleWindowResizeDebounced: null,
       selected1Index: 0,
       selected2Index: 0,
+      colDialogVisible1: false,
     };
   },
   watch: {},
@@ -413,13 +443,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -464,10 +494,25 @@ export default {
         })
         .catch((_) => {});
     },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      // this.delData[remarkTb] = [];
-      // this.delData[remarkTb].push(row);
+    // 单击获取明细
+    async handleRowClick(row, remarkTb, column) {
+      this.clickRow = row;
+      if (
+        this.tableColumns[remarkTb].findIndex(
+          (item) => item['prop'] === column['property'] && item['prop2'],
+        ) !== -1
+      ) {
+        // this.formSearchs[1].datas['StartDate'] = column['property'];
+        this.formSearchs[1].datas['LineName'] = row['DefaultLineName'];
+        this.colDialogVisible1 = true;
+        await this.dataSearch(1);
+      }
+      // if (column['property'] === 'FormRate1') {
+      //   this.formSearchs[2].datas['OrderID'] = row['OrderID'];
+      //   this.colDialogVisible2 = true;
+
+      //   await this.dataSearch(2);
+      // }
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -533,20 +578,20 @@ export default {
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-            x.forEach((y) => {
-              if (y.prop && y.value) {
-                this.$set(this.formSearchs[z].datas, [y.prop], y.value);
-              } else {
-                this.$set(this.formSearchs[z].datas, [y.prop], '');
-              }
-            });
-            await this.getTableData(this.formSearchs[z].datas, z);
-            // await this.getEcharts();
-          }),
-        );
+        // await Promise.all(
+        //   forms.map(async (x, z) => {
+        //     this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+        //     x.forEach((y) => {
+        //       if (y.prop && y.value) {
+        //         this.$set(this.formSearchs[z].datas, [y.prop], y.value);
+        //       } else {
+        //         this.$set(this.formSearchs[z].datas, [y.prop], '');
+        //       }
+        //     });
+        await this.getTableData(this.formSearchs[0].datas, 0);
+        // await this.getEcharts();
+        //   }),
+        // );
         this.adminLoading = false;
       }
     },
@@ -594,7 +639,9 @@ export default {
           }),
         );
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        await this.getEcharts();
+        if (remarkTb === 0) {
+          await this.getEcharts();
+        }
       } else {
         this.$message({
           message: msg,
@@ -615,6 +662,8 @@ export default {
         });
       });
     },
+    //添加产品机台
+    async confirmDialog(remarkTb) {},
     hexToRgba(hex, opacity) {
       let rgbaColor = '';
       let reg = /^#[\da-f]{6}$/i;

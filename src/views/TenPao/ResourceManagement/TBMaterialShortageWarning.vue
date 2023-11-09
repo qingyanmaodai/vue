@@ -58,7 +58,7 @@
     </splitpanes>
     <!-- 弹框-->
     <DialogOptTable
-      title="库存齐套率查询"
+      title="齐套率查询"
       :tableDialog="colDialogVisible1"
       :sysID="sysID[1]['ID']"
       :isEdit="isEdit[1]"
@@ -84,7 +84,7 @@
       @selectFunCall="selectFun"
     ></DialogOptTable>
     <!-- 弹框-->
-    <DialogOptTable
+    <!-- <DialogOptTable
       title="采购齐套率查询"
       :tableDialog="colDialogVisible2"
       :sysID="sysID[2]['ID']"
@@ -109,7 +109,7 @@
       @pageSizeCall="pageSize"
       @sortChangeCall="sortChange"
       @selectFunCall="selectFun"
-    ></DialogOptTable>
+    ></DialogOptTable> -->
   </div>
 </template>
 
@@ -244,7 +244,7 @@ export default {
       ],
       Region: [6, 6, 6],
       labelStatus1: 0,
-      sysID: [{ ID: 15199 }, { ID: 7757 }, { ID: 5633 }],
+      sysID: [{ ID: 15199 }, { ID: 7757 }],
       isEdit: [false, false, false, false],
       userInfo: {},
       selectedIndex: '1',
@@ -590,19 +590,23 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb, column) {
-      console.log(column['property'], '11111');
       this.clickRow = row;
-      if (column['property'] === 'FormRate') {
+      if (
+        column['property'] === 'FormRate' ||
+        column['property'] === 'FormRate1' ||
+        column['property'] === 'FormRate2' ||
+        column['property'] === 'FormRate3'
+      ) {
         this.formSearchs[1].datas['OrderID'] = row['OrderID'];
         this.colDialogVisible1 = true;
         await this.dataSearch(1);
       }
-      if (column['property'] === 'FormRate1') {
-        this.formSearchs[2].datas['OrderID'] = row['OrderID'];
-        this.colDialogVisible2 = true;
+      // if (column['property'] === 'FormRate1') {
+      //   this.formSearchs[2].datas['OrderID'] = row['OrderID'];
+      //   this.colDialogVisible2 = true;
 
-        await this.dataSearch(2);
-      }
+      //   await this.dataSearch(2);
+      // }
     },
     handleClick(tab, event) {
       console.log(tab, event);

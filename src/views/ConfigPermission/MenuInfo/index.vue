@@ -78,6 +78,7 @@
             children: 'children',
             iconOpen: 'vxe-icon-square-minus-fill',
             iconClose: 'vxe-icon-square-plus-fill',
+            expandAll: false,
           }"
         />
       </div>
