@@ -1317,6 +1317,99 @@ export default {
       this.formSearchs[this.labelStatus1].datas['IsCompleteQty'] = val;
       this.dataSearch(this.labelStatus1);
     },
+    // 增行
+    addRow(remarkTb) {
+      // 获取修改记录s
+      const sheet = this.spread[remarkTb].getActiveSheet();
+      if (!this.addNum) {
+        this.$message.error('请输入需要添加的行数!');
+        return;
+      }
+      // 下拉数据是需要获取数据源
+      for (let x = 0; x < this.addNum; x++) {
+        let obj = {
+          dicID: this.ID,
+          RowNumber: _.uniqueId(),
+        };
+        this.tableColumns[remarkTb].map((item) => {
+          obj[item.prop] = null;
+          if (item.prop === 'Status') {
+            obj[item.prop] = 1;
+          }
+          console.log(this.DataSourceList, 'this.DataSourceList');
+          for (let key in this.DataSourceList[remarkTb]) {
+            if (item.DataSourceName === key) {
+              obj[key] = this.DataSourceList[remarkTb][key];
+            }
+          }
+        });
+        // this.tableData[remarkTb].unshift(obj);
+        sheet.addRows(0, 1, GC.Spread.Sheets.SheetArea.viewport);
+        this.$set(sheet.getDataSource(), '0', obj);
+      }
+      // 渲染列
+      this.spread[remarkTb].suspendPaint();
+      this.tableColumns[remarkTb].forEach((x, y) => {
+        x['name'] = x['prop'];
+        x['displayName'] = x['label'];
+        x['width'] = parseInt(x.width);
+        if (x.prop === 'isChecked') {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader,
+          );
+          x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+        } else if (
+          x.ControlType === 'comboboxMultiple' ||
+          x.ControlType === 'combobox'
+        ) {
+          sheet.getDataSource().map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              let newData = x['items']; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value,
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
+            }
+          });
+        } else if (x.ControlType === 'checkbox') {
+          let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          cellType.caption('');
+          cellType.textTrue('');
+          cellType.textFalse('');
+          cellType.textIndeterminate('');
+          cellType.textAlign(
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
+          );
+          cellType.isThreeState(false);
+          sheet.getCell(-1, y).cellType(cellType);
+        } else if (
+          x.DataType == 'datetime' ||
+          x.DataType === 'varchar' ||
+          x.DataType === 'nvarchar'
+        ) {
+          x.formatter = '@';
+        }
+
+        //行，start,end
+        if (x.isEdit) {
+          sheet.getCell(-1, y).locked(false).foreColor('#2a06ecd9');
+        }
+      });
+      this.spread[remarkTb].resumePaint();
+    },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');
