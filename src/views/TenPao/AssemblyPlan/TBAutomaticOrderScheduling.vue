@@ -13,13 +13,13 @@
         <div class="flex_grow flex">
           <div class="flex">
             <el-steps :active="active" finish-status="success" align-center>
-              <el-step title="选择订单"></el-step>
-              <el-step title="方案运算"></el-step>
-              <el-step title="调整负荷"></el-step>
-              <el-step title="更新订单"></el-step>
+              <el-step title="选择订单" @click.native="activeNum(1)"></el-step>
+              <el-step title="方案运算" @click.native="activeNum(2)"></el-step>
+              <el-step title="调整负荷" @click.native="activeNum(3)"></el-step>
+              <el-step title="更新订单" @click.native="activeNum(4)"></el-step>
             </el-steps>
           </div>
-          <el-button
+          <!-- <el-button
             type="primary"
             size="small"
             @click="activeNum(-1)"
@@ -27,7 +27,7 @@
             >上一步</el-button
           ><el-button type="primary" size="small" @click="activeNum(1)"
             >下一步</el-button
-          >
+          > -->
         </div>
         <div class="flex">
           <div v-for="(item, y) in Status1" :key="y">
@@ -94,17 +94,17 @@
         <div class="flex_grow flex">
           <div class="flex">
             <el-steps :active="active" finish-status="success" align-center>
-              <el-step title="选择订单"></el-step>
-              <el-step title="方案运算"></el-step>
-              <el-step title="调整负荷"></el-step>
-              <el-step title="更新订单"></el-step>
+              <el-step title="选择订单" @click.native="activeNum(1)"></el-step>
+              <el-step title="方案运算" @click.native="activeNum(2)"></el-step>
+              <el-step title="调整负荷" @click.native="activeNum(3)"></el-step>
+              <el-step title="更新订单" @click.native="activeNum(4)"></el-step>
             </el-steps>
           </div>
-          <el-button type="primary" size="small" @click="activeNum(-1)"
+          <!-- <el-button type="primary" size="small" @click="activeNum(-1)"
             >上一步</el-button
           ><el-button type="primary" size="small" @click="activeNum(1)"
             >下一步</el-button
-          >
+          > -->
         </div>
         <div class="flex"></div>
       </div>
@@ -168,7 +168,7 @@
       <div
         class="flex_column admin_content flex_grow"
         v-for="item in [2]"
-        :key="item"
+        :key="item + 'spread'"
       >
         <ComSpreadTable
           ref="`spreadsheetRef${remarkTb}`"
@@ -195,17 +195,17 @@
         <div class="flex_grow flex">
           <div class="flex">
             <el-steps :active="active" finish-status="success" align-center>
-              <el-step title="选择订单"></el-step>
-              <el-step title="方案运算"></el-step>
-              <el-step title="调整负荷"></el-step>
-              <el-step title="更新订单"></el-step>
+              <el-step title="选择订单" @click.native="activeNum(1)"></el-step>
+              <el-step title="方案运算" @click.native="activeNum(2)"></el-step>
+              <el-step title="调整负荷" @click.native="activeNum(3)"></el-step>
+              <el-step title="更新订单" @click.native="activeNum(4)"></el-step>
             </el-steps>
           </div>
-          <el-button type="primary" size="small" @click="activeNum(-1)"
+          <!-- <el-button type="primary" size="small" @click="activeNum(-1)"
             >上一步</el-button
           ><el-button type="primary" size="small" @click="activeNum(1)"
             >下一步</el-button
-          >
+          > -->
         </div>
         <div class="flex">
           <div v-for="(item, y) in Status2" :key="y">
@@ -272,13 +272,13 @@
         <div class="flex_grow flex">
           <div class="flex">
             <el-steps :active="active" finish-status="success" align-center>
-              <el-step title="选择订单"></el-step>
-              <el-step title="方案运算"></el-step>
-              <el-step title="调整负荷"></el-step>
-              <el-step title="更新订单"></el-step>
+              <el-step title="选择订单" @click.native="activeNum(1)"></el-step>
+              <el-step title="方案运算" @click.native="activeNum(2)"></el-step>
+              <el-step title="调整负荷" @click.native="activeNum(3)"></el-step>
+              <el-step title="更新订单" @click.native="activeNum(4)"></el-step>
             </el-steps>
           </div>
-          <el-button type="primary" size="small" @click="activeNum(-1)"
+          <!-- <el-button type="primary" size="small" @click="activeNum(-1)"
             >上一步</el-button
           ><el-button
             type="primary"
@@ -286,12 +286,12 @@
             @click="activeNum(1)"
             v-show="active !== 4"
             >下一步</el-button
-          >
+          > -->
         </div>
         <div class="flex"></div>
       </div>
       <div
-        v-for="i in [2]"
+        v-for="i in [5]"
         :key="i + 'head'"
         class="admin_head_2"
         ref="headRef"
@@ -311,7 +311,7 @@
       </div>
       <div
         class="flex_column admin_content flex_grow"
-        v-for="item in [2]"
+        v-for="item in [5]"
         :key="item"
       >
         <ComSpreadTable
@@ -372,11 +372,11 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      spread: [[], [], [], [], []],
-      selectionData: [[], [], [], [], []],
+      spread: [[], [], [], [], [], []],
+      selectionData: [[], [], [], [], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], [], [], [], []],
-      hasSelect: [false, false, false, false, false],
+      includeFields: [[], [], [], [], [], []],
+      hasSelect: [false, false, false, false, false, false],
       selectedIndex: '0',
       active: 1,
       ChangeReason: false,
@@ -403,18 +403,23 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
       OrderNo: '',
       OrderNoValue: '',
-      OrderNos: [[], [], [], [], []],
-      tableData: [[], [], [], [], []],
-      tableColumns: [[], [], [], [], []],
-      tableLoading: [false, false, false, false, false],
-      isClear: [false, false, false, false, false],
+      OrderNos: [[], [], [], [], [], []],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
@@ -441,11 +446,11 @@ export default {
         { ID: 15215 },
         { ID: 6694 },
         { ID: 49 },
+        { ID: 15215 },
       ],
-      isEdit: [false, false, false, false, false],
+      isEdit: [false, false, false, false, false, false],
       userInfo: {},
-      selectedIndex: '1',
-      Region: [6, 6, 6, 6, 6],
+      Region: [6, 6, 6, 6, 6, 6],
       colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
@@ -473,7 +478,6 @@ export default {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
-      console.log(this.spread, 'this.spread');
     },
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
@@ -498,397 +502,382 @@ export default {
     },
     // 渲染数据
     async setData(remarkTb) {
-      try {
-        this.spread[remarkTb].suspendPaint();
-        let sheet = this.spread[remarkTb].getActiveSheet();
-        sheet.options.allowCellOverflow = true;
-        sheet.defaults.rowHeight = 23;
-        sheet.defaults.colWidth = 100;
-        sheet.defaults.colHeaderRowHeight = 23;
-        sheet.defaults.rowHeaderColWidth = 60;
-        let colHeader1 = [];
-        // let colInfos = [];
-        sheet.setDataSource(this.tableData[remarkTb]);
+      this.spread[remarkTb].suspendPaint();
+      let sheet = this.spread[remarkTb].getActiveSheet();
+      sheet.reset();
+      sheet.options.allowCellOverflow = true;
+      sheet.defaults.rowHeight = 23;
+      sheet.defaults.colWidth = 100;
+      sheet.defaults.colHeaderRowHeight = 23;
+      sheet.defaults.rowHeaderColWidth = 60;
+      let colHeader1 = [];
+      // let colInfos = [];
+      sheet.setDataSource(this.tableData[remarkTb]);
 
-        // 渲染列
-        this.tableColumns[remarkTb].forEach((x, y) => {
-          x['name'] = x['prop'];
-          x['displayName'] = x['label'];
-          x['width'] = parseInt(x.width);
-          if (x.prop === 'isChecked') {
-            // 选框
-            sheet.setCellType(
-              0,
-              0,
-              new HeaderCheckBoxCellType(),
-              GCsheets.SheetArea.colHeader,
-            );
-            x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-          } else if (
-            x.ControlType === 'comboboxMultiple' ||
-            x.ControlType === 'combobox'
+      // 渲染列
+      this.tableColumns[remarkTb].forEach((x, y) => {
+        x['name'] = x['prop'];
+        x['displayName'] = x['label'];
+        x['width'] = parseInt(x.width);
+        if (x.prop === 'isChecked') {
+          // 选框
+          sheet.setCellType(
+            0,
+            0,
+            new HeaderCheckBoxCellType(),
+            GCsheets.SheetArea.colHeader,
+          );
+          x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+        } else if (
+          x.ControlType === 'comboboxMultiple' ||
+          x.ControlType === 'combobox'
+        ) {
+          this.tableData[remarkTb].map((item, index) => {
+            if (x.DataSourceID && x.DataSourceName) {
+              let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
+              // 获取要绑定下拉菜单的单元格对象
+              let cell = sheet.getCell(index, y);
+              // 创建下拉菜单单元格类型，并设置其选项数据
+              let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
+              comboBox.editorValueType(
+                GC.Spread.Sheets.CellTypes.EditorValueType.value,
+              );
+              comboBox.editable(true);
+              // 获取下拉菜单的选项数据
+              comboBox.items(newData);
+              comboBox.itemHeight(24);
+              // 将下拉菜单单元格类型绑定到指定的单元格中
+              cell.cellType(comboBox);
+            }
+          });
+        } else if (x.ControlType === 'checkbox') {
+          let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
+          cellType.caption('');
+          cellType.textTrue('');
+          cellType.textFalse('');
+          cellType.textIndeterminate('');
+          cellType.textAlign(
+            GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
+          );
+          cellType.isThreeState(false);
+          sheet.getCell(-1, y).cellType(cellType);
+        } else if (
+          x.DataType == 'datetime' ||
+          x.DataType === 'varchar' ||
+          x.DataType === 'nvarchar'
+        ) {
+          x.formatter = '@';
+        }
+      });
+      //渲染列
+      sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
+      sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
+      colHeader1.forEach(function (value, index) {
+        sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
+      });
+
+      var defaultStyle = new GC.Spread.Sheets.Style();
+      defaultStyle.font =
+        '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
+      defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
+      defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
+      defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
+        'gray',
+        GC.Spread.Sheets.LineStyle.thin,
+      );
+      defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
+        'gray',
+        GC.Spread.Sheets.LineStyle.thin,
+      );
+      defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
+        'gray',
+        GC.Spread.Sheets.LineStyle.thin,
+      );
+      defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
+        'gray',
+        GC.Spread.Sheets.LineStyle.thin,
+      );
+      defaultStyle.showEllipsis = true;
+      sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
+
+      // 冻结第一列
+      if (this.tableColumns[remarkTb][0]['FixCount']) {
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      }
+
+      // 列筛选
+      // 参数2 开始列
+      // 参数3
+      // 参数4 结束列
+      let cellrange = new GC.Spread.Sheets.Range(
+        -1,
+        -1,
+        -1,
+        this.tableColumns[remarkTb].length,
+      );
+      let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(cellrange);
+      sheet.rowFilter(hideRowFilter);
+
+      // sheet.bindColumns(colInfos);
+      this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+
+      //改变字体颜色
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor('black');
+          cell.backColor('white');
+          if (column['isEdit']) {
+            cell.locked(false).foreColor('#2a06ecd9');
+          }
+          if (
+            Object.prototype.toString.call(rowItem['FColors']) ===
+            '[object Object]'
           ) {
-            this.tableData[remarkTb].map((item, index) => {
-              if (x.DataSourceID && x.DataSourceName) {
-                let newData = item[x.DataSourceName]; // 设置列表每行下拉菜单
-                // 获取要绑定下拉菜单的单元格对象
-                let cell = sheet.getCell(index, y);
-                // 创建下拉菜单单元格类型，并设置其选项数据
-                let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-                comboBox.editorValueType(
-                  GC.Spread.Sheets.CellTypes.EditorValueType.value,
-                );
-                comboBox.editable(true);
-                // 获取下拉菜单的选项数据
-                comboBox.items(newData);
-                comboBox.itemHeight(24);
-                // 将下拉菜单单元格类型绑定到指定的单元格中
-                cell.cellType(comboBox);
+            Object.keys(rowItem['FColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem['FColors'][key]);
               }
             });
-          } else if (x.ControlType === 'checkbox') {
-            let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
-            cellType.caption('');
-            cellType.textTrue('');
-            cellType.textFalse('');
-            cellType.textIndeterminate('');
-            cellType.textAlign(
-              GC.Spread.Sheets.CellTypes.CheckBoxTextAlign.center,
-            );
-            cellType.isThreeState(false);
-            sheet.getCell(-1, y).cellType(cellType);
-          } else if (
-            x.DataType == 'datetime' ||
-            x.DataType === 'varchar' ||
-            x.DataType === 'nvarchar'
+          }
+          if (
+            Object.prototype.toString.call(rowItem['BColors']) ===
+            '[object Object]'
           ) {
-            x.formatter = '@';
+            Object.keys(rowItem['BColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[0].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem['BColors'][key]);
+              }
+            });
           }
         });
-        //渲染列
-        sheet.bindColumns(this.tableColumns[remarkTb]); //此方法一定要放在setDataSource后面才能正确渲染列名
-        sheet.setRowCount(1, GC.Spread.Sheets.SheetArea.colHeader);
-        colHeader1.forEach(function (value, index) {
-          sheet.setValue(0, index, value, GC.Spread.Sheets.SheetArea.colHeader);
-        });
+      });
 
-        var defaultStyle = new GC.Spread.Sheets.Style();
-        defaultStyle.font =
-          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
-        defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
-        defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.center;
-        defaultStyle.borderLeft = new GC.Spread.Sheets.LineBorder(
-          'gray',
-          GC.Spread.Sheets.LineStyle.thin,
-        );
-        defaultStyle.borderTop = new GC.Spread.Sheets.LineBorder(
-          'gray',
-          GC.Spread.Sheets.LineStyle.thin,
-        );
-        defaultStyle.borderRight = new GC.Spread.Sheets.LineBorder(
-          'gray',
-          GC.Spread.Sheets.LineStyle.thin,
-        );
-        defaultStyle.borderBottom = new GC.Spread.Sheets.LineBorder(
-          'gray',
-          GC.Spread.Sheets.LineStyle.thin,
-        );
-        defaultStyle.showEllipsis = true;
-        sheet.setDefaultStyle(
-          defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport,
-        );
-
-        // 冻结第一列
-        if (this.tableColumns[remarkTb][0]['FixCount']) {
-          // 冻结
-          sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      let cellIndex = 0;
+      let viewSortIndex = 0; //排序的索引
+      let lineIDIndex = 0;
+      this.tableColumns[remarkTb].forEach((m) => {
+        //行，start,end
+        if (m.prop == 'ViewSort') {
+          viewSortIndex = cellIndex;
+        }
+        if (m.prop == 'LineID') {
+          lineIDIndex = cellIndex;
+        }
+        //行，start,end
+        if (m.isEdit) {
+          sheet.getRange(-1, cellIndex, 1, 1).locked(false);
+          var cell = sheet.getCell(
+            -1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport,
+          );
+          //cell.foreColor("#2a06ecd9");
+        } else {
+          var cell = sheet.getCell(
+            -1,
+            cellIndex,
+            GC.Spread.Sheets.SheetArea.viewport,
+          );
+          // cell.foreColor("gray");
         }
 
-        // 列筛选
-        // 参数2 开始列
-        // 参数3
-        // 参数4 结束列
-        let cellrange = new GC.Spread.Sheets.Range(
-          -1,
-          -1,
-          -1,
-          this.tableColumns[remarkTb].length,
-        );
-        let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange,
-        );
-        sheet.rowFilter(hideRowFilter);
+        cellIndex++;
+      });
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.isProtected = true;
+      sheet.options.protectionOptions.allowResizeColumns = true;
+      sheet.options.protectionOptions.allowInsertRows = true;
+      sheet.options.protectionOptions.allowDeleteRows = true;
+      sheet.options.protectionOptions.allowSelectLockedCells = true;
+      sheet.options.protectionOptions.allowSelectUnlockedCells = true;
+      sheet.options.protectionOptions.allowDeleteColumns = true;
+      sheet.options.protectionOptions.allowInsertColumns = true;
+      sheet.options.protectionOptions.allowDargInsertRows = true;
+      sheet.options.protectionOptions.allowDragInsertColumns = true;
+      sheet.options.protectionOptions.allowSort = true;
+      sheet.options.protectionOptions.allowFilter = true;
+      sheet.options.allowUserDragDrop = true;
 
-        // sheet.bindColumns(colInfos);
-        this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
-
-        //改变字体颜色
-        this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-            // 获取当前单元格
-            const cell = sheet.getCell(rowIndex, columnIndex);
-            cell.foreColor('black');
-            cell.backColor('white');
-            if (column['isEdit']) {
-              cell.locked(false).foreColor('#2a06ecd9');
-            }
-            if (
-              Object.prototype.toString.call(rowItem['FColors']) ===
-              '[object Object]'
-            ) {
-              Object.keys(rowItem['FColors']).forEach((key) => {
-                const columnIndex = this.tableColumns[0].findIndex(
-                  (column) => column.prop === key,
-                );
-                if (columnIndex !== -1) {
-                  // 这里使用 rowIndex 和 columnIndex 获取单元格
-                  const cell = sheet.getCell(rowIndex, columnIndex);
-                  cell.foreColor(rowItem['FColors'][key]);
-                }
-              });
-            }
-            if (
-              Object.prototype.toString.call(rowItem['BColors']) ===
-              '[object Object]'
-            ) {
-              Object.keys(rowItem['BColors']).forEach((key) => {
-                const columnIndex = this.tableColumns[0].findIndex(
-                  (column) => column.prop === key,
-                );
-                if (columnIndex !== -1) {
-                  // 这里使用 rowIndex 和 columnIndex 获取单元格
-                  const cell = sheet.getCell(rowIndex, columnIndex);
-                  cell.backColor(rowItem['BColors'][key]);
-                }
-              });
-            }
-          });
-        });
-
-        let cellIndex = 0;
-        let viewSortIndex = 0; //排序的索引
-        let lineIDIndex = 0;
-        this.tableColumns[remarkTb].forEach((m) => {
-          //行，start,end
-          if (m.prop == 'ViewSort') {
-            viewSortIndex = cellIndex;
-          }
-          if (m.prop == 'LineID') {
-            lineIDIndex = cellIndex;
-          }
-          //行，start,end
-          if (m.isEdit) {
-            sheet.getRange(-1, cellIndex, 1, 1).locked(false);
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport,
-            );
-            //cell.foreColor("#2a06ecd9");
+      var insertRowsCopyStyle = {
+        canUndo: true,
+        name: 'insertRowsCopyStyle',
+        execute: function (context, options, isUndo) {
+          var Commands = GC.Spread.Sheets.Commands;
+          if (isUndo) {
+            Commands.undoTransaction(context, options);
+            return true;
           } else {
-            var cell = sheet.getCell(
-              -1,
-              cellIndex,
-              GC.Spread.Sheets.SheetArea.viewport,
-            );
-            // cell.foreColor("gray");
-          }
+            sheet.suspendPaint();
+            sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
+            //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
+            // console.log(_this.sheetSelectRows);
 
-          cellIndex++;
-        });
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.isProtected = true;
-        sheet.options.protectionOptions.allowResizeColumns = true;
-        sheet.options.protectionOptions.allowInsertRows = true;
-        sheet.options.protectionOptions.allowDeleteRows = true;
-        sheet.options.protectionOptions.allowSelectLockedCells = true;
-        sheet.options.protectionOptions.allowSelectUnlockedCells = true;
-        sheet.options.protectionOptions.allowDeleteColumns = true;
-        sheet.options.protectionOptions.allowInsertColumns = true;
-        sheet.options.protectionOptions.allowDargInsertRows = true;
-        sheet.options.protectionOptions.allowDragInsertColumns = true;
-        sheet.options.protectionOptions.allowSort = true;
-        sheet.options.protectionOptions.allowFilter = true;
-        sheet.options.allowUserDragDrop = true;
-
-        var insertRowsCopyStyle = {
-          canUndo: true,
-          name: 'insertRowsCopyStyle',
-          execute: function (context, options, isUndo) {
-            var Commands = GC.Spread.Sheets.Commands;
-            if (isUndo) {
-              Commands.undoTransaction(context, options);
-              return true;
-            } else {
-              sheet.suspendPaint();
-              sheet.addRows(options.activeRow, _this.sheetSelectRows.length);
-              //  sheet.setArray(options.activeRow, 0,_this.sheetSelectRows);
-              // console.log(_this.sheetSelectRows);
-
-              // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
-              //删除旧行
-              if (_this.sheetSelectObj.start > options.activeRow) {
-                //说明从下面插入上面
-                sheet.copyTo(
-                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                  0,
-                  options.activeRow,
-                  0,
-                  _this.sheetSelectRows.length,
-                  sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.all,
-                );
-
-                //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-                sheet.deleteRows(
-                  _this.sheetSelectObj.start + _this.sheetSelectRows.length,
-                  _this.sheetSelectObj.count,
-                );
-                // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
-              } else {
-                //从上面往下面插入
-                sheet.copyTo(
-                  _this.sheetSelectObj.start,
-                  0,
-                  options.activeRow,
-                  0,
-                  _this.sheetSelectRows.length,
-                  sheet.getColumnCount(),
-                  GC.Spread.Sheets.CopyToOptions.all,
-                );
-                //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
-                sheet.deleteRows(
-                  _this.sheetSelectObj.start,
-                  _this.sheetSelectObj.count,
-                );
-              }
-              let count = sheet.getRowCount(
-                GC.Spread.Sheets.SheetArea.viewport,
+            // console.log(_this.sheetSelectObj.start+_this.sheetSelectRows.length)
+            //删除旧行
+            if (_this.sheetSelectObj.start > options.activeRow) {
+              //说明从下面插入上面
+              sheet.copyTo(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all,
               );
 
-              let lineID = _this.sheetSelectRows[0][lineIDIndex];
-              let isFind = false;
-              let viewSort = 1;
+              //   sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start + _this.sheetSelectRows.length,
+                _this.sheetSelectObj.count,
+              );
+              // sheet.removeRow(_this.sheetSelectObj.start+ _this.sheetSelectRows.length)
+            } else {
+              //从上面往下面插入
+              sheet.copyTo(
+                _this.sheetSelectObj.start,
+                0,
+                options.activeRow,
+                0,
+                _this.sheetSelectRows.length,
+                sheet.getColumnCount(),
+                GC.Spread.Sheets.CopyToOptions.all,
+              );
+              //  sheet.setArray(options.activeRow, 0, _this.sheetSelectRows);
+              sheet.deleteRows(
+                _this.sheetSelectObj.start,
+                _this.sheetSelectObj.count,
+              );
+            }
+            let count = sheet.getRowCount(GC.Spread.Sheets.SheetArea.viewport);
 
-              for (var i = 0; i < count; i++) {
-                if (
-                  isFind == false &&
-                  sheet.getValue(i, lineIDIndex) == lineID
-                ) {
-                  isFind = true;
-                }
-                if (isFind && sheet.getValue(i, lineIDIndex) != lineID) {
-                  break;
-                }
-                if (isFind) {
-                  sheet.setValue(i, viewSortIndex, viewSort);
-                  viewSort++;
-                }
+            let lineID = _this.sheetSelectRows[0][lineIDIndex];
+            let isFind = false;
+            let viewSort = 1;
+
+            for (var i = 0; i < count; i++) {
+              if (isFind == false && sheet.getValue(i, lineIDIndex) == lineID) {
+                isFind = true;
               }
-
-              // Commands.startTransaction(context, options);
-
-              // sheet.suspendPaint();
-
-              // var beforeRowCount = 0;
-
-              //  sheet.suspendPaint();
-
-              // Commands.endTransaction(context, options);
-              sheet.resumePaint();
-
-              return true;
+              if (isFind && sheet.getValue(i, lineIDIndex) != lineID) {
+                break;
+              }
+              if (isFind) {
+                sheet.setValue(i, viewSortIndex, viewSort);
+                viewSort++;
+              }
             }
-          },
-        };
 
-        this.spread[remarkTb]
-          .commandManager()
-          .register('insertRowsCopyStyle', insertRowsCopyStyle);
+            // Commands.startTransaction(context, options);
 
-        function MyContextMenu() {}
-        MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
-          this.spread[remarkTb],
-        );
-        MyContextMenu.prototype.onOpenMenu = function (
-          menuData,
-          itemsDataForShown,
-          hitInfo,
-          spread,
-        ) {
-          itemsDataForShown.forEach(function (item, index) {
-            // console.log(item);
-            if (item && item.name === 'gc.spread.rowHeaderinsertCutCells') {
-              item.command = 'insertRowsCopyStyle';
-            }
-            //  else if (item && item.name === "gc.spread.cut") {
+            // sheet.suspendPaint();
 
-            //     item.command = "insertRowsCut";
-            //   }
-          });
-        };
-        var contextMenu = new MyContextMenu();
-        this.spread[remarkTb].contextMenu = contextMenu;
-        // 剪贴板事件绑定
-        sheet.bind(
-          GC.Spread.Sheets.Events.ClipboardChanged,
-          function (sender, args) {
-            let s = sheet.getSelections()[0];
-            console.log(sheet.getDataItem(s.row));
-            _this.sheetSelectRows = sheet.getArray(
-              s.row,
-              0,
-              s.rowCount,
-              _this.tableColumns[remarkTb].length,
-            );
-            _this.sheetSelectObj.start = s.row;
+            // var beforeRowCount = 0;
 
-            _this.sheetSelectObj.count = s.rowCount;
-          },
-        );
+            //  sheet.suspendPaint();
 
-        /////////////////表格事件/////////////
-        //绑定表格事件前，需清除之前的绑定事件
-        this.spread[remarkTb].unbindAll();
-        this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
-          const { sheet, row, col } = args;
-          const cellType = sheet.getCellType(row, col);
-          if (cellType instanceof GCsheets.CellTypes.Button) {
+            // Commands.endTransaction(context, options);
+            sheet.resumePaint();
+
+            return true;
           }
-          if (cellType instanceof GCsheets.CellTypes.CheckBox) {
+        },
+      };
+
+      this.spread[remarkTb]
+        .commandManager()
+        .register('insertRowsCopyStyle', insertRowsCopyStyle);
+
+      function MyContextMenu() {}
+      MyContextMenu.prototype = new GC.Spread.Sheets.ContextMenu.ContextMenu(
+        this.spread[remarkTb],
+      );
+      MyContextMenu.prototype.onOpenMenu = function (
+        menuData,
+        itemsDataForShown,
+        hitInfo,
+        spread,
+      ) {
+        itemsDataForShown.forEach(function (item, index) {
+          // console.log(item);
+          if (item && item.name === 'gc.spread.rowHeaderinsertCutCells') {
+            item.command = 'insertRowsCopyStyle';
           }
-          if (cellType instanceof GCsheets.CellTypes.HyperLink) {
-          }
+          //  else if (item && item.name === "gc.spread.cut") {
+
+          //     item.command = "insertRowsCut";
+          //   }
         });
-        //表格编辑事件
+      };
+      var contextMenu = new MyContextMenu();
+      this.spread[remarkTb].contextMenu = contextMenu;
+      // 剪贴板事件绑定
+      sheet.bind(
+        GC.Spread.Sheets.Events.ClipboardChanged,
+        function (sender, args) {
+          let s = sheet.getSelections()[0];
+          console.log(sheet.getDataItem(s.row));
+          _this.sheetSelectRows = sheet.getArray(
+            s.row,
+            0,
+            s.rowCount,
+            _this.tableColumns[remarkTb].length,
+          );
+          _this.sheetSelectObj.start = s.row;
 
-        this.spread[remarkTb].bind(
-          GCsheets.Events.EditStarting,
-          function (e, args) {},
-        );
-        this.spread[remarkTb].bind(
-          GCsheets.Events.EditEnded,
-          function (e, args) {
-            // 自动计算数量
-          },
-        );
-        // 表格单击齐套率弹框事件
-        this.spread[remarkTb].bind(
-          GCsheets.Events.CellClick,
-          function (e, args) {},
-        );
-        //脏数据清除
-        sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {});
-        this.spread[remarkTb].resumePaint();
-        this.adminLoading = false;
-        this.tableLoading[remarkTb] = false;
-        this.spread[remarkTb].refresh(); //重新定位宽高度
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
+          _this.sheetSelectObj.count = s.rowCount;
+        },
+      );
+
+      /////////////////表格事件/////////////
+      //绑定表格事件前，需清除之前的绑定事件
+      this.spread[remarkTb].unbindAll();
+      this.spread[remarkTb].bind(GCsheets.Events.ButtonClicked, (e, args) => {
+        const { sheet, row, col } = args;
+        const cellType = sheet.getCellType(row, col);
+        if (cellType instanceof GCsheets.CellTypes.Button) {
         }
-      }
+        if (cellType instanceof GCsheets.CellTypes.CheckBox) {
+        }
+        if (cellType instanceof GCsheets.CellTypes.HyperLink) {
+        }
+      });
+      //表格编辑事件
+
+      this.spread[remarkTb].bind(
+        GCsheets.Events.EditStarting,
+        function (e, args) {},
+      );
+      this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
+        // 自动计算数量
+      });
+      // 表格单击齐套率弹框事件
+      this.spread[remarkTb].bind(
+        GCsheets.Events.CellClick,
+        function (e, args) {},
+      );
+      //脏数据清除
+      sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {});
+      this.spread[remarkTb].resumePaint();
+      this.adminLoading = false;
+      this.tableLoading[remarkTb] = false;
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        this.spread[remarkTb].refresh(); //重新定位宽高度
+      }, 0);
     },
     // 高度控制
     setHeight() {
@@ -1120,7 +1109,7 @@ export default {
       if (result) {
         Columns.some((m, i) => {
           m.forEach((n, index) => {
-            // 进行验证
+            //进行验证;
             this.verifyDta(n);
             if (n.childrens && n.children.length != 0) {
               n.childrens.forEach((x) => {
@@ -1132,7 +1121,7 @@ export default {
         });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        await this.setData(remarkTb);
+        this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -1263,26 +1252,41 @@ export default {
       this.labelStatus2 = index;
       this.dataSearch(this.labelStatus2);
     },
-    async activeNum(changeNum) {
-      if (changeNum === -1) {
-        if (this.active === 1) {
-          return;
+    activeNum(stepNumber) {
+      console.log('点击步骤', stepNumber);
+      this.active = stepNumber;
+      //   if (stepNumber === -1) {
+      //     if (this.active === 1) {
+      //       return;
+      //     } else {
+      //       this.active = this.active + stepNumber;
+      //     }
+      //   } else {
+      //     if (this.active === 4) {
+      //       return;
+      //     } else {
+      //       this.active = this.active + stepNumber;
+      //     }
+      //   }
+      if (this.active === 1) {
+        if (this.tableData[this.labelStatus1].length === 0) {
+          this.dataSearch(this.labelStatus1);
         } else {
-          this.active = this.active + changeNum;
-        }
-      } else {
-        if (this.active === 4) {
-          return;
-        } else {
-          this.active = this.active + changeNum;
+          this.setData(this.labelStatus1);
         }
       }
-
       if (this.active === 2) {
         this.dataSearch(2);
       }
       if (this.active === 3) {
-        this.dataSearch(this.labelStatus2);
+        if (this.tableData[this.labelStatus2].length === 0) {
+          this.dataSearch(this.labelStatus2);
+        } else {
+          this.setData(this.labelStatus2);
+        }
+      }
+      if (this.active === 4) {
+        this.dataSearch(5);
       }
     },
     // 行内样式
