@@ -15,7 +15,7 @@ let base_url;
 //http://192.168.128.160          --金羚内网
 //http://jinlingfan.gicp.net:5999 --金羚外网
 //http://10.50.18.130             --佛照内网
-//http://192.168.1.188:9999        --瑞能
+//http://112.15.190.218:9999       --瑞能
 //http://172.16.30.213       --tenpao
 //http://10.8.0.18:9998       --金星徽
 
@@ -76,15 +76,22 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    if (error.response.status == 401) {
-      Message({
-        message: "登录信息失效，请重新登录！",
-        type: "error",
-        duration: 5 * 1000,
-      });
-      this.$router.push("/login");
+    return {
+      "data": {
+        "data": [
+        ],
+        "dataFooter": null,
+        "result": false,
+        "msg": "与服务器通讯失败，请稍后再试",
+        "count": 1,
+        "Columns": [
+        ],
+        "status": 200,
+        "statusText": "OK",
+        "request": {}
+      }
     }
-    return Promise.reject(error);
+    // return Promise.reject(error);
   }
 );
 
