@@ -2,7 +2,7 @@
 <template>
   <el-container>
     <el-main>
-      <div class="firstNode">
+      <div class="firstNode" v-show="active === 1">
         <div class="rightCard">
           <div class="secondCard">
             <div class="itemCard">
@@ -10,6 +10,85 @@
                 <div class="echartTitle">计划配套趋势</div>
               </div> -->
               <div class="echartBody" ref="chart1"></div>
+            </div>
+          </div>
+        </div>
+        <div class="leftCard APSContainer">
+          <div
+            class="admin_head_2 flex justify-between"
+            ref="headRef"
+            v-for="i in [0, 1]"
+            :key="i + 'head'"
+            v-show="labelStatus1 === i"
+          >
+            <div v-for="(item, y) in Status1" :key="y">
+              <span
+                @click="changeStatus(item, y)"
+                :class="
+                  labelStatus2 == item['index2']
+                    ? 'statusActive cursor'
+                    : 'cursor'
+                "
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider>
+            </div>
+            <ComSearch
+              class="flex-grow"
+              ref="searchRef"
+              :searchData="formSearchs[i].datas"
+              :searchForm="formSearchs[i].forms"
+              :remark="i"
+              :btnForm="btnForm"
+              :signName="i"
+              :Region="Region[i]"
+              @btnClick="btnClick"
+            />
+          </div>
+          <div
+            v-for="item in [0, 1]"
+            :key="item"
+            class="admin_content flex_grow"
+            v-show="labelStatus1 === item"
+          >
+            <ComVxeTable
+              :ref="`tableRef${item}`"
+              :rowKey="'RowNumber'"
+              height="100%"
+              :isToolbar="false"
+              :isEdit="isEdit[item]"
+              :tableData="tableData[item]"
+              :tableHeader="tableColumns[item]"
+              :tableLoading="tableLoading[item]"
+              :remark="item"
+              :sysID="sysID[item]['ID']"
+              :isClear="isClear[item]"
+              :hasSelect="hasSelect[item]"
+              :pagination="tablePagination[item]"
+              @pageChange="pageChange"
+              @handleRowClick="handleRowClick"
+              @pageSize="pageSize"
+              @sortChange="sortChange"
+              @selectfun="selectFun"
+              :keepSource="true"
+              :footerContent="true"
+              :scrollEnable="false"
+              :EnableColumnFiltering="false"
+              :showFooter="true"
+              :dataFooter="dataFooter[item]"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="activeNode2" v-show="active === 2">
+        <div
+          class="rightCard"
+          v-for="(item, index) in chartData2"
+          :key="index + 'chart2'"
+        >
+          <div class="secondCard">
+            <div class="itemCard">
+              <div class="echartBody" :ref="'activeChart'"></div>
             </div>
           </div>
         </div>
@@ -112,6 +191,7 @@ export default {
       btnForm: [],
       tableData: [[], []],
       chartData: [],
+      chartData2: [],
       tableColumns: [[], []],
       dataFooter: [[], []],
       tableLoading: [false, false],
@@ -153,6 +233,7 @@ export default {
         { label: '在途金额', value: 7, index: 0, index2: 6 },
         { label: '消耗在途金额', value: 8, index: 0, index2: 7 },
       ],
+      active: 1,
     };
   },
   watch: {},
@@ -189,7 +270,7 @@ export default {
     barData(item, option) {
       item.setOption(option);
     },
-    async getEcharts() {
+    async getEcharts(remarkTb) {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -199,159 +280,279 @@ export default {
         if (!clientWidth) return;
         return res * (clientWidth / 1920);
       }
-      this.chartOptions = [
-        {
-          title: {
-            text: '库存分析趋势图',
-            textStyle: {
-              align: 'center',
-              color: '#000',
-              fontSize: fontSize(16),
-            },
-            top: '0',
-            left: 'center',
-          },
-          grid: {
-            containLabel: true,
-            bottom: 0,
-            left: fontSize(10),
-            right: fontSize(10),
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow',
-            },
-          },
-          legend: {
-            right: 0,
-            data: [
-              '计划任务',
-              '配套任务',
-              this.Status1[this.labelStatus2]['label'],
-            ],
-            itemWidth: fontSize(14),
-            itemHeight: fontSize(14),
-            itemGap: fontSize(10),
-          },
-          xAxis: {
-            // name: "班级",
-            triggerEvent: true,
-            data: this.chartData.map((item) => item['SaveDate']),
-            axisLabel: {
-              interval: 0,
-              show: true,
-              textStyle: {
-                color: '#000',
-              },
-            },
-            axisLine: {
-              lineStyle: {
-                show: false,
-                color: '#F3F3F3',
-                width: 2,
-              },
-            },
-          },
-          yAxis: [
+      this.$nextTick(() => {
+        if (remarkTb === 0) {
+          _this.chart = [echarts.init(_this.$refs.chart1)];
+          _this.chartOptions = [
             {
-              name: '金额（万元）',
-              type: 'value',
-              nameTextStyle: {
-                color: '#444444',
-              },
-              axisLabel: {
-                interval: 0,
-                show: true,
-                // formatter: '{value}%',
+              title: {
+                text: '库存分析趋势图',
                 textStyle: {
-                  color: '#444444',
+                  align: 'center',
+                  color: '#000',
+                  fontSize: fontSize(16),
+                },
+                top: '0',
+                left: 'center',
+              },
+              grid: {
+                containLabel: true,
+                bottom: 0,
+                left: fontSize(10),
+                right: fontSize(10),
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow',
                 },
               },
-              axisLine: {
-                show: false,
-                // lineStyle: {
-                //   color: "#F3F3F3",
-                //   width: 2
-                // }
+              legend: {
+                right: 0,
+                data: [
+                  '计划任务',
+                  '配套任务',
+                  this.Status1[this.labelStatus2]['label'],
+                ],
+                itemWidth: fontSize(14),
+                itemHeight: fontSize(14),
+                itemGap: fontSize(10),
               },
-              axisTick: {
-                show: false,
-              },
-              splitLine: {
-                lineStyle: {
-                  type: 'dashed',
-                  color: '#E9E9E9',
+              xAxis: {
+                // name: "班级",
+                triggerEvent: true,
+                data: this.chartData.map((item) => item['SaveDate']),
+                axisLabel: {
+                  interval: 0,
+                  show: true,
+                  textStyle: {
+                    color: '#000',
+                  },
+                },
+                axisLine: {
+                  lineStyle: {
+                    show: false,
+                    color: '#F3F3F3',
+                    width: 2,
+                  },
                 },
               },
+              yAxis: [
+                {
+                  name: '金额（万元）',
+                  type: 'value',
+                  nameTextStyle: {
+                    color: '#444444',
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    show: true,
+                    // formatter: '{value}%',
+                    textStyle: {
+                      color: '#444444',
+                    },
+                  },
+                  axisLine: {
+                    show: false,
+                    // lineStyle: {
+                    //   color: "#F3F3F3",
+                    //   width: 2
+                    // }
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      type: 'dashed',
+                      color: '#E9E9E9',
+                    },
+                  },
+                },
+              ],
+              series: [
+                // {
+                //   name: '计划任务',
+                //   type: 'bar',
+                //   barWidth: fontSize(15),
+                //   silent: true,
+                //   itemStyle: {
+                //     normal: {
+                //       color: '#009B4C',
+                //     },
+                //   },
+                //   data: [
+                //     100, 25, 6, 6, 66, 26, 55, 51, 54, 44, 58, 66, 15, 96, 87, 26,
+                //     84, 86, 64, 56,
+                //   ],
+                // },
+                // {
+                //   name: '配套任务',
+                //   type: 'bar',
+                //   barWidth: fontSize(15),
+                //   silent: true,
+                //   itemStyle: {
+                //     normal: {
+                //       color: '#40AAF6',
+                //     },
+                //   },
+                //   data: [
+                //     84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
+                //     75, 52, 25, 63,
+                //   ],
+                // },
+                {
+                  name: this.Status1[this.labelStatus2]['label'],
+                  type: 'line',
+                  silent: true,
+                  itemStyle: {
+                    normal: {
+                      color: '#FA9A09',
+                    },
+                  },
+                  label: {
+                    show: true, // 显示标签
+                    position: 'top', // 标签显示在柱状图的上方
+                    fontSize: fontSize(10),
+                    color: '#000',
+                    formatter: function (params) {
+                      // 在标签文本后添加百分号
+                      // return params.value + '%';
+                    },
+                  },
+                  data: this.chartData.map((item) => item['Amount']),
+                  // this.chartData.map((item) => {
+                  //   const percentageValue = parseFloat(
+                  //     this.dataFooter[0][0][item.prop],
+                  //   );
+                  //   if (isNaN(percentageValue)) {
+                  //     return null; // 处理无效的百分比值
+                  //   }
+                  //   return percentageValue;
+                  // }),
+                },
+              ],
             },
-          ],
-          series: [
-            // {
-            //   name: '计划任务',
-            //   type: 'bar',
-            //   barWidth: fontSize(15),
-            //   silent: true,
-            //   itemStyle: {
-            //     normal: {
-            //       color: '#009B4C',
-            //     },
-            //   },
-            //   data: [
-            //     100, 25, 6, 6, 66, 26, 55, 51, 54, 44, 58, 66, 15, 96, 87, 26,
-            //     84, 86, 64, 56,
-            //   ],
-            // },
-            // {
-            //   name: '配套任务',
-            //   type: 'bar',
-            //   barWidth: fontSize(15),
-            //   silent: true,
-            //   itemStyle: {
-            //     normal: {
-            //       color: '#40AAF6',
-            //     },
-            //   },
-            //   data: [
-            //     84, 86, 64, 56, 51, 54, 44, 58, 66, 25, 6, 6, 66, 26, 34, 98,
-            //     75, 52, 25, 63,
-            //   ],
-            // },
-            {
-              name: this.Status1[this.labelStatus2]['label'],
-              type: 'line',
-              silent: true,
-              itemStyle: {
-                normal: {
-                  color: '#FA9A09',
+          ];
+        } else {
+          console.log(_this.$refs, '_this.$refs');
+
+          _this.chart = [];
+          _this.chartOptions = [];
+          _this.chartData2.forEach((item, index) => {
+            _this.chart.push(echarts.init(_this.$refs['activeChart'][index]));
+            _this.chartOptions.push({
+              title: {
+                text: item['WarehouseName'] + '趋势图',
+                textStyle: {
+                  align: 'center',
+                  color: '#000',
+                  fontSize: fontSize(16),
+                },
+                top: '0',
+                left: 'center',
+              },
+              grid: {
+                containLabel: true,
+                bottom: 0,
+                left: fontSize(10),
+                right: fontSize(10),
+              },
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow',
                 },
               },
-              label: {
-                show: true, // 显示标签
-                position: 'top', // 标签显示在柱状图的上方
-                fontSize: fontSize(10),
-                color: '#000',
-                formatter: function (params) {
-                  // 在标签文本后添加百分号
-                  // return params.value + '%';
+              legend: {
+                right: 0,
+                data: [item['WarehouseName']],
+                itemWidth: fontSize(14),
+                itemHeight: fontSize(14),
+                itemGap: fontSize(10),
+              },
+              xAxis: {
+                // name: "班级",
+                triggerEvent: true,
+                data: item['data'].map((item) => item['SaveDate']),
+                axisLabel: {
+                  interval: 0,
+                  show: true,
+                  textStyle: {
+                    color: '#000',
+                  },
+                },
+                axisLine: {
+                  lineStyle: {
+                    show: false,
+                    color: '#F3F3F3',
+                    width: 2,
+                  },
                 },
               },
-              data: this.chartData.map((item) => item['Amount']),
-              // this.chartData.map((item) => {
-              //   const percentageValue = parseFloat(
-              //     this.dataFooter[0][0][item.prop],
-              //   );
-              //   if (isNaN(percentageValue)) {
-              //     return null; // 处理无效的百分比值
-              //   }
-              //   return percentageValue;
-              // }),
-            },
-          ],
-        },
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
+              yAxis: [
+                {
+                  name: '金额（万元）',
+                  type: 'value',
+                  nameTextStyle: {
+                    color: '#444444',
+                  },
+                  axisLabel: {
+                    interval: 0,
+                    show: true,
+                    // formatter: '{value}%',
+                    textStyle: {
+                      color: '#444444',
+                    },
+                  },
+                  axisLine: {
+                    show: false,
+                    // lineStyle: {
+                    //   color: "#F3F3F3",
+                    //   width: 2
+                    // }
+                  },
+                  axisTick: {
+                    show: false,
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      type: 'dashed',
+                      color: '#E9E9E9',
+                    },
+                  },
+                },
+              ],
+              series: [
+                {
+                  name: item['WarehouseName'],
+                  type: 'line',
+                  silent: true,
+                  itemStyle: {
+                    normal: {
+                      color: '#FA9A09',
+                    },
+                  },
+                  label: {
+                    show: true, // 显示标签
+                    position: 'top', // 标签显示在柱状图的上方
+                    fontSize: fontSize(10),
+                    color: '#000',
+                    formatter: function (params) {
+                      // 在标签文本后添加百分号
+                      // return params.value + '%';
+                    },
+                  },
+                  data: item['data'].map((item) => item['Amount']),
+                },
+              ],
+            });
+          });
+        }
+
+        _this.chart.map((item, index) => {
+          _this.barData(item, _this.chartOptions[index]);
+        });
       });
     },
     handleWindowResize() {
@@ -623,13 +824,42 @@ export default {
             this.$set(this.tableColumns, remarkTb, m);
           });
         });
-        this.$set(this.tableData, remarkTb, data);
+        console.log(remarkTb, 'remarkTb');
+        if (remarkTb === 1) {
+          this.$set(this.tableData, remarkTb, data);
+          this.$set(this, 'chartData', data);
+          const classifiedData = [];
+          // 遍历原始数据数组
+          data.forEach((item) => {
+            // 获取仓库名称
+            const warehouse = item.WarehouseName;
+            // 在classifiedData数组中查找是否存在相应仓库的数据
+            const warehouseData = classifiedData.find(
+              (data) => data.WarehouseName === warehouse,
+            );
+
+            // 如果不存在，则创建一个包含仓库信息的对象，并将其放入classifiedData数组
+            if (!warehouseData) {
+              classifiedData.push({
+                WarehouseName: warehouse,
+                data: [item],
+              });
+            } else {
+              // 如果存在，则将当前数据项添加到相应仓库的数组中
+              warehouseData.data.push(item);
+            }
+          });
+          this.$set(this, 'chartData2', classifiedData);
+          console.log(this.chartData2);
+        } else {
+          this.$set(this.tableData, remarkTb, data);
+          this.$set(this, 'chartData', data);
+        }
         if (dataFooter && dataFooter.length > 0) {
           this.$set(this.dataFooter, remarkTb, dataFooter);
         }
-        this.$set(this, 'chartData', data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        await this.getEcharts();
+        await this.getEcharts(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -654,7 +884,11 @@ export default {
       this.formSearchs[item['index']].datas['AmountType'] = item['value'];
       this.labelStatus1 = item['index'];
       this.labelStatus2 = item['index2'];
-      console.log(this.labelStatus1, this.labelStatus2);
+      if (this.labelStatus1 === 0) {
+        this.active = 1;
+      } else {
+        this.active = 2;
+      }
       this.dataSearch(this.labelStatus1);
     },
     hexToRgba(hex, opacity) {
@@ -679,13 +913,13 @@ export default {
 .el-main {
   padding: 10px;
   height: calc(100vh - 80px);
-  overflow: hidden;
+  width: 100%;
 
   .firstNode {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100%;
+    overflow: auto;
 
     .rightCard {
       width: 100%;
@@ -709,7 +943,37 @@ export default {
       width: 100%;
       height: 70%;
       background: #fff;
-      margin-right: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .activeNode2 {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    .rightCard {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      margin-bottom: 10px;
+      .secondCard {
+        width: 100%;
+        height: 100%;
+        .itemCard {
+          height: 100%;
+          border-radius: 4px;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+      }
+    }
+    .leftCard {
+      width: 100%;
+      height: 600px;
+      background: #fff;
       display: flex;
       flex-direction: column;
     }
