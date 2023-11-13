@@ -1,7 +1,7 @@
 <!--表格-->
 <template>
   <el-container>
-    <el-main>
+    <el-main v-loading="adminLoading">
       <div class="firstNode" v-show="active === 1">
         <div class="rightCard">
           <div class="secondCard">
@@ -239,6 +239,7 @@ export default {
   watch: {},
   created() {
     _this = this;
+    this.adminLoading = true;
     let routeBtn = this.$route;
 
     // 获取所有按钮
@@ -286,7 +287,7 @@ export default {
           _this.chartOptions = [
             {
               title: {
-                text: '库存分析趋势图',
+                text: this.Status1[this.labelStatus2]['label'] + '趋势图',
                 textStyle: {
                   align: 'center',
                   color: '#000',

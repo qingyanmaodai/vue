@@ -248,6 +248,7 @@ export default {
   computed: {},
   created() {
     _this = this;
+    this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
