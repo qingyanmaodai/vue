@@ -14,6 +14,24 @@
           </div>
         </div>
         <div class="leftCard APSContainer">
+          <div class="ant-table-title pd-0-6 text-red">
+            <el-row>
+              <el-col :span="4"><span class="title"></span></el-col>
+              <el-col :span="20" class="flex_flex_end">
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus2 == item['index2']
+                        ? 'statusActive cursor'
+                        : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
+                  <el-divider direction="vertical"></el-divider></div
+              ></el-col>
+            </el-row>
+          </div>
           <div
             class="admin_head_2 flex justify-between"
             ref="headRef"
@@ -21,18 +39,6 @@
             :key="i + 'head'"
             v-show="labelStatus1 === i"
           >
-            <div v-for="(item, y) in Status1" :key="y">
-              <span
-                @click="changeStatus(item, y)"
-                :class="
-                  labelStatus2 == item['index2']
-                    ? 'statusActive cursor'
-                    : 'cursor'
-                "
-                >{{ item.label }}</span
-              >
-              <el-divider direction="vertical"></el-divider>
-            </div>
             <ComSearch
               class="flex-grow"
               ref="searchRef"
@@ -93,6 +99,24 @@
           </div>
         </div>
         <div class="leftCard APSContainer">
+          <div class="ant-table-title pd-0-6 text-red">
+            <el-row>
+              <el-col :span="4"><span class="title"></span></el-col>
+              <el-col :span="20" class="flex_flex_end">
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus2 == item['index2']
+                        ? 'statusActive cursor'
+                        : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
+                  <el-divider direction="vertical"></el-divider></div
+              ></el-col>
+            </el-row>
+          </div>
           <div
             class="admin_head_2 flex justify-between"
             ref="headRef"
@@ -100,18 +124,6 @@
             :key="i + 'head'"
             v-show="labelStatus1 === i"
           >
-            <div v-for="(item, y) in Status1" :key="y">
-              <span
-                @click="changeStatus(item, y)"
-                :class="
-                  labelStatus2 == item['index2']
-                    ? 'statusActive cursor'
-                    : 'cursor'
-                "
-                >{{ item.label }}</span
-              >
-              <el-divider direction="vertical"></el-divider>
-            </div>
             <ComSearch
               class="flex-grow"
               ref="searchRef"

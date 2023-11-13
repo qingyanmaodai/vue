@@ -214,6 +214,7 @@
                 v-if="x.type === 'Select'"
                 filterable
                 :multiple="x.multiple"
+                collapse-tags
                 v-model="searchData[x.prop]"
                 size="small"
                 clearable
@@ -356,6 +357,7 @@
                   v-if="x.type === 'Select'"
                   filterable
                   :multiple="x.multiple"
+                  collapse-tags
                   v-model="x[x.prop]"
                   size="small"
                   clearable
