@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import ScrollPane from "./ScrollPane";
-import path from "path";
+import ScrollPane from './ScrollPane';
+import path from 'path';
 
 export default {
   components: { ScrollPane },
@@ -73,9 +73,9 @@ export default {
     },
     visible(value) {
       if (value) {
-        document.body.addEventListener("click", this.closeMenu);
+        document.body.addEventListener('click', this.closeMenu);
       } else {
-        document.body.removeEventListener("click", this.closeMenu);
+        document.body.removeEventListener('click', this.closeMenu);
       }
     },
   },
@@ -90,7 +90,7 @@ export default {
     isAffix(tag) {
       return tag.meta && tag.meta.affix;
     },
-    filterAffixTags(routes, basePath = "/") {
+    filterAffixTags(routes, basePath = '/') {
       let tags = [];
       routes.forEach((route) => {
         if (route.meta && route.meta.affix) {
@@ -116,14 +116,14 @@ export default {
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
-          this.$store.dispatch("tagsView/addVisitedView", tag);
+          this.$store.dispatch('tagsView/addVisitedView', tag);
         }
       }
     },
     addTags() {
       const { name } = this.$route;
       if (name) {
-        this.$store.dispatch("tagsView/addView", this.$route);
+        this.$store.dispatch('tagsView/addView', this.$route);
       }
       return false;
     },
@@ -135,7 +135,7 @@ export default {
             this.$refs.scrollPane.moveToTarget(tag);
             // when query is different then update
             if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch("tagsView/updateVisitedView", this.$route);
+              this.$store.dispatch('tagsView/updateVisitedView', this.$route);
             }
             break;
           }
@@ -143,18 +143,18 @@ export default {
       });
     },
     refreshSelectedTag(view) {
-      this.$store.dispatch("tagsView/delCachedView", view).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     closeSelectedTag(view) {
       this.$store
-        .dispatch("tagsView/delView", view)
+        .dispatch('tagsView/delView', view)
         .then(({ visitedViews }) => {
           if (this.isActive(view)) {
             this.toLastView(visitedViews, view);
@@ -162,22 +162,22 @@ export default {
         });
     },
     closeOthersTags() {
-      if (this.selectedTag && this.selectedTag.path.indexOf("dic") > -1) {
+      if (this.selectedTag && this.selectedTag.path.indexOf('dic') > -1) {
         this.$router.push(
-          this.selectedTag.path + "?dicID=" + this.selectedTag.meta.dicID
+          this.selectedTag.path + '?dicID=' + this.selectedTag.meta.dicID,
         );
       } else {
         this.$router.push(this.selectedTag.path);
       }
       this.$store
-        .dispatch("tagsView/delOthersViews", this.selectedTag)
+        .dispatch('tagsView/delOthersViews', this.selectedTag)
         .then(() => {
           this.moveToCurrentTag();
         });
     },
     closeAllTags(view) {
       this.$store
-        .dispatch("tagsView/delAllViews", this.$route)
+        .dispatch('tagsView/delAllViews', this.$route)
         .then(({ visitedViews }) => {
           if (this.affixTags.some((tag) => tag.path === view.path)) {
             return;
@@ -192,11 +192,11 @@ export default {
       } else {
         // now the default is to redirect to the home page if there is no tags-view,
         // you can adjust it according to your needs.
-        if (view.name === "Dashboard") {
+        if (view.name === 'Dashboard') {
           // to reload home page
-          this.$router.replace({ path: "/redirect" + view.fullPath });
+          this.$router.replace({ path: '/redirect' + view.fullPath });
         } else {
-          this.$router.push("/");
+          this.$router.push('/');
         }
       }
     },
@@ -230,7 +230,9 @@ export default {
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.12),
+    0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -242,7 +244,7 @@ export default {
       color: #495060;
       background: #fff;
       padding: 0 8px;
-      font-size: 12px;
+      font-size: 14px;
       margin-left: 5px;
       margin-top: 4px;
       &:first-of-type {
@@ -256,7 +258,7 @@ export default {
         color: #fff;
         border-color: #42b983;
         &::before {
-          content: "";
+          content: '';
           background: #fff;
           display: inline-block;
           width: 8px;
