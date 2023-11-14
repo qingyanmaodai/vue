@@ -1,131 +1,129 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="headCard">
-          <div class="box">
-            <div class="icon">
-              <svg-icon icon-class="iconAnnualHead-0" class="iconAnnual" />
-            </div>
-            <div class="textBox">
-              <div class="statusNum">
-                {{ headCard[0]['Prop'] }}
-              </div>
-              <div class="textHead">
-                <div class="title">{{ headCard[0]['title'] }}</div>
-              </div>
-            </div>
+  <div class="flex_column content_height APS">
+    <div class="firstNode">
+      <div class="headCard">
+        <div class="box">
+          <div class="icon">
+            <svg-icon icon-class="iconAnnualHead-0" class="iconAnnual" />
           </div>
-          <div class="box">
-            <div class="icon">
-              <svg-icon icon-class="iconAnnualHead-1" class="iconAnnual" />
+          <div class="textBox">
+            <div class="statusNum">
+              {{ headCard[0]['Prop'] }}
             </div>
-            <div class="textBox">
-              <div class="statusNum">
-                {{ headCard[1]['Prop'] }}
-              </div>
-              <div class="textHead">
-                <div class="title">{{ headCard[1]['title'] }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="box">
-            <div class="icon">
-              <svg-icon icon-class="iconAnnualHead-2" class="iconAnnual" />
-            </div>
-            <div class="textBox">
-              <div class="statusNum">{{ headCard[2]['Prop'] }}</div>
-              <div class="textHead">
-                <div class="title">{{ headCard[2]['title'] }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="box">
-            <div class="icon">
-              <svg-icon icon-class="iconAnnualHead-3" class="iconAnnual" />
-            </div>
-            <div class="textBox">
-              <div class="statusNum">{{ headCard[3]['Prop'] }}</div>
-              <div class="textHead">
-                <div class="title">{{ headCard[3]['title'] }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="box">
-            <div class="icon">
-              <svg-icon icon-class="iconAnnualHead-4" class="iconAnnual" />
-            </div>
-            <div class="textBox">
-              <div class="statusNum">{{ headCard[4]['Prop'] }}</div>
-              <div class="textHead">
-                <div class="title">{{ headCard[4]['title'] }}</div>
-              </div>
+            <div class="textHead">
+              <div class="title">{{ headCard[0]['title'] }}</div>
             </div>
           </div>
         </div>
-        <div class="middleCard">
-          <div class="BFirstCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">计划达成趋势图</div>
-              </div>
-              <div class="echartBody" ref="chart0"></div>
-            </div>
+        <div class="box">
+          <div class="icon">
+            <svg-icon icon-class="iconAnnualHead-1" class="iconAnnual" />
           </div>
-          <div class="BSecondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">计划概览</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
+          <div class="textBox">
+            <div class="statusNum">
+              {{ headCard[1]['Prop'] }}
             </div>
-          </div>
-          <div class="BSecondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">计划按部门占比</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
+            <div class="textHead">
+              <div class="title">{{ headCard[1]['title'] }}</div>
             </div>
           </div>
         </div>
-        <div class="bottomCard">
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">计划月度汇总统计</div>
-              </div>
-              <div class="echartBody" v-for="item in [0]" :key="item">
-                <ComVxeTable
-                  :ref="`tableRef${item}`"
-                  :rowKey="'RowNumber'"
-                  height="100%"
-                  :isToolbar="false"
-                  :isEdit="isEdit[0]"
-                  :tableData="tableData[0]"
-                  :tableHeader="tableColumns[0]"
-                  :tableLoading="tableLoading[0]"
-                  :remark="0"
-                  :sysID="sysID[0]['ID']"
-                  :isClear="isClear[0]"
-                  :hasSelect="hasSelect[item]"
-                  :pagination="tablePagination[0]"
-                  @pageChange="pageChange"
-                  @handleRowClick="handleRowClick"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                  @selectfun="selectFun"
-                  :keepSource="true"
-                  :footerContent="false"
-                />
-              </div>
+        <div class="box">
+          <div class="icon">
+            <svg-icon icon-class="iconAnnualHead-2" class="iconAnnual" />
+          </div>
+          <div class="textBox">
+            <div class="statusNum">{{ headCard[2]['Prop'] }}</div>
+            <div class="textHead">
+              <div class="title">{{ headCard[2]['title'] }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="icon">
+            <svg-icon icon-class="iconAnnualHead-3" class="iconAnnual" />
+          </div>
+          <div class="textBox">
+            <div class="statusNum">{{ headCard[3]['Prop'] }}</div>
+            <div class="textHead">
+              <div class="title">{{ headCard[3]['title'] }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="icon">
+            <svg-icon icon-class="iconAnnualHead-4" class="iconAnnual" />
+          </div>
+          <div class="textBox">
+            <div class="statusNum">{{ headCard[4]['Prop'] }}</div>
+            <div class="textHead">
+              <div class="title">{{ headCard[4]['title'] }}</div>
             </div>
           </div>
         </div>
       </div>
-    </el-main>
-  </el-container>
+      <div class="middleCard">
+        <div class="BFirstCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">计划达成趋势图</div>
+            </div>
+            <div class="echartBody" ref="chart0"></div>
+          </div>
+        </div>
+        <div class="BSecondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">计划概览</div>
+            </div>
+            <div class="echartBody" ref="chart1"></div>
+          </div>
+        </div>
+        <div class="BSecondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">计划按部门占比</div>
+            </div>
+            <div class="echartBody" ref="chart2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottomCard">
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">计划月度汇总统计</div>
+            </div>
+            <div class="echartBody" v-for="item in [0]" :key="item">
+              <ComVxeTable
+                :ref="`tableRef${item}`"
+                :rowKey="'RowNumber'"
+                height="100%"
+                :isToolbar="false"
+                :isEdit="isEdit[0]"
+                :tableData="tableData[0]"
+                :tableHeader="tableColumns[0]"
+                :tableLoading="tableLoading[0]"
+                :remark="0"
+                :sysID="sysID[0]['ID']"
+                :isClear="isClear[0]"
+                :hasSelect="hasSelect[item]"
+                :pagination="tablePagination[0]"
+                @pageChange="pageChange"
+                @handleRowClick="handleRowClick"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+                @selectfun="selectFun"
+                :keepSource="true"
+                :footerContent="false"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -982,9 +980,8 @@ export default {
 }
 .el-container {
 }
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {

@@ -1,226 +1,225 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="leftCard">
-          <div class="headCard">
-            <div class="box blue">
-              <div class="icon">
-                <img :src="headCard[0]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">
-                  {{ tableData[0][0]['Prop'] }}
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]['title'] }}</div>
-                </div>
-              </div>
+  <div class="flex_column content_height APS">
+    <div class="firstNode">
+      <div class="leftCard">
+        <div class="headCard">
+          <div class="box blue">
+            <div class="icon">
+              <img :src="headCard[0]['icon']" />
             </div>
-            <div class="box green">
-              <div class="icon">
-                <img :src="headCard[1]['icon']" />
+            <div class="textBox">
+              <div class="statusNum">
+                {{ tableData[0][0]['Prop'] }}
               </div>
-              <div class="textBox">
-                <div class="statusNum">
-                  {{ tableData[0][1]['Prop'] }}
-                </div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]['title'] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box purple">
-              <div class="icon">
-                <img :src="headCard[2]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">{{ tableData[0][2]['Prop'] }}</div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]['title'] }}</div>
-                </div>
-              </div>
-            </div>
-            <div class="box red">
-              <div class="icon">
-                <img :src="headCard[3]['icon']" />
-              </div>
-              <div class="textBox">
-                <div class="statusNum">{{ tableData[0][3]['Prop'] }}</div>
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]['title'] }}</div>
-                </div>
+              <div class="textHead">
+                <div class="title">{{ headCard[0]['title'] }}</div>
               </div>
             </div>
           </div>
-          <div class="secondCard">
-            <div class="itemCard1">
-              <div class="echartHead">
-                <div class="echartTitle">{{ result1[1]['label'] }}</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
+          <div class="box green">
+            <div class="icon">
+              <img :src="headCard[1]['icon']" />
             </div>
-            <div class="itemCard2">
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">{{ result1[2]['label'] }}</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
-                </div>
-                <div class="echartBody" ref="chart2"></div>
+            <div class="textBox">
+              <div class="statusNum">
+                {{ tableData[0][1]['Prop'] }}
               </div>
-              <div class="itemCard">
-                <div class="echartHead">
-                  <div class="echartTitle">{{ result1[3]['label'] }}</div>
-                  <!-- <el-button-group>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 0
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(0)"
-                    >
-                      今日
-                    </el-button>
-                    <el-button
-                      :class="{
-                        select: selected2Index === 1
-                      }"
-                      size="small"
-                      @click="handleDayBtnClick(1)"
-                    >
-                      昨日
-                    </el-button>
-                  </el-button-group> -->
-                </div>
-                <div class="echartBody" ref="chart3"></div>
+              <div class="textHead">
+                <div class="title">{{ headCard[1]['title'] }}</div>
               </div>
             </div>
           </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">{{ result1[4]['label'] }}</div>
-              </div>
-              <div class="echartBody">
-                <ComReportTable
-                  :isToolbar="false"
-                  :showFooter="true"
-                  :isShowFooter="false"
-                  :isFooterRemark="false"
-                  :includeFields="[
-                    'Qty',
-                    'ReportQty',
-                    'OutStockQty',
-                    'StockQtyDiff',
-                  ]"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="4"
-                  :IsIndex="false"
-                  :height="'100%'"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[4]['ID']"
-                  :table-data="tableData[4]"
-                  :table-header="tableColumns[4]"
-                  :table-loading="tableLoading[4]"
-                  :pagination="tablePagination[4]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                >
-                </ComReportTable>
+          <div class="box purple">
+            <div class="icon">
+              <img :src="headCard[2]['icon']" />
+            </div>
+            <div class="textBox">
+              <div class="statusNum">{{ tableData[0][2]['Prop'] }}</div>
+              <div class="textHead">
+                <div class="title">{{ headCard[2]['title'] }}</div>
               </div>
             </div>
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">{{ result1[5]['label'] }}</div>
-              </div>
-              <div class="echartBody">
-                <ComReportTable
-                  :isToolbar="false"
-                  :showFooter="false"
-                  :isShowFooter="false"
-                  ref="PurchaseRequisition"
-                  :isEdit="false"
-                  :remark="5"
-                  :IsIndex="false"
-                  :height="'100%'"
-                  :row-key="'RowNumber'"
-                  :sysID="sysID[5]['ID']"
-                  :table-data="tableData[5]"
-                  :table-header="tableColumns[5]"
-                  :table-loading="tableLoading[5]"
-                  :pagination="tablePagination[5]"
-                  @pageChange="pageChange"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                  :cellStyle="cellStyle7"
-                >
-                </ComReportTable>
+          </div>
+          <div class="box red">
+            <div class="icon">
+              <img :src="headCard[3]['icon']" />
+            </div>
+            <div class="textBox">
+              <div class="statusNum">{{ tableData[0][3]['Prop'] }}</div>
+              <div class="textHead">
+                <div class="title">{{ headCard[3]['title'] }}</div>
               </div>
             </div>
           </div>
         </div>
-        <div class="rightCard">
-          <div class="firstCard">
+        <div class="secondCard">
+          <div class="itemCard1">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[1]['label'] }}</div>
+            </div>
+            <div class="echartBody" ref="chart1"></div>
+          </div>
+          <div class="itemCard2">
             <div class="itemCard">
               <div class="echartHead">
-                <div class="echartTitle">{{ result1[6]['label'] }}</div>
+                <div class="echartTitle">{{ result1[2]['label'] }}</div>
+                <!-- <el-button-group>
+                    <el-button
+                      :class="{
+                        select: selected2Index === 0
+                      }"
+                      size="small"
+                      @click="handleDayBtnClick(0)"
+                    >
+                      今日
+                    </el-button>
+                    <el-button
+                      :class="{
+                        select: selected2Index === 1
+                      }"
+                      size="small"
+                      @click="handleDayBtnClick(1)"
+                    >
+                      昨日
+                    </el-button>
+                  </el-button-group> -->
               </div>
-              <div class="echartBody">
-                <div class="xnode">
-                  <div class="triangle">产品缺失工艺</div>
-                  <div></div>
-                  <div>{{ tableData[9][0]['C1'] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">工艺缺失</div>
-                  <div></div>
-                  <div>{{ tableData[9][0]['C1'] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">产能缺失</div>
-                  <div></div>
-                  <div>{{ tableData[10][0]['C1'] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">排班未配置</div>
-                  <div></div>
-                  <div>{{ tableData[11][0]['C1'] }}</div>
-                </div>
-                <div class="xnode">
-                  <div class="triangle">库存预警</div>
-                  <div></div>
-                  <div>{{ tableData[12][0]['C1'] }}</div>
-                </div>
+              <div class="echartBody" ref="chart2"></div>
+            </div>
+            <div class="itemCard">
+              <div class="echartHead">
+                <div class="echartTitle">{{ result1[3]['label'] }}</div>
+                <!-- <el-button-group>
+                    <el-button
+                      :class="{
+                        select: selected2Index === 0
+                      }"
+                      size="small"
+                      @click="handleDayBtnClick(0)"
+                    >
+                      今日
+                    </el-button>
+                    <el-button
+                      :class="{
+                        select: selected2Index === 1
+                      }"
+                      size="small"
+                      @click="handleDayBtnClick(1)"
+                    >
+                      昨日
+                    </el-button>
+                  </el-button-group> -->
+              </div>
+              <div class="echartBody" ref="chart3"></div>
+            </div>
+          </div>
+        </div>
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[4]['label'] }}</div>
+            </div>
+            <div class="echartBody">
+              <ComReportTable
+                :isToolbar="false"
+                :showFooter="true"
+                :isShowFooter="false"
+                :isFooterRemark="false"
+                :includeFields="[
+                  'Qty',
+                  'ReportQty',
+                  'OutStockQty',
+                  'StockQtyDiff',
+                ]"
+                ref="PurchaseRequisition"
+                :isEdit="false"
+                :remark="4"
+                :IsIndex="false"
+                :height="'100%'"
+                :row-key="'RowNumber'"
+                :sysID="sysID[4]['ID']"
+                :table-data="tableData[4]"
+                :table-header="tableColumns[4]"
+                :table-loading="tableLoading[4]"
+                :pagination="tablePagination[4]"
+                @pageChange="pageChange"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+              >
+              </ComReportTable>
+            </div>
+          </div>
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[5]['label'] }}</div>
+            </div>
+            <div class="echartBody">
+              <ComReportTable
+                :isToolbar="false"
+                :showFooter="false"
+                :isShowFooter="false"
+                ref="PurchaseRequisition"
+                :isEdit="false"
+                :remark="5"
+                :IsIndex="false"
+                :height="'100%'"
+                :row-key="'RowNumber'"
+                :sysID="sysID[5]['ID']"
+                :table-data="tableData[5]"
+                :table-header="tableColumns[5]"
+                :table-loading="tableLoading[5]"
+                :pagination="tablePagination[5]"
+                @pageChange="pageChange"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+                :cellStyle="cellStyle7"
+              >
+              </ComReportTable>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rightCard">
+        <div class="firstCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[6]['label'] }}</div>
+            </div>
+            <div class="echartBody">
+              <div class="xnode">
+                <div class="triangle">产品缺失工艺</div>
+                <div></div>
+                <div>{{ tableData[9][0]['C1'] }}</div>
+              </div>
+              <div class="xnode">
+                <div class="triangle">工艺缺失</div>
+                <div></div>
+                <div>{{ tableData[9][0]['C1'] }}</div>
+              </div>
+              <div class="xnode">
+                <div class="triangle">产能缺失</div>
+                <div></div>
+                <div>{{ tableData[10][0]['C1'] }}</div>
+              </div>
+              <div class="xnode">
+                <div class="triangle">排班未配置</div>
+                <div></div>
+                <div>{{ tableData[11][0]['C1'] }}</div>
+              </div>
+              <div class="xnode">
+                <div class="triangle">库存预警</div>
+                <div></div>
+                <div>{{ tableData[12][0]['C1'] }}</div>
               </div>
             </div>
           </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">{{ result1[7]['label'] }}</div>
-                <!-- <el-button-group>
+        </div>
+        <div class="secondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[7]['label'] }}</div>
+              <!-- <el-button-group>
                   <el-button
                     :class="{
                       select: selected1Index === 0,
@@ -240,21 +239,21 @@
                     预计超额
                   </el-button>
                 </el-button-group> -->
-              </div>
-              <div class="echartBody" ref="chart4"></div>
             </div>
+            <div class="echartBody" ref="chart4"></div>
           </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">{{ result1[8]['label'] }}</div>
-              </div>
-              <div class="echartBody" ref="chart5"></div>
+        </div>
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">{{ result1[8]['label'] }}</div>
             </div>
+            <div class="echartBody" ref="chart5"></div>
           </div>
         </div>
       </div>
-      <!-- <div class="listCard">
+    </div>
+    <!-- <div class="listCard">
         <div class="APSContainer" v-loading="adminLoading">
           <div class="admin_head" ref="headRef">
             <ComSearch
@@ -355,8 +354,7 @@
           </div>
         </div></div
     > -->
-    </el-main>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -1532,11 +1530,8 @@ export default {
 * {
   box-sizing: border-box;
 }
-.el-container {
-}
-.el-main {
+.APS {
   padding: 16px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {

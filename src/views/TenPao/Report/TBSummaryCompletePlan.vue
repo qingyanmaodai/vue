@@ -1,91 +1,89 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode APSContainer">
-        <div class="rightCard">
-          <div class="secondCard">
-            <div class="itemCard">
-              <!-- <div class="echartHead">
+  <div class="flex_column content_height APS">
+    <div class="firstNode APSContainer">
+      <div class="rightCard">
+        <div class="secondCard">
+          <div class="itemCard">
+            <!-- <div class="echartHead">
                 <div class="echartTitle">计划配套趋势</div>
               </div> -->
-              <div class="echartBody" ref="chart1"></div>
-            </div>
+            <div class="echartBody" ref="chart1"></div>
           </div>
         </div>
-        <div class="leftCard APSContainer">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              :signName="0"
-              :Region="Region[0]"
-              @btnClick="btnClick"
-            />
-          </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[0]"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :sysID="sysID[0]['ID']"
-              :isClear="isClear[0]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[0]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-              :scrollEnable="false"
-              :EnableColumnFiltering="false"
-              :showFooter="true"
-              :dataFooter="dataFooter[0]"
-            />
-          </div>
-        </div>
-        <!-- 弹框-->
-        <DialogOptTable
-          title="齐套率查询"
-          :tableDialog="colDialogVisible1"
-          :sysID="sysID[1]['ID']"
-          :isEdit="isEdit[1]"
-          :remark="1"
-          width="80%"
-          :hasSelect="hasSelect[1]"
-          @closeDialog="colDialogVisible1 = false"
-          @btnClickCall="btnClick"
-          :searchForm="formSearchs[1]"
-          :btnForm="btnForm"
-          :isToolbar="false"
-          :isConfirmBtn="true"
-          :showFooter="false"
-          :table-data="tableData[1]"
-          :table-header="tableColumns[1]"
-          :table-loading="tableLoading[1]"
-          :table-pagination="tablePagination[1]"
-          :isClear="isClear[1]"
-          @confirmDialog="confirmDialog"
-          @pageChangeCall="pageChange"
-          @pageSizeCall="pageSize"
-          @sortChangeCall="sortChange"
-          @selectFunCall="selectFun"
-        ></DialogOptTable>
       </div>
-    </el-main>
-  </el-container>
+      <div class="leftCard APSContainer">
+        <div class="admin_head_2" ref="headRef">
+          <ComSearch
+            ref="searchRef"
+            :searchData="formSearchs[0].datas"
+            :searchForm="formSearchs[0].forms"
+            :remark="0"
+            :isLoading="isLoading"
+            :btnForm="btnForm"
+            :signName="0"
+            :Region="Region[0]"
+            @btnClick="btnClick"
+          />
+        </div>
+        <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[0]"
+            :tableData="tableData[0]"
+            :tableHeader="tableColumns[0]"
+            :tableLoading="tableLoading[0]"
+            :remark="0"
+            :sysID="sysID[0]['ID']"
+            :isClear="isClear[0]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[0]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+            :scrollEnable="false"
+            :EnableColumnFiltering="false"
+            :showFooter="true"
+            :dataFooter="dataFooter[0]"
+          />
+        </div>
+      </div>
+      <!-- 弹框-->
+      <DialogOptTable
+        title="齐套率查询"
+        :tableDialog="colDialogVisible1"
+        :sysID="sysID[1]['ID']"
+        :isEdit="isEdit[1]"
+        :remark="1"
+        width="80%"
+        :hasSelect="hasSelect[1]"
+        @closeDialog="colDialogVisible1 = false"
+        @btnClickCall="btnClick"
+        :searchForm="formSearchs[1]"
+        :btnForm="btnForm"
+        :isToolbar="false"
+        :isConfirmBtn="true"
+        :showFooter="false"
+        :table-data="tableData[1]"
+        :table-header="tableColumns[1]"
+        :table-loading="tableLoading[1]"
+        :table-pagination="tablePagination[1]"
+        :isClear="isClear[1]"
+        @confirmDialog="confirmDialog"
+        @pageChangeCall="pageChange"
+        @pageSizeCall="pageSize"
+        @sortChangeCall="sortChange"
+        @selectFunCall="selectFun"
+      ></DialogOptTable>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -683,9 +681,8 @@ export default {
 }
 .el-container {
 }
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {

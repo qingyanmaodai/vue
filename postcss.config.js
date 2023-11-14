@@ -2,9 +2,10 @@ module.exports = {
   plugins: [
     require('tailwindcss'),
     require('autoprefixer'),
-    require('postcss-px2rem-exclude')({
-      remUnit: 16,
-      exclude: /node_modules|floder_name/i,
+    require('postcss-plugin-px2rem')({
+      rootValue: 16,
+      exclude: /node_modules|Sidebar|TagsView|Navbar|Breadcrumb|AppMain/i,
+      selectorBlackList: ['.content_height'],
     }),
   ],
 };

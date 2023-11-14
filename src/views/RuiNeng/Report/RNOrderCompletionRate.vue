@@ -1,78 +1,76 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="leftCard">
-          <div class="LFirstCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">过去30天计划完成趋势</div>
-              </div>
-              <div class="echartBody" ref="chart0"></div>
+  <div class="flex_column content_height APS">
+    <div class="firstNode">
+      <div class="leftCard">
+        <div class="LFirstCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">过去30天计划完成趋势</div>
             </div>
-          </div>
-          <div class="LSecondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">车间计划完成情况</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
-            </div>
+            <div class="echartBody" ref="chart0"></div>
           </div>
         </div>
-        <div class="rightCard">
-          <div class="firstCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">整体完成情况</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
+        <div class="LSecondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">车间计划完成情况</div>
             </div>
+            <div class="echartBody" ref="chart1"></div>
           </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">各车间完成占比</div>
-              </div>
-              <div class="echartBody" ref="chart3"></div>
+        </div>
+      </div>
+      <div class="rightCard">
+        <div class="firstCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">整体完成情况</div>
             </div>
+            <div class="echartBody" ref="chart2"></div>
           </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">各车间完成率</div>
-              </div>
-              <div class="echartBody" v-for="item in [0]" :key="item">
-                <ComVxeTable
-                  :ref="`tableRef${item}`"
-                  :rowKey="'RowNumber'"
-                  height="100%"
-                  :isToolbar="false"
-                  :isEdit="isEdit[0]"
-                  :tableData="tableData[0]"
-                  :tableHeader="tableColumns[0]"
-                  :tableLoading="tableLoading[0]"
-                  :remark="0"
-                  :sysID="sysID[0]['ID']"
-                  :isClear="isClear[0]"
-                  :hasSelect="hasSelect[item]"
-                  :pagination="tablePagination[0]"
-                  @pageChange="pageChange"
-                  @handleRowClick="handleRowClick"
-                  @pageSize="pageSize"
-                  @sortChange="sortChange"
-                  @selectfun="selectFun"
-                  :keepSource="true"
-                  :footerContent="false"
-                />
-              </div>
+        </div>
+        <div class="secondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">各车间完成占比</div>
+            </div>
+            <div class="echartBody" ref="chart3"></div>
+          </div>
+        </div>
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">各车间完成率</div>
+            </div>
+            <div class="echartBody" v-for="item in [0]" :key="item">
+              <ComVxeTable
+                :ref="`tableRef${item}`"
+                :rowKey="'RowNumber'"
+                height="100%"
+                :isToolbar="false"
+                :isEdit="isEdit[0]"
+                :tableData="tableData[0]"
+                :tableHeader="tableColumns[0]"
+                :tableLoading="tableLoading[0]"
+                :remark="0"
+                :sysID="sysID[0]['ID']"
+                :isClear="isClear[0]"
+                :hasSelect="hasSelect[item]"
+                :pagination="tablePagination[0]"
+                @pageChange="pageChange"
+                @handleRowClick="handleRowClick"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+                @selectfun="selectFun"
+                :keepSource="true"
+                :footerContent="false"
+              />
             </div>
           </div>
         </div>
       </div>
-    </el-main>
-  </el-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -1080,9 +1078,8 @@ export default {
 }
 .el-container {
 }
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {

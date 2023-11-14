@@ -1,178 +1,176 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main v-loading="adminLoading">
-      <div class="firstNode" v-show="active === 1">
-        <div class="rightCard">
-          <div class="secondCard">
-            <div class="itemCard">
-              <!-- <div class="echartHead">
+  <div class="flex_column content_height APS" v-loading="adminLoading">
+    <div class="firstNode" v-show="active === 1">
+      <div class="rightCard">
+        <div class="secondCard">
+          <div class="itemCard">
+            <!-- <div class="echartHead">
                 <div class="echartTitle">计划配套趋势</div>
               </div> -->
-              <div class="echartBody" ref="chart1"></div>
-            </div>
-          </div>
-        </div>
-        <div class="leftCard APSContainer">
-          <div class="ant-table-title pd-0-6 text-red">
-            <el-row>
-              <el-col :span="4"><span class="title"></span></el-col>
-              <el-col :span="20" class="flex_flex_end">
-                <div v-for="(item, y) in Status1" :key="y">
-                  <span
-                    @click="changeStatus(item, y)"
-                    :class="
-                      labelStatus2 == item['index2']
-                        ? 'statusActive cursor'
-                        : 'cursor'
-                    "
-                    >{{ item.label }}</span
-                  >
-                  <el-divider direction="vertical"></el-divider></div
-              ></el-col>
-            </el-row>
-          </div>
-          <div
-            class="admin_head_2 flex justify-between"
-            ref="headRef"
-            v-for="i in [0, 1]"
-            :key="i + 'head'"
-            v-show="labelStatus1 === i"
-          >
-            <ComSearch
-              class="flex-grow"
-              ref="searchRef"
-              :searchData="formSearchs[i].datas"
-              :searchForm="formSearchs[i].forms"
-              :remark="i"
-              :btnForm="btnForm"
-              :signName="i"
-              :Region="Region[i]"
-              @btnClick="btnClick"
-            />
-          </div>
-          <div
-            v-for="item in [0, 1]"
-            :key="item"
-            class="admin_content flex_grow"
-            v-show="labelStatus1 === item"
-          >
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[item]"
-              :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]"
-              :tableLoading="tableLoading[item]"
-              :remark="item"
-              :sysID="sysID[item]['ID']"
-              :isClear="isClear[item]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[item]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-              :scrollEnable="false"
-              :EnableColumnFiltering="false"
-              :showFooter="true"
-              :dataFooter="dataFooter[item]"
-            />
+            <div class="echartBody" ref="chart1"></div>
           </div>
         </div>
       </div>
-      <div class="activeNode2" v-show="active === 2">
+      <div class="leftCard APSContainer">
+        <div class="ant-table-title pd-0-6 text-red">
+          <el-row>
+            <el-col :span="4"><span class="title"></span></el-col>
+            <el-col :span="20" class="flex_flex_end">
+              <div v-for="(item, y) in Status1" :key="y">
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="
+                    labelStatus2 == item['index2']
+                      ? 'statusActive cursor'
+                      : 'cursor'
+                  "
+                  >{{ item.label }}</span
+                >
+                <el-divider direction="vertical"></el-divider></div
+            ></el-col>
+          </el-row>
+        </div>
         <div
-          class="rightCard"
-          v-for="(item, index) in chartData2"
-          :key="index + 'chart2'"
+          class="admin_head_2 flex justify-between"
+          ref="headRef"
+          v-for="i in [0, 1]"
+          :key="i + 'head'"
+          v-show="labelStatus1 === i"
         >
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartBody" :ref="'activeChart'"></div>
-            </div>
-          </div>
+          <ComSearch
+            class="flex-grow"
+            ref="searchRef"
+            :searchData="formSearchs[i].datas"
+            :searchForm="formSearchs[i].forms"
+            :remark="i"
+            :btnForm="btnForm"
+            :signName="i"
+            :Region="Region[i]"
+            @btnClick="btnClick"
+          />
         </div>
-        <div class="leftCard APSContainer">
-          <div class="ant-table-title pd-0-6 text-red">
-            <el-row>
-              <el-col :span="4"><span class="title"></span></el-col>
-              <el-col :span="20" class="flex_flex_end">
-                <div v-for="(item, y) in Status1" :key="y">
-                  <span
-                    @click="changeStatus(item, y)"
-                    :class="
-                      labelStatus2 == item['index2']
-                        ? 'statusActive cursor'
-                        : 'cursor'
-                    "
-                    >{{ item.label }}</span
-                  >
-                  <el-divider direction="vertical"></el-divider></div
-              ></el-col>
-            </el-row>
-          </div>
-          <div
-            class="admin_head_2 flex justify-between"
-            ref="headRef"
-            v-for="i in [0, 1]"
-            :key="i + 'head'"
-            v-show="labelStatus1 === i"
-          >
-            <ComSearch
-              class="flex-grow"
-              ref="searchRef"
-              :searchData="formSearchs[i].datas"
-              :searchForm="formSearchs[i].forms"
-              :remark="i"
-              :btnForm="btnForm"
-              :signName="i"
-              :Region="Region[i]"
-              @btnClick="btnClick"
-            />
-          </div>
-          <div
-            v-for="item in [0, 1]"
-            :key="item"
-            class="admin_content flex_grow"
-            v-show="labelStatus1 === item"
-          >
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[item]"
-              :tableData="tableData[item]"
-              :tableHeader="tableColumns[item]"
-              :tableLoading="tableLoading[item]"
-              :remark="item"
-              :sysID="sysID[item]['ID']"
-              :isClear="isClear[item]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[item]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-              :scrollEnable="false"
-              :EnableColumnFiltering="false"
-              :showFooter="true"
-              :dataFooter="dataFooter[item]"
-            />
+        <div
+          v-for="item in [0, 1]"
+          :key="item"
+          class="admin_content flex_grow"
+          v-show="labelStatus1 === item"
+        >
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[item]"
+            :tableData="tableData[item]"
+            :tableHeader="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :isClear="isClear[item]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+            :scrollEnable="false"
+            :EnableColumnFiltering="false"
+            :showFooter="true"
+            :dataFooter="dataFooter[item]"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="activeNode2" v-show="active === 2">
+      <div
+        class="rightCard"
+        v-for="(item, index) in chartData2"
+        :key="index + 'chart2'"
+      >
+        <div class="secondCard">
+          <div class="itemCard">
+            <div class="echartBody" :ref="'activeChart'"></div>
           </div>
         </div>
       </div>
-    </el-main>
-  </el-container>
+      <div class="leftCard APSContainer">
+        <div class="ant-table-title pd-0-6 text-red">
+          <el-row>
+            <el-col :span="4"><span class="title"></span></el-col>
+            <el-col :span="20" class="flex_flex_end">
+              <div v-for="(item, y) in Status1" :key="y">
+                <span
+                  @click="changeStatus(item, y)"
+                  :class="
+                    labelStatus2 == item['index2']
+                      ? 'statusActive cursor'
+                      : 'cursor'
+                  "
+                  >{{ item.label }}</span
+                >
+                <el-divider direction="vertical"></el-divider></div
+            ></el-col>
+          </el-row>
+        </div>
+        <div
+          class="admin_head_2 flex justify-between"
+          ref="headRef"
+          v-for="i in [0, 1]"
+          :key="i + 'head'"
+          v-show="labelStatus1 === i"
+        >
+          <ComSearch
+            class="flex-grow"
+            ref="searchRef"
+            :searchData="formSearchs[i].datas"
+            :searchForm="formSearchs[i].forms"
+            :remark="i"
+            :btnForm="btnForm"
+            :signName="i"
+            :Region="Region[i]"
+            @btnClick="btnClick"
+          />
+        </div>
+        <div
+          v-for="item in [0, 1]"
+          :key="item"
+          class="admin_content flex_grow"
+          v-show="labelStatus1 === item"
+        >
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[item]"
+            :tableData="tableData[item]"
+            :tableHeader="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :isClear="isClear[item]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+            :scrollEnable="false"
+            :EnableColumnFiltering="false"
+            :showFooter="true"
+            :dataFooter="dataFooter[item]"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -923,9 +921,8 @@ export default {
 }
 .el-container {
 }
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   width: 100%;
 
   .firstNode {

@@ -20,8 +20,8 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="12" class="flex"> </el-col>
-            <el-col :span="12" class="flex_flex_end">
+            <el-col :span="0" class="flex"> </el-col>
+            <el-col :span="24" class="flex_flex_end">
               <a
                 style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"

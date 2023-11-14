@@ -29,7 +29,7 @@
           </div>
           <div class="ant-table-title pd-0-6 text-red">
             <el-row>
-              <el-col :span="12" class="flex"
+              <el-col :span="8" class="flex"
                 ><el-radio-group v-model="radioValue0" @change="radioChange">
                   <el-radio
                     v-for="(item, index) in parmsBtn2"
@@ -40,7 +40,7 @@
                   >
                 </el-radio-group></el-col
               >
-              <el-col :span="12" class="flex_flex_end">
+              <el-col :span="16" class="flex_flex_end">
                 <!-- 批量修改组件 -->
                 <div
                   v-for="i in [0, 1, 2]"

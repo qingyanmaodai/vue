@@ -1,79 +1,77 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="rightCard">
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">各部门分布</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
+  <div class="flex_column content_height APS">
+    <div class="firstNode">
+      <div class="rightCard">
+        <div class="secondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">各部门分布</div>
             </div>
+            <div class="echartBody" ref="chart1"></div>
           </div>
-          <div class="headCard">
-            <div class="box">
-              <svg-icon icon-class="Documentation" class="Documentation" />
-              <div class="textBox">
-                <div class="statusNum">1,857</div>
-                <div class="textHead">
-                  <div class="title">今日累计异常次数</div>
-                </div>
+        </div>
+        <div class="headCard">
+          <div class="box">
+            <svg-icon icon-class="Documentation" class="Documentation" />
+            <div class="textBox">
+              <div class="statusNum">1,857</div>
+              <div class="textHead">
+                <div class="title">今日累计异常次数</div>
               </div>
-            </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">异常原因占比</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
             </div>
           </div>
         </div>
-        <div class="leftCard APSContainer">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              :signName="0"
-              :Region="3"
-              @btnClick="btnClick"
-            />
-          </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[0]"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :sysID="sysID[0]['ID']"
-              :isClear="isClear[0]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[0]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-            />
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">异常原因占比</div>
+            </div>
+            <div class="echartBody" ref="chart2"></div>
           </div>
         </div>
       </div>
-    </el-main>
-  </el-container>
+      <div class="leftCard APSContainer">
+        <div class="admin_head_2" ref="headRef">
+          <ComSearch
+            ref="searchRef"
+            :searchData="formSearchs[0].datas"
+            :searchForm="formSearchs[0].forms"
+            :remark="0"
+            :isLoading="isLoading"
+            :btnForm="btnForm"
+            :signName="0"
+            :Region="3"
+            @btnClick="btnClick"
+          />
+        </div>
+        <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[0]"
+            :tableData="tableData[0]"
+            :tableHeader="tableColumns[0]"
+            :tableLoading="tableLoading[0]"
+            :remark="0"
+            :sysID="sysID[0]['ID']"
+            :isClear="isClear[0]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[0]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -875,11 +873,8 @@ export default {
 * {
   box-sizing: border-box;
 }
-.el-container {
-}
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {

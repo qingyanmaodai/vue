@@ -1,106 +1,104 @@
 <!--表格-->
 <template>
-  <el-container>
-    <el-main>
-      <div class="firstNode">
-        <div class="leftCard APSContainer">
-          <div class="admin_head_2" ref="headRef">
-            <ComSearch
-              ref="searchRef"
-              :searchData="formSearchs[0].datas"
-              :searchForm="formSearchs[0].forms"
-              :remark="0"
-              :isLoading="isLoading"
-              :btnForm="btnForm"
-              :signName="0"
-              :Region="4"
-              @btnClick="btnClick"
-            />
+  <div class="flex_column content_height APS">
+    <div class="firstNode">
+      <div class="leftCard APSContainer">
+        <div class="admin_head_2" ref="headRef">
+          <ComSearch
+            ref="searchRef"
+            :searchData="formSearchs[0].datas"
+            :searchForm="formSearchs[0].forms"
+            :remark="0"
+            :isLoading="isLoading"
+            :btnForm="btnForm"
+            :signName="0"
+            :Region="4"
+            @btnClick="btnClick"
+          />
+        </div>
+        <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+          <ComVxeTable
+            :ref="`tableRef${item}`"
+            :rowKey="'RowNumber'"
+            height="100%"
+            :isToolbar="false"
+            :isEdit="isEdit[0]"
+            :tableData="tableData[0]"
+            :tableHeader="tableColumns[0]"
+            :tableLoading="tableLoading[0]"
+            :remark="0"
+            :sysID="sysID[0]['ID']"
+            :isClear="isClear[0]"
+            :hasSelect="hasSelect[item]"
+            :pagination="tablePagination[0]"
+            @pageChange="pageChange"
+            @handleRowClick="handleRowClick"
+            @pageSize="pageSize"
+            @sortChange="sortChange"
+            @selectfun="selectFun"
+            :keepSource="true"
+            :footerContent="true"
+          />
+        </div>
+      </div>
+      <div class="rightCard">
+        <div class="headCard">
+          <div class="box bgColor1">
+            <div class="textBox">
+              <div class="textHead">
+                <div class="title">{{ headCard[0]['title'] }}</div>
+              </div>
+              <div class="statusNum">
+                {{ headCard[0]['Prop'] }}
+              </div>
+            </div>
           </div>
-          <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
-            <ComVxeTable
-              :ref="`tableRef${item}`"
-              :rowKey="'RowNumber'"
-              height="100%"
-              :isToolbar="false"
-              :isEdit="isEdit[0]"
-              :tableData="tableData[0]"
-              :tableHeader="tableColumns[0]"
-              :tableLoading="tableLoading[0]"
-              :remark="0"
-              :sysID="sysID[0]['ID']"
-              :isClear="isClear[0]"
-              :hasSelect="hasSelect[item]"
-              :pagination="tablePagination[0]"
-              @pageChange="pageChange"
-              @handleRowClick="handleRowClick"
-              @pageSize="pageSize"
-              @sortChange="sortChange"
-              @selectfun="selectFun"
-              :keepSource="true"
-              :footerContent="true"
-            />
+          <div class="box bgColor2">
+            <div class="textBox">
+              <div class="textHead">
+                <div class="title">{{ headCard[1]['title'] }}</div>
+              </div>
+              <div class="statusNum">
+                {{ headCard[1]['Prop'] }}
+              </div>
+            </div>
+          </div>
+          <div class="box bgColor3">
+            <div class="textBox">
+              <div class="textHead">
+                <div class="title">{{ headCard[2]['title'] }}</div>
+              </div>
+              <div class="statusNum">{{ headCard[2]['Prop'] }}</div>
+            </div>
+          </div>
+          <div class="box bgColor4">
+            <div class="textBox">
+              <div class="textHead">
+                <div class="title">{{ headCard[3]['title'] }}</div>
+              </div>
+              <div class="statusNum">{{ headCard[3]['Prop'] }}</div>
+            </div>
           </div>
         </div>
-        <div class="rightCard">
-          <div class="headCard">
-            <div class="box bgColor1">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[0]['title'] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[0]['Prop'] }}
-                </div>
-              </div>
+        <div class="secondCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">入库月统计</div>
             </div>
-            <div class="box bgColor2">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[1]['title'] }}</div>
-                </div>
-                <div class="statusNum">
-                  {{ headCard[1]['Prop'] }}
-                </div>
-              </div>
-            </div>
-            <div class="box bgColor3">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[2]['title'] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[2]['Prop'] }}</div>
-              </div>
-            </div>
-            <div class="box bgColor4">
-              <div class="textBox">
-                <div class="textHead">
-                  <div class="title">{{ headCard[3]['title'] }}</div>
-                </div>
-                <div class="statusNum">{{ headCard[3]['Prop'] }}</div>
-              </div>
-            </div>
+            <div class="echartBody" ref="chart1"></div>
           </div>
-          <div class="secondCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">入库月统计</div>
-              </div>
-              <div class="echartBody" ref="chart1"></div>
+        </div>
+        <div class="thirdCard">
+          <div class="itemCard">
+            <div class="echartHead">
+              <div class="echartTitle">仓位分布</div>
             </div>
-          </div>
-          <div class="thirdCard">
-            <div class="itemCard">
-              <div class="echartHead">
-                <div class="echartTitle">仓位分布</div>
-              </div>
-              <div class="echartBody" ref="chart2"></div>
-            </div>
+            <div class="echartBody" ref="chart2"></div>
           </div>
         </div>
       </div>
-    </el-main>
-  </el-container>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -810,9 +808,8 @@ export default {
 }
 .el-container {
 }
-.el-main {
+.APS {
   padding: 10px;
-  height: calc(100vh - 80px);
   overflow: hidden;
 
   .firstNode {
