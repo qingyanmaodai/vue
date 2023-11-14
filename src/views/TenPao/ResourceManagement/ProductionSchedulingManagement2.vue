@@ -1501,6 +1501,8 @@ export default {
   .el-dialog {
     margin-top: 10vh !important;
     height: 80vh !important;
+    display: flex;
+    flex-direction: column;
     .el-dialog__body {
       padding: 2px !important;
       flex-grow: 1;
