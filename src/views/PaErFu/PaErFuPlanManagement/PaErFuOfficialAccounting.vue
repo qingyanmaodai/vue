@@ -561,7 +561,10 @@ export default {
       if (result) {
         // 获取每个表头
         Columns.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
+          m.forEach((n, index) => {
+            // 进行验证
+          });
+          this.$set(this.tableColumns, remarkTb, m);
         });
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
