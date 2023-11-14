@@ -557,8 +557,12 @@ export default {
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        // 获取每个表头
+        Columns.some((m, i) => {
+          this.$set(this.tableColumns, i, m);
+        });
         this.$set(this.tableData, remarkTb, data);
         this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
@@ -569,7 +573,6 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       }
-      this.$set(this.tableLoading, remarkTb, false);
     },
     // 刷新页面
     refrshPage() {
