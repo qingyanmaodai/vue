@@ -1141,10 +1141,10 @@ export default {
           });
           await this.dataSearch(2);
         } else {
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
+          this.$alert(msg, '提示', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true, // 使用这个选项
+            callback: (action) => {},
           });
         }
         this.adminLoading = false;
@@ -1353,11 +1353,12 @@ export default {
           });
           await this.dataSearch(remarkTb);
         } else {
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
+          this.$alert(msg, '提示', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true, // 使用这个选项
+            callback: (action) => {},
           });
+          await this.dataSearch(remarkTb);
         }
         this.adminLoading = false;
       }

@@ -739,11 +739,17 @@ export default {
 //   width: 100% !important;
 // }
 
-::v-deep .el-form-item__content {
-  width: 100% !important;
+.ces-search ::v-deep .el-form-item__content {
+  // width: 100% !important;
   margin-right: 10px !important;
+  .el-date-editor {
+    width: 250px !important;
+  }
+  .el-input {
+    width: 150px !important;
+  }
 }
-.FormDiv {
-  width: 220px;
-}
+// .FormDiv {
+//   width: 220px;
+// }
 </style>

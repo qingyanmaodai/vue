@@ -42,7 +42,7 @@
               >
               <el-col :span="16" class="flex_flex_end">
                 <!-- 批量修改组件 -->
-                <div
+                <!-- <div
                   v-for="i in [0, 1, 2]"
                   :key="'Edit' + i"
                   style="height: 100%"
@@ -54,7 +54,7 @@
                     :OrderNo="DVBatch"
                     :remark="i"
                   />
-                </div>
+                </div> -->
                 <div v-for="(item, y) in Status1" :key="y">
                   <span
                     @click="changeStatus(item, y)"

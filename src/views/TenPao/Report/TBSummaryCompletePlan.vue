@@ -13,6 +13,22 @@
         </div>
       </div>
       <div class="leftCard APSContainer">
+        <div class="ant-table-title pd-0-6 text-red">
+          <el-row>
+            <el-col :span="0" class="flex"></el-col>
+            <el-col :span="24" class="flex_flex_end"
+              ><el-radio-group v-model="radioValue0" @change="radioChange">
+                <el-radio
+                  v-for="(item, index) in parmsBtn2"
+                  :key="index"
+                  :label="item.value"
+                  :value="item.value"
+                  >{{ item.label }}</el-radio
+                >
+              </el-radio-group></el-col
+            >
+          </el-row>
+        </div>
         <div class="admin_head_2" ref="headRef">
           <ComSearch
             ref="searchRef"
@@ -123,13 +139,20 @@ export default {
       isClear: [false, false],
       hasSelect: [false, false],
       Region: [6, 6],
+      radioValue0: 0,
+      parmsBtn2: [
+        { label: '按物料', value: 0 },
+        { label: '按订单', value: 1 },
+      ],
       tablePagination: [
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
       ],
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            dataType: 0,
+          },
           forms: [],
         },
         {
@@ -385,6 +408,10 @@ export default {
           // your code here
         }
       }
+    },
+    radioChange(val) {
+      this.formSearchs[0].datas['dataType'] = val;
+      this.dataSearch(0);
     },
     // 高度控制
     setHeight() {
