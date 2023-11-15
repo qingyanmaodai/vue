@@ -522,12 +522,12 @@ export default {
     // 单击获取明细
     async handleRowClick(row, remarkTb, column) {
       this.clickRow = row;
-      if (
-        this.tableColumns[remarkTb].findIndex(
-          (item) => item['prop'] === column['property'] && item['prop2'],
-        ) !== -1
-      ) {
-        // this.formSearchs[1].datas['StartDate'] = column['property'];
+      let matchNum = this.tableColumns[remarkTb].findIndex(
+        (item) => item['prop'] === column['property'] && item['prop2'],
+      );
+      if (matchNum !== -1) {
+        this.formSearchs[1].datas['StartDate'] =
+          this.tableColumns[remarkTb][matchNum]['prop2'];
         this.formSearchs[1].datas['LineName'] = row['DefaultLineName'];
         this.colDialogVisible1 = true;
         await this.dataSearch(1);
@@ -803,5 +803,14 @@ export default {
 .Documentation {
   height: 80px;
   width: 80px;
+}
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
 }
 </style>

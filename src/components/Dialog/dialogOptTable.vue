@@ -204,8 +204,24 @@ export default {
     // 单元格样式
     cellStyle: {
       type: Function,
-      default: () => {
-        return null;
+      default: function ({ row, column }) {
+        let style = {}; // 创建一个空的样式对象
+        const key = column.property;
+        if (
+          Object.prototype.toString.call(row['FColors']) ===
+            '[object Object]' &&
+          key in row['FColors']
+        ) {
+          style.color = row['FColors'][key]; // 设置文本颜色
+        }
+        if (
+          Object.prototype.toString.call(row['BColors']) ===
+            '[object Object]' &&
+          key in row['BColors']
+        ) {
+          style.backgroundColor = row['BColors'][key]; // 设置背景颜色
+        }
+        return style; // 返回样式对象
       },
     },
     btnClickCall: {
