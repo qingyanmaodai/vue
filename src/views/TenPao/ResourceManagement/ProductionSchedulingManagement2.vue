@@ -349,7 +349,36 @@
           <el-col :span="6" class="flex"> 生产订单: {{ OOrderNo }} </el-col>
           <el-col :span="6" class="flex"> 原数量: {{ OQty }} </el-col>
           <el-col :span="6" class="flex"> 新数量: {{ ONewQty }} </el-col>
+          <el-col :span="6" class="flex"> 产能:{{ Capacity }}</el-col>
+        </el-row>
+      </div>
+      <div class="ant-table-title pd-0-6">
+        <el-row>
+          <el-col :span="6" class="flex">
+            开始时间:
+            <el-date-picker
+              size="small"
+              v-model="ERPStartDate"
+              type="date"
+              placeholder="选择开始日期"
+            >
+            </el-date-picker>
+          </el-col>
+          <el-col :span="6" class="flex"
+            >结束时间:
+            <el-date-picker
+              size="small"
+              v-model="ERPEndDate"
+              type="date"
+              placeholder="选择结束日期"
+            >
+            </el-date-picker>
+          </el-col>
+          <el-col :span="6" class="flex"> </el-col>
           <el-col :span="6" class="flex_flex_end">
+            <el-button type="primary" size="mini" @click="AutoSplitOrder(3)"
+              >自动排产</el-button
+            >
             <el-button type="primary" size="mini" @click="addRow(3)"
               >新增</el-button
             >
@@ -522,6 +551,9 @@ export default {
       selectedIndex: '1',
       OOrderNo: false,
       OQty: 0,
+      Capacity: null,
+      ERPEndDate: null,
+      ERPStartDate: null,
       // ONewQty: false,
       colDialogVisible2: false,
       colDialogVisible3: false,
@@ -868,6 +900,7 @@ export default {
                 dicID: '11150',
                 icon: null,
                 multiple: false,
+                width: 300,
                 value: [
                   this.$moment().format('YYYY-MM-DD'),
                   this.$moment().add(30, 'days').format('YYYY-MM-DD'),
@@ -1322,6 +1355,7 @@ export default {
           await this.dataSearch(3);
           this.OOrderNo = this.selectionData[2][0]['OrderNo'];
           this.OQty = this.selectionData[2][0]['Qty'];
+          this.Capacity = this.selectionData[2][0]['Capacity'];
           this.ONewQty = 0;
           this.colDialogVisible4 = true;
         }
@@ -1410,6 +1444,19 @@ export default {
         }
         console.log(this.tableData[remarkTb], 'this.tableData[remarkTb]');
       }
+    },
+    async AutoSplitOrder() {
+      let obj = _.cloneDeep(this.selectionData[2][0]);
+      if (!this.ERPEndDate || !this.ERPStartDate) {
+        this.$message.error('没有填写开始日期或者结束日期');
+      }
+      if (this.$moment(this.ERPEndDate) < this.$moment(this.ERPStartDate)) {
+        this.$message.error('开始日期在结束日期之后');
+      }
+      obj['ERPEndDate'] = this.ERPEndDate;
+      obj['ERPStartDate'] = this.ERPStartDate;
+
+      let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
     },
     deleteRow(remarkTb) {
       if (remarkTb === 3) {
@@ -1510,6 +1557,9 @@ export default {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      .el-date-editor {
+        width: 200px;
+      }
     }
   }
 }

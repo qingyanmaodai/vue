@@ -323,11 +323,6 @@ input[type='number'] {
   .admin_head,
   .admin_head_2,
   .dialog_search {
-    .el-date-editor.el-input,
-    .el-date-editor.el-input__inner {
-      width: auto !important;
-    }
-
     .el-input__prefix {
       left: 0 !important;
     }

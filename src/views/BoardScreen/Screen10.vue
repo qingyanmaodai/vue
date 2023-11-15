@@ -3,7 +3,7 @@
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
       <img class="logo" :src="logo" mode="heightFix" />
-      <div class="textTitle">APS产销计划看板</div>
+      <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
@@ -11,7 +11,7 @@
         <div class="panel h-full w-65/100">
           <div class="chartHead">
             <div class="panel-footer"></div>
-            <h2>出货计划</h2>
+            <h2>{{ result1[1]['label'] }}</h2>
           </div>
           <div
             class="chartContent flex flex-col"
@@ -19,19 +19,19 @@
           >
             <div class="tableHead flex px-[10px] text-white w-full">
               <div
-                v-for="(column, index) in tableColumns[0]"
+                v-for="(column, index) in tableColumns[1]"
                 :key="'tableHead' + index"
                 class="flex"
                 :class="
-                  index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                  index < tableColumns[1].length - 1 ? 'mr-[10px]' : 'mr-0'
                 "
-                :style="getColumnStyle(tableColumns[0], column)"
+                :style="getColumnStyle(tableColumns[1], column)"
               >
                 {{ column.label }}
               </div>
             </div>
             <VueSeamlessScroll
-              :data="tableData[0]"
+              :data="tableData[1]"
               class="warp"
               :class-option="{
                 step: 0.25,
@@ -39,22 +39,22 @@
             >
               <ul class="px-[10px]">
                 <li
-                  v-for="(item, index) in tableData[0]"
+                  v-for="(item, index) in tableData[1]"
                   :key="'data' + index"
                   class="flex"
                 >
                   <div
-                    v-for="(column, colIndex) in tableColumns[0]"
+                    v-for="(column, colIndex) in tableColumns[1]"
                     :key="'column' + colIndex"
                     class="truncate"
                     :class="
-                      colIndex < tableColumns[0].length - 1
+                      colIndex < tableColumns[1].length - 1
                         ? 'mr-[10px]'
                         : 'mr-0'
                     "
-                    :style="getColumnStyle(tableColumns[0], column)"
+                    :style="getColumnStyle(tableColumns[1], column)"
                   >
-                    {{ tableData[0][index][column.prop] }}
+                    {{ tableData[1][index][column.prop] }}
                   </div>
                 </li>
               </ul>
@@ -75,13 +75,13 @@
                   class="ScreenBaseNum absolute"
                   style="top: 20%; height: 30%"
                 >
-                  4,930
+                  {{ tableData[2][0]['S1'] }}
                 </div>
                 <div
                   class="ScreenBaseTitle absolute"
                   style="bottom: 30%; height: 20%"
                 >
-                  今日订单总量
+                  {{ result1[2]['label'] }}
                 </div>
               </div>
             </div>
@@ -94,13 +94,13 @@
                   class="ScreenBaseNum absolute"
                   style="top: 20%; height: 30%"
                 >
-                  8,342
+                  {{ tableData[3][0]['S1'] }}
                 </div>
                 <div
                   class="ScreenBaseTitle absolute"
                   style="bottom: 30%; height: 20%"
                 >
-                  今日未完成数量
+                  {{ result1[3]['label'] }}
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>近七天出货对比</h2>
+              <h2>{{ result1[4]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart1"></div>
             <div class="panel-footer"></div>
@@ -118,7 +118,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>本月指标</h2>
+              <h2>{{ result1[5]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart2"></div>
             <div class="panel-footer"></div>
@@ -150,11 +150,10 @@ export default {
       chartData1: [],
       chartData2: [[], []],
       chartTotal1: 2562,
-      sysID: [{ ID: 10103 }, { ID: 5610 }, { ID: 5610 }],
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], []],
-      tableData: [[], [], []],
+      tableColumns: [[], [], [], [], [], [], [], [], []],
+      tableData: [[], [], [{ S1: '' }], [{ S1: '' }], [], [], [], [], []],
 
       tablePagination: [
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
@@ -188,6 +187,98 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+      ],
+      result1: [
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+      ],
+      sysID: [
+        { ID: 7917 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 7918 },
+        { ID: 7919 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
       ],
     };
   },
@@ -241,25 +332,83 @@ export default {
 
     // 获取表头数据
     async getTableHeader() {
+      let rea = await GetSearchData({
+        dicID: 15224,
+        rows: 0,
+        page: 1,
+      });
+      const { data: data1, result: result1, msg: msg1 } = rea.data;
+      if (result1) {
+        this.sysID = data1.map((item) => {
+          return {
+            ID: item.sysID,
+          };
+        });
+        this.result1 = data1.map((item) => {
+          return {
+            label: item.label,
+            fields: item.fields,
+            groupby: item.groupby,
+            sort: item.sort,
+            DataFilter: item.DataFilter,
+            rows: item.erows,
+          };
+        });
+      }
       let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.some((n, index) => {});
-          this.$set(this.tableColumns, i, m);
+          m.some((n, j) => {
+            // 进行验证
+            // this.verifyDta(n);
+            // if (n.children && n.children.length != 0) {
+            //   n.children.forEach((x) => {
+            //     this.verifyDta(x);
+            //   });
+            // }
+            // if (j === 1 && ) {
+            //   this.tablePagination[i]["pageSize"] = n["pageSize"];
+            // }
+          });
         });
         // 获取查询的初始化字段 组件 按钮
-
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+        forms.map(async (x, z) => {
+          this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+          if (this.result1[z].fields) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'fields',
+              this.result1[z].fields,
+            );
+          }
+          if (this.result1[z].groupby) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'groupby',
+              this.result1[z].groupby,
+            );
+          }
+          if (this.result1[z].sort) {
+            this.$set(this.formSearchs[z].datas, 'sort', this.result1[z].sort);
+          }
+          if (this.result1[z].DataFilter) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'DataFilter',
+              this.result1[z].DataFilter,
+            );
+          }
+          if (this.result1[z].rows) {
+            this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
+          }
+          if (this.sysID[z].ID) {
             await this.getTableData(this.formSearchs[z].datas, z);
-          }),
-        );
-        this.adminLoading = false;
-        await this.getEcharts();
+            await this.getEcharts();
+          }
+        });
       }
     },
     async getEcharts() {
@@ -669,8 +818,22 @@ export default {
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
+      const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
+        // 获取每个表头
+        if (remarkTb === 1) {
+          AppColumns.some((m, i) => {
+            this.$set(this.tableColumns, remarkTb, m);
+          });
+          console.log(this.tableColumns[remarkTb]);
+        } else {
+          Columns.some((m, i) => {
+            m.forEach((n, index) => {
+              // 进行验证
+            });
+            this.$set(this.tableColumns, remarkTb, m);
+          });
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {

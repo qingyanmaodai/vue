@@ -54,10 +54,10 @@
                 </el-select>
                 <!-- 日期 -->
                 <el-date-picker
-                  style="width: 100%"
+                  :style="{ width: 240 + 'px' }"
                   v-if="x.type === 'Daterange'"
                   v-model="searchData[x.prop]"
-                  format="MM-dd"
+                  format="yyyy-MM-dd"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -232,7 +232,7 @@
                 style="width: 100%"
                 v-if="x.type === 'Daterange'"
                 v-model="searchData[x.prop]"
-                format="MM-dd"
+                format="yyyy-MM-dd"
                 type="daterange"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -376,7 +376,7 @@
                   style="width: 100%"
                   v-if="x.type === 'Daterange'"
                   v-model="x[x.prop]"
-                  format="MM-dd"
+                  format="yyyy-MM-dd"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -742,9 +742,9 @@ export default {
 .ces-search ::v-deep .el-form-item__content {
   // width: 100% !important;
   margin-right: 10px !important;
-  .el-date-editor {
-    width: 250px !important;
-  }
+  // .el-date-editor {
+  //   width: 250px !important;
+  // }
   .el-input {
     width: 150px !important;
   }
