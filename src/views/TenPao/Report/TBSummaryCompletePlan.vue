@@ -526,8 +526,10 @@ export default {
         (item) => item['prop'] === column['property'] && item['prop2'],
       );
       if (matchNum !== -1) {
-        this.formSearchs[1].datas['StartDate'] =
-          this.tableColumns[remarkTb][matchNum]['prop2'];
+        this.formSearchs[1].datas['StartDate'] = [
+          this.tableColumns[remarkTb][matchNum]['prop2'],
+          this.tableColumns[remarkTb][matchNum]['prop2'],
+        ];
         this.formSearchs[1].datas['LineName'] = row['DefaultLineName'];
         this.colDialogVisible1 = true;
         await this.dataSearch(1);
