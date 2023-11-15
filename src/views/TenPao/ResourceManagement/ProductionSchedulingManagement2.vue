@@ -1857,6 +1857,21 @@ export default {
           obj['IsNew'] = 1;
           obj['_X_ROW_KEY'] = _.uniqueId('row__');
           obj['seq'] = this.tableData[remarkTb].length + 1;
+          obj['ERPEndDate'] = this.$moment(
+            this.tableData[remarkTb][this.tableData[remarkTb].length - 1][
+              'ERPEndDate'
+            ],
+          )
+            .add(1, 'day')
+            .format('YYYY-MM-DD');
+          obj['ERPStartDate'] = this.$moment(
+            this.tableData[remarkTb][this.tableData[remarkTb].length - 1][
+              'ERPStartDate'
+            ],
+          )
+            .add(1, 'day')
+            .format('YYYY-MM-DD');
+          obj['seq'] = this.tableData[remarkTb].length + 1;
           obj['isChecked'] = false;
           obj['NewQty1'] = 0;
           this.tableColumns[remarkTb].map((item) => {

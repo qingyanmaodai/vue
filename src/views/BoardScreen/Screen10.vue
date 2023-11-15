@@ -307,17 +307,17 @@ export default {
   methods: {
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.width || 0),
+        (sum, col) => sum + parseFloat(col.appWidth || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.width) / totalWidth) * 100;
+        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.width) / totalWidth) * 100;
+          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -451,7 +451,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ['1号', '2号', '3号', '4号', '5号', '6号', '7号'],
+            data: this.tableData[4].map((item) => item['Name1']),
             axisLabel: {
               show: true,
               fontSize: fontSize(18),
@@ -511,7 +511,14 @@ export default {
                   color: '#2F8FFF',
                 },
               },
-              data: [120, 75, 90, 102, 130, 75, 99],
+              data: this.tableData[4].map((item) => item['S1']),
+
+              label: {
+                show: true,
+                color: '#2F8FFF',
+                position: 'top', // 显示位置，可选值有 'top', 'bottom', 'inside', 'outside'
+                formatter: '{c}', // 标签内容格式器，这里表示显示数据值
+              },
             },
             {
               name: '实际出货',
@@ -522,7 +529,13 @@ export default {
                   color: '#47B558',
                 },
               },
-              data: [102, 130, 75, 99, 120, 75, 90],
+              data: this.tableData[4].map((item) => item['S2']),
+              label: {
+                show: true,
+                color: '#47B558',
+                position: 'top', // 显示位置，可选值有 'top', 'bottom', 'inside', 'outside'
+                formatter: '{c}', // 标签内容格式器，这里表示显示数据值
+              },
             },
           ],
         },
@@ -555,15 +568,17 @@ export default {
                 },
               },
               detail: {
-                formatter: '{value}%',
+                formatter: (params) => {
+                  return `${params.toFixed(2)}%`;
+                },
                 fontSize: fontSize(24),
                 color: '#fff',
                 offsetCenter: [0, '110%'],
               },
               data: [
                 {
-                  value: 90.12,
-                  name: '排产达成',
+                  value: this.tableData[5][0]['S1'],
+                  name: this.tableData[5][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -637,15 +652,17 @@ export default {
                 },
               },
               detail: {
-                formatter: '{value}%',
+                formatter: (params) => {
+                  return `${params.toFixed(2)}%`;
+                },
                 fontSize: fontSize(24),
                 color: '#fff',
                 offsetCenter: [0, '110%'],
               },
               data: [
                 {
-                  value: 39.53,
-                  name: '出货达成',
+                  value: this.tableData[6][0]['S1'],
+                  name: this.tableData[6][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -719,15 +736,17 @@ export default {
                 },
               },
               detail: {
-                formatter: '{value}%',
+                formatter: (params) => {
+                  return `${params.toFixed(2)}%`;
+                },
                 fontSize: fontSize(24),
                 color: '#fff',
                 offsetCenter: [0, '110%'],
               },
               data: [
                 {
-                  value: 85.34,
-                  name: '计划配套率',
+                  value: this.tableData[6][0]['S1'],
+                  name: this.tableData[6][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -815,25 +834,23 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['rows'] = this.tablePagination[remarkTb].pageSize;
-      form['page'] = this.tablePagination[remarkTb].pageIndex;
+      // form['rows'] = this.tablePagination[remarkTb].pageSize;
+      // form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
         // 获取每个表头
         if (remarkTb === 1) {
-          AppColumns.some((m, i) => {
-            this.$set(this.tableColumns, remarkTb, m);
-          });
-          console.log(this.tableColumns[remarkTb]);
-        } else {
-          Columns.some((m, i) => {
-            m.forEach((n, index) => {
-              // 进行验证
-            });
-            this.$set(this.tableColumns, remarkTb, m);
-          });
+          this.$set(this.tableColumns, remarkTb, AppColumns);
         }
+        // else {
+        //   Columns.some((m, i) => {
+        //     m.forEach((n, index) => {
+        //       // 进行验证
+        //     });
+        //     this.$set(this.tableColumns, remarkTb, m);
+        //   });
+        // }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
