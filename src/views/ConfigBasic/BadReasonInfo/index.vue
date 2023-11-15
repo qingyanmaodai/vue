@@ -497,76 +497,81 @@ export default {
       this.delData[remarkTb].push(row);
     },
     // 保存
-    async dataSave(remarkTb, index, parms) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       let submitData = [];
-      if (this.tableData[0].length != 0) {
-        this.tableData[0].forEach((x) => {
-          if (x.update) {
-            let childrens = [];
-            // 判断有没有新增的细小工序与工序的改动
-            let ProcessIDTemporary = x.ProcessIDTemporary;
-            let TinyProcessIDTemporary = x.TinyProcessIDTemporary;
-            let newData1 = x.ProcessID.filter(
-              (x3) => !ProcessIDTemporary.some((y) => y == x3),
-            ); //新增
-            let newData2 = ProcessIDTemporary.filter(
-              (c) => !x.ProcessID.some((z) => c == z),
-            ); //删除
+      if (newData && newData.length != 0) {
+        submitData = newData;
+      } else {
+        if (this.tableData[0].length != 0) {
+          this.tableData[0].forEach((x) => {
+            if (x.update) {
+              let childrens = [];
+              // 判断有没有新增的细小工序与工序的改动
+              let ProcessIDTemporary = x.ProcessIDTemporary;
+              let TinyProcessIDTemporary = x.TinyProcessIDTemporary;
+              let newData1 = x.ProcessID.filter(
+                (x3) => !ProcessIDTemporary.some((y) => y == x3),
+              ); //新增
+              let newData2 = ProcessIDTemporary.filter(
+                (c) => !x.ProcessID.some((z) => c == z),
+              ); //删除
 
-            let newData3 = x.TinyProcessID.filter(
-              (x1) => !TinyProcessIDTemporary.some((y1) => y1 == x1),
-            ); //新增
-            let newData4 = TinyProcessIDTemporary.filter(
-              (c1) => !x.TinyProcessID.some((z1) => c1 == z1),
-            ); //删除
-            if (newData1.length != 0) {
-              newData1.forEach((a) => {
-                let obj1 = {};
-                obj1['dicID'] = 7771;
-                obj1['ProcessID'] = a;
-                childrens.push(obj1);
-              });
-            }
-            if (newData2.length != 0) {
-              newData2.forEach((b) => {
-                let newIndex2 = ProcessIDTemporary.findIndex((e) => e == b);
-                let obj2 = {};
-                obj2['dicID'] = 7771;
-                obj2['ElementDeleteFlag'] = 1;
-                obj2['AbnormalApsProcessID'] = parseInt(
-                  x.AbnormalApsProcessID[newIndex2],
-                );
-                childrens.push(obj2);
-              });
-            }
+              let newData3 = x.TinyProcessID.filter(
+                (x1) => !TinyProcessIDTemporary.some((y1) => y1 == x1),
+              ); //新增
+              let newData4 = TinyProcessIDTemporary.filter(
+                (c1) => !x.TinyProcessID.some((z1) => c1 == z1),
+              ); //删除
+              if (newData1.length != 0) {
+                newData1.forEach((a) => {
+                  let obj1 = {};
+                  obj1['dicID'] = 7771;
+                  obj1['ProcessID'] = a;
+                  childrens.push(obj1);
+                });
+              }
+              if (newData2.length != 0) {
+                newData2.forEach((b) => {
+                  let newIndex2 = ProcessIDTemporary.findIndex((e) => e == b);
+                  let obj2 = {};
+                  obj2['dicID'] = 7771;
+                  obj2['ElementDeleteFlag'] = 1;
+                  obj2['AbnormalApsProcessID'] = parseInt(
+                    x.AbnormalApsProcessID[newIndex2],
+                  );
+                  childrens.push(obj2);
+                });
+              }
 
-            if (newData3.length != 0) {
-              newData3.forEach((c) => {
-                let obj3 = {};
-                obj3['dicID'] = 7772;
-                obj3['TinyProcessID'] = c;
-                childrens.push(obj3);
-              });
+              if (newData3.length != 0) {
+                newData3.forEach((c) => {
+                  let obj3 = {};
+                  obj3['dicID'] = 7772;
+                  obj3['TinyProcessID'] = c;
+                  childrens.push(obj3);
+                });
+              }
+              if (newData4.length != 0) {
+                newData4.forEach((d) => {
+                  let obj4 = {};
+                  let newIndex4 = TinyProcessIDTemporary.findIndex(
+                    (f) => f == d,
+                  );
+                  obj4['dicID'] = 7772;
+                  obj4['ElementDeleteFlag'] = 1;
+                  obj4['AbnormalTinyProcessID'] = parseInt(
+                    x.AbnormalTinyProcessID[newIndex4],
+                  );
+                  childrens.push(obj4);
+                });
+              }
+              x['childrens'] = childrens;
+              submitData.push(x);
             }
-            if (newData4.length != 0) {
-              newData4.forEach((d) => {
-                let obj4 = {};
-                let newIndex4 = TinyProcessIDTemporary.findIndex((f) => f == d);
-                obj4['dicID'] = 7772;
-                obj4['ElementDeleteFlag'] = 1;
-                obj4['AbnormalTinyProcessID'] = parseInt(
-                  x.AbnormalTinyProcessID[newIndex4],
-                );
-                childrens.push(obj4);
-              });
-            }
-            x['childrens'] = childrens;
-            submitData.push(x);
-          }
-        });
+          });
+        }
       }
-      debugger;
       if (submitData.length == 0) {
         this.$message.error('没有可提交的数据！');
         return;
