@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3]" :key="i" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -80,7 +80,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3]"
+      v-for="item in [0, 1, 2, 3, 4]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -99,7 +99,7 @@
         @selectChanged="selectChanged"
       />
     </div>
-    <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
+    <!-- <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
       <div v-for="item in [4]" :key="item">
         <ComSearch
           class="margin_bottom_10 dialog_search"
@@ -134,7 +134,7 @@
           >确 定</el-button
         >
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 导入文件 -->
     <div>
       <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
@@ -271,7 +271,7 @@ export default {
         { ID: 10106 },
         { ID: 10077 },
         { ID: 10081 },
-        { ID: 10108 },
+        { ID: 11165 },
       ],
       colorStatus: [
         { label: '字体颜色', value: 0 },
@@ -280,14 +280,15 @@ export default {
       Status1: [
         {
           label: '待转入',
-          value: { IsPoDetailFinish: '' },
+          value: {},
         },
         {
           label: '有变更',
-          value: { IsPoDetailFinish: '' },
+          value: {},
         },
-        { label: '主计划', value: { IsPoDetailFinish: '' } },
-        { label: '计划调序', value: { IsPoDetailFinish: '' } },
+        { label: '主计划', value: {} },
+        { label: '计划调序', value: {} },
+        { label: '异常订单', value: {} },
       ],
       spread: [], //excel初始
       fileList: [],
@@ -1201,8 +1202,11 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[this.labelStatus1].datas['IsPoDetailFinish'] =
-        item.value['IsPoDetailFinish'];
+      this.formSearchs[this.labelStatus1].datas = Object.assign(
+        {},
+        this.formSearchs[this.labelStatus1].datas,
+        item['value'],
+      );
       this.dataSearch(this.labelStatus1);
     },
     // 保存
@@ -1685,6 +1689,7 @@ export default {
           '有选中' + newData.length + '行数据，是否确认转入主计划？',
         )
           .then(async (_) => {
+            this.adminLoading = true;
             let res = await GetSearch(newData, '/APSAPI/APSTOSalesMainPlan');
             const { data, result, msg } = res.data;
             if (result) {
@@ -1694,12 +1699,14 @@ export default {
                 dangerouslyUseHTMLString: true,
               });
               await this.dataSearch(remarkTb);
+              this.adminLoading = false;
             } else {
               this.$message({
                 message: msg,
                 type: 'error',
                 dangerouslyUseHTMLString: true,
               });
+              this.adminLoading = false;
             }
           })
           .catch((_) => {});

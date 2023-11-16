@@ -1903,6 +1903,8 @@ export default {
       }
       obj['ERPEndDate'] = this.ERPEndDate;
       obj['ERPStartDate'] = this.ERPStartDate;
+      this.adminLoading = true;
+      this.adminLoadingText = '自动拆单中';
       let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
       const { data, forms, result, msg } = res.data;
       if (result) {
@@ -1919,7 +1921,7 @@ export default {
           type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        // this.$set(this, 'adminLoading', false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     deleteRow(remarkTb) {
