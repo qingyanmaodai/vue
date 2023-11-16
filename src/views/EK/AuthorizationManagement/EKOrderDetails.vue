@@ -316,27 +316,21 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
-    // let RoleMapList = this.$store.getters.userInfo.RoleMap;
-    // if (RoleMapList.length) {
-    //   RoleMapList.forEach((item) => {
-    //     if (
-    //       item.RoleID === 'R2305080001' ||
-    //       item.RoleID === 'R2306050001' ||
-    //       item.RoleID === 'R2309060001'
-    //     ) {
-    //       //业务经理
-    //       this.RoleMapStatus = true;
-    //       return;
-    //     }
-    //     if (item.RoleID === 'R2306050001') {
-    //       //业务订单明细批量删除
-    //       this.BatchDelete = true;
-    //       return;
-    //     }
-    //   });
-    // }
-    // this.CreatedBy =
-    //   this.RoleMapStatus === true ? '' : this.$store.getters.userInfo.Account;
+    this.RoleMapList = this.$store.getters.userInfo.RoleMap;
+    if (RoleMapList.length) {
+      RoleMapList.forEach((item) => {
+        if (item.RoleID === 'R1809030009') {
+          //可编辑
+          this.RoleMapStatus = true;
+          return;
+        }
+        if (item.RoleID === 'R2306050001') {
+          //业务订单明细批量删除
+          this.BatchDelete = true;
+          return;
+        }
+      });
+    }
   },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
@@ -667,25 +661,17 @@ export default {
             if (column['isEdit']) {
               cell.locked(false).foreColor('#2a06ecd9');
             }
+            if (remarkTb === 0 && this.RoleMapStatus) {
+              if (column['prop'] === 'WorkOrderTypeName') {
+                cell.locked(false).foreColor('#2a06ecd9');
+              }
+            }
             if (
               rowItem['Result'] !== '正常' &&
               rowItem['Result'] &&
               columnIndex < 5
             ) {
               cell.backColor('#FF0000');
-            }
-            // 获取颜色
-            if (rowItem['ISPOFinish'] === '是' && key === 'ReportQty') {
-              cell.backColor('#92d050');
-            }
-            if (rowItem['ISOutStock'] === '出库正常' && key === 'OutDate') {
-              cell.backColor('#92d050');
-            }
-            if (rowItem['ISOutStock'] === '出库异常' && key === 'OutDate') {
-              cell.backColor('#ff0000');
-            }
-            if (rowItem['ISCheckWarm'] === 1 && key === 'CheckDate') {
-              cell.backColor('#ffff00');
             }
             if (
               Object.prototype.toString.call(rowItem['FColors']) ===
@@ -1685,31 +1671,76 @@ export default {
             return x;
           }),
         );
-        this.$confirm(
-          '有选中' + newData.length + '行数据，是否确认转入主计划？',
-        )
-          .then(async (_) => {
-            this.adminLoading = true;
-            let res = await GetSearch(newData, '/APSAPI/APSTOSalesMainPlan');
-            const { data, result, msg } = res.data;
-            if (result) {
-              this.$message({
-                message: msg,
-                type: 'success',
-                dangerouslyUseHTMLString: true,
-              });
-              await this.dataSearch(remarkTb);
-              this.adminLoading = false;
-            } else {
-              this.$message({
-                message: msg,
-                type: 'error',
-                dangerouslyUseHTMLString: true,
-              });
-              this.adminLoading = false;
-            }
-          })
-          .catch((_) => {});
+        let DayErrorPlanData = [];
+        DayErrorPlanData = newData.filter((element) => {
+          return element['Result'] == '异常';
+        });
+        let DayTruePlanData = [];
+        DayTruePlanData = newData.filter((element) => {
+          return element['Remark1'] !== '异常';
+        });
+        if (DayErrorPlanData.length) {
+          this.$confirm(
+            `有${DayErrorPlanData.length}条数据异常，是否确定转入日计划?`,
+            '提示',
+            {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+            },
+          )
+            .then(async (_) => {
+              this.adminLoading = true;
+              let res = await GetSearch(
+                DayTruePlanData,
+                '/APSAPI/APSTOSalesMainPlan',
+              );
+              const { data, result, msg } = res.data;
+              if (result) {
+                this.$message({
+                  message: msg,
+                  type: 'success',
+                  dangerouslyUseHTMLString: true,
+                });
+                await this.dataSearch(remarkTb);
+                this.adminLoading = false;
+              } else {
+                this.$message({
+                  message: msg,
+                  type: 'error',
+                  dangerouslyUseHTMLString: true,
+                });
+                this.adminLoading = false;
+              }
+            })
+            .catch((_) => {});
+        } else {
+          this.$confirm(
+            '选中' + newData.length + '行数据，是否确认转入主计划？',
+          )
+            .then(async (_) => {
+              this.adminLoading = true;
+              let res = await GetSearch(newData, '/APSAPI/APSTOSalesMainPlan');
+              const { data, result, msg } = res.data;
+              if (result) {
+                this.$message({
+                  message: msg,
+                  type: 'success',
+                  dangerouslyUseHTMLString: true,
+                });
+                await this.dataSearch(remarkTb);
+                this.adminLoading = false;
+              } else {
+                this.$message({
+                  message: msg,
+                  type: 'error',
+                  dangerouslyUseHTMLString: true,
+                });
+                this.adminLoading = false;
+              }
+            })
+            .catch((_) => {});
+        }
       }
     },
     // 退回

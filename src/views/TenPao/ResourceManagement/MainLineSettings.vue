@@ -207,7 +207,7 @@
           :remark="item"
           :sysID="sysID[item]['ID']"
           :hasSelect="hasSelect[item]"
-          :isEdit="isEdit[item]"
+          :isEdit="true"
           :isClear="isClear[item]"
           :keepSource="true"
           :pagination="tablePagination[item]"
