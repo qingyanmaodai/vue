@@ -316,7 +316,7 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
-    this.RoleMapList = this.$store.getters.userInfo.RoleMap;
+    let RoleMapList = this.$store.getters.userInfo.RoleMap;
     if (RoleMapList.length) {
       RoleMapList.forEach((item) => {
         if (item.RoleID === 'R1809030009') {
@@ -1677,7 +1677,7 @@ export default {
         });
         let DayTruePlanData = [];
         DayTruePlanData = newData.filter((element) => {
-          return element['Remark1'] !== '异常';
+          return element['Result'] !== '异常';
         });
         if (DayErrorPlanData.length) {
           this.$confirm(
