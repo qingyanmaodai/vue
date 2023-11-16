@@ -1071,7 +1071,6 @@ export default {
       });
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
-        console.log(args.row, _this.selectingRow, '222');
         if (_this.selectingRow === -1 || args['row'] !== _this.selectingRow) {
           if (_this.tableColumns[remarkTb].length) {
             _this.tableColumns[remarkTb].map((item, index) => {

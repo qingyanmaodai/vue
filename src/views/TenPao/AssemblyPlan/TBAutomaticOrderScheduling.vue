@@ -131,7 +131,7 @@
       <div class="flex justify-between" style="width: 100%">
         <div class="flex_grow flex"></div>
         <div class="flex">
-          <!-- <div>
+          <div>
             排程方向:<el-select
               clearable
               filterable
@@ -146,8 +146,8 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-          </div> -->
-          <!-- <div>
+          </div>
+          <div>
             选择方案:<el-select
               clearable
               filterable
@@ -162,7 +162,7 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-          </div> -->
+          </div>
         </div>
       </div>
       <div
@@ -207,12 +207,12 @@
             >下一步</el-button
           > -->
         </div>
-        <div class="flex">
-          <div v-for="(item, y) in Status2" :key="y">
+        <div class="flex items-center">
+          <div v-for="(item, y) in Status3" :key="y">
             <span
-              @click="changeStatus2(item, item['index'])"
+              @click="changeStatus3(item, item['index'])"
               :class="
-                labelStatus2 == item['index'] ? 'statusActive cursor' : 'cursor'
+                labelStatus3 == item['index'] ? 'statusActive cursor' : 'cursor'
               "
               class="title1"
               >{{ item.label }}</span
@@ -226,7 +226,7 @@
         :key="i + 'head'"
         class="admin_head_2"
         ref="headRef"
-        v-show="labelStatus2 === i"
+        v-show="labelStatus3 === i"
       >
         <ComSearch
           ref="searchRef"
@@ -241,11 +241,45 @@
           @btnClick="btnClick"
         />
       </div>
+      <div class="flex justify-between" style="width: 100%">
+        <div class="flex_grow flex"></div>
+        <div class="flex">
+          <el-radio-group
+            v-model="radioValue3"
+            @change="radioChange"
+            style="margin-right: 40px"
+          >
+            <el-radio
+              v-for="(item, index) in parmsBtn3"
+              :key="index"
+              :label="item.value"
+              :value="item.value"
+              >{{ item.label }}</el-radio
+            >
+          </el-radio-group>
+          <div>
+            选择方案:<el-select
+              clearable
+              filterable
+              size="small"
+              placeholder="请选择方案"
+              v-model="ChangeReason"
+            >
+              <el-option
+                v-for="(item, i) in ChangeReasonArray"
+                :key="i"
+                :label="item.value"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+        </div>
+      </div>
       <div
         class="flex_column admin_content flex_grow"
         v-for="item in [3, 4]"
         :key="item"
-        v-show="labelStatus2 === item"
+        v-show="labelStatus3 === item"
       >
         <ComSpreadTable
           ref="`spreadsheetRef${remarkTb}`"
@@ -330,6 +364,57 @@
         />
       </div>
     </div>
+    <!-- 弹框-->
+    <el-dialog
+      :title="'产线排班表'"
+      :visible.sync="colDialogVisible1"
+      width="90%"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
+      ><div
+        style="
+          height: 80vh;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <splitpanes class="default-theme">
+          <pane :size="50" v-for="item in [6, 7]" :key="item">
+            <div class="flex_column" style="width: 100%; height: 100%">
+              <div class="admin_head_2" ref="headRef">
+                <ComSearch
+                  ref="searchRef"
+                  :searchData="formSearchs[item].datas"
+                  :searchForm="formSearchs[item].forms"
+                  :remark="item"
+                  :isLoading="isLoading"
+                  :btnForm="btnForm"
+                  :signName="item"
+                  @btnClick="btnClick"
+                />
+              </div>
+              <div class="flex_grow">
+                <ComSpreadTable
+                  ref="`spreadsheetRef${remarkTb}`"
+                  :height="'100%'"
+                  :tableData="tableData[item]"
+                  :tableColumns="tableColumns[item]"
+                  :tableLoading="tableLoading[item]"
+                  :remark="item"
+                  :sysID="sysID[item]['ID']"
+                  :pagination="tablePagination[item]"
+                  @pageChange="pageChange"
+                  @pageSize="pageSize"
+                  @workbookInitialized="workbookInitialized"
+                  @selectChanged="selectChanged"
+                />
+              </div>
+            </div>
+          </pane>
+        </splitpanes>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -372,14 +457,16 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      spread: [[], [], [], [], [], []],
-      selectionData: [[], [], [], [], [], []],
+      spread: [[], [], [], [], [], [], [], []],
+      selectionData: [[], [], [], [], [], [], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], [], [], [], [], []],
+      colDialogVisible1: false,
+      includeFields: [[], [], [], [], [], [], [], []],
       hasSelect: [false, false, false, false, false, false],
       selectedIndex: '0',
       active: 1,
-      ChangeReason: false,
+      ChangeReasonArray: [],
+      ChangeReason: null,
       formSearchs: [
         {
           datas: {
@@ -407,18 +494,32 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
       OrderNo: '',
       OrderNoValue: '',
-      OrderNos: [[], [], [], [], [], []],
-      tableData: [[], [], [], [], [], []],
-      tableColumns: [[], [], [], [], [], []],
-      tableLoading: [false, false, false, false, false, false],
-      isClear: [false, false, false, false, false, false],
+      OrderNos: [[], [], [], [], [], [], [], []],
+      tableData: [[], [], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
@@ -434,32 +535,33 @@ export default {
         { label: '订单列表', value: '未开始', index: 0 },
         { label: '已选订单', value: '已完成', index: 1 },
       ],
-      Status2: [
+      Status3: [
         { label: '销售订单', value: '未开始', index: 3 },
         { label: '生产订单', value: '已完成', index: 4 },
       ],
       labelStatus1: 0,
-      labelStatus2: 3,
+      labelStatus3: 3,
       sysID: [
         { ID: 15216 },
         { ID: 15215 },
         { ID: 15215 },
-        { ID: 6694 },
+        { ID: 16230 },
         { ID: 49 },
         { ID: 15215 },
+        { ID: 16231 },
+        { ID: 16231 },
       ],
       isEdit: [false, false, false, false, false, false],
       userInfo: {},
-      Region: [6, 6, 6, 6, 6, 6],
+      Region: [6, 6, 6, 6, 6, 6, 6, 6, 6],
       colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
-      radioValue0: 0,
+      radioValue3: 0,
       radioValue1: 1,
-      parmsBtn2: [
+      parmsBtn3: [
         { label: '显示工时', value: 0 },
         { label: '显示负荷', value: 1 },
-        { label: '显示数量', value: 2 },
       ],
     };
   },
@@ -865,10 +967,22 @@ export default {
         // 自动计算数量
       });
       // 表格单击齐套率弹框事件
-      this.spread[remarkTb].bind(
-        GCsheets.Events.CellClick,
-        function (e, args) {},
-      );
+      this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
+        // if (_this.selectingRow === -1 || args['row'] !== _this.selectingRow) {
+        if (_this.tableColumns[remarkTb].length) {
+          _this.tableColumns[remarkTb].map((item, index) => {
+            if (remarkTb === 3) {
+              _this.formSearchs[3].datas['OrganizeID'] =
+                _this.tableData[remarkTb][args.row].OrganizeID || 'N/A';
+              _this.colDialogVisible1 = true;
+              _this.dataSearch(6);
+              _this.dataSearch(7);
+            }
+          });
+        }
+        // _this.selectingRow = args.row;
+        // }
+      });
       //脏数据清除
       sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {});
       this.spread[remarkTb].resumePaint();
@@ -1169,6 +1283,13 @@ export default {
     // 单击获取明细
     handleRowClick(row, remarkTb) {
       this.clickRow = row;
+      if (remarkTb === 3) {
+        this.formSearchs[6].datas['OrganizeID'] = row.OrganizeID;
+        this.formSearchs[7].datas['OrganizeID'] = row.OrganizeID;
+        this.dataSearch(6);
+        this.dataSearch(7);
+        this.colDialogVisible1 = true;
+      }
       // this.dataSearch(this.selectedIndex);
     },
     //双击事件
@@ -1248,9 +1369,9 @@ export default {
       this.setData(this.labelStatus1);
       this.dataSearch(this.labelStatus1);
     },
-    changeStatus2(item, index) {
-      this.labelStatus2 = index;
-      this.dataSearch(this.labelStatus2);
+    changeStatus3(item, index) {
+      this.labelStatus3 = index;
+      this.dataSearch(this.labelStatus3);
     },
     activeNum(stepNumber) {
       console.log('点击步骤', stepNumber);
@@ -1279,10 +1400,10 @@ export default {
         this.dataSearch(2);
       }
       if (this.active === 3) {
-        if (this.tableData[this.labelStatus2].length === 0) {
-          this.dataSearch(this.labelStatus2);
+        if (this.tableData[this.labelStatus3].length === 0) {
+          this.dataSearch(this.labelStatus3);
         } else {
-          this.setData(this.labelStatus2);
+          this.setData(this.labelStatus3);
         }
       }
       if (this.active === 4) {
@@ -1315,23 +1436,26 @@ export default {
   padding: 5px;
   /* 设置为0或调整合适的数值 */
 }
-::v-deep .el-dialog {
-  margin-top: 10vh !important;
-  height: 80vh !important;
-  display: flex;
-  flex-direction: column;
-}
 ::v-deep .el-dialog__header {
   background-color: #409eff !important;
 }
-::v-deep .el-dialog__body {
-  flex-grow: 1;
-  overflow: hidden;
-  display: flex;
+::v-deep .el-dialog__title {
+  color: #fff !important;
 }
 ::v-deep .el-dialog__close {
   color: #fff !important;
 }
+// ::v-deep .el-dialog {
+//   margin-top: 10vh !important;
+//   height: 80vh !important;
+//   display: flex;
+//   flex-direction: column;
+// }
+// ::v-deep .el-dialog__body {
+//   flex-grow: 1;
+//   overflow: hidden;
+//   display: flex;
+// }
 .title1 {
   font-size: 20px;
 }

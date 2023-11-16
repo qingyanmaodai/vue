@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -11,6 +11,13 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
 
     <title><%= webpackConfig.name %></title>
+    <!-- 其他头部信息 -->
+    <style>
+      /* 添加内联样式  由于vxe的省略文本层级比element弹窗层级低*/
+      body .vxe-table--tooltip-wrapper {
+        z-index: 10000 !important;
+      }
+    </style>
   </head>
 
   <body>
