@@ -2012,7 +2012,7 @@ export default {
       this.adminLoading = true;
       this.adminLoadingText = '自动拆单中';
       let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
-      const { data, forms, result, totalQty } = res.data;
+      const { data, result, totalQty, msg } = res.data;
       if (result) {
         this.$message({
           message: msg,
