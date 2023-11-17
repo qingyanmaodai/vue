@@ -356,7 +356,7 @@
           <el-col :span="6" class="flex"> 产能:{{ Capacity }}</el-col>
         </el-row>
       </div>
-      <div class="ant-table-title pd-0-6">
+      <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
           <el-col :span="6" class="flex">
             开始时间:
@@ -389,9 +389,17 @@
           <el-col :span="6" class="flex"> 箱数: {{ BoxNum }} </el-col>
         </el-row>
       </div>
-      <div class="ant-table-title pd-0-6">
+      <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
-          <el-col :span="18" class="flex"> </el-col>
+          <el-col :span="12" class="flex">
+            线体:
+            <el-input
+              class="DefaultLineNameInput"
+              v-model="DefaultLineName"
+              size="small"
+            ></el-input
+          ></el-col>
+          <el-col :span="6" class="flex"> </el-col>
           <el-col :span="6" class="flex_flex_end">
             <el-button type="primary" size="mini" @click="AutoSplitOrder(3)"
               >自动拆单</el-button
@@ -577,6 +585,7 @@ export default {
       OQty: 0,
       Capacity: null,
       BoxNum: null,
+      DefaultLineName: null,
       TotalHours: null,
       totalQty: null,
       OOrderNo: null,
@@ -1874,6 +1883,7 @@ export default {
           this.OQty = this.selectionData[2][0]['Qty'];
           this.Capacity = this.selectionData[2][0]['Capacity'];
           this.BoxNum = this.selectionData[2][0]['BoxNum'];
+          this.DefaultLineName = this.selectionData[2][0]['DefaultLineName'];
           this.totalQty = 0;
           this.TotalHours = this.selectionData[2][0]['TotalHours']
             ? this.selectionData[2][0]['TotalHours']
@@ -1998,7 +2008,12 @@ export default {
     },
     async AutoSplitOrder() {
       let obj = _.cloneDeep(this.selectionData[2][0]);
-      if (!this.ERPEndDate || !this.ERPStartDate || !this.TotalHours) {
+      if (
+        !this.ERPEndDate ||
+        !this.ERPStartDate ||
+        !this.TotalHours ||
+        !this.DefaultLineName
+      ) {
         this.$message.error('没有填写开始日期、结束日期或者工时');
         return;
       }
@@ -2009,6 +2024,7 @@ export default {
       obj['ERPEndDate'] = this.ERPEndDate;
       obj['ERPStartDate'] = this.ERPStartDate;
       obj['TotalHours'] = this.TotalHours;
+      obj['DefaultLineName'] = this.DefaultLineName;
       this.adminLoading = true;
       this.adminLoadingText = '自动拆单中';
       let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
@@ -2135,6 +2151,9 @@ export default {
       }
       .el-input {
         width: 200px !important;
+      }
+      .DefaultLineNameInput {
+        width: 500px !important;
       }
     }
     .dialog-footer {
