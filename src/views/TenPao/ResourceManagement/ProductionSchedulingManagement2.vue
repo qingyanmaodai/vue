@@ -269,7 +269,7 @@
                   size="small"
                   >忽略周日</el-checkbox
                 >
-                <el-button type="primary" size="small" @click="Reschedule()"
+                <el-button type="primary" size="small" @click="Reschedule(2)"
                   >重算排期</el-button
                 >
                 <el-button type="primary" size="small" @click="dataSave2()"
@@ -378,7 +378,20 @@
             >
             </el-date-picker>
           </el-col>
-          <el-col :span="6" class="flex"> </el-col>
+          <el-col :span="6" class="flex">
+            工时:
+            <el-input
+              type="number"
+              v-model="TotalHours"
+              size="small"
+            ></el-input>
+          </el-col>
+          <el-col :span="6" class="flex"> 箱数: {{ BoxNum }} </el-col>
+        </el-row>
+      </div>
+      <div class="ant-table-title pd-0-6">
+        <el-row>
+          <el-col :span="18" class="flex"> </el-col>
           <el-col :span="6" class="flex_flex_end">
             <el-button type="primary" size="mini" @click="AutoSplitOrder(3)"
               >自动拆单</el-button
@@ -417,10 +430,15 @@
         />
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="colDialogVisible4 = false">取 消</el-button>
-        <el-button type="primary" @click="confirmDialog(null, 3)"
-          >确 定</el-button
-        >
+        <div class="flex">
+          <div>总数量:{{ totalQty }}</div>
+        </div>
+        <div>
+          <el-button @click="colDialogVisible4 = false">取 消</el-button>
+          <el-button type="primary" @click="confirmDialog(null, 3)"
+            >确 定</el-button
+          >
+        </div>
       </span>
     </el-dialog>
   </div>
@@ -558,6 +576,10 @@ export default {
       OOrderNo: false,
       OQty: 0,
       Capacity: null,
+      BoxNum: null,
+      TotalHours: null,
+      totalQty: null,
+      OOrderNo: null,
       ERPEndDate: null,
       ERPStartDate: null,
       // ONewQty: false,
@@ -802,8 +824,13 @@ export default {
       sheet.setDefaultStyle(defaultStyle, GC.Spread.Sheets.SheetArea.viewport);
 
       // 冻结第一列
-
-      sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      if (
+        this.tableColumns[remarkTb][0] &&
+        this.tableColumns[remarkTb][0]['FixCount']
+      ) {
+        // 冻结
+        sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      }
 
       // 列筛选
       // 参数2 开始列
@@ -836,7 +863,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['FColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {
@@ -851,7 +878,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['BColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {
@@ -1538,19 +1565,54 @@ export default {
     async confirmDialog(data, remarkTb) {
       if (remarkTb === 2) {
         const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-        this.selectionData[remarkTb] = $table.getCheckboxRecords();
-        this.selectionData[remarkTb].forEach((x) => {
-          if (x['ERPStartDate']) {
-            x['NewStartDate'] = this.$moment(x['ERPStartDate'])
-              .add(this.formData['AdjustDay'], 'days')
-              .format('YYYY-MM-DD');
-          }
-          if (x['ERPEndDate']) {
-            x['NewEndDate'] = this.$moment(x['ERPEndDate'])
-              .add(this.formData['AdjustDay'], 'days')
-              .format('YYYY-MM-DD');
-          }
+        if ($table) {
+          this.selectionData[remarkTb] = $table.getCheckboxRecords();
+        }
+        let sheet = this.spread[remarkTb]?.getActiveSheet();
+        sheet.suspendPaint();
+        this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+            const key = column.prop;
+            if (rowItem['isChecked'] === true) {
+              if (key === 'ERPStartDate') {
+                let dataIndex = this.tableColumns[remarkTb].findIndex(
+                  (item) => item['prop'] === key,
+                );
+                sheet.setValue(
+                  rowIndex,
+                  dataIndex,
+                  this.$moment(rowItem['ERPStartDate'])
+                    .add(this.formData['AdjustDay'], 'days')
+                    .format('YYYY-MM-DD'),
+                );
+              } else if (key === 'ERPStartDate') {
+                let dataIndex = this.tableColumns[remarkTb].findIndex(
+                  (item) => item['prop'] === key,
+                );
+                sheet.setValue(
+                  rowIndex,
+                  dataIndex,
+                  this.$moment(rowItem['ERPStartDate'])
+                    .add(this.formData['AdjustDay'], 'days')
+                    .format('YYYY-MM-DD'),
+                );
+              }
+            }
+          });
         });
+        sheet.resumePaint();
+        // this.selectionData[remarkTb].forEach((x) => {
+        //   if (x['ERPStartDate']) {
+        //     x['NewStartDate'] = this.$moment(x['ERPStartDate'])
+        //       .add(this.formData['AdjustDay'], 'days')
+        //       .format('YYYY-MM-DD');
+        //   }
+        //   if (x['ERPEndDate']) {
+        //     x['NewEndDate'] = this.$moment(x['ERPEndDate'])
+        //       .add(this.formData['AdjustDay'], 'days')
+        //       .format('YYYY-MM-DD');
+        //   }
+        // });
         this.colDialogVisible3 = false;
       }
       if (remarkTb === 3) {
@@ -1623,7 +1685,9 @@ export default {
     },
     async dataSave2(remarkTb, index, parms) {
       const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
-      this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
+      if ($table) {
+        this.selectionData[2] = _.cloneDeep($table.getCheckboxRecords());
+      }
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -1683,12 +1747,13 @@ export default {
         this.$set(this.tableData, 1, []);
         // await this.dataSearch(1);
         await this.dataSearch(2);
+        await this.setData(1);
       }
     },
     //重算
-    async Reschedule() {
-      const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
-      this.selectionData[2] = $table.getCheckboxRecords();
+    async Reschedule(remarkTb) {
+      // const $table = this.$refs[`tableRef${2}`]?.[0].$refs.vxeTable;
+      // this.selectionData[2] = $table.getCheckboxRecords();
       if (this.selectionData[2].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
@@ -1710,21 +1775,37 @@ export default {
         if (data) {
           // 对应匹配并更新表格数据
           data.forEach((newData) => {
-            const rowIndex = this.tableData[2].findIndex(
+            const matchIndex = this.tableData[2].findIndex(
               (row) => row.OrderID === newData.OrderID,
             );
-            console.log(rowIndex, 'rowIndex');
-            if (rowIndex !== -1) {
-              // 确保 rowIndex 在有效范围内
-              if (rowIndex === this.tableData[2].length - 1) {
-                $table.remove(this.tableData[2][rowIndex]);
+            if (matchIndex !== -1) {
+              let sheet = this.spread[remarkTb]?.getActiveSheet();
+              sheet.suspendPaint();
+              this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+                this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+                  const key = column.prop;
+                  if (rowItem['isChecked'] === true) {
+                    if (key === 'NewStartDate' || key === 'NewEndDate') {
+                      let dataIndex = this.tableColumns[remarkTb].findIndex(
+                        (item) => item['prop'] === key,
+                      );
+                      console.log(newData, 'newData');
+                      sheet.setValue(matchIndex, dataIndex, newData[key]);
+                    }
+                  }
+                });
+              });
+              sheet.resumePaint();
 
-                $table.insertAt(newData, -1);
+              // 确保 rowIndex 在有效范围内
+              if (matchIndex === this.tableData[2].length - 1) {
+                // $table.remove(this.tableData[2][matchIndex]);
+                // $table.insertAt(newData, -1);
               } else {
-                $table.remove(this.tableData[2][rowIndex]);
-                $table.insertAt(newData, rowIndex);
+                // $table.remove(this.tableData[2][matchIndex]);
+                // $table.insertAt(newData, matchIndex);
               }
-              // this.tableData[2].splice(rowIndex, 1, newData);
+              // this.tableData[2].splice(matchIndex, 1, newData);
             }
           });
         }
@@ -1737,19 +1818,39 @@ export default {
       }
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
+      console.log(OrderNoValue, 'OrderNoValue');
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');
         return;
       }
-      this.selectionData[remarkTb] = $table.getCheckboxRecords();
+      if ($table) {
+        this.selectionData[remarkTb] = $table.getCheckboxRecords();
+      }
       if (this.selectionData[remarkTb].length === 0) {
         this.$message.error('请选择需要批量修改的行');
         return;
       }
-      this.selectionData[remarkTb].forEach((rowItem, rowIndex) => {
-        rowItem[OrderNo] = OrderNoValue;
-      });
+      if ($table) {
+        this.selectionData[remarkTb].forEach((rowItem, rowIndex) => {
+          rowItem[OrderNo] = OrderNoValue;
+        });
+      } else {
+        let sheet = this.spread[remarkTb]?.getActiveSheet();
+        sheet.suspendPaint();
+        this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+          this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+            const key = column.prop;
+            if (rowItem['isChecked'] === true) {
+              let dataIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item['prop'] === OrderNo,
+              );
+              sheet.setValue(rowIndex, dataIndex, OrderNoValue);
+            }
+          });
+        });
+        sheet.resumePaint();
+      }
     },
     // 调整排期
     async AdjustSchedule(remarkTb, index, parms) {
@@ -1772,6 +1873,11 @@ export default {
           this.OOrderNo = this.selectionData[2][0]['OrderNo'];
           this.OQty = this.selectionData[2][0]['Qty'];
           this.Capacity = this.selectionData[2][0]['Capacity'];
+          this.BoxNum = this.selectionData[2][0]['BoxNum'];
+          this.totalQty = 0;
+          this.TotalHours = this.selectionData[2][0]['TotalHours']
+            ? this.selectionData[2][0]['TotalHours']
+            : 10;
           const erpStartDate = this.$moment(
             this.selectionData[2][0]['ERPStartDate'],
           );
@@ -1892,8 +1998,8 @@ export default {
     },
     async AutoSplitOrder() {
       let obj = _.cloneDeep(this.selectionData[2][0]);
-      if (!this.ERPEndDate || !this.ERPStartDate) {
-        this.$message.error('没有填写开始日期或者结束日期');
+      if (!this.ERPEndDate || !this.ERPStartDate || !this.TotalHours) {
+        this.$message.error('没有填写开始日期、结束日期或者工时');
         return;
       }
       if (this.$moment(this.ERPEndDate) < this.$moment(this.ERPStartDate)) {
@@ -1902,16 +2008,18 @@ export default {
       }
       obj['ERPEndDate'] = this.ERPEndDate;
       obj['ERPStartDate'] = this.ERPStartDate;
+      obj['TotalHours'] = this.TotalHours;
       this.adminLoading = true;
       this.adminLoadingText = '自动拆单中';
       let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
-      const { data, forms, result, msg } = res.data;
+      const { data, forms, result, totalQty } = res.data;
       if (result) {
         this.$message({
           message: msg,
           type: 'success',
           dangerouslyUseHTMLString: true,
         });
+        this.$set(this, 'totalQty', totalQty);
         this.$set(this.tableData, 3, data);
         this.$set(this, 'adminLoading', false);
       } else {
@@ -2025,6 +2133,14 @@ export default {
       .el-date-editor {
         width: 200px;
       }
+      .el-input {
+        width: 200px !important;
+      }
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   }
 }

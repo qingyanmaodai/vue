@@ -64,6 +64,7 @@
       <el-date-picker
         v-if="OrderNoObj.ControlType === 'datebox'"
         v-model="OrderNoValue"
+        :value-format="'yyyy-MM-dd'"
         size="small"
         type="date"
       ></el-date-picker>
