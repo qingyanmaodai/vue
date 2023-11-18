@@ -2,7 +2,7 @@
 <template>
   <div class="APSContainer" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i">
+      <div v-for="i in [0, 1, 2]" :key="i" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -60,7 +60,7 @@
                 class="margin_right_20"
                 size="small"
                 type="primary"
-                @click="updateColor(0)"
+                @click="updateColor(labelStatus1)"
                 >确定</el-button
               >
               <div v-for="(item, y) in Status1" :key="y">
@@ -74,23 +74,29 @@
             </el-col>
           </el-row>
         </div>
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableColumns="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :remark="0"
-          :sysID="sysID[0]['ID']"
-          :pagination="tablePagination[0]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
-        />
+        <div
+          v-for="item in [0, 1, 2]"
+          :key="item"
+          v-show="labelStatus1 === item"
+        >
+          <ComSpreadTable
+            ref="spreadsheetRef"
+            :height="height"
+            :tableData="tableData[item]"
+            :tableColumns="tableColumns[item]"
+            :tableLoading="tableLoading[item]"
+            :remark="item"
+            :sysID="sysID[item]['ID']"
+            :pagination="tablePagination[item]"
+            @pageChange="pageChange"
+            @pageSize="pageSize"
+            @workbookInitialized="workbookInitialized"
+            @selectChanged="selectChanged"
+          />
+        </div>
       </div>
     </div>
-    <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
+    <!-- <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
       <div v-for="item in [1]" :key="item">
         <ComSearch
           class="margin_bottom_10 dialog_search"
@@ -125,7 +131,7 @@
           >确 定</el-button
         >
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 导入文件 -->
     <div>
       <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
@@ -225,25 +231,29 @@ export default {
           required: [], //获取必填项
         },
         {
-          datas: {
-            CreatedBy: this.$store.getters.userInfo.Account,
-          }, //查询入参
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
       ],
-      tableData: [[], []], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[], []], //表格表头列
+      tableData: [[], [], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], [], []], //表格表头列
       tableLoading: [false, false], //每个表加载
       isClear: [false, false],
-      hasSelect: [false, false],
-      Region: [5, 5],
+      hasSelect: [false, false, false],
+      Region: [5, 5, 5],
       tablePagination: [
         //表分页参数
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
-      sysID: [{ ID: 10108 }, { ID: 10108 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 10108 }],
       colorStatus: [
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
@@ -259,7 +269,7 @@ export default {
         },
         { label: '全部', value: { IsPoDetailFinish: '' } },
       ],
-      spread: null, //excel初始
+      spread: [], //excel初始
       fileList: [],
       file: [],
       selectionData: [[]],
@@ -273,8 +283,8 @@ export default {
     };
   },
   activated() {
-    if (this.spread) {
-      this.spread.refresh();
+    if (this.spread[this.tagRemark]) {
+      this.spread[this.tagRemark].refresh();
     }
   },
   created() {
@@ -314,6 +324,7 @@ export default {
   },
   methods: {
     updateColor(remarkTb) {
+      debugger;
       let sheet = this.spread.getActiveSheet();
       sheet.suspendPaint();
       const { col, colCount, row, rowCount } = sheet.getSelections()[0];
@@ -427,8 +438,8 @@ export default {
       this.$set(this, 'btnForm', routeBtn);
     },
     //获取子组件实例
-    workbookInitialized: function (workbook) {
-      this.spread = workbook;
+    workbookInitialized: function (workbook, remarkTb) {
+      this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
@@ -536,7 +547,7 @@ export default {
         }
         this.$set(this.tableLoading, remarkTb, false);
 
-        this.setData();
+        this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -546,11 +557,11 @@ export default {
       }
     },
     // excle表数据渲染
-    async setData() {
+    async setData(remarkTb) {
       try {
-        this.spread.suspendPaint();
+        this.spread[remarkTb].suspendPaint();
         // 获取活动表单
-        let sheet = this.spread.getActiveSheet();
+        let sheet = this.spread[remarkTb].getActiveSheet();
         // 重置表单
         sheet.reset();
         //渲染数据源
@@ -753,11 +764,11 @@ export default {
         // 冻结
         sheet.frozenColumnCount(this.tableColumns[this.tagRemark][1].FixCount);
 
-        this.spread.options.tabStripVisible = false; //是否显示表单标签
-        this.spread.options.scrollbarMaxAlign = true;
+        this.spread[remarkTb].options.tabStripVisible = false; //是否显示表单标签
+        this.spread[remarkTb].options.scrollbarMaxAlign = true;
         // this.spread.options.scrollByPixel = true;
 
-        this.spread.resumePaint();
+        this.spread[remarkTb].resumePaint();
         sheet.options.isProtected = true;
         sheet.options.protectionOptions.allowResizeColumns = true;
         sheet.options.protectionOptions.allowInsertRows = true;
@@ -774,7 +785,7 @@ export default {
       } catch (error) {
         console.log('表格渲染的错误信息:', error);
       }
-      this.spread.refresh(); //重新定位宽高度
+      this.spread[remarkTb].refresh(); //重新定位宽高度
     },
     bindComboBoxToCell(sheet, row, col, dataSourceName) {
       // 获取要绑定下拉菜单的单元格对象
@@ -839,13 +850,14 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas['IsPoDetailFinish'] =
+      this.tagRemark = index;
+      this.formSearchs[this.tagRemark].datas['IsPoDetailFinish'] =
         item.value['IsPoDetailFinish'];
-      this.dataSearch(0);
+      this.dataSearch(this.tagRemark);
     },
     // 保存
     async dataSave(remarkTb) {
-      let sheet = this.spread.getActiveSheet();
+      let sheet = this.spread[remarkTb].getActiveSheet();
       let newData = sheet.getDirtyRows(); //获取修改过的数据
       let submitData = [];
       if (newData.length != 0) {
@@ -1330,7 +1342,7 @@ export default {
     // 确定添加这些排程进来
     async CompleteEvent(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请选择需要删除的数据！');
+        this.$message.error('请选择需要指定完成的数据！');
         return;
       } else {
         let newData = _.cloneDeep(

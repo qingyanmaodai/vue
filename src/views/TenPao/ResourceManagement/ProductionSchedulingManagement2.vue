@@ -132,7 +132,12 @@
                 :defaultResetShow="false"
               />
             </div>
-            <div v-for="item in [1]" :key="item" class="flex_grow w-full">
+            <div
+              v-for="item in [1]"
+              :key="item"
+              class="flex_grow w-full"
+              id="tableContainer1"
+            >
               <!-- <ComVxeTable
                 :ref="`tableRef${item}`"
                 :rowKey="'RowNumber'"
@@ -211,6 +216,7 @@
             <div
               v-for="item in [2]"
               :key="item"
+              id="tableContainer2"
               class="flex_grow w-full"
               style="padding-bottom: 2px"
             >
@@ -1108,16 +1114,15 @@ export default {
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.selectingRow === -1 || args['row'] !== _this.selectingRow) {
-          if (_this.tableColumns[remarkTb].length) {
-            _this.tableColumns[remarkTb].map((item, index) => {
-              if (remarkTb === 2) {
-                _this.formSearchs[1].datas['SalesOrderDetailID'] =
-                  _this.tableData[remarkTb][args.row].SalesOrderDetailID ||
-                  'N/A';
-                _this.dataSearch(1);
-              }
-            });
+          // if (_this.tableColumns[remarkTb].length) {
+          //   _this.tableColumns[remarkTb].map((item, index) => {
+          if (remarkTb === 2) {
+            _this.formSearchs[1].datas['SalesOrderDetailID'] =
+              _this.tableData[remarkTb][args.row].SalesOrderDetailID || 'N/A';
+            _this.dataSearch(1);
           }
+          //   });
+          // }
           _this.selectingRow = args.row;
         }
       });
@@ -1583,7 +1588,7 @@ export default {
           this.tableColumns[remarkTb].forEach((column, columnIndex) => {
             const key = column.prop;
             if (rowItem['isChecked'] === true) {
-              if (key === 'ERPStartDate') {
+              if (key === 'NewStartDate') {
                 let dataIndex = this.tableColumns[remarkTb].findIndex(
                   (item) => item['prop'] === key,
                 );
@@ -1594,14 +1599,14 @@ export default {
                     .add(this.formData['AdjustDay'], 'days')
                     .format('YYYY-MM-DD'),
                 );
-              } else if (key === 'ERPStartDate') {
+              } else if (key === 'NewEndDate') {
                 let dataIndex = this.tableColumns[remarkTb].findIndex(
                   (item) => item['prop'] === key,
                 );
                 sheet.setValue(
                   rowIndex,
                   dataIndex,
-                  this.$moment(rowItem['ERPStartDate'])
+                  this.$moment(rowItem['ERPEndDate'])
                     .add(this.formData['AdjustDay'], 'days')
                     .format('YYYY-MM-DD'),
                 );
@@ -1748,6 +1753,28 @@ export default {
       //获取原因数据源
       if (remarkTb === 0) {
         this.colDialogVisible2 = true;
+        this.$nextTick(() => {
+          let tableContainer1 = document.getElementById('tableContainer1'); // 通过 `<div>` 的 ID 获取元素
+          let tableContainer2 = document.getElementById('tableContainer2'); // 通过 `<div>` 的 ID 获取元素
+          // 创建一个 ResizeObserver 实例
+          const resizeObserver = new ResizeObserver((entries) => {
+            // 当元素的大小发生变化时，会触发此回调函数
+            for (const entry of entries) {
+              if (entry.target === tableContainer1) {
+                // 在这里执行你的操作，例如刷新 SpreadJS
+                // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
+                this.spread[1].refresh();
+              }
+              if (entry.target === tableContainer2) {
+                // 在这里执行你的操作，例如刷新 SpreadJS
+                // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
+                this.spread[2].refresh();
+              }
+            }
+          }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
+          resizeObserver.observe(tableContainer1);
+          resizeObserver.observe(tableContainer2);
+        });
         this.dataReset(1);
         this.dataReset(2);
         this.formSearchs[1].datas['SalesOrderDetailID'] = null;

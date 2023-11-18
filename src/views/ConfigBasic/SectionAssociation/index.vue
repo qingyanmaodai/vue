@@ -649,8 +649,9 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
-      this.clickRow = row;
       if (remarkTb === 0) {
+        this.clickRow = row;
+
         this.formSearchs[1].datas['ProcessID'] = row['ProcessID'];
       }
       await this.dataSearch(Number(this.selectedIndex));
