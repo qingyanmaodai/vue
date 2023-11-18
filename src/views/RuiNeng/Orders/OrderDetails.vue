@@ -795,12 +795,12 @@ export default {
       cell.cellType(comboBox);
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 重置
     dataReset(remarkTb) {
@@ -847,7 +847,6 @@ export default {
     async dataSave(remarkTb) {
       let sheet = this.spread.getActiveSheet();
       let newData = sheet.getDirtyRows(); //获取修改过的数据
-      debugger;
       let submitData = [];
       if (newData.length != 0) {
         newData.forEach((x) => {
@@ -1326,6 +1325,53 @@ export default {
           });
         }
         this.newDataDialog = false;
+      }
+    },
+    // 确定添加这些排程进来
+    async CompleteEvent(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要删除的数据！');
+        return;
+      } else {
+        let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            return x;
+          }),
+        );
+        this.$confirm(
+          `已选中${newData.length}条数据，是否确定指定完成?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          },
+        )
+          .then(async (_) => {
+            this.adminLoading = true;
+            let res = await GetSearch(
+              newData,
+              '/APSAPI/UpdateBusinessOrderComplete',
+            );
+            const { data, result, msg } = res.data;
+            if (result) {
+              this.$message({
+                message: msg,
+                type: 'success',
+                dangerouslyUseHTMLString: true,
+              });
+              await this.dataSearch(remarkTb);
+              this.adminLoading = false;
+            } else {
+              this.$message({
+                message: msg,
+                type: 'error',
+                dangerouslyUseHTMLString: true,
+              });
+              this.adminLoading = false;
+            }
+          })
+          .catch((_) => {});
       }
     },
   },
