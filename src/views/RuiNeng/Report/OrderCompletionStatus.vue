@@ -493,18 +493,7 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     // 单击获取明细
-    handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas['OrganizeID'] = row.OrganizeID;
-      this.formSearchs[1].datas['WorkingDate'] = [
-        this.$moment(row['YearMonth']).startOf('month').format('YYYY-MM-DD'),
-        this.$moment(row['YearMonth']).endOf('month').format('YYYY-MM-DD'),
-      ];
-      this.dataSearch(1);
-    },
-    // 行内样式
-    cellStyle0({ row, column }) {},
-    // 行内样式
-    cellStyle({ row, column }) {},
+    handleRowClick(row, remarkTb) {},
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');
