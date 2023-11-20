@@ -130,11 +130,15 @@ export default {
       drawer: false,
       formSearchs: [
         {
-          datas: {},
+          datas: {
+            SaleType: 'OUTSale',
+          },
           forms: [],
         },
         {
-          datas: {},
+          datas: {
+            SaleType: 'INSale',
+          },
           forms: [],
         },
         {
@@ -222,8 +226,8 @@ export default {
       OrderNoValue: '',
       OrderNos: [[], []],
       Status1: [
-        { label: '外销产品', value: '未开始', index: 0 },
-        { label: '内销产品', value: '已完成', index: 1 },
+        { label: '外销产品', value: 'OUTSale', index: 0 },
+        { label: '内销产品', value: 'INSale', index: 1 },
       ],
       labelStatus1: 0,
       labelStatus2: 0,
@@ -478,7 +482,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      //   this.formSearchs[this.labelStatus1].datas['IsCompleteInspect'] = item.value;
+      this.formSearchs[this.labelStatus1].datas['SaleType'] = item.value;
       this.dataSearch(this.labelStatus1);
     },
     changeStatus2(item, index) {
