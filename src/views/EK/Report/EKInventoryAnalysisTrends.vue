@@ -1,6 +1,6 @@
 <!--表格-->
 <template>
-  <div class="flex_column content_height APS" v-loading="adminLoading">
+  <div class="flex_column APS" v-loading="adminLoading">
     <div class="firstNode" v-show="active === 1">
       <div class="rightCard">
         <div class="secondCard">

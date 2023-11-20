@@ -722,6 +722,13 @@ export default {
               });
             }
           });
+          if (i === 0 && !this.IsPurchaseBoss) {
+            m.forEach((item) => {
+              if (item['prop'] === 'Remark7') {
+                item['component'] = '';
+              }
+            });
+          }
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
