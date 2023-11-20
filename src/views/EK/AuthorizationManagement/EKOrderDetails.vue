@@ -406,19 +406,19 @@ export default {
             rowItem['Result'] &&
             columnIndex < 5
           ) {
-            cell.backColor('#FF0000');
+            // cell.backColor('#FF0000');
           }
           if (rowItem['ISPOFinish'] === '是' && key === 'ReportQty') {
-            cell.backColor('#92d050');
+            // cell.backColor('#92d050');
           }
           if (rowItem['ISOutStock'] === '出库正常' && key === 'OutDate') {
-            cell.backColor('#92d050');
+            // cell.backColor('#92d050');
           }
           if (rowItem['ISOutStock'] === '出库异常' && key === 'OutDate') {
-            cell.backColor('#ff0000');
+            //cell.backColor('#ff0000');
           }
           if (rowItem['ISCheckWarm'] === 1 && key === 'CheckDate') {
-            cell.backColor('#ffff00');
+            //cell.backColor('#ffff00');
           }
           if (
             Object.prototype.toString.call(rowItem['FColors']) ===
@@ -671,7 +671,7 @@ export default {
               rowItem['Result'] &&
               columnIndex < 5
             ) {
-              cell.backColor('#FF0000');
+              // cell.backColor('#FF0000');
             }
             if (
               Object.prototype.toString.call(rowItem['FColors']) ===

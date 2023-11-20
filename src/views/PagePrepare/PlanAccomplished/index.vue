@@ -584,6 +584,7 @@ export default {
         {
           dicID: 36,
           OrganizeTypeID: 5,
+          Status: 1,
           rows: 0,
           // fields: 'Account,Name',
           // groupby: 'Account,Name',
