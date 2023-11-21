@@ -1,7 +1,7 @@
 <!--表格-->
 <template>
   <div class="flex_column APS" v-loading="adminLoading">
-    <div class="firstNode" v-show="active === 1">
+    <div class="firstNode content_height" v-show="active === 1">
       <div class="rightCard">
         <div class="secondCard">
           <div class="itemCard">
@@ -928,7 +928,7 @@ export default {
   .firstNode {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    // height: 100%;
     overflow: auto;
 
     .rightCard {
