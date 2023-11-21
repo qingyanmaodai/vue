@@ -12,13 +12,13 @@
       >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
-          :searchForm="formSearchs[0].forms"
-          :remark="0"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :remark="i"
           :isLoading="isLoading"
           :btnForm="btnForm"
-          :signName="0"
-          :Region="Region[0]"
+          :signName="i"
+          :Region="Region[i]"
           @btnClick="btnClick"
         />
       </div>
@@ -28,8 +28,18 @@
         <el-row>
           <el-col :span="8"
             ><span class="title">{{ title }}</span>
+            <span class="title" style="margin-left: 20px"
+              >选中总材积 {{ TotalVolume }}</span
+            >
           </el-col>
           <el-col :span="16" class="flex_flex_end">
+            <a
+              style="color: #ec0d1f; margin-right: 30px"
+              :href="`${apsurl}` + '/出货计划管理.pdf'"
+              target="_blank"
+              class="font_size_1"
+              >【说明文档】</a
+            >
             <div v-for="(item, y) in Status1" :key="y">
               <span
                 @click="changeStatus(item, y)"
@@ -48,8 +58,9 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0]"
-      :key="item"
+      v-for="item in [0, 3, 4, 5]"
+      :key="item + 'table'"
+      v-show="labelStatus1 === item"
     >
       <ComSpreadTable
         ref="spreadsheetRef"
@@ -85,7 +96,7 @@
           </el-col>
         </el-row>
       </div>
-      <div v-for="item in [1]" :key="item">
+      <div v-for="item in [1]" :key="item + 'table'">
         <ComSpreadTable
           ref="spreadsheetRef"
           height="600px"
@@ -125,7 +136,7 @@
             }}客户的业务人员，勾选表示选定人员，非勾选表示未选定</el-row
           >
         </div>
-        <div v-for="item in [2]" :key="item" class="flex_grow">
+        <div v-for="item in [2]" :key="item + 'table'" class="flex_grow">
           <ComVxeTable
             :ref="`tableRef${item}`"
             :rowKey="'RowNumber'"
@@ -195,13 +206,12 @@ export default {
   data() {
     return {
       labelStatus1: 0,
-      spread: [[], []],
+      spread: [[], [], [], [], [], [], []],
       dialogSearchForm: {
         OrderID: '',
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      title2: null,
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -221,17 +231,27 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
-      hasSelect: [false, false, false, false],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       height: '707px',
@@ -239,16 +259,23 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10127 }],
+      sysID: [
+        { ID: 10108 },
+        { ID: 10108 },
+        { ID: 7833 },
+        { ID: 10108 },
+        { ID: 10108 },
+        { ID: 10108 },
+      ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
-      selectionData: [[], []],
+      selectionData: [[], [], [], [], [], [], []],
       NoWorkHour: [],
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: [false, false, false],
+      isEdit: [false, false, false, false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
       Status1: [
@@ -257,15 +284,18 @@ export default {
         { label: '全部', value: '', index: 4 },
         { label: '预测单', value: 2, index: 5 },
       ],
-      Region: [5, 6, 6],
+      Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
       Customer: null,
       linkTableData: [],
+      linkTableData2: [],
+      apsurl: null,
     };
   },
   watch: {},
   created() {
+    this.apsurl = localStorage.getItem('apsurl');
     _this = this;
     this.adminLoading = true;
     // 获取所有按钮
@@ -273,15 +303,22 @@ export default {
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
   },
-  // activated() {
-  //   if (this.spread) {
-  //     this.spread.refresh();
-  //   }
-  // },
+  activated() {
+    if (this.spread) {
+      this.spread[this.labelStatus1].refresh();
+    }
+  },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
     }),
+    TotalVolume: function () {
+      return this.selectionData[this.labelStatus1].reduce((total, obj) => {
+        return Number(obj.TotalVolume)
+          ? total + Number(obj.TotalVolume)
+          : total;
+      }, 0);
+    },
   },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
@@ -292,7 +329,7 @@ export default {
         if (entry.target === tableContainer) {
           // 在这里执行你的操作，例如刷新 SpreadJS
           // 你可能需要访问 SpreadJS 实例来调用 refresh() 方法
-          this.spread[0].refresh();
+          this.spread[this.labelStatus1].refresh();
         }
       }
     }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
@@ -352,7 +389,7 @@ export default {
     //获取当前选中行的值
     selectChanged(newValue, remarkTb) {
       // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
+      this.$set(this.selectionData, remarkTb, newValue);
     },
     // 高度控制
     setHeight() {
@@ -470,7 +507,7 @@ export default {
         this.$message.error('请单击需要操作的数据！');
         return;
       } else {
-        if (remarkTb === 0) {
+        if (remarkTb !== 2 || remarkTb !== 1) {
           newData = _.cloneDeep(
             this.selectionData[remarkTb]
               .filter((x) => x['DataSource'] !== '业务') // 过滤条件，不包括 "DataSource" 为 "业务" 的对象
@@ -549,9 +586,9 @@ export default {
           return;
         }
         this.colDialogVisible1 = false;
-        let sheet = this.spread[0].getActiveSheet();
+        let sheet = this.spread[this.labelStatus1].getActiveSheet();
         const changedIndices = [];
-        this.tableData[0].forEach((element, index) => {
+        this.tableData[this.labelStatus1].forEach((element, index) => {
           if (element['isChecked']) {
             changedIndices.push(index);
           }
@@ -567,7 +604,7 @@ export default {
         this.$nextTick(() => {
           sheet.repaint();
         });
-        await this.dataSave(0);
+        await this.dataSave(this.labelStatus1);
       }
     },
     //在该行数据下面增加新的一行
@@ -584,8 +621,10 @@ export default {
       );
       let newRowIndex = rowNumber + 1;
       let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      this.tableData[0][newRowIndex] = JSON.parse(JSON.stringify(oldData));
-      let newData = this.tableData[0][newRowIndex]; // 获取数据源中新行的值
+      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
+        JSON.stringify(oldData),
+      );
+      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
       let SQtyObj = this.selectionData[1].find(
         (item) => item['RowNumber'] === oldData['RowNumber'],
       );
@@ -607,7 +646,7 @@ export default {
         .then(async (_) => {
           this.adminLoading = true;
 
-          let sheet = this.spread[0].getActiveSheet();
+          let sheet = this.spread[this.labelStatus1].getActiveSheet();
           let submitData = sheet.getDataSource();
           submitData.forEach((m) => {
             m['isChecked'] = true;
@@ -652,8 +691,11 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      // this.adminLoading = true;
-      const sheet = this.spread[remarkTb]?.getActiveSheet();
+      this.adminLoading = true;
+      const sheet =
+        this.spread[2] && typeof this.spread[2].getActiveSheet === 'function'
+          ? this.spread[2].getActiveSheet()
+          : undefined;
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       if (sheet && sheet.isEditing()) {
@@ -769,11 +811,18 @@ export default {
         Columns.some((m, i) => {
           this.$set(this.tableColumns, i, m);
         });
+        if (remarkTb === 5) {
+          this.tableColumns[5].forEach((item) => {
+            if (item['prop'] === 'RequestOutDate') {
+              item['isEdit'] = false;
+            }
+          });
+        }
         this.linkTableData = [];
         if (remarkTb === 2) {
           data.forEach((item1) => {
             // 使用find方法在第二个数组中查找匹配的SaleMan
-            const matching = this.tableData[3].find(
+            const matching = this.linkTableData2.find(
               (item2) => item2.SaleMan === item1.Account,
             );
             // 如果找到匹配的SaleMan，将isChecked设置为true
@@ -786,7 +835,7 @@ export default {
 
         this.$set(this.tableData, remarkTb, data);
 
-        if (remarkTb === 0 || remarkTb === 1) {
+        if (remarkTb !== 2) {
           this.setData(remarkTb);
         }
 
@@ -1417,9 +1466,18 @@ export default {
       this.SalesOrderNo = this.selectionData[remarkTb][0]['SalesOrderNo'];
       this.Customer = this.selectionData[remarkTb][0]['Customer'];
       this.colDialogVisible2 = true;
-      this.formSearchs[3].datas.SalesOrderDetailID =
-        this.selectionData[remarkTb][0]['SalesOrderDetailID'];
-      await this.dataSearch(3);
+      let form = {
+        dicID: 10127,
+        rows: 0,
+        SalesOrderDetailID:
+          this.selectionData[remarkTb][0]['SalesOrderDetailID'],
+      };
+      let res = await GetSearchData(form);
+      const { result, data, count, msg, Columns } = res.data;
+      if (result) {
+        this.$set(this, 'linkTableData2', data);
+      }
+
       await this.dataSearch(2);
     },
     //添加产品机台
@@ -1436,7 +1494,7 @@ export default {
         addData1.forEach((item) => {
           item['dicID'] = 10127;
           item['SalesOrderDetailID'] =
-            this.selectionData[0][0]['SalesOrderDetailID'];
+            this.selectionData[this.labelStatus1][0]['SalesOrderDetailID'];
           item['SaleMan'] = item['Account'];
         });
         newData = newData.concat(addData1);
@@ -1471,19 +1529,29 @@ export default {
           }
         });
       }
-      this.formSearchs[0].datas['SaleMan'] = null;
-      if (this.RoleMapStatus !== true && index !== 3) {
+      this.formSearchs[this.labelStatus1].datas['SaleMan'] = null;
+      if (this.RoleMapStatus !== true && index !== 5) {
         this.$set(
-          this.formSearchs[0]['datas'],
+          this.formSearchs[this.labelStatus1]['datas'],
           'SaleMan',
           this.userInfo.Account,
         );
       }
       this.labelStatus1 = item['index'];
-      this.formSearchs[0].datas['IsFinish'] = item.value;
-      await this.dataSearch(0);
+      this.formSearchs[this.labelStatus1].datas['IsFinish'] = item.value;
+      await this.dataSearch(this.labelStatus1);
     },
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
+}
+</style>
