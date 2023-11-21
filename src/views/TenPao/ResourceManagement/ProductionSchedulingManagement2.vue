@@ -783,29 +783,27 @@ export default {
               cell.cellType(comboBox);
             }
           });
-        }
-        // else if (x.ControlType === 'datebox' && x['isEdit']) {
-        //   let rangeCalendarStyle = new GC.Spread.Sheets.Style();
-        //   rangeCalendarStyle.formatter = 'yyyy-MM-dd';
+        } else if (x.ControlType === 'datebox' && x['isEdit']) {
+          let rangeCalendarStyle = new GC.Spread.Sheets.Style();
+          rangeCalendarStyle.formatter = 'yyyy-MM-dd';
 
-        //   rangeCalendarStyle.cellButtons = [
-        //     {
-        //       imageType: GC.Spread.Sheets.ButtonImageType.dropdown,
-        //       command: 'openDateTimePicker',
-        //       useButtonStyle: true,
-        //     },
-        //   ];
-        //   rangeCalendarStyle.dropDowns = [
-        //     {
-        //       type: GC.Spread.Sheets.DropDownType.dateTimePicker,
-        //       option: {
-        //         showTime: false,
-        //       },
-        //     },
-        //   ];
-        //   sheet.setStyle(-1, y, rangeCalendarStyle);
-        // }
-        else if (x.ControlType === 'checkbox') {
+          rangeCalendarStyle.cellButtons = [
+            {
+              imageType: GC.Spread.Sheets.ButtonImageType.dropdown,
+              command: 'openDateTimePicker',
+              useButtonStyle: true,
+            },
+          ];
+          rangeCalendarStyle.dropDowns = [
+            {
+              type: GC.Spread.Sheets.DropDownType.dateTimePicker,
+              option: {
+                showTime: false,
+              },
+            },
+          ];
+          sheet.setStyle(-1, y, rangeCalendarStyle);
+        } else if (x.ControlType === 'checkbox') {
           let cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
           cellType.caption('');
           cellType.textTrue('');
