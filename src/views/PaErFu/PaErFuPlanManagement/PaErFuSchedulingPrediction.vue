@@ -785,12 +785,15 @@ export default {
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      // changeRecords.forEach((x) => {
-      //   x['SDate'] = this.formSearchs[remarkTb].datas['SDate'];
-      //   x['Edate'] = this.formSearchs[remarkTb].datas['Edate'];
-      // });
-      // let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
-      let res = await SaveData(changeRecords);
+      changeRecords.forEach((x) => {
+        x['SDate'] = this.formSearchs[remarkTb].datas['SDate'];
+        x['Edate'] = this.formSearchs[remarkTb].datas['Edate'];
+      });
+      if (parms === '添加产品') {
+        let res = await SaveData(changeRecords);
+      } else {
+        let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
+      }
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1585,7 +1588,7 @@ export default {
         );
       }
 
-      await this.dataSave(this.labelStatus1, null, null, newData);
+      await this.dataSave(this.labelStatus1, null, '添加产品', newData);
       this.colDialogVisible2 = false;
     },
     //添加产品机台
