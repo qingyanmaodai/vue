@@ -693,8 +693,9 @@ export default {
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet =
-        this.spread[2] && typeof this.spread[2].getActiveSheet === 'function'
-          ? this.spread[2].getActiveSheet()
+        this.spread[remarkTb] &&
+        typeof this.spread[remarkTb].getActiveSheet === 'function'
+          ? this.spread[remarkTb].getActiveSheet()
           : undefined;
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
