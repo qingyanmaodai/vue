@@ -14,7 +14,7 @@
         :remark="remark"
         :btnForm="btnForm"
         :signName="remark"
-        :Region="Region[remark]"
+        :Region="Region"
         @btnClick="btnClick"
       />
     </div>
@@ -154,7 +154,7 @@ export default {
     },
     Region: {
       type: Number,
-      default: 3,
+      default: 5,
     },
     //表格高度
     height: {

@@ -16,6 +16,7 @@
               :isLoading="isLoading"
               :btnForm="btnForm"
               @btnClick="btnClick"
+              :Region="Region[0]"
               :signName="labelStatus1"
             />
           </div>
@@ -46,7 +47,6 @@
               :tableLoading="tableLoading[0]"
               :remark="0"
               :hasSelect="hasSelect[0]"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
               :pagination="tablePagination[0]"
@@ -137,57 +137,86 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <DialogTable
+    <!-- 弹框-->
+    <DialogOptTable
       title="添加机台"
       :tableDialog="colDialogVisible3"
       :sysID="sysID[3]['ID']"
-      width="80%"
+      :isEdit="isEdit[3]"
+      :remark="3"
+      width="70%"
       :hasSelect="hasSelect[3]"
       @closeDialog="colDialogVisible3 = false"
+      @btnClickCall="btnClick"
       :searchForm="formSearchs[3]"
+      :btnForm="btnForm"
       :isToolbar="false"
       :isConfirmBtn="true"
+      :table-data="tableData[3]"
+      :table-header="tableColumns[3]"
+      :table-loading="tableLoading[3]"
+      :table-pagination="tablePagination[3]"
+      :isClear="isClear[3]"
+      :Region="Region[3]"
       @confirmDialog="confirmDialog"
-    ></DialogTable>
-    <DialogTable
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
+    <DialogOptTable
       title="添加产品"
       :tableDialog="colDialogVisible4"
       :sysID="sysID[4]['ID']"
-      width="80%"
+      :isEdit="isEdit[4]"
+      :remark="4"
+      width="70%"
       :hasSelect="hasSelect[4]"
       @closeDialog="colDialogVisible4 = false"
+      @btnClickCall="btnClick"
       :searchForm="formSearchs[4]"
+      :btnForm="btnForm"
       :isToolbar="false"
       :isConfirmBtn="true"
+      :table-data="tableData[4]"
+      :table-header="tableColumns[4]"
+      :table-loading="tableLoading[4]"
+      :table-pagination="tablePagination[4]"
+      :isClear="isClear[4]"
+      :Region="Region[4]"
       @confirmDialog="confirmDialog"
-    ></DialogTable>
+      @pageChangeCall="pageChange"
+      @pageSizeCall="pageSize"
+      @sortChangeCall="sortChange"
+      @selectFunCall="selectFun"
+    ></DialogOptTable>
   </div>
 </template>
 
 <script>
 var _this;
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import DialogTable from "@/components/Dialog/dialogTable";
+import { Splitpanes, Pane } from 'splitpanes';
+import 'splitpanes/dist/splitpanes.css';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
+import DialogOptTable from '@/components/Dialog/dialogOptTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetServerTime,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "DeviceAssociation",
+  name: 'DeviceAssociation',
   components: {
     ComSearch,
     ComVxeTable,
     ComReportTable,
     Splitpanes,
     Pane,
-    DialogTable,
+    DialogOptTable,
   },
   data() {
     return {
@@ -230,23 +259,26 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
       Status1: [
-        { label: "待确认", value: "未开始" },
-        { label: "已完成", value: "已完成" },
-        { label: "全部", value: "" },
+        { label: '待确认', value: '未开始' },
+        { label: '已完成', value: '已完成' },
+        { label: '全部', value: '' },
       ],
       labelStatus1: 0,
       sysID: [{ ID: 108 }, { ID: 110 }, { ID: 112 }, { ID: 90 }, { ID: 1180 }],
+      Region: [5, 6, 6, 6, 6, 6],
       isEdit: false,
       userInfo: {},
-      selectedIndex: "1",
+      selectedIndex: '1',
       colDialogVisible3: false,
       colDialogVisible4: false,
       clickRow: null,
+      linkTableData: [],
+      linkTableData2: [],
     };
   },
   watch: {},
@@ -269,17 +301,17 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            if (!item["signName"] || item["signName"].length === 0) {
+          if (item.ButtonCode == 'save') {
+            if (!item['signName'] || item['signName'].length === 0) {
               this.isEdit.fill(true);
-            } else if (item["signName"] && item["signName"].length > 0) {
-              item["signName"].map((item) => {
+            } else if (item['signName'] && item['signName'].length > 0) {
+              item['signName'].map((item) => {
                 this.$set(this.isEdit, item, true);
               });
             }
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     // 高度控制
     setHeight() {
@@ -288,17 +320,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -309,13 +341,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -335,13 +367,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -349,7 +381,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -365,31 +397,74 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     //添加产品机台
     confirmDialog(data) {
       if (Number(this.selectedIndex) === 1) {
-        console.log(this.formSearchs[1]["MachineMouldID"], "1");
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[1]["datas"]["MachineMouldID"];
-          item["dicID"] = 110;
+        let newData = [];
+        //添加
+        let addData1 = this.selectionData[3].filter(
+          (item0) =>
+            !this.linkTableData.some((item3) => {
+              return item3['MachineID'] === item0['MachineID'];
+            }),
+        );
+        addData1.forEach((item) => {
+          item['dicID'] = 110;
+          item['MachineMouldID'] =
+            this.formSearchs[1]['datas']['MachineMouldID'];
         });
-        this.dataSave(1, null, null, data);
+        newData = newData.concat(addData1);
+        //删除
+        let addData2 = this.linkTableData.filter(
+          (item0) =>
+            !this.selectionData[3].some((item3) => {
+              return item3['MachineID'] === item0['MachineID'];
+            }),
+        );
+        addData2.forEach((item) => {
+          item['dicID'] = 110;
+          item['ElementDeleteFlag'] = 1;
+        });
+
+        newData = newData.concat(addData2);
+        this.dataSave(1, null, null, newData);
+        this.colDialogVisible3 = false;
       } else if (Number(this.selectedIndex) === 2) {
-        data.map((item) => {
-          item["MachineMouldID"] =
-            this.formSearchs[2]["datas"]["MachineMouldID"];
-          item["dicID"] = 112;
+        let newData = [];
+        //添加
+        let addData1 = this.selectionData[4].filter(
+          (item0) =>
+            !this.linkTableData.some((item3) => {
+              return item3['Code'] === item0['Code'];
+            }),
+        );
+        addData1.forEach((item) => {
+          item['dicID'] = 112;
+          item['MachineMouldID'] =
+            this.formSearchs[2]['datas']['MachineMouldID'];
         });
-        this.dataSave(2, null, null, data);
+        newData = newData.concat(addData1);
+        //删除
+        let addData2 = this.linkTableData.filter(
+          (item0) =>
+            !this.selectionData[4].some((item3) => {
+              return item3['Code'] === item0['Code'];
+            }),
+        );
+        addData2.forEach((item) => {
+          item['dicID'] = 112;
+          item['ElementDeleteFlag'] = 1;
+        });
+
+        newData = newData.concat(addData2);
+        this.dataSave(2, null, null, newData);
+        this.colDialogVisible4 = false;
       }
-      this.colDialogVisible3 = false;
-      this.colDialogVisible4 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -412,15 +487,15 @@ export default {
           let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
           let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
           DeletedRows.forEach((item) => {
-            item["ElementDeleteFlag"] = 1;
+            item['ElementDeleteFlag'] = 1;
           }); //获取被删除的数据
           updateRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
 
       if (updateRecords.length == 0) {
-        this.$set(this, "adminLoading", false);
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
       let res = await SaveData(updateRecords);
@@ -429,18 +504,18 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 获取表头数据
@@ -461,27 +536,28 @@ export default {
             }
 
             if (index === 1) {
-              this.tablePagination[i]["pageSize"] = n["pageSize"];
-              this.hasSelect[i] = n["IsSelect"];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
           });
           this.$set(this.tableColumns, i, m);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
 
         // this.formSearchs[0].datas["IsCompleteInspect"] = 0;
-        this.formSearchs[0].datas["PrepareStatus"] = 1;
+        this.formSearchs[0].datas['PrepareStatus'] = 1;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.adminLoading = false;
       }
@@ -490,35 +566,59 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (remarkTb == 1) {
           if (data.length != 0) {
             data.forEach((a) => {
-              this.$set(a, "update", false);
+              this.$set(a, 'update', false);
             });
           }
         }
+        this.linkTableData = [];
+        if (remarkTb === 3) {
+          data.forEach((item1) => {
+            // 使用find方法在第二个数组中查找匹配的SaleMan
+            const matching = this.linkTableData2.find(
+              (item2) => item2.MachineID === item1.MachineID,
+            );
+            if (matching) {
+              item1.isChecked = true;
+              this.linkTableData.push(matching);
+            }
+          });
+        } else if (remarkTb === 4) {
+          data.forEach((item1) => {
+            // 使用find方法在第二个数组中查找匹配的SaleMan
+            const matching = this.linkTableData2.find(
+              (item2) => item2.Code === item1.Code,
+            );
+            if (matching) {
+              item1.isChecked = true;
+              this.linkTableData.push(matching);
+            }
+          });
+        }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -529,16 +629,16 @@ export default {
       let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请单击需要操作的数据！");
+        this.$message.error('请单击需要操作的数据！');
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
-          obj["ElementDeleteFlag"] = 1;
+          obj['ElementDeleteFlag'] = 1;
           newData.push(obj);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -546,11 +646,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -562,8 +662,8 @@ export default {
     // 单击获取明细
     handleRowClick(row, remarkTb) {
       this.clickRow = row;
-      this.formSearchs[1].datas["MachineMouldID"] = row.MachineMouldID;
-      this.formSearchs[2].datas["MachineMouldID"] = row.MachineMouldID;
+      this.formSearchs[1].datas['MachineMouldID'] = row.MachineMouldID;
+      this.formSearchs[2].datas['MachineMouldID'] = row.MachineMouldID;
       this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
@@ -571,51 +671,50 @@ export default {
       this.selectedIndex = tab.name;
       this.dataSearch(this.selectedIndex);
     },
-    AddEvent(index) {
+    async AddEvent(index) {
       if (!this.clickRow) {
-        this.$message.error("请点击需要绑定的数据！");
+        this.$message.error('请点击需要绑定的数据！');
         return;
       }
       if (index === 1) {
+        let form = {
+          dicID: 110,
+          rows: 0,
+          MachineMouldID: this.formSearchs[1].datas['MachineMouldID'],
+        };
+        let res = await GetSearchData(form);
+        const { result, data, count, msg, Columns } = res.data;
+        if (result) {
+          this.$set(this, 'linkTableData2', data);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
         this.colDialogVisible3 = true;
-        // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
+        await this.dataSearch(3);
       }
       if (index === 2) {
-        this.colDialogVisible4 = true;
-      }
-    },
-    // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == "IsCompleteInspect") {
-        if (row.IsCompleteInspect == "未开始") {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
-        } else if (row.IsCompleteInspect == "进行中") {
-          return {
-            backgroundColor: "#fdfd8f",
-          };
-        } else if (row.IsCompleteInspect == "已完成") {
-          return {
-            backgroundColor: "#9fff9f",
-          };
-        }
-      }
-    },
-    // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == "OrderNo") {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: "#ff7b7b",
-          };
+        let form = {
+          dicID: 112,
+          rows: 0,
+          MachineMouldID: this.formSearchs[2].datas['MachineMouldID'],
+        };
+        let res = await GetSearchData(form);
+        const { result, data, count, msg, Columns } = res.data;
+        if (result) {
+          this.$set(this, 'linkTableData2', data);
         } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: "#9fff9f",
-            };
-          }
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
         }
+        this.colDialogVisible4 = true;
+        await this.dataSearch(4);
       }
     },
   },
