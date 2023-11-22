@@ -789,10 +789,11 @@ export default {
         x['SDate'] = this.formSearchs[remarkTb].datas['SDate'];
         x['Edate'] = this.formSearchs[remarkTb].datas['Edate'];
       });
+      let res;
       if (parms === '添加产品') {
-        let res = await SaveData(changeRecords);
+        res = await SaveData(changeRecords);
       } else {
-        let res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
+        res = await GetSearch(changeRecords, '/APSAPI/SaveManualForecast'); //金羚此特殊接口，没使用通用保存
       }
       const { datas, forms, result, msg } = res.data;
       if (result) {
