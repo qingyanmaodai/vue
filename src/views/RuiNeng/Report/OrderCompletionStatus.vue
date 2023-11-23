@@ -58,7 +58,6 @@
               :tableHeader="tableColumns[item]"
               :tableLoading="tableLoading[item]"
               :remark="item"
-              :cellStyle="cellStyle0"
               :sysID="sysID[item]['ID']"
               :isClear="isClear[item]"
               :hasSelect="hasSelect[item]"
@@ -231,7 +230,7 @@ export default {
       ],
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 12188 }, { ID: 12188 }],
+      sysID: [{ ID: 12188 }, { ID: 11146 }],
       isEdit: [false, false, false, false, false],
       colDialogVisible1: false,
       userInfo: {},
@@ -482,7 +481,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[this.labelStatus1].datas['SaleType'] = item.value;
+      // this.formSearchs[this.labelStatus1].datas['SaleType'] = item.value;
       this.dataSearch(this.labelStatus1);
     },
     changeStatus2(item, index) {

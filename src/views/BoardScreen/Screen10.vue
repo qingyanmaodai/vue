@@ -203,6 +203,10 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
       ],
       result1: [
         {
@@ -577,8 +581,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[5][0]['S1'],
-                  name: this.tableData[5][0]['Name1'],
+                  value: this.tableData[6][0]['S1'],
+                  name: this.tableData[6][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -661,8 +665,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[6][0]['S1'],
-                  name: this.tableData[6][0]['Name1'],
+                  value: this.tableData[7][0]['S1'],
+                  name: this.tableData[7][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -745,8 +749,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[7][0]['S1'],
-                  name: this.tableData[7][0]['Name1'],
+                  value: this.tableData[8][0]['S1'],
+                  name: this.tableData[8][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
