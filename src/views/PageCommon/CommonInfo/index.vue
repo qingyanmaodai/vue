@@ -499,6 +499,13 @@ export default {
         }
         this.formSearchs[0].datas['dicID'] = this.ID;
         this.getTableData(this.formSearchs[0].datas, 0);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 验证数据

@@ -367,7 +367,7 @@
     <!-- 弹框-->
     <el-dialog
       :title="'产线排班表'"
-      :visible.sync="colDialogVisible1"
+      :visible.sync="colDialogVisible0"
       width="90%"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
@@ -415,6 +415,87 @@
         </splitpanes>
       </div>
     </el-dialog>
+    <!-- 弹框-->
+    <el-dialog
+      :title="'拆分订单'"
+      class="colDialogVisible1"
+      :visible.sync="colDialogVisible1"
+      :width="'50%'"
+      :close-on-click-modal="false"
+      :modal-append-to-body="false"
+    >
+      <div class="pd-0-6 h-50px flex">
+        <div class="flex-1 w-1/3 p-4">销售订单: {{ OOrderNo }}</div>
+        <div class="flex-1 w-1/3 p-4">产品编码: {{ OQty }}</div>
+        <div class="flex-1 w-1/3 p-4">产品名称: {{ ONewQty }}</div>
+      </div>
+      <div class="pd-0-6 h-50px flex">
+        <div class="flex-1 w-1/3 p-4">订单交期:{{ Capacity }}</div>
+        <div class="flex-1 w-1/3 p-4">订单数量: {{ OOrderNo }}</div>
+        <div class="flex-1 w-1/3 p-4">计划数: {{ OQty }}</div>
+      </div>
+      <!-- <div class="ant-table-title pd-0-6 h-50px">
+        <el-row>
+          <el-col :span="6" class="flex"> 销售订单: {{ OOrderNo }} </el-col>
+          <el-col :span="6" class="flex"> 产品编码: {{ OQty }} </el-col>
+          <el-col :span="6" class="flex"> 产品名称: {{ ONewQty }} </el-col>
+          <el-col :span="6" class="flex"> 订单交期:{{ Capacity }}</el-col>
+        </el-row>
+      </div> -->
+      <!-- <div class="ant-table-title pd-0-6 h-50px">
+        <el-row>
+          <el-col :span="6" class="flex"> 订单数量: {{ OOrderNo }} </el-col>
+          <el-col :span="6" class="flex"> 计划数: {{ OQty }} </el-col>
+        </el-row>
+      </div> -->
+      <div class="pd-0-6">
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+          <el-form-item label="拉体">
+            <el-input
+              size="small"
+              v-model="formInline.user"
+              placeholder="请输入拉体"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="数量">
+            <el-input
+              size="small"
+              v-model="formInline.user"
+              placeholder="请输入数量"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="计划开始时间">
+            <el-date-picker
+              size="small"
+              v-model="ERPStartDate"
+              type="date"
+              placeholder="选择开始日期"
+            >
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="计划结束时间">
+            <el-date-picker
+              size="small"
+              v-model="ERPStartDate"
+              type="date"
+              placeholder="选择结束日期"
+            >
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <!-- <div class="flex">
+          <div>总数量:{{ totalQty }}</div>
+        </div> -->
+        <div>
+          <el-button @click="colDialogVisible1 = false">取 消</el-button>
+          <el-button type="primary" @click="confirmDialog(null, 3)"
+            >确 定</el-button
+          >
+        </div>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -460,7 +541,6 @@ export default {
       spread: [[], [], [], [], [], [], [], []],
       selectionData: [[], [], [], [], [], [], [], []],
       title: this.$route.meta.title,
-      colDialogVisible1: false,
       includeFields: [[], [], [], [], [], [], [], []],
       hasSelect: [false, false, false, false, false, false],
       selectedIndex: '0',
@@ -507,6 +587,10 @@ export default {
           forms: [],
         },
       ],
+      formInline: {
+        user: '',
+        region: '',
+      },
       btnForm: [],
       OrderNo: '',
       OrderNoValue: '',
@@ -554,6 +638,8 @@ export default {
       isEdit: [false, false, false, false, false, false],
       userInfo: {},
       Region: [6, 6, 6, 6, 6, 6, 6, 6, 6],
+      colDialogVisible0: false,
+      colDialogVisible1: false,
       colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
@@ -974,7 +1060,7 @@ export default {
             if (remarkTb === 3) {
               _this.formSearchs[3].datas['OrganizeID'] =
                 _this.tableData[remarkTb][args.row].OrganizeID || 'N/A';
-              _this.colDialogVisible1 = true;
+              _this.colDialogVisible0 = true;
               _this.dataSearch(6);
               _this.dataSearch(7);
             }
@@ -1101,7 +1187,6 @@ export default {
         this.dataSave(2, null, null, data);
       }
       this.colDialogVisible3 = false;
-      this.colDialogVisible4 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -1288,7 +1373,7 @@ export default {
         this.formSearchs[7].datas['OrganizeID'] = row.OrganizeID;
         this.dataSearch(6);
         this.dataSearch(7);
-        this.colDialogVisible1 = true;
+        this.colDialogVisible0 = true;
       }
       // this.dataSearch(this.selectedIndex);
     },
@@ -1305,9 +1390,6 @@ export default {
       if (index === 1) {
         this.colDialogVisible3 = true;
         // this.formSearchs[3]["MachineTypeID"] = "M20230614001";
-      }
-      if (index === 2) {
-        this.colDialogVisible4 = true;
       }
     },
     //获取当前选中行的值
@@ -1445,17 +1527,11 @@ export default {
 ::v-deep .el-dialog__close {
   color: #fff !important;
 }
-// ::v-deep .el-dialog {
-//   margin-top: 10vh !important;
-//   height: 80vh !important;
-//   display: flex;
-//   flex-direction: column;
-// }
-// ::v-deep .el-dialog__body {
-//   flex-grow: 1;
-//   overflow: hidden;
-//   display: flex;
-// }
+::v-deep .colDialogVisible1 {
+  .el-form-item {
+    margin-bottom: 10px;
+  }
+}
 .title1 {
   font-size: 20px;
 }

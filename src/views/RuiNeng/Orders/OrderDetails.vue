@@ -20,8 +20,12 @@
       <div class="admin_content">
         <div class="ant-table-title">
           <el-row>
-            <el-col :span="0" class="flex"> </el-col>
-            <el-col :span="24" class="flex_flex_end">
+            <el-col :span="10" class="flex">
+              上次运算时间：{{ LastCalculationTime }} 下次运算时间：{{
+                NextCalculationTime
+              }}
+            </el-col>
+            <el-col :span="14" class="flex_flex_end">
               <a
                 style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
@@ -316,6 +320,39 @@ export default {
     }
     this.CreatedBy =
       this.RoleMapStatus === true ? '' : this.$store.getters.userInfo.Account;
+  },
+  computed: {
+    LastCalculationTime: function () {
+      let rowData = this.tableData[this.labelStatus1];
+
+      if (Array.isArray(rowData) && rowData.length > 0) {
+        let row = rowData.find((item) => {
+          return item['SyncDatetime'];
+        });
+
+        if (row) {
+          return row['SyncDatetime'];
+        }
+      }
+    },
+    NextCalculationTime: function () {
+      let lastCalculationTime = this.LastCalculationTime;
+
+      if (lastCalculationTime) {
+        // 使用 this.$moment 将 LastCalculationTime 增加十五分钟
+        let nextCalculationTime = this.$moment(lastCalculationTime).add(
+          15,
+          'minutes',
+        );
+
+        // 返回格式化后的时间字符串，你也可以根据需要返回其他格式
+        return nextCalculationTime.format('YYYY-MM-DD HH:mm:ss');
+      }
+
+      // 处理 LastCalculationTime 为 null 或 undefined 的情况
+      // 返回适当的默认值或执行其他逻辑
+      return null; // 例如，你可以返回一个默认值
+    },
   },
   mounted() {
     setTimeout(() => {

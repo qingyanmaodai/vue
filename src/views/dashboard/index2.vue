@@ -1363,6 +1363,13 @@ export default {
             rows: item.erows,
           };
         });
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
       }
       let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
@@ -1438,6 +1445,13 @@ export default {
         // );
         this.adminLoading = false;
         // await this.getEcharts();
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 验证数据
