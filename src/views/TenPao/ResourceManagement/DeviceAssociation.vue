@@ -137,15 +137,15 @@
       </pane>
     </splitpanes>
     <!-- 弹框-->
-    <!-- 弹框-->
     <DialogOptTable
       title="添加机台"
+      ref="DialogOptTable3"
       :tableDialog="colDialogVisible3"
       :sysID="sysID[3]['ID']"
       :isEdit="isEdit[3]"
       :remark="3"
       width="70%"
-      :hasSelect="hasSelect[3]"
+      :hasSelect="true"
       @closeDialog="colDialogVisible3 = false"
       @btnClickCall="btnClick"
       :searchForm="formSearchs[3]"
@@ -166,12 +166,13 @@
     ></DialogOptTable>
     <DialogOptTable
       title="添加产品"
+      ref="DialogOptTable4"
       :tableDialog="colDialogVisible4"
       :sysID="sysID[4]['ID']"
       :isEdit="isEdit[4]"
       :remark="4"
       width="70%"
-      :hasSelect="hasSelect[4]"
+      :hasSelect="true"
       @closeDialog="colDialogVisible4 = false"
       @btnClickCall="btnClick"
       :searchForm="formSearchs[4]"
@@ -221,9 +222,9 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      selectionData: [[], []],
+      selectionData: [[], [], [], [], [], [], []],
       title: this.$route.meta.title,
-      includeFields: [[], [], []],
+      includeFields: [[], [], [], [], [], [], []],
       hasSelect: [false, false, false, false, false],
       formSearchs: [
         {
@@ -248,10 +249,10 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], []],
-      tableColumns: [[], [], [], []],
-      tableLoading: [false, false, false, false],
-      isClear: [false, false, false, false],
+      tableData: [[], [], [], [], []],
+      tableColumns: [[], [], [], [], []],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
@@ -403,8 +404,13 @@ export default {
       this.$store.dispatch('user/exportData', res.data);
     },
     //添加产品机台
-    confirmDialog(data) {
+    async confirmDialog(remarkTb) {
       if (Number(this.selectedIndex) === 1) {
+        const $table =
+          this.$refs[`DialogOptTable3`]?.$refs.vxeTable.$refs.vxeTable;
+        if ($table) {
+          this.selectionData[remarkTb] = $table.getCheckboxRecords();
+        }
         let newData = [];
         //添加
         let addData1 = this.selectionData[3].filter(
@@ -435,6 +441,11 @@ export default {
         this.dataSave(1, null, null, newData);
         this.colDialogVisible3 = false;
       } else if (Number(this.selectedIndex) === 2) {
+        const $table =
+          this.$refs[`DialogOptTable4`]?.$refs.vxeTable.$refs.vxeTable;
+        if ($table) {
+          this.selectionData[remarkTb] = $table.getCheckboxRecords();
+        }
         let newData = [];
         //添加
         let addData1 = this.selectionData[4].filter(
@@ -694,6 +705,7 @@ export default {
           });
         }
         this.colDialogVisible3 = true;
+        this.dataReset(3);
         await this.dataSearch(3);
       }
       if (index === 2) {
@@ -714,6 +726,7 @@ export default {
           });
         }
         this.colDialogVisible4 = true;
+        this.dataReset(4);
         await this.dataSearch(4);
       }
     },

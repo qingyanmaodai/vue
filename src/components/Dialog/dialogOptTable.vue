@@ -20,7 +20,7 @@
     </div>
     <div class="admin_content flex_grow">
       <ComVxeTable
-        ref="PurchaseRequisition"
+        ref="vxeTable"
         :isToolbar="isToolbar"
         :forbidden="forbidden"
         :isEdit="isEdit"
