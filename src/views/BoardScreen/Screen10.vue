@@ -49,11 +49,11 @@
                   <div
                     v-for="(column, colIndex) in tableColumns[1]"
                     :key="'column' + colIndex"
-                    class="h-full w-full flex items-center"
+                    class="h-full flex items-center"
                     :class="
                       colIndex < tableColumns[1].length - 1
-                        ? 'mr-[10px]'
-                        : 'mr-0'
+                        ? 'pr-[10px]'
+                        : 'pr-0'
                     "
                     :style="getColumnStyle(tableColumns[1], column)"
                   >
@@ -202,7 +202,7 @@ export default {
           forms: [],
         },
         {
-          datas: { page: 1 },
+          datas: { page: 5 },
           forms: [],
         },
         {
@@ -910,7 +910,7 @@ export default {
         // 获取每个表头
         if (remarkTb === 1) {
           this.$set(this.tableColumns, remarkTb, AppColumns);
-          this.startRefreshTimer(1, count);
+          // this.startRefreshTimer(1, count);
         }
         // else {
         //   Columns.some((m, i) => {
