@@ -910,7 +910,7 @@ export default {
         // 获取每个表头
         if (remarkTb === 1) {
           this.$set(this.tableColumns, remarkTb, AppColumns);
-          // this.startRefreshTimer(1, count);
+          this.startRefreshTimer(1, count);
         }
         // else {
         //   Columns.some((m, i) => {
