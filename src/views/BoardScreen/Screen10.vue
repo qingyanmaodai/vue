@@ -15,7 +15,8 @@
           </div>
           <div
             class="chartContent flex flex-col"
-            element-loading-background="#060765"
+            element-loading-background="#030a2c"
+            v-loading="tableLoading[1]"
           >
             <div class="tableHead flex px-[10px] text-white w-full">
               <div
@@ -30,23 +31,25 @@
                 {{ column.label }}
               </div>
             </div>
-            <VueSeamlessScroll
+            <!-- <VueSeamlessScroll
               :data="tableData[1]"
               class="warp"
               :class-option="{
                 step: 0.25,
               }"
-            >
+            > -->
+            <div class="warp">
               <ul class="px-[10px]">
                 <li
                   v-for="(item, index) in tableData[1]"
                   :key="'data' + index"
                   class="flex"
+                  :style="getColumnRows(1)"
                 >
                   <div
                     v-for="(column, colIndex) in tableColumns[1]"
                     :key="'column' + colIndex"
-                    class="truncate"
+                    class="h-full w-full flex items-center"
                     :class="
                       colIndex < tableColumns[1].length - 1
                         ? 'mr-[10px]'
@@ -54,11 +57,14 @@
                     "
                     :style="getColumnStyle(tableColumns[1], column)"
                   >
-                    {{ tableData[1][index][column.prop] }}
+                    <div class="w-full truncate">
+                      {{ tableData[1][index][column.prop] }}
+                    </div>
                   </div>
                 </li>
               </ul>
-            </VueSeamlessScroll>
+            </div>
+            <!-- </VueSeamlessScroll> -->
           </div>
         </div>
         <div class="h-full w-35/100 flex flex-col">
@@ -145,16 +151,36 @@ export default {
       chartHead: chartHead,
       logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
-      tableLoading: [false, false, false], //每个表加载
       todayDate: '',
       chartData1: [],
       chartData2: [[], []],
       chartTotal1: 2562,
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], [], [], [], [], [], [], []],
-      tableData: [[], [], [{ S1: '' }], [{ S1: '' }], [], [], [], [], []],
-
+      tableColumns: [[], [], [], [], [], [], [], [], [], []],
+      tableData: [
+        [],
+        [],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [],
+        [],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [],
+      ],
+      tableLoading: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
       tablePagination: [
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
@@ -176,7 +202,7 @@ export default {
           forms: [],
         },
         {
-          datas: {},
+          datas: { page: 1 },
           forms: [],
         },
         {
@@ -328,6 +354,17 @@ export default {
         });
       }
     },
+    getColumnRows(remarkTb) {
+      if (this.formSearchs[remarkTb].datas['rows']) {
+        return {
+          height: `${100 / this.formSearchs[remarkTb].datas['rows']}%`,
+        };
+      } else {
+        return {
+          height: `5%`,
+        };
+      }
+    },
     // 渲染echart图
     barData(id, option) {
       // echarts.dispose(id);
@@ -408,7 +445,15 @@ export default {
           if (this.result1[z].rows) {
             this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
           }
-          if (this.sysID[z].ID) {
+          if (
+            z === 1 ||
+            z === 2 ||
+            z === 3 ||
+            z === 4 ||
+            z === 6 ||
+            z === 7 ||
+            z === 8
+          ) {
             await this.getTableData(this.formSearchs[z].datas, z);
             await this.getEcharts();
           }
@@ -835,6 +880,25 @@ export default {
       const weekDayName = weekDayNames[weekDay]; // 获取星期几的名称
       return `${year}年${month}月${day}日 ${weekDayName}`;
     },
+    async startRefreshTimer(remarkTb, count) {
+      // 先清除之前的定时器
+      this.stopRefreshTimer();
+      // 设置定时器，每十秒刷新一次数据
+      this.refreshTimer = setInterval(async () => {
+        const form = this.formSearchs[remarkTb].datas;
+        // 如果当前页小于总页数，则继续增加页数；否则重新从第一页开始
+        form.page =
+          form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
+        // 调用 getTableData 方法
+        this.$set(_this.tableLoading, remarkTb, true);
+        await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+        this.$set(_this.tableLoading, remarkTb, false);
+      }, 10000); // 10000 毫秒等于十秒
+    },
+    stopRefreshTimer() {
+      // 清除定时器
+      clearInterval(this.refreshTimer);
+    },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
@@ -846,6 +910,7 @@ export default {
         // 获取每个表头
         if (remarkTb === 1) {
           this.$set(this.tableColumns, remarkTb, AppColumns);
+          this.startRefreshTimer(1, count);
         }
         // else {
         //   Columns.some((m, i) => {
@@ -1011,6 +1076,7 @@ export default {
     .tableHead {
       height: 50px;
       background: rgba(53, 64, 117, 1);
+      font-size: 18px;
     }
     padding: 9px 12px;
     height: calc(100% - 48px);
@@ -1020,14 +1086,15 @@ export default {
       color: #fff;
       overflow: hidden;
       ul {
+        height: 100%;
         list-style: none;
         padding: 0;
         margin: 0 auto;
         li,
         a {
-          height: 50px;
-          line-height: 50px;
-          font-size: 18px;
+          // height: 5%;
+          // line-height: 5%;
+          font-size: 14px;
         }
         li:nth-child(even) {
           background-color: #0f1740;

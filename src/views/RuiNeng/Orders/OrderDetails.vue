@@ -19,13 +19,16 @@
     <div>
       <div class="admin_content">
         <div class="ant-table-title">
-          <el-row>
-            <el-col :span="10" class="flex">
-              上次运算时间：{{ LastCalculationTime }} 下次运算时间：{{
+          <div class="flex items-center justify-between">
+            <div class="flex">
+              上次运算时间：<span style="color: red; font-weight: bold">{{
+                LastCalculationTime
+              }}</span>
+              下次运算时间：<span style="color: red; font-weight: bold">{{
                 NextCalculationTime
-              }}
-            </el-col>
-            <el-col :span="14" class="flex_flex_end">
+              }}</span>
+            </div>
+            <div class="flex">
               <a
                 style="color: #ec0d1f; margin-right: 30px"
                 :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
@@ -75,8 +78,16 @@
                 >
                 <el-divider direction="vertical"></el-divider>
               </div>
-            </el-col>
-          </el-row>
+            </div>
+          </div>
+        </div>
+        <div class="ant-table-title">
+          <div class="flex justify-between items-center">
+            <div class="flex">
+              【温馨提示:在运算过程中，数据可能存在一定时间差，建议运算完成后做验证，时间间隔不要太久】
+            </div>
+            <div class="flex_flex_end"></div>
+          </div>
         </div>
         <div
           v-for="item in [0, 1, 2]"
