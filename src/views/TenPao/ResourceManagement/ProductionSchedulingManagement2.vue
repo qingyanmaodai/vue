@@ -2061,7 +2061,7 @@ export default {
         !this.TotalHours ||
         !this.DefaultLineName
       ) {
-        this.$message.error('没有填写开始日期、结束日期或者工时');
+        this.$message.error('没有填写开始日期、结束日期、线体或者工时');
         return;
       }
       if (this.$moment(this.ERPEndDate) < this.$moment(this.ERPStartDate)) {
