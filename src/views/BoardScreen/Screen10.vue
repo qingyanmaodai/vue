@@ -2,7 +2,7 @@
   <div id="Screen">
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
-      <img class="logo" :src="logo" mode="heightFix" />
+      <img class="logo" :src="result1[0]['groupby']" mode="heightFix" />
       <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
@@ -31,40 +31,58 @@
                 {{ column.label }}
               </div>
             </div>
-            <!-- <VueSeamlessScroll
+            <VueSeamlessScroll
+              ref="seamlessScroll"
+              @ScrollEnd="ScrollEnd"
               :data="tableData[1]"
               class="warp"
               :class-option="{
-                step: 0.25,
+                singleHeight: 30,
+                waitTime: 2000,
               }"
-            > -->
-            <div class="warp">
-              <ul class="px-[10px]">
-                <li
-                  v-for="(item, index) in tableData[1]"
-                  :key="'data' + index"
-                  class="flex"
-                  :style="getColumnRows(1)"
-                >
-                  <div
-                    v-for="(column, colIndex) in tableColumns[1]"
-                    :key="'column' + colIndex"
-                    class="h-full flex items-center"
-                    :class="
-                      colIndex < tableColumns[1].length - 1
-                        ? 'pr-[10px]'
-                        : 'pr-0'
-                    "
-                    :style="getColumnStyle(tableColumns[1], column)"
+            >
+              <div class="warp">
+                <!-- <ComScreenTable
+                :rowKey="'RowNumber'"
+                ref="ComScreenTable"
+                height="100%"
+                :tableData="tableData[1]"
+                :tableHeader="tableColumns[1]"
+                :remark="1"
+                :sysID="sysID[1]"
+                :isEdit="false"
+                :hasSelect="false"
+                :pagination="tablePagination[1]"
+                :keepSource="true"
+                :footerContent="false"
+              /> -->
+
+                <ul class="px-[10px]">
+                  <li
+                    v-for="(item, index) in tableData[1]"
+                    :key="'data' + index"
+                    class="flex"
+                    :style="getColumnRows(1)"
                   >
-                    <div class="w-full truncate">
-                      {{ tableData[1][index][column.prop] }}
+                    <div
+                      v-for="(column, colIndex) in tableColumns[1]"
+                      :key="'column' + colIndex"
+                      class="h-full flex items-center"
+                      :class="
+                        colIndex < tableColumns[1].length - 1
+                          ? 'pr-[10px]'
+                          : 'pr-0'
+                      "
+                      :style="getColumnStyle(tableColumns[1], column)"
+                    >
+                      <div class="w-full truncate">
+                        {{ tableData[1][index][column.prop] }}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <!-- </VueSeamlessScroll> -->
+                  </li>
+                </ul>
+              </div>
+            </VueSeamlessScroll>
           </div>
         </div>
         <div class="h-full w-35/100 flex flex-col">
@@ -143,7 +161,8 @@ import chartHead from '@/assets/imgs/chartHead.png';
 import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
-import ComVxeTable from '@/components/ComVxeTable';
+import ComScreenTable from '@/components/ComScreenTable';
+import '@/flexible.js';
 export default {
   name: 'Screen10',
   data() {
@@ -314,7 +333,7 @@ export default {
   },
   components: {
     VueSeamlessScroll,
-    ComVxeTable,
+    ComScreenTable,
   },
   watch: {},
   created() {
@@ -335,6 +354,19 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
+    async ScrollEnd() {
+      // const scrollContainer = this.$refs.seamlessScroll.$el;
+      // // Check if the scroll position is at the bottom
+      // const isAtBottom =
+      //   scrollContainer.scrollTop + scrollContainer.clientHeight ===
+      //   scrollContainer.scrollHeight;
+      // if (isAtBottom) {
+      //   console.log('Scrolled to the bottom!');
+      //   await this.getTableData(this.formSearchs[1].datas, 1);
+      //   // Your logic for when the scroll reaches the bottom
+      // }
+      // console.log('ScrollEnd');
+    },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
         (sum, col) => sum + parseFloat(col.appWidth || 0),
@@ -908,9 +940,9 @@ export default {
       const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
         // 获取每个表头
-        if (remarkTb === 1) {
+        if (remarkTb === 1 && this.tableColumns[1].length === 0) {
           this.$set(this.tableColumns, remarkTb, AppColumns);
-          this.startRefreshTimer(1, count);
+          // this.startRefreshTimer(1, count);
         }
         // else {
         //   Columns.some((m, i) => {
@@ -922,6 +954,11 @@ export default {
         // }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        if (remarkTb === 1) {
+          this.tableData[1][this.tableData[1].length - 1][
+            this.tableColumns[1]['0']['prop']
+          ] = '合计';
+        }
       } else {
         this.$message({
           message: msg,
@@ -1075,7 +1112,7 @@ export default {
   .chartContent {
     .tableHead {
       height: 50px;
-      background: rgba(53, 64, 117, 1);
+      background: #354075;
       font-size: 18px;
     }
     padding: 9px 12px;
@@ -1092,12 +1129,13 @@ export default {
         margin: 0 auto;
         li,
         a {
-          // height: 5%;
-          // line-height: 5%;
-          font-size: 14px;
+          height: 50px;
+          line-height: 50px;
+          font-size: 17px;
+          border-bottom: 1px solid #fff;
         }
         li:nth-child(even) {
-          background-color: #0f1740;
+          // background-color: #0f1740;
         }
       }
     }
@@ -1128,5 +1166,27 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+::v-deep .vxe-header--row {
+  background-color: #354075 !important;
+  height: 50px !important;
+}
+::v-deep .vxe-cell--title {
+  font-size: 18px;
+  color: #fff !important;
+}
+::v-deep .vxe-table .vxe-table--body-wrapper,
+.vxe-table .vxe-table--footer-wrapper {
+  background-color: #030a2c;
+}
+/*调整表格文字及位置*/
+::v-deep .vxe-table .vxe-body--column,
+.vxe-table .vxe-footer--column,
+.vxe-table .vxe-header--column {
+  // position: relative;
+  // line-height: 24px;
+  // text-align: center;
+  color: #ffffff;
+  font-size: 18px;
 }
 </style>

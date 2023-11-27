@@ -61,6 +61,7 @@
         :isToolbar="false"
         :isConfirmBtn="true"
         :showFooter="false"
+        :Region="Region[1]"
         :table-data="tableData[1]"
         :table-header="tableColumns[1]"
         :table-loading="tableLoading[1]"
@@ -531,6 +532,7 @@ export default {
       let matchedColumn = this.findColumn(this.tableColumns[remarkTb], column);
       if (matchedColumn) {
         this.formSearchs[1].datas['YearMonth'] = matchedColumn['prop2'];
+        this.formSearchs[1].datas['Extend14'] = row['WorkCenter'];
         this.colDialogVisible1 = true;
         await this.dataSearch(1);
       }

@@ -27,7 +27,7 @@ import UmyUI from "umy-ui";
 import "umy-ui/lib/theme-chalk/index.css"; // 引入样式
 import "./assets/icon/iconfont.css";
 
-import "../rem";
+// import "../rem";
 import moment from "moment";
 import _ from "lodash";
 Vue.prototype.$moment = moment;

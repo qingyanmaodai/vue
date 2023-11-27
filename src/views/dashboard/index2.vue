@@ -1563,8 +1563,8 @@ export default {
         margin-bottom: 10px;
         .box {
           display: flex;
-          // width: calc(25% - 16px);
-          width: 25%;
+          width: calc(25% - 10px);
+          // width: 25%;
           height: 100px;
           // border: 1px solid #d5d6ff;
           box-shadow: 1px 1px 10px rgba(122, 125, 255, 0.1);
@@ -1646,13 +1646,13 @@ export default {
       }
       .secondCard {
         width: 100%;
-        height: 335px;
+        height: 30%;
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
         gap: 10px;
         .itemCard1 {
-          height: 335px;
+          height: 100%;
           width: 50%;
           border-radius: 4px;
           background: #ffffff;
@@ -1662,11 +1662,11 @@ export default {
         }
         .itemCard2 {
           width: 50%;
-          height: 335px;
+          height: 100%;
           display: flex;
           justify-content: space-between;
           .itemCard {
-            height: 335px;
+            height: 100%;
             border-radius: 4px;
             width: 50%;
             background: #ffffff;
