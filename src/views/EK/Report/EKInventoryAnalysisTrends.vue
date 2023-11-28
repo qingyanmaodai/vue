@@ -239,7 +239,7 @@ export default {
         { label: '未领金额', value: 3, index: 0, index2: 2 },
         { label: '库存金额', value: 4, index: 1, index2: 3 },
         { label: '消耗库存金额', value: 5, index: 1, index2: 4 },
-        { label: '消耗后库存金额', value: 6, index: 1, index2: 5 },
+        // { label: '消耗后库存金额', value: 6, index: 1, index2: 5 },
         { label: '在途金额', value: 7, index: 0, index2: 6 },
         { label: '消耗在途金额', value: 8, index: 0, index2: 7 },
       ],
