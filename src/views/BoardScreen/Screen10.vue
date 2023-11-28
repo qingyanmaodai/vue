@@ -73,7 +73,14 @@
                           ? 'pr-[10px]'
                           : 'pr-0'
                       "
-                      :style="getColumnStyle(tableColumns[1], column)"
+                      :style="
+                        getCellStyles(
+                          tableData[1][index].BColors,
+                          tableData[1][index].FColors,
+                          column,
+                          tableColumns[1],
+                        )
+                      "
                     >
                       <div class="w-full truncate">
                         {{ tableData[1][index][column.prop] }}
@@ -221,7 +228,9 @@ export default {
           forms: [],
         },
         {
-          datas: { page: 5 },
+          datas: {
+            // page: 5
+          },
           forms: [],
         },
         {
@@ -366,6 +375,21 @@ export default {
       //   // Your logic for when the scroll reaches the bottom
       // }
       // console.log('ScrollEnd');
+    },
+    getCellStyles(BColor, FColor, column, columns) {
+      const cellStyles = {};
+      // Check if BColor is defined for the current column
+      if (BColor && BColor[column.prop]) {
+        cellStyles.backgroundColor = BColor[column.prop];
+      }
+      if (FColor && FColor[column.prop]) {
+        cellStyles.color = FColor[column.prop];
+      }
+
+      const columnStyles = this.getColumnStyle(columns, column);
+      Object.assign(cellStyles, columnStyles);
+
+      return cellStyles;
     },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
@@ -1132,7 +1156,7 @@ export default {
           height: 50px;
           line-height: 50px;
           font-size: 17px;
-          border-bottom: 1px solid #fff;
+          border-bottom: 1px solid #ffffff50;
         }
         li:nth-child(even) {
           // background-color: #0f1740;

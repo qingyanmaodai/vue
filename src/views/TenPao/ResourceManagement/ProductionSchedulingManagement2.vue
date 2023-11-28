@@ -350,7 +350,7 @@
       :title="'拆分订单'"
       class="el-dialog3"
       :visible.sync="colDialogVisible4"
-      :width="'60%'"
+      :width="'66%'"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
     >

@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3, 4, 5, 6]"
+        :key="i"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -22,22 +26,8 @@
     <div class="admin_content pd-0-6">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="12" class="flex"> </el-col>
-          <el-col :span="12" class="flex_flex_end">
-            <!-- <a
-              style="color: #ec0d1f; margin-right: 30px"
-              :href="`${apsurl}` + '/瑞能业务订单明细.pdf'"
-              target="_blank"
-              class="font_size_1"
-              >【逻辑说明文档】</a
-            > -->
-            <!-- <a
-              style="color: #0960bd; margin-right: 30px"
-              :href="`${apsurl}` + '/业务订单明细导入模板.xlsx'"
-              target="_blank"
-              class="font_size_1"
-              >业务订单明细导入模板</a
-            > -->
+          <el-col :span="2" class="flex"> </el-col>
+          <el-col :span="22" class="flex_flex_end">
             <!-- 下拉框 -->
             <!-- <el-select
               v-model="colorType"
@@ -67,7 +57,7 @@
             > -->
             <div v-for="(item, y) in Status1" :key="y">
               <span
-                @click="changeStatus(item, y)"
+                @click="changeStatus(item, item['index'])"
                 :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'"
                 >{{ item.label }}</span
               >
@@ -80,7 +70,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3, 4]"
+      v-for="item in [0, 1, 2, 3, 4, 5, 6]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -99,42 +89,6 @@
         @selectChanged="selectChanged"
       />
     </div>
-    <!-- <el-dialog title="添加计划" :visible.sync="newDataDialog" width="80%">
-      <div v-for="item in [4]" :key="item">
-        <ComSearch
-          class="margin_bottom_10 dialog_search"
-          ref="searchRef"
-          :searchData="formSearchs[item].datas"
-          :searchForm="formSearchs[item].forms"
-          :remark="item"
-          :isLoading="tableLoading[item]"
-          :btnForm="btnForm"
-          :signName="item"
-          :Region="Region[item]"
-          @btnClick="btnClick"
-        />
-        <ComSpreadTable2
-          ref="spreadsheetRef"
-          height="500px"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
-        />
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="newDataDialog = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="sureAddNewData" size="small"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog> -->
     <!-- 导入文件 -->
     <div>
       <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
@@ -199,7 +153,7 @@ import {
 import formatDates from '@/utils/formatDate';
 import XLSX from 'xlsx';
 export default {
-  name: 'EKOrderDetails',
+  name: 'EKProductionPlan',
   components: {
     ComSearch,
     ComSpreadTable,
@@ -212,8 +166,6 @@ export default {
       colorValue: null,
       newDataDialog: false,
       height: '607px',
-      selectedOption: [1],
-      dialogSearchForm: {},
       colDialogVisible: false,
       colAdd: [],
       dialogImport: false,
@@ -251,15 +203,27 @@ export default {
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
       ],
-      tableData: [[], [], [], [], []], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[], [], [], [], []], //表格表头列
+      tableData: [[], [], [], [], [], [], [], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], [], [], [], [], [], [], []], //表格表头列
       tableLoading: [false, false, false, false, false], //每个表加载
       isClear: [false, false, false, false, false],
       hasSelect: [false, false, false, false, false],
-      Region: [6, 6, 6, 6, 6],
+      Region: [6, 6, 6, 6, 6, 6, 6, 6],
       tablePagination: [
         //表分页参数
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
@@ -272,6 +236,8 @@ export default {
         { ID: 10077 },
         { ID: 10081 },
         { ID: 11165 },
+        { ID: 11165 },
+        { ID: 11165 },
       ],
       colorStatus: [
         { label: '字体颜色', value: 0 },
@@ -279,21 +245,25 @@ export default {
       ],
       Status1: [
         {
-          label: '待转入',
+          label: '主生产计划',
           value: {},
+          index: 0,
         },
         {
-          label: '有变更',
+          label: '半成品月计划',
           value: {},
+          index: 1,
         },
-        { label: '主计划', value: {} },
-        { label: '计划调序', value: {} },
-        { label: '异常订单', value: {} },
+        { label: '成品月计划', value: {}, index: 2 },
+        { label: '包装月计划', value: {}, index: 3 },
+        { label: '变更记录', value: {}, index: 4 },
+        { label: '差异对比', value: {}, index: 5 },
+        { label: '工单异常', value: {}, index: 6 },
       ],
       spread: [], //excel初始
       fileList: [],
       file: [],
-      selectionData: [[]],
+      selectionData: [[], [], [], [], [], [], [], [], []],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       ImportParams: '',

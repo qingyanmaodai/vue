@@ -130,13 +130,13 @@ export default {
       formSearchs: [
         {
           datas: {
-            SaleType: 'OUTSale',
+            // SaleType: 'OUTSale',
           },
           forms: [],
         },
         {
           datas: {
-            SaleType: 'INSale',
+            // SaleType: 'INSale',
           },
           forms: [],
         },

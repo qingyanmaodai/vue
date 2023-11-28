@@ -89,7 +89,7 @@
     </div>
 
     <el-drawer :title="drawerTitle" :visible.sync="drawer" direction="rtl">
-      <div class="drawer_body">
+      <div class="drawer_body flex_column">
         <el-form
           :model="roleForm"
           :rules="roleRules"
@@ -136,7 +136,7 @@
           </el-row>
 
           <el-row>
-            <el-col :span="12">
+            <el-col :span="24">
               <el-form-item label="状态" prop="Status">
                 <el-radio-group v-model="roleForm.Status" size="small">
                   <el-radio :label="1">启用</el-radio>
@@ -165,7 +165,10 @@
           </el-row>
         </el-form>
 
-        <div v-show="!operationStatus && editType == '用户'">
+        <div
+          v-show="!operationStatus && editType == '用户'"
+          class="flex_grow flex_column"
+        >
           <div class="flex_row_spaceBtn px-7-20 border-b-1">
             <span class="px_16">用户分配</span>
             <div>
@@ -194,7 +197,7 @@
               </el-dropdown>
             </div>
           </div>
-          <div class="menuTree" v-loading="dialogLoading[0]">
+          <div class="flex-grow overflow-scroll" v-loading="dialogLoading[0]">
             <div
               v-for="o in userData"
               :key="o.Account"
@@ -212,7 +215,10 @@
           </div>
         </div>
 
-        <div v-show="!operationStatus && editType == '菜单'">
+        <div
+          v-show="!operationStatus && editType == '菜单'"
+          class="flex_grow flex_column"
+        >
           <div class="flex_row_spaceBtn px-7-20 border-b-1">
             <span class="px_16">菜单分配</span>
             <el-dropdown @command="handleCommand">
@@ -227,7 +233,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div class="menuTree">
+          <div class="flex-grow overflow-scroll">
             <el-tree
               v-loading="dialogLoading[1]"
               :data="menuData"
@@ -243,7 +249,10 @@
           </div>
         </div>
 
-        <div v-show="!operationStatus && editType == '按钮'">
+        <div
+          v-show="!operationStatus && editType == '按钮'"
+          class="flex_grow flex_column"
+        >
           <div class="flex_row_spaceBtn px-7-20 border-b-1">
             <span class="px_16">按钮分配</span>
             <el-dropdown @command="handleCommand2">
@@ -258,7 +267,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div class="menuTree">
+          <div class="flex-grow overflow-scroll">
             <el-tree
               v-loading="dialogLoading[2]"
               :data="menuBtnData"
