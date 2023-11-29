@@ -3,7 +3,7 @@
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
       <img class="logo" :src="logo" mode="heightFix" />
-      <div class="textTitle">APS生产计划看板</div>
+      <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
@@ -12,7 +12,7 @@
           <div class="panel h-full w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>计划达成明细</h2>
+              <h2>{{ result1[1]['label'] }}</h2>
             </div>
             <div
               class="chartContent flex flex-col"
@@ -77,7 +77,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>近一周计划达成趋势</h2>
+                <h2>{{ result1[2]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
@@ -85,7 +85,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>计划达成部门占比</h2>
+                <h2>{{ result1[3]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
@@ -94,7 +94,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>计划达成排行棒</h2>
+                <h2>{{ result1[4]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart2"></div>
             </div>
@@ -122,17 +122,36 @@ export default {
       chartHead: chartHead,
       logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
-      tableLoading: [false, false, false], //每个表加载
       todayDate: '',
-      chartData1: [],
-      chartData2: [[], []],
-      chartTotal1: 2562,
-      sysID: [{ ID: 10103 }, { ID: 5610 }, { ID: 5610 }],
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], []],
-      tableData: [[], [], []],
-
+      tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
+      tableData: [
+        [],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [],
+        [],
+      ],
+      tableLoading: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
       tablePagination: [
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
@@ -145,8 +164,6 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       formSearchs: [
         {
@@ -154,6 +171,16 @@ export default {
           forms: [],
         },
         {
+          datas: {
+            // page: 5
+          },
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
           datas: {},
           forms: [],
         },
@@ -165,6 +192,118 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+      ],
+      result1: [
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+      ],
+      sysID: [
+        { ID: 7917 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 7918 },
+        { ID: 7919 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
       ],
     };
   },
@@ -180,11 +319,7 @@ export default {
   },
   async mounted() {
     //初始化图表;
-    this.chart = [
-      echarts.init(this.$refs.chart0),
-      echarts.init(this.$refs.chart1),
-      echarts.init(this.$refs.chart2),
-    ];
+    this.chart = [this.$refs.chart0, this.$refs.chart1, this.$refs.chart2];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -230,16 +365,15 @@ export default {
       }
     },
     // 渲染echart图
-    barData(item, option) {
+    barData(id, option) {
       // echarts.dispose(id);
-      item.setOption(option);
-      // echarts.init(id).setOption(option);
+      echarts.init(id).setOption(option);
     },
 
     // 获取表头数据
     async getTableHeader() {
       let rea = await GetSearchData({
-        dicID: 11180,
+        dicID: 15221,
         rows: 0,
         page: 1,
       });
@@ -472,7 +606,7 @@ export default {
             top: 'center',
             // left: "center",
             orient: 'vertical',
-            right: '10%',
+            right: fontSize(20),
             // bottom: "0",
             itemWidth: fontSize(16),
             itemHeight: fontSize(16),
@@ -483,7 +617,7 @@ export default {
               fontSize: fontSize(18),
               padding: [0, 0, 0, fontSize(10)],
             },
-            data: ['制一部', '制二部', '制三部', '制四部'],
+            data: this.tableData[3].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -516,7 +650,7 @@ export default {
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
-                textBorderWidth: 1,
+                textBorderWidth: fontSize(1),
                 fontSize: fontSize(16),
                 formatter: function (params) {
                   if (params.name !== '') {
@@ -529,12 +663,10 @@ export default {
               labelLine: {
                 show: false,
               },
-              data: [
-                { value: '36', name: '制一部' },
-                { value: '48', name: '制二部' },
-                { value: '31', name: '制三部' },
-                { value: '29', name: '制四部' },
-              ],
+              data: this.tableData[3].map((item) => ({
+                value: item.S1,
+                name: item.Name1,
+              })),
             },
           ],
         },
@@ -544,7 +676,7 @@ export default {
             bottom: -fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
-            right: fontSize(10),
+            right: fontSize(80),
           },
           tooltip: {
             trigger: 'axis',
@@ -589,7 +721,7 @@ export default {
               axisLine: {
                 show: false,
               },
-              data: ['H3-3', 'D2', 'D3-B', 'H6', 'A01'],
+              data: this.tableData[4].map((item) => item['Name1']),
             },
             // {
             //   type: 'category',
@@ -632,7 +764,7 @@ export default {
                 offset: [fontSize(10), 0],
               },
               barWidth: fontSize(16),
-              data: [45, 26, 14, 12, 5],
+              data: this.tableData[4].map((item) => item['S1']),
             },
             // {
             //   name: '背景',
@@ -653,14 +785,15 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
-    },
-    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          item.resize();
+          echarts.init(item).resize();
         });
       }, 100);
+    },
+    handleWindowResize() {
+      this.getEcharts();
     },
     showtime() {
       const now = new Date();

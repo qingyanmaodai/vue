@@ -420,10 +420,10 @@ export default {
   async mounted() {
     //初始化图表;
     this.chart = [
-      echarts.init(this.$refs.chart0),
-      echarts.init(this.$refs.chart1),
-      echarts.init(this.$refs.chart2),
-      echarts.init(this.$refs.chart3),
+      this.$refs.chart0,
+      this.$refs.chart1,
+      this.$refs.chart2,
+      this.$refs.chart3,
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
@@ -470,10 +470,9 @@ export default {
       }
     },
     // 渲染echart图
-    barData(item, option) {
+    barData(id, option) {
       // echarts.dispose(id);
-      item.setOption(option);
-      // echarts.init(id).setOption(option);
+      echarts.init(id).setOption(option);
     },
 
     // 获取表头数据
@@ -570,7 +569,7 @@ export default {
             top: 'center',
             // left: "center",
             orient: 'vertical',
-            right: '10%',
+            right: fontSize(20),
             // bottom: "0",
             itemWidth: fontSize(16),
             itemHeight: fontSize(16),
@@ -590,7 +589,7 @@ export default {
             {
               type: 'pie',
               selectedMode: 'single',
-              radius: ['50%', '80%'],
+              radius: [fontSize(50), fontSize(80)],
               center: ['40%', '50%'],
               color: [
                 '#8E35FF',
@@ -616,7 +615,7 @@ export default {
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
-                textBorderWidth: 1,
+                textBorderWidth: fontSize(1),
                 fontSize: fontSize(16),
                 formatter: function (params) {
                   if (params.name !== '') {
@@ -846,12 +845,6 @@ export default {
           radar: {
             // shape: 'circle',
             splitNumber: 3,
-            grid: {
-              left: fontSize(10),
-              right: fontSize(10),
-              bottom: fontSize(10),
-              containLabel: true,
-            },
             splitArea: {
               show: false,
             },
@@ -866,9 +859,11 @@ export default {
               },
             },
             indicator: this.tableData[8].map((item) => ({
-              max: 100,
               name: item.Name1,
+              min: 0,
             })),
+            center: ['50%', '50%'],
+            radius: fontSize(80), // 调整雷达图的半径
             // [
             //   {
             //     name: '欠料',
@@ -913,7 +908,7 @@ export default {
               },
               data: [
                 {
-                  data: this.tableData[8].map((item) => item['S1']),
+                  value: this.tableData[8].map((item) => item['S1']),
                 },
               ],
             },
@@ -923,14 +918,15 @@ export default {
       this.chart.map((item, index) => {
         this.barData(item, this.chartOptions[index]);
       });
-    },
-    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
         this.chart.map((item) => {
-          item.resize();
+          echarts.init(item).resize();
         });
       }, 100);
+    },
+    handleWindowResize() {
+      this.getEcharts();
     },
     showtime() {
       const now = new Date();
