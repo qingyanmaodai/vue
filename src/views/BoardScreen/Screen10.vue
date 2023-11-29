@@ -24,7 +24,7 @@
                 :key="'tableHead' + index"
                 class="flex"
                 :class="
-                  index < tableColumns[1].length - 1 ? 'mr-[10px]' : 'mr-0'
+                  index < tableColumns[1].length - 1 ? 'pr-[10px]' : 'pr-0'
                 "
                 :style="getColumnStyle(tableColumns[1], column)"
               >
@@ -42,21 +42,6 @@
               }"
             >
               <div class="warp">
-                <!-- <ComScreenTable
-                :rowKey="'RowNumber'"
-                ref="ComScreenTable"
-                height="100%"
-                :tableData="tableData[1]"
-                :tableHeader="tableColumns[1]"
-                :remark="1"
-                :sysID="sysID[1]"
-                :isEdit="false"
-                :hasSelect="false"
-                :pagination="tablePagination[1]"
-                :keepSource="true"
-                :footerContent="false"
-              /> -->
-
                 <ul class="px-[10px]">
                   <li
                     v-for="(item, index) in tableData[1]"
@@ -149,7 +134,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>{{ result1[5]['label'] }}</h2>
+              <h2>{{ result1[6]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart2"></div>
             <div class="panel-footer"></div>
@@ -178,9 +163,6 @@ export default {
       logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
       todayDate: '',
-      chartData1: [],
-      chartData2: [[], []],
-      chartTotal1: 2562,
       chart: [],
       chartOptions: [],
       tableColumns: [[], [], [], [], [], [], [], [], [], []],
@@ -501,15 +483,7 @@ export default {
           if (this.result1[z].rows) {
             this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
           }
-          if (
-            z === 1 ||
-            z === 2 ||
-            z === 3 ||
-            z === 4 ||
-            z === 6 ||
-            z === 7 ||
-            z === 8
-          ) {
+          if (z !== 0) {
             await this.getTableData(this.formSearchs[z].datas, z);
             await this.getEcharts();
           }
@@ -682,8 +656,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[6][0]['S1'],
-                  name: this.tableData[6][0]['Name1'],
+                  value: this.tableData[5][0]['S1'],
+                  name: this.tableData[5][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -766,8 +740,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[7][0]['S1'],
-                  name: this.tableData[7][0]['Name1'],
+                  value: this.tableData[6][0]['S1'],
+                  name: this.tableData[6][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -850,8 +824,8 @@ export default {
               },
               data: [
                 {
-                  value: this.tableData[8][0]['S1'],
-                  name: this.tableData[8][0]['Name1'],
+                  value: this.tableData[7][0]['S1'],
+                  name: this.tableData[7][0]['Name1'],
                   title: {
                     offsetCenter: ['0%', '150%'],
                     fontSize: fontSize(18),
@@ -1066,7 +1040,7 @@ export default {
   .ScreenBaseNum {
     color: #fff;
     font-family: Revalia;
-    font-size: 36px;
+    font-size: 40px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -1155,7 +1129,7 @@ export default {
         a {
           height: 50px;
           line-height: 50px;
-          font-size: 17px;
+          font-size: 16px;
           border-bottom: 1px solid #ffffff50;
         }
         li:nth-child(even) {

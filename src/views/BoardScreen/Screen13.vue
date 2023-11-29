@@ -12,7 +12,7 @@
           <div class="panel h-full w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>出货计划</h2>
+              <h2>计划达成明细</h2>
             </div>
             <div
               class="chartContent flex flex-col"
@@ -24,7 +24,7 @@
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                    index < tableColumns[0].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
                   :style="getColumnStyle(tableColumns[0], column)"
                 >
@@ -50,10 +50,17 @@
                       class="truncate"
                       :class="
                         colIndex < tableColumns[0].length - 1
-                          ? '!mr-[10px]'
-                          : '!mr-0'
+                          ? 'pr-[10px]'
+                          : 'pr-0'
                       "
-                      :style="getColumnStyle(tableColumns[0], column)"
+                      :style="
+                        getCellStyles(
+                          tableData[0][index].BColors,
+                          tableData[0][index].FColors,
+                          column,
+                          tableColumns[0],
+                        )
+                      "
                     >
                       {{ tableData[0][index][column.prop] }}
                     </div>
@@ -69,7 +76,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>欠料分布</h2>
+                <h2>近一周计划达成趋势</h2>
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
@@ -77,7 +84,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>欠料排行榜</h2>
+                <h2>计划达成部门占比</h2>
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
@@ -106,6 +113,7 @@ import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
 import ComVxeTable from '@/components/ComVxeTable';
+import '@/flexible.js';
 export default {
   name: 'Screen13',
   data() {
@@ -167,6 +175,7 @@ export default {
   created() {
     this.todayDate = this.showtime();
     _this = this;
+    this.getTableHeader();
   },
   async mounted() {
     //初始化图表;
@@ -178,7 +187,6 @@ export default {
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
-    await this.getTableHeader();
   },
   beforeDestroy() {
     // 在组件销毁时，移除 resize 事件监听器
@@ -186,19 +194,34 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
+    getCellStyles(BColor, FColor, column, columns) {
+      const cellStyles = {};
+      // Check if BColor is defined for the current column
+      if (BColor && BColor[column.prop]) {
+        cellStyles.backgroundColor = BColor[column.prop];
+      }
+      if (FColor && FColor[column.prop]) {
+        cellStyles.color = FColor[column.prop];
+      }
+
+      const columnStyles = this.getColumnStyle(columns, column);
+      Object.assign(cellStyles, columnStyles);
+
+      return cellStyles;
+    },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.width || 0),
+        (sum, col) => sum + parseFloat(col.appWidth || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.width) / totalWidth) * 100;
+        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.width) / totalWidth) * 100;
+          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -214,24 +237,68 @@ export default {
 
     // 获取表头数据
     async getTableHeader() {
+      let rea = await GetSearchData({
+        dicID: 15224,
+        rows: 0,
+        page: 1,
+      });
+      const { data: data1, result: result1, msg: msg1 } = rea.data;
+      if (result1) {
+        this.sysID = data1.map((item) => {
+          return {
+            ID: item.sysID,
+          };
+        });
+        this.result1 = data1.map((item) => {
+          return {
+            label: item.label,
+            fields: item.fields,
+            groupby: item.groupby,
+            sort: item.sort,
+            DataFilter: item.DataFilter,
+            rows: item.erows,
+          };
+        });
+      }
       let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          m.some((n, index) => {});
-          this.$set(this.tableColumns, i, m);
-        });
         // 获取查询的初始化字段 组件 按钮
-
         forms.map(async (x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-          await this.getTableData(this.formSearchs[z].datas, z);
-          await this.getEcharts();
+          if (this.result1[z].fields) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'fields',
+              this.result1[z].fields,
+            );
+          }
+          if (this.result1[z].groupby) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'groupby',
+              this.result1[z].groupby,
+            );
+          }
+          if (this.result1[z].sort) {
+            this.$set(this.formSearchs[z].datas, 'sort', this.result1[z].sort);
+          }
+          if (this.result1[z].DataFilter) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'DataFilter',
+              this.result1[z].DataFilter,
+            );
+          }
+          if (this.result1[z].rows) {
+            this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
+          }
+          if (z !== 0) {
+            await this.getTableData(this.formSearchs[z].datas, z);
+            await this.getEcharts();
+          }
         });
-        this.adminLoading = false;
-        // await this.getEcharts();
       }
     },
     async getEcharts() {
@@ -770,7 +837,8 @@ export default {
   .chartContent {
     .tableHead {
       height: 50px;
-      background: rgba(53, 64, 117, 1);
+      background: #354075;
+      font-size: 18px;
     }
     padding: 9px 12px;
     height: calc(100% - 48px);
@@ -780,6 +848,7 @@ export default {
       color: #fff;
       overflow: hidden;
       ul {
+        height: 100%;
         list-style: none;
         padding: 0;
         margin: 0 auto;
@@ -787,10 +856,11 @@ export default {
         a {
           height: 50px;
           line-height: 50px;
-          font-size: 18px;
+          font-size: 16px;
+          border-bottom: 1px solid #ffffff50;
         }
         li:nth-child(even) {
-          background-color: #0f1740;
+          // background-color: #0f1740;
         }
       }
     }

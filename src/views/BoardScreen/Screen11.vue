@@ -3,7 +3,7 @@
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
       <img class="logo" :src="logo" mode="heightFix" />
-      <div class="textTitle">APS生产计划看板</div>
+      <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
@@ -14,7 +14,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>计划每日按车间占比</h2>
+                <h2>{{ result1[1]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
@@ -22,7 +22,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>近七天出货对比</h2>
+                <h2>{{ result1[2]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
@@ -32,7 +32,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>当日工段占比</h2>
+              <h2>{{ result1[3]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart2"></div>
           </div>
@@ -41,7 +41,7 @@
           <div class="panel h-70/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>出货计划</h2>
+              <h2>{{ result1[4]['label'] }}</h2>
             </div>
             <div
               class="chartContent flex flex-col"
@@ -49,42 +49,50 @@
             >
               <div class="tableHead flex px-[10px] text-white w-full">
                 <div
-                  v-for="(column, index) in tableColumns[0]"
+                  v-for="(column, index) in tableColumns[4]"
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                    index < tableColumns[4].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
-                  :style="getColumnStyle(tableColumns[0], column)"
+                  :style="getColumnStyle(tableColumns[4], column)"
                 >
                   {{ column.label }}
                 </div>
               </div>
               <VueSeamlessScroll
-                :data="tableData[0]"
+                :data="tableData[4]"
                 class="warp"
                 :class-option="{
-                  step: 0.1,
+                  singleHeight: 30,
+                  waitTime: 2000,
                 }"
               >
                 <ul class="px-[10px]">
                   <li
-                    v-for="(item, index) in tableData[0]"
+                    v-for="(item, index) in tableData[4]"
                     :key="'data' + index"
                     class="flex"
                   >
                     <div
-                      v-for="(column, colIndex) in tableColumns[0]"
+                      v-for="(column, colIndex) in tableColumns[4]"
                       :key="'column' + colIndex"
                       class="truncate"
                       :class="
-                        colIndex < tableColumns[0].length - 1
+                        colIndex < tableColumns[4].length - 1
                           ? '!mr-[10px]'
                           : '!mr-0'
                       "
-                      :style="getColumnStyle(tableColumns[0], column)"
+                      :style="
+                        getCellStyles(
+                          tableData[4][index].BColors,
+                          tableData[4][index].FColors,
+                          column,
+                          tableColumns[4],
+                        )
+                      "
                     >
-                      {{ tableData[0][index][column.prop] }}
+                      {{ tableData[4][index][column.prop] }}
                     </div>
                   </li>
                 </ul>
@@ -95,7 +103,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>近一周订单完成概览</h2>
+              <h2>{{ result1[5]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart3"></div>
           </div>
@@ -107,7 +115,7 @@
               class="h-50/100 w-full upper-right-element flex justify-center gap-[50px]"
             >
               <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">383</div>
+                <div class="ScreenBaseNum">{{ tableData[6][0]['S1'] }}</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -116,11 +124,13 @@
                     icon-class="ScreenBase4"
                     class="ScreenBase4 !absolute"
                   />
-                  <div class="ScreenBaseTitle">计划数</div>
+                  <div class="ScreenBaseTitle">
+                    {{ tableData[6][0]['Name1'] }}
+                  </div>
                 </div>
               </div>
               <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">162</div>
+                <div class="ScreenBaseNum">{{ tableData[7][0]['S1'] }}</div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -129,11 +139,13 @@
                     icon-class="ScreenBase4"
                     class="ScreenBase4 !absolute"
                   />
-                  <div class="ScreenBaseTitle">已完成</div>
+                  <div class="ScreenBaseTitle">
+                    {{ tableData[7][0]['Name1'] }}
+                  </div>
                 </div>
               </div>
               <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">53</div>
+                <div class="ScreenBaseNum">{{ tableData[8][0]['S1'] }}</div>
                 <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -142,14 +154,16 @@
                     icon-class="ScreenBase4"
                     class="ScreenBase4 !absolute"
                   />
-                  <div class="ScreenBaseTitle">未完成</div>
+                  <div class="ScreenBaseTitle">
+                    {{ tableData[8][0]['Name1'] }}
+                  </div>
                 </div>
               </div>
             </div>
             <div class="panel h-50/100 w-full">
               <div class="chartHead">
                 <div class="panel-footer"></div>
-                <h2>昨日落产计划</h2>
+                <h2>{{ result1[9]['label'] }}</h2>
               </div>
               <div
                 class="chartContent flex flex-col"
@@ -157,42 +171,43 @@
               >
                 <div class="tableHead flex !px-[10px] text-white w-full">
                   <div
-                    v-for="(column, index) in tableColumns[0]"
+                    v-for="(column, index) in tableColumns[9]"
                     :key="'tableHead' + index"
                     class="flex"
                     :class="
-                      index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                      index < tableColumns[9].length - 1 ? 'pr-[10px]' : 'pr-0'
                     "
-                    :style="getColumnStyle(tableColumns[0], column)"
+                    :style="getColumnStyle(tableColumns[9], column)"
                   >
                     {{ column.label }}
                   </div>
                 </div>
                 <VueSeamlessScroll
-                  :data="tableData[0]"
+                  :data="tableData[9]"
                   class="warp"
                   :class-option="{
-                    step: 0,
+                    singleHeight: 30,
+                    waitTime: 2000,
                   }"
                 >
                   <ul class="px-[10px]">
                     <li
-                      v-for="(item, index) in tableData[0]"
+                      v-for="(item, index) in tableData[9]"
                       :key="'data' + index"
                       class="flex"
                     >
                       <div
-                        v-for="(column, colIndex) in tableColumns[0]"
+                        v-for="(column, colIndex) in tableColumns[9]"
                         :key="'column' + colIndex"
                         class="truncate"
                         :class="
-                          colIndex < tableColumns[0].length - 1
-                            ? 'mr-[10px]'
-                            : 'mr-0'
+                          colIndex < tableColumns[9].length - 1
+                            ? 'pr-[10px]'
+                            : 'pr-0'
                         "
-                        :style="getColumnStyle(tableColumns[0], column)"
+                        :style="getColumnStyle(tableColumns[9], column)"
                       >
-                        {{ tableData[0][index][column.prop] }}
+                        {{ tableData[9][index][column.prop] }}
                       </div>
                     </li>
                   </ul>
@@ -205,7 +220,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>落产原因分析</h2>
+              <h2>{{ result1[10]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart4"></div>
           </div>
@@ -224,6 +239,7 @@ import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
 import ComVxeTable from '@/components/ComVxeTable';
+import '@/flexible.js';
 export default {
   name: 'Screen11',
   data() {
@@ -231,17 +247,36 @@ export default {
       chartHead: chartHead,
       logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
-      tableLoading: [false, false, false], //每个表加载
       todayDate: '',
-      chartData1: [],
-      chartData2: [[], []],
-      chartTotal1: 2562,
-      sysID: [{ ID: 10103 }, { ID: 5610 }, { ID: 5610 }],
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], []],
-      tableData: [[], [], []],
-
+      tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
+      tableData: [
+        [],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [],
+        [],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [],
+        [],
+      ],
+      tableLoading: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
       tablePagination: [
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
@@ -254,8 +289,6 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       formSearchs: [
         {
@@ -263,6 +296,16 @@ export default {
           forms: [],
         },
         {
+          datas: {
+            // page: 5
+          },
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
           datas: {},
           forms: [],
         },
@@ -274,6 +317,118 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+      ],
+      result1: [
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+      ],
+      sysID: [
+        { ID: 7917 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 7918 },
+        { ID: 7919 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
       ],
     };
   },
@@ -285,6 +440,7 @@ export default {
   created() {
     this.todayDate = this.showtime();
     _this = this;
+    this.getTableHeader();
   },
   async mounted() {
     //初始化图表;
@@ -298,7 +454,6 @@ export default {
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
-    await this.getTableHeader();
   },
   beforeDestroy() {
     // 在组件销毁时，移除 resize 事件监听器
@@ -306,19 +461,34 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
+    getCellStyles(BColor, FColor, column, columns) {
+      const cellStyles = {};
+      // Check if BColor is defined for the current column
+      if (BColor && BColor[column.prop]) {
+        cellStyles.backgroundColor = BColor[column.prop];
+      }
+      if (FColor && FColor[column.prop]) {
+        cellStyles.color = FColor[column.prop];
+      }
+
+      const columnStyles = this.getColumnStyle(columns, column);
+      Object.assign(cellStyles, columnStyles);
+
+      return cellStyles;
+    },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.width || 0),
+        (sum, col) => sum + parseFloat(col.appWidth || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.width) / totalWidth) * 100;
+        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.width) / totalWidth) * 100;
+          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -333,25 +503,68 @@ export default {
 
     // 获取表头数据
     async getTableHeader() {
+      let rea = await GetSearchData({
+        dicID: 11175,
+        rows: 0,
+        page: 1,
+      });
+      const { data: data1, result: result1, msg: msg1 } = rea.data;
+      if (result1) {
+        this.sysID = data1.map((item) => {
+          return {
+            ID: item.sysID,
+          };
+        });
+        this.result1 = data1.map((item) => {
+          return {
+            label: item.label,
+            fields: item.fields,
+            groupby: item.groupby,
+            sort: item.sort,
+            DataFilter: item.DataFilter,
+            rows: item.erows,
+          };
+        });
+      }
       let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          m.some((n, index) => {});
-          this.$set(this.tableColumns, i, m);
-        });
         // 获取查询的初始化字段 组件 按钮
-
-        await Promise.all(
-          forms.map(async (x, z) => {
-            this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+        forms.map(async (x, z) => {
+          this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
+          if (this.result1[z].fields) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'fields',
+              this.result1[z].fields,
+            );
+          }
+          if (this.result1[z].groupby) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'groupby',
+              this.result1[z].groupby,
+            );
+          }
+          if (this.result1[z].sort) {
+            this.$set(this.formSearchs[z].datas, 'sort', this.result1[z].sort);
+          }
+          if (this.result1[z].DataFilter) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'DataFilter',
+              this.result1[z].DataFilter,
+            );
+          }
+          if (this.result1[z].rows) {
+            this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
+          }
+          if (z !== 0) {
             await this.getTableData(this.formSearchs[z].datas, z);
-          }),
-        );
-        this.adminLoading = false;
-        await this.getEcharts();
+            await this.getEcharts();
+          }
+        });
       }
     },
     async getEcharts() {
@@ -385,14 +598,7 @@ export default {
               fontSize: fontSize(18),
               padding: [0, 0, 0, fontSize(10)],
             },
-            data: [
-              '一部一车间',
-              '一部二车间',
-              '二部一车间',
-              '二部三车间',
-              '新能源车间',
-              '四部一车间',
-            ],
+            data: this.tableData[1].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -441,14 +647,10 @@ export default {
                 show: true,
                 length2: 0,
               },
-              data: [
-                { value: '15', name: '一部一车间' },
-                { value: '7', name: '一部二车间' },
-                { value: '13', name: '二部一车间' },
-                { value: '27', name: '二部三车间' },
-                { value: '39', name: '新能源车间' },
-                { value: '42', name: '四部一车间' },
-              ],
+              data: this.tableData[1].map((item) => ({
+                value: item.S1,
+                name: item.Name1,
+              })),
             },
           ],
         },
@@ -482,7 +684,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ['ASSY-02', 'ASSY-03', 'ASSY-04', 'ASSY-05', 'ASSY-06'],
+            data: this.tableData[2].map((item) => item['Name1']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -544,7 +746,7 @@ export default {
                 },
               },
               barWidth: fontSize(30),
-              data: [96, 108, 99, 89, 94],
+              data: this.tableData[2].map((item) => item['S1']),
               label: {
                 show: true, // 显示标签
                 position: 'top', // 标签显示在柱状图的上方
@@ -603,7 +805,7 @@ export default {
               fontSize: fontSize(18),
               padding: [0, 0, 0, fontSize(10)],
             },
-            data: ['前加工', 'SMT', '注塑', '镭射'],
+            data: this.tableData[3].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -653,12 +855,10 @@ export default {
                   show: false,
                 },
               },
-              data: [
-                { value: '36', name: '前加工' },
-                { value: '48', name: 'SMT' },
-                { value: '31', name: '注塑' },
-                { value: '29', name: '镭射' },
-              ],
+              data: this.tableData[3].map((item) => ({
+                value: item.S1,
+                name: item.Name1,
+              })),
             },
           ],
         },
@@ -692,14 +892,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: [
-              '一部一车间',
-              '一部二车间',
-              '二部一车间',
-              '二部三车间',
-              '新能源',
-              '四部一车间',
-            ],
+            data: this.tableData[5].map((item) => item['Name1']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -784,7 +977,7 @@ export default {
                 color: '#2F8FFF',
               },
               barWidth: fontSize(30),
-              data: [200, 108, 200, 40, 210, 130],
+              data: this.tableData[5].map((item) => item['S1']),
               // label: {
               //   show: true, // 显示标签
               //   position: 'top', // 标签显示在柱状图的上方
@@ -803,7 +996,7 @@ export default {
               itemStyle: {
                 color: 'yellow', // 设置折线颜色为黄色
               },
-              data: [100, 80, 120, 60, 90, 70], // 折线图的数据
+              data: this.tableData[5].map((item) => item['S2']), // 折线图的数据
             },
           ],
         },
@@ -953,13 +1146,25 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['rows'] = this.tablePagination[remarkTb].pageSize;
-      form['page'] = this.tablePagination[remarkTb].pageIndex;
+      // form['rows'] = this.tablePagination[remarkTb].pageSize;
+      // form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
+      const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
+        // 获取每个表头
+        if (remarkTb === 4 && this.tableColumns[4].length === 0) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
+        if (remarkTb === 9 && this.tableColumns[9].length === 0) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        // if (remarkTb === 1) {
+        //   this.tableData[1][this.tableData[1].length - 1][
+        //     this.tableColumns[1]['0']['prop']
+        //   ] = '合计';
+        // }
       } else {
         this.$message({
           message: msg,
@@ -1114,7 +1319,8 @@ export default {
   .chartContent {
     .tableHead {
       height: 50px;
-      background: rgba(53, 64, 117, 1);
+      background: #354075;
+      font-size: 18px;
     }
     padding: 9px 12px;
     height: calc(100% - 48px);
@@ -1124,6 +1330,7 @@ export default {
       color: #fff;
       overflow: hidden;
       ul {
+        height: 100%;
         list-style: none;
         padding: 0;
         margin: 0 auto;
@@ -1131,10 +1338,11 @@ export default {
         a {
           height: 50px;
           line-height: 50px;
-          font-size: 18px;
+          font-size: 16px;
+          border-bottom: 1px solid #ffffff50;
         }
         li:nth-child(even) {
-          background-color: #0f1740;
+          // background-color: #0f1740;
         }
       }
     }

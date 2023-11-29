@@ -3,7 +3,7 @@
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
       <img class="logo" :src="logo" mode="heightFix" />
-      <div class="textTitle">APS生产计划看板</div>
+      <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
     <div class="mainbox flex-grow overflow-hidden">
@@ -14,7 +14,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>欠料分布</h2>
+                <h2>{{ result1[1]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
@@ -22,7 +22,7 @@
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
-                <h2>欠料排行榜</h2>
+                <h2>{{ result1[2]['label'] }}</h2>
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
@@ -31,7 +31,7 @@
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>欠料明细</h2>
+              <h2>{{ result1[3]['label'] }}</h2>
             </div>
             <div
               class="chartContent flex flex-col"
@@ -39,11 +39,11 @@
             >
               <div class="tableHead flex !px-[10px] text-white w-full">
                 <div
-                  v-for="(column, index) in tableColumns[0]"
+                  v-for="(column, index) in tableColumns[4]"
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                    index < tableColumns[4].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
                   :style="getColumnStyle(tableColumns[0], column)"
                 >
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <VueSeamlessScroll
-                :data="tableData[0]"
+                :data="tableData[4]"
                 class="warp"
                 :class-option="{
                   step: 0,
@@ -59,22 +59,29 @@
               >
                 <ul class="px-[10px]">
                   <li
-                    v-for="(item, index) in tableData[0]"
+                    v-for="(item, index) in tableData[4]"
                     :key="'data' + index"
                     class="flex"
                   >
                     <div
-                      v-for="(column, colIndex) in tableColumns[0]"
+                      v-for="(column, colIndex) in tableColumns[4]"
                       :key="'column' + colIndex"
                       class="truncate"
                       :class="
-                        colIndex < tableColumns[0].length - 1
-                          ? 'mr-[10px]'
-                          : 'mr-0'
+                        colIndex < tableColumns[4].length - 1
+                          ? 'pr-[10px]'
+                          : 'pr-0'
                       "
-                      :style="getColumnStyle(tableColumns[0], column)"
+                      :style="
+                        getCellStyles(
+                          tableData[4][index].BColors,
+                          tableData[4][index].FColors,
+                          column,
+                          tableColumns[4],
+                        )
+                      "
                     >
-                      {{ tableData[0][index][column.prop] }}
+                      {{ tableData[4][index][column.prop] }}
                     </div>
                   </li>
                 </ul>
@@ -86,7 +93,7 @@
           <div class="panel h-full w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>出货计划</h2>
+              <h2>{{ result1[4]['label'] }}</h2>
             </div>
             <div
               class="chartContent flex flex-col"
@@ -98,7 +105,7 @@
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? 'mr-[10px]' : 'mr-0'
+                    index < tableColumns[0].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
                   :style="getColumnStyle(tableColumns[0], column)"
                 >
@@ -124,10 +131,17 @@
                       class="truncate"
                       :class="
                         colIndex < tableColumns[0].length - 1
-                          ? '!mr-[10px]'
-                          : '!mr-0'
+                          ? 'pr-[10px]'
+                          : 'pr-0'
                       "
-                      :style="getColumnStyle(tableColumns[0], column)"
+                      :style="
+                        getCellStyles(
+                          tableData[0][index].BColors,
+                          tableData[0][index].FColors,
+                          column,
+                          tableColumns[0],
+                        )
+                      "
                     >
                       {{ tableData[0][index][column.prop] }}
                     </div>
@@ -142,7 +156,7 @@
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>欠料统计</h2>
+              <h2>{{ result1[5]['label'] }}</h2>
             </div>
             <div class="chartContent">
               <div class="h-full w-full flex justify-center">
@@ -150,14 +164,18 @@
                   class="w-40/100 h-full flex flex-col items-center justify-center mb-[5%]"
                 >
                   <div class="ScreenBaseNum">64,945</div>
-                  <div class="ScreenBaseTitle">欠料总数</div>
+                  <div class="ScreenBaseTitle">
+                    {{ tableData[5][0]['Name1'] }}
+                  </div>
                   <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
                 </div>
                 <div
                   class="w-40/100 h-full flex flex-col items-center justify-center ml-[5%]"
                 >
                   <div class="ScreenBaseNum">462</div>
-                  <div class="ScreenBaseTitle">影响订单</div>
+                  <div class="ScreenBaseTitle">
+                    {{ tableData[6][0]['Name1'] }}
+                  </div>
                   <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
                 </div>
               </div>
@@ -166,7 +184,7 @@
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
               <div class="panel-footer"></div>
-              <h2>近一周欠料趋势图</h2>
+              <h2>{{ result1[7]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart2"></div>
           </div>
@@ -175,7 +193,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>欠料原因分析</h2>
+              <h2>{{ result1[7]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart3"></div>
           </div>
@@ -194,6 +212,7 @@ import { GetSearchData } from '@/api/Common';
 import VueSeamlessScroll from 'vue-seamless-scroll';
 import { GetHeader } from '@/api/Common';
 import ComVxeTable from '@/components/ComVxeTable';
+import '@/flexible.js';
 export default {
   name: 'Screen12',
   data() {
@@ -201,17 +220,36 @@ export default {
       chartHead: chartHead,
       logo: localStorage.getItem('apsurl') + '/images/ScreenLogo.png', //动态获取服务器对应的logo
       handleWindowResizeDebounced: null,
-      tableLoading: [false, false, false], //每个表加载
       todayDate: '',
-      chartData1: [],
-      chartData2: [[], []],
-      chartTotal1: 2562,
-      sysID: [{ ID: 10103 }, { ID: 5610 }, { ID: 5610 }],
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], []],
-      tableData: [[], [], []],
-
+      tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
+      tableData: [
+        [],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [{ S1: '', Name1: '' }],
+        [],
+        [],
+      ],
+      tableLoading: [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ],
       tablePagination: [
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
         { pageIndex: 1, pageSize: 15, pageTotal: 0 },
@@ -224,8 +262,6 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
       formSearchs: [
         {
@@ -233,6 +269,16 @@ export default {
           forms: [],
         },
         {
+          datas: {
+            // page: 5
+          },
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
           datas: {},
           forms: [],
         },
@@ -244,6 +290,118 @@ export default {
           datas: {},
           forms: [],
         },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+      ],
+      result1: [
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+        {
+          label: null,
+          fields: null,
+          groupby: null,
+          sort: null,
+          DataFilter: null,
+        },
+      ],
+      sysID: [
+        { ID: 7917 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 7918 },
+        { ID: 7919 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
+        { ID: 5170 },
       ],
     };
   },
@@ -255,6 +413,7 @@ export default {
   created() {
     this.todayDate = this.showtime();
     _this = this;
+    this.getTableHeader();
   },
   async mounted() {
     //初始化图表;
@@ -267,7 +426,6 @@ export default {
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
-    await this.getTableHeader();
   },
   beforeDestroy() {
     // 在组件销毁时，移除 resize 事件监听器
@@ -275,19 +433,34 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
+    getCellStyles(BColor, FColor, column, columns) {
+      const cellStyles = {};
+      // Check if BColor is defined for the current column
+      if (BColor && BColor[column.prop]) {
+        cellStyles.backgroundColor = BColor[column.prop];
+      }
+      if (FColor && FColor[column.prop]) {
+        cellStyles.color = FColor[column.prop];
+      }
+
+      const columnStyles = this.getColumnStyle(columns, column);
+      Object.assign(cellStyles, columnStyles);
+
+      return cellStyles;
+    },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.width || 0),
+        (sum, col) => sum + parseFloat(col.appWidth || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.width) / totalWidth) * 100;
+        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.width) / totalWidth) * 100;
+          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -303,24 +476,68 @@ export default {
 
     // 获取表头数据
     async getTableHeader() {
+      let rea = await GetSearchData({
+        dicID: 11177,
+        rows: 0,
+        page: 1,
+      });
+      const { data: data1, result: result1, msg: msg1 } = rea.data;
+      if (result1) {
+        this.sysID = data1.map((item) => {
+          return {
+            ID: item.sysID,
+          };
+        });
+        this.result1 = data1.map((item) => {
+          return {
+            label: item.label,
+            fields: item.fields,
+            groupby: item.groupby,
+            sort: item.sort,
+            DataFilter: item.DataFilter,
+            rows: item.erows,
+          };
+        });
+      }
       let res = await GetHeader(this.sysID);
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
-        // 获取每个表头
-        datas.some((m, i) => {
-          m.some((n, index) => {});
-          this.$set(this.tableColumns, i, m);
-        });
         // 获取查询的初始化字段 组件 按钮
-
         forms.map(async (x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', this.sysID[z].ID);
-          await this.getTableData(this.formSearchs[z].datas, z);
-          await this.getEcharts();
+          if (this.result1[z].fields) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'fields',
+              this.result1[z].fields,
+            );
+          }
+          if (this.result1[z].groupby) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'groupby',
+              this.result1[z].groupby,
+            );
+          }
+          if (this.result1[z].sort) {
+            this.$set(this.formSearchs[z].datas, 'sort', this.result1[z].sort);
+          }
+          if (this.result1[z].DataFilter) {
+            this.$set(
+              this.formSearchs[z].datas,
+              'DataFilter',
+              this.result1[z].DataFilter,
+            );
+          }
+          if (this.result1[z].rows) {
+            this.$set(this.formSearchs[z].datas, 'rows', this.result1[z].rows);
+          }
+          if (z !== 0) {
+            await this.getTableData(this.formSearchs[z].datas, z);
+            await this.getEcharts();
+          }
         });
-        this.adminLoading = false;
-        // await this.getEcharts();
       }
     },
     async getEcharts() {
@@ -354,7 +571,7 @@ export default {
               fontSize: fontSize(18),
               padding: [0, 0, 0, fontSize(10)],
             },
-            data: ['前加工', 'SMT', '注塑', '镭射'],
+            data: this.tableData[1].map((item) => item['Name1']),
           },
           grid: {
             containLabel: true,
@@ -400,12 +617,10 @@ export default {
               labelLine: {
                 show: false,
               },
-              data: [
-                { value: '36', name: '前加工' },
-                { value: '48', name: 'SMT' },
-                { value: '31', name: '注塑' },
-                { value: '29', name: '镭射' },
-              ],
+              data: this.tableData[1].map((item) => ({
+                value: item.S1,
+                name: item.Name1,
+              })),
             },
           ],
         },
@@ -761,6 +976,9 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        if (remarkTb === 4 && this.tableColumns[4].length === 0) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
@@ -919,7 +1137,8 @@ export default {
   .chartContent {
     .tableHead {
       height: 50px;
-      background: rgba(53, 64, 117, 1);
+      background: #354075;
+      font-size: 18px;
     }
     padding: 9px 12px;
     height: calc(100% - 48px);
@@ -929,6 +1148,7 @@ export default {
       color: #fff;
       overflow: hidden;
       ul {
+        height: 100%;
         list-style: none;
         padding: 0;
         margin: 0 auto;
@@ -936,10 +1156,11 @@ export default {
         a {
           height: 50px;
           line-height: 50px;
-          font-size: 18px;
+          font-size: 16px;
+          border-bottom: 1px solid #ffffff50;
         }
         li:nth-child(even) {
-          background-color: #0f1740;
+          // background-color: #0f1740;
         }
       }
     }
