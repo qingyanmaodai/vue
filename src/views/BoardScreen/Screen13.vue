@@ -20,49 +20,50 @@
             >
               <div class="tableHead flex px-[10px] text-white w-full">
                 <div
-                  v-for="(column, index) in tableColumns[0]"
+                  v-for="(column, index) in tableColumns[1]"
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
-                    index < tableColumns[0].length - 1 ? 'pr-[10px]' : 'pr-0'
+                    index < tableColumns[1].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
-                  :style="getColumnStyle(tableColumns[0], column)"
+                  :style="getColumnStyle(tableColumns[1], column)"
                 >
                   {{ column.label }}
                 </div>
               </div>
               <VueSeamlessScroll
-                :data="tableData[0]"
+                :data="tableData[1]"
                 class="warp"
                 :class-option="{
-                  step: 0.1,
+                  singleHeight: fontSize(30),
+                  waitTime: 2000,
                 }"
               >
                 <ul class="px-[10px]">
                   <li
-                    v-for="(item, index) in tableData[0]"
+                    v-for="(item, index) in tableData[1]"
                     :key="'data' + index"
                     class="flex"
                   >
                     <div
-                      v-for="(column, colIndex) in tableColumns[0]"
+                      v-for="(column, colIndex) in tableColumns[1]"
                       :key="'column' + colIndex"
                       class="truncate"
                       :class="
-                        colIndex < tableColumns[0].length - 1
+                        colIndex < tableColumns[1].length - 1
                           ? 'pr-[10px]'
                           : 'pr-0'
                       "
                       :style="
                         getCellStyles(
-                          tableData[0][index].BColors,
-                          tableData[0][index].FColors,
+                          tableData[1][index].BColors,
+                          tableData[1][index].FColors,
                           column,
-                          tableColumns[0],
+                          tableColumns[1],
                         )
                       "
                     >
-                      {{ tableData[0][index][column.prop] }}
+                      {{ tableData[1][index][column.prop] }}
                     </div>
                   </li>
                 </ul>
@@ -211,17 +212,17 @@ export default {
     },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.appWidth || 0),
+        (sum, col) => sum + parseFloat(col.width || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+        const percentage = (parseFloat(column.width) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+          const percentage = (parseFloat(column.width) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -238,7 +239,7 @@ export default {
     // 获取表头数据
     async getTableHeader() {
       let rea = await GetSearchData({
-        dicID: 15224,
+        dicID: 11180,
         rows: 0,
         page: 1,
       });
@@ -300,6 +301,14 @@ export default {
           }
         });
       }
+    },
+    fontSize(res) {
+      let clientWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (!clientWidth) return;
+      return res * (clientWidth / 1920);
     },
     async getEcharts() {
       //获取屏幕宽度并计算比例
@@ -674,11 +683,13 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['rows'] = this.tablePagination[remarkTb].pageSize;
-      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        // 获取每个表头
+        if (remarkTb === 1 && this.tableColumns[1].length === 0) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {

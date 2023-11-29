@@ -39,13 +39,76 @@
             >
               <div class="tableHead flex !px-[10px] text-white w-full">
                 <div
+                  v-for="(column, index) in tableColumns[3]"
+                  :key="'tableHead' + index"
+                  class="flex"
+                  :class="
+                    index < tableColumns[3].length - 1 ? 'pr-[10px]' : 'pr-0'
+                  "
+                  :style="getColumnStyle(tableColumns[0], column)"
+                >
+                  {{ column.label }}
+                </div>
+              </div>
+              <VueSeamlessScroll
+                :data="tableData[3]"
+                class="warp"
+                :class-option="{
+                  singleHeight: fontSize(10),
+                  waitTime: 2000,
+                }"
+              >
+                <ul class="px-[10px]">
+                  <li
+                    v-for="(item, index) in tableData[3]"
+                    :key="'data' + index"
+                    class="flex"
+                  >
+                    <div
+                      v-for="(column, colIndex) in tableColumns[3]"
+                      :key="'column' + colIndex"
+                      class="truncate"
+                      :class="
+                        colIndex < tableColumns[3].length - 1
+                          ? 'pr-[10px]'
+                          : 'pr-0'
+                      "
+                      :style="
+                        getCellStyles(
+                          tableData[3][index].BColors,
+                          tableData[3][index].FColors,
+                          column,
+                          tableColumns[3],
+                        )
+                      "
+                    >
+                      {{ tableData[3][index][column.prop] }}
+                    </div>
+                  </li>
+                </ul>
+              </VueSeamlessScroll>
+            </div>
+          </div>
+        </div>
+        <div class="h-full w-40/100 flex flex-col gap-[10px]">
+          <div class="panel h-full w-full">
+            <div class="chartHead">
+              <div class="panel-footer"></div>
+              <h2>{{ result1[4]['label'] }}</h2>
+            </div>
+            <div
+              class="chartContent flex flex-col"
+              element-loading-background="#060765"
+            >
+              <div class="tableHead flex px-[10px] text-white w-full">
+                <div
                   v-for="(column, index) in tableColumns[4]"
                   :key="'tableHead' + index"
                   class="flex"
                   :class="
                     index < tableColumns[4].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
-                  :style="getColumnStyle(tableColumns[0], column)"
+                  :style="getColumnStyle(tableColumns[4], column)"
                 >
                   {{ column.label }}
                 </div>
@@ -54,7 +117,8 @@
                 :data="tableData[4]"
                 class="warp"
                 :class-option="{
-                  step: 0,
+                  singleHeight: fontSize(30),
+                  waitTime: 2000,
                 }"
               >
                 <ul class="px-[10px]">
@@ -82,68 +146,6 @@
                       "
                     >
                       {{ tableData[4][index][column.prop] }}
-                    </div>
-                  </li>
-                </ul>
-              </VueSeamlessScroll>
-            </div>
-          </div>
-        </div>
-        <div class="h-full w-40/100 flex flex-col gap-[10px]">
-          <div class="panel h-full w-full">
-            <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>{{ result1[4]['label'] }}</h2>
-            </div>
-            <div
-              class="chartContent flex flex-col"
-              element-loading-background="#060765"
-            >
-              <div class="tableHead flex px-[10px] text-white w-full">
-                <div
-                  v-for="(column, index) in tableColumns[0]"
-                  :key="'tableHead' + index"
-                  class="flex"
-                  :class="
-                    index < tableColumns[0].length - 1 ? 'pr-[10px]' : 'pr-0'
-                  "
-                  :style="getColumnStyle(tableColumns[0], column)"
-                >
-                  {{ column.label }}
-                </div>
-              </div>
-              <VueSeamlessScroll
-                :data="tableData[0]"
-                class="warp"
-                :class-option="{
-                  step: 0.1,
-                }"
-              >
-                <ul class="px-[10px]">
-                  <li
-                    v-for="(item, index) in tableData[0]"
-                    :key="'data' + index"
-                    class="flex"
-                  >
-                    <div
-                      v-for="(column, colIndex) in tableColumns[0]"
-                      :key="'column' + colIndex"
-                      class="truncate"
-                      :class="
-                        colIndex < tableColumns[0].length - 1
-                          ? 'pr-[10px]'
-                          : 'pr-0'
-                      "
-                      :style="
-                        getCellStyles(
-                          tableData[0][index].BColors,
-                          tableData[0][index].FColors,
-                          column,
-                          tableColumns[0],
-                        )
-                      "
-                    >
-                      {{ tableData[0][index][column.prop] }}
                     </div>
                   </li>
                 </ul>
@@ -450,17 +452,17 @@ export default {
     },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.appWidth || 0),
+        (sum, col) => sum + parseFloat(col.width || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+        const percentage = (parseFloat(column.width) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+          const percentage = (parseFloat(column.width) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -477,7 +479,7 @@ export default {
     // 获取表头数据
     async getTableHeader() {
       let rea = await GetSearchData({
-        dicID: 11177,
+        dicID: 15222,
         rows: 0,
         page: 1,
       });
@@ -540,6 +542,14 @@ export default {
         });
       }
     },
+    fontSize(res) {
+      let clientWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (!clientWidth) return;
+      return res * (clientWidth / 1920);
+    },
     async getEcharts() {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
@@ -598,9 +608,11 @@ export default {
                 '#D5D5D5',
                 '#D70303',
               ],
+              labelLayout: {
+                hideOverlap: false, // 是否隐藏重叠标签
+              },
               label: {
                 position: 'inner',
-                formatter: '{d}%',
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
@@ -630,26 +642,13 @@ export default {
             bottom: -fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
-            right: fontSize(10),
+            right: fontSize(80),
           },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
               type: 'none',
             },
-            // formatter: function (params) {
-            //   return (
-            //     params[0].name +
-            //     '<br/>' +
-            //     "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
-            //     params[0].seriesName +
-            //     ' : ' +
-            //     Number(
-            //       (params[0].value.toFixed(4) / 10000).toFixed(2),
-            //     ).toLocaleString() +
-            //     ' 万元<br/>'
-            //   );
-            // },
           },
           xAxis: {
             show: false,
@@ -675,29 +674,8 @@ export default {
               axisLine: {
                 show: false,
               },
-              data: ['物料异常', '欠员', '工艺缺失', '欠料', '机械故障'],
+              data: this.tableData[2].map((item) => item['Name1']),
             },
-            // {
-            //   type: 'category',
-            //   inverse: true,
-            //   axisTick: 'none',
-            //   axisLine: 'none',
-            //   show: true,
-            //   axisLabel: {
-            //     textStyle: {
-            //       color: '#ffffff',
-            //       fontSize: fontSize(12),
-            //     },
-            //     // formatter: function (value) {
-            //     //   if (value >= 10000) {
-            //     //     return (value / 10000).toLocaleString() + '万';
-            //     //   } else {
-            //     //     return value.toLocaleString();
-            //     //   }
-            //     // },
-            //   },
-            //   data: [45, 26, 14, 12, 5],
-            // },
           ],
           series: [
             {
@@ -718,7 +696,7 @@ export default {
                 offset: [fontSize(10), 0],
               },
               barWidth: fontSize(16),
-              data: [45, 26, 14, 12, 5],
+              data: this.tableData[1].map((item) => item['S1']),
             },
             // {
             //   name: '背景',
@@ -765,7 +743,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ['6日', '7日', '8日', '9日', '10日', '11日', '12日'],
+            data: this.tableData[7].map((item) => item['Name1']),
             axisLabel: {
               interval: 0,
               show: true,
@@ -827,7 +805,7 @@ export default {
               lineStyle: {
                 width: fontSize(4),
               },
-              data: [100, 80, 120, 60, 90, 70, 70], // 折线图的数据
+              data: this.tableData[7].map((item) => item['S1']),
             },
           ],
         },
@@ -887,28 +865,32 @@ export default {
                 color: '#254678',
               },
             },
-            indicator: [
-              {
-                name: '欠料',
-                max: 100,
-              },
-              {
-                name: '人员不够',
-                max: 100,
-              },
-              {
-                name: '机械故障',
-                max: 100,
-              },
-              {
-                name: '模具异常',
-                max: 100,
-              },
-              {
-                name: '来料不良',
-                max: 100,
-              },
-            ],
+            indicator: this.tableData[8].map((item) => ({
+              max: 100,
+              name: item.Name1,
+            })),
+            // [
+            //   {
+            //     name: '欠料',
+            //     max: 100,
+            //   },
+            //   {
+            //     name: '人员不够',
+            //     max: 100,
+            //   },
+            //   {
+            //     name: '机械故障',
+            //     max: 100,
+            //   },
+            //   {
+            //     name: '模具异常',
+            //     max: 100,
+            //   },
+            //   {
+            //     name: '来料不良',
+            //     max: 100,
+            //   },
+            // ],
           },
           series: [
             {
@@ -931,7 +913,7 @@ export default {
               },
               data: [
                 {
-                  value: [50, 46, 80, 30, 60],
+                  data: this.tableData[8].map((item) => item['S1']),
                 },
               ],
             },
@@ -971,11 +953,12 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form['rows'] = this.tablePagination[remarkTb].pageSize;
-      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        if (remarkTb === 3 && this.tableColumns[3].length === 0) {
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         if (remarkTb === 4 && this.tableColumns[4].length === 0) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }

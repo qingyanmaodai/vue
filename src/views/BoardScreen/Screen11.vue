@@ -64,7 +64,7 @@
                 :data="tableData[4]"
                 class="warp"
                 :class-option="{
-                  singleHeight: 30,
+                  singleHeight: fontSize(30),
                   waitTime: 2000,
                 }"
               >
@@ -80,8 +80,8 @@
                       class="truncate"
                       :class="
                         colIndex < tableColumns[4].length - 1
-                          ? '!mr-[10px]'
-                          : '!mr-0'
+                          ? 'pr-[10px]'
+                          : 'pr-0'
                       "
                       :style="
                         getCellStyles(
@@ -186,7 +186,7 @@
                   :data="tableData[9]"
                   class="warp"
                   :class-option="{
-                    singleHeight: 30,
+                    singleHeight: fontSize(10),
                     waitTime: 2000,
                   }"
                 >
@@ -478,17 +478,17 @@ export default {
     },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.appWidth || 0),
+        (sum, col) => sum + parseFloat(col.width || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+        const percentage = (parseFloat(column.width) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+          const percentage = (parseFloat(column.width) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
@@ -504,7 +504,7 @@ export default {
     // 获取表头数据
     async getTableHeader() {
       let rea = await GetSearchData({
-        dicID: 11175,
+        dicID: 15223,
         rows: 0,
         page: 1,
       });
@@ -567,6 +567,14 @@ export default {
         });
       }
     },
+    fontSize(res) {
+      let clientWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (!clientWidth) return;
+      return res * (clientWidth / 1920);
+    },
     async getEcharts() {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
@@ -587,7 +595,7 @@ export default {
             top: 'center',
             // left: "center",
             orient: 'vertical',
-            right: '10%',
+            right: fontSize(10),
             // bottom: "0",
             itemWidth: fontSize(16),
             itemHeight: fontSize(16),
@@ -607,8 +615,8 @@ export default {
             {
               type: 'pie',
               // selectedMode: "single",
-              radius: ['50%', '80%'],
-              center: ['30%', '50%'],
+              radius: [fontSize(50), fontSize(80)],
+              center: ['35%', '50%'],
               color: [
                 '#8E35FF',
                 '#FFB933',
@@ -625,20 +633,20 @@ export default {
                 '#D5D5D5',
                 '#D70303',
               ],
+              labelLayout: {
+                hideOverlap: false, // 是否隐藏重叠标签
+              },
               label: {
                 normal: {
                   position: 'outside',
-                  formatter: '{d}%',
                   show: true,
                   color: '#fff',
                   textBorderColor: 'inherit',
-                  textBorderWidth: 1,
-                  fontSize: fontSize(12),
+                  textBorderWidth: fontSize(1),
+                  fontSize: fontSize(16),
                   formatter: function (params) {
                     if (params.name !== '') {
                       return params.percent + '%';
-                    } else {
-                      return '';
                     }
                   },
                 },
@@ -646,6 +654,7 @@ export default {
               labelLine: {
                 show: true,
                 length2: 0,
+                length: fontSize(10),
               },
               data: this.tableData[1].map((item) => ({
                 value: item.S1,
@@ -688,7 +697,7 @@ export default {
             axisLabel: {
               interval: 0,
               show: true,
-              fontSize: fontSize(18),
+              fontSize: fontSize(14),
               color: '#C9D2FA',
             },
             axisLine: {
@@ -746,7 +755,7 @@ export default {
                 },
               },
               barWidth: fontSize(30),
-              data: this.tableData[2].map((item) => item['S1']),
+              data: this.tableData[2].map((item) => item['S1'] * 100),
               label: {
                 show: true, // 显示标签
                 position: 'top', // 标签显示在柱状图的上方
@@ -754,7 +763,7 @@ export default {
                 color: '#fff',
                 formatter: function (params) {
                   // 在标签文本后添加百分号
-                  return params.value + '%';
+                  return params.value.toFixed(2) + '%';
                 },
               },
               markLine: {
@@ -776,11 +785,7 @@ export default {
                     },
                   },
                 ],
-                // label: {
-                //   show: false,
-                // },
                 silent: true,
-                // animation: true,
               },
             },
           ],
@@ -810,11 +815,12 @@ export default {
           grid: {
             containLabel: true,
           },
+          avoidLabelOverlap: false,
           series: [
             {
               type: 'pie',
               // selectedMode: "single",
-              radius: ['50%', '80%'],
+              radius: [fontSize(50), fontSize(80)],
               center: ['40%', '50%'],
               color: [
                 '#8E35FF',
@@ -832,28 +838,22 @@ export default {
                 '#D5D5D5',
                 '#D70303',
               ],
+              labelLayout: {
+                hideOverlap: false, // 是否隐藏重叠标签
+              },
               label: {
-                normal: {
-                  position: 'inner',
-                  formatter: '{d}%',
-                  show: true,
-                  color: '#fff',
-                  textBorderColor: 'inherit',
-                  textBorderWidth: 1,
-                  fontSize: fontSize(16),
-                  formatter: function (params) {
-                    if (params.name !== '') {
-                      return params.percent + '%';
-                    } else {
-                      return '';
-                    }
-                  },
+                position: 'inner',
+                show: true,
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: fontSize(1),
+                fontSize: fontSize(16),
+                formatter: function (params) {
+                  return params.percent + '%';
                 },
               },
               labelLine: {
-                normal: {
-                  show: false,
-                },
+                show: false,
               },
               data: this.tableData[3].map((item) => ({
                 value: item.S1,
@@ -919,7 +919,7 @@ export default {
               // nameTextStyle: {
               //   color: '#444444',
               // },
-              splitNumber: 2,
+              splitNumber: 3,
               axisLabel: {
                 show: true,
                 fontSize: fontSize(18),
@@ -943,7 +943,7 @@ export default {
               },
             },
             {
-              splitNumber: 2,
+              splitNumber: 3,
               position: 'right', // 放在右边
               axisLabel: {
                 show: true,
@@ -1006,7 +1006,7 @@ export default {
             bottom: -fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
-            right: fontSize(10),
+            right: fontSize(80),
           },
           tooltip: {
             trigger: 'axis',
@@ -1051,7 +1051,7 @@ export default {
               axisLine: {
                 show: false,
               },
-              data: ['物料异常', '欠员', '工艺缺失', '欠料', '机械故障'],
+              data: this.tableData[10].map((item) => item['Name1']),
             },
             // {
             //   type: 'category',
@@ -1094,7 +1094,7 @@ export default {
                 offset: [fontSize(10), 0],
               },
               barWidth: fontSize(16),
-              data: [45, 26, 14, 12, 5],
+              data: this.tableData[10].map((item) => item['S1']), // 折线图的数据,
             },
             // {
             //   name: '背景',
@@ -1146,8 +1146,6 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      // form['rows'] = this.tablePagination[remarkTb].pageSize;
-      // form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
