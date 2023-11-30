@@ -579,7 +579,7 @@ export default {
         }
 
         const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item['SQty'] > item['PlanQty'];
+          return item['SQty'] >= item['PlanQty'];
         });
         if (errorNum2 !== -1) {
           this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
