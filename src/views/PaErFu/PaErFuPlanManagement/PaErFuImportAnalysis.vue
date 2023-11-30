@@ -434,7 +434,7 @@ export default {
           );
 
           if (newData.length === 0) {
-            this.$message.error('无数据可以删除或无法删除该数据');
+            this.$message.error('业务数据不能删除');
             return;
           }
         } else {

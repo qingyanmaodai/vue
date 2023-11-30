@@ -665,22 +665,6 @@ export default {
         _this.processDialog1 = false;
       }
     },
-    // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == 'OrderNo') {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: '#9fff9f',
-            };
-          }
-        }
-      }
-    },
   },
 };
 </script>

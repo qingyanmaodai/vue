@@ -131,7 +131,6 @@
               :tableLoading="tableLoading[item]"
               :isEdit="isEdit"
               :remark="item"
-              :cellStyle="cellStyle"
               :sysID="sysID[item].ID"
               :showPagination="false"
               :isClear="isClear[item]"
@@ -1086,8 +1085,6 @@ export default {
       }
       return className;
     },
-    // 行内列样式
-    cellStyle({ row, column }) {},
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;

@@ -42,7 +42,6 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
               :hasSelect="hasSelect[0]"
@@ -129,7 +128,6 @@
               :tableHeader="tableColumns[item]"
               :tableLoading="tableLoading[item]"
               :remark="item"
-              :cellStyle="cellStyle0"
               :sysID="sysID[item]['ID']"
               :isClear="isClear[item]"
               :hasSelect="hasSelect[item]"
@@ -658,8 +656,6 @@ export default {
       ];
       this.dataSearch(1);
     },
-    // 行内样式
-    cellStyle0({ row, column }) {},
     // 行内样式
     cellStyle({ row, column }) {},
     changeProp(remarkTb, OrderNo, OrderNoValue) {

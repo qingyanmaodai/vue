@@ -39,7 +39,6 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0].ID"
               :footerLabel="footerLabel[0]"
               :isClear="isClear[0]"
@@ -128,7 +127,6 @@
               :tableLoading="tableLoading[1]"
               :remark="1"
               :hasSelect="hasSelect[1]"
-              :cellStyle="cellStyle"
               :sysID="sysID[1].ID"
               :isClear="isClear[1]"
               @pageChange="pageChange"
@@ -505,10 +503,6 @@ export default {
       ];
       this.dataSearch(1);
     },
-    // 行内样式
-    cellStyle0({ row, column }) {},
-    // 行内样式
-    cellStyle({ row, column }) {},
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
         this.$message.error('请选择需要修改的值');

@@ -47,7 +47,6 @@
               :tableHeader="tableColumns[0]"
               :tableLoading="tableLoading[0]"
               :remark="0"
-              :cellStyle="cellStyle0"
               :sysID="sysID[0]['ID']"
               :isClear="isClear[0]"
               :hasSelect="hasSelect[item]"
@@ -770,24 +769,6 @@ export default {
         this.colDialogVisible4 = true;
       }
     },
-    // 行内样式
-    cellStyle0({ row, column }) {
-      if (column.property == 'IsCompleteInspect') {
-        if (row.IsCompleteInspect == '未开始') {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else if (row.IsCompleteInspect == '进行中') {
-          return {
-            backgroundColor: '#fdfd8f',
-          };
-        } else if (row.IsCompleteInspect == '已完成') {
-          return {
-            backgroundColor: '#9fff9f',
-          };
-        }
-      }
-    },
     // 工序弹框确定添加
     async dialogBtnClick1(val) {
       if (val) {
@@ -811,22 +792,6 @@ export default {
       } else {
         _this.$refs.processForm.$refs.formData.resetFields();
         _this.processDialog1 = false;
-      }
-    },
-    // 行内样式
-    cellStyle({ row, column }) {
-      if (column.property == 'OrderNo') {
-        if (row.InspectStatus == 2) {
-          return {
-            backgroundColor: '#ff7b7b',
-          };
-        } else {
-          if (row.InspectStatus == 1) {
-            return {
-              backgroundColor: '#9fff9f',
-            };
-          }
-        }
       }
     },
   },
