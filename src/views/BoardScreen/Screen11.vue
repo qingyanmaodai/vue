@@ -769,7 +769,13 @@ export default {
               silent: true,
               itemStyle: {
                 color: function (params) {
-                  return params.value > 100 ? '#DE4646' : '#2F8FFF';
+                  if (params.value > 110) {
+                    return '#DE4646';
+                  } else if (params.value <= 110 && params.value >= 90) {
+                    return '​#35ff49';
+                  } else {
+                    return '#2F8FFF';
+                  }
                 },
               },
               barWidth: fontSize(30),
@@ -861,7 +867,7 @@ export default {
                 hideOverlap: false, // 是否隐藏重叠标签
               },
               label: {
-                position: 'inner',
+                position: 'outside',
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
@@ -872,7 +878,9 @@ export default {
                 },
               },
               labelLine: {
-                show: false,
+                show: true,
+                length2: 0,
+                length: fontSize(10),
               },
               data: this.tableData[3].map((item) => ({
                 value: item.S1,
