@@ -372,8 +372,7 @@ export default {
   },
   methods: {
     updateColor(remarkTb) {
-      debugger;
-      let sheet = this.spread.getActiveSheet();
+      let sheet = this.spread[remarkTb].getActiveSheet();
       sheet.suspendPaint();
       const { col, colCount, row, rowCount } = sheet.getSelections()[0];
 
@@ -446,7 +445,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['FColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (column) => column.prop === key,
               );
               if (columnIndex !== -1) {
@@ -461,7 +460,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['BColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (column) => column.prop === key,
               );
               if (columnIndex !== -1) {

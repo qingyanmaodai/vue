@@ -165,8 +165,14 @@
                 <div
                   class="w-40/100 h-full flex flex-col items-center justify-center mb-[5%]"
                 >
-                  <div class="ScreenBaseNum">64,945</div>
-                  <div class="ScreenBaseTitle">
+                  <div
+                    class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                  >
+                    {{ tableData[5][0]['S1'].toLocaleString() }}
+                  </div>
+                  <div
+                    class="ScreenBaseTitle truncate w-full text-center px-[10px]"
+                  >
                     {{ tableData[5][0]['Name1'] }}
                   </div>
                   <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
@@ -174,8 +180,14 @@
                 <div
                   class="w-40/100 h-full flex flex-col items-center justify-center ml-[5%]"
                 >
-                  <div class="ScreenBaseNum">462</div>
-                  <div class="ScreenBaseTitle">
+                  <div
+                    class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                  >
+                    {{ tableData[6][0]['S1'].toLocaleString() }}
+                  </div>
+                  <div
+                    class="ScreenBaseTitle truncate w-full text-center px-[10px]"
+                  >
                     {{ tableData[6][0]['Name1'] }}
                   </div>
                   <svg-icon icon-class="ScreenBase5" class="ScreenBase5" />
@@ -195,7 +207,7 @@
             <div class="chartHead">
               <div class="panel-footer"></div>
 
-              <h2>{{ result1[7]['label'] }}</h2>
+              <h2>{{ result1[8]['label'] }}</h2>
             </div>
             <div class="chartContent" ref="chart3"></div>
           </div>
@@ -715,8 +727,8 @@ export default {
         {
           grid: {
             containLabel: true,
-            bottom: fontSize(10),
-            top: fontSize(10),
+            bottom: fontSize(0),
+            top: fontSize(20),
             left: fontSize(10),
             right: fontSize(10),
           },
@@ -757,7 +769,6 @@ export default {
                 width: 2,
               },
             },
-
             axisTick: {
               show: false,
             },
@@ -795,7 +806,7 @@ export default {
           ],
           series: [
             {
-              name: '折线图名称',
+              // name: '折线图名称',
               type: 'line',
               // yAxisIndex: 1, // 与第二个 y 轴关联
               itemStyle: {
@@ -809,15 +820,6 @@ export default {
           ],
         },
         {
-          // title: {
-          //   text: "雷达图",
-          //   top: 10,
-          //   left: "center",
-          //   textStyle: {
-          //     fontSize: 18,
-          //     fontWeight: 400,
-          //   },
-          // },
           textStyle: {
             // 全局字体样式
             color: '#C9D2FA',

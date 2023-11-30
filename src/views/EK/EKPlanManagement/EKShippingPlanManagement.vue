@@ -40,6 +40,33 @@
               class="font_size_1"
               >【说明文档】</a
             >
+            <!-- 下拉框 -->
+            <el-select
+              v-model="colorType"
+              filterable
+              size="small"
+              clearable
+              class="margin_right_10"
+            >
+              <el-option
+                v-for="(op, index) in colorStatus"
+                :label="op.label"
+                :value="op.value"
+                :key="'select' + index"
+              ></el-option>
+            </el-select>
+            <el-color-picker
+              size="small"
+              v-model="colorValue"
+              class="margin_right_10"
+            ></el-color-picker>
+            <el-button
+              class="margin_right_20"
+              size="small"
+              type="primary"
+              @click="updateColor(labelStatus1)"
+              >确定</el-button
+            >
             <div v-for="(item, y) in Status1" :key="y">
               <span
                 @click="changeStatus(item, y)"
@@ -254,6 +281,12 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
+      colorType: 0,
+      colorValue: null,
+      colorStatus: [
+        { label: '字体颜色', value: 0 },
+        { label: '背景颜色', value: 1 },
+      ],
       height: '707px',
       treeHeight: '765px',
       showPagination: true,
@@ -337,6 +370,89 @@ export default {
     this.keyDown();
   },
   methods: {
+    updateColor(remarkTb) {
+      let sheet = this.spread[remarkTb].getActiveSheet();
+      sheet.suspendPaint();
+      const { col, colCount, row, rowCount } = sheet.getSelections()[0];
+
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          const key = column.prop;
+
+          if (
+            row <= rowIndex &&
+            rowIndex < rowCount + row &&
+            col <= columnIndex &&
+            columnIndex < colCount + col
+          ) {
+            if (this.colorType === 0) {
+              if (
+                Object.prototype.toString.call(rowItem['FColors']) !==
+                '[object Object]'
+              ) {
+                rowItem['FColors'] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item['prop'] === key + 'FColor',
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem['FColors'][key] = this.colorValue;
+            } else if (this.colorType === 1) {
+              if (
+                Object.prototype.toString.call(rowItem['BColors']) !==
+                '[object Object]'
+              ) {
+                rowItem['BColors'] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item['prop'] === key + 'BColor',
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem['BColors'][key] = this.colorValue;
+            }
+          }
+
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor('black');
+          cell.backColor('white');
+          if (column['isEdit']) {
+            cell.locked(false).foreColor('#2a06ecd9');
+          }
+          if (
+            Object.prototype.toString.call(rowItem['FColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['FColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem['FColors'][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem['BColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['BColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem['BColors'][key]);
+              }
+            });
+          }
+        });
+      });
+      sheet.resumePaint();
+    },
     // 更新表格高度的函数
     updateTableHeight() {},
     //按钮权限
@@ -1012,7 +1128,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['FColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {
@@ -1027,7 +1143,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['BColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (columnItem) => columnItem.prop === key,
               );
               if (columnIndex !== -1) {

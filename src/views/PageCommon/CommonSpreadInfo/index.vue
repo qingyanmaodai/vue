@@ -711,6 +711,49 @@ export default {
       // 冻结第一列
 
       sheet.frozenColumnCount(this.tableColumns[remarkTb][0].FixCount);
+      //改变字体颜色
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          const key = column.prop;
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor('black');
+          cell.backColor('white');
+          if (column['isEdit']) {
+            cell.locked(false).foreColor('#2a06ecd9');
+          }
+          if (
+            Object.prototype.toString.call(rowItem['FColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['FColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem['FColors'][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem['BColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['BColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem['BColors'][key]);
+              }
+            });
+          }
+        });
+      });
 
       // 列筛选
       // 参数2 开始列

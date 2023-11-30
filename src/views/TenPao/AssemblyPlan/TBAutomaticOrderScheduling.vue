@@ -633,7 +633,7 @@ export default {
         { ID: 49 },
         { ID: 15215 },
         { ID: 16231 },
-        { ID: 16231 },
+        { ID: 97 },
       ],
       isEdit: [false, false, false, false, false, false],
       userInfo: {},
@@ -825,7 +825,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['FColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (column) => column.prop === key,
               );
               if (columnIndex !== -1) {
@@ -840,7 +840,7 @@ export default {
             '[object Object]'
           ) {
             Object.keys(rowItem['BColors']).forEach((key) => {
-              const columnIndex = this.tableColumns[0].findIndex(
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
                 (column) => column.prop === key,
               );
               if (columnIndex !== -1) {
@@ -1054,20 +1054,20 @@ export default {
       });
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
-        // if (_this.selectingRow === -1 || args['row'] !== _this.selectingRow) {
-        if (_this.tableColumns[remarkTb].length) {
-          _this.tableColumns[remarkTb].map((item, index) => {
-            if (remarkTb === 3) {
-              _this.formSearchs[3].datas['OrganizeID'] =
-                _this.tableData[remarkTb][args.row].OrganizeID || 'N/A';
-              _this.colDialogVisible0 = true;
-              _this.dataSearch(6);
-              _this.dataSearch(7);
-            }
-          });
+        if (_this.selectingRow === -1 || args['row'] !== _this.selectingRow) {
+          // if (_this.tableColumns[remarkTb].length) {
+          //   _this.tableColumns[remarkTb].map((item, index) => {
+          if (remarkTb === 3) {
+            _this.formSearchs[3].datas['OrganizeID'] =
+              _this.tableData[remarkTb][args.row].OrganizeID || 'N/A';
+            _this.colDialogVisible0 = true;
+            _this.dataSearch(6);
+            _this.dataSearch(7);
+          }
+          //   });
+          // }
+          _this.selectingRow = args.row;
         }
-        // _this.selectingRow = args.row;
-        // }
       });
       //脏数据清除
       sheet.bind(GC.Spread.Sheets.Events.RowChanged, function (e, info) {});

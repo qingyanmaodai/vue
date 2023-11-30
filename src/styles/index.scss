@@ -1413,7 +1413,9 @@ label {
 .flex-start {
   align-items: flex-start;
 }
-
+.text-center {
+  text-align: center;
+}
 .flex_grow {
   flex-grow: 1;
   overflow: hidden;
@@ -1464,6 +1466,9 @@ label {
 }
 .w-30\/100 {
   width: 30%;
+}
+.w-33\/100 {
+  width: 33%;
 }
 .w-35\/100 {
   width: 35%;

@@ -88,13 +88,13 @@
                 class="h-full w-full flex flex-col items-center justify-between relative"
               >
                 <div
-                  class="ScreenBaseNum absolute"
+                  class="ScreenBaseNum absolute truncate w-full text-center px-[10px]"
                   style="top: 20%; height: 30%"
                 >
-                  {{ tableData[2][0]['S1'] }}
+                  {{ tableData[2][0]['S1'].toLocaleString() }}
                 </div>
                 <div
-                  class="ScreenBaseTitle absolute"
+                  class="ScreenBaseTitle absolute truncate w-full text-center px-[10px]"
                   style="bottom: 30%; height: 20%"
                 >
                   {{ result1[2]['label'] }}
@@ -107,13 +107,13 @@
                 class="h-full w-full flex flex-col items-center justify-between relative"
               >
                 <div
-                  class="ScreenBaseNum absolute"
+                  class="ScreenBaseNum absolute truncate w-full text-center px-[10px]"
                   style="top: 20%; height: 30%"
                 >
-                  {{ tableData[3][0]['S1'] }}
+                  {{ tableData[3][0]['S1'].toLocaleString() }}
                 </div>
                 <div
-                  class="ScreenBaseTitle absolute"
+                  class="ScreenBaseTitle absolute truncate w-full text-center px-[10px]"
                   style="bottom: 30%; height: 20%"
                 >
                   {{ result1[3]['label'] }}

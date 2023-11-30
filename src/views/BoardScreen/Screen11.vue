@@ -112,10 +112,16 @@
         <div class="h-full w-30/100 flex flex-col gap-[10px]">
           <div class="h-70/100 w-full flex flex-col gap-[10px]">
             <div
-              class="h-50/100 w-full upper-right-element flex justify-center gap-[50px]"
+              class="h-50/100 w-full upper-right-element flex justify-center"
             >
-              <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">{{ tableData[6][0]['S1'] }}</div>
+              <div
+                class="h-full flex flex-col justify-center gap-[10%] w-33/100"
+              >
+                <div
+                  class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                >
+                  {{ tableData[6][0]['S1'].toLocaleString() }}
+                </div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -129,8 +135,14 @@
                   </div>
                 </div>
               </div>
-              <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">{{ tableData[7][0]['S1'] }}</div>
+              <div
+                class="h-full flex flex-col justify-center gap-[10%] w-33/100"
+              >
+                <div
+                  class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                >
+                  {{ tableData[7][0]['S1'].toLocaleString() }}
+                </div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -144,8 +156,14 @@
                   </div>
                 </div>
               </div>
-              <div class="h-full flex flex-col justify-center gap-[10%]">
-                <div class="ScreenBaseNum">{{ tableData[8][0]['S1'] }}</div>
+              <div
+                class="h-full flex flex-col justify-center gap-[10%] w-33/100"
+              >
+                <div
+                  class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                >
+                  {{ tableData[8][0]['S1'].toLocaleString() }}
+                </div>
                 <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
                 <div
                   class="relative ScreenBase4 flex justify-center items-center"
@@ -746,7 +764,7 @@ export default {
           ],
           series: [
             {
-              name: '负荷情况',
+              // name: '负荷情况',
               type: 'bar',
               silent: true,
               itemStyle: {
@@ -778,6 +796,7 @@ export default {
                     name: '安全线',
                     yAxis: 100,
                     label: {
+                      fontSize: fontSize(16),
                       show: true,
                       position: 'start', // 设置标签文本的位置为起始位置
                       color: '#51D365',
