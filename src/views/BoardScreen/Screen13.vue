@@ -81,7 +81,7 @@
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
-            <div class="panel h-40/100 w-full">
+            <div class="panel h-30/100 w-full">
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
@@ -90,7 +90,7 @@
               <div class="chartContent" ref="chart1"></div>
             </div>
 
-            <div class="panel h-30/100 w-full">
+            <div class="panel h-40/100 w-full">
               <div class="chartHead">
                 <div class="panel-footer"></div>
 
@@ -305,6 +305,7 @@ export default {
         { ID: 5170 },
         { ID: 5170 },
       ],
+      series2: [],
     };
   },
   components: {
@@ -472,7 +473,7 @@ export default {
           legend: {
             top: fontSize(0),
             right: fontSize(10),
-            data: ['制一部', '制二部', '制三部', '制四部'],
+            data: [...new Set(this.tableData[2].map((item) => item.Name1))],
             // itemWidth: fontSize(10),
             // itemHeight: fontSize(10),
             itemGap: fontSize(10),
@@ -485,7 +486,7 @@ export default {
           xAxis: {
             // name: "班级",
             triggerEvent: true,
-            data: ['6日', '7日', '8日', '9日', '10日', '11日', '12日'],
+            data: [...new Set(this.tableData[2].map((item) => item.Name2))],
             axisLabel: {
               interval: 0,
               show: true,
@@ -536,66 +537,7 @@ export default {
               },
             },
           ],
-          series: [
-            {
-              name: '制一部',
-              type: 'line',
-              symbol: 'circle',
-              symbolSize: fontSize(6),
-
-              // yAxisIndex: 1, // 与第二个 y 轴关联
-              itemStyle: {
-                color: '#8E35FF',
-              },
-              lineStyle: {
-                width: fontSize(4),
-              },
-              data: [100, 80, 120, 60, 90, 70, 70], // 折线图的数据
-            },
-            {
-              name: '制二部',
-              type: 'line',
-              symbol: 'circle',
-              symbolSize: fontSize(6),
-
-              // yAxisIndex: 1, // 与第二个 y 轴关联
-              itemStyle: {
-                color: '#FFB933',
-              },
-              lineStyle: {
-                width: fontSize(4),
-              },
-              data: [60, 70, 90, 40, 50, 80, 60], // 折线图的数据
-            },
-            {
-              name: '制三部',
-              type: 'line',
-              symbol: 'circle',
-              symbolSize: fontSize(6),
-              // yAxisIndex: 1, // 与第二个 y 轴关联
-              itemStyle: {
-                color: '#44C558',
-              },
-              lineStyle: {
-                width: fontSize(4),
-              },
-              data: [90, 70, 40, 70, 80, 65, 73], // 折线图的数据
-            },
-            {
-              name: '制四部',
-              type: 'line',
-              symbol: 'circle',
-              symbolSize: fontSize(6),
-              // yAxisIndex: 1, // 与第二个 y 轴关联
-              itemStyle: {
-                color: '#2F8FFF',
-              },
-              lineStyle: {
-                width: fontSize(4),
-              },
-              data: [85, 81, 12, 50, 40, 40, 70], // 折线图的数据
-            },
-          ],
+          series: this.series2,
         },
         {
           tooltip: {
@@ -626,7 +568,7 @@ export default {
             {
               type: 'pie',
               selectedMode: 'single',
-              radius: ['50%', '80%'],
+              radius: [fontSize(50), fontSize(80)],
               center: ['40%', '50%'],
               color: [
                 '#8E35FF',
@@ -645,8 +587,7 @@ export default {
                 '#D70303',
               ],
               label: {
-                position: 'inner',
-                formatter: '{d}%',
+                position: 'outside',
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
@@ -661,7 +602,9 @@ export default {
                 },
               },
               labelLine: {
-                show: false,
+                show: true,
+                length2: 0,
+                length: fontSize(10),
               },
               data: this.tableData[3].map((item) => ({
                 value: item.S1,
@@ -704,12 +647,12 @@ export default {
           yAxis: [
             {
               type: 'category',
-              // inverse: true,
+              inverse: true,
               axisLabel: {
                 show: true,
                 textStyle: {
                   color: '#C9D2FA',
-                  fontSize: fontSize(16),
+                  fontSize: fontSize(14),
                 },
               },
               splitLine: {
@@ -747,7 +690,7 @@ export default {
           ],
           series: [
             {
-              name: '金额',
+              // name: '金额',
               type: 'bar',
               zlevel: 1,
               itemStyle: {
@@ -762,6 +705,10 @@ export default {
                 fontSize: fontSize(16),
                 color: '#fff',
                 offset: [fontSize(10), 0],
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return (params.value * 100).toFixed(2) + '%';
+                },
               },
               barWidth: fontSize(16),
               data: this.tableData[4].map((item) => item['S1']),
@@ -822,6 +769,30 @@ export default {
         // 获取每个表头
         if (remarkTb === 1 && this.tableColumns[1].length === 0) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
+        if (remarkTb === 2) {
+          const uniqueName1Values = [
+            ...new Set(data.map((item) => item.Name1)),
+          ];
+          let color = ['#8E35FF', '#FFB933', '#44C558', '#2F8FFF'];
+          // 构建 series 和 x 轴数据
+          this.series2 = uniqueName1Values.map((name1, index) => {
+            return {
+              name: name1,
+              type: 'line',
+              symbol: 'circle',
+              symbolSize: this.fontSize(6),
+              itemStyle: {
+                color: color[index],
+              },
+              lineStyle: {
+                width: this.fontSize(4),
+              },
+              data: data
+                .filter((item) => item.Name1 === name1)
+                .map((item) => item.S1),
+            };
+          });
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);

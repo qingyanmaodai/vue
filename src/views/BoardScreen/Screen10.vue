@@ -1039,7 +1039,7 @@ export default {
   justify-content: space-between;
   .ScreenBaseNum {
     color: #fff;
-    font-family: Revalia;
+    font-family: 'Microsoft YaHei', sans-serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 400;

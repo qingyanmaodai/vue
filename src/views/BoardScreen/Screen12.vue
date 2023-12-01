@@ -45,7 +45,7 @@
                   :class="
                     index < tableColumns[3].length - 1 ? 'pr-[10px]' : 'pr-0'
                   "
-                  :style="getColumnStyle(tableColumns[0], column)"
+                  :style="getColumnStyle(tableColumns[3], column)"
                 >
                   {{ column.label }}
                 </div>
@@ -623,7 +623,7 @@ export default {
                 hideOverlap: false, // 是否隐藏重叠标签
               },
               label: {
-                position: 'inner',
+                position: 'outside',
                 show: true,
                 color: '#fff',
                 textBorderColor: 'inherit',
@@ -638,7 +638,9 @@ export default {
                 },
               },
               labelLine: {
-                show: false,
+                show: true,
+                length2: 0,
+                length: fontSize(10),
               },
               data: this.tableData[1].map((item) => ({
                 value: item.S1,
@@ -668,12 +670,12 @@ export default {
           yAxis: [
             {
               type: 'category',
-              // inverse: true,
+              inverse: true,
               axisLabel: {
                 show: true,
                 textStyle: {
                   color: '#C9D2FA',
-                  fontSize: fontSize(16),
+                  fontSize: fontSize(14),
                 },
               },
               splitLine: {
@@ -690,7 +692,7 @@ export default {
           ],
           series: [
             {
-              name: '金额',
+              // name: '金额',
               type: 'bar',
               zlevel: 1,
               itemStyle: {
@@ -707,7 +709,7 @@ export default {
                 offset: [fontSize(10), 0],
               },
               barWidth: fontSize(16),
-              data: this.tableData[1].map((item) => item['S1']),
+              data: this.tableData[2].map((item) => item['S1']),
             },
             // {
             //   name: '背景',
@@ -780,7 +782,7 @@ export default {
               // nameTextStyle: {
               //   color: '#444444',
               // },
-              splitNumber: 2,
+              splitNumber: 0,
               axisLabel: {
                 show: true,
                 fontSize: fontSize(18),
@@ -814,6 +816,16 @@ export default {
               },
               lineStyle: {
                 width: fontSize(4),
+              },
+              label: {
+                show: true, // 显示标签
+                position: 'top', // 标签显示在柱状图的上方
+                fontSize: fontSize(14),
+                color: '#fff',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  // return params.value.toFixed(2)
+                },
               },
               data: this.tableData[7].map((item) => item['S1']),
             },
@@ -862,10 +874,15 @@ export default {
             },
             indicator: this.tableData[8].map((item) => ({
               name: item.Name1,
-              min: 0,
+              // min: 0,
+              // max:
+              //   this.tableData[8].reduce(
+              //     (acc, innerItem) => acc + innerItem.S1,
+              //     0,
+              //   ) / this.tableData[8].length,
             })),
             center: ['50%', '50%'],
-            radius: fontSize(80), // 调整雷达图的半径
+            radius: fontSize(100), // 调整雷达图的半径
             // [
             //   {
             //     name: '欠料',
@@ -891,9 +908,9 @@ export default {
           },
           series: [
             {
-              name: '雷达图',
+              // name: '雷达图',
               type: 'radar',
-              symbol: 'none',
+              symbol: 'circle',
               areaStyle: {
                 color: '#31C2FF', // 调色盘颜色列表。
                 opacity: 0.4,
@@ -907,6 +924,11 @@ export default {
                 areaStyle: {
                   opacity: 0.8,
                 },
+              },
+              label: {
+                show: true, // 显示标签
+                fontSize: fontSize(14),
+                color: '#fff',
               },
               data: [
                 {
@@ -1044,7 +1066,7 @@ export default {
   justify-content: space-between;
   .ScreenBaseNum {
     color: #fff;
-    font-family: Revalia;
+    font-family: 'Microsoft YaHei', sans-serif;
     font-size: 36px;
     font-style: normal;
     font-weight: 400;

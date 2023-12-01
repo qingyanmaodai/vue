@@ -772,9 +772,9 @@ export default {
                   if (params.value > 110) {
                     return '#DE4646';
                   } else if (params.value <= 110 && params.value >= 90) {
-                    return '​#35ff49';
-                  } else {
                     return '#2F8FFF';
+                  } else {
+                    return '#FF932F';
                   }
                 },
               },
@@ -1272,7 +1272,7 @@ export default {
   justify-content: space-between;
   .ScreenBaseNum {
     color: #fff;
-    font-family: Revalia;
+    font-family: 'Microsoft YaHei', sans-serif;
     font-size: 36px;
     font-style: normal;
     font-weight: 400;
