@@ -189,7 +189,6 @@ export default {
       colDialogVisible2: false,
       colDialogVisible3: false,
       clickRow: null,
-      linkTableData: [],
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],

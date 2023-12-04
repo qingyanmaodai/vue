@@ -84,40 +84,6 @@
               />
             </div>
           </div>
-          <!-- <div
-            class="ant-table-title pd-0-6 flex_row_spaceBtn"
-            ref="headRef_2"
-          >
-            <div>
-              <el-tabs
-                v-model="selectedIndex"
-                @tab-click="handleClick"
-                :stretch="true"
-              >
-                <el-tab-pane label="机台" name="1"></el-tab-pane>
-                <el-tab-pane label="产品" name="2"></el-tab-pane
-              ></el-tabs>
-            </div>
-            <div class="flex_flex_end">
-              <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(1)"
-                v-show="selectedIndex === '1'"
-              >
-                添加机台
-              </el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(2)"
-                v-show="selectedIndex === '2'"
-              >
-                添加产品
-              </el-button>
-            </div>
-          </div> -->
           <div
             v-for="item in [1]"
             :key="item"
@@ -355,8 +321,9 @@ export default {
       selectedIndex: '1',
       colDialogVisible2: false,
       colDialogVisible3: false,
-      clickRow: null,
+      clickRow0: null,
       linkTableData: [],
+      linkTableData2: [],
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
@@ -517,27 +484,10 @@ export default {
 
       newData = _.cloneDeep(
         this.selectionData[remarkTb].map((item) => {
-          item.MaterialTypeID = this.clickRow['MaterialTypeID'];
+          item.MaterialTypeID = this.clickRow0['MaterialTypeID'];
           return item;
         }),
       );
-
-      // if (remarkTb === 2) {
-      //   let newData1 = this.linkTableData.filter(
-      //     (x) =>
-      //       !this.selectionData[2].some((y) => y.MaterialID === x.MaterialID)
-      //   );
-      //   newData1.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = "";
-      //   });
-      //   let newData2 = this.selectionData[2].filter(
-      //     (c) => !this.linkTableData.some((z) => c.MaterialID == z.MaterialID)
-      //   );
-      //   newData2.forEach((newDataItem) => {
-      //     newDataItem["MaterialTypeID"] = this.clickRow["MaterialTypeID"];
-      //   });
-      //   newData = [].concat(newData1, newData2);
-      // }
 
       await this.dataSave(1, null, null, newData);
       this.colDialogVisible2 = false;
@@ -669,11 +619,15 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
+        if (remarkTb === 0) {
+          this.clickRow0 = null;
+        }
+        this.linkTableData = [];
         if (remarkTb === 2) {
           data
             .filter((item2) => {
-              return (
-                item2['MaterialTypeID'] === this.clickRow['MaterialTypeID']
+              return this.linkTableData2.some(
+                (item1) => item2['MaterialTypeID'] === item1['MaterialTypeID'],
               );
             })
             .forEach((item2) => {
@@ -711,7 +665,7 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
-      this.clickRow = row;
+      this.clickRow0 = row;
       this.formSearchs[1].datas['MaterialTypeID'] = row['MaterialTypeID'];
       await this.dataSearch(this.selectedIndex);
     },
@@ -747,26 +701,31 @@ export default {
         $table.insert(obj);
       }
     },
-    LinkData(remarkTb) {
+    async LinkData(remarkTb) {
       if (remarkTb == 1) {
-        if (!this.clickRow) {
+        if (!this.clickRow0) {
           this.$message.error('请点击需要绑定的数据！');
           return;
         }
+        let form = {
+          dicID: 11171,
+          rows: 0,
+          MaterialTypeID: this.formSearchs[1].datas['MaterialTypeID'],
+        };
+        let res = await GetSearchData(form);
+        const { result, data, count, msg, Columns } = res.data;
+        if (result) {
+          this.$set(this, 'linkTableData2', data);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.dataReset(2);
         this.colDialogVisible2 = true;
         this.dataSearch(2);
-      }
-    },
-    AddEvent(index) {
-      if (!this.clickRow) {
-        this.$message.error('请点击需要绑定的数据！');
-        return;
-      }
-      if (index === 1) {
-        this.colDialogVisible2 = true;
-      }
-      if (index === 2) {
-        this.colDialogVisible4 = true;
       }
     },
     // 工序弹框确定添加

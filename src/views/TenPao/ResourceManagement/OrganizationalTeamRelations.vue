@@ -259,9 +259,10 @@ export default {
       colDialogVisible2: false,
       colDialogVisible3: false,
       colDialogVisible4: false,
-      clickRow: null,
+      clickRow0: null,
       addNum: 1,
       linkTableData: [],
+      linkTableData2: [],
       hasSelect: [false, false, false],
       DataSourceList: [{}, {}, {}],
     };
@@ -353,8 +354,13 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != 'dicID' || name != 'QueryParams') {
-          this.formSearchs[remarkTb].datas[name] = null;
+        if (this.formSearchs[remarkTb].forms.length) {
+          // 判断是否是页面显示的查询条件，是的字段才清空
+          this.formSearchs[remarkTb].forms.forEach((element) => {
+            if (element['prop'] === name) {
+              this.formSearchs[remarkTb].datas[name] = null;
+            }
+          });
         }
       }
     },
@@ -400,10 +406,8 @@ export default {
         );
         addData1.forEach((item) => {
           item['dicID'] = 15205;
-          item['OrganizeID'] = this.clickRow['OrganizeID'];
+          item['OrganizeID'] = this.clickRow0['OrganizeID'];
           item['ID'] = '';
-
-          // item['OrganizeTeamID'] = item['OrganizeTeamID'];
         });
         newData = newData.concat(addData1);
 
@@ -428,13 +432,6 @@ export default {
 
         this.colDialogVisible2 = false;
       }
-
-      // this.selectionData[remark].forEach((item) => {
-      //   item.ProcessName = this.clickRow['ProcessName'];
-      //   item.ProcessID = this.clickRow['ProcessID'];
-      // });
-      // this.dataSave(1, null, null, this.selectionData[remark]);
-      // this.colDialogVisible2 = false;
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -566,26 +563,25 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         if (remarkTb === 0) {
+          this.clickRow0 = null;
           this.$set(this.tableData, 1, []);
         }
         this.linkTableData = [];
-
         if (remarkTb === 2) {
-          data.forEach((item1) => {
-            // 使用find方法在第二个数组中查找匹配的SaleMan
-            const matching = this.tableData[1].find(
-              (item2) => item2.OrganizeTeamID === item1.OrganizeTeamID,
-            );
-            // 如果找到匹配的OrganizeTeamID，将isChecked设置为true
-            if (matching) {
-              item1.isChecked = true;
-              this.linkTableData.push(matching);
-            }
+          data
+            .filter((item2) => {
+              return this.linkTableData2.some(
+                (item1) => item2['OrganizeTeamID'] === item1['OrganizeTeamID'],
+              );
+            })
+            .forEach((item2) => {
+              item2['isChecked'] = true;
+            });
+          this.linkTableData = data.filter((item) => {
+            return item['isChecked'];
           });
-          this.$set(this.tableData, remarkTb, data);
-        } else {
-          this.$set(this.tableData, remarkTb, data);
         }
+        this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
@@ -613,9 +609,9 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
-      this.clickRow = row;
+      this.clickRow0 = row;
       if (remarkTb === 0) {
-        this.clickRow = row;
+        this.clickRow0 = row;
         this.formSearchs[1].datas['OrganizeID'] = row['OrganizeID'];
       }
       await this.dataSearch(Number(this.selectedIndex));
@@ -665,16 +661,29 @@ export default {
     },
     async LinkData(remarkTb) {
       if (remarkTb == 1) {
-        // if (this.selectionData[0].length !== 1) {
-        //   this.$message.error('请选择需要操作的数据且仅为一条！');
-        //   return;
-        // }
-        if (!this.clickRow) {
+        if (!this.clickRow0) {
           this.$message.error('请点击需要绑定的数据！');
           return;
         }
+        let form = {
+          dicID: 15207,
+          rows: 0,
+          OrganizeID: this.formSearchs[1].datas['OrganizeID'],
+        };
+        let res = await GetSearchData(form);
+        const { result, data, count, msg, Columns } = res.data;
+        if (result) {
+          this.$set(this, 'linkTableData2', data);
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+        this.dataReset(2);
         this.colDialogVisible2 = true;
-        await this.dataSearch(2);
+        this.dataSearch(2);
       }
     },
   },

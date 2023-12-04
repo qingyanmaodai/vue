@@ -85,40 +85,6 @@
               />
             </div>
           </div>
-          <!-- <div
-            class="ant-table-title pd-0-6 flex_row_spaceBtn"
-            ref="headRef_2"
-          >
-            <div>
-              <el-tabs
-                v-model="selectedIndex"
-                @tab-click="handleClick"
-                :stretch="true"
-              >
-                <el-tab-pane label="机台" name="1"></el-tab-pane>
-                <el-tab-pane label="产品" name="2"></el-tab-pane
-              ></el-tabs>
-            </div>
-            <div class="flex_flex_end">
-              <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(1)"
-                v-show="selectedIndex === '1'"
-              >
-                添加机台
-              </el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(2)"
-                v-show="selectedIndex === '2'"
-              >
-                添加产品
-              </el-button>
-            </div>
-          </div> -->
           <div
             v-for="item in [1]"
             :key="item"
@@ -672,18 +638,6 @@ export default {
     //     }
     //     this.colDialogVisible2 = true;
     //     this.dataSearch(2);
-    //   }
-    // },
-    // AddEvent(index) {
-    //   if (!this.clickRow) {
-    //     this.$message.error('请点击需要绑定的数据！');
-    //     return;
-    //   }
-    //   if (index === 1) {
-    //     this.colDialogVisible2 = true;
-    //   }
-    //   if (index === 2) {
-    //     this.colDialogVisible4 = true;
     //   }
     // },
     // 行内样式

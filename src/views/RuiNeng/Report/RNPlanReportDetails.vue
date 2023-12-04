@@ -162,7 +162,6 @@ export default {
       isEdit: [false, false, false, false],
       userInfo: {},
       clickRow: null,
-      linkTableData: [],
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],

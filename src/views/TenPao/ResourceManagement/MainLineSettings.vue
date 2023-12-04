@@ -96,26 +96,6 @@
               :Region="Region[item]"
             />
           </div>
-          <!-- <div class="ant-table-title" ref="headRef_2">
-            <el-row>
-              <el-col :span="6"><el-tabs v-model="selectedIndex" @tab-click="handleClick" :stretch="true">
-                  <el-tab-pane label="关联产品配置" name="1"></el-tab-pane>
-                  <el-tab-pane label="关联产品族" name="2"></el-tab-pane>
-                  <el-tab-pane label="TPM设备明细" name="3"></el-tab-pane> </el-tabs></el-col>
-              <el-col :span="18" class="flex_flex_end">
-                <el-divider direction="vertical"></el-divider>
-                <el-button type="primary" size="mini" @click="AddEvent(1)" v-show="selectedIndex === '1'">
-                  添加产品
-                </el-button>
-                <el-button type="primary" size="mini" @click="AddEvent(2)" v-show="selectedIndex === '2'">
-                  添加产品族
-                </el-button>
-                <el-button type="primary" size="mini" @click="AddEvent(3)" v-show="selectedIndex === '3'">
-                  添加TPM设备
-                </el-button>
-              </el-col>
-            </el-row>
-          </div> -->
           <div v-for="item in [2]" :key="item" class="admin_content flex_grow">
             <ComVxeTable
               :ref="`tableRef${item}`"
@@ -148,32 +128,6 @@
         </div>
       </pane>
     </splitpanes>
-    <!-- 弹框-->
-    <!-- <DialogOptTable
-      title="添加主辅线"
-      :tableDialog="colDialogVisible3"
-      :sysID="sysID[3]['ID']"
-      :isEdit="isEdit[3]"
-      :remark="3"
-      width="80%"
-      :hasSelect="hasSelect[3]"
-      @closeDialog="colDialogVisible3 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[3]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :showFooter="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[3]"
-      :table-header="tableColumns[3]"
-      :table-loading="tableLoading[3]"
-      :table-pagination="tablePagination[3]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable> -->
 
     <el-dialog
       :title="'添加主辅线'"
@@ -220,9 +174,6 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="colDialogVisible3 = false">关 闭</el-button>
-        <!-- <el-button type="danger" @click="cancelDialog(3)"
-          >批量取消关联</el-button
-        > -->
         <el-button type="primary" @click="confirmDialog(3)"
           >批量关联线体</el-button
         >
@@ -828,13 +779,6 @@ export default {
         this.$message.error('请选择需要操作的数据！');
         return;
       }
-      // const hasSchedulingSpecialType = this.selectionData[remarkTb].some(
-      //   (item) => !item.SchedulingSpecialType
-      // );
-      // if (hasSchedulingSpecialType) {
-      //   this.$message.error("存在没有配置类别的数据！");
-      //   return;
-      // }
       let newData = [];
       if (remarkTb === 3) {
         this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
@@ -872,49 +816,6 @@ export default {
         this.colDialogVisible3 = false;
         await this.dataSave(Number(this.selectedIndex), null, null, newData);
       }
-    },
-    //删除产品机台
-    async cancelDialog(remarkTb) {
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
-        return;
-      }
-      let newData = [];
-      if (remarkTb === 3) {
-        this.selectionData[Number(this.selectedIndex)].forEach((item0) => {
-          let addData = JSON.parse(
-            JSON.stringify(
-              this.selectionData[remarkTb].filter((item3) => {
-                if (item0['OrganizeIDs']) {
-                  let OrganizeIDs = item0['OrganizeIDs']?.split(',');
-                  return OrganizeIDs.some((OID) => OID == item3['OrganizeID']);
-                } else {
-                  return false;
-                }
-              }),
-            ),
-          );
-          let OrganizeIDs = item0['OrganizeIDs']?.split(',');
-          let SchedulingSpecialIDs = item0['SchedulingSpecialIDs']?.split(',');
-          addData.forEach((item) => {
-            item['dicID'] = 125;
-            let newIndex = OrganizeIDs.findIndex((OID) => {
-              return item['OrganizeID'] == OID;
-            });
-            item['SchedulingSpecialID'] = SchedulingSpecialIDs[newIndex];
-            if (Number(this.selectedIndex) === 0) {
-              item['MaterialID'] = item0['MaterialID'];
-              item['ElementDeleteFlag'] = 1;
-            } else if (Number(this.selectedIndex) === 1) {
-              item['MaterialTypeID'] = item0['MaterialTypeID'];
-              item['ElementDeleteFlag'] = 1;
-            }
-          });
-          newData = newData.concat(addData);
-        });
-      }
-      this.colDialogVisible3 = false;
-      await this.dataSave(Number(this.selectedIndex), null, null, newData);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {

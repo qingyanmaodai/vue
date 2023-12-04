@@ -1439,10 +1439,19 @@ export default {
       // 如果是勾选框单元格，则取消行点击的触发
       if (column.type !== 'checkbox') {
         if (this.isToggleCheckbox) {
-          this.$refs.vxeTable.toggleCheckboxRow(row);
-          row = this.$refs.vxeTable.getCheckboxRecords(true);
-          this.$emit('handleRowClick', row, this.remark, column);
-          return;
+          if (this.isMultiple) {
+            this.$refs.vxeTable.toggleCheckboxRow(row);
+            row = this.$refs.vxeTable.getCheckboxRecords(true);
+            this.$emit('handleRowClick', row, this.remark, column);
+            return;
+          } else {
+            this.$refs.vxeTable.clearCheckboxRow();
+            this.$refs.vxeTable.toggleCheckboxRow(row);
+
+            row = this.$refs.vxeTable.getCheckboxRecords(true);
+            this.$emit('handleRowClick', row, this.remark, column);
+            return;
+          }
         }
         // 如果是勾选框单元格，则取消行点击的触发
         // if (row !== this.lastClickedRow ) {
@@ -1450,6 +1459,11 @@ export default {
         //   this.lastClickedRow = row;
         // }
       }
+    },
+    // 初始化
+    initSpread: function () {
+      this.spread = this.$refs.vxeTable;
+      this.$emit('workbookInitialized', this.spread, this.remark);
     },
     // 双击行
     handleRowdbClick({ row, column }) {
@@ -1674,6 +1688,7 @@ export default {
   },
   mounted() {
     if (this.$refs.vxeTable) {
+      this.initSpread();
       //这个if判断是怕拿不到table报错，也可以直接在table方法后加问号 '？'
       //list是要默认显示的列field数组
       if (this.defaultTableHeader.length != 0) {
@@ -1716,6 +1731,8 @@ export default {
       if (this.tableData) {
         // this.$refs.vxeTable.reloadData(this.tableData);//加载数据并清除所有状态,使用这个调用后端筛选、排序接口后条件被清空
         this.$refs.vxeTable.loadData(this.tableData); //加载数据
+        this.multipleSelection = this.$refs.vxeTable.getCheckboxRecords(true);
+        this.$emit('selectfun', this.multipleSelection, this.remark);
       }
       // if (this.tableData && this.isSpanMethods) {
       //   this.info();
@@ -1732,13 +1749,6 @@ export default {
       },
       immediate: true,
       deep: true,
-    },
-    multipleSelection: {
-      handler(newValue) {
-        this.$emit('selectChanged', newValue, this.remark);
-      },
-      immediate: true,
-      deep: true, // 启用深度监听
     },
   },
   computed: {

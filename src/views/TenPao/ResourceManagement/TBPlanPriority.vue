@@ -85,40 +85,6 @@
               />
             </div>
           </div>
-          <!-- <div
-            class="ant-table-title pd-0-6 flex_row_spaceBtn"
-            ref="headRef_2"
-          >
-            <div>
-              <el-tabs
-                v-model="selectedIndex"
-                @tab-click="handleClick"
-                :stretch="true"
-              >
-                <el-tab-pane label="机台" name="1"></el-tab-pane>
-                <el-tab-pane label="产品" name="2"></el-tab-pane
-              ></el-tabs>
-            </div>
-            <div class="flex_flex_end">
-              <el-divider direction="vertical"></el-divider>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(1)"
-                v-show="selectedIndex === '1'"
-              >
-                添加机台
-              </el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="AddEvent(2)"
-                v-show="selectedIndex === '2'"
-              >
-                添加产品
-              </el-button>
-            </div>
-          </div> -->
           <div
             v-for="item in [1]"
             :key="item"
@@ -150,58 +116,6 @@
         </div>
       </pane>
     </splitpanes>
-    <!-- 弹框-->
-    <!-- <DialogOptTable
-      title=""
-      :tableDialog="colDialogVisible2"
-      :sysID="sysID[2]['ID']"
-      :isEdit="isEdit[2]"
-      :remark="2"
-      width="80%"
-      :hasSelect="hasSelect[2]"
-      @closeDialog="colDialogVisible2 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[2]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[2]"
-      :table-header="tableColumns[2]"
-      :table-loading="tableLoading[2]"
-      :table-pagination="tablePagination[2]"
-      :isClear="isClear[2]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable> -->
-    <!-- 弹框-->
-    <!-- <DialogOptTable
-      title=""
-      :tableDialog="colDialogVisible3"
-      :sysID="sysID[3]['ID']"
-      :isEdit="isEdit[3]"
-      :remark="3"
-      width="80%"
-      :hasSelect="hasSelect[3]"
-      @closeDialog="colDialogVisible3 = false"
-      @btnClickCall="btnClick"
-      :searchForm="formSearchs[3]"
-      :btnForm="btnForm"
-      :isToolbar="false"
-      :isConfirmBtn="true"
-      :table-data="tableData[3]"
-      :table-header="tableColumns[3]"
-      :table-loading="tableLoading[3]"
-      :table-pagination="tablePagination[3]"
-      :isClear="isClear[3]"
-      @confirmDialog="confirmDialog"
-      @pageChangeCall="pageChange"
-      @pageSizeCall="pageSize"
-      @sortChangeCall="sortChange"
-      @selectFunCall="selectFun"
-    ></DialogOptTable> -->
   </div>
 </template>
 
@@ -294,8 +208,7 @@ export default {
       selectedIndex: '1',
       colDialogVisible2: false,
       colDialogVisible3: false,
-      clickRow: null,
-      linkTableData: [],
+      clickRow0: null,
       hasSelect: [false, false, false, false],
       addNum: 1,
       DataSourceList: [{}, {}, {}, {}],
@@ -440,19 +353,6 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch('user/exportData', res.data);
     },
-    //添加产品机台
-    async confirmDialog(remarkTb) {
-      let newData;
-      newData = _.cloneDeep(
-        this.selectionData[remarkTb].map((item) => {
-          item.MaterialTypeID = this.clickRow['MaterialTypeID'];
-          return item;
-        }),
-      );
-
-      await this.dataSave(1, null, null, newData);
-      this.colDialogVisible2 = false;
-    },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
@@ -580,19 +480,8 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        if (remarkTb === 2) {
-          data
-            .filter((item2) => {
-              return (
-                item2['MaterialTypeID'] === this.clickRow['MaterialTypeID']
-              );
-            })
-            .forEach((item2) => {
-              item2['isChecked'] = true;
-            });
-          this.linkTableData = data.filter((item) => {
-            return item['isChecked'];
-          });
+        if (remarkTb === 0) {
+          this.clickRow0 = null;
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
@@ -622,7 +511,7 @@ export default {
     },
     // 单击获取明细
     async handleRowClick(row, remarkTb) {
-      this.clickRow = row;
+      this.clickRow0 = row;
       this.formSearchs[1].datas['OrganizeID'] = row['OrganizeID'];
       await this.dataSearch(this.selectedIndex);
     },
@@ -650,7 +539,7 @@ export default {
             obj[item.prop] = 1;
           }
           if (remarkTb === 1) {
-            obj['OrganizeID'] = this.clickRow['OrganizeID'];
+            obj['OrganizeID'] = this.clickRow0['OrganizeID'];
           }
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
@@ -661,48 +550,8 @@ export default {
         $table.insert(obj);
       }
     },
-    LinkData(remarkTb) {
-      if (remarkTb == 1) {
-        if (!this.clickRow) {
-          this.$message.error('请点击需要绑定的数据！');
-          return;
-        }
-        this.colDialogVisible2 = true;
-        this.dataSearch(2);
-      }
-    },
-    AddEvent(index) {
-      if (!this.clickRow) {
-        this.$message.error('请点击需要绑定的数据！');
-        return;
-      }
-      if (index === 1) {
-        this.colDialogVisible2 = true;
-      }
-      if (index === 2) {
-        this.colDialogVisible4 = true;
-      }
-    },
     // 行内样式
     cellStyle0({ row, column }) {
-      let style = {}; // 创建一个空的样式对象
-      const key = column.property;
-      if (
-        Object.prototype.toString.call(row['FColors']) === '[object Object]' &&
-        key in row['FColors']
-      ) {
-        style.color = row['FColors'][key]; // 设置背景颜色
-      }
-      if (
-        Object.prototype.toString.call(row['BColors']) === '[object Object]' &&
-        key in row['BColors']
-      ) {
-        style.backgroundColor = row['BColors'][key]; // 设置背景颜色
-      }
-      return style; // 返回样式对象
-    },
-    // 行内样式
-    cellStyle1({ row, column }) {
       let style = {}; // 创建一个空的样式对象
       const key = column.property;
       if (

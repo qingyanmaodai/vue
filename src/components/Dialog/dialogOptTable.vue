@@ -40,6 +40,8 @@
         @selectfun="selectFun"
         @toPageSetting="toPageSetting"
         :cell-style="cellStyle"
+        :keepSource="true"
+        @workbookInitialized="workbookInitialized"
       />
     </div>
     <span slot="footer" class="dialog-footer" v-show="showFooter">
@@ -302,6 +304,10 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.$emit('selectFunCall', data, remarkTb, row);
+    },
+    //获取子组件实例
+    workbookInitialized(workbook, remarkTb) {
+      this.$emit('workbookInitialized', workbook, remarkTb);
     },
     // 关闭弹框
     closeDialog() {
