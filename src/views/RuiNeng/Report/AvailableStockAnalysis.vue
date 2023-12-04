@@ -244,9 +244,8 @@ export default {
       this.spread = workbook;
     },
     //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
     },
     // 导出
     async dataExport(remarkTb) {

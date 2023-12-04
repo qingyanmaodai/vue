@@ -286,15 +286,6 @@ export default {
         });
       this.$set(this, 'btnForm', routeBtn);
     },
-    //获取子组件实例
-    // workbookInitialized: function (workbook, remarkTb) {
-    //   this.spread[remarkTb] = workbook;
-    // },
-    // //获取当前选中行的值
-    // selectChanged(newValue, remarkTb) {
-    //   // 在子组件计算属性发生变化时，更新父组件的计算属性
-    //   this.selectionData[remarkTb] = newValue;
-    // },
     searchTree(msg) {
       this.treeData = [];
       let treeListTmp = JSON.parse(JSON.stringify(this.treeListTmp));

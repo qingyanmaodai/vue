@@ -52,7 +52,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
+          @selectfun="selectFun"
         />
       </div>
     </div>
@@ -98,25 +98,25 @@
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import ComSearch from "@/components/ComSearch";
-import ComSpreadTable from "@/components/ComSpreadTable";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '@grapecity/spread-sheets/js/zh.js';
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import ComSearch from '@/components/ComSearch';
+import ComSpreadTable from '@/components/ComSpreadTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetSearch,
-} from "@/api/Common";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
-import formatDates from "@/utils/formatDate";
-import XLSX from "xlsx";
+} from '@/api/Common';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
+import formatDates from '@/utils/formatDate';
+import XLSX from 'xlsx';
 export default {
-  name: "DemandSourceMaintenance",
+  name: 'DemandSourceMaintenance',
   components: {
     ComSearch,
     ComSpreadTable,
@@ -129,7 +129,7 @@ export default {
       colDialogVisible: false,
       colAdd: [],
       dialogImport: false,
-      machineCycle: "",
+      machineCycle: '',
       title: this.$route.meta.title, //表名
       adminLoading: false, //加载状态
       labelStatus1: 0,
@@ -156,15 +156,15 @@ export default {
       ],
       sysID: [{ ID: 10076 }],
       Status1: [
-        { label: "重复导入", value: 0 },
-        { label: "个人数据", value: 1 },
-        { label: "已关闭", value: 2 },
+        { label: '重复导入', value: 0 },
+        { label: '个人数据', value: 1 },
+        { label: '已关闭', value: 2 },
       ],
       spread: null, //excel初始
       fileList: [],
       file: [],
       selectionData: [[]],
-      ImportParams: "",
+      ImportParams: '',
       isEdit: true,
     };
   },
@@ -190,7 +190,7 @@ export default {
         document.documentElement.clientHeight -
         this.headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem + 'px';
       return newHeight;
     },
   },
@@ -198,11 +198,11 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+          if (item.ButtonCode == 'save') {
+            this.$set(this, 'isEdit', true);
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     //初始化SpreadJS
     // initSpread: function(spread) {
@@ -213,9 +213,8 @@ export default {
       this.spread = workbook;
     },
     //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {
@@ -233,7 +232,7 @@ export default {
     // 跳转至属性配置
     toPageSetting(id) {
       this.$router.push({
-        name: "FieldInfo",
+        name: 'FieldInfo',
         params: { ID: id },
       });
     },
@@ -254,15 +253,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
           this.getTableData(this.formSearchs[z].datas, z);
         });
         this.adminLoading = false;
@@ -270,7 +269,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -278,13 +277,13 @@ export default {
     // 获取表格数据
     async getTableData(params, index) {
       this.$set(this.tableLoading, index, true);
-      params["rows"] = this.tablePagination[index].pageSize;
-      params["page"] = this.tablePagination[index].pageIndex;
+      params['rows'] = this.tablePagination[index].pageSize;
+      params['page'] = this.tablePagination[index].pageIndex;
       let res = await GetSearchData(params);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         this.$set(this.tableData, index, data);
-        this.$set(this.tablePagination[index], "pageTotal", count);
+        this.$set(this.tablePagination[index], 'pageTotal', count);
         // 查询时重新获取列渲染
         if (Columns.length) {
           this.tableColumns[index] = Columns[0];
@@ -295,7 +294,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -325,21 +324,21 @@ export default {
         // });
         // 渲染列
         this.tableColumns[this.tagRemark].forEach((x, y) => {
-          x["name"] = x["prop"];
-          x["displayName"] = x["label"];
-          x["width"] = parseInt(x.width);
-          if (x.prop === "isChecked") {
+          x['name'] = x['prop'];
+          x['displayName'] = x['label'];
+          x['width'] = parseInt(x.width);
+          if (x.prop === 'isChecked') {
             // 选框
             sheet.setCellType(
               0,
               0,
               new HeaderCheckBoxCellType(),
-              GCsheets.SheetArea.colHeader
+              GCsheets.SheetArea.colHeader,
             );
             x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
           } else if (
-            x.ControlType === "comboboxMultiple" ||
-            x.ControlType === "combobox"
+            x.ControlType === 'comboboxMultiple' ||
+            x.ControlType === 'combobox'
           ) {
             // colInfos.push({
             //   name: x.prop,
@@ -356,11 +355,11 @@ export default {
               }
             });
           } else if (
-            x.DataType == "datetime" ||
-            x.DataType === "varchar" ||
-            x.DataType === "nvarchar"
+            x.DataType == 'datetime' ||
+            x.DataType === 'varchar' ||
+            x.DataType === 'nvarchar'
           ) {
-            x.formatter = "@";
+            x.formatter = '@';
             // colInfos.push({
             //   name: x.prop,
             //   displayName: x.label,
@@ -371,7 +370,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor('#2a06ecd9');
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -411,10 +410,10 @@ export default {
           -1,
           -1,
           -1,
-          this.tableColumns[this.tagRemark].length
+          this.tableColumns[this.tagRemark].length,
         );
         let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange
+          cellrange,
         );
         sheet.rowFilter(hideRowFilter);
 
@@ -431,12 +430,12 @@ export default {
           -1,
           1,
           -1,
-          GC.Spread.Sheets.SheetArea.colHeader
+          GC.Spread.Sheets.SheetArea.colHeader,
         );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.foreColor('000000d9');
+        colHeaderStyle.backColor('#f3f3f3');
         colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif',
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
@@ -444,12 +443,12 @@ export default {
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport
+          GC.Spread.Sheets.SheetArea.viewport,
         );
         defaultStyle.showEllipsis = true;
         // 冻结
@@ -474,7 +473,7 @@ export default {
         sheet.options.protectionOptions.allowFilter = true;
         sheet.options.allowUserDragDrop = true;
       } catch (error) {
-        console.log("表格渲染的错误信息:", error);
+        console.log('表格渲染的错误信息:', error);
       }
       this.spread.refresh(); //重新定位宽高度
     },
@@ -485,7 +484,7 @@ export default {
       // 创建下拉菜单单元格类型，并设置其选项数据
       let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
       comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
+        GC.Spread.Sheets.CellTypes.EditorValueType.value,
       );
       comboBox.editable(true);
       // 获取下拉菜单的选项数据
@@ -507,7 +506,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -523,19 +522,19 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 当前第几页
     pageChange(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // // 改变状态
@@ -572,7 +571,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
@@ -580,12 +579,12 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
       } else {
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$message.error('当前数据没做修改，请先修改再保存！');
       }
     },
     // 导入并分析模板
@@ -598,12 +597,12 @@ export default {
     // 确认导入
     sureImport() {
       if (this.fileList.length == 0) {
-        this.$message.error("请先选择文件");
+        this.$message.error('请先选择文件');
         return;
       } else if (this.fileList.length > 1) {
-        this.$message.error("仅支持一个文件上传");
+        this.$message.error('仅支持一个文件上传');
       } else {
-        this.$confirm("确定要导入并分析吗？")
+        this.$confirm('确定要导入并分析吗？')
           .then((_) => {
             _this.importExcel(this.file);
           })
@@ -620,9 +619,9 @@ export default {
       reader.onload = function (e) {
         const data = e.target.result;
         this.wb = XLSX.read(data, {
-          type: "binary",
+          type: 'binary',
           cellDates: true,
-          dateNF: "yyyy-MM-dd",
+          dateNF: 'yyyy-MM-dd',
         });
         this.wb.SheetNames.forEach((sheetName) => {
           result.push({
@@ -648,7 +647,7 @@ export default {
         this.colAdd = [];
         let obj = {};
         let rowNo = 0; // excel行号
-        let propName = "";
+        let propName = '';
         let split = []; //存储需求到料日期过期信息
         let groupList = [];
         importData[0].sheet.forEach((m, y) => {
@@ -662,25 +661,25 @@ export default {
               ) {
                 let item = this.tableColumns[this.tagRemark][i];
                 if (item.label === key) {
-                  if (item.DataType === "datetime") {
+                  if (item.DataType === 'datetime') {
                     if (m[key] && !this.isValidDate(m[key])) {
                       //预防用户输入日期格式不正确的判断
                       propName = key;
                       rowNo = Number(m.__rowNum__) + 1;
                       // 异常提示
                       split.push(
-                        `第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`
+                        `第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`,
                       );
                     } else {
-                      if (this.$moment(m[key]).format("YYYY-MM-DD HH:mm:ss")) {
+                      if (this.$moment(m[key]).format('YYYY-MM-DD HH:mm:ss')) {
                         let getDate = new Date(m[key]);
                         // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
                         var date = new Date(
-                          getDate.setSeconds(getDate.getSeconds() + 43)
+                          getDate.setSeconds(getDate.getSeconds() + 43),
                         );
                         obj[item.prop] = m[key]
-                          ? this.$moment(date).format("YYYY-MM-DD")
-                          : "";
+                          ? this.$moment(date).format('YYYY-MM-DD')
+                          : '';
                       }
                     }
                     // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
@@ -715,9 +714,9 @@ export default {
                   if (Number(m[key]) > 0) {
                     // obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
                     // obj["DemandQty"] = m[key];
-                    obj["dicID"] = _this.sysID[_this.tagRemark].ID;
-                    obj["Account"] = _this.$store.getters.userInfo.Account;
-                    obj["row"] = m.__rowNum__;
+                    obj['dicID'] = _this.sysID[_this.tagRemark].ID;
+                    obj['Account'] = _this.$store.getters.userInfo.Account;
+                    obj['row'] = m.__rowNum__;
                     // 需要使用...obj 不然值回写有问题
                     DataList.push({ ...obj });
                     break;
@@ -728,10 +727,10 @@ export default {
           }
           // 以下为固定入参
           if (!isDate) {
-            obj["dicID"] = this.sysID[this.tagRemark].ID;
-            obj["Account"] = this.$store.getters.userInfo.Account;
-            obj["row"] = m.__rowNum__;
-            obj["Status"] = 0;
+            obj['dicID'] = this.sysID[this.tagRemark].ID;
+            obj['Account'] = this.$store.getters.userInfo.Account;
+            obj['row'] = m.__rowNum__;
+            obj['Status'] = 0;
             // 需要使用...obj 不然值回写有问题
             DataList.push({ ...obj });
           }
@@ -747,21 +746,21 @@ export default {
             ) {
               if (
                 DataList[i][
-                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                  this.formSearchs[this.tagRemark].required[x]['prop']
                 ] === undefined ||
                 DataList[i][
-                  this.formSearchs[this.tagRemark].required[x]["prop"]
+                  this.formSearchs[this.tagRemark].required[x]['prop']
                 ] === null ||
                 DataList[i][
-                  this.formSearchs[this.tagRemark].required[x]["prop"]
-                ] === ""
+                  this.formSearchs[this.tagRemark].required[x]['prop']
+                ] === ''
               ) {
-                rowNo = Number(DataList[i]["row"]) + 1;
+                rowNo = Number(DataList[i]['row']) + 1;
                 // 异常提示
                 split.push(
                   `第${rowNo}行,【${
-                    this.formSearchs[this.tagRemark].required[x]["label"]
-                  }】不能为空，导入失败，请填写`
+                    this.formSearchs[this.tagRemark].required[x]['label']
+                  }】不能为空，导入失败，请填写`,
                 );
                 this.adminLoading = false;
               }
@@ -771,14 +770,14 @@ export default {
         if (split.length) {
           //异常集合
           this.adminLoading = false;
-          let txt = "";
+          let txt = '';
           split.map((value) => {
             return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
           });
           this.$alert(txt, {
             dangerouslyUseHTMLString: true,
-            title: "导入异常信息!",
-            customClass: "message-width",
+            title: '导入异常信息!',
+            customClass: 'message-width',
           });
 
           return;
@@ -786,8 +785,8 @@ export default {
         // =1表示要删记录（删除并导入）
         // =0表示不删除（增量导入）
         if (DataList.length) {
-          console.log("DataList", DataList);
-          let res = await GetSearch(DataList, "/APSAPI/MRPImport");
+          console.log('DataList', DataList);
+          let res = await GetSearch(DataList, '/APSAPI/MRPImport');
           const { result, data, count, msg } = res.data;
           if (result) {
             this.adminLoading = false;
@@ -796,35 +795,35 @@ export default {
             this.getTableHeader();
             this.$message({
               message: msg,
-              type: "success",
+              type: 'success',
               dangerouslyUseHTMLString: true,
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
             });
           }
         } else {
           this.adminLoading = false;
-          this.$message.error("未接收到数据，请检查！");
+          this.$message.error('未接收到数据，请检查！');
         }
       }
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -836,7 +835,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 分析
@@ -856,13 +855,13 @@ export default {
         });
       }
       if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       this.adminLoading = true;
       let res = await GetSearch(
         this.selectionData[this.tagRemark],
-        "/APSAPI/CalculateBOMDemand"
+        '/APSAPI/CalculateBOMDemand',
       );
       const { result, data, count, msg } = res.data;
       try {
@@ -870,7 +869,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
@@ -878,7 +877,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -891,14 +890,14 @@ export default {
     //需求检查
     async MRPCheckData() {
       this.adminLoading = true;
-      let res = await GetSearch("", "/APSAPI/MRPCheckData");
+      let res = await GetSearch('', '/APSAPI/MRPCheckData');
       const { result, data, count, msg } = res.data;
       try {
         if (result) {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
@@ -906,7 +905,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -919,13 +918,13 @@ export default {
     //需求导入
     async MRPToOfficial() {
       if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
         return;
       }
       this.adminLoading = true;
       let res = await GetSearch(
         this.selectionData[this.tagRemark],
-        "/APSAPI/MRPToOfficial"
+        '/APSAPI/MRPToOfficial',
       );
       const { result, data, count, msg } = res.data;
       try {
@@ -933,7 +932,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(this.tagRemark);
@@ -941,7 +940,7 @@ export default {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -954,17 +953,17 @@ export default {
     //删除
     dataDel() {
       if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error("请选择需要删除的数据！");
+        this.$message.error('请选择需要删除的数据！');
         return;
       } else {
-        this.$confirm("删除不可恢复，确定要删除吗？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "info",
+        this.$confirm('删除不可恢复，确定要删除吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info',
         }).then(async () => {
           this.adminLoading = true;
           this.selectionData[this.tagRemark].map((item) => {
-            item["ElementDeleteFlag"] = 1;
+            item['ElementDeleteFlag'] = 1;
           });
           let res = await SaveData(this.selectionData[this.tagRemark]);
           const { result, data, count, msg } = res.data;
@@ -973,14 +972,14 @@ export default {
             this.adminLoading = false;
             this.$message({
               message: msg,
-              type: "success",
+              type: 'success',
               dangerouslyUseHTMLString: true,
             });
           } else {
             this.adminLoading = false;
             this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
             });
           }

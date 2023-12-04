@@ -1732,13 +1732,6 @@ export default {
       immediate: true,
       deep: true,
     },
-    multipleSelection: {
-      handler(newValue) {
-        this.$emit('selectChanged', newValue, this.remark);
-      },
-      immediate: true,
-      deep: true, // 启用深度监听
-    },
   },
   computed: {
     tableHeaderChange() {

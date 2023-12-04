@@ -147,28 +147,28 @@
 <script>
 var _this;
 const GCsheets = GC.Spread.Sheets;
-import "@grapecity/spread-sheets-vue";
-import GC from "@grapecity/spread-sheets";
-import "@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css";
-import "@grapecity/spread-sheets/js/zh.js";
-GC.Spread.Common.CultureManager.culture("zh-cn");
-import ComSpreadTable from "@/components/ComSpreadTable";
-import XLSX from "xlsx";
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
+import '@grapecity/spread-sheets-vue';
+import GC from '@grapecity/spread-sheets';
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2013white.css';
+import '@grapecity/spread-sheets/js/zh.js';
+GC.Spread.Common.CultureManager.culture('zh-cn');
+import ComSpreadTable from '@/components/ComSpreadTable';
+import XLSX from 'xlsx';
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   GetSearch,
   SaveData,
-} from "@/api/Common";
-import { HeaderCheckBoxCellType } from "@/static/data.js";
-import ComFormDialog from "@/components/ComFormDialog";
+} from '@/api/Common';
+import { HeaderCheckBoxCellType } from '@/static/data.js';
+import ComFormDialog from '@/components/ComFormDialog';
 export default {
-  name: "MaintenanceReturnDelivery",
+  name: 'MaintenanceReturnDelivery',
   components: {
     ComSearch,
     ComAsideTree,
@@ -179,20 +179,20 @@ export default {
   },
   data() {
     return {
-      Rescheduled: "",
+      Rescheduled: '',
       isLoading: false,
       hasSelect: [true, true, true, true, true],
-      footerLabel: [""],
+      footerLabel: [''],
       dialogShow: false,
-      height1: "360px",
+      height1: '360px',
       labelStatus1: 0,
       Status1: [
-        { label: "要求交期已超时", value: -1 },
-        { label: "全部", value: 0 },
+        { label: '要求交期已超时', value: -1 },
+        { label: '全部', value: 0 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
-      ReplyDate: "",
+      ReplyDate: '',
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       delData: [[]],
@@ -231,7 +231,7 @@ export default {
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 1000, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -269,42 +269,41 @@ export default {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
-          if (item.ButtonCode == "save") {
-            this.$set(this, "isEdit", true);
+          if (item.ButtonCode == 'save') {
+            this.$set(this, 'isEdit', true);
           }
         });
-      this.$set(this, "btnForm", routeBtn);
+      this.$set(this, 'btnForm', routeBtn);
     },
     //获取子组件实例
     workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
     //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
     },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -316,7 +315,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 高度控制
@@ -327,17 +326,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -348,13 +347,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -388,7 +387,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -412,8 +411,8 @@ export default {
         updateRecords = $table.getUpdateRecords();
       }
       if (updateRecords.length == 0) {
-        this.$set(this, "adminLoading", false);
-        this.$message.error("当前数据没做修改，请先修改再保存！");
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
       let res = await SaveData(updateRecords);
@@ -421,18 +420,18 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this, "adminLoading", false);
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 保存
@@ -469,29 +468,29 @@ export default {
     // 从月计划更新
     async monthUpdata(remarkTb, index) {
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要提交的数据！");
+        this.$message.error('请选择需要提交的数据！');
         return;
       } else {
         let res = await GetSearch(
           this.selectionData[remarkTb],
-          "/APSAPI/SaveData10075FromMonth"
+          '/APSAPI/SaveData10075FromMonth',
         );
         const { datas, forms, result, msg } = res.data;
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(remarkTb);
-          this.$set(this, "adminLoading", false);
+          this.$set(this, 'adminLoading', false);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
-          this.$set(this, "adminLoading", false);
+          this.$set(this, 'adminLoading', false);
         }
       }
     },
@@ -556,22 +555,22 @@ export default {
       if (result) {
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           if (z !== 0) {
             this.$set(
               this.formSearchs[z].datas,
-              "Account",
-              this.userInfo.Account
+              'Account',
+              this.userInfo.Account,
             );
           }
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.dataSearch(0);
       }
@@ -580,11 +579,11 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
@@ -592,16 +591,16 @@ export default {
     async changeDate(val) {
       if (val == 0) {
         if (this.selectionData[0].length === 0) {
-          this.$message.error("请选择需要提交的数据！");
+          this.$message.error('请选择需要提交的数据！');
           return;
         }
         if (!this.Rescheduled) {
-          this.$message.error("请填写复期时间");
+          this.$message.error('请填写复期时间');
           return;
         }
         this.selectionData[0].map((item) => {
-          this.$set(item, "DeliveryDate", this.Rescheduled);
-          item["DeliveryDate"] = this.Rescheduled;
+          this.$set(item, 'DeliveryDate', this.Rescheduled);
+          item['DeliveryDate'] = this.Rescheduled;
         });
         // let res = await GetSearch(
         //   this.selectionData[1],
@@ -629,30 +628,30 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       let { result, data, count, msg, Columns } = res.data;
       if (result) {
         if (remarkTb === 0) {
           Columns[0] = Columns[0].filter(
             (item) =>
-              item["label"] !== "预计生产日期" &&
-              item["label"] !== "线体" &&
-              item["label"] !== "标准人员" &&
-              item["label"] !== "每托数量" &&
-              item["label"] !== "托板数"
+              item['label'] !== '预计生产日期' &&
+              item['label'] !== '线体' &&
+              item['label'] !== '标准人员' &&
+              item['label'] !== '每托数量' &&
+              item['label'] !== '托板数',
           );
         } else if (remarkTb === 1) {
           Columns[0] = Columns[0].filter(
             (item) =>
-              item["label"] !== "标准人员" &&
-              item["label"] !== "每托数量" &&
-              item["label"] !== "托板数"
+              item['label'] !== '标准人员' &&
+              item['label'] !== '每托数量' &&
+              item['label'] !== '托板数',
           );
         } else if (remarkTb === 2) {
           Columns[0] = Columns[0].filter(
-            (item) => item["label"] !== "标准人员"
+            (item) => item['label'] !== '标准人员',
           );
         }
         Columns.some((m, i) => {
@@ -669,11 +668,11 @@ export default {
         this.$set(this.tableColumns, remarkTb, Columns[0]);
         this.$set(this.tableData, remarkTb, data);
         // this.setData();
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -689,21 +688,21 @@ export default {
         sheet.reset();
         // 渲染列
         this.tableColumns[this.tagRemark].forEach((x, y) => {
-          x["name"] = x["prop"];
-          x["displayName"] = x["label"];
-          x["width"] = parseInt(x.width);
-          if (x.prop === "isChecked") {
+          x['name'] = x['prop'];
+          x['displayName'] = x['label'];
+          x['width'] = parseInt(x.width);
+          if (x.prop === 'isChecked') {
             // 选框
             sheet.setCellType(
               0,
               0,
               new HeaderCheckBoxCellType(),
-              GCsheets.SheetArea.colHeader
+              GCsheets.SheetArea.colHeader,
             );
             x.cellType = new GC.Spread.Sheets.CellTypes.CheckBox();
           } else if (
-            x.ControlType === "comboboxMultiple" ||
-            x.ControlType === "combobox"
+            x.ControlType === 'comboboxMultiple' ||
+            x.ControlType === 'combobox'
           ) {
             // colInfos.push({
             //   name: x.prop,
@@ -720,11 +719,11 @@ export default {
               }
             });
           } else if (
-            x.DataType == "datetime" ||
-            x.DataType === "varchar" ||
-            x.DataType === "nvarchar"
+            x.DataType == 'datetime' ||
+            x.DataType === 'varchar' ||
+            x.DataType === 'nvarchar'
           ) {
-            x.formatter = "@";
+            x.formatter = '@';
             // colInfos.push({
             //   name: x.prop,
             //   displayName: x.label,
@@ -735,7 +734,7 @@ export default {
 
           //行，start,end
           if (x.isEdit) {
-            sheet.getCell(-1, y).locked(false).foreColor("#2a06ecd9");
+            sheet.getCell(-1, y).locked(false).foreColor('#2a06ecd9');
             // sheet.getRange(-1, cellIndex, 1, 1).locked(false);
             // let cell = sheet.getCell(
             //   -1,
@@ -759,7 +758,7 @@ export default {
               const color = row.colorMapping[key];
               cell.style({
                 backColor: color,
-                foreColor: "#FFFFFF",
+                foreColor: '#FFFFFF',
               });
               // 其他代码
             }
@@ -782,10 +781,10 @@ export default {
           -1,
           -1,
           -1,
-          this.tableColumns[this.tagRemark].length
+          this.tableColumns[this.tagRemark].length,
         );
         let hideRowFilter = new GC.Spread.Sheets.Filter.HideRowFilter(
-          cellrange
+          cellrange,
         );
         sheet.rowFilter(hideRowFilter);
 
@@ -802,12 +801,12 @@ export default {
           -1,
           1,
           -1,
-          GC.Spread.Sheets.SheetArea.colHeader
+          GC.Spread.Sheets.SheetArea.colHeader,
         );
-        colHeaderStyle.foreColor("000000d9");
-        colHeaderStyle.backColor("#f3f3f3");
+        colHeaderStyle.foreColor('000000d9');
+        colHeaderStyle.backColor('#f3f3f3');
         colHeaderStyle.font(
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif"
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif',
         );
         colHeaderStyle.hAlign(GC.Spread.Sheets.HorizontalAlign.left);
         colHeaderStyle.vAlign(GC.Spread.Sheets.HorizontalAlign.left);
@@ -815,12 +814,12 @@ export default {
         //设置数据渲染的单元格默认的样式
         var defaultStyle = new GC.Spread.Sheets.Style();
         defaultStyle.font =
-          "12px basefontRegular, Roboto, Helvetica, Arial, sans-serif";
+          '12px basefontRegular, Roboto, Helvetica, Arial, sans-serif';
         defaultStyle.hAlign = GC.Spread.Sheets.HorizontalAlign.left;
         defaultStyle.vAlign = GC.Spread.Sheets.HorizontalAlign.left;
         sheet.setDefaultStyle(
           defaultStyle,
-          GC.Spread.Sheets.SheetArea.viewport
+          GC.Spread.Sheets.SheetArea.viewport,
         );
         defaultStyle.showEllipsis = true;
         // 冻结
@@ -848,7 +847,7 @@ export default {
         sheet.options.protectionOptions.allowFilter = true;
         sheet.options.allowUserDragDrop = true;
       } catch (error) {
-        console.log("表格渲染的错误信息:", error);
+        console.log('表格渲染的错误信息:', error);
       }
       this.spread.refresh(); //重新定位宽高度
     },
@@ -859,7 +858,7 @@ export default {
       // 创建下拉菜单单元格类型，并设置其选项数据
       let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
       comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value
+        GC.Spread.Sheets.CellTypes.EditorValueType.value,
       );
       comboBox.editable(true);
       // 获取下拉菜单的选项数据
@@ -872,11 +871,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -887,77 +886,77 @@ export default {
     },
     // 行内列样式
     cellStyle({ row, column }) {
-      if (column.property == "DeliveryDate") {
+      if (column.property == 'DeliveryDate') {
         return {
-          background: "#00b0f0",
+          background: '#00b0f0',
         };
-      } else if (column.property == "ArriveQty") {
+      } else if (column.property == 'ArriveQty') {
         return {
-          color: "#00b0f0",
+          color: '#00b0f0',
         };
-      } else if (column.property == "UnaccountedQty") {
+      } else if (column.property == 'UnaccountedQty') {
         return {
-          color: "#ff0000",
+          color: '#ff0000',
         };
       } else if (
-        (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
-        (column.property == "IsReplyStatusName" &&
-          row["IsReplyStatusName"] == "是")
+        (column.property == 'JudgeResult' && row['JudgeResult'] == '满足') ||
+        (column.property == 'IsReplyStatusName' &&
+          row['IsReplyStatusName'] == '是')
       ) {
         return {
-          background: "#9fff9f",
+          background: '#9fff9f',
         };
       }
 
-      if (column.property == "OnloadQty") {
+      if (column.property == 'OnloadQty') {
         return {
-          color: "blue",
+          color: 'blue',
         };
       }
-      if (column.property == "RealOweQty") {
+      if (column.property == 'RealOweQty') {
         return {
-          color: "red",
+          color: 'red',
         };
       }
       if (
-        column.property == "ReplyQty" &&
+        column.property == 'ReplyQty' &&
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b",
+          background: '#ff7b7b',
         };
       }
 
       if (row.ReplyDate && !row.SecondReplyDate) {
         if (
-          column.property == "ReplyDate" &&
+          column.property == 'ReplyDate' &&
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b",
+            background: '#ff7b7b',
           };
         }
       }
 
       if (row.SecondReplyDate) {
         if (
-          column.property == "SecondReplyDate" &&
+          column.property == 'SecondReplyDate' &&
           new Date(row.SecondReplyDate).getTime() >
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b",
+            background: '#ff7b7b',
           };
         }
       }
 
-      if (column.property == "OncheckQty") {
+      if (column.property == 'OncheckQty') {
         if (
           parseFloat(row.OncheckQty) >=
           parseFloat(row.StockQtyAllocationPrepare)
         ) {
           return {
-            background: "#9fff9f",
+            background: '#9fff9f',
           };
         }
       }
@@ -965,9 +964,9 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsOverTime"] = "";
+      this.formSearchs[0].datas['IsOverTime'] = '';
       if (index === 0) {
-        this.formSearchs[0].datas["IsOverTime"] = 1;
+        this.formSearchs[0].datas['IsOverTime'] = 1;
       }
       this.dataSearch(0);
     },

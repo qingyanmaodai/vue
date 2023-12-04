@@ -71,7 +71,6 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
-              @selectChanged="selectChanged"
             />
           </div>
         </div>
@@ -117,7 +116,6 @@
               @pageSize="pageSize"
               @sortChange="sortChange"
               @selectfun="selectFun"
-              @selectChanged="selectChanged"
               :treeConfig="{
                 children: 'children',
                 iconOpen: 'vxe-icon-square-minus-fill',
@@ -169,7 +167,6 @@
           @pageSize="pageSize"
           @sortChange="sortChange"
           @selectfun="selectFun"
-          @selectChanged="selectChanged"
         />
       </div>
       <span slot="footer" class="dialog-footer">
@@ -346,9 +343,8 @@ export default {
       this.spread[remarkTb] = workbook;
     },
     //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.selectionData[remarkTb] = newValue;
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {

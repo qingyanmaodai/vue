@@ -135,7 +135,7 @@ export default {
   watch: {
     multipleSelection: {
       handler(newValue) {
-        this.$emit('selectChanged', newValue, this.remark);
+        this.$emit('selectfun', newValue, this.remark);
       },
       deep: true, // 启用深度监听
     },

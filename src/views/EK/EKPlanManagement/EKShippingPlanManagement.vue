@@ -101,7 +101,7 @@
         @pageChange="pageChange"
         @pageSize="pageSize"
         @workbookInitialized="workbookInitialized"
-        @selectChanged="selectChanged"
+        @selectfun="selectFun"
       />
     </div>
     <!-- 弹框-->
@@ -136,7 +136,7 @@
           @pageChange="pageChange"
           @pageSize="pageSize"
           @workbookInitialized="workbookInitialized"
-          @selectChanged="selectChanged"
+          @selectfun="selectFun"
           :spaceBtnShow="false"
         />
       </div>
@@ -622,11 +622,6 @@ export default {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
-    },
-    //获取当前选中行的值
-    selectChanged(newValue, remarkTb) {
-      // 在子组件计算属性发生变化时，更新父组件的计算属性
-      this.$set(this.selectionData, remarkTb, newValue);
     },
     // 高度控制
     setHeight() {
