@@ -12,17 +12,17 @@
           <div class="h-70/100 w-full flex flex-col gap-[10px]">
             <div class="panel h-50/100 w-full">
               <div class="chartHead">
-                <div class="panel-footer"></div>
-
-                <h2>{{ result1[1]['label'] }}</h2>
+                <div class="panel-footer">
+                  <h2>{{ result1[1]['label'] }}</h2>
+                </div>
               </div>
               <div class="chartContent" ref="chart0"></div>
             </div>
             <div class="panel h-50/100 w-full">
               <div class="chartHead">
-                <div class="panel-footer"></div>
-
-                <h2>{{ result1[2]['label'] }}</h2>
+                <div class="panel-footer">
+                  <h2>{{ result1[2]['label'] }}</h2>
+                </div>
               </div>
               <div class="chartContent" ref="chart1"></div>
             </div>
@@ -30,12 +30,19 @@
 
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>{{ result1[3]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[3]['label'] }}</h2>
+                <div class="chartHeadEnd">
+                  翻页倒计时{{ countdowns[3] }} 第{{
+                    formSearchs[3].datas['page']
+                  }}页 共{{ countTotal[3] }}页
+                </div>
+              </div>
             </div>
             <div
               class="chartContent flex flex-col"
-              element-loading-background="#060765"
+              element-loading-background="#030a2c"
+              v-loading="tableLoading[3]"
             >
               <div class="tableHead flex !px-[10px] text-white w-full">
                 <div
@@ -50,19 +57,21 @@
                   {{ column.label }}
                 </div>
               </div>
-              <VueSeamlessScroll
+              <!-- <VueSeamlessScroll
                 :data="tableData[3]"
                 class="warp"
                 :class-option="{
                   singleHeight: fontSize(10),
                   waitTime: 2000,
                 }"
-              >
+              > -->
+              <div class="warp">
                 <ul class="px-[10px]">
                   <li
                     v-for="(item, index) in tableData[3]"
                     :key="'data' + index"
                     class="flex"
+                    :style="getRowsHeight(3)"
                   >
                     <div
                       v-for="(column, colIndex) in tableColumns[3]"
@@ -86,19 +95,27 @@
                     </div>
                   </li>
                 </ul>
-              </VueSeamlessScroll>
+              </div>
+              <!-- </VueSeamlessScroll> -->
             </div>
           </div>
         </div>
         <div class="h-full w-40/100 flex flex-col gap-[10px]">
           <div class="panel h-full w-full">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>{{ result1[4]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[4]['label'] }}</h2>
+                <div class="chartHeadEnd">
+                  翻页倒计时{{ countdowns[4] }} 第{{
+                    formSearchs[4].datas['page']
+                  }}页 共{{ countTotal[4] }}页
+                </div>
+              </div>
             </div>
             <div
               class="chartContent flex flex-col"
-              element-loading-background="#060765"
+              element-loading-background="#030a2c"
+              v-loading="tableLoading[4]"
             >
               <div class="tableHead flex px-[10px] text-white w-full">
                 <div
@@ -113,19 +130,22 @@
                   {{ column.label }}
                 </div>
               </div>
-              <VueSeamlessScroll
+
+              <!-- <VueSeamlessScroll
                 :data="tableData[4]"
                 class="warp"
                 :class-option="{
                   singleHeight: fontSize(30),
                   waitTime: 2000,
                 }"
-              >
+              > -->
+              <div class="warp">
                 <ul class="px-[10px]">
                   <li
                     v-for="(item, index) in tableData[4]"
                     :key="'data' + index"
                     class="flex"
+                    :style="getRowsHeight(4)"
                   >
                     <div
                       v-for="(column, colIndex) in tableColumns[4]"
@@ -149,7 +169,8 @@
                     </div>
                   </li>
                 </ul>
-              </VueSeamlessScroll>
+              </div>
+              <!-- </VueSeamlessScroll> -->
             </div>
           </div>
         </div>
@@ -157,8 +178,9 @@
         <div class="h-full w-30/100 flex flex-col gap-[10px]">
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>{{ result1[5]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[5]['label'] }}</h2>
+              </div>
             </div>
             <div class="chartContent">
               <div class="h-full w-full flex justify-center">
@@ -197,17 +219,18 @@
           </div>
           <div class="panel h-30/100 w-full">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-              <h2>{{ result1[7]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[7]['label'] }}</h2>
+              </div>
             </div>
             <div class="chartContent" ref="chart2"></div>
           </div>
 
           <div class="panel h-40/100 w-full">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-
-              <h2>{{ result1[8]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[8]['label'] }}</h2>
+              </div>
             </div>
             <div class="chartContent" ref="chart3"></div>
           </div>
@@ -237,6 +260,9 @@ export default {
       todayDate: '',
       chart: [],
       chartOptions: [],
+      countdowns: [],
+      countTotal: [],
+      refreshTimers: [],
       tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
       tableData: [
         [],
@@ -479,6 +505,17 @@ export default {
             width: `${percentage}%`,
           };
         });
+      }
+    },
+    getRowsHeight(remarkTb) {
+      if (this.formSearchs[remarkTb].datas['rows']) {
+        return {
+          height: `${100 / this.formSearchs[remarkTb].datas['rows']}%`,
+        };
+      } else {
+        return {
+          height: `5%`,
+        };
       }
     },
     // 渲染echart图
@@ -970,6 +1007,46 @@ export default {
       const weekDayName = weekDayNames[weekDay]; // 获取星期几的名称
       return `${year}年${month}月${day}日 ${weekDayName}`;
     },
+    async startRefreshTimer(remarkTb, count) {
+      // 先清除之前的定时器
+      this.stopRefreshTimer(remarkTb);
+
+      // 设置定时器，每十秒刷新一次数据
+      this.$set(
+        this.refreshTimers,
+        remarkTb,
+        setInterval(async () => {
+          if (_this.countdowns[remarkTb] > 0) {
+            _this.$set(
+              _this.countdowns,
+              remarkTb,
+              _this.countdowns[remarkTb] - 1,
+            );
+          } else {
+            _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
+
+            const form = _this.formSearchs[remarkTb].datas;
+            form.page =
+              form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
+            _this.countTotal[remarkTb] = Math.ceil(count / form.rows);
+
+            // _this.$set(_this.tableLoading, remarkTb, true);
+            await _this.getTableData(
+              _this.formSearchs[remarkTb].datas,
+              remarkTb,
+            );
+            // _this.$set(_this.tableLoading, remarkTb, false);
+          }
+        }, 1000),
+      );
+    },
+    stopRefreshTimer(remarkTb) {
+      // 清除指定 remarkTb 的定时器
+      if (this.refreshTimers[remarkTb]) {
+        clearInterval(this.refreshTimers[remarkTb]);
+        this.refreshTimers[remarkTb] = null;
+      }
+    },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
@@ -978,9 +1055,11 @@ export default {
       if (result) {
         if (remarkTb === 3 && this.tableColumns[3].length === 0) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
+          this.startRefreshTimer(3, count);
         }
         if (remarkTb === 4 && this.tableColumns[4].length === 0) {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
+          this.startRefreshTimer(4, count);
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
@@ -1114,6 +1193,26 @@ export default {
       left: 0;
       top: 0;
       width: 100%;
+      display: flex;
+      justify-content: space-between;
+      h2 {
+        position: relative;
+        font-family: PingFang SC;
+        padding-left: 25px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 48px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: rgba(0, 178, 255, 1);
+      }
+      .chartHeadEnd {
+        position: relative;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        padding-right: 20px;
+      }
       &::before {
         position: absolute;
         left: 0;
@@ -1126,16 +1225,6 @@ export default {
     // background: url(../../assets/imgs/chartHead.png) no-repeat;
     height: 48px;
     background-size: 100% 100%;
-  }
-  h2 {
-    font-family: PingFang SC;
-    padding-left: 25px;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 48px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: rgba(0, 178, 255, 1);
   }
   .chartContent {
     .tableHead {

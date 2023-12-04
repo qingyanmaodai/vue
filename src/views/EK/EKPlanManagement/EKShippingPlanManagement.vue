@@ -195,9 +195,9 @@
           </el-col>
           <el-col :span="6" class="flex"> </el-col>
           <el-col :span="6" class="flex_flex_end">
-            <el-button type="primary" size="mini" @click="AutoSplitOrder(1)"
+            <!-- <el-button type="primary" size="mini" @click="AutoSplitOrder(1)"
               >自动拆单</el-button
-            >
+            > -->
             <el-button type="primary" size="mini" @click="addRow(1)"
               >新增</el-button
             >
@@ -819,6 +819,7 @@ export default {
         this.formData1['OutType'] = this.selectionData[remarkTb][0]['OutType'];
         this.formData1['Qty'] = this.selectionData[remarkTb][0]['Qty'];
         this.colDialogVisible1 = true;
+        this.$set(this.tableData, 1, []);
         this.ONewQty = 0;
       }
 

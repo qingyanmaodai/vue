@@ -37,7 +37,7 @@
           title="序号"
         ></vxe-column>
         <vxe-column
-          v-for="(x, z) in tableHeader"
+          v-for="(x, z) in tableHeaderChange"
           :key="z"
           :resizable="true"
           :tree-node="z == 0 ? true : x.treeNode ? x.treeNode : false"
@@ -101,7 +101,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     @change="
@@ -110,7 +110,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-input>
@@ -124,7 +124,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     :disabled="scope.row[x.component.disabled]"
@@ -134,7 +134,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     type="number"
@@ -159,7 +159,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-input>
@@ -179,7 +179,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   >
@@ -218,7 +218,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     v-model="scope.row[x.prop]"
@@ -240,7 +240,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                     v-model="scope.row[x.prop]"
@@ -278,7 +278,7 @@
                         scope.row,
                         scope.row[x.prop],
                         x.prop,
-                        scope.$rowIndex
+                        scope.$rowIndex,
                       )
                     "
                   ></el-checkbox>
@@ -414,9 +414,9 @@
   </div>
 </template>
 <script>
-import { setTimeout } from "timers";
-import XEUtils from "xe-utils";
-import { GetSearchData } from "@/api/Common";
+import { setTimeout } from 'timers';
+import XEUtils from 'xe-utils';
+import { GetSearchData } from '@/api/Common';
 export default {
   props: {
     // 传行内样式
@@ -524,7 +524,7 @@ export default {
     height: {
       type: String,
       required: false,
-      default: "600px",
+      default: '600px',
     },
     rowKey: {
       type: String,
@@ -590,20 +590,20 @@ export default {
   },
   data() {
     return {
-      Prompt: "",
+      Prompt: '',
       ControlTypeList: [
-        "textbox",
-        "textarea",
-        "el-input",
-        "el-input-number",
-        "el-autocomplete",
+        'textbox',
+        'textarea',
+        'el-input',
+        'el-input-number',
+        'el-autocomplete',
       ], //允许筛选的控件类型
       singleSelection: {},
       multipleSelection: [],
       getPickerTime(row = {}) {
         return {
           disabledDate(time) {
-            if (row.hasOwnProperty("PreStartDate") && row.PreStartDate) {
+            if (row.hasOwnProperty('PreStartDate') && row.PreStartDate) {
               return time.getTime() < new Date(row.PreStartDate).getTime();
             }
           },
@@ -617,7 +617,7 @@ export default {
       colspan: [],
       colspanDel: [],
       scrollTop: 0,
-      theme: "#409EFF",
+      theme: '#409EFF',
       isChangeColor: true,
     };
   },
@@ -625,10 +625,10 @@ export default {
     // 跳转至页面配置
     toPageSetting() {
       if (this.sysID == 35) {
-        this.$emit("oneselftSysID", 35);
+        this.$emit('oneselftSysID', 35);
       } else {
         this.$router.push({
-          name: "FieldInfo",
+          name: 'FieldInfo',
           params: { ID: this.sysID },
         });
       }
@@ -638,30 +638,30 @@ export default {
       if (this.isChecked) {
         this.$refs.vxeTable.setCheckboxRow(row, true);
       }
-      this.$emit("handleRowClick", row, this.remark);
+      this.$emit('handleRowClick', row, this.remark);
     },
     // 双击行
     handleRowdbClick({ row, column }) {
       if (this.isEdit && !row.update) {
-        this.$set(row, "update", true);
+        this.$set(row, 'update', true);
       }
-      this.$emit("handleRowdbClick", row, this.remark);
+      this.$emit('handleRowdbClick', row, this.remark);
     },
     // 编辑行
     editRow(row, index) {
-      this.$emit("editRow", row, index, this.remark);
+      this.$emit('editRow', row, index, this.remark);
     },
     // 删除行
     delRow(row, index) {
-      this.$emit("delRow", row, index, this.remark);
+      this.$emit('delRow', row, index, this.remark);
     },
     // 表头颜色控制
     updateStyle(isLook, isEdit) {
       if (isLook) {
-        return "fontBlueInkColor";
+        return 'fontBlueInkColor';
       }
       if (isEdit) {
-        return "fontBluesInkColor";
+        return 'fontBluesInkColor';
       }
     },
     // 合并取几列
@@ -769,7 +769,7 @@ export default {
     },
     // row:本行数据 route：要跳转的路由路径 跳转要传的参数routeId
     handleActive(row, routerName, prop) {
-      this.$emit("toPage", row, prop);
+      this.$emit('toPage', row, prop);
       // this.$router.push({
       //   name: routerName.name,
       //   query: { row: row },
@@ -789,22 +789,22 @@ export default {
     },
     // 选择一页显示多少数据
     pageSize(val) {
-      this.$emit("pageSize", val, this.remark, this.filtertb);
+      this.$emit('pageSize', val, this.remark, this.filtertb);
     },
     // 分页导航
     pageChange(val) {
-      this.$emit("pageChange", val, this.remark, this.filtertb);
+      this.$emit('pageChange', val, this.remark, this.filtertb);
     },
     //后端排序
     sortChange({ column }) {
       //调用父组件方法
       this.$refs.vxeTable.clearSelected();
       this.$emit(
-        "sortChange",
+        'sortChange',
         column.order,
         column.property,
         this.remark,
-        this.filtertb
+        this.filtertb,
       );
     },
     //合并同一名称
@@ -855,32 +855,32 @@ export default {
     },
     // 行样式控制
     tableRowClassName({ row, rowIndex }) {
-      let className = "";
-      if (row["IsAdd"]) {
-        className += "purpleBgColor";
+      let className = '';
+      if (row['IsAdd']) {
+        className += 'purpleBgColor';
       }
 
-      if (row["blueSummaryColor"]) {
-        className += "blueSummaryColor";
+      if (row['blueSummaryColor']) {
+        className += 'blueSummaryColor';
       }
       return className;
     },
     //可编辑列加背景颜色
     tableCellClassName({ row, column, rowIndex, columnIndex }) {
-      let className = "";
+      let className = '';
       if (
-        column.property == "PlanQtyP" &&
-        row["receiveColor"] &&
-        parseFloat(row["receiveColor"]) >= 100
+        column.property == 'PlanQtyP' &&
+        row['receiveColor'] &&
+        parseFloat(row['receiveColor']) >= 100
       ) {
-        className += "receiveGreenBg";
+        className += 'receiveGreenBg';
       }
       if (
-        column.property == "PlanQtyP" &&
-        row["receiveColor"] &&
-        parseFloat(row["receiveColor"]) < 100
+        column.property == 'PlanQtyP' &&
+        row['receiveColor'] &&
+        parseFloat(row['receiveColor']) < 100
       ) {
-        className += "receiveYellowBg";
+        className += 'receiveYellowBg';
       }
       return className;
     },
@@ -891,7 +891,7 @@ export default {
       const footerData = [
         columns.map((column, columnIndex) => {
           if (columnIndex === 0) {
-            return "合计";
+            return '合计';
           }
           if (this.includeFields.includes(column.property)) {
             return XEUtils.sum(data, column.property);
@@ -913,7 +913,7 @@ export default {
     },
     filterRecoverMethod({ option }) {
       // 如果是自定义筛选模板，当为点击确认时，该选项将被恢复为默认值
-      option.data = "";
+      option.data = '';
     },
     //后端筛选
     filterChange(filters) {
@@ -922,14 +922,14 @@ export default {
       // 筛选的字段
       let property = filters.property;
       // this.remark 操作的表格下标
-      this.$emit("filterChange", val, property, this.remark);
+      this.$emit('filterChange', val, property, this.remark);
     },
     async getFooterRemark() {
       let form = {};
-      form["dicID"] = 33;
-      form["page"] = 1;
-      form["rows"] = 0;
-      form["DictionaryID"] = this.sysID;
+      form['dicID'] = 33;
+      form['page'] = 1;
+      form['rows'] = 0;
+      form['DictionaryID'] = this.sysID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -950,7 +950,7 @@ export default {
     },
     height: {
       handler(newValue, oldValue) {
-        this.$set(this, "height", newValue);
+        this.$set(this, 'height', newValue);
       },
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
       immediate: true,
@@ -966,7 +966,30 @@ export default {
       }
     },
   },
-  computed: {},
+  computed: {
+    tableHeaderChange() {
+      let modifiedTableHeader = this.tableHeader.map((item) => {
+        if (item['width'] == 0) {
+          item['visible'] = false;
+        }
+        return {
+          ...item,
+        };
+      });
+      //如果hasSelect值存在的话
+      if (this.hasSelect) {
+        //删除带有选择的一列
+        modifiedTableHeader = modifiedTableHeader.filter(
+          (item) => item.prop !== 'isChecked',
+        );
+      }
+      //重新渲染列
+      this.$nextTick(() => {
+        this.$refs.vxeTable.refreshColumn();
+      });
+      return modifiedTableHeader;
+    },
+  },
   created() {
     if (this.isFooterRemark) {
       this.getFooterRemark();

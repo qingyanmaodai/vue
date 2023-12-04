@@ -2,7 +2,7 @@
   <div id="Screen">
     <div class="el-header">
       <svg-icon icon-class="ScreenHeader1" class="ScreenHeader1" />
-      <img class="logo" :src="result1[0]['groupby']" mode="heightFix" />
+      <img class="logo" :src="logo" mode="heightFix" />
       <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
     </div>
@@ -10,8 +10,14 @@
       <div class="h-full flex gap-[10px]">
         <div class="panel h-full w-65/100">
           <div class="chartHead">
-            <div class="panel-footer"></div>
-            <h2>{{ result1[1]['label'] }}</h2>
+            <div class="panel-footer">
+              <h2>{{ result1[1]['label'] }}</h2>
+              <div class="chartHeadEnd">
+                翻页倒计时{{ countdowns[1] }} 第{{
+                  formSearchs[1].datas['page']
+                }}页 共{{ countTotal[1] }}页
+              </div>
+            </div>
           </div>
           <div
             class="chartContent flex flex-col"
@@ -31,50 +37,49 @@
                 {{ column.label }}
               </div>
             </div>
-            <VueSeamlessScroll
+            <!-- <VueSeamlessScroll
               ref="seamlessScroll"
               @ScrollEnd="ScrollEnd"
               :data="tableData[1]"
               class="warp"
               :class-option="{
-                singleHeight: 30,
-                waitTime: 2000,
+                step: 0,
               }"
-            >
-              <div class="warp">
-                <ul class="px-[10px]">
-                  <li
-                    v-for="(item, index) in tableData[1]"
-                    :key="'data' + index"
-                    class="flex"
-                    :style="getColumnRows(1)"
+            > -->
+            <div class="warp">
+              <ul class="px-[10px]">
+                <li
+                  v-for="(item, index) in tableData[1]"
+                  :key="'data' + index"
+                  class="flex"
+                  :style="getRowsHeight(1)"
+                >
+                  <div
+                    v-for="(column, colIndex) in tableColumns[1]"
+                    :key="'column' + colIndex"
+                    class="h-full flex items-center"
+                    :class="
+                      colIndex < tableColumns[1].length - 1
+                        ? 'pr-[10px]'
+                        : 'pr-0'
+                    "
+                    :style="
+                      getCellStyles(
+                        tableData[1][index].BColors,
+                        tableData[1][index].FColors,
+                        column,
+                        tableColumns[1],
+                      )
+                    "
                   >
-                    <div
-                      v-for="(column, colIndex) in tableColumns[1]"
-                      :key="'column' + colIndex"
-                      class="h-full flex items-center"
-                      :class="
-                        colIndex < tableColumns[1].length - 1
-                          ? 'pr-[10px]'
-                          : 'pr-0'
-                      "
-                      :style="
-                        getCellStyles(
-                          tableData[1][index].BColors,
-                          tableData[1][index].FColors,
-                          column,
-                          tableColumns[1],
-                        )
-                      "
-                    >
-                      <div class="w-full truncate">
-                        {{ tableData[1][index][column.prop] }}
-                      </div>
+                    <div class="w-full truncate">
+                      {{ tableData[1][index][column.prop] }}
                     </div>
-                  </li>
-                </ul>
-              </div>
-            </VueSeamlessScroll>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- </VueSeamlessScroll> -->
           </div>
         </div>
         <div class="h-full w-35/100 flex flex-col">
@@ -91,7 +96,11 @@
                   class="ScreenBaseNum absolute truncate w-full text-center px-[10px]"
                   style="top: 20%; height: 30%"
                 >
-                  {{ tableData[2][0]['S1'].toLocaleString() }}
+                  {{
+                    tableData[2][0]['S1']
+                      ? tableData[2][0]['S1'].toLocaleString()
+                      : null
+                  }}
                 </div>
                 <div
                   class="ScreenBaseTitle absolute truncate w-full text-center px-[10px]"
@@ -110,7 +119,11 @@
                   class="ScreenBaseNum absolute truncate w-full text-center px-[10px]"
                   style="top: 20%; height: 30%"
                 >
-                  {{ tableData[3][0]['S1'].toLocaleString() }}
+                  {{
+                    tableData[3][0]['S1']
+                      ? tableData[3][0]['S1'].toLocaleString()
+                      : null
+                  }}
                 </div>
                 <div
                   class="ScreenBaseTitle absolute truncate w-full text-center px-[10px]"
@@ -123,18 +136,18 @@
           </div>
           <div class="panel h-45/100 w-full mb-[10px]">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-
-              <h2>{{ result1[4]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[4]['label'] }}</h2>
+              </div>
             </div>
             <div class="chartContent" ref="chart1"></div>
             <div class="panel-footer"></div>
           </div>
           <div class="panel h-30/100 w-full" style="height: 30%">
             <div class="chartHead">
-              <div class="panel-footer"></div>
-
-              <h2>{{ result1[6]['label'] }}</h2>
+              <div class="panel-footer">
+                <h2>{{ result1[6]['label'] }}</h2>
+              </div>
             </div>
             <div class="chartContent" ref="chart2"></div>
             <div class="panel-footer"></div>
@@ -165,18 +178,21 @@ export default {
       todayDate: '',
       chart: [],
       chartOptions: [],
-      tableColumns: [[], [], [], [], [], [], [], [], [], []],
+      countdowns: [],
+      countTotal: [],
+      tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
+      refreshTimers: [],
       tableData: [
-        [],
-        [],
         [{ S1: '' }],
         [{ S1: '' }],
-        [],
-        [],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [{ S1: '' }],
+        [{ S1: '' }],
         [{ S1: '', Name1: '' }],
         [{ S1: '', Name1: '' }],
         [{ S1: '', Name1: '' }],
-        [],
+        [{ S1: '' }],
       ],
       tableLoading: [
         false,
@@ -345,19 +361,7 @@ export default {
     this.handleWindowResizeDebounced.cancel();
   },
   methods: {
-    async ScrollEnd() {
-      // const scrollContainer = this.$refs.seamlessScroll.$el;
-      // // Check if the scroll position is at the bottom
-      // const isAtBottom =
-      //   scrollContainer.scrollTop + scrollContainer.clientHeight ===
-      //   scrollContainer.scrollHeight;
-      // if (isAtBottom) {
-      //   console.log('Scrolled to the bottom!');
-      //   await this.getTableData(this.formSearchs[1].datas, 1);
-      //   // Your logic for when the scroll reaches the bottom
-      // }
-      // console.log('ScrollEnd');
-    },
+    async ScrollEnd() {},
     getCellStyles(BColor, FColor, column, columns) {
       const cellStyles = {};
       // Check if BColor is defined for the current column
@@ -375,24 +379,24 @@ export default {
     },
     getColumnStyle(columns, column) {
       const totalWidth = columns.reduce(
-        (sum, col) => sum + parseFloat(col.appWidth || 0),
+        (sum, col) => sum + parseFloat(col.width || 0),
         0,
       );
       if (column) {
-        const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+        const percentage = (parseFloat(column.width) / totalWidth) * 100;
         return {
           width: `${percentage}%`,
         };
       } else {
         return columns.map((column) => {
-          const percentage = (parseFloat(column.appWidth) / totalWidth) * 100;
+          const percentage = (parseFloat(column.width) / totalWidth) * 100;
           return {
             width: `${percentage}%`,
           };
         });
       }
     },
-    getColumnRows(remarkTb) {
+    getRowsHeight(remarkTb) {
       if (this.formSearchs[remarkTb].datas['rows']) {
         return {
           height: `${100 / this.formSearchs[remarkTb].datas['rows']}%`,
@@ -912,22 +916,42 @@ export default {
     },
     async startRefreshTimer(remarkTb, count) {
       // 先清除之前的定时器
-      this.stopRefreshTimer();
+      this.stopRefreshTimer(remarkTb);
+
       // 设置定时器，每十秒刷新一次数据
-      this.refreshTimer = setInterval(async () => {
-        const form = this.formSearchs[remarkTb].datas;
-        // 如果当前页小于总页数，则继续增加页数；否则重新从第一页开始
-        form.page =
-          form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
-        // 调用 getTableData 方法
-        this.$set(_this.tableLoading, remarkTb, true);
-        await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
-        this.$set(_this.tableLoading, remarkTb, false);
-      }, 10000); // 10000 毫秒等于十秒
+      this.$set(
+        this.refreshTimers,
+        remarkTb,
+        setInterval(async () => {
+          if (_this.countdowns[remarkTb] > 0) {
+            _this.$set(
+              _this.countdowns,
+              remarkTb,
+              _this.countdowns[remarkTb] - 1,
+            );
+          } else {
+            _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
+
+            const form = _this.formSearchs[remarkTb].datas;
+            form.page =
+              form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
+            _this.countTotal[remarkTb] = Math.ceil(count / form.rows);
+            // _this.$set(_this.tableLoading, remarkTb, true);
+            await _this.getTableData(
+              _this.formSearchs[remarkTb].datas,
+              remarkTb,
+            );
+            // _this.$set(_this.tableLoading, remarkTb, false);
+          }
+        }, 1000),
+      );
     },
-    stopRefreshTimer() {
-      // 清除定时器
-      clearInterval(this.refreshTimer);
+    stopRefreshTimer(remarkTb) {
+      // 清除指定 remarkTb 的定时器
+      if (this.refreshTimers[remarkTb]) {
+        clearInterval(this.refreshTimers[remarkTb]);
+        this.refreshTimers[remarkTb] = null;
+      }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
@@ -940,7 +964,8 @@ export default {
         // 获取每个表头
         if (remarkTb === 1 && this.tableColumns[1].length === 0) {
           this.$set(this.tableColumns, remarkTb, AppColumns);
-          // this.startRefreshTimer(1, count);
+
+          this.startRefreshTimer(1, count);
         }
         // else {
         //   Columns.some((m, i) => {
@@ -1084,6 +1109,26 @@ export default {
       left: 0;
       top: 0;
       width: 100%;
+      display: flex;
+      justify-content: space-between;
+      h2 {
+        position: relative;
+        font-family: PingFang SC;
+        padding-left: 25px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 48px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: rgba(0, 178, 255, 1);
+      }
+      .chartHeadEnd {
+        position: relative;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        padding-right: 20px;
+      }
       &::before {
         position: absolute;
         left: 0;
@@ -1093,20 +1138,12 @@ export default {
         border-left: 4px solid rgba(87, 235, 255, 1);
       }
     }
+
     // background: url(../../assets/imgs/chartHead.png) no-repeat;
     height: 48px;
     background-size: 100% 100%;
   }
-  h2 {
-    font-family: PingFang SC;
-    padding-left: 25px;
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 48px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: rgba(0, 178, 255, 1);
-  }
+
   .chartContent {
     .tableHead {
       height: 50px;
