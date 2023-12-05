@@ -97,7 +97,7 @@
                   style="top: 20%; height: 30%"
                 >
                   {{
-                    tableData[2][0]['S1']
+                    tableData[2][0]['S1'] || tableData[2][0]['S1'] === 0
                       ? tableData[2][0]['S1'].toLocaleString()
                       : null
                   }}
@@ -120,7 +120,7 @@
                   style="top: 20%; height: 30%"
                 >
                   {{
-                    tableData[3][0]['S1']
+                    tableData[3][0]['S1'] || tableData[3][0]['S1'] === 0
                       ? tableData[3][0]['S1'].toLocaleString()
                       : null
                   }}
@@ -140,7 +140,7 @@
                 <h2>{{ result1[4]['label'] }}</h2>
               </div>
             </div>
-            <div class="chartContent" ref="chart1"></div>
+            <div class="chartContent" ref="chart4"></div>
             <div class="panel-footer"></div>
           </div>
           <div class="panel h-30/100 w-full" style="height: 30%">
@@ -149,7 +149,7 @@
                 <h2>{{ result1[6]['label'] }}</h2>
               </div>
             </div>
-            <div class="chartContent" ref="chart2"></div>
+            <div class="chartContent" ref="chart6"></div>
             <div class="panel-footer"></div>
           </div>
         </div>
@@ -350,7 +350,15 @@ export default {
   },
   async mounted() {
     //初始化图表;
-    this.chart = [this.$refs.chart1, this.$refs.chart2];
+    this.chart = [
+      null,
+      null,
+      null,
+      null,
+      echarts.init(this.$refs.chart4),
+      null,
+      echarts.init(this.$refs.chart6),
+    ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -359,6 +367,12 @@ export default {
     // 在组件销毁时，移除 resize 事件监听器
     window.removeEventListener('resize', this.handleWindowResizeDebounced);
     this.handleWindowResizeDebounced.cancel();
+    // 在组件销毁之前清除所有定时器
+    for (const remarkTb in this.refreshTimers) {
+      if (this.refreshTimers.hasOwnProperty(remarkTb)) {
+        this.stopRefreshTimer(remarkTb);
+      }
+    }
   },
   methods: {
     async ScrollEnd() {},
@@ -408,18 +422,21 @@ export default {
       }
     },
     // 渲染echart图
-    barData(id, option) {
+    barData(item, option) {
       // echarts.dispose(id);
-      echarts.init(id).setOption(option);
+      item.setOption(option);
     },
 
     // 获取表头数据
     async getTableHeader() {
-      let rea = await GetSearchData({
-        dicID: 15224,
-        rows: 0,
-        page: 1,
-      });
+      let rea = await GetSearchData(
+        {
+          dicID: 15224,
+          rows: 0,
+          page: 1,
+        },
+        '557842568941C6D97DBF4313086B3E2A',
+      );
       const { data: data1, result: result1, msg: msg1 } = rea.data;
       if (result1) {
         this.sysID = data1.map((item) => {
@@ -438,7 +455,7 @@ export default {
           };
         });
       }
-      let res = await GetHeader(this.sysID);
+      let res = await GetHeader(this.sysID, '557842568941C6D97DBF4313086B3E2A');
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
@@ -489,12 +506,11 @@ export default {
           }
           if (z !== 0) {
             await this.getTableData(this.formSearchs[z].datas, z);
-            await this.getEcharts();
           }
         });
       }
     },
-    async getEcharts() {
+    async getEcharts(remarkTb) {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -504,11 +520,12 @@ export default {
         if (!clientWidth) return;
         return res * (clientWidth / 1920);
       }
-      this.chartOptions = [
-        {
+      if (remarkTb === 4) {
+        this.chartOptions[4] = {
           grid: {
             containLabel: true,
             bottom: 0,
+            top: fontSize(80),
             left: fontSize(10),
             right: fontSize(10),
           },
@@ -537,8 +554,12 @@ export default {
             data: this.tableData[4].map((item) => item['Name1']),
             axisLabel: {
               show: true,
-              fontSize: fontSize(18),
+              fontSize: fontSize(14),
               color: '#C9D2FA',
+              rotate: 30, // 设置旋转角度为45度
+              align: 'right',
+              // margin
+              verticalAlign: 'top',
             },
             axisLine: {
               show: false,
@@ -588,6 +609,7 @@ export default {
             {
               name: '计划出货',
               type: 'bar',
+              animation: true,
               silent: true,
               itemStyle: {
                 normal: {
@@ -599,6 +621,7 @@ export default {
               label: {
                 show: true,
                 color: '#2F8FFF',
+                fontSize: fontSize(18),
                 position: 'top', // 显示位置，可选值有 'top', 'bottom', 'inside', 'outside'
                 formatter: '{c}', // 标签内容格式器，这里表示显示数据值
               },
@@ -606,6 +629,8 @@ export default {
             {
               name: '实际出货',
               type: 'bar',
+              animation: true,
+              animationDuration: 2000,
               silent: true,
               itemStyle: {
                 normal: {
@@ -616,13 +641,15 @@ export default {
               label: {
                 show: true,
                 color: '#47B558',
+                fontSize: fontSize(18),
                 position: 'top', // 显示位置，可选值有 'top', 'bottom', 'inside', 'outside'
                 formatter: '{c}', // 标签内容格式器，这里表示显示数据值
               },
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 6) {
+        this.chartOptions[6] = {
           backgroundColor: '#0E1327',
           tooltip: {
             formatter: '{a} <br/>{b} : {c}%',
@@ -881,20 +908,20 @@ export default {
               animationDuration: 4000,
             },
           ],
-        },
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
-      });
-      // 调用 resize 方法重新渲染图表
-      setTimeout(() => {
-        this.chart.map((item) => {
-          echarts.init(item).resize();
-        });
-      }, 100);
+        };
+      }
+      this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
     },
     handleWindowResize() {
-      this.getEcharts();
+      // 调用 resize 方法重新渲染图表
+      setTimeout(() => {
+        this.chart.map((item, remarkTb) => {
+          if (item) {
+            this.getEcharts(remarkTb);
+            item.resize();
+          }
+        });
+      }, 100);
     },
     showtime() {
       const now = new Date();
@@ -958,15 +985,16 @@ export default {
       this.$set(this.tableLoading, remarkTb, true);
       // form['rows'] = this.tablePagination[remarkTb].pageSize;
       // form['page'] = this.tablePagination[remarkTb].pageIndex;
-      let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns, AppColumns } = res.data;
+      let res = await GetSearchData(form, '557842568941C6D97DBF4313086B3E2A');
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
         if (remarkTb === 1 && this.tableColumns[1].length === 0) {
-          this.$set(this.tableColumns, remarkTb, AppColumns);
-
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+          console.log(this.tableColumns[1]);
           this.startRefreshTimer(1, count);
         }
+
         // else {
         //   Columns.some((m, i) => {
         //     m.forEach((n, index) => {
@@ -977,11 +1005,17 @@ export default {
         // }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        if (remarkTb === 1) {
-          this.tableData[1][this.tableData[1].length - 1][
-            this.tableColumns[1]['0']['prop']
-          ] = '合计';
+        if (remarkTb === 4) {
+          await this.getEcharts(remarkTb);
         }
+        if (remarkTb === 5 || remarkTb === 6 || remarkTb === 7) {
+          await this.getEcharts(6);
+        }
+        // if (remarkTb === 1) {
+        //   this.tableData[1][this.tableData[1].length - 1][
+        //     this.tableColumns[1]['0']['prop']
+        //   ] = '合计';
+        // }
       } else {
         this.$message({
           message: msg,

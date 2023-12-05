@@ -333,7 +333,13 @@ export default {
   },
   async mounted() {
     //初始化图表;
-    this.chart = [this.$refs.chart0, this.$refs.chart1, this.$refs.chart2];
+    this.chart = [
+      null,
+      null,
+      echarts.init(this.$refs.chart0),
+      echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
+    ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
     window.addEventListener('resize', this.handleWindowResizeDebounced);
@@ -342,6 +348,11 @@ export default {
     // 在组件销毁时，移除 resize 事件监听器
     window.removeEventListener('resize', this.handleWindowResizeDebounced);
     this.handleWindowResizeDebounced.cancel();
+    for (const remarkTb in this.refreshTimers) {
+      if (this.refreshTimers.hasOwnProperty(remarkTb)) {
+        this.stopRefreshTimer(remarkTb);
+      }
+    }
   },
   methods: {
     getCellStyles(BColor, FColor, column, columns) {
@@ -389,19 +400,16 @@ export default {
         };
       }
     },
-    // 渲染echart图
-    barData(id, option) {
-      // echarts.dispose(id);
-      echarts.init(id).setOption(option);
-    },
-
     // 获取表头数据
     async getTableHeader() {
-      let rea = await GetSearchData({
-        dicID: 15221,
-        rows: 0,
-        page: 1,
-      });
+      let rea = await GetSearchData(
+        {
+          dicID: 15221,
+          rows: 0,
+          page: 1,
+        },
+        '557842568941C6D97DBF4313086B3E2A',
+      );
       const { data: data1, result: result1, msg: msg1 } = rea.data;
       if (result1) {
         this.sysID = data1.map((item) => {
@@ -420,7 +428,7 @@ export default {
           };
         });
       }
-      let res = await GetHeader(this.sysID);
+      let res = await GetHeader(this.sysID, '557842568941C6D97DBF4313086B3E2A');
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
@@ -456,7 +464,6 @@ export default {
           }
           if (z !== 0) {
             await this.getTableData(this.formSearchs[z].datas, z);
-            await this.getEcharts();
           }
         });
       }
@@ -469,7 +476,7 @@ export default {
       if (!clientWidth) return;
       return res * (clientWidth / 1920);
     },
-    async getEcharts() {
+    async getEcharts(remarkTb) {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -479,8 +486,8 @@ export default {
         if (!clientWidth) return;
         return res * (clientWidth / 1920);
       }
-      this.chartOptions = [
-        {
+      if (remarkTb === 2) {
+        this.chartOptions[2] = {
           grid: {
             containLabel: true,
             bottom: fontSize(10),
@@ -562,8 +569,9 @@ export default {
             },
           ],
           series: this.series2,
-        },
-        {
+        };
+      } else if (remarkTb === 3) {
+        this.chartOptions[3] = {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
@@ -636,8 +644,9 @@ export default {
               })),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 4) {
+        this.chartOptions[4] = {
           grid: {
             containLabel: true,
             bottom: -fontSize(10),
@@ -674,10 +683,8 @@ export default {
               inverse: true,
               axisLabel: {
                 show: true,
-                textStyle: {
-                  color: '#C9D2FA',
-                  fontSize: fontSize(14),
-                },
+                color: '#C9D2FA',
+                fontSize: fontSize(14),
               },
               splitLine: {
                 show: false,
@@ -718,10 +725,8 @@ export default {
               type: 'bar',
               zlevel: 1,
               itemStyle: {
-                normal: {
-                  barBorderRadius: 30,
-                  color: '#2F8FFF',
-                },
+                borderRadius: 30,
+                color: '#2F8FFF',
               },
               label: {
                 show: true, // 显示标签
@@ -751,20 +756,25 @@ export default {
             //   },
             // },
           ],
-        },
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
-      });
+        };
+      }
+      this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
-        this.chart.map((item) => {
-          echarts.init(item).resize();
+        this.chart.map((item, remarkTb) => {
+          if (item) {
+            this.getEcharts(remarkTb);
+            item.resize();
+          }
         });
       }, 100);
     },
-    handleWindowResize() {
-      this.getEcharts();
+    // 渲染echart图
+    barData(item, option) {
+      // echarts.dispose(id);
+      item.setOption(option);
     },
     showtime() {
       const now = new Date();
@@ -827,7 +837,7 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      let res = await GetSearchData(form);
+      let res = await GetSearchData(form, '557842568941C6D97DBF4313086B3E2A');
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         // 获取每个表头
@@ -835,6 +845,9 @@ export default {
           this.$set(this.tableColumns, remarkTb, Columns[0]);
           this.startRefreshTimer(1, count);
         }
+
+        this.$set(this.tableData, remarkTb, data);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
         if (remarkTb === 2) {
           const uniqueName1Values = [
             ...new Set(data.map((item) => item.Name1)),
@@ -858,9 +871,10 @@ export default {
                 .map((item) => item.S1),
             };
           });
+          await this.getEcharts(remarkTb);
+        } else if (remarkTb === 3 || remarkTb === 4) {
+          await this.getEcharts(remarkTb);
         }
-        this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,

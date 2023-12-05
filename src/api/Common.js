@@ -1,10 +1,15 @@
 import request from "@/utils/request";
 // 获取表头
-export function GetHeader(data) {
+export function GetHeader(data, token) {
+  let headers = {};
+  if (token) {
+    headers["token"] = token;
+  }
   return request({
     url: "/APSAPI/GetConfig",
     method: "POST",
     data,
+    headers
   });
 }
 // 获取有个性化头部带日期

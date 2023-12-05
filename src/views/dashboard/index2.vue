@@ -591,9 +591,13 @@ export default {
     // var style = window.getComputedStyle("echartBody");
     //初始化图表;
     this.chart = [
+      null,
       echarts.init(this.$refs.chart1),
       echarts.init(this.$refs.chart2),
       echarts.init(this.$refs.chart3),
+      null,
+      null,
+      null,
       echarts.init(this.$refs.chart4),
       echarts.init(this.$refs.chart5),
     ];
@@ -612,13 +616,15 @@ export default {
         });
       this.$set(this, 'btnForm', routeBtn);
     },
-    // 渲染echart图
-    barData(item, option) {
-      // echarts.dispose(id);
-      item.setOption(option);
-      // echarts.init(id).setOption(option);
+    fontSize(res) {
+      let clientWidth =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+      if (!clientWidth) return;
+      return res * (clientWidth / 1920);
     },
-    async getEcharts() {
+    async getEcharts(remarkTb) {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -628,13 +634,14 @@ export default {
         if (!clientWidth) return;
         return res * (clientWidth / 1920);
       }
-      this.chartOptions = [
-        {
+      if (remarkTb === 1) {
+        this.chartOptions[1] = {
           grid: {
             containLabel: true,
             bottom: 0,
             left: fontSize(10),
             right: fontSize(10),
+            top: fontSize(50),
           },
           tooltip: {
             trigger: 'axis',
@@ -647,6 +654,11 @@ export default {
             data: ['计划数', '完成数'],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
+            itemGap: fontSize(30),
+            textStyle: {
+              fontSize: fontSize(16),
+              padding: [0, 0, 0, fontSize(10)],
+            },
           },
           xAxis: {
             // name: "班级",
@@ -656,6 +668,7 @@ export default {
               interval: 0,
               show: true,
               color: '#000',
+              fontSize: fontSize(16),
             },
             axisLine: {
               lineStyle: {
@@ -671,11 +684,13 @@ export default {
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
+                fontSize: fontSize(16),
               },
               axisLabel: {
                 interval: 0,
                 show: true,
                 color: '#444444',
+                fontSize: fontSize(12),
               },
               axisLine: {
                 show: false,
@@ -735,8 +750,9 @@ export default {
               },
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 2) {
+        this.chartOptions[2] = {
           backgroundColor: '#fff',
           // title: {
           //   text: "注册资金",
@@ -833,8 +849,9 @@ export default {
               }),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 3) {
+        this.chartOptions[3] = {
           backgroundColor: '#fff',
           // title: {
           //   text: "注册资金",
@@ -931,11 +948,13 @@ export default {
               }),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 7) {
+        this.chartOptions[7] = {
           grid: {
             containLabel: true,
             bottom: 0,
+            top: fontSize(50),
             left: fontSize(10),
             right: fontSize(10),
           },
@@ -950,6 +969,11 @@ export default {
             data: ['计划数', '完成数'],
             itemWidth: fontSize(14),
             itemHeight: fontSize(14),
+            itemGap: fontSize(30),
+            textStyle: {
+              fontSize: fontSize(16),
+              padding: [0, 0, 0, fontSize(10)],
+            },
           },
           xAxis: {
             // name: "班级",
@@ -959,6 +983,7 @@ export default {
               interval: 0,
               show: true,
               color: '#000',
+              fontSize: fontSize(16),
             },
             axisLine: {
               lineStyle: {
@@ -974,11 +999,13 @@ export default {
               type: 'value',
               nameTextStyle: {
                 color: '#444444',
+                fontSize: fontSize(16),
               },
               axisLabel: {
                 interval: 0,
                 show: true,
                 color: '#444444',
+                fontSize: fontSize(12),
               },
               axisLine: {
                 show: false,
@@ -1020,8 +1047,9 @@ export default {
               data: this.tableData[7].map((item) => item['S2']),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 8) {
+        this.chartOptions[8] = {
           backgroundColor: '#fff',
           color: [
             '#0090FF',
@@ -1032,7 +1060,14 @@ export default {
             '#00CA69',
           ],
           legend: {
-            top: '0%',
+            data: ['计划数', '生产数'],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            itemGap: fontSize(30),
+            textStyle: {
+              fontSize: fontSize(16),
+              padding: [0, 0, 0, fontSize(10)],
+            },
           },
           tooltip: {
             trigger: 'axis',
@@ -1041,6 +1076,7 @@ export default {
             },
           },
           grid: {
+            top: fontSize(50),
             left: fontSize(10),
             right: fontSize(10),
             bottom: fontSize(10),
@@ -1053,6 +1089,7 @@ export default {
               axisLabel: {
                 formatter: '{value}月',
                 color: '#333',
+                fontSize: fontSize(16),
               },
               axisLine: {
                 lineStyle: {
@@ -1065,14 +1102,14 @@ export default {
           yAxis: [
             {
               type: 'value',
-              name: '单位：万',
+              name: '单位:万',
               axisLabel: {
                 color: '#666',
+                fontSize: fontSize(12),
               },
               nameTextStyle: {
-                color: '#666',
-                fontSize: 12,
-                lineHeight: 40,
+                color: '#444444',
+                fontSize: fontSize(16),
               },
               splitLine: {
                 lineStyle: {
@@ -1150,19 +1187,25 @@ export default {
               data: [233, 233, 200, 180, 199, 233, 210, 180],
             },
           ],
-        },
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
-      });
+        };
+      }
+      this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
     },
     handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
-        this.chart.map((item) => {
-          item.resize();
+        this.chart.map((item, remarkTb) => {
+          if (item) {
+            this.getEcharts(remarkTb);
+            item.resize();
+          }
         });
       }, 100);
+    },
+    // 渲染echart图
+    barData(item, option) {
+      // echarts.dispose(id);
+      item.setOption(option);
     },
     handleConsumeBtnClick(index) {
       if (
@@ -1436,7 +1479,6 @@ export default {
           }
           if (this.sysID[z].ID) {
             await this.getTableData(this.formSearchs[z].datas, z);
-            await this.getEcharts();
           }
         });
         // 使用Promise.all等待所有getTableData函数执行完成
@@ -1444,7 +1486,6 @@ export default {
         // await Promise.all(tableDataPromises);
         // );
         this.adminLoading = false;
-        // await this.getEcharts();
       } else {
         this.$message({
           message: msg,
@@ -1496,6 +1537,15 @@ export default {
           });
         }
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        if (
+          remarkTb === 1 ||
+          remarkTb === 2 ||
+          remarkTb === 3 ||
+          remarkTb === 7 ||
+          remarkTb === 8
+        ) {
+          await this.getEcharts(remarkTb);
+        }
       } else {
         this.$message({
           message: msg,
@@ -1735,12 +1785,15 @@ export default {
             font-size: 12px;
             // .triangle
           }
-          .xnode div:nth-child(1) {
+          .triangle {
             padding-left: 20px;
             width: 30%;
             position: relative;
+            white-space: nowrap;
+            // overflow: hidden;
+            text-overflow: ellipsis;
           }
-          .xnode div:nth-child(1)::before {
+          .triangle::before {
             content: ''; /* 伪元素的内容为空 */
             position: absolute; /* 将伪元素设置为绝对定位 */
             top: 50%;
@@ -1751,6 +1804,7 @@ export default {
             height: 10px;
             background: #8598ff;
             border-radius: 50%;
+            z-index: 1;
           }
           .xnode:nth-child(2) div:nth-child(1)::before {
             background: #f9921a;
@@ -1815,6 +1869,9 @@ export default {
       font-size: 14px;
       color: #333333;
       font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .el-button {
       border-radius: 6px !important;
@@ -1843,6 +1900,7 @@ export default {
   .echartBody {
     // height: 480px;
     flex-grow: 1;
+    overflow: hidden;
     padding: 10px;
     width: 100%;
     // height: 100%;

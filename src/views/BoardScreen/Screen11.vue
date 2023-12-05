@@ -130,7 +130,11 @@
                 <div
                   class="ScreenBaseNum truncate w-full text-center px-[10px]"
                 >
-                  {{ tableData[6][0]['S1'].toLocaleString() }}
+                  {{
+                    tableData[6][0]['S1'] || tableData[6][0]['S1'] === 0
+                      ? tableData[6][0]['S1'].toLocaleString()
+                      : null
+                  }}
                 </div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
@@ -151,7 +155,11 @@
                 <div
                   class="ScreenBaseNum truncate w-full text-center px-[10px]"
                 >
-                  {{ tableData[7][0]['S1'].toLocaleString() }}
+                  {{
+                    tableData[7][0]['S1'] || tableData[7][0]['S1'] === 0
+                      ? tableData[7][0]['S1'].toLocaleString()
+                      : null
+                  }}
                 </div>
                 <svg-icon icon-class="ScreenBase2" class="ScreenBase2" />
                 <div
@@ -170,9 +178,13 @@
                 class="h-full flex flex-col justify-center gap-[10%] w-33/100"
               >
                 <div
-                  class="ScreenBaseNum truncate w-full text-center px-[10px]"
+                  class="ScreenBaseNum truncate w-full text-center px-[10px] FFB803"
                 >
-                  {{ tableData[8][0]['S1'].toLocaleString() }}
+                  {{
+                    tableData[8][0]['S1'] || tableData[8][0]['S1'] === 0
+                      ? tableData[8][0]['S1'].toLocaleString()
+                      : null
+                  }}
                 </div>
                 <svg-icon icon-class="ScreenBase3" class="ScreenBase2" />
                 <div
@@ -493,11 +505,17 @@ export default {
   async mounted() {
     //初始化图表;
     this.chart = [
-      this.$refs.chart0,
-      this.$refs.chart1,
-      this.$refs.chart2,
-      this.$refs.chart3,
-      this.$refs.chart4,
+      null,
+      echarts.init(this.$refs.chart0),
+      echarts.init(this.$refs.chart1),
+      echarts.init(this.$refs.chart2),
+      null,
+      echarts.init(this.$refs.chart3),
+      null,
+      null,
+      null,
+      null,
+      echarts.init(this.$refs.chart4),
     ];
     // 在窗口大小变化时，调用 resize 方法重新渲染图表
     this.handleWindowResizeDebounced = debounce(this.handleWindowResize, 200); //设置防抖
@@ -507,6 +525,11 @@ export default {
     // 在组件销毁时，移除 resize 事件监听器
     window.removeEventListener('resize', this.handleWindowResizeDebounced);
     this.handleWindowResizeDebounced.cancel();
+    for (const remarkTb in this.refreshTimers) {
+      if (this.refreshTimers.hasOwnProperty(remarkTb)) {
+        this.stopRefreshTimer(remarkTb);
+      }
+    }
   },
   methods: {
     getCellStyles(BColor, FColor, column, columns) {
@@ -554,19 +577,16 @@ export default {
         };
       }
     },
-    // 渲染echart图
-    barData(id, option) {
-      // echarts.dispose(id);
-      echarts.init(id).setOption(option);
-    },
-
     // 获取表头数据
     async getTableHeader() {
-      let rea = await GetSearchData({
-        dicID: 15223,
-        rows: 0,
-        page: 1,
-      });
+      let rea = await GetSearchData(
+        {
+          dicID: 15223,
+          rows: 0,
+          page: 1,
+        },
+        '557842568941C6D97DBF4313086B3E2A',
+      );
       const { data: data1, result: result1, msg: msg1 } = rea.data;
       if (result1) {
         this.sysID = data1.map((item) => {
@@ -585,7 +605,7 @@ export default {
           };
         });
       }
-      let res = await GetHeader(this.sysID);
+      let res = await GetHeader(this.sysID, '557842568941C6D97DBF4313086B3E2A');
       const { datas, forms, result, msg } = res.data;
 
       if (result) {
@@ -621,7 +641,6 @@ export default {
           }
           if (z !== 0) {
             await this.getTableData(this.formSearchs[z].datas, z);
-            await this.getEcharts();
           }
         });
       }
@@ -634,7 +653,7 @@ export default {
       if (!clientWidth) return;
       return res * (clientWidth / 1920);
     },
-    async getEcharts() {
+    async getEcharts(remarkTb) {
       //获取屏幕宽度并计算比例
       function fontSize(res) {
         let clientWidth =
@@ -644,8 +663,8 @@ export default {
         if (!clientWidth) return;
         return res * (clientWidth / 1920);
       }
-      this.chartOptions = [
-        {
+      if (remarkTb === 1) {
+        this.chartOptions[1] = {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
@@ -696,18 +715,16 @@ export default {
                 hideOverlap: false, // 是否隐藏重叠标签
               },
               label: {
-                normal: {
-                  position: 'outside',
-                  show: true,
-                  color: '#fff',
-                  textBorderColor: 'inherit',
-                  textBorderWidth: fontSize(1),
-                  fontSize: fontSize(16),
-                  formatter: function (params) {
-                    if (params.name !== '') {
-                      return params.percent + '%';
-                    }
-                  },
+                position: 'outside',
+                show: true,
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: fontSize(1),
+                fontSize: fontSize(16),
+                formatter: function (params) {
+                  if (params.name !== '') {
+                    return params.percent + '%';
+                  }
                 },
               },
               labelLine: {
@@ -721,8 +738,9 @@ export default {
               })),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 2) {
+        this.chartOptions[2] = {
           grid: {
             containLabel: true,
             bottom: 0,
@@ -855,8 +873,9 @@ export default {
               },
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 3) {
+        this.chartOptions[3] = {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
@@ -929,8 +948,9 @@ export default {
               })),
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 5) {
+        this.chartOptions[5] = {
           grid: {
             containLabel: true,
             bottom: fontSize(10),
@@ -1067,8 +1087,9 @@ export default {
               data: this.tableData[5].map((item) => item['S2']), // 折线图的数据
             },
           ],
-        },
-        {
+        };
+      } else if (remarkTb === 10) {
+        this.chartOptions[10] = {
           grid: {
             containLabel: true,
             bottom: -fontSize(10),
@@ -1105,10 +1126,8 @@ export default {
               // inverse: true,
               axisLabel: {
                 show: true,
-                textStyle: {
-                  color: '#C9D2FA',
-                  fontSize: fontSize(16),
-                },
+                color: '#C9D2FA',
+                fontSize: fontSize(16),
               },
               splitLine: {
                 show: false,
@@ -1145,14 +1164,12 @@ export default {
           ],
           series: [
             {
-              name: '金额',
+              // name: '金额',
               type: 'bar',
               zlevel: 1,
               itemStyle: {
-                normal: {
-                  barBorderRadius: 30,
-                  color: '#2F8FFF',
-                },
+                borderRadius: 30,
+                color: '#2F8FFF',
               },
               label: {
                 show: true, // 显示标签
@@ -1178,20 +1195,25 @@ export default {
             //   },
             // },
           ],
-        },
-      ];
-      this.chart.map((item, index) => {
-        this.barData(item, this.chartOptions[index]);
-      });
+        };
+      }
+      this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
+    },
+    handleWindowResize() {
       // 调用 resize 方法重新渲染图表
       setTimeout(() => {
-        this.chart.map((item) => {
-          echarts.init(item).resize();
+        this.chart.map((item, remarkTb) => {
+          if (item) {
+            this.getEcharts(remarkTb);
+            item.resize();
+          }
         });
       }, 100);
     },
-    handleWindowResize() {
-      this.getEcharts();
+    // 渲染echart图
+    barData(item, option) {
+      // echarts.dispose(id);
+      item.setOption(option);
     },
     showtime() {
       const now = new Date();
@@ -1253,7 +1275,7 @@ export default {
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      let res = await GetSearchData(form);
+      let res = await GetSearchData(form, '557842568941C6D97DBF4313086B3E2A');
       const { result, data, count, msg, Columns, AppColumns } = res.data;
       if (result) {
         // 获取每个表头
@@ -1267,11 +1289,15 @@ export default {
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
-        // if (remarkTb === 1) {
-        //   this.tableData[1][this.tableData[1].length - 1][
-        //     this.tableColumns[1]['0']['prop']
-        //   ] = '合计';
-        // }
+        if (
+          remarkTb === 1 ||
+          remarkTb === 2 ||
+          remarkTb === 3 ||
+          remarkTb === 5 ||
+          remarkTb === 10
+        ) {
+          await this.getEcharts(remarkTb);
+        }
       } else {
         this.$message({
           message: msg,
@@ -1498,5 +1524,8 @@ export default {
 .ScreenBase4 {
   width: 144px;
   height: 36px;
+}
+.FFB803 {
+  color: #ffb803 !important;
 }
 </style>
