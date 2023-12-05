@@ -193,11 +193,22 @@
             ></el-input
           > -->
           </el-col>
-          <el-col :span="6" class="flex"> </el-col>
-          <el-col :span="6" class="flex_flex_end">
+          <el-col :span="12" class="flex_flex_end">
             <!-- <el-button type="primary" size="mini" @click="AutoSplitOrder(1)"
               >自动拆单</el-button
             > -->
+            <div>
+              <span>新增行数：</span>
+              <el-input-number
+                size="mini"
+                v-model.trim="addNum"
+                :min="1"
+                :max="100"
+                :step="1"
+                placeholder="请输入新增行数"
+                style="margin-right: 10px"
+              ></el-input-number>
+            </div>
             <el-button type="primary" size="mini" @click="addRow(1)"
               >新增</el-button
             >
@@ -338,6 +349,7 @@ export default {
       dialogSearchForm: {
         OrderID: '',
       },
+      addNum: 1,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
@@ -376,9 +388,9 @@ export default {
       isClear: [false, false, false, false, false, false],
       hasSelect: [false, false, false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
@@ -1043,7 +1055,7 @@ export default {
             // }
 
             if (index === 1) {
-              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              // this.tablePagination[i]['pageSize'] = n['pageSize'];
               this.hasSelect[i] = n['IsSelect'];
               this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
@@ -1826,7 +1838,7 @@ export default {
           return;
         }
         if (error) {
-          this.$message.error('订单中不含有新数量');
+          this.$message.error('订单中不含有拆分数量');
           return;
         }
         let newData = _.cloneDeep(
@@ -1860,10 +1872,13 @@ export default {
     addRow(remarkTb) {
       if (remarkTb === 1) {
         // 获取修改记录
-        console.log(this.tableColumns[1], '111');
+        if (!this.addNum) {
+          this.$message.error('请输入需要添加的行数!');
+          return;
+        }
         const $table = this.$refs.ComVxeTable.$refs.vxeTable;
         // 下拉数据是需要获取数据源
-        for (let x = 0; x < 1; x++) {
+        for (let x = 0; x < this.addNum; x++) {
           let obj = _.cloneDeep(this.selectionData[this.labelStatus1][0]);
           obj['_X_ROW_KEY'] = _.uniqueId('row__');
           // obj['seq'] = this.tableData[remarkTb].length + 1;
@@ -1875,9 +1890,9 @@ export default {
           obj['PlanQty'] = 0;
           console.log(this.DataSourceList, 'in this.DataSourceList');
           this.tableColumns[remarkTb].map((item) => {
-            // if (item.prop === 'Status') {
-            //   obj[item.prop] = 1;
-            // }
+            if (item.prop === 'RequestOutDate') {
+              obj[item.prop] = null;
+            }
             for (let key in this.DataSourceList[remarkTb]) {
               if (item.DataSourceName === key) {
                 obj[key] = this.DataSourceList[remarkTb][key];
@@ -1953,15 +1968,15 @@ export default {
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      .el-date-editor {
-        width: 200px;
-      }
-      .el-input {
-        width: 200px !important;
-      }
-      .DefaultLineNameInput {
-        width: 500px !important;
-      }
+      // .el-date-editor {
+      //   width: 200px;
+      // }
+      // .el-input {
+      //   width: 200px !important;
+      // }
+      // .DefaultLineNameInput {
+      //   width: 500px !important;
+      // }
     }
     .dialog-footer {
       display: flex;
