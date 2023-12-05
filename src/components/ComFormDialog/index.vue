@@ -186,7 +186,14 @@
             placeholder=""
           >
           </el-time-select>
-
+          <el-time-picker
+            style="width: 100%"
+            v-else-if="newItem.type == 'timeHHmm'"
+            v-model="formData[newItem.prop]"
+            placeholder=""
+            value-format="HH:mm"
+          >
+          </el-time-picker>
           <el-checkbox
             v-else-if="newItem.type == 'checkbox'"
             v-model="formData[newItem.prop]"

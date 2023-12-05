@@ -112,18 +112,18 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import ComFormDialog from "@/components/ComFormDialog";
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import ComFormDialog from '@/components/ComFormDialog';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetWorkTime,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "StandTypeInfo",
+  name: 'StandTypeInfo',
   components: {
     ComSearch,
     ComUmyTable,
@@ -144,23 +144,23 @@ export default {
       btnForm: [],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataTreeSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataTreeSave',
+          Icon: '',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          Type: "danger",
+          ButtonCode: 'delete',
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Params: { dataName: "delData" },
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataDel',
+          Params: { dataName: 'delData' },
+          Icon: '',
         },
       ],
       tableData: [[]],
@@ -168,18 +168,18 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       //////////////新增弹框//////////////
       dialogShow: false,
       formData: {
-        ParentWorkingTimesID: "0",
-        ParentWorkingTimesName: "",
-        WorkingTimesName: "",
-        StartTime: "08:00",
-        EndTime: "17:30",
+        ParentWorkingTimesID: '0',
+        ParentWorkingTimesName: '',
+        WorkingTimesName: '',
+        StartTime: '08:00',
+        EndTime: '17:30',
         WorkHour: 8,
         OverTimeHour: 0,
         RestHour: 0,
@@ -188,57 +188,65 @@ export default {
       },
       formController: [
         {
-          label: "上级班次",
-          prop: "ParentWorkingTimesName",
-          type: "select",
+          label: '上级班次',
+          prop: 'ParentWorkingTimesName',
+          type: 'select',
           select: [],
         },
-        { label: "班次名称", prop: "WorkingTimesName", type: "input" },
-        { label: "开始时间", prop: "StartTime", type: "time" },
-        { label: "结束时间", prop: "EndTime", type: "time" },
+        { label: '班次名称', prop: 'WorkingTimesName', type: 'input' },
         {
-          label: "上班时间",
-          prop: "WorkHour",
-          type: "input",
-          inputType: "number",
+          label: '开始时间',
+          prop: 'StartTime',
+          type: 'timeHHmm',
         },
         {
-          label: "加班时间",
-          prop: "OverTimeHour",
-          type: "input",
-          inputType: "number",
+          label: '结束时间',
+          prop: 'EndTime',
+          type: 'timeHHmm',
         },
         {
-          label: "休息时间",
-          prop: "RestHour",
-          type: "input",
-          inputType: "number",
+          label: '上班时间',
+          prop: 'WorkHour',
+          type: 'input',
+          inputType: 'number',
         },
         {
-          label: "状态",
-          prop: "Status",
-          type: "radioGroupLabel",
+          label: '加班时间',
+          prop: 'OverTimeHour',
+          type: 'input',
+          inputType: 'number',
+        },
+        {
+          label: '休息时间',
+          prop: 'RestHour',
+          type: 'input',
+          inputType: 'number',
+        },
+        {
+          label: '状态',
+          prop: 'Status',
+          type: 'radioGroupLabel',
           radioGroups: [
-            { label: "启用", value: 1 },
-            { label: "禁用", value: 0 },
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
           ],
         },
       ],
       formRules: {
         WorkingTimesName: [
-          { required: true, message: "班次名称为必填项", trigger: "blur" },
+          { required: true, message: '班次名称为必填项', trigger: 'blur' },
         ],
         StartTime: [
-          { required: true, message: "开始时间为必填项", trigger: "change" },
+          { required: true, message: '开始时间为必填项', trigger: 'change' },
         ],
         EndTime: [
-          { required: true, message: "结束时间为必填项", trigger: "change" },
+          { required: true, message: '结束时间为必填项', trigger: 'change' },
         ],
         WorkHour: [
-          { required: true, message: "上班时间为必填项", trigger: "change" },
+          { required: true, message: '上班时间为必填项', trigger: 'change' },
         ],
         OverTimeHour: [
-          { required: true, message: "加班时间为必填项", trigger: "change" },
+          { required: true, message: '加班时间为必填项', trigger: 'change' },
         ],
       },
       adminLoading: false,
@@ -267,15 +275,15 @@ export default {
       if (result) {
         if (data.length != 0) {
           data.forEach((x) => {
-            x["label"] = x.WorkingTimesName;
-            x["value"] = x.WorkingTimesID;
+            x['label'] = x.WorkingTimesName;
+            x['value'] = x.WorkingTimesID;
           });
         }
         this.formController[0].select = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -287,7 +295,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -298,8 +306,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -309,17 +317,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -330,13 +338,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -371,7 +379,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -380,10 +388,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -391,23 +399,23 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -432,7 +440,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -440,7 +448,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -451,7 +459,7 @@ export default {
         let submitData = [];
         this.tableData[remarkTb].forEach((x) => {
           if (x.update) {
-            x["dicID"] = 86;
+            x['dicID'] = 86;
             submitData.push(x);
           }
           if (x.children && x.children.length != 0) {
@@ -461,10 +469,10 @@ export default {
         if (submitData.length != 0) {
           this.generalSaveData(submitData, 0, index);
         } else {
-          this.$message.error("没有可保存的数据");
+          this.$message.error('没有可保存的数据');
         }
       } else {
-        this.$message.error("没有可保存的数据");
+        this.$message.error('没有可保存的数据');
       }
     },
     // 递归获取子数据
@@ -472,7 +480,7 @@ export default {
       submitData.concat(row.children);
       row.children.forEach((x) => {
         if (x.update) {
-          x["dicID"] = 86;
+          x['dicID'] = 86;
           submitData.push(x);
         }
         if (x.children && x.children.length != 0) {
@@ -489,13 +497,13 @@ export default {
         this.getWorkTimeData();
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -521,15 +529,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -538,28 +546,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetWorkTime(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -568,16 +576,16 @@ export default {
     // 点击新增班次
     openDrawer() {
       this.dialogShow = true;
-      console.log("this.delData[remarkTb]", this.delData[this.tagRemark]);
+      console.log('this.delData[remarkTb]', this.delData[this.tagRemark]);
       if (this.delData[0].length != 0) {
         let row = this.delData[0][0];
         this.formData.ParentWorkingTimesID = row.WorkingTimesID;
         this.formData.ParentWorkingTimesName = row.WorkingTimesName;
-        this.formData.WorkingTimesName = "";
+        this.formData.WorkingTimesName = '';
       } else {
         // 没选中时班次清空
-        this.formData.ParentWorkingTimesID = "";
-        this.formData.ParentWorkingTimesName = "";
+        this.formData.ParentWorkingTimesID = '';
+        this.formData.ParentWorkingTimesName = '';
       }
     },
     // 弹框确定添加
@@ -588,7 +596,7 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
@@ -597,7 +605,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           this.dialogShow = false;
@@ -609,11 +617,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
