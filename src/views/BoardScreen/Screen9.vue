@@ -168,7 +168,7 @@ import { GetHeader } from '@/api/Common';
 import ComScreenTable from '@/components/ComScreenTable';
 import '@/flexible.js';
 export default {
-  name: 'Screen10',
+  name: 'Screen9',
   data() {
     return {
       chartHead: chartHead,
@@ -431,7 +431,7 @@ export default {
     async getTableHeader() {
       let rea = await GetSearchData(
         {
-          dicID: 15220,
+          dicID: 15224,
           rows: 0,
           page: 1,
         },
@@ -917,7 +917,6 @@ export default {
               }, //分隔线样式
             },
           ],
-          animationDuration: 2000,
         };
       }
       this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);

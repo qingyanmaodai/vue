@@ -27,8 +27,8 @@ function GetMenuList(data, ParentCode) {
         item.Component == "Layout"
           ? Layout
           : function component(resolve) {
-              require([`@/views/${item.Component}.vue`], resolve);
-            };
+            require([`@/views/${item.Component}.vue`], resolve);
+          };
       let allBtns = [];
       let newBtns = store.getters.btns.filter((x) => {
         return x.MenuCode == item.MenuCode;
@@ -224,27 +224,27 @@ const state = {
 const mutations = {
   SET_ROUTERS: (state, routers) => {
     // 登录成功或重新加载页面时，获取是动态配置首页渲染动态首页，否则取静态的
-    if (store.getters.menus.length) {
-      let indexNum = -1;
-      indexNum = _.findIndex(store.getters.menus, function (o) {
-        if (o.ParentCode && o.MenuName === "首页") {
-          return o;
-        }
-      });
-      if (indexNum > -1) {
-        constantRoutes.forEach((x, i) => {
-          if (x.children && x.children.length) {
-            if (
-              x.children &&
-              x.children[0].meta.title === "首页" &&
-              x.children[0].path != store.getters.menus[indexNum].Url
-            ) {
-              constantRoutes.splice(i, 1);
-            }
-          }
-        });
-      }
-    }
+    // if (store.getters.menus.length) {
+    //   let indexNum = -1;
+    //   indexNum = _.findIndex(store.getters.menus, function (o) {
+    //     if (o.ParentCode && o.MenuName === "首页") {
+    //       return o;
+    //     }
+    //   });
+    //   if (indexNum > -1) {
+    //     constantRoutes.forEach((x, i) => {
+    //       if (x.children && x.children.length) {
+    //         if (
+    //           x.children &&
+    //           x.children[0].meta.title === "首页" &&
+    //           x.children[0].path != store.getters.menus[indexNum].Url
+    //         ) {
+    //           constantRoutes.splice(i, 1);
+    //         }
+    //       }
+    //     });
+    //   }
+    // }
     state.addRouters = routers;
     state.routers = constantRoutes.concat(routers);
   },

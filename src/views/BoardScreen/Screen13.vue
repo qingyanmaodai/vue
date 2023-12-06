@@ -14,7 +14,7 @@
               <div class="panel-footer">
                 <h2>{{ result1[1]['label'] }}</h2>
                 <div class="chartHeadEnd">
-                  翻页倒计时{{ countdowns[1] }} 第{{
+                  {{ countdownsTitle[1] }} 第{{
                     formSearchs[1].datas['page']
                   }}页 共{{ countTotal[1] }}页
                 </div>
@@ -135,7 +135,8 @@ export default {
       todayDate: '',
       chart: [],
       chartOptions: [],
-      countdowns: [],
+      countdowns: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+      countdownsTitle: ['', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       countTotal: [],
       refreshTimers: [],
       tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
@@ -500,6 +501,11 @@ export default {
             axisPointer: {
               type: 'shadow',
             },
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           legend: {
             top: fontSize(0),
@@ -575,6 +581,11 @@ export default {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           legend: {
             top: 'center',
@@ -600,7 +611,7 @@ export default {
             {
               type: 'pie',
               selectedMode: 'single',
-              radius: [fontSize(50), fontSize(80)],
+              radius: ['50%', '80%'],
               center: ['40%', '50%'],
               color: [
                 '#8E35FF',
@@ -635,7 +646,7 @@ export default {
               },
               labelLine: {
                 show: true,
-                length2: 0,
+                length2: fontSize(10),
                 length: fontSize(10),
               },
               data: this.tableData[3].map((item) => ({
@@ -659,6 +670,11 @@ export default {
             axisPointer: {
               type: 'none',
             },
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
             // formatter: function (params) {
             //   return (
             //     params[0].name +
@@ -797,35 +813,48 @@ export default {
     async startRefreshTimer(remarkTb, count) {
       // 先清除之前的定时器
       this.stopRefreshTimer(remarkTb);
-
-      // 设置定时器，每十秒刷新一次数据
-      this.$set(
-        this.refreshTimers,
-        remarkTb,
-        setInterval(async () => {
-          if (_this.countdowns[remarkTb] > 0) {
-            _this.$set(
-              _this.countdowns,
-              remarkTb,
-              _this.countdowns[remarkTb] - 1,
-            );
-          } else {
-            _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
-
-            const form = _this.formSearchs[remarkTb].datas;
-            form.page =
-              form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
-            _this.countTotal[remarkTb] = Math.ceil(count / form.rows);
-
-            // _this.$set(_this.tableLoading, remarkTb, true);
-            await _this.getTableData(
-              _this.formSearchs[remarkTb].datas,
-              remarkTb,
-            );
-            // _this.$set(_this.tableLoading, remarkTb, false);
-          }
-        }, 1000),
+      this.countTotal[remarkTb] = Math.ceil(
+        count / this.formSearchs[remarkTb].datas.rows,
       );
+      this.formSearchs[remarkTb].datas.page = 1;
+      // 设置定时器，每十秒刷新一次数据
+      if (this.countTotal[remarkTb] !== 1) {
+        this.$set(
+          this.countdownsTitle,
+          remarkTb,
+          '翻页倒计时' + this.countdowns[remarkTb],
+        );
+        this.$set(
+          this.refreshTimers,
+          remarkTb,
+          setInterval(async () => {
+            if (_this.countdowns[remarkTb] > 0) {
+              _this.$set(
+                _this.countdowns,
+                remarkTb,
+                _this.countdowns[remarkTb] - 1,
+              );
+              _this.$set(
+                _this.countdownsTitle,
+                remarkTb,
+                '翻页倒计时' + _this.countdowns[remarkTb],
+              ); // 重新开始倒计时
+            } else {
+              _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
+              _this.$set(_this.countdownsTitle, remarkTb, '翻页倒计时' + 10); // 重新开始倒计时
+              const form = _this.formSearchs[remarkTb].datas;
+              form.page =
+                form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
+              // _this.$set(_this.tableLoading, remarkTb, true);
+              await _this.getTableData(
+                _this.formSearchs[remarkTb].datas,
+                remarkTb,
+              );
+              // _this.$set(_this.tableLoading, remarkTb, false);
+            }
+          }, 1000),
+        );
+      }
     },
     stopRefreshTimer(remarkTb) {
       // 清除指定 remarkTb 的定时器

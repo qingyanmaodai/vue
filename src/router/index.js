@@ -43,6 +43,11 @@ export let constantRoutes = [
     hidden: true,
   },
   {
+    path: "/Screen9",
+    component: () => import("@/views/BoardScreen/Screen9.vue"),
+    hidden: true,
+  },
+  {
     path: "/Screen10",
     component: () => import("@/views/BoardScreen/Screen10.vue"),
     hidden: true,

@@ -33,7 +33,7 @@
               <div class="panel-footer">
                 <h2>{{ result1[3]['label'] }}</h2>
                 <div class="chartHeadEnd">
-                  翻页倒计时{{ countdowns[3] }} 第{{
+                  {{ countdownsTitle[3] }} 第{{
                     formSearchs[3].datas['page']
                   }}页 共{{ countTotal[3] }}页
                 </div>
@@ -106,7 +106,7 @@
               <div class="panel-footer">
                 <h2>{{ result1[4]['label'] }}</h2>
                 <div class="chartHeadEnd">
-                  翻页倒计时{{ countdowns[4] }} 第{{
+                  {{ countdownsTitle[4] }} 第{{
                     formSearchs[4].datas['page']
                   }}页 共{{ countTotal[4] }}页
                 </div>
@@ -268,7 +268,8 @@ export default {
       todayDate: '',
       chart: [],
       chartOptions: [],
-      countdowns: [],
+      countdowns: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+      countdownsTitle: ['', '', '', '', '', '', '', '', '', '', '', '', '', ''],
       countTotal: [],
       refreshTimers: [],
       tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
@@ -627,6 +628,11 @@ export default {
           tooltip: {
             trigger: 'item',
             formatter: '{b}:({d}%)',
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           legend: {
             top: 'center',
@@ -652,7 +658,7 @@ export default {
             {
               type: 'pie',
               selectedMode: 'single',
-              radius: [fontSize(50), fontSize(80)],
+              radius: ['50%', '80%'],
               center: ['40%', '50%'],
               color: [
                 '#8E35FF',
@@ -690,7 +696,7 @@ export default {
               },
               labelLine: {
                 show: true,
-                length2: 0,
+                length2: fontSize(10),
                 length: fontSize(10),
               },
               data: this.tableData[1].map((item) => ({
@@ -714,6 +720,11 @@ export default {
             axisPointer: {
               type: 'none',
             },
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           xAxis: {
             show: false,
@@ -788,6 +799,11 @@ export default {
             axisPointer: {
               type: 'shadow',
             },
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
+            },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           // legend: {
           //   top: fontSize(10),
@@ -882,112 +898,200 @@ export default {
         };
       } else if (remarkTb === 8) {
         this.chartOptions[8] = {
-          textStyle: {
-            // 全局字体样式
-            color: '#C9D2FA',
-            fontSize: fontSize(14),
-          },
-          // legend: {
-          //   bottom: 0,
-          //   left: "center",
-          //   itemBorderRadius: 8,
-          //   data: [
-          //     "Chars Bosh",
-          //   ],
-          // },
           tooltip: {
-            // 提示框组件
-            trigger: 'item', // 触发类型 可选为：'axis' | 'item' | 'none'
-            axisPointer: {
-              // 坐标轴指示器，坐标轴触发有效
-              type: 'line', // 默认为直线，可选为：'line' | 'shadow'
-              shadowStyle: {
-                color: 'rgba(204, 214, 235, 0.247059)',
-              },
+            trigger: 'item',
+            formatter: '{b}:({d}%)',
+            confine: true,
+            textStyle: {
+              fontSize: fontSize(16), // 调整字体大小
             },
+            padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
-          radar: {
-            // shape: 'circle',
-            splitNumber: 3,
-            splitArea: {
-              show: false,
+          legend: {
+            top: 'center',
+            // left: "center",
+            orient: 'vertical',
+            right: fontSize(20),
+            // bottom: "0",
+            itemWidth: fontSize(16),
+            itemHeight: fontSize(16),
+            icon: 'circle',
+            itemGap: fontSize(20),
+            textStyle: {
+              color: '#fff',
+              fontSize: fontSize(18),
+              padding: [0, 0, 0, fontSize(10)],
             },
-            splitLine: {
-              lineStyle: {
-                color: ['#254678'],
-              },
-            },
-            axisLine: {
-              lineStyle: {
-                color: '#254678',
-              },
-            },
-            indicator: this.tableData[8].map((item) => ({
-              name: item.Name1,
-              // min: 0,
-              // max:
-              //   this.tableData[8].reduce(
-              //     (acc, innerItem) => acc + innerItem.S1,
-              //     0,
-              //   ) / this.tableData[8].length,
-            })),
-            center: ['50%', '50%'],
-            radius: fontSize(100), // 调整雷达图的半径
-            // [
-            //   {
-            //     name: '欠料',
-            //     max: 100,
-            //   },
-            //   {
-            //     name: '人员不够',
-            //     max: 100,
-            //   },
-            //   {
-            //     name: '机械故障',
-            //     max: 100,
-            //   },
-            //   {
-            //     name: '模具异常',
-            //     max: 100,
-            //   },
-            //   {
-            //     name: '来料不良',
-            //     max: 100,
-            //   },
-            // ],
+            data: this.tableData[8].map((item) => item['Name1']),
+          },
+          grid: {
+            containLabel: true,
           },
           series: [
             {
-              // name: '雷达图',
-              type: 'radar',
-              symbol: 'circle',
-              areaStyle: {
-                color: '#31C2FF', // 调色盘颜色列表。
-                opacity: 0.4,
-              },
-              itemStyle: {
-                lineStyle: {
-                  width: 2,
-                },
-              },
-              emphasis: {
-                areaStyle: {
-                  opacity: 0.8,
-                },
+              type: 'pie',
+              selectedMode: 'single',
+              radius: ['50%', '80%'],
+              center: ['40%', '50%'],
+              color: [
+                '#8E35FF',
+                '#FFB933',
+                '#2CAA3F',
+                '#1983FF',
+                '#8BCE1D',
+                '#D170FF',
+                '#F46D4F',
+                '#FA9A09',
+                '#FF317B',
+                '#444444',
+                '#BDBDBD',
+                '#D01505',
+                '#D5D5D5',
+                '#D70303',
+              ],
+              labelLayout: {
+                hideOverlap: false, // 是否隐藏重叠标签
               },
               label: {
-                show: true, // 显示标签
-                fontSize: fontSize(14),
+                position: 'outside',
+                show: true,
                 color: '#fff',
-              },
-              data: [
-                {
-                  value: this.tableData[8].map((item) => item['S1']),
+                textBorderColor: 'inherit',
+                textBorderWidth: fontSize(1),
+                fontSize: fontSize(16),
+                formatter: function (params) {
+                  console.log(params, 'params');
+                  if (params.name !== '') {
+                    return params.value;
+                  } else {
+                    return '';
+                  }
                 },
-              ],
+              },
+              labelLine: {
+                show: true,
+                length2: fontSize(10),
+                length: fontSize(10),
+              },
+              data: this.tableData[8].map((item) => ({
+                value: item.S1,
+                name: item.Name1,
+              })),
             },
           ],
         };
+        //  {
+        //   textStyle: {
+        //     // 全局字体样式
+        //     color: '#C9D2FA',
+        //     fontSize: fontSize(14),
+        //   },
+        //   // legend: {
+        //   //   bottom: 0,
+        //   //   left: "center",
+        //   //   itemBorderRadius: 8,
+        //   //   data: [
+        //   //     "Chars Bosh",
+        //   //   ],
+        //   // },
+        //   tooltip: {
+        //     // 提示框组件
+        //     trigger: 'item', // 触发类型 可选为：'axis' | 'item' | 'none'
+        //     axisPointer: {
+        //       // 坐标轴指示器，坐标轴触发有效
+        //       type: 'line', // 默认为直线，可选为：'line' | 'shadow'
+        //       shadowStyle: {
+        //         color: 'rgba(204, 214, 235, 0.247059)',
+        //       },
+        //     },
+        //     confine: true,
+        //     textStyle: {
+        //       fontSize: fontSize(16), // 调整字体大小
+        //     },
+        //     padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
+        //   },
+        //   radar: {
+        //     // shape: 'circle',
+        //     splitNumber: 3,
+        //     splitArea: {
+        //       show: false,
+        //     },
+        //     splitLine: {
+        //       lineStyle: {
+        //         color: ['#254678'],
+        //       },
+        //     },
+        //     axisLine: {
+        //       lineStyle: {
+        //         color: '#254678',
+        //       },
+        //     },
+        //     indicator: this.tableData[8].map((item) => ({
+        //       name: item.Name1,
+        //       // min: 0,
+        //       // max:
+        //       //   this.tableData[8].reduce(
+        //       //     (acc, innerItem) => acc + innerItem.S1,
+        //       //     0,
+        //       //   ) / this.tableData[8].length,
+        //     })),
+        //     center: ['50%', '50%'],
+        //     radius: fontSize(100), // 调整雷达图的半径
+        //     // [
+        //     //   {
+        //     //     name: '欠料',
+        //     //     max: 100,
+        //     //   },
+        //     //   {
+        //     //     name: '人员不够',
+        //     //     max: 100,
+        //     //   },
+        //     //   {
+        //     //     name: '机械故障',
+        //     //     max: 100,
+        //     //   },
+        //     //   {
+        //     //     name: '模具异常',
+        //     //     max: 100,
+        //     //   },
+        //     //   {
+        //     //     name: '来料不良',
+        //     //     max: 100,
+        //     //   },
+        //     // ],
+        //   },
+        //   series: [
+        //     {
+        //       // name: '雷达图',
+        //       type: 'radar',
+        //       symbol: 'circle',
+        //       areaStyle: {
+        //         color: '#31C2FF', // 调色盘颜色列表。
+        //         opacity: 0.4,
+        //       },
+        //       itemStyle: {
+        //         lineStyle: {
+        //           width: 2,
+        //         },
+        //       },
+        //       emphasis: {
+        //         areaStyle: {
+        //           opacity: 0.8,
+        //         },
+        //       },
+        //       label: {
+        //         show: true, // 显示标签
+        //         fontSize: fontSize(14),
+        //         color: '#fff',
+        //       },
+        //       data: [
+        //         {
+        //           value: this.tableData[8].map((item) => item['S1']),
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // };
       }
       this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
     },
@@ -1028,35 +1132,48 @@ export default {
     async startRefreshTimer(remarkTb, count) {
       // 先清除之前的定时器
       this.stopRefreshTimer(remarkTb);
-
-      // 设置定时器，每十秒刷新一次数据
-      this.$set(
-        this.refreshTimers,
-        remarkTb,
-        setInterval(async () => {
-          if (_this.countdowns[remarkTb] > 0) {
-            _this.$set(
-              _this.countdowns,
-              remarkTb,
-              _this.countdowns[remarkTb] - 1,
-            );
-          } else {
-            _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
-
-            const form = _this.formSearchs[remarkTb].datas;
-            form.page =
-              form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
-            _this.countTotal[remarkTb] = Math.ceil(count / form.rows);
-
-            // _this.$set(_this.tableLoading, remarkTb, true);
-            await _this.getTableData(
-              _this.formSearchs[remarkTb].datas,
-              remarkTb,
-            );
-            // _this.$set(_this.tableLoading, remarkTb, false);
-          }
-        }, 1000),
+      this.countTotal[remarkTb] = Math.ceil(
+        count / this.formSearchs[remarkTb].datas.rows,
       );
+      this.formSearchs[remarkTb].datas.page = 1;
+      // 设置定时器，每十秒刷新一次数据
+      if (this.countTotal[remarkTb] !== 1) {
+        this.$set(
+          this.countdownsTitle,
+          remarkTb,
+          '翻页倒计时' + this.countdowns[remarkTb],
+        );
+        this.$set(
+          this.refreshTimers,
+          remarkTb,
+          setInterval(async () => {
+            if (_this.countdowns[remarkTb] > 0) {
+              _this.$set(
+                _this.countdowns,
+                remarkTb,
+                _this.countdowns[remarkTb] - 1,
+              );
+              _this.$set(
+                _this.countdownsTitle,
+                remarkTb,
+                '翻页倒计时' + _this.countdowns[remarkTb],
+              ); // 重新开始倒计时
+            } else {
+              _this.$set(_this.countdowns, remarkTb, 10); // 重新开始倒计时
+              _this.$set(_this.countdownsTitle, remarkTb, '翻页倒计时' + 10); // 重新开始倒计时
+              const form = _this.formSearchs[remarkTb].datas;
+              form.page =
+                form.page < Math.ceil(count / form.rows) ? form.page + 1 : 1;
+              // _this.$set(_this.tableLoading, remarkTb, true);
+              await _this.getTableData(
+                _this.formSearchs[remarkTb].datas,
+                remarkTb,
+              );
+              // _this.$set(_this.tableLoading, remarkTb, false);
+            }
+          }, 1000),
+        );
+      }
     },
     stopRefreshTimer(remarkTb) {
       // 清除指定 remarkTb 的定时器
