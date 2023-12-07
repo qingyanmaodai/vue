@@ -167,7 +167,9 @@
                       </div>
                       <div v-if="item.WorkingDate.indexOf(data.day) != -1">
                         <el-row class="text_row">
-                          <el-col :span="12"> 班次： </el-col>
+                          <el-col :span="12" class="flex truncate">
+                            班次：
+                          </el-col>
                           <el-col :span="12">
                             <el-select
                               size="mini"
@@ -187,7 +189,9 @@
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
-                          <el-col :span="12"> 上班人数： </el-col>
+                          <el-col :span="12" class="flex truncate">
+                            上班人数：
+                          </el-col>
                           <el-col :span="12">
                             <el-input
                               size="mini"
@@ -198,7 +202,9 @@
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
-                          <el-col :span="12"> 总时长： </el-col>
+                          <el-col :span="12" class="flex truncate">
+                            总时长：
+                          </el-col>
                           <el-col :span="12">
                             <el-input
                               size="mini"
@@ -209,7 +215,9 @@
                           </el-col>
                         </el-row>
                         <el-row class="text_row">
-                          <el-col :span="12"> 加班时长： </el-col>
+                          <el-col :span="12" class="flex truncate">
+                            加班时长：
+                          </el-col>
                           <el-col :span="12">
                             <el-input
                               size="mini"

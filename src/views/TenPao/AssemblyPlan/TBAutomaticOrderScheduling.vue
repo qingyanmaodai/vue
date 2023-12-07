@@ -137,14 +137,14 @@
               filterable
               size="small"
               placeholder="请选择方案"
-              v-model="ChangeReason[2]"
+              v-model="selectOption[2]"
               @change="handleSelectChange(2)"
             >
               <el-option
-                v-for="(item, i) in ChangeReasonArray[2]"
+                v-for="(item, i) in selectOptionArray[2]"
                 :key="i"
-                :label="item.title"
-                :value="item.title"
+                :label="item.value"
+                :value="item.value"
               ></el-option>
             </el-select>
           </div>
@@ -247,14 +247,14 @@
                 filterable
                 size="small"
                 placeholder="请选择方案"
-                v-model="ChangeReason[i]"
+                v-model="selectOption[i]"
                 @change="handleSelectChange(i)"
               >
                 <el-option
-                  v-for="(item, i) in ChangeReasonArray[i]"
+                  v-for="(item, i) in selectOptionArray[i]"
                   :key="i"
-                  :label="item.title"
-                  :value="item.title"
+                  :label="item.value"
+                  :value="item.value"
                 ></el-option>
               </el-select>
             </div>
@@ -533,8 +533,8 @@ export default {
       hasSelect: [false, false, false, false, false, false],
       selectedIndex: '0',
       active: 1,
-      ChangeReasonArray: [],
-      ChangeReason: [null],
+      selectOptionArray: [],
+      selectOption: [null],
       formSearchs: [
         {
           datas: {
@@ -662,9 +662,9 @@ export default {
     );
     const { result, data, count, msg } = res.data;
     if (result) {
-      this.ChangeReasonArray[2] = data;
-      this.ChangeReasonArray[3] = data;
-      this.ChangeReasonArray[4] = data;
+      this.selectOptionArray[2] = data;
+      this.selectOptionArray[3] = data;
+      this.selectOptionArray[4] = data;
     } else {
       this.$message({
         message: msg,
@@ -1481,7 +1481,7 @@ export default {
       this.dataSearch(this.labelStatus3);
     },
     handleSelectChange(remarkTb) {
-      this.formSearchs[remarkTb].datas['ChangeReason'] = this.ChangeReason;
+      this.formSearchs[remarkTb].datas['selectOption'] = this.selectOption;
     },
     activeNum(stepNumber) {
       console.log('点击步骤', stepNumber);

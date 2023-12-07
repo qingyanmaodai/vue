@@ -25,6 +25,7 @@
                   v-model="searchData[x.prop]"
                   size="small"
                   @keyup.enter.native="btnClick('dataSearch')"
+                  @paste.native="pasteDescription($event, x.prop)"
                 ></el-input>
                 <!-- 输入框 -->
                 <el-input
@@ -33,7 +34,78 @@
                   size="small"
                   type="text"
                   @keyup.enter.native="btnClick('dataSearch')"
+                  @paste.native="pasteDescription($event, x.prop)"
                 ></el-input>
+                <!-- el-popover -->
+                <el-popover
+                  v-model="popoverVisible[x.prop]"
+                  placement="bottom"
+                  trigger="manual"
+                  width="280"
+                  ><div style="height: 200px; overflow-y: auto">
+                    <div class="flex justify-between propBtnNode">
+                      <div class="flex">
+                        <el-button
+                          class="propButton"
+                          type="danger"
+                          size="mini"
+                          icon="el-icon-close"
+                          @click="closePropTable(x.prop)"
+                        ></el-button>
+                      </div>
+                      <div class="flex items-center">
+                        <el-button
+                          class="propButton"
+                          type="primary"
+                          size="mini"
+                          icon="el-icon-plus"
+                          @click="addPropRow(x.prop)"
+                        ></el-button>
+                        <el-button
+                          class="propButton"
+                          type="primary"
+                          size="mini"
+                          icon="el-icon-check"
+                          @click="confirmPropTable(x.prop)"
+                        ></el-button>
+                      </div>
+                    </div>
+                    <el-table
+                      :data="filterPropData(x.prop)"
+                      style="width: 100%"
+                    >
+                      <el-table-column
+                        :prop="x.prop"
+                        :label="x.label"
+                        :editable="true"
+                        ><template slot="header" slot-scope="scope">
+                          <el-input
+                            v-model="currentPropValue[x.prop]"
+                            size="mini"
+                            placeholder="搜索"
+                          /> </template
+                        ><template slot-scope="scope">
+                          <el-input
+                            v-model="scope.row"
+                            @input="
+                              updatePropRow(scope.row, scope.$index, x.prop)
+                            "
+                          >
+                          </el-input> </template
+                      ></el-table-column>
+                      <el-table-column width="60" label="操作">
+                        <template slot-scope="scope">
+                          <el-button
+                            @click="removePropRow(x.prop, scope.$index)"
+                            type="danger"
+                            size="mini"
+                            icon="el-icon-delete"
+                          ></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </el-popover>
                 <!-- 下拉框 -->
                 <el-select
                   v-if="x.type === 'Select'"
@@ -209,6 +281,73 @@
                 type="text"
                 @keyup.enter.native="btnClick('dataSearch')"
               ></el-input>
+              <!-- el-popover -->
+              <el-popover
+                v-model="popoverVisible[x.prop]"
+                placement="bottom"
+                trigger="manual"
+                width="280"
+                ><div style="height: 200px; overflow-y: auto">
+                  <div class="flex justify-between propBtnNode">
+                    <div class="flex">
+                      <el-button
+                        class="propButton"
+                        type="danger"
+                        size="mini"
+                        icon="el-icon-close"
+                        @click="closePropTable(x.prop)"
+                      ></el-button>
+                    </div>
+                    <div class="flex items-center">
+                      <el-button
+                        class="propButton"
+                        type="primary"
+                        size="mini"
+                        icon="el-icon-plus"
+                        @click="addPropRow(x.prop)"
+                      ></el-button>
+                      <el-button
+                        class="propButton"
+                        type="primary"
+                        size="mini"
+                        icon="el-icon-check"
+                        @click="confirmPropTable(x.prop)"
+                      ></el-button>
+                    </div>
+                  </div>
+                  <el-table :data="filterPropData(x.prop)" style="width: 100%">
+                    <el-table-column
+                      :prop="x.prop"
+                      :label="x.label"
+                      :editable="true"
+                      ><template slot="header" slot-scope="scope">
+                        <el-input
+                          v-model="currentPropValue[x.prop]"
+                          size="mini"
+                          placeholder="搜索"
+                        /> </template
+                      ><template slot-scope="scope">
+                        <el-input
+                          v-model="scope.row"
+                          @input="
+                            updatePropRow(scope.row, scope.$index, x.prop)
+                          "
+                        >
+                        </el-input> </template
+                    ></el-table-column>
+                    <el-table-column width="60" label="操作">
+                      <template slot-scope="scope">
+                        <el-button
+                          @click="removePropRow(x.prop, scope.$index)"
+                          type="danger"
+                          size="mini"
+                          icon="el-icon-delete"
+                        ></el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </el-popover>
               <!-- 下拉框 -->
               <el-select
                 v-if="x.type === 'Select'"
@@ -528,6 +667,9 @@ export default {
   },
   data() {
     return {
+      propTableData: {},
+      popoverVisible: {},
+      currentPropValue: {},
       size: 'small',
       circle: 0,
       tag: 0,
@@ -577,17 +719,15 @@ export default {
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
-        // this.row = this.searchForm.length <= 6 ? 0 : 1;
-        // this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
-        // this.tag = this.searchForm.length % 7;
-        // this.col = 24 - 3 * this.tag;
-        // if (this.searchForm.length == 7 || this.circle >= 2) {
-        //   this.isSpread = true;
-        //   this.tagRemark = 0;
-        // }
         if (this.searchForm.length > this.Region) {
           this.isSpread = true;
         }
+        this.searchForm.map((item) => {
+          this.$set(this.popoverVisible, item.prop, false);
+          this.$set(this.currentPropValue, item.prop, '');
+          this.$set(this.propTableData, item.prop, []);
+        });
+
         // 检查并赋值给 searchData["QueryParams"]
         this.$set(this.searchData, 'QueryParams', []);
         this.$set(this.searchData['QueryParams'], 0, {
@@ -704,6 +844,49 @@ export default {
     OpenMoreSearch() {
       this.colDialogVisible2 = true;
     },
+    addPropRow(prop) {
+      this.propTableData[prop].unshift('');
+    },
+    filterPropData(prop) {
+      const searchData = this.currentPropValue[prop].toLowerCase(); // 转换为小写，方便匹配
+      return this.propTableData[prop].filter((item) =>
+        item.toLowerCase().includes(searchData),
+      );
+    },
+    removePropRow(prop, index) {
+      // 判断索引是否有效
+      if (index >= 0 && index < this.propTableData[prop].length) {
+        // 使用数组的 splice 方法删除指定索引的元素
+        this.propTableData[prop].splice(index, 1);
+      }
+    },
+    updatePropRow(row, index, prop) {
+      this.$set(this.propTableData[prop], index, row);
+    },
+    confirmPropTable(prop) {
+      this.searchData[prop] = this.propTableData[prop];
+      this.popoverVisible[prop] = false;
+    },
+    closePropTable(prop) {
+      this.popoverVisible[prop] = false;
+    },
+    pasteDescription(event, prop) {
+      let copiedString = event.clipboardData.getData('text/plain');
+      // 检查是否包含换行符
+      if (copiedString.trim().includes('\n')) {
+        this.popoverVisible[prop] = true;
+        // 包含换行符，执行相应操作
+        const lines = copiedString
+          .trim()
+          .split('\n')
+          .map((line) => line.trim());
+
+        this.propTableData[prop] = lines;
+      } else {
+        // 不包含换行符，执行其他操作
+        console.log('不包含换行符的处理逻辑');
+      }
+    },
   },
 };
 </script>
@@ -721,11 +904,6 @@ export default {
 }
 .dialogContent {
   width: 200px;
-}
-::v-deep .el-icon-plus,
-.el-icon-delete {
-  cursor: pointer !important;
-  font-size: 24px;
 }
 
 .innerDiv {
@@ -748,6 +926,15 @@ export default {
     width: 150px !important;
   }
 }
+::v-deep .propBtnNode {
+  padding: 0 10px;
+  .propButton {
+    border-radius: 50% !important;
+    padding: 4px !important;
+    font-size: 6px !important;
+  }
+}
+
 // .FormDiv {
 //   width: 220px;
 // }

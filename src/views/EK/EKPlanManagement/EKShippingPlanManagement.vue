@@ -1111,13 +1111,13 @@ export default {
           });
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
-        if (remarkTb === 5) {
-          this.tableColumns[5].forEach((item) => {
-            if (item['prop'] === 'RequestOutDate') {
-              item['isEdit'] = false;
-            }
-          });
-        }
+        // if (remarkTb === 5) {
+        //   this.tableColumns[5].forEach((item) => {
+        //     if (item['prop'] === 'RequestOutDate') {
+        //       item['isEdit'] = false;
+        //     }
+        //   });
+        // }
         this.linkTableData = [];
         if (remarkTb === 2) {
           data.forEach((item1) => {
