@@ -958,7 +958,7 @@ export default {
       );
       this.formSearchs[remarkTb].datas.page = 1;
       // 设置定时器，每十秒刷新一次数据
-      if (this.countTotal[remarkTb] !== 1 || this.countTotal[remarkTb] !== 0) {
+      if (this.countTotal[remarkTb] !== 1 && this.countTotal[remarkTb] !== 0) {
         this.$set(
           this.countdownsTitle,
           remarkTb,

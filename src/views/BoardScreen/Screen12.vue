@@ -638,7 +638,7 @@ export default {
             top: 'center',
             // left: "center",
             orient: 'vertical',
-            right: fontSize(20),
+            right: fontSize(10),
             // bottom: "0",
             itemWidth: fontSize(16),
             itemHeight: fontSize(16),
@@ -646,20 +646,24 @@ export default {
             itemGap: fontSize(20),
             textStyle: {
               color: '#fff',
-              fontSize: fontSize(18),
+              fontSize: fontSize(16),
               padding: [0, 0, 0, fontSize(10)],
             },
             data: this.tableData[1].map((item) => item['Name1']),
           },
           grid: {
+            bottom: fontSize(10),
+            top: fontSize(10),
+            left: fontSize(0),
+            right: fontSize(80),
             containLabel: true,
           },
           series: [
             {
               type: 'pie',
               selectedMode: 'single',
-              radius: ['50%', '80%'],
-              center: ['40%', '50%'],
+              radius: ['40%', '70%'],
+              center: ['35%', '50%'],
               color: [
                 '#8E35FF',
                 '#FFB933',
@@ -705,6 +709,7 @@ export default {
               })),
             },
           ],
+          // roseType: 'area',
         };
       } else if (remarkTb === 2) {
         this.chartOptions[2] = {
@@ -1027,7 +1032,7 @@ export default {
       );
       this.formSearchs[remarkTb].datas.page = 1;
       // 设置定时器，每十秒刷新一次数据
-      if (this.countTotal[remarkTb] !== 1 || this.countTotal[remarkTb] !== 0) {
+      if (this.countTotal[remarkTb] !== 1 && this.countTotal[remarkTb] !== 0) {
         this.$set(
           this.countdownsTitle,
           remarkTb,
