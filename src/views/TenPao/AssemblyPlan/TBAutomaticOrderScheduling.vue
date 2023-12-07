@@ -1484,7 +1484,7 @@ export default {
           }),
         );
         this.adminLoading = true;
-        let res = await GetSearch(newData, '/APSAPI/planlinescheduling');
+        let res = await GetSearch(newData, '/APSAPI/PlanlineScheduling');
         const { data, result, msg } = res.data;
         if (result) {
           this.$alert(msg, '提示', {
