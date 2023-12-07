@@ -1470,6 +1470,40 @@ export default {
         await this.dataSearch(1);
       }
     },
+    // 计算
+    async CalculateEvent(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x['selectOption'] = this.selectOption[remarkTb];
+            return x;
+          }),
+        );
+        this.adminLoading = true;
+        let res = await GetSearch(newData, '/APSAPI/planlinescheduling');
+        const { data, result, msg } = res.data;
+        if (result) {
+          this.$alert(msg, '提示', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true, // 使用这个选项
+            callback: (action) => {},
+          });
+          await this.dataSearch(remarkTb);
+        } else {
+          this.$alert(msg, '提示', {
+            confirmButtonText: '确定',
+            dangerouslyUseHTMLString: true, // 使用这个选项
+            callback: (action) => {},
+          });
+          await this.dataSearch(remarkTb);
+        }
+        this.adminLoading = false;
+      }
+    },
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
