@@ -427,10 +427,10 @@ export default {
       colDialogVisible2: false,
       colDialogVisible4: false,
       Status1: [
-        { label: '未完成', value: 0, index: 0 },
-        { label: '已完成', value: 1, index: 3 },
-        { label: '全部', value: '', index: 4 },
-        { label: '预测单', value: 2, index: 5 },
+        { label: '未完成', value: { IsFinish: 0 }, index: 0 },
+        { label: '已完成', value: { IsFinish: 1 }, index: 3 },
+        { label: '全部', value: { IsFinish: '' }, index: 4 },
+        { label: '预测单', value: { SalesOrderDetailID: 'F' }, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
@@ -1055,7 +1055,7 @@ export default {
             // }
 
             if (index === 1) {
-              // this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
               this.hasSelect[i] = n['IsSelect'];
               this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
             }
@@ -1940,7 +1940,7 @@ export default {
         );
       }
       this.labelStatus1 = item['index'];
-      this.formSearchs[this.labelStatus1].datas['IsFinish'] = item.value;
+      Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
       await this.dataSearch(this.labelStatus1);
     },
   },

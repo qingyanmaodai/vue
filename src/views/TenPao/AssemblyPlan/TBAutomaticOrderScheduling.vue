@@ -512,7 +512,7 @@ import {
   GetServerTime,
 } from '@/api/Common';
 export default {
-  name: 'TBPlanManpowerRequirements',
+  name: 'TBAutomaticOrderScheduling',
   components: {
     ComSearch,
     ComVxeTable,
