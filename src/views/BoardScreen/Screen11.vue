@@ -1119,7 +1119,7 @@ export default {
         this.chartOptions[10] = {
           grid: {
             containLabel: true,
-            bottom: -fontSize(10),
+            bottom: fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
             right: fontSize(80),
@@ -1136,7 +1136,10 @@ export default {
             padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           xAxis: {
-            show: false,
+            splitLine: { show: false },
+            axisLabel: { show: false },
+            axisTick: { show: false },
+            axisLine: { show: false },
             type: 'value',
           },
           yAxis: [
@@ -1159,27 +1162,6 @@ export default {
               },
               data: this.tableData[10].map((item) => item['Name1']),
             },
-            // {
-            //   type: 'category',
-            //   inverse: true,
-            //   axisTick: 'none',
-            //   axisLine: 'none',
-            //   show: true,
-            //   axisLabel: {
-            //     textStyle: {
-            //       color: '#ffffff',
-            //       fontSize: fontSize(12),
-            //     },
-            //     // formatter: function (value) {
-            //     //   if (value >= 10000) {
-            //     //     return (value / 10000).toLocaleString() + '万';
-            //     //   } else {
-            //     //     return value.toLocaleString();
-            //     //   }
-            //     // },
-            //   },
-            //   data: [45, 26, 14, 12, 5],
-            // },
           ],
           series: [
             {
@@ -1260,7 +1242,7 @@ export default {
       );
       this.formSearchs[remarkTb].datas.page = 1;
       // 设置定时器，每十秒刷新一次数据
-      if (this.countTotal[remarkTb] !== 1) {
+      if (this.countTotal[remarkTb] !== 1 || this.countTotal[remarkTb] !== 0) {
         this.$set(
           this.countdownsTitle,
           remarkTb,

@@ -135,40 +135,7 @@
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
                 <span class="title">{{ title }}</span> -->
             </el-col>
-            <el-col :span="12" class="flex_flex_end">
-              <!-- <el-divider direction="vertical"></el-divider>
-                    <div class="flex">
-                      复期:
-                      <el-date-picker
-                        v-model="PODeliveryDate"
-                        type="date"
-                        size="small"
-                        value-format="yyyy-MM-dd"
-                        style="flex: 1;"
-                        placeholder="请输入复期"
-                      >
-                      </el-date-picker>
-                    </div>
-                    <el-divider direction="vertical"></el-divider>
-                    <el-button
-                      type="primary"
-                      size="mini"
-                      @click="changeDate(0)"
-                    >
-                      批量指定日期
-                    </el-button>
-                    <el-divider direction="vertical"></el-divider> -->
-              <!-- <div
-                      
-                      v-for="(item, y) in Status1"
-                      :key="y"
-                    >
-                      <span @click="changeStatus(item, y)" :class="labelStatus1 == y ? 'statusActive cursor' : 'cursor'">{{
-                        item.label
-                      }}</span>
-                      <el-divider direction="vertical"></el-divider>
-                    </div> -->
-            </el-col>
+            <el-col :span="12" class="flex_flex_end"> </el-col>
           </el-row>
         </div>
         <div
@@ -334,11 +301,7 @@ export default {
     this.judgeBtn(this.btnForm);
     this.getTableHeader();
   },
-  mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 500);
-  },
+  mounted() {},
   methods: {
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
@@ -352,10 +315,6 @@ export default {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
-    },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
     },
     searchTree(msg, dataName, dataName2, valueName) {
       this[dataName] = [];
@@ -440,23 +399,6 @@ export default {
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        let newTree = [];
-        // if (data.length != 0) {
-        //   let supplierMap = new Map();
-        //   data.forEach((a) => {
-        //     let currentSum = supplierMap.get(a.OrganizeName) || 0;
-        //     currentSum += a.LineCount;
-        //     supplierMap.set(a.OrganizeName, currentSum);
-        //     a["SumCount"] = `${a.OrganizeName}(${currentSum})`;
-        //   });
-        //   newTree = Array.from(supplierMap.entries()).map(([OrganizeName, sum]) => {
-        //     const foundItem = data.find((a) => a.OrganizeName === OrganizeName);
-        //     return {
-        //       ...foundItem,
-        //       SumCount: `${foundItem.OrganizeName}(${sum})`,
-        //     };
-        //   });
-        // }
         this.treeData = JSON.parse(JSON.stringify(data));
         this.treeData.unshift({
           OrganizeID: -1,
@@ -481,21 +423,6 @@ export default {
         });
       }
     },
-    // 高度控制
-    setHeight() {
-      // this.treeHeight = document.documentElement.clientHeight - 150 + "px";
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + 'px';
-      this.$set(this, 'height', newHeight);
-    },
-    // 编辑行
-    editRow(row) {},
-    // 删除行
-    delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
@@ -629,110 +556,26 @@ export default {
         this.$set(this, 'adminLoading', false);
       }
     },
-    // 全部下达
-    async releaseOrders(remarkTb, index) {
-      let submitData = [];
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请选择需要提交的数据！');
+        this.$message.error('请单击需要操作的数据！');
         return;
       } else {
-        if (
-          !this.selectionData[remarkTb].every(
-            (obj) =>
-              obj.hasOwnProperty('PlanDeliveryDate') && obj.PlanDeliveryDate,
-          )
-        ) {
-          // 显示错误消息
-          this.$message.error('有订单没有填写计划交期!');
-          return;
-        }
-        let res = await GetSearch(
-          this.selectionData[remarkTb],
-          '/APSAPI/OrderTaskDownload',
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
         );
-        const { datas, forms, result, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(remarkTb);
-          this.$set(this, 'adminLoading', false);
-        } else {
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-          this.$set(this, 'adminLoading', false);
-        }
       }
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
-    //批量设置日期
-    async changeDate(val) {
-      if (val == 0) {
-        if (this.selectionData[0].length === 0) {
-          this.$message.error('请选择需要提交的数据！');
-          return;
-        }
-        if (!this.PODeliveryDate) {
-          this.$message.error('请填写复期时间');
-          return;
-        }
-        this.selectionData[0].map((item) => {
-          this.$set(item, 'PODeliveryDate', this.PODeliveryDate);
-        });
-        // let res = await GetSearch(
-        //   this.selectionData[1],
-        //   "/APSAPI/OrderTaskDownload"
-        // );
-        // const { datas, forms, result, msg } = res.data;
-        // if (result) {
-        //   this.$message({
-        //     message: msg,
-        //     type: "success",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.dataSearch(1);
-        //   this.$set(this, "adminLoading", false);
-        // } else {
-        //   this.$message({
-        //     message: msg,
-        //     type: "error",
-        //     dangerouslyUseHTMLString: true
-        //   });
-        //   this.$set(this, "adminLoading", false);
-        // }
-      }
-    },
-    // 删除
-    // async dataDel(remarkTb, index, parms) {
-    //   let res = null;
-    //   let newData = [];
-    //   if (parms && parms.dataName) {
-    //     if (this[parms.dataName][remarkTb].length == 0) {
-    //       this.$message.error("请单击需要操作的数据！");
-    //     } else {
-    //       this[parms.dataName][remarkTb].forEach(x => {
-    //         let obj = x;
-    //         obj["ElementDeleteFlag"] = 1;
-    //         newData.push(obj);
-    //       });
-    //     }
-    //   } else {
-    //     this.tableData[remarkTb].forEach(y => {
-    //       let obj2 = y;
-    //       obj2["ElementDeleteFlag"] = 1;
-    //       newData.push(obj2);
-    //     });
-    //   }
-    //   this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-    //     .then(_ => {
-    //       _this.generalSaveData(newData, remarkTb, index);
-    //     })
-    //     .catch(_ => {});
-    // },
     // 通用直接保存
     // async generalSaveData(newData, remarkTb, index) {
     //   if (newData.length == 0) {
@@ -1152,18 +995,18 @@ export default {
         data.OrganizeID === -1 ? '' : data.OrganizeID;
       this.formSearchs[this.selectedIndex].datas['LineID'] = '';
       await this.getLineData(data.OrganizeID === -1 ? '' : data.OrganizeID);
+      //假如点击车间没有线别，则直接查询车间
       if (this.treeData1.length != 0) {
         this.$nextTick(function () {
           _this.$refs.asideTree1.setCurrentKey(this.treeData1[0].OrganizeID);
         });
-        this.handleNodeClick1(this.treeData1[0]);
+        await this.handleNodeClick1(this.treeData1[0]);
       } else {
         await this.dataSearch(this.selectedIndex);
       }
     },
     // 获取线别数据
     async getLineData(OrganizeIDs) {
-      this.lines = [];
       let res = await GetSearchData({
         dicID: 36,
         OrganizeTypeID: 6,
@@ -1188,8 +1031,8 @@ export default {
       }
     },
     // 单击线体
-    handleNodeClick1(data, node) {
-      this.clickData[1] = data.OrganizeID === -1 ? '' : data.OrganizeID;
+    async handleNodeClick1(data, node) {
+      this.clickData[1] = data;
       this.$set(
         this.formSearchs[this.selectedIndex].datas,
         'LineID',
@@ -1211,155 +1054,20 @@ export default {
     // 选择数据
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
-      // if (
-      //   this.selectionData[remarkTb].length === 1 &&
-      //   this.labelStatus1 === 1
-      // ) {
-      //   const {
-      //     OrderNo,
-      //     Code,
-      //     OProductionQty,
-      //     SentQty,
-      //     UnSentQty
-      //   } = this.selectionData[remarkTb][0];
-      //   let StringValue = `当前选定计划订单 ${OrderNo} 产品编码 ${Code} 生产数量 ${OProductionQty} 已下达数量 ${SentQty} 可下达数量 ${UnSentQty}`;
-      //   this.$set(this.footerLabel, 1, StringValue);
-      //   this.$set(
-      //     this.selectionData[remarkTb][0],
-      //     "DownDeilveryDate",
-      //     this.selectionData[remarkTb][0]["PlanDeliveryDate"]
-      //   );
-      // } else {
-      //   this.$set(this.footerLabel, remarkTb, "");
-      // }
-    },
-    tableRowClassName({ row, rowIndex }) {
-      // let className = "";
-      // if (row["JudgeResult"] == "交期冲突") {
-      //   className += "bgRedColor";
-      // }
-      // return className;
-    },
-    // 行内列样式
-    cellStyle({ row, column }) {
-      if (column.property == 'PODeliveryDate' || column.property == 'Remark') {
-        return {
-          background: '#00b0f0',
-        };
-      } else if (column.property == 'ArriveQty') {
-        return {
-          color: '#00b0f0',
-        };
-      } else if (column.property == 'UnaccountedQty') {
-        return {
-          color: '#ff0000',
-        };
-      }
-      // else if (
-      //   column.property == "JudgeResult" &&
-      //   row["JudgeResult"] == "交期冲突"
-      // ) {
-      //   return {
-      //     background: "red",
-      //   };
-      // }
-      else if (
-        (column.property == 'JudgeResult' && row['JudgeResult'] == '满足') ||
-        (column.property == 'IsReplyStatusName' &&
-          row['IsReplyStatusName'] == '是')
-      ) {
-        return {
-          background: '#9fff9f',
-        };
-      }
-
-      if (column.property == 'OnloadQty') {
-        return {
-          color: 'blue',
-        };
-      }
-      if (column.property == 'RealOweQty') {
-        return {
-          color: 'red',
-        };
-      }
-      if (
-        column.property == 'ReplyQty' &&
-        parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
-      ) {
-        return {
-          background: '#ff7b7b',
-        };
-      }
-
-      if (row.ReplyDate && !row.SecondReplyDate) {
-        if (
-          column.property == 'ReplyDate' &&
-          new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
-        ) {
-          return {
-            background: '#ff7b7b',
-          };
-        }
-      }
-
-      if (row.SecondReplyDate) {
-        if (
-          column.property == 'SecondReplyDate' &&
-          new Date(row.SecondReplyDate).getTime() >
-            new Date(row.LastDate).getTime()
-        ) {
-          return {
-            background: '#ff7b7b',
-          };
-        }
-      }
-
-      if (column.property == 'OncheckQty') {
-        if (
-          parseFloat(row.OncheckQty) >=
-          parseFloat(row.StockQtyAllocationPrepare)
-        ) {
-          return {
-            background: '#9fff9f',
-          };
-        }
-      }
-    },
-    // 改变状态
-    changeStatus(item, index) {
-      this.labelStatus1 = index;
-      this.formSearchs[0].datas['ReplyStatus'] = item.value;
-      // if (this.tableData[index].length == 0) {
-      this.dataSearch(0);
-      // }
     },
     handleClick(tab, event) {
       console.log(tab, event);
       this.formSearchs[this.selectedIndex].datas['WorkShopID'] =
-        this.clickData[0]?.OrganizeID;
+        this.clickData[0]?.OrganizeID === -1
+          ? ''
+          : this.clickData[0].OrganizeID;
       this.formSearchs[this.selectedIndex].datas['LineID'] =
-        this.clickData[1]?.OrganizeID;
+        this.clickData[1]?.OrganizeID === -1
+          ? ''
+          : this.clickData[1].OrganizeID;
       this.selectedIndex = tab.name;
       this.dataSearch(this.selectedIndex);
     },
-    // 改变状态
-    // changeStatus(x, index) {
-    //   this.labelStatus1 = index;
-    //   this.formSearchs[0].datas["IsClose"] = x.value;
-    //   if (x.label === "生产任务单") {
-    //     this.dataSearch(1);
-    //   } else {
-    //     this.dataSearch(0);
-    //   }
-    // },
-    // 可用量查询
-    // usingSearch(row, prop) {
-    //   this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-    //   // this.formSearchs[1].datas["Remark1"] = "送货";
-    //   this.dataSearch(1);
-    //   this.dialogShow = true;
-    // }
   },
 };
 </script>

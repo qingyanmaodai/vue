@@ -710,7 +710,7 @@ export default {
         this.chartOptions[2] = {
           grid: {
             containLabel: true,
-            bottom: -fontSize(10),
+            bottom: fontSize(10),
             top: fontSize(10),
             left: fontSize(10),
             right: fontSize(80),
@@ -727,7 +727,10 @@ export default {
             padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
           },
           xAxis: {
-            show: false,
+            splitLine: { show: false },
+            axisLabel: { show: false },
+            axisTick: { show: false },
+            axisLine: { show: false },
             type: 'value',
           },
           yAxis: [
@@ -852,10 +855,10 @@ export default {
                 show: true,
                 fontSize: fontSize(18),
                 color: '#C9D2FA',
-                // formatter: function (value) {
-                //   // 在标签后面添加百分号
-                //   return value + '%';
-                // },
+                formatter: function (value) {
+                  // 在标签后面添加百分号
+                  return value + '%';
+                },
               },
               axisLine: {
                 show: false,
@@ -889,7 +892,7 @@ export default {
                 color: '#fff',
                 formatter: function (params) {
                   // 在标签文本后添加百分号
-                  // return params.value.toFixed(2)
+                  return params.value.toFixed(2) + '%';
                 },
               },
               data: this.tableData[7].map((item) => item['S1']),
@@ -960,7 +963,6 @@ export default {
                 textBorderWidth: fontSize(1),
                 fontSize: fontSize(16),
                 formatter: function (params) {
-                  console.log(params, 'params');
                   if (params.name !== '') {
                     return params.value;
                   } else {
@@ -980,118 +982,6 @@ export default {
             },
           ],
         };
-        //  {
-        //   textStyle: {
-        //     // 全局字体样式
-        //     color: '#C9D2FA',
-        //     fontSize: fontSize(14),
-        //   },
-        //   // legend: {
-        //   //   bottom: 0,
-        //   //   left: "center",
-        //   //   itemBorderRadius: 8,
-        //   //   data: [
-        //   //     "Chars Bosh",
-        //   //   ],
-        //   // },
-        //   tooltip: {
-        //     // 提示框组件
-        //     trigger: 'item', // 触发类型 可选为：'axis' | 'item' | 'none'
-        //     axisPointer: {
-        //       // 坐标轴指示器，坐标轴触发有效
-        //       type: 'line', // 默认为直线，可选为：'line' | 'shadow'
-        //       shadowStyle: {
-        //         color: 'rgba(204, 214, 235, 0.247059)',
-        //       },
-        //     },
-        //     confine: true,
-        //     textStyle: {
-        //       fontSize: fontSize(16), // 调整字体大小
-        //     },
-        //     padding: [fontSize(16), fontSize(16)], // 适配内边距，可以根据实际需要调整
-        //   },
-        //   radar: {
-        //     // shape: 'circle',
-        //     splitNumber: 3,
-        //     splitArea: {
-        //       show: false,
-        //     },
-        //     splitLine: {
-        //       lineStyle: {
-        //         color: ['#254678'],
-        //       },
-        //     },
-        //     axisLine: {
-        //       lineStyle: {
-        //         color: '#254678',
-        //       },
-        //     },
-        //     indicator: this.tableData[8].map((item) => ({
-        //       name: item.Name1,
-        //       // min: 0,
-        //       // max:
-        //       //   this.tableData[8].reduce(
-        //       //     (acc, innerItem) => acc + innerItem.S1,
-        //       //     0,
-        //       //   ) / this.tableData[8].length,
-        //     })),
-        //     center: ['50%', '50%'],
-        //     radius: fontSize(100), // 调整雷达图的半径
-        //     // [
-        //     //   {
-        //     //     name: '欠料',
-        //     //     max: 100,
-        //     //   },
-        //     //   {
-        //     //     name: '人员不够',
-        //     //     max: 100,
-        //     //   },
-        //     //   {
-        //     //     name: '机械故障',
-        //     //     max: 100,
-        //     //   },
-        //     //   {
-        //     //     name: '模具异常',
-        //     //     max: 100,
-        //     //   },
-        //     //   {
-        //     //     name: '来料不良',
-        //     //     max: 100,
-        //     //   },
-        //     // ],
-        //   },
-        //   series: [
-        //     {
-        //       // name: '雷达图',
-        //       type: 'radar',
-        //       symbol: 'circle',
-        //       areaStyle: {
-        //         color: '#31C2FF', // 调色盘颜色列表。
-        //         opacity: 0.4,
-        //       },
-        //       itemStyle: {
-        //         lineStyle: {
-        //           width: 2,
-        //         },
-        //       },
-        //       emphasis: {
-        //         areaStyle: {
-        //           opacity: 0.8,
-        //         },
-        //       },
-        //       label: {
-        //         show: true, // 显示标签
-        //         fontSize: fontSize(14),
-        //         color: '#fff',
-        //       },
-        //       data: [
-        //         {
-        //           value: this.tableData[8].map((item) => item['S1']),
-        //         },
-        //       ],
-        //     },
-        //   ],
-        // };
       }
       this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
     },
@@ -1137,7 +1027,7 @@ export default {
       );
       this.formSearchs[remarkTb].datas.page = 1;
       // 设置定时器，每十秒刷新一次数据
-      if (this.countTotal[remarkTb] !== 1) {
+      if (this.countTotal[remarkTb] !== 1 || this.countTotal[remarkTb] !== 0) {
         this.$set(
           this.countdownsTitle,
           remarkTb,

@@ -333,17 +333,17 @@ export default {
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
-      let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请单击需要操作的数据！');
+        this.$message.error('请选择需要操作的数据！');
         return;
       } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj['ElementDeleteFlag'] = 1;
-          newData.push(obj);
-        });
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
+        );
       }
       this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {

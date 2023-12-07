@@ -70,7 +70,7 @@
         v-show="item === labelStatus1"
       >
         <ComSpreadTable
-          ref="`spreadsheetRef${remarkTb}`"
+          :ref="`spreadsheetRef${item}`"
           :height="'100%'"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
@@ -132,34 +132,19 @@
         <div class="flex_grow flex"></div>
         <div class="flex">
           <div>
-            排程方向:<el-select
-              clearable
-              filterable
-              size="small"
-              placeholder="请选择排程方向"
-              v-model="ChangeReason"
-            >
-              <el-option
-                v-for="(item, i) in ChangeReasonArray"
-                :key="i"
-                :label="item.value"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <div>
             选择方案:<el-select
               clearable
               filterable
               size="small"
               placeholder="请选择方案"
-              v-model="ChangeReason"
+              v-model="ChangeReason[2]"
+              @change="handleSelectChange(2)"
             >
               <el-option
-                v-for="(item, i) in ChangeReasonArray"
+                v-for="(item, i) in ChangeReasonArray[2]"
                 :key="i"
-                :label="item.value"
-                :value="item.value"
+                :label="item.title"
+                :value="item.title"
               ></el-option>
             </el-select>
           </div>
@@ -171,7 +156,7 @@
         :key="item + 'spread'"
       >
         <ComSpreadTable
-          ref="`spreadsheetRef${remarkTb}`"
+          :ref="`spreadsheetRef${item}`"
           :height="'100%'"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
@@ -240,41 +225,43 @@
           :btnForm="btnForm"
           @btnClick="btnClick"
         />
-      </div>
-      <div class="flex justify-between" style="width: 100%">
-        <div class="flex_grow flex"></div>
-        <div class="flex">
-          <el-radio-group
-            v-model="radioValue3"
-            @change="radioChange"
-            style="margin-right: 40px"
-          >
-            <el-radio
-              v-for="(item, index) in parmsBtn3"
-              :key="index"
-              :label="item.value"
-              :value="item.value"
-              >{{ item.label }}</el-radio
+        <div class="flex justify-between" style="width: 100%">
+          <div class="flex_grow flex"></div>
+          <div class="flex">
+            <el-radio-group
+              v-model="radioValue[i]"
+              @change="radioChange"
+              style="margin-right: 40px"
             >
-          </el-radio-group>
-          <div>
-            选择方案:<el-select
-              clearable
-              filterable
-              size="small"
-              placeholder="请选择方案"
-              v-model="ChangeReason"
-            >
-              <el-option
-                v-for="(item, i) in ChangeReasonArray"
-                :key="i"
+              <el-radio
+                v-for="(item, index) in parmsBtn[i]"
+                :key="index"
                 :label="item.value"
                 :value="item.value"
-              ></el-option>
-            </el-select>
+                >{{ item.label }}</el-radio
+              >
+            </el-radio-group>
+            <div>
+              选择方案:<el-select
+                clearable
+                filterable
+                size="small"
+                placeholder="请选择方案"
+                v-model="ChangeReason[i]"
+                @change="handleSelectChange(i)"
+              >
+                <el-option
+                  v-for="(item, i) in ChangeReasonArray[i]"
+                  :key="i"
+                  :label="item.title"
+                  :value="item.title"
+                ></el-option>
+              </el-select>
+            </div>
           </div>
         </div>
       </div>
+
       <div
         class="flex_column admin_content flex_grow"
         v-for="item in [3, 4]"
@@ -282,7 +269,7 @@
         v-show="labelStatus3 === item"
       >
         <ComSpreadTable
-          ref="`spreadsheetRef${remarkTb}`"
+          :ref="`spreadsheetRef${item}`"
           :height="'100%'"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
@@ -349,7 +336,7 @@
         :key="item"
       >
         <ComSpreadTable
-          ref="`spreadsheetRef${remarkTb}`"
+          :ref="`spreadsheetRef${item}`"
           :height="'100%'"
           :tableData="tableData[item]"
           :tableColumns="tableColumns[item]"
@@ -396,7 +383,7 @@
               </div>
               <div class="flex_grow">
                 <ComSpreadTable
-                  ref="`spreadsheetRef${remarkTb}`"
+                  :ref="`spreadsheetRef${item}`"
                   :height="'100%'"
                   :tableData="tableData[item]"
                   :tableColumns="tableColumns[item]"
@@ -424,7 +411,7 @@
       :close-on-click-modal="false"
       :modal-append-to-body="false"
     >
-      <div class="pd-0-6 h-50px flex">
+      <!-- <div class="pd-0-6 h-50px flex">
         <div class="flex-1 w-1/3 p-4">销售订单: {{ OOrderNo }}</div>
         <div class="flex-1 w-1/3 p-4">产品编码: {{ OQty }}</div>
         <div class="flex-1 w-1/3 p-4">产品名称: {{ ONewQty }}</div>
@@ -433,7 +420,7 @@
         <div class="flex-1 w-1/3 p-4">订单交期:{{ Capacity }}</div>
         <div class="flex-1 w-1/3 p-4">订单数量: {{ OOrderNo }}</div>
         <div class="flex-1 w-1/3 p-4">计划数: {{ OQty }}</div>
-      </div>
+      </div> -->
       <!-- <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
           <el-col :span="6" class="flex"> 销售订单: {{ OOrderNo }} </el-col>
@@ -448,7 +435,7 @@
           <el-col :span="6" class="flex"> 计划数: {{ OQty }} </el-col>
         </el-row>
       </div> -->
-      <div class="pd-0-6">
+      <!-- <div class="pd-0-6">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
           <el-form-item label="拉体">
             <el-input
@@ -483,7 +470,7 @@
             </el-date-picker>
           </el-form-item>
         </el-form>
-      </div>
+      </div> -->
       <span slot="footer" class="dialog-footer">
         <!-- <div class="flex">
           <div>总数量:{{ totalQty }}</div>
@@ -521,6 +508,7 @@ import {
   GetSearchData,
   ExportData,
   SaveData,
+  GetSearch,
   GetServerTime,
 } from '@/api/Common';
 export default {
@@ -546,7 +534,7 @@ export default {
       selectedIndex: '0',
       active: 1,
       ChangeReasonArray: [],
-      ChangeReason: null,
+      ChangeReason: [null],
       formSearchs: [
         {
           datas: {
@@ -643,14 +631,20 @@ export default {
       colDialogVisible2: false,
       colDialogVisible4: false,
       clickRow: null,
-      radioValue3: 0,
-      radioValue1: 1,
-      parmsBtn3: [
-        { label: '显示工时', value: 0 },
-        { label: '显示负荷', value: 1 },
-      ],
+      radioValue: [null, null, null, 0, 0],
+      parmsBtn: {
+        3: [
+          { label: '显示工时', value: 0 },
+          { label: '显示负荷', value: 1 },
+        ],
+        4: [
+          { label: '显示工时', value: 0 },
+          { label: '显示负荷', value: 1 },
+        ],
+      },
     };
   },
+  computed: {},
   watch: {},
   created() {
     _this = this;
@@ -661,7 +655,24 @@ export default {
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() {},
+  async mounted() {
+    let res = await GetSearch(
+      { DataSourceID: 'P2312060002' },
+      '/APSAPI/GetDataSource',
+    );
+    const { result, data, count, msg } = res.data;
+    if (result) {
+      this.ChangeReasonArray[2] = data;
+      this.ChangeReasonArray[3] = data;
+      this.ChangeReasonArray[4] = data;
+    } else {
+      this.$message({
+        message: msg,
+        type: 'error',
+        dangerouslyUseHTMLString: true,
+      });
+    }
+  },
   methods: {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
@@ -670,6 +681,20 @@ export default {
     //获取当前选中行的值
     selectFun(data, remarkTb, row) {
       this.selectionData[remarkTb] = data;
+    },
+    startObserving(remarkTb) {
+      const tableElement = this.$refs[`spreadsheetRef${remarkTb}`]?.[0].$el;
+      if (tableElement) {
+        this[`resizeObserver${remarkTb}`] = new ResizeObserver((entries) => {
+          // for (const entry of entries) {
+          this.spread[remarkTb].refresh();
+          // }
+        });
+        this[`resizeObserver${remarkTb}`].observe(tableElement);
+      }
+      // if (this.resizeObserver) {
+      //   this.resizeObserver.disconnect();
+      // }
     },
     //按钮权限
     judgeBtn(routeBtn) {
@@ -1266,10 +1291,12 @@ export default {
             i,
             m.filter((item) => item['isEdit'] === true),
           );
+          this.startObserving(i);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
           this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
+
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
@@ -1396,7 +1423,7 @@ export default {
       this.selectionData[remarkTb] = data;
     },
     radioChange(val) {
-      this.dataSearch(this.tagRemark);
+      this.dataSearch(this.labelStatus3);
     },
     changeProp(remarkTb, OrderNo, OrderNoValue) {
       if (!OrderNo) {
@@ -1452,6 +1479,9 @@ export default {
     changeStatus3(item, index) {
       this.labelStatus3 = index;
       this.dataSearch(this.labelStatus3);
+    },
+    handleSelectChange(remarkTb) {
+      this.formSearchs[remarkTb].datas['ChangeReason'] = this.ChangeReason;
     },
     activeNum(stepNumber) {
       console.log('点击步骤', stepNumber);
