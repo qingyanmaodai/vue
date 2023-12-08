@@ -1,218 +1,225 @@
-<!--菜单设置-->
+<!--物料点检-->
 <template>
-  <div class="APSContainer" v-loading="adminLoading">
-    <div class="admin_head" ref="headRef">
-      <ComSearch
-        ref="searchRef"
-        :searchData="formSearchs[0].datas"
-        :searchForm="formSearchs[0].forms"
-        :remark="0"
-        :btnForm="btnForm"
-        @btnClick="btnClick"
-      />
-    </div>
-    <div>
-      <div class="admin_content">
-        <div class="ant-table-title">
-          <el-row>
-            <el-col :span="4"
-              ><span class="title">{{ title }}</span></el-col
-            >
-            <el-col :span="20" class="flex_flex_end">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="刷新"
-                placement="bottom"
-              >
-                <span class="right_icon">
-                  <span
-                    @click="refrshPage"
-                    role="img"
-                    aria-label="redo"
-                    class="anticon anticon-redo icon_size"
-                    ><svg
-                      class=""
-                      data-icon="redo"
-                      width="1em"
-                      height="1em"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      viewBox="64 64 896 896"
-                      focusable="false"
-                    >
-                      <path
-                        d="M758.2 839.1C851.8 765.9 912 651.9 912 523.9 912 303 733.5 124.3 512.6 124 291.4 123.7 112 302.8 112 523.9c0 125.2 57.5 236.9 147.6 310.2 3.5 2.8 8.6 2.2 11.4-1.3l39.4-50.5c2.7-3.4 2.1-8.3-1.2-11.1-8.1-6.6-15.9-13.7-23.4-21.2a318.64 318.64 0 01-68.6-101.7C200.4 609 192 567.1 192 523.9s8.4-85.1 25.1-124.5c16.1-38.1 39.2-72.3 68.6-101.7 29.4-29.4 63.6-52.5 101.7-68.6C426.9 212.4 468.8 204 512 204s85.1 8.4 124.5 25.1c38.1 16.1 72.3 39.2 101.7 68.6 29.4 29.4 52.5 63.6 68.6 101.7 16.7 39.4 25.1 81.3 25.1 124.5s-8.4 85.1-25.1 124.5a318.64 318.64 0 01-68.6 101.7c-9.3 9.3-19.1 18-29.3 26L668.2 724a8 8 0 00-14.1 3l-39.6 162.2c-1.2 5 2.6 9.9 7.7 9.9l167 .8c6.7 0 10.5-7.7 6.3-12.9l-37.3-47.9z"
-                      ></path></svg
-                  ></span>
-                </span>
-              </el-tooltip>
-              <el-divider direction="vertical"></el-divider>
-              <el-tooltip effect="dark" content="列设置" placement="bottom">
-                <span class="right_icon">
-                  <span
-                    role="img"
-                    aria-label="setting"
-                    class="anticon anticon-setting icon_size"
-                    ><svg
-                      class=""
-                      data-icon="setting"
-                      width="1em"
-                      height="1em"
-                      fill="currentColor"
-                      aria-hidden="true"
-                      viewBox="64 64 896 896"
-                      focusable="false"
-                    >
-                      <path
-                        d="M924.8 625.7l-65.5-56c3.1-19 4.7-38.4 4.7-57.8s-1.6-38.8-4.7-57.8l65.5-56a32.03 32.03 0 009.3-35.2l-.9-2.6a443.74 443.74 0 00-79.7-137.9l-1.8-2.1a32.12 32.12 0 00-35.1-9.5l-81.3 28.9c-30-24.6-63.5-44-99.7-57.6l-15.7-85a32.05 32.05 0 00-25.8-25.7l-2.7-.5c-52.1-9.4-106.9-9.4-159 0l-2.7.5a32.05 32.05 0 00-25.8 25.7l-15.8 85.4a351.86 351.86 0 00-99 57.4l-81.9-29.1a32 32 0 00-35.1 9.5l-1.8 2.1a446.02 446.02 0 00-79.7 137.9l-.9 2.6c-4.5 12.5-.8 26.5 9.3 35.2l66.3 56.6c-3.1 18.8-4.6 38-4.6 57.1 0 19.2 1.5 38.4 4.6 57.1L99 625.5a32.03 32.03 0 00-9.3 35.2l.9 2.6c18.1 50.4 44.9 96.9 79.7 137.9l1.8 2.1a32.12 32.12 0 0035.1 9.5l81.9-29.1c29.8 24.5 63.1 43.9 99 57.4l15.8 85.4a32.05 32.05 0 0025.8 25.7l2.7.5a449.4 449.4 0 00159 0l2.7-.5a32.05 32.05 0 0025.8-25.7l15.7-85a350 350 0 0099.7-57.6l81.3 28.9a32 32 0 0035.1-9.5l1.8-2.1c34.8-41.1 61.6-87.5 79.7-137.9l.9-2.6c4.5-12.3.8-26.3-9.3-35zM788.3 465.9c2.5 15.1 3.8 30.6 3.8 46.1s-1.3 31-3.8 46.1l-6.6 40.1 74.7 63.9a370.03 370.03 0 01-42.6 73.6L721 702.8l-31.4 25.8c-23.9 19.6-50.5 35-79.3 45.8l-38.1 14.3-17.9 97a377.5 377.5 0 01-85 0l-17.9-97.2-37.8-14.5c-28.5-10.8-55-26.2-78.7-45.7l-31.4-25.9-93.4 33.2c-17-22.9-31.2-47.6-42.6-73.6l75.5-64.5-6.5-40c-2.4-14.9-3.7-30.3-3.7-45.5 0-15.3 1.2-30.6 3.7-45.5l6.5-40-75.5-64.5c11.3-26.1 25.6-50.7 42.6-73.6l93.4 33.2 31.4-25.9c23.7-19.5 50.2-34.9 78.7-45.7l37.9-14.3 17.9-97.2c28.1-3.2 56.8-3.2 85 0l17.9 97 38.1 14.3c28.7 10.8 55.4 26.2 79.3 45.8l31.4 25.8 92.8-32.9c17 22.9 31.2 47.6 42.6 73.6L781.8 426l6.5 39.9zM512 326c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm79.2 255.2A111.6 111.6 0 01512 614c-29.9 0-58-11.7-79.2-32.8A111.6 111.6 0 01400 502c0-29.9 11.7-58 32.8-79.2C454 401.6 482.1 390 512 390c29.9 0 58 11.6 79.2 32.8A111.6 111.6 0 01624 502c0 29.9-11.7 58-32.8 79.2z"
-                      ></path></svg
-                  ></span>
-                </span>
-              </el-tooltip>
-            </el-col>
-          </el-row>
-        </div>
-        <ComUmyTable
+  <div
+    class="APSContainer flex_column content_height bgWhite"
+    v-loading="adminLoading"
+  >
+    <div class="flex_column" style="width: 100%; height: 100%">
+      <div
+        v-for="i in [0]"
+        :key="i + 'head'"
+        class="admin_head_2"
+        ref="headRef"
+      >
+        <ComSearch
+          ref="searchRef"
+          :searchData="formSearchs[i].datas"
+          :searchForm="formSearchs[i].forms"
+          :searchMoreForm="formSearchs[i].formsAll"
+          :remark="i"
+          :isLoading="isLoading"
+          :signName="i"
+          :Region="Region[i]"
+          :btnForm="btnForm"
+          @btnClick="btnClick"
+        />
+      </div>
+      <div v-for="item in [0]" :key="item" class="admin_content flex_grow">
+        <ComVxeTable
+          :ref="`tableRef${item}`"
           :rowKey="'RowNumber'"
-          :height="height"
-          :tableData="tableData[0]"
-          :tableHeader="tableColumns[0]"
-          :tableLoading="tableLoading[0]"
-          :isEdit="isEdit"
-          :remark="0"
-          :sysID="15"
-          :isClear="isClear[0]"
-          :pagination="tablePagination[0]"
-          @handleRowClick="handleRowClick"
+          height="100%"
+          :tableData="tableData[item]"
+          :tableHeader="tableColumns[item]"
+          :tableLoading="tableLoading[item]"
+          :isToolbar="false"
+          :remark="item"
+          :sysID="sysID[item]['ID']"
+          :hasSelect="hasSelect[item]"
+          :isEdit="isEdit[item]"
+          :isClear="isClear[item]"
+          :keepSource="true"
+          :pagination="tablePagination[item]"
           @pageChange="pageChange"
           @pageSize="pageSize"
           @sortChange="sortChange"
+          @selectfun="selectFun"
+          @handleRowClick="handleRowClick"
         />
       </div>
+    </div>
+    <!-- 导入文件 -->
+    <div>
+      <el-dialog title="导入" :visible.sync="dialogImport" width="50%">
+        <el-upload
+          action="https://jsonplaceholder.typicode.com/posts/"
+          style="padding-top: 10px"
+          class="upload-demo"
+          drag
+          :limit="1"
+          :multiple="false"
+          name="files"
+          ref="upload"
+          :on-change="handleChanged"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          accept=".xls, .xlsx"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+          <div class="el-upload__tip" slot="tip">
+            只能上传xls、xslx文件且仅支持上传一个文件
+          </div>
+        </el-upload>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogImport = false" size="small"
+            >取 消</el-button
+          >
+          <el-button size="small" type="primary" @click="sureImport"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+import { Splitpanes, Pane } from 'splitpanes';
+import 'splitpanes/dist/splitpanes.css';
+import ComSearch from '@/components/ComSearch/AdvancedSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
+import ComBatchEdit from '@/components/ComBatchEdit';
+import XLSX from 'xlsx';
+import {
+  GetHeader,
+  GetSearchData,
+  ExportData,
+  SaveData,
+  GetServerTime,
+} from '@/api/Common';
 export default {
-  name: "CapaticyInfo",
+  name: 'CapaticyInfo',
   components: {
     ComSearch,
-    ComUmyTable,
+    ComVxeTable,
+    ComReportTable,
+    Splitpanes,
+    Pane,
+    ComBatchEdit,
   },
   data() {
     return {
       ////////////////// Search /////////////////
+      selectionData: [[], [], [], [], []],
       title: this.$route.meta.title,
-      drawer: false,
-      delData: [[]],
+      includeFields: [[], [], [], [], []],
+      hasSelect: [false, false, false, false, false],
+      selectedIndex: '0',
       formSearchs: [
         {
           datas: {},
           forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
+        },
+        {
+          datas: {},
+          forms: [],
+          required: [], //获取必填项
         },
       ],
       btnForm: [],
-      parmsBtn: [
-        {
-          ButtonCode: "save",
-          BtnName: "保存",
-          isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-        },
-        {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "delData" },
-        },
+      OrderNo: '',
+      OrderNoValue: '',
+      OrderNos: [[], [], [], [], []],
+      tableData: [[], [], [], [], []],
+      tableColumns: [[], [], [], [], []],
+      tableLoading: [false, false, false, false, false],
+      isClear: [false, false, false, false, false],
+      tablePagination: [
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      tableData: [[]],
-      tableColumns: [[]],
-      tableLoading: [false],
-      isClear: [false],
-      tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
-      height: "706px",
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      isUpdate: true,
-      isEdit: false,
       adminLoading: false,
+      Status1: [
+        { label: '待确认', value: '未开始' },
+        { label: '已完成', value: '已完成' },
+        { label: '全部', value: '' },
+      ],
+      labelStatus1: 0,
+      sysID: [{ ID: 15 }],
+      isEdit: [false, false, false, false, false],
+      userInfo: {},
+      selectedIndex: '1',
+      Region: [6, 6, 6, 6, 6],
+      clickRow: null,
+      dialogImport: false,
+      fileList: [],
+      file: [],
     };
   },
   watch: {},
   created() {
     _this = this;
     this.adminLoading = true;
-    this.judgeBtn();
+    this.userInfo = this.$store.getters.userInfo;
     this.getTableHeader();
+    // 获取所有按钮
+    this.btnForm = this.$route.meta.btns;
+    this.judgeBtn(this.btnForm);
   },
-  mounted() {
-    setTimeout(() => {
-      this.setHeight();
-    }, 450);
-  },
+  mounted() {},
   methods: {
-    // 判断按钮权限
-    judgeBtn() {
-      let routeBtn = this.$route.meta.btns;
-      let newBtn = [];
-      let permission = false;
-      if (routeBtn.length != 0) {
-        routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
-            permission = true;
-          }
-          let newData = this.parmsBtn.filter((y) => {
-            return x.ButtonCode == y.ButtonCode;
-          });
-          if (newData.length != 0) {
-            newBtn = newBtn.concat(newData);
+    //按钮权限
+    judgeBtn(routeBtn) {
+      if (routeBtn && routeBtn.length > 0)
+        routeBtn.some((item, index) => {
+          if (item.ButtonCode == 'save') {
+            if (!item['signName'] || item['signName'].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item['signName'] && item['signName'].length > 0) {
+              item['signName'].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
-      }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
-    },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-
-      // const scale =
-      //   Math.min(document.documentElement.clientWidth / 1920, 1) * 14;
-      // let rem =
-      //   (document.documentElement.clientHeight - headHeight - 95) /
-      //   scale;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      this.$set(this, 'btnForm', routeBtn);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
-      // this.dataSearch(remarkTb);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
-      // this.dataSearch(remarkTb);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -223,13 +230,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -252,6 +259,7 @@ export default {
     dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
+      this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
@@ -262,91 +270,87 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        this.formSearchs[remarkTb].datas[name] = "";
-      }
-    },
-    // 删除
-    async dataDel(remarkTb, index, parms) {
-      let res = null;
-      let newData = [];
-      if (parms && parms.dataName) {
-        if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
-          return;
-        } else {
-          this[parms.dataName][remarkTb].forEach((x) => {
-            let obj = x;
-            obj["ElementDeleteFlag"] = 1;
-            newData.push(obj);
-          });
+        if (name != 'dicID') {
+          if (this.formSearchs[remarkTb].forms.length) {
+            // 判断是否是页面显示的查询条件，是的字段才清空
+            this.formSearchs[remarkTb].forms.forEach((element) => {
+              if (element.prop === name) {
+                this.formSearchs[remarkTb].datas[name] = null;
+              }
+            });
+          }
         }
-      } else {
-        this.tableData[remarkTb].forEach((y) => {
-          let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
-          newData.push(obj2);
-        });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
-        .then((_) => {
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
     },
-    // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
+    // 导出
+    async dataExport(remarkTb) {
+      this.adminLoading = true;
+      let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
+      form['rows'] = 0;
+      let res = await ExportData(form);
+      this.adminLoading = false;
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      let res = null;
       this.adminLoading = true;
+      // const sheet = this.spread[remarkTb]?.getActiveSheet();
 
-      if (newData && newData.length != 0) {
-        res = await SaveData(newData);
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      // if (sheet && sheet.isEditing()) {
+      //   sheet.endEdit();
+      // }
+      // 获取修改记录
+      let changeRecords = [];
+      if (newData) {
+        changeRecords = newData;
       } else {
-        let submitData = [];
-        if (this.isUpdate) {
-          if (this.tableData[remarkTb].length != 0) {
-            this.tableData[remarkTb].forEach((i) => {
-              if (i.update) {
-                submitData.push(i);
-              }
-            });
-            res = await SaveData(submitData);
-          }
+        if ($table) {
+          changeRecords = $table.getUpdateRecords();
         } else {
-          res = await SaveData(this.tableData[remarkTb]);
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          DeletedRows.forEach((item) => {
+            item['ElementDeleteFlag'] = 1;
+          }); //获取被删除的数据
+          changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
+
+      if (changeRecords.length == 0) {
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
+        return;
+      }
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
-        this.adminLoading = false;
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
-        this.adminLoading = false;
+        this.$set(this, 'adminLoading', false);
       }
     },
     // 获取表头数据
     async getTableHeader() {
-      let IDs = [{ ID: 15 }];
+      let IDs = this.sysID;
       let res = await GetHeader(IDs);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         // 获取每个表头
         datas.some((m, i) => {
-          m.forEach((n) => {
+          m.forEach((n, index) => {
             // 进行验证
             this.verifyDta(n);
             if (n.children && n.children.length != 0) {
@@ -354,76 +358,405 @@ export default {
                 this.verifyDta(x);
               });
             }
+            if (index === 1) {
+              this.tablePagination[i]['pageSize'] = n['pageSize'];
+              this.hasSelect[i] = n['IsSelect'];
+              this.Region[i] = n['Region'] ? n['Region'] : this.Region[i];
+            }
           });
           this.$set(this.tableColumns, i, m);
+          this.$set(
+            this.OrderNos,
+            i,
+            m.filter((item) => item['isEdit'] === true),
+          );
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.adminLoading = false;
         this.getTableData(this.formSearchs[0].datas, 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
-      const { result, data, count, msg } = res.data;
+      const { result, data, count, msg, Columns } = res.data;
       if (result) {
+        Columns.some((m, i) => {
+          m.forEach((n, index) => {
+            // 进行验证
+            this.verifyDta(n);
+            if (n.childrens && n.children.length != 0) {
+              n.childrens.forEach((x) => {
+                this.verifyDta(x);
+              });
+            }
+            this.$set(this.tableColumns, remarkTb, m);
+          });
+        });
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
     },
+    // 删除
+    async dataDel(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请单击需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj['ElementDeleteFlag'] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
+    },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
-    // 导出
-    async dataExport(remarkTb) {
+    // 选择数据
+    selectFun(data, remarkTb, row) {
+      this.selectionData[remarkTb] = data;
+    },
+    // 单击获取明细
+    handleRowClick(row, remarkTb) {
+      this.clickRow = row;
+    },
+    //双击事件
+    async handleRowdbClick(row, remarkTb) {
+      //获取原因数据源
+    },
+    changeProp(remarkTb, OrderNo, OrderNoValue) {
+      if (!OrderNo) {
+        this.$message.error('请选择需要修改的值');
+        return;
+      }
+      if (this.tableData[remarkTb].length === 0) {
+        this.$message.error('当前表格无数据');
+        return;
+      }
+      if (this.selectionData[remarkTb].length === 0) {
+        this.$message.error('请选择需要批量修改的行');
+        return;
+      }
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        if (rowItem['isChecked'] === true) {
+          rowItem[OrderNo] = OrderNoValue;
+        }
+      });
+    },
+    // 导入并分析模板
+    dataImport() {
+      this.dialogImport = true;
+      this.fileList = [];
+      this.file = [];
+    },
+    // 确认导入
+    sureImport() {
+      if (this.fileList.length == 0) {
+        this.$message.error('请先选择文件');
+        return;
+      } else if (this.fileList.length > 1) {
+        this.$message.error('仅支持一个文件上传');
+      } else {
+        this.$confirm('确定要导入并分析吗？')
+          .then((_) => {
+            _this.importExcel(this.file);
+          })
+          .catch((_) => {});
+      }
+    },
+    //导入解析excel
+    importExcel(file) {
       this.adminLoading = true;
-      let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
-      let res = await ExportData(form);
-      this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.dialogImport = false;
+      const result = [];
+      const reader = new FileReader(); //上传就解析文件
+      var that = this;
+      reader.onload = function (e) {
+        const data = e.target.result;
+        this.wb = XLSX.read(data, {
+          type: 'binary',
+          cellDates: true,
+          dateNF: 'yyyy-MM-dd',
+        });
+        this.wb.SheetNames.forEach((sheetName) => {
+          result.push({
+            sheetName: sheetName,
+            sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName], {
+              defval: null,
+            }),
+          });
+        });
+        that.dataSys(result); // 解析文件
+      };
+      reader.readAsBinaryString(file.raw);
+    },
+    isValidDate(date) {
+      return date instanceof Date && !isNaN(date.getTime());
+    },
+    // 解析文件
+    async dataSys(importData) {
+      this.adminLoading = true;
+      if (importData && importData.length > 0) {
+        let DataList = [];
+        let isDate = false;
+        this.colAdd = [];
+        let obj = {};
+        let rowNo = 0; // excel行号
+        let propName = '';
+        let split = []; //存储需求到料日期过期信息
+        let groupList = [];
+        importData[0].sheet.forEach((m, y) => {
+          for (let key in m) {
+            if (this.tableColumns[this.labelStatus1].length) {
+              // 判断是否和配置里的取名一致，一致才可导入
+              for (
+                let i = 0;
+                i < this.tableColumns[this.labelStatus1].length;
+                i++
+              ) {
+                let item = this.tableColumns[this.labelStatus1][i];
+                if (item.label === key) {
+                  if (item.DataType === 'datetime') {
+                    if (m[key] && !this.isValidDate(m[key])) {
+                      //预防用户输入日期格式不正确的判断
+                      propName = key;
+                      rowNo = Number(m.__rowNum__) + 1;
+                      // 异常提示
+                      split.push(
+                        `第${rowNo}行,【${propName}】格式存在错误，导入失败，请检查！`,
+                      );
+                    } else {
+                      if (this.$moment(m[key]).format('YYYY-MM-DD HH:mm:ss')) {
+                        let getDate = new Date(m[key]);
+                        // // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以转化为时间戳再加上43秒
+                        var date = new Date(
+                          getDate.setSeconds(getDate.getSeconds() + 43),
+                        );
+                        obj[item.prop] = m[key]
+                          ? this.$moment(date).format('YYYY-MM-DD')
+                          : '';
+                      }
+                    }
+                    // 注意的点：xlsx将excel中的时间内容解析后，会小一天xlsx会解析成 Mon Nov 02 2020 23:59:17 GMT+0800 小了43秒，所以需要在moment转换后＋1天
+                    // 判断需求到料日期是否大于今天
+                    // if (
+                    //   item.prop === "DeliveryDate" &&obj[item.prop]&&
+                    //   obj[item.prop] < formatDates.formatTodayDate()
+                    // ) {
+                    //   propName = this.$moment(obj[item.prop]).format('YYYY-MM-DD')
+                    //   rowNo = Number(m.__rowNum__) + 1;
+                    //   // 异常提示
+                    //   split.push(
+                    //     `第${rowNo}行,【${propName}】过期，导入失败，请检查！`
+                    //   );
+                    // }
+                  }
+                  // else if (item.prop === "DemandQty") {
+                  //   if (m[key] > 0) {
+                  //     //导入欠料数大于0才导入
+                  //     obj[item.prop] = m[key];
+                  //   } else {
+                  //     return;
+                  //   }
+                  // }
+                  else {
+                    obj[item.prop] = m[key];
+                  }
+                } else if (isNaN(key) && !isNaN(Date.parse(key))) {
+                  //导入日期并且数大于0才导入
+                  // 列为日期的格式
+                  isDate = true;
+                  if (Number(m[key]) > 0) {
+                    // obj["DeliveryDate"] = this.$moment(key).format("YYYY-MM-DD");
+                    // obj["DemandQty"] = m[key];
+                    obj['dicID'] = 7928;
+                    obj['Account'] = _this.$store.getters.userInfo.Account;
+                    obj['row'] = m.__rowNum__;
+                    // 需要使用...obj 不然值回写有问题
+                    DataList.push({ ...obj });
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // 以下为固定入参
+          if (!isDate) {
+            obj['dicID'] = 7928;
+            obj['Account'] = this.$store.getters.userInfo.Account;
+            obj['row'] = m.__rowNum__;
+            obj['Status'] = 0;
+            // 需要使用...obj 不然值回写有问题
+            DataList.push({ ...obj });
+          }
+        });
+        // 必填校验
+        if (this.formSearchs[this.labelStatus1].required.length) {
+          // 动态检验必填项
+          for (let i = 0; i < DataList.length; i++) {
+            for (
+              let x = 0;
+              x < this.formSearchs[this.labelStatus1].required.length;
+              x++
+            ) {
+              if (
+                DataList[i][
+                  this.formSearchs[this.labelStatus1].required[x]['prop']
+                ] === undefined ||
+                DataList[i][
+                  this.formSearchs[this.labelStatus1].required[x]['prop']
+                ] === null ||
+                DataList[i][
+                  this.formSearchs[this.labelStatus1].required[x]['prop']
+                ] === ''
+              ) {
+                rowNo = Number(DataList[i]['row']) + 1;
+                // 异常提示
+                split.push(
+                  `第${rowNo}行,【${
+                    this.formSearchs[this.labelStatus1].required[x]['label']
+                  }】不能为空，导入失败，请填写`,
+                );
+                this.adminLoading = false;
+              }
+            }
+          }
+        }
+        if (split.length) {
+          //异常集合
+          this.adminLoading = false;
+          let txt = '';
+          split.map((value) => {
+            return (txt = `${txt}<p style="word-break: break-word;">${value}</p>`);
+          });
+          this.$alert(txt, {
+            dangerouslyUseHTMLString: true,
+            title: '导入异常信息!',
+            customClass: 'message-width',
+          });
+
+          return;
+        }
+        // =1表示要删记录（删除并导入）
+        // =0表示不删除（增量导入）
+        if (DataList.length) {
+          console.log('DataList', DataList);
+          let res = await SaveData(DataList);
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.adminLoading = false;
+            // this.dataSearch(this.labelStatus1);
+            // 导入可能存在表头格式不一样，需要更新
+            this.getTableHeader();
+            this.$message({
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        } else {
+          this.adminLoading = false;
+          this.$message.error('未接收到数据，请检查！');
+        }
+      }
+    },
+    handleChanged(file, fileList) {
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
+      if (!extension) {
+        this.$message.error('上传文件格式只能为xlsx/xls');
+        // 取消时在文件列表中删除该文件
+        this.$refs.upload.handleRemove(file);
+        return false;
+      }
+      const isLt2M = file.size / 1024 / 1024 < 50;
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 50MB!');
+        // 取消时在文件列表中删除该文件
+        this.$refs.upload.handleRemove(file);
+        return false;
+      } else {
+        this.file = file;
+        this.fileList = fileList;
+      }
+    },
+    handleRemove(file) {
+      this.fileList.splice(
+        this.fileList.findIndex((item) => item.url === file.url),
+        1,
+      );
     },
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .el-tabs__item {
+  padding: 5px;
+  /* 设置为0或调整合适的数值 */
+}
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
+}
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
+}
+</style>
