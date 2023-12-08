@@ -219,10 +219,18 @@ export default {
       isConfirmLoading: false,
       Region: [6, 6, 6, 6, 6],
       Status1: [
-        { label: '未完成', value: 0, index: 0 },
-        { label: '已完成', value: 1, index: 2 },
-        { label: '全部', value: '', index: 3 },
-        { label: '预测单', value: 2, index: 4 },
+        {
+          label: '未完成',
+          value: { IsFinish: 0, Extend7: '销售订单' },
+          index: 0,
+        },
+        {
+          label: '已完成',
+          value: { IsFinish: 1, Extend7: '销售订单' },
+          index: 2,
+        },
+        { label: '全部', value: {}, index: 3 },
+        { label: '预测单', value: { Extend7: '预测单' }, index: 4 },
       ],
     };
   },
@@ -558,7 +566,7 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        await this.changeStatus({ label: '未完成', value: 0, index: 0 }, 0);
+        await this.changeStatus(this.Status1[0], 0);
         this.adminLoading = false;
       }
     },
@@ -1081,7 +1089,8 @@ export default {
         });
       });
     },
-    changeStatus(item, index) {
+    // 改变状态
+    async changeStatus(item, index) {
       let RoleMapList = this.$store.getters.userInfo.RoleMap;
       if (RoleMapList.length) {
         RoleMapList.forEach((item) => {
@@ -1092,21 +1101,17 @@ export default {
           }
         });
       }
-      this.formSearchs[0].datas['SaleMan'] = null;
-      if (this.RoleMapStatus !== true && index !== 3) {
+      this.formSearchs[this.labelStatus1].datas['SaleMan'] = null;
+      if (this.RoleMapStatus !== true && index !== 4) {
         this.$set(
-          this.formSearchs[0]['datas'],
+          this.formSearchs[this.labelStatus1]['datas'],
           'SaleMan',
           this.userInfo.Account,
         );
       }
       this.labelStatus1 = item['index'];
-      this.formSearchs[this.labelStatus1].datas['IsFinish'] = item.value;
-      this.dataSearch(this.labelStatus1);
-    },
-    // 选择数据
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
+      await this.dataSearch(this.labelStatus1);
     },
     //指定人员
     async DesignatedPerson(remarkTb) {
