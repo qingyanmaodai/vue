@@ -348,7 +348,7 @@
       :title="'拆分订单'"
       class="el-dialog3"
       :visible.sync="colDialogVisible4"
-      :width="'66%'"
+      :width="'70%'"
       :close-on-click-modal="false"
       :modal-append-to-body="false"
     >
@@ -363,7 +363,7 @@
       <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
           <el-col :span="6" class="flex">
-            开始时间:
+            <div class="WhiteSpaceNowrap">开始时间:</div>
             <el-date-picker
               size="small"
               v-model="ERPStartDate"
@@ -372,8 +372,9 @@
             >
             </el-date-picker>
           </el-col>
-          <el-col :span="6" class="flex"
-            >结束时间:
+          <el-col :span="6" class="flex">
+            <div class="WhiteSpaceNowrap">结束时间:</div>
+
             <el-date-picker
               size="small"
               v-model="ERPEndDate"
@@ -383,7 +384,7 @@
             </el-date-picker>
           </el-col>
           <el-col :span="6" class="flex">
-            工时:
+            <div class="WhiteSpaceNowrap">工时:</div>
             <el-input
               type="number"
               v-model="TotalHours"
@@ -395,16 +396,15 @@
       </div>
       <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
-          <el-col :span="12" class="flex">
-            线体:
-            <el-input
-              class="DefaultLineNameInput"
-              v-model="DefaultLineName"
-              size="small"
-            ></el-input
+          <el-col :span="9" class="flex">
+            <div class="WhiteSpaceNowrap">线体:</div>
+            <el-input v-model="DefaultLineName" size="small"></el-input
           ></el-col>
-          <el-col :span="6" class="flex"> </el-col>
-          <el-col :span="6" class="flex_flex_end">
+          <el-col :span="6" class="flex">
+            <div class="WhiteSpaceNowrap">拆分数量:</div>
+            <el-input type="number" v-model="SplitNum" size="small"></el-input>
+          </el-col>
+          <el-col :span="9" class="flex_flex_end">
             <el-button type="primary" size="mini" @click="AutoSplitOrder(3)"
               >自动拆单</el-button
             >
@@ -595,6 +595,7 @@ export default {
       OOrderNo: null,
       ERPEndDate: null,
       ERPStartDate: null,
+      SplitNum: null,
       // ONewQty: false,
       colDialogVisible2: false,
       colDialogVisible3: false,
@@ -1927,6 +1928,7 @@ export default {
           this.OQty = this.selectionData[2][0]['Qty'];
           this.Capacity = this.selectionData[2][0]['Capacity'];
           this.BoxNum = this.selectionData[2][0]['BoxNum'];
+          this.SplitNum = this.selectionData[2][0]['Qty'];
           this.DefaultLineName = this.selectionData[2][0]['DefaultLineName'];
           this.totalQty = 0;
           this.TotalHours = this.selectionData[2][0]['TotalHours']
@@ -2058,7 +2060,9 @@ export default {
         !this.TotalHours ||
         !this.DefaultLineName
       ) {
-        this.$message.error('没有填写开始日期、结束日期、线体或者工时');
+        this.$message.error(
+          '没有填写开始日期、结束日期、线体、拆分数量或者工时',
+        );
         return;
       }
       if (this.$moment(this.ERPEndDate) < this.$moment(this.ERPStartDate)) {
@@ -2069,6 +2073,7 @@ export default {
       obj['ERPStartDate'] = this.ERPStartDate;
       obj['TotalHours'] = this.TotalHours;
       obj['DefaultLineName'] = this.DefaultLineName;
+      obj['SplitNum'] = this.SplitNum;
       this.adminLoading = true;
       this.adminLoadingText = '自动拆单中';
       let res = await GetSearch([obj], '/APSAPI/AutoSplitOrder');
@@ -2190,15 +2195,15 @@ export default {
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      .el-date-editor {
-        width: 200px;
-      }
+      // .el-date-editor {
+      //   width: 200px;
+      // }
       .el-input {
-        width: 200px !important;
+        width: 100% !important;
       }
-      .DefaultLineNameInput {
-        width: 500px !important;
-      }
+      // .DefaultLineNameInput {
+      //   width: 300px !important;
+      // }
     }
     .dialog-footer {
       display: flex;

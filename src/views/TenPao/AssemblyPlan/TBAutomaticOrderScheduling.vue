@@ -1215,8 +1215,11 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      // const sheet = this.spread[remarkTb]?.getActiveSheet();
-
+      const sheet =
+        this.spread[remarkTb] &&
+        typeof this.spread[remarkTb].getActiveSheet === 'function'
+          ? this.spread[remarkTb].getActiveSheet()
+          : undefined;
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       // if (sheet && sheet.isEditing()) {
       //   sheet.endEdit();
@@ -1358,17 +1361,17 @@ export default {
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
-      let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请单击需要操作的数据！');
+        this.$message.error('请选择需要操作的数据！');
         return;
       } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj['ElementDeleteFlag'] = 1;
-          newData.push(obj);
-        });
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
+        );
       }
       this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
@@ -1386,10 +1389,6 @@ export default {
           });
         });
       });
-    },
-    // 选择数据
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
@@ -1515,24 +1514,11 @@ export default {
       this.dataSearch(this.labelStatus3);
     },
     handleSelectChange(remarkTb) {
-      this.formSearchs[remarkTb].datas['selectOption'] = this.selectOption;
+      // this.formSearchs[remarkTb].datas['selectOption'] = this.selectOption;
     },
     activeNum(stepNumber) {
       console.log('点击步骤', stepNumber);
       this.active = stepNumber;
-      //   if (stepNumber === -1) {
-      //     if (this.active === 1) {
-      //       return;
-      //     } else {
-      //       this.active = this.active + stepNumber;
-      //     }
-      //   } else {
-      //     if (this.active === 4) {
-      //       return;
-      //     } else {
-      //       this.active = this.active + stepNumber;
-      //     }
-      //   }
       if (this.active === 1) {
         if (this.tableData[this.labelStatus1].length === 0) {
           this.dataSearch(this.labelStatus1);

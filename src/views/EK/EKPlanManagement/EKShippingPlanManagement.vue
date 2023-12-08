@@ -427,10 +427,18 @@ export default {
       colDialogVisible2: false,
       colDialogVisible4: false,
       Status1: [
-        { label: '未完成', value: { IsFinish: 0 }, index: 0 },
-        { label: '已完成', value: { IsFinish: 1 }, index: 3 },
-        { label: '全部', value: { IsFinish: '' }, index: 4 },
-        { label: '预测单', value: { SalesOrderDetailID: 'F' }, index: 5 },
+        {
+          label: '未完成',
+          value: { IsFinish: 0, Extend7: '销售订单' },
+          index: 0,
+        },
+        {
+          label: '已完成',
+          value: { IsFinish: 1, Extend7: '销售订单' },
+          index: 3,
+        },
+        { label: '全部', value: {}, index: 4 },
+        { label: '预测单', value: { Extend7: '预测单' }, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
