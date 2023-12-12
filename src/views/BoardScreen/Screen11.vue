@@ -5,6 +5,7 @@
       <img class="logo" :src="logo" mode="heightFix" />
       <div class="textTitle">{{ result1[0]['label'] }}</div>
       <div class="showTime">{{ todayDate }}</div>
+      <svg-icon icon-class="moreLarge" @click="moreLarge" class="moreLarge" />
     </div>
     <div class="mainbox flex-grow overflow-hidden">
       <div class="h-full flex gap-[10px]">
@@ -312,6 +313,7 @@ export default {
       countTotal: [],
       tableColumns: [[], [], [], [], [], [], [], [], [], [], []],
       refreshTimers: [],
+      large: true,
       tableData: [
         [],
         [{ S1: '', Name1: '' }],
@@ -1321,6 +1323,36 @@ export default {
 
       this.$set(this.tableLoading, remarkTb, false);
     },
+    moreLarge() {
+      this.large = !this.large;
+      if (!this.large) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        }
+        if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        }
+        if (document.documentElement.webkitRequestFullScreen) {
+          document.documentElement.webkitRequestFullScreen();
+        }
+        if (document.documentElement.msRequestFullscreen) {
+          document.documentElement.msRequestFullscreen();
+        }
+      } else {
+        if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        }
+        if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        }
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+        if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    },
   },
 };
 </script>
@@ -1383,6 +1415,13 @@ export default {
     color: #89bfff;
     font-weight: 400;
     line-height: 28px;
+  }
+  .moreLarge {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: 40px;
+    top: 20px;
   }
 }
 .mainbox {

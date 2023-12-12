@@ -1475,6 +1475,9 @@ export default {
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
+      } else if (!this.selectOption[remarkTb]) {
+        this.$message.error('没有选择方案');
+        return;
       } else {
         newData = _.cloneDeep(
           this.selectionData[remarkTb].map((x) => {

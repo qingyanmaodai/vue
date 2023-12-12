@@ -11,7 +11,7 @@
       </gc-spread-sheets>
     </div>
     <div class="flex_row_spaceBtn pagination flex_shrink" v-show="spaceBtnShow">
-      <div v-show="sysID > 0">
+      <div v-show="sysID > 0" class="flex truncate">
         <span @click="toPageSetting" class="primaryColor cursor"
           >SysID:{{ sysID }}
         </span>
