@@ -127,9 +127,8 @@
                 :stretch="true"
               >
                 <el-tab-pane label="生产任务清单" name="0"></el-tab-pane>
-                <!-- <el-tab-pane label="月计划" name="1"></el-tab-pane> -->
-                <el-tab-pane label="滚动周计划" name="2"></el-tab-pane>
-                <el-tab-pane label="滚动日计划" name="3"></el-tab-pane>
+                <el-tab-pane label="滚动周计划" name="1"></el-tab-pane>
+                <el-tab-pane label="滚动日计划" name="2"></el-tab-pane>
               </el-tabs>
               <!-- <i class="el-icon-d-arrow-left" v-show="showAside" @click="showAside = !showAside"></i>
                 <i class="el-icon-d-arrow-right" v-show="!showAside" @click="showAside = !showAside"></i>
@@ -140,7 +139,7 @@
         </div>
         <div
           class="flex_column flex_grow"
-          v-for="item in [0, 1, 2, 3]"
+          v-for="item in [0, 1, 2]"
           :key="item"
           v-show="Number(selectedIndex) === item"
         >
@@ -234,16 +233,9 @@ export default {
       treeListTmp1: [],
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      delData: [[]],
       formSearchs: [
         {
           datas: {},
-          forms: [],
-        },
-        {
-          datas: {
-            PlanMonths: 8,
-          },
           forms: [],
         },
         {
@@ -256,6 +248,10 @@ export default {
           datas: {
             PlanDays: 50,
           },
+          forms: [],
+        },
+        {
+          datas: {},
           forms: [],
         },
       ],
@@ -285,7 +281,7 @@ export default {
       dialogImport: false,
       fileList: [],
       file: [],
-      sysID: [{ ID: 7833 }, { ID: 7908 }, { ID: 7915 }, { ID: 7910 }],
+      sysID: [{ ID: 7833 }, { ID: 7915 }, { ID: 7910 }],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       userInfo: {},

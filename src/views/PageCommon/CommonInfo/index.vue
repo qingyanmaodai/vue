@@ -46,7 +46,7 @@
               placeholder="请输入"
             ></el-input-number>
           </div>
-          <el-divider direction="vertical"></el-divider>
+          <!-- <el-divider direction="vertical"></el-divider> -->
 
           <!-- <vxe-toolbar ref="xToolbar" custom print> </vxe-toolbar> -->
           <!-- <el-tooltip

@@ -2,7 +2,7 @@
   <!--  spreadJSform表单控件  -->
 
   <div class="flex_column" style="height: 100%">
-    <div class="flex_grow" v-loading="tableLoading">
+    <div class="flex_grow flex0 flex-col" v-loading="tableLoading">
       <gc-spread-sheets
         class="sample-spreadsheets"
         ref="gcSpreadSheets"
@@ -10,6 +10,7 @@
       >
       </gc-spread-sheets>
     </div>
+    <div class="statusBar"></div>
     <div class="flex_row_spaceBtn pagination flex_shrink" v-show="spaceBtnShow">
       <div v-show="sysID > 0" class="flex truncate">
         <span @click="toPageSetting" class="primaryColor cursor"
@@ -164,6 +165,12 @@ export default {
     initSpread: function () {
       this.spread = this.$refs.gcSpreadSheets.spread;
       this.$emit('workbookInitialized', this.spread, this.remark);
+      this.initStatusBar();
+    },
+    initStatusBar() {
+      let statusBarDOM = this.$el.querySelector('.statusBar');
+      let statusBar = new GC.Spread.Sheets.StatusBar.StatusBar(statusBarDOM);
+      statusBar.bind(this.spread);
     },
     // 选择一页显示多少数据
     pageSize(val) {

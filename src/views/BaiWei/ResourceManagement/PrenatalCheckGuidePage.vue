@@ -1,14 +1,14 @@
 <!--物料点检-->
 <template>
   <div
-    class="APSContainer flex_column content_height bgWhite"
+    class="APSContainer flex_column content_height gray"
     v-loading="adminLoading"
   >
     <div class="flex_column" style="width: 100%; height: 100%">
       <div
-        v-for="i in [0]"
+        v-for="i in [2]"
         :key="i + 'head'"
-        class="admin_head_2"
+        class="admin_head_2 mb-[8px]"
         ref="headRef"
       >
         <ComSearch
@@ -24,76 +24,114 @@
           @btnClick="btnClick"
         />
       </div>
-      <div class="ItemNode">
-        <svg-icon icon-class="ItemRedBG" class="ItemRedBG" />
-        <div class="flex justify-between absolute items-center h-full w-full">
-          <div class="flex">
-            <div
-              class="flex ItemFlex"
-              v-for="(item, index) in ItemArray"
-              :class="index < ItemArray.length - 1 ? 'BorderRight' : ''"
-              :key="index"
-            >
-              <div class="flex flex-col items-center justify-center w-full">
-                <div class="truncate" style="color: #b37666; font-size: 12px">
-                  {{ item['key'] }}
-                </div>
-                <div
-                  class="truncate"
-                  style="color: #872106; font-size: 14px; font-weight: bold"
-                >
-                  {{ item['value'] }}
+
+      <div class="flex_grow gray flex0">
+        <div class="flex0 w-60/100 flex-col mr-[10px]">
+          <div class="itemCard">
+            <div class="echartHead truncate w-full">
+              <div class="echartTitle">车间当天点检概览</div>
+              <div class="flex">
+                <div v-for="(item, y) in Status1" :key="y">
+                  <span
+                    @click="changeStatus(item, y)"
+                    :class="
+                      labelStatus1 == item['index']
+                        ? 'statusActive cursor'
+                        : 'cursor'
+                    "
+                    >{{ item.label }}</span
+                  >
+                  <el-divider
+                    v-if="y !== Status1.length - 1"
+                    direction="vertical"
+                  ></el-divider>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="flex">
-            <svg-icon
-              icon-class="IconCalendar"
-              class="IconCalendar pr-[10px]"
-            />
             <div
-              class="pr-[10px] truncate"
-              style="color: #fff; font-size: 26px"
+              class="flex justify-between w-full px-[10px] truncate"
+              style="height: 50px; background: #e9f3ff"
             >
-              预计交货:2023-07-29
+              <div class="flex">
+                <div
+                  v-for="(item, index) in ItemArray"
+                  :key="index"
+                  class="flex truncate"
+                >
+                  <div
+                    class="mr-[10px]"
+                    style="color: #6a6a6a; font-size: 16px"
+                  >
+                    {{ item['key'] }}
+                  </div>
+                  <div
+                    class="mr-[20px]"
+                    style="color: #000; font-size: 16px; font-weight: 600"
+                  >
+                    {{ item['value'] }}
+                  </div>
+                </div>
+              </div>
+              <div class="flexProgress truncate">
+                <el-progress
+                  :percentage="percentage"
+                  :color="customColors"
+                  :format="
+                    (percentage) => {
+                      return '进度: ' + `${percentage}%`;
+                    }
+                  "
+                ></el-progress>
+              </div>
+            </div>
+            <div
+              v-for="item in [2]"
+              :key="item"
+              class="admin_content flex_grow"
+              style="padding: 10px"
+            >
+              <ComVxeTable
+                :ref="`tableRef${item}`"
+                :rowKey="'RowNumber'"
+                height="100%"
+                :tableData="tableData[item]"
+                :tableHeader="tableColumns[item]"
+                :tableLoading="tableLoading[item]"
+                :isToolbar="false"
+                :remark="item"
+                :sysID="sysID[item]['ID']"
+                :hasSelect="hasSelect[item]"
+                :isEdit="isEdit[item]"
+                :isClear="isClear[item]"
+                :keepSource="true"
+                :pagination="tablePagination[item]"
+                @pageChange="pageChange"
+                @pageSize="pageSize"
+                @sortChange="sortChange"
+                @selectfun="selectFun"
+                @handleRowClick="handleRowClick"
+              />
             </div>
           </div>
         </div>
-      </div>
-      <div class="ant-table-title pd-0-6">
-        <el-row>
-          <el-col :span="4"><span class="title"> 用料清单 </span></el-col>
-          <el-col :span="20" class="flex_flex_end"> </el-col>
-        </el-row>
-      </div>
-      <div
-        v-for="item in [0]"
-        :key="item"
-        class="admin_content flex_grow"
-        style="padding-left: 0; padding-right: 0"
-      >
-        <ComVxeTable
-          :ref="`tableRef${item}`"
-          :rowKey="'RowNumber'"
-          height="100%"
-          :tableData="tableData[item]"
-          :tableHeader="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :isToolbar="false"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :hasSelect="hasSelect[item]"
-          :isEdit="isEdit[item]"
-          :isClear="isClear[item]"
-          :keepSource="true"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-          @selectfun="selectFun"
-          @handleRowClick="handleRowClick"
-        />
+        <div class="flex flex-col w-40/100">
+          <div class="h-50/100 mb-[10px] w-full">
+            <div class="itemCard">
+              <div class="echartHead truncate">
+                <div class="echartTitle">车间当天点检概览</div>
+              </div>
+              <div class="echartBody" ref="chart0"></div>
+            </div>
+          </div>
+          <div class="h-50/100 w-full">
+            <div class="itemCard">
+              <div class="echartHead truncate">
+                <div class="echartTitle">异常原因占比</div>
+              </div>
+              <div class="echartBody" ref="chart1"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- 导入文件 -->
@@ -145,6 +183,7 @@ import ComVxeTable from '@/components/ComVxeTable';
 import ComReportTable from '@/components/ComReportTable';
 import ComBatchEdit from '@/components/ComBatchEdit';
 import XLSX from 'xlsx';
+import * as echarts from 'echarts';
 import {
   GetHeader,
   GetSearchData,
@@ -153,7 +192,7 @@ import {
   GetServerTime,
 } from '@/api/Common';
 export default {
-  name: 'DeliverySimulationCalculation',
+  name: 'PrenatalCheckGuidePage',
   components: {
     ComSearch,
     ComVxeTable,
@@ -166,14 +205,18 @@ export default {
     return {
       ////////////////// Search /////////////////
       ItemArray: [
-        { value: 'YU89845466', key: '模拟单号' },
-        { value: '9288888888', key: '产品品号' },
-        { value: '500', key: '数量' },
-        { value: '300项', key: '所需物料' },
-        { value: '280项', key: '库存满足' },
-        { value: '20项', key: '欠料' },
-        { value: '5项', key: '禁用料' },
-        { value: '2023-07-18', key: '物料最迟交货' },
+        { key: '总任务', value: '57' },
+        { key: '点检OK', value: '30' },
+        { key: '点检异常', value: '3' },
+        { key: '未点', value: '24' },
+      ],
+      percentage: 20,
+      customColors: [
+        { color: '#f56c6c', percentage: 20 },
+        { color: '#e6a23c', percentage: 40 },
+        { color: '​#ffff00', percentage: 60 },
+        { color: '#1989fa', percentage: 80 },
+        { color: '#5cb87a', percentage: 100 },
       ],
       selectionData: [[], [], [], [], []],
       title: this.$route.meta.title,
@@ -211,7 +254,28 @@ export default {
       OrderNo: '',
       OrderNoValue: '',
       OrderNos: [[], [], [], [], []],
-      tableData: [[], [], [], [], []],
+      tableData: [
+        [
+          { S1: 30, S2: 70, S3: 100, Name1: '一车间' },
+          { S1: 0, S2: 49, S3: 121, Name1: '二车间' },
+          { S1: 0, S2: 65, S3: 75, Name1: '五车间' },
+          { S1: 0, S2: 160, S3: 20, Name1: '七车间' },
+          { S1: 20, S2: 25, S3: 56, Name1: '电池阀车间' },
+          { S1: 5, S2: 95, S3: 20, Name1: '风机车间' },
+          { S1: 0, S2: 70, S3: 75, Name1: '电控车间' },
+          { S1: 0, S2: 44, S3: 56, Name1: '比例阀车间' },
+        ],
+        [
+          { S1: 38.4, Name1: '设备' },
+          { S1: 19.4, Name1: '工具' },
+          { S1: 29.4, Name1: '文件' },
+          { S1: 32.4, Name1: '程序' },
+          { S1: 18.2, Name1: '人员' },
+        ],
+        [],
+        [],
+        [],
+      ],
       tableColumns: [[], [], [], [], []],
       tableLoading: [false, false, false, false, false],
       isClear: [false, false, false, false, false],
@@ -225,13 +289,15 @@ export default {
       tagRemark: 0,
       isLoading: false,
       adminLoading: false,
+      chart: [],
+      chartOptions: [],
       Status1: [
-        { label: '待确认', value: '未开始' },
-        { label: '已完成', value: '已完成' },
-        { label: '全部', value: '' },
+        { label: '一车间', value: '未开始', index: 0 },
+        { label: '二车间', value: '已完成', index: 1 },
+        { label: '三车间', value: '', index: 2 },
       ],
       labelStatus1: 0,
-      sysID: [{ ID: 15 }],
+      sysID: [{ ID: 15 }, { ID: 15 }, { ID: 15 }, { ID: 15 }, { ID: 15 }],
       isEdit: [false, false, false, false, false],
       userInfo: {},
       selectedIndex: '1',
@@ -245,14 +311,27 @@ export default {
   watch: {},
   created() {
     _this = this;
-    this.adminLoading = true;
     this.userInfo = this.$store.getters.userInfo;
-    this.getTableHeader();
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
   },
-  mounted() {},
+  mounted() {
+    this.chart = [
+      echarts.init(this.$refs.chart0),
+      echarts.init(this.$refs.chart1),
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ];
+    this.adminLoading = true;
+    this.getTableHeader();
+    window.addEventListener('resize', this.handleWindowResize);
+  },
   methods: {
     //按钮权限
     judgeBtn(routeBtn) {
@@ -444,7 +523,7 @@ export default {
           });
           this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.getTableData(this.formSearchs[0].datas, 0);
+        this.getTableData(this.formSearchs[2].datas, 2);
         this.adminLoading = false;
       }
     },
@@ -482,6 +561,10 @@ export default {
         });
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        // if (remarkTb === 0 || remarkTb === 1) {
+        await this.getEcharts(0);
+        await this.getEcharts(1);
+        // }
       } else {
         this.$message({
           message: msg,
@@ -602,26 +685,6 @@ export default {
     },
     isValidDate(date) {
       return date instanceof Date && !isNaN(date.getTime());
-    },
-    // 模拟运算
-    async AnalogOperationEvent(remarkTb, index, parms) {
-      let newData = [];
-      // if (this.selectionData[remarkTb].length == 0) {
-      //   this.$message.error('请选择需要操作的数据！');
-      //   return;
-      // } else {
-      //   newData = _.cloneDeep(
-      //     this.selectionData[remarkTb].map((obj) => {
-      //       obj['ElementDeleteFlag'] = 1;
-      //       return obj;
-      //     }),
-      //   );
-      // }
-      // this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
-      //   .then((_) => {
-      //     _this.dataSave(remarkTb, index, null, newData);
-      //   })
-      //   .catch((_) => {});
     },
     // 解析文件
     async dataSys(importData) {
@@ -823,6 +886,273 @@ export default {
         1,
       );
     },
+    async getEcharts(remarkTb) {
+      //获取屏幕宽度并计算比例
+      function fontSize(res) {
+        let clientWidth =
+          window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth;
+        if (!clientWidth) return;
+        return res * (clientWidth / 1920);
+      }
+      if (remarkTb === 0) {
+        this.chartOptions[0] = {
+          grid: {
+            containLabel: true,
+            bottom: -fontSize(30),
+            left: fontSize(10),
+            right: fontSize(10),
+            top: fontSize(50),
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow',
+            },
+          },
+          legend: {
+            top: '0',
+            right: '0',
+            data: ['异常', '已点检', '未点检'],
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            itemGap: fontSize(30),
+            textStyle: {
+              fontSize: fontSize(16),
+              padding: [0, 0, 0, fontSize(10)],
+            },
+          },
+          xAxis: {
+            // name: "班级",
+            triggerEvent: true,
+            data: this.tableData[0].map((item) => item['Name1']),
+            axisLabel: {
+              interval: 0,
+              show: true,
+              color: '#000',
+              fontSize: fontSize(16),
+              rotate: 30, // 设置旋转角度为30度
+              align: 'center',
+              margin: fontSize(30),
+              // verticalAlign: 'top',
+            },
+            axisLine: {
+              lineStyle: {
+                show: false,
+                color: '#F3F3F3',
+                width: 2,
+              },
+            },
+          },
+          yAxis: [
+            {
+              name: '单位:万',
+              type: 'value',
+              nameTextStyle: {
+                color: '#444444',
+                fontSize: fontSize(16),
+              },
+              axisLabel: {
+                interval: 0,
+                show: true,
+                color: '#444444',
+                fontSize: fontSize(12),
+              },
+              axisLine: {
+                show: false,
+                // lineStyle: {
+                //   color: "#F3F3F3",
+                //   width: 2
+                // }
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                lineStyle: {
+                  type: 'dashed',
+                  color: '#E9E9E9',
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: '未点检',
+              type: 'bar',
+              stack: '总量',
+              silent: true,
+              barWidth: fontSize(30),
+              itemStyle: {
+                color: '#0A9FF3',
+              },
+              data: this.tableData[0].map((item) => item['S3']),
+              label: {
+                show: true, // 显示标签
+                position: 'inside', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#fff',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value ? params.value : '';
+                },
+              },
+            },
+
+            {
+              name: '已点检',
+              type: 'bar',
+              stack: '总量',
+              silent: true,
+              barWidth: fontSize(30),
+              itemStyle: {
+                color: '#53CBFF',
+              },
+              data: this.tableData[0].map((item) => item['S2']),
+              label: {
+                show: true, // 显示标签
+                position: 'inside', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#fff',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value ? params.value : '';
+                },
+              },
+            },
+
+            {
+              name: '异常',
+              type: 'bar',
+              stack: '总量',
+              silent: true,
+              barWidth: fontSize(30),
+              itemStyle: {
+                color: '#FF9519',
+              },
+              data: this.tableData[0].map((item) => item['S1']),
+              label: {
+                show: true, // 显示标签
+                position: 'inside', // 标签显示在柱状图的上方
+                fontSize: fontSize(10),
+                color: '#fff',
+                formatter: function (params) {
+                  // 在标签文本后添加百分号
+                  return params.value ? params.value : '';
+                },
+              },
+            },
+          ],
+        };
+      } else if (remarkTb === 1) {
+        this.chartOptions[1] = {
+          // title: {
+          //   text: "注册资金",
+          //   subtext: "2016年",
+          //   x: "center",
+          //   y: "center",
+          //   textStyle: {
+          //     fontWeight: "normal",
+          //     fontSize: 16
+          //   }
+          // },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}:({d}%)',
+          },
+          legend: {
+            // top: '0',
+            left: 'center',
+            orient: 'horizontal',
+            // right: "0%",
+            bottom: '0',
+            itemWidth: fontSize(14),
+            itemHeight: fontSize(14),
+            textStyle: {
+              fontSize: fontSize(14),
+            },
+            itemStyle: {
+              borderRadius: '50%', // 将图例项的形状设定为圆形
+            },
+            data: this.tableData[1].map((item) => item['Name1']),
+          },
+          grid: {
+            containLabel: true,
+          },
+          series: [
+            {
+              type: 'pie',
+              selectedMode: 'single',
+              radius: ['40%', '80%'],
+              color: [
+                '#21A863',
+                '#6DD93A',
+                '#FF9519',
+                '#F63F33',
+                '#0A9FF3',
+                '#6E40F2',
+                '#FF61E6',
+                '#E82074',
+                '#FBA806',
+              ],
+              center: ['50%', '40%'],
+              label: {
+                position: 'inner',
+                formatter: '{d}%',
+                show: true,
+                color: '#fff',
+                textBorderColor: 'inherit',
+                textBorderWidth: 1,
+                fontSize: fontSize(16),
+                formatter: function (params) {
+                  // let percent = 0;
+                  // let total = 0;
+                  // for (var i = 0; i < this.tableData[2].length; i++) {
+                  //   total += scaleData[i].value;
+                  // }
+                  // percent = ((params.value / total) * 100).toFixed(0);
+                  if (params.name !== '') {
+                    // return params.name + '\n' + params.data.data;
+                    {
+                      return params.percent + '%';
+                    }
+                  } else {
+                    return '';
+                  }
+                },
+              },
+              labelLine: {
+                show: false,
+              },
+              data: this.tableData[1].map((item) => {
+                return {
+                  value: item['S1'],
+                  name: item['Name1'],
+                };
+              }),
+            },
+          ],
+        };
+      }
+      this.barData(this.chart[remarkTb], this.chartOptions[remarkTb]);
+    },
+    // 渲染echart图
+    barData(item, option) {
+      // echarts.dispose(id);
+      item.setOption(option);
+    },
+    handleWindowResize() {
+      // 调用 resize 方法重新渲染图表
+      setTimeout(() => {
+        this.chart.map((item, remarkTb) => {
+          if (item) {
+            this.getEcharts(remarkTb);
+            item.resize();
+          }
+        });
+      }, 100);
+    },
   },
 };
 </script>
@@ -840,24 +1170,48 @@ export default {
 ::v-deep .el-dialog__close {
   color: #fff !important;
 }
-.ItemNode {
-  height: 80px;
+.itemCard {
+  height: 100%;
+  border-radius: 4px;
+  background: #ffffff;
   width: 100%;
-  position: relative;
-  .ItemFlex {
-    padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 0px !important;
+}
+.flexProgress {
+  width: 350px;
+}
+.flexProgress .el-progress--line {
+  white-space: nowrap;
+  width: 300px;
+  ::v-deep .el-progress-bar__outer {
+    height: 16px !important;
   }
 }
-.ItemRedBG {
-  height: 100%;
+.echartHead {
+  padding: 0px 10px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .echartTitle {
+    position: relative;
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    font-weight: bold;
+    // white-space: nowrap;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+  }
+}
+.echartBody {
+  // height: 480px;
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 10px;
   width: 100%;
-  position: absolute;
-}
-.IconCalendar {
-  height: 80px;
-  width: 80px;
-}
-.BorderRight {
-  border-right: 1px solid #eabdb0;
+  // height: 100%;
 }
 </style>

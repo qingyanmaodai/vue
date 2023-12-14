@@ -346,7 +346,7 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      const $table = this.$refs[`tableRef${remarkTb}`].$refs.vxeTable;
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
       // 获取修改记录
       let updateRecords = [];
       this.adminLoading = true;
