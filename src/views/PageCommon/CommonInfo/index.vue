@@ -322,10 +322,6 @@ export default {
     },
     // 重置
     dataReset(remarkTb) {
-      console.log(
-        this.formSearchs[remarkTb].datas,
-        'this.formSearchs[remarkTb].datas',
-      );
       for (let name in this.formSearchs[remarkTb].datas) {
         if (name != 'dicID' || name != 'QueryParams') {
           this.formSearchs[remarkTb].datas[name] = null;
@@ -576,21 +572,16 @@ export default {
           if (item.prop === 'Status') {
             obj[item.prop] = 1;
           }
-          console.log(this.DataSourceList, 'this.DataSourceList');
           for (let key in this.DataSourceList[remarkTb]) {
             if (item.DataSourceName === key) {
               obj[key] = this.DataSourceList[remarkTb][key];
             }
           }
         });
-
-        console.log('this.addNum', this.addNum);
         $table.insert(obj);
 
         // this.tableData[remarkTb].unshift(obj);
       }
-
-      console.log('this.tableData[remarkTb]', this.tableData[remarkTb]);
     },
     // 行内样式
     cellStyle0({ row, column }) {

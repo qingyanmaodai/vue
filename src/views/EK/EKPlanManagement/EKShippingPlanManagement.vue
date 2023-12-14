@@ -990,7 +990,9 @@ export default {
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      this.adminLoading = true;
+      if (index !== 'save') {
+        this.adminLoading = true;
+      }
       const sheet =
         this.spread[remarkTb] &&
         typeof this.spread[remarkTb].getActiveSheet === 'function'
@@ -998,9 +1000,6 @@ export default {
           : undefined;
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      if (sheet && sheet.isEditing()) {
-        sheet.endEdit();
-      }
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -1021,20 +1020,26 @@ export default {
       }
       if (changeRecords.length == 0) {
         this.$set(this, 'adminLoading', false);
-        this.$message.error('当前数据没做修改，请先修改再保存！');
+        if (index !== 'save') {
+          this.$message.error('当前数据没做修改，请先修改再保存！');
+        }
         return;
       }
+
       let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        this.$message({
-          message: msg,
-          type: 'success',
-          dangerouslyUseHTMLString: true,
-        });
-        this.dataSearch(remarkTb);
+        if (index !== 'save') {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          this.dataSearch(remarkTb);
+        }
         this.$set(this, 'adminLoading', false);
       } else {
+        this.$set(this, 'adminLoading', false);
         this.$message({
           message: msg,
           type: 'error',
@@ -1543,7 +1548,8 @@ export default {
         GCsheets.Events.EditStarting,
         function (e, args) {},
       );
-      this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
+      this.spread[remarkTb].bind(GCsheets.Events.LeaveCell, function (e, args) {
+        _this.dataSave(remarkTb, 'save');
         // 自动计算数量
         // _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
