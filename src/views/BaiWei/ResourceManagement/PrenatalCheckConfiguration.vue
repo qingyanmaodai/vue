@@ -225,7 +225,7 @@ export default {
       adminLoading: false,
       labelStatus1: 0,
       labelStatus2: 0,
-      sysID: [{ ID: 5051 }, { ID: 5054 }, { ID: 15 }],
+      sysID: [{ ID: 12194 }, { ID: 5054 }, { ID: 15 }],
       isEdit: [false, false, true, false, false, false, false],
       userInfo: {},
       selectedIndex: '1',
@@ -558,7 +558,7 @@ export default {
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[1].datas['Order'] = row.CustomerID;
+      this.formSearchs[1].datas['OrderID'] = row.OrderID;
       this.dataSearch(this.selectedIndex);
     },
     handleClick(tab, event) {
