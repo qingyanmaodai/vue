@@ -60,11 +60,11 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
 export default {
-  name: "PageClearShort",
+  name: 'PageClearShort',
   components: {
     ComSearch,
     ComVxeTable,
@@ -89,7 +89,7 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -120,7 +120,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -132,16 +132,16 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 获取采购员对应的超领数
     async getPOTrokerData() {
       let form = {};
-      form["dicID"] = 7864;
-      form["fields"] = "NewPOTracker,count(1) as Count";
-      form["groupby"] = "NewPOTracker";
-      form["sort"] = "Count desc";
+      form['dicID'] = 7864;
+      form['fields'] = 'NewPOTracker,count(1) as Count';
+      form['groupby'] = 'NewPOTracker';
+      form['sort'] = 'Count desc';
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -156,14 +156,14 @@ export default {
             });
           });
           this.Status1.unshift({
-            NewPOTracker: "",
+            NewPOTracker: '',
             Label: `全部(${Count})`,
           });
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -177,17 +177,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -198,13 +198,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -238,7 +238,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -247,10 +247,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     dataSave(remarkTb) {},
@@ -275,22 +275,22 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         if (this.parseSearch) {
           let obj = this.parseForm;
           for (var name in obj) {
             this.$set(this.formSearchs[0].datas, name, obj[name]);
           }
-          this.$set(this.formSearchs[0].datas, "dicID", 7790);
+          this.$set(this.formSearchs[0].datas, 'dicID', 7790);
           this.dataSearch(0);
         } else {
           this.getTableData(this.formSearchs[0].datas, 0);
@@ -301,28 +301,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -330,11 +330,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -342,15 +342,15 @@ export default {
     // 切换状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["NewPOTracker"] = x.NewPOTracker;
+      this.formSearchs[0].datas['NewPOTracker'] = x.NewPOTracker;
       this.dataSearch(0);
     },
     // 清空超领
     clearShortData() {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要清空的数据！");
+        this.$message.error('请选择需要清空的数据！');
       } else {
-        this.$confirm("确定清空选中的吗？")
+        this.$confirm('确定清空选中的吗？')
           .then(() => {
             let newData = [];
             _this.selectionData[0].forEach((x) => {
@@ -358,13 +358,13 @@ export default {
               if (parseInt(x.UnIssuedQty) == 0) {
                 x.InspectStatus = 1;
                 if (parseInt(x.OweQty) == 0) {
-                  x.PrepareType = "齐套";
+                  x.PrepareType = '齐套';
                 } else {
-                  x.PrepareType = "欠料";
+                  x.PrepareType = '欠料';
                 }
               } else {
                 x.InspectStatus = 2;
-                x.PrepareType = "异常";
+                x.PrepareType = '异常';
               }
               newData.push(x);
             });
@@ -384,21 +384,21 @@ export default {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
   },
 };

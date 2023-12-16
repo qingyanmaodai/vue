@@ -213,21 +213,21 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComVxeTable from "@/components/ComVxeTable";
+import XLSX from 'xlsx';
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComVxeTable from '@/components/ComVxeTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetOrgData,
-} from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+} from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "DayManagement",
+  name: 'DayManagement',
   components: {
     ComSearch,
     ComAsideTree,
@@ -236,8 +236,8 @@ export default {
   },
   data() {
     return {
-      LineValue: "",
-      SN: "",
+      LineValue: '',
+      SN: '',
       lineDialog: false,
       sortDialog: false,
       includeFields: [], // 包含合计的字段
@@ -257,40 +257,40 @@ export default {
       ],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "选线",
-          Type: "primary",
+          ButtonCode: 'save',
+          BtnName: '选线',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "lineData",
-          Icon: "",
+          Size: 'small',
+          Methods: 'lineData',
+          Icon: '',
         },
         {
-          ButtonCode: "save",
-          BtnName: "调序",
-          Type: "primary",
+          ButtonCode: 'save',
+          BtnName: '调序',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "sortData",
-          Icon: "",
+          Size: 'small',
+          Methods: 'sortData',
+          Icon: '',
         },
         {
-          ButtonCode: "save",
-          BtnName: "暂停",
-          Type: "danger",
+          ButtonCode: 'save',
+          BtnName: '暂停',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "parseData",
-          Icon: "",
+          Size: 'small',
+          Methods: 'parseData',
+          Icon: '',
         },
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "saveData",
-          Icon: "",
+          Size: 'small',
+          Methods: 'saveData',
+          Icon: '',
         },
       ],
       selectionData: [[], []],
@@ -300,8 +300,8 @@ export default {
       tableLoading: [false, false],
       isClear: [false, false],
       tablePagination: [{ pageIndex: 1, pageSize: 0, pageTotal: 0 }],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -317,61 +317,61 @@ export default {
       dialogHeader: [
         [
           {
-            label: "行号",
-            prop: "SN",
-            width: "80px",
+            label: '行号',
+            prop: 'SN',
+            width: '80px',
           },
           {
-            label: "SAP订单号",
-            prop: "GroupCabinet",
-            width: "120px",
+            label: 'SAP订单号',
+            prop: 'GroupCabinet',
+            width: '120px',
           },
           {
-            label: "SAP代码",
-            prop: "SaleTo",
-            width: "120px",
+            label: 'SAP代码',
+            prop: 'SaleTo',
+            width: '120px',
           },
           {
-            label: "规格型号",
-            prop: "SalesOrderNo",
-            width: "150px",
+            label: '规格型号',
+            prop: 'SalesOrderNo',
+            width: '150px',
           },
           {
-            label: "批量",
-            prop: "MaterialName",
-            width: "80px",
+            label: '批量',
+            prop: 'MaterialName',
+            width: '80px',
           },
         ],
         [
           {
-            label: "当前行",
-            prop: "SN",
-            width: "80px",
+            label: '当前行',
+            prop: 'SN',
+            width: '80px',
           },
           {
-            label: "目标行",
-            prop: "SN2",
-            width: "80px",
+            label: '目标行',
+            prop: 'SN2',
+            width: '80px',
           },
           {
-            label: "SAP订单号",
-            prop: "GroupCabinet",
-            width: "120px",
+            label: 'SAP订单号',
+            prop: 'GroupCabinet',
+            width: '120px',
           },
           {
-            label: "SAP代码",
-            prop: "SaleTo",
-            width: "120px",
+            label: 'SAP代码',
+            prop: 'SaleTo',
+            width: '120px',
           },
           {
-            label: "规格型号",
-            prop: "SalesOrderNo",
-            width: "150px",
+            label: '规格型号',
+            prop: 'SalesOrderNo',
+            width: '150px',
           },
           {
-            label: "批量",
-            prop: "MaterialName",
-            width: "80px",
+            label: '批量',
+            prop: 'MaterialName',
+            width: '80px',
           },
         ],
       ],
@@ -405,7 +405,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.SupplierName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -434,23 +434,23 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -462,7 +462,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 判断按钮权限
@@ -472,7 +472,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -483,20 +483,20 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -504,12 +504,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -520,13 +520,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -560,7 +560,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -575,14 +575,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -608,15 +608,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.dataSearch(0);
       }
@@ -625,28 +625,28 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -655,43 +655,43 @@ export default {
     // 获取标签页的线别
     async getLinesData() {
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 36;
-      form["OrganizeTypeID"] = 6;
-      form["OrganizeIDs"] = this.userInfo.CenterID;
+      form['rows'] = 0;
+      form['dicID'] = 36;
+      form['OrganizeTypeID'] = 6;
+      form['OrganizeIDs'] = this.userInfo.CenterID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       this.adminLoading = false;
       if (result) {
         if (data.length != 0) {
           data.forEach((a) => {
-            this.$set(a, "label", a.OrganizeName);
-            this.$set(a, "value", a.OrganizeID);
+            this.$set(a, 'label', a.OrganizeName);
+            this.$set(a, 'value', a.OrganizeID);
           });
         }
         this.Status1 = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     tableRowClassName({ row, rowIndex }) {},
     // 行内列样式
@@ -699,13 +699,13 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsReplyStatusOther"] = x.value;
+      this.formSearchs[0].datas['IsReplyStatusOther'] = x.value;
       this.dataSearch(0);
     },
     // 选线
     lineData() {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要改线的数据！");
+        this.$message.error('请选择需要改线的数据！');
         return;
       }
       this.lineDialog = true;
@@ -713,7 +713,7 @@ export default {
     // 确定选线
     sureLine() {
       this.selectionData[0].forEach((a) => {
-        this.$set(a, "LineID", this.LineValue);
+        this.$set(a, 'LineID', this.LineValue);
       });
       this.lineDialog = false;
     },
@@ -728,7 +728,7 @@ export default {
           this.selectionData[0].forEach((y) => {
             let newIndex = -1;
             newIndex = this.dialogData[1].findIndex(
-              (x) => x.SalesOrderDetailID == y.SalesOrderDetailID
+              (x) => x.SalesOrderDetailID == y.SalesOrderDetailID,
             );
             if (newIndex == -1) {
               this.dialogData[1].push(y);
@@ -751,12 +751,12 @@ export default {
         if (this.dialogData[1].length != 0) {
           this.dialogData[1].forEach((x) => {
             x.SN2 = this.SN;
-            x["GroupCabinets"] = prop;
-            this.$set(x, "EditDisabled", EditDisabled);
+            x['GroupCabinets'] = prop;
+            this.$set(x, 'EditDisabled', EditDisabled);
             x.NewGroupCabinet = NewGroupCabinet;
           });
         } else {
-          this.$message.error("暂未找到该目标行，请确认当前页是否有这行数据！");
+          this.$message.error('暂未找到该目标行，请确认当前页是否有这行数据！');
         }
       }
       this.$nextTick(() => {
@@ -775,14 +775,14 @@ export default {
     // 确定调整顺序
     sureChangeSort() {
       if (this.dialogData[0].length == 0) {
-        this.$message.error("请填写目标行再调整！");
+        this.$message.error('请填写目标行再调整！');
       } else if (this.dialogData[1].length == 0) {
-        this.$message.error("请选择需要调整的数据！");
+        this.$message.error('请选择需要调整的数据！');
       } else {
         let newData = JSON.parse(JSON.stringify(this.dialogData[1]));
         // 先删除有的，在push新的
         let newTableData = this.tableData[0].filter(
-          (x) => !newData.some((y) => y.SN == x.SN)
+          (x) => !newData.some((y) => y.SN == x.SN),
         );
         let newIndex = newTableData.findIndex((z) => z.SN == this.SN);
         // 把arr2 变成一个适合splice的数组（包含splice前2个参数的数组）
@@ -790,7 +790,7 @@ export default {
         Array.prototype.splice.apply(newTableData, newData);
         let startNum = this.startNum;
         newTableData.forEach((z) => {
-          this.$set(z, "SN", startNum);
+          this.$set(z, 'SN', startNum);
           startNum++;
         });
         this.$set(this.tableData, 0, []);

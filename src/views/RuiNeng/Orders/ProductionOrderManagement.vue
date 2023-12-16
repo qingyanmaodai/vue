@@ -362,10 +362,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     async subSAP() {
       this.adminLoading = true;
       if (this.selectionData[1].length == 0) {
@@ -1173,7 +1169,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 批量开始日期
     changeDate() {

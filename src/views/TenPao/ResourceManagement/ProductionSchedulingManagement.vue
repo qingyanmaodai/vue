@@ -454,10 +454,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
@@ -812,7 +808,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {

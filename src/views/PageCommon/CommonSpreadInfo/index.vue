@@ -251,7 +251,7 @@ export default {
     },
     //获取当前选中行的值
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 高度控制
     setHeight() {

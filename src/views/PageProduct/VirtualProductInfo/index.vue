@@ -118,14 +118,14 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComUmyTable from '@/components/ComUmyTable';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "VirtualProductInfo",
+  name: 'VirtualProductInfo',
   components: {
     ComSearch,
     ComAsideTree,
@@ -136,46 +136,46 @@ export default {
     return {
       //////////////左侧树节点//////////////
       treeProps: {
-        label: "MaterialName",
-        children: "children",
+        label: 'MaterialName',
+        children: 'children',
       },
       selectionData: [[], []],
       ///////////////新增弹框//////////////
-      dialogTilte: "新增",
+      dialogTilte: '新增',
       dialogShow: false,
       dialogShow2: false,
       formData: {
-        Code: "",
-        MaterialName: "",
-        Spec: "",
-        MaterialID: "",
-        Extend18: "APS虚拟组件",
+        Code: '',
+        MaterialName: '',
+        Spec: '',
+        MaterialID: '',
+        Extend18: 'APS虚拟组件',
         dicID: 12,
       },
       treeData: [],
       treeListTmp: [],
       formController: [
         {
-          label: "编码",
-          prop: "Code",
-          type: "input",
+          label: '编码',
+          prop: 'Code',
+          type: 'input',
           disabled: false,
-          placholder: "自动生成",
+          placholder: '自动生成',
         },
-        { label: "产品名称", prop: "MaterialName", type: "input" },
-        { label: "规格", prop: "Spec", type: "input" },
+        { label: '产品名称', prop: 'MaterialName', type: 'input' },
+        { label: '规格', prop: 'Spec', type: 'input' },
       ],
       formRules: {
         Code: [
-          { required: true, message: "产品编码为必填项", trigger: "blur" },
+          { required: true, message: '产品编码为必填项', trigger: 'blur' },
         ],
         MaterialName: [
-          { required: true, message: "产品名称为必填项", trigger: "blur" },
+          { required: true, message: '产品名称为必填项', trigger: 'blur' },
         ],
       },
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      rightName: "配置半成品",
+      rightName: '配置半成品',
       drawer: false,
       delData: [[]],
       formSearchs: [
@@ -190,23 +190,23 @@ export default {
       ],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSave',
+          Icon: '',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
-          Type: "danger",
+          ButtonCode: 'delete',
+          BtnName: '删除',
+          Type: 'danger',
           Ghost: true,
-          Size: "small",
-          Methods: "dataDel",
-          Params: { dataName: "delData" },
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataDel',
+          Params: { dataName: 'delData' },
+          Icon: '',
         },
       ],
       btnForm: [[], []],
@@ -218,8 +218,8 @@ export default {
         { pageIndex: 1, pageSize: 30, pageTotal: 0 },
         { pageIndex: 1, pageSize: 100, pageTotal: 0 },
       ],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -228,20 +228,20 @@ export default {
       adminLoading: false,
       Status1: [
         {
-          label: "关联的半成品",
+          label: '关联的半成品',
           value: 1,
-          title: "半成品列表",
-          name: "半成品",
-          rightName: "配置半成品",
-          MaterialType: "半成品",
+          title: '半成品列表',
+          name: '半成品',
+          rightName: '配置半成品',
+          MaterialType: '半成品',
         },
         {
-          label: "关联的成品",
+          label: '关联的成品',
           value: 3,
-          title: "成品列表",
-          name: "成品",
-          rightName: "配置成品",
-          MaterialType: "成品",
+          title: '成品列表',
+          name: '成品',
+          rightName: '配置成品',
+          MaterialType: '成品',
         },
       ],
       labelStatus1: 0,
@@ -278,7 +278,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.MaterialName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -309,7 +309,7 @@ export default {
       this.treeListTmp = [];
       let form = {
         dicID: 12,
-        Extend18: "APS虚拟组件",
+        Extend18: 'APS虚拟组件',
       };
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -319,21 +319,21 @@ export default {
         if (data.length != 0) {
           this.$nextTick(function () {
             _this.$refs.asideRef.$refs.asideTree.setCurrentKey(
-              data[0].MaterialID
+              data[0].MaterialID,
             );
             _this.clickData = data[0];
           });
-          this.formSearchs[0].datas["ParantMaterialID"] = data[0].MaterialID;
-          this.formSearchs[0].datas["dicID"] = 6730;
-          this.formSearchs[0].datas["MaterialType"] = "半成品";
-          this.formSearchs[1].datas["MaterialType"] = "半成品";
-          this.formSearchs[0].datas["Extend18"] = "null";
+          this.formSearchs[0].datas['ParantMaterialID'] = data[0].MaterialID;
+          this.formSearchs[0].datas['dicID'] = 6730;
+          this.formSearchs[0].datas['MaterialType'] = '半成品';
+          this.formSearchs[1].datas['MaterialType'] = '半成品';
+          this.formSearchs[0].datas['Extend18'] = 'null';
           this.dataSearch(0);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -345,7 +345,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -357,7 +357,7 @@ export default {
         });
       }
       this.$set(this.btnForm, 0, newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'isEdit', permission);
       // if (this.isEdit) {
       //   this.btnForm[1].push({
       //     ButtonCode: "save",
@@ -372,15 +372,15 @@ export default {
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -388,12 +388,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -404,13 +404,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -444,7 +444,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -456,7 +456,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -464,7 +464,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -480,22 +480,22 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -510,7 +510,7 @@ export default {
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -521,7 +521,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -548,15 +548,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.tableColumns[1].splice(this.tableColumns[1].length - 1, 1);
         this.adminLoading = false;
@@ -566,29 +566,29 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       console.log(form);
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -596,7 +596,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 配置虚拟组件产品
     openDrawer() {
@@ -604,7 +604,7 @@ export default {
         this.dialogShow2 = true;
         this.dataSearch(1);
       } else {
-        this.$message.error("请单击左侧需要配置的组件！");
+        this.$message.error('请单击左侧需要配置的组件！');
       }
     },
     // 弹框确定添加
@@ -612,7 +612,7 @@ export default {
       this.dialogShow = false;
       if (val) {
         if (this.remark == 1) {
-          this.formData.MaterialID = "";
+          this.formData.MaterialID = '';
         }
         let newData = [];
         newData.push(this.formData);
@@ -620,14 +620,14 @@ export default {
         this.getMaterialData();
       } else {
         for (let name in this.formData) {
-          this.formData[name] = "";
+          this.formData[name] = '';
         }
       }
     },
     // 单击出来产品人员
     handleNodeClick(data, node) {
       this.clickData = data;
-      this.$set(this.formSearchs[0].datas, "MaterialIDs", data.MaterialID);
+      this.$set(this.formSearchs[0].datas, 'MaterialIDs', data.MaterialID);
       this.dataSearch(0);
     },
     // 选择菜单树形
@@ -640,48 +640,48 @@ export default {
     handleCommand(val) {
       this.remark = val;
       if (val == 1) {
-        this.dialogTilte = "新增";
+        this.dialogTilte = '新增';
         this.dialogShow = true;
         this.$nextTick(() => {
           _this.$refs.materialOrgRef.$refs.formData.resetFields();
         });
       } else if (val == 2) {
         if (this.clickData) {
-          this.dialogTilte = "修改";
+          this.dialogTilte = '修改';
           this.dialogShow = true;
           for (var name in this.clickData) {
             this.formData[name] = this.clickData[name];
           }
         } else {
-          this.$message.error("请单击左侧的组件");
+          this.$message.error('请单击左侧的组件');
         }
       } else {
         if (this.clickData) {
-          this.$confirm("确定要删除数据吗？")
+          this.$confirm('确定要删除数据吗？')
             .then((_) => {
-              _this.clickData["ElementDeleteFlag"] = 1;
+              _this.clickData['ElementDeleteFlag'] = 1;
               let newData = [];
               newData.push(_this.clickData);
               _this.generalSaveData(newData, 0, 0);
             })
             .catch((_) => {});
         } else {
-          this.$message.error("请单击左侧的组件");
+          this.$message.error('请单击左侧的组件');
         }
       }
     },
     // 保存配置
     saveConfig() {
       if (this.selectionData[1].length == 0) {
-        this.$message.error("请选择需要配置的产品！");
+        this.$message.error('请选择需要配置的产品！');
       } else {
         let childrens = this.selectionData[1];
         childrens.forEach((x) => {
-          x["ParantMaterialID"] = this.clickData.MaterialID;
-          x["dicID"] = 6728;
+          x['ParantMaterialID'] = this.clickData.MaterialID;
+          x['dicID'] = 6728;
         });
         let obj = JSON.parse(JSON.stringify(this.clickData));
-        obj["childrens"] = childrens;
+        obj['childrens'] = childrens;
         let newData = [];
         newData.push(obj);
         this.generalSaveData(newData, 0, 0);
@@ -690,11 +690,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -705,7 +705,7 @@ export default {
       this.rightName = item.rightName;
       this.title = item.title;
       this.formSearchs.forEach((x) => {
-        this.$set(x.datas, "MaterialType", item.MaterialType);
+        this.$set(x.datas, 'MaterialType', item.MaterialType);
       });
       this.dataSearch(0);
     },

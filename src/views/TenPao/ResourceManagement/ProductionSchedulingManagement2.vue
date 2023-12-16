@@ -728,10 +728,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     // 渲染数据
     async setData(remarkTb) {
       this.spread[remarkTb].suspendPaint();
@@ -1571,7 +1567,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {

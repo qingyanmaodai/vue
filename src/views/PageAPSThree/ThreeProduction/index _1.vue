@@ -111,14 +111,14 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComVxeTable from "@/components/ComVxeTable";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComVxeTable from '@/components/ComVxeTable';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "ThreeProduction",
+  name: 'ThreeProduction',
   components: {
     ComSearch,
     ComAsideTree,
@@ -128,13 +128,13 @@ export default {
   data() {
     return {
       rightData: [],
-      currentRow: { WorkShopName: "", LineName: "", Approvals: "", LineID: 8 },
+      currentRow: { WorkShopName: '', LineName: '', Approvals: '', LineID: 8 },
       sysID: [{ ID: 7784 }, { ID: 86 }],
       //////////////左侧树节点//////////////
       treeData: [],
       treeProps: {
-        label: "OrganizeName",
-        children: "children",
+        label: 'OrganizeName',
+        children: 'children',
       },
       selectionData: [[], []],
       ///////////////新增弹框//////////////
@@ -162,15 +162,15 @@ export default {
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
       clickData: {},
       remark: 1,
       adminLoading: false,
-      submitForm: "",
+      submitForm: '',
       standWorkTime: {},
       allLevelTwoProcessData: [],
       LevelTwoProcessData: [],
@@ -211,7 +211,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.OrganizeName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -261,7 +261,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -273,7 +273,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -286,14 +286,14 @@ export default {
         });
       }
       this.$set(this.btnForm, 0, newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let rem = document.documentElement.clientHeight - 110;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -301,12 +301,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -317,13 +317,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -357,7 +357,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -369,7 +369,7 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -377,7 +377,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -400,7 +400,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -411,22 +411,22 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -445,7 +445,7 @@ export default {
         }
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -456,7 +456,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -483,15 +483,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
       } else {
@@ -502,19 +502,19 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -522,19 +522,19 @@ export default {
           // 是人员就先把标准时间填进去
           if (data.length != 0) {
             data.forEach((a) => {
-              a["StartTime"] = this.standWorkTime.StartTime;
-              a["EndTime"] = this.standWorkTime.EndTime;
-              a["TotalHour"] = this.standWorkTime.TotalHour;
-              a["LevelTwoProcessData"] = this.LevelTwoProcessData;
+              a['StartTime'] = this.standWorkTime.StartTime;
+              a['EndTime'] = this.standWorkTime.EndTime;
+              a['TotalHour'] = this.standWorkTime.TotalHour;
+              a['LevelTwoProcessData'] = this.LevelTwoProcessData;
             });
           }
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -542,29 +542,29 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 获取日计划
     openDialog(item) {
       this.currentRow = item;
       this.dialogShow = true;
       // 获取日计划
-      this.formSearchs[0].datas["LineID"] = this.currentRow.LineID;
+      this.formSearchs[0].datas['LineID'] = this.currentRow.LineID;
       this.dataSearch(0);
       // 获取对应线别的人员
       // 提取线别对应的二级工序
       this.LevelTwoProcessData = this.allLevelTwoProcessData.filter(
-        (a) => a.LineID == this.currentRow.LineID
+        (a) => a.LineID == this.currentRow.LineID,
       );
-      this.formSearchs[1].datas["OrganizeID"] = this.currentRow.LineID;
+      this.formSearchs[1].datas['OrganizeID'] = this.currentRow.LineID;
       // 默认读取排产时间再查询人员数据
       this.searchWorkTimeData();
     },
     // 获取所有线别对应的二级工序
     async getLineLevelProcessData() {
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 7848;
+      form['rows'] = 0;
+      form['dicID'] = 7848;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -572,7 +572,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -580,9 +580,9 @@ export default {
     // 获取默认排班开始时间结束时间
     async searchWorkTimeData() {
       let form = {};
-      form["rows"] = 1;
-      form["page"] = 1;
-      form["dicID"] = 3056;
+      form['rows'] = 1;
+      form['page'] = 1;
+      form['dicID'] = 3056;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -591,7 +591,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -603,18 +603,18 @@ export default {
         !this.submitForm.ProducedQty ||
         parseFloat(this.submitForm.ProducedQty <= 0)
       ) {
-        this.$message.error("请单击选中需要提报的产品并填写报工数！");
+        this.$message.error('请单击选中需要提报的产品并填写报工数！');
       } else {
         // 判断提报的数量不能大于总钱数
         if (
           parseFloat(this.submitForm.ProducedQty) >
           parseFloat(this.submitForm.TotalOweQty)
         ) {
-          this.$message.error("提报的数量大于总欠数！");
+          this.$message.error('提报的数量大于总欠数！');
           return;
         }
         if (this.selectionData[1].length == 0) {
-          this.$message.error("请勾选提报的生产人员！");
+          this.$message.error('请勾选提报的生产人员！');
         } else {
           let flag = 0;
           this.selectionData[1].some((a) => {
@@ -628,33 +628,33 @@ export default {
             this.submitForm.dicID = 5586;
             let childrens = [];
             this.selectionData[1].forEach((c) => {
-              let LevelTwoProcessName = "";
+              let LevelTwoProcessName = '';
               if (c.LevelTwoProcessID.length != 0) {
                 // 得到这些二级工序id的工序名称
                 let filterLevelTwoProcessData = this.LevelTwoProcessData.filter(
                   (q) =>
-                    !c.LevelTwoProcessID.some((w) => w == q.LevelTwoProcessID)
+                    !c.LevelTwoProcessID.some((w) => w == q.LevelTwoProcessID),
                 );
                 LevelTwoProcessName = filterLevelTwoProcessData
                   .map((x) => {
                     return x.LevelTwoProcessName;
                   })
-                  .join(",");
+                  .join(',');
               }
               let obj = {}; // 121的提报生产人员的ID 缺少 StartTime，EndTime字段
-              obj["dicID"] = 6710;
-              obj["Account"] = c.Account;
-              obj["TotalHours"] = c.TotalHour;
-              obj["StartTime"] = c.StartTime;
-              obj["EndTime"] = c.EndTime;
-              obj["Remark2"] = LevelTwoProcessName;
+              obj['dicID'] = 6710;
+              obj['Account'] = c.Account;
+              obj['TotalHours'] = c.TotalHour;
+              obj['StartTime'] = c.StartTime;
+              obj['EndTime'] = c.EndTime;
+              obj['Remark2'] = LevelTwoProcessName;
               childrens.push(obj);
             });
-            this.submitForm["childrens"] = childrens;
+            this.submitForm['childrens'] = childrens;
             submitData.push(this.submitForm);
             this.generalSaveData(submitData, 1);
           } else {
-            this.$message.error("开始时间与结束时间为必填项！");
+            this.$message.error('开始时间与结束时间为必填项！');
           }
         }
       }
@@ -664,14 +664,14 @@ export default {
     clearData() {
       if (this.tableData[1].length != 0) {
         this.tableData[1].forEach((a) => {
-          this.$set(a, "StartTime", this.standWorkTime.StartTime);
-          this.$set(a, "EndTime", this.standWorkTime.EndTime);
+          this.$set(a, 'StartTime', this.standWorkTime.StartTime);
+          this.$set(a, 'EndTime', this.standWorkTime.EndTime);
           if (this.LevelTwoProcessData.length == 1) {
-            this.$set(a, "LevelTwoProcessID", [
+            this.$set(a, 'LevelTwoProcessID', [
               this.LevelTwoProcessData[0].LevelTwoProcessID,
             ]);
           } else {
-            this.$set(a, "LevelTwoProcessID", []);
+            this.$set(a, 'LevelTwoProcessID', []);
           }
         });
       }

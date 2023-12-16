@@ -163,11 +163,11 @@
 
 <script>
 var _this;
-import XLSX from "xlsx";
-import ComSearch from "@/components/ComSearch";
-import ComAsideTree from "@/components/ComAsideTree";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
+import XLSX from 'xlsx';
+import ComSearch from '@/components/ComSearch';
+import ComAsideTree from '@/components/ComAsideTree';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
 import {
   GetHeader,
   GetSearchData,
@@ -176,12 +176,12 @@ import {
   GetServerTime,
   GetOrgData,
   UpdateOrderBomPOTracker,
-} from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
-import { Handler } from "mockjs";
+} from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
+import { Handler } from 'mockjs';
 export default {
-  name: "OutTrakerReply",
+  name: 'OutTrakerReply',
   components: {
     ComSearch,
     ComAsideTree,
@@ -193,23 +193,23 @@ export default {
     return {
       dialogShow: false,
       EditDisabled: false,
-      height1: "360px",
+      height1: '360px',
       labelStatus1: 0,
       Status1: [
-        { label: "全部", value: "" },
-        { label: "待复期", value: 0 },
-        { label: "复期超时", value: 5 },
-        { label: "三天内即将到期", value: 4 },
-        { label: "已复期", value: [1, 2, 3, 4, 5] },
-        { label: "复期异常", value: 2 },
-        { label: "复期变更", value: 3 },
+        { label: '全部', value: '' },
+        { label: '待复期', value: 0 },
+        { label: '复期超时', value: 5 },
+        { label: '三天内即将到期', value: 4 },
+        { label: '已复期', value: [1, 2, 3, 4, 5] },
+        { label: '复期异常', value: 2 },
+        { label: '复期变更', value: 3 },
       ],
       //////////////左侧树节点//////////////
       showAside: true,
-      ReplyDate: "",
+      ReplyDate: '',
       treeProps: {
-        label: "SupplierNameCount",
-        children: "children",
+        label: 'SupplierNameCount',
+        children: 'children',
       },
       treeData: [],
       treeListTmp: [],
@@ -228,13 +228,13 @@ export default {
       ],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "allSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'allSave',
+          Icon: '',
         },
       ],
       selectionData: [[], []],
@@ -247,8 +247,8 @@ export default {
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
       ],
-      height: "707px",
-      treeHeight: "765px",
+      height: '707px',
+      treeHeight: '765px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -261,7 +261,7 @@ export default {
       sysID: [{ ID: 7862 }, { ID: 6751 }],
       userInfo: {},
       IsPurchaseBoss: false,
-      footerLabel: [""],
+      footerLabel: [''],
     };
   },
   computed: {},
@@ -286,25 +286,25 @@ export default {
   },
   methods: {
     getData() {
-      this.formSearchs[0].datas["PMCRemark"] = ["试产", "试产/车间生产"];
-      this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
+      this.formSearchs[0].datas['PMCRemark'] = ['试产', '试产/车间生产'];
+      this.formSearchs[0].datas['dicID'] = this.sysID[0].ID;
       this.getTableData(this.formSearchs[0].datas, 0);
     },
     // 获取查询到的所有欠料数
     async getTotalOweNum() {
       let form = JSON.parse(JSON.stringify(this.formSearchs[0].datas));
-      form["fields"] = "isnull(sum(RealOweQty),0) as RealOweQty";
-      form["rows"] = 0;
+      form['fields'] = 'isnull(sum(RealOweQty),0) as RealOweQty';
+      form['rows'] = 0;
       let res = await GetSearchData(form);
       const { result, data, msg } = res.data;
       if (result) {
         let StringValue =
-          "当前查询结果【欠料合计：" + `${data[0].RealOweQty}` + "】";
+          '当前查询结果【欠料合计：' + `${data[0].RealOweQty}` + '】';
         this.$set(this.footerLabel, 0, StringValue);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -322,7 +322,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element.SupplierName.indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -351,23 +351,23 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     handleChanged(file, fileList) {
-      var ext = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const extension = ext === "xlsx" || ext === "xls";
+      var ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+      const extension = ext === 'xlsx' || ext === 'xls';
       if (!extension) {
-        this.$message.error("上传文件格式只能为xlsx/xls");
+        this.$message.error('上传文件格式只能为xlsx/xls');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 50;
       if (!isLt2M) {
-        this.$message.error("上传文件大小不能超过 50MB!");
+        this.$message.error('上传文件大小不能超过 50MB!');
         // 取消时在文件列表中删除该文件
         this.$refs.upload.handleRemove(file);
         return false;
@@ -379,7 +379,7 @@ export default {
     handleRemove(file) {
       this.fileList.splice(
         this.fileList.findIndex((item) => item.url === file.url),
-        1
+        1,
       );
     },
     // 获取供应商
@@ -400,7 +400,7 @@ export default {
           if (Account) {
             data.forEach((a) => {
               num += parseInt(a.SumCount);
-              a["SupplierNameCount"] = a.SupplierName + "(" + a.SumCount + ")";
+              a['SupplierNameCount'] = a.SupplierName + '(' + a.SumCount + ')';
               newTree.push(a);
             });
           } else if (tag == 1) {
@@ -409,8 +409,8 @@ export default {
               newIndex = newTree.findIndex((c) => c.SupplierID == a.SupplierID);
               if (newIndex == -1) {
                 num += parseInt(a.SumCount);
-                a["SupplierNameCount"] =
-                  a.SupplierName + "(" + a.SumCount + ")";
+                a['SupplierNameCount'] =
+                  a.SupplierName + '(' + a.SumCount + ')';
                 newTree.push(a);
               }
             });
@@ -424,8 +424,8 @@ export default {
         //   SupplierNameCount: "全部" + "(" + num + ")",
         // });
 
-        this.formSearchs[0].datas["PMCRemark"] = ["试产", "试产/车间生产"];
-        this.formSearchs[0].datas["dicID"] = this.sysID[0].ID;
+        this.formSearchs[0].datas['PMCRemark'] = ['试产', '试产/车间生产'];
+        this.formSearchs[0].datas['dicID'] = this.sysID[0].ID;
         this.treeListTmp = this.treeData;
         if (this.treeData.length < 2) {
           return;
@@ -439,7 +439,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -451,7 +451,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -462,19 +462,19 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + "px";
+      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
       let headHeight = this.$refs.headRef.offsetHeight;
       let rem =
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 编辑行
     editRow(row) {},
@@ -482,12 +482,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -498,13 +498,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -538,7 +538,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -560,14 +560,14 @@ export default {
         // 获取修改记录
         const updateRecords = $table.getUpdateRecords();
         if (updateRecords.length == 0) {
-          this.$message.error("当前数据没做修改，请先修改再保存！");
+          this.$message.error('当前数据没做修改，请先修改再保存！');
           return;
         }
         updateRecords.forEach((x) => {
-          let MaterialFormID = x.MaterialFormID.split(",");
+          let MaterialFormID = x.MaterialFormID.split(',');
           MaterialFormID.forEach((b, i) => {
             let obj = JSON.parse(JSON.stringify(x));
-            obj["MaterialFormID"] = b;
+            obj['MaterialFormID'] = b;
             if (!obj.ReplyDate && !obj.SecondReplyDate) {
               obj.IsReplyStatus = 0;
             } else {
@@ -596,7 +596,7 @@ export default {
       let submitData = [];
       let flag = 0;
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要提交的数据！");
+        this.$message.error('请选择需要提交的数据！');
         return;
       } else {
         this.selectionData[0].forEach((x) => {
@@ -610,15 +610,15 @@ export default {
             flag = 1;
           }
           let obj = JSON.parse(JSON.stringify(x));
-          obj["IsReplyStatus"] = 1;
+          obj['IsReplyStatus'] = 1;
           submitData.push(obj);
         });
       }
       if (flag == 1) {
-        this.$message.error("请检查是否填写了回货数与一次日期，或二次复期！");
+        this.$message.error('请检查是否填写了回货数与一次日期，或二次复期！');
         return;
       }
-      this.$confirm("确定要回复吗？")
+      this.$confirm('确定要回复吗？')
         .then((_) => {
           _this.generalSaveData(submitData, 0);
         })
@@ -635,22 +635,22 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -659,7 +659,7 @@ export default {
     // 通用直接保存
     async generalSaveData(newData, remarkTb, index) {
       if (newData.length == 0) {
-        this.$message.error("没有提交保存的数据！");
+        this.$message.error('没有提交保存的数据！');
         return;
       }
       this.adminLoading = true;
@@ -670,14 +670,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -703,15 +703,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
           this.getTotalOweNum();
         });
       }
@@ -720,19 +720,19 @@ export default {
     verifyData(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -743,24 +743,24 @@ export default {
               x.ReplyQty = x.RealOweQty;
             }
             if (!x.ReplyDate) {
-              this.$set(x, "tag_1", 1);
+              this.$set(x, 'tag_1', 1);
             }
             if (!x.SecondReplyDate) {
-              this.$set(x, "tag_2", 1);
+              this.$set(x, 'tag_2', 1);
             }
             if (x.EditDisabled) {
-              this.$set(x, "EditDisabled", true);
+              this.$set(x, 'EditDisabled', true);
             } else {
-              this.$set(x, "EditDisabled", false);
+              this.$set(x, 'EditDisabled', false);
             }
           });
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -771,30 +771,30 @@ export default {
       this.clickData = data;
       this.$set(
         this.formSearchs[0].datas,
-        "POSuplierName",
-        data.SupplierName == "全部" ? "" : data.SupplierName
+        'POSuplierName',
+        data.SupplierName == '全部' ? '' : data.SupplierName,
       );
       this.dataSearch(0);
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 批量复期
     changeDate(val) {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要批量填写交期的数据！");
+        this.$message.error('请选择需要批量填写交期的数据！');
       } else {
         if (val == 0) {
           this.selectionData[0].forEach((a) => {
@@ -819,25 +819,25 @@ export default {
     // 行内列样式
     cellStyle({ row, column }) {
       if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "缺采购单"
+        column.property == 'JudgeResult' &&
+        row['JudgeResult'] == '缺采购单'
       ) {
         return {
-          background: "#ff7b7b",
+          background: '#ff7b7b',
         };
       } else if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "在途不足"
+        column.property == 'JudgeResult' &&
+        row['JudgeResult'] == '在途不足'
       ) {
         return {
-          background: "#ffced6",
+          background: '#ffced6',
         };
       } else if (
-        column.property == "JudgeResult" &&
-        row["JudgeResult"] == "待复期"
+        column.property == 'JudgeResult' &&
+        row['JudgeResult'] == '待复期'
       ) {
         return {
-          background: "#fdfd8f",
+          background: '#fdfd8f',
         };
       }
       // else if (
@@ -849,53 +849,53 @@ export default {
       //   };
       // }
       else if (
-        (column.property == "JudgeResult" && row["JudgeResult"] == "满足") ||
-        (column.property == "IsReplyStatusName" &&
-          row["IsReplyStatusName"] == "是")
+        (column.property == 'JudgeResult' && row['JudgeResult'] == '满足') ||
+        (column.property == 'IsReplyStatusName' &&
+          row['IsReplyStatusName'] == '是')
       ) {
         return {
-          background: "#9fff9f",
+          background: '#9fff9f',
         };
       }
 
-      if (column.property == "OnloadQty") {
+      if (column.property == 'OnloadQty') {
         return {
-          color: "blue",
+          color: 'blue',
         };
       }
-      if (column.property == "RealOweQty") {
+      if (column.property == 'RealOweQty') {
         return {
-          color: "red",
+          color: 'red',
         };
       }
       if (
-        column.property == "ReplyQty" &&
+        column.property == 'ReplyQty' &&
         parseFloat(row.ReplyQty) < parseFloat(row.RealOweQty)
       ) {
         return {
-          background: "#ff7b7b",
+          background: '#ff7b7b',
         };
       }
 
       if (row.ReplyDate && !row.SecondReplyDate) {
         if (
-          column.property == "ReplyDate" &&
+          column.property == 'ReplyDate' &&
           new Date(row.ReplyDate).getTime() > new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b",
+            background: '#ff7b7b',
           };
         }
       }
 
       if (row.SecondReplyDate) {
         if (
-          column.property == "SecondReplyDate" &&
+          column.property == 'SecondReplyDate' &&
           new Date(row.SecondReplyDate).getTime() >
             new Date(row.LastDate).getTime()
         ) {
           return {
-            background: "#ff7b7b",
+            background: '#ff7b7b',
           };
         }
       }
@@ -903,13 +903,13 @@ export default {
     // 改变状态
     changeStatus(x, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["IsReplyStatusOther"] = x.value;
+      this.formSearchs[0].datas['IsReplyStatusOther'] = x.value;
       this.dataSearch(0);
     },
     // 可用量查询
     usingSearch(row, prop) {
-      this.formSearchs[1].datas["MaterialID"] = row.MaterialID;
-      this.formSearchs[1].datas["Remark1"] = "送货";
+      this.formSearchs[1].datas['MaterialID'] = row.MaterialID;
+      this.formSearchs[1].datas['Remark1'] = '送货';
       this.dataSearch(1);
       this.dialogShow = true;
     },
@@ -922,14 +922,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }

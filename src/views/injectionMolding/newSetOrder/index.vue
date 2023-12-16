@@ -205,11 +205,11 @@
 
 <script>
 var _this;
-import lodop from "@/components/Lodop/index";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import GoodsDialog from "@/components/Dialog/Goods";
-import GeneralForm from "@/components/GeneralForm";
+import lodop from '@/components/Lodop/index';
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import GoodsDialog from '@/components/Dialog/Goods';
+import GeneralForm from '@/components/GeneralForm';
 import {
   GetHeader,
   GetSearchData,
@@ -217,9 +217,9 @@ import {
   SaveData,
   printTemplateData,
   GetPrintProgramCodes,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "NewSetOrder",
+  name: 'NewSetOrder',
   components: {
     ComSearch,
     ComVxeTable,
@@ -233,16 +233,16 @@ export default {
       printLoading: false,
       editTag: 0,
       showBox: false,
-      dialogHeader: "新建订单",
+      dialogHeader: '新建订单',
       dialogShow: false,
       selectionData: [[], [], []],
       adminLoading: false,
       ruleForm0: {
         dicID: 5102,
-        SalesOrderID: "",
-        DeliveryDate: "",
-        OrderDate: "",
-        Extend2: "",
+        SalesOrderID: '',
+        DeliveryDate: '',
+        OrderDate: '',
+        Extend2: '',
       },
       suppliers: [],
       warehouses: [],
@@ -264,39 +264,39 @@ export default {
         //   disabled: false,
         // },
         {
-          label: "下单日期",
-          prop: "OrderDate",
+          label: '下单日期',
+          prop: 'OrderDate',
           component: {
-            type: "date",
+            type: 'date',
           },
           disabled: false,
         },
         {
-          label: "计划交期",
-          prop: "DeliveryDate",
+          label: '计划交期',
+          prop: 'DeliveryDate',
           component: {
-            type: "date",
+            type: 'date',
           },
           disabled: false,
         },
         {
-          label: "客户",
-          prop: "CustomerID",
+          label: '客户',
+          prop: 'CustomerID',
           component: {
-            type: "select",
+            type: 'select',
           },
           select: [],
           disabled: false,
         },
         {
-          label: "是否加急",
-          prop: "Extend2",
+          label: '是否加急',
+          prop: 'Extend2',
           component: {
-            type: "select",
+            type: 'select',
           },
           select: [
-            { label: "是", value: "是" },
-            { label: "否", value: "否" },
+            { label: '是', value: '是' },
+            { label: '否', value: '否' },
           ],
           disabled: false,
         },
@@ -328,11 +328,11 @@ export default {
         //   { required: true, message: "计划交期必填！", trigger: "change" },
         // ],
         OrderDate: [
-          { required: true, message: "下单日期必填！", trigger: "change" },
+          { required: true, message: '下单日期必填！', trigger: 'change' },
         ],
       },
       GoodsDialog: false,
-      tableHeight2: document.documentElement.clientHeight - 520 + "px",
+      tableHeight2: document.documentElement.clientHeight - 520 + 'px',
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
@@ -353,26 +353,26 @@ export default {
       ],
       btnForm: [
         {
-          ButtonCode: "save",
-          BtnName: "保存",
+          ButtonCode: 'save',
+          BtnName: '保存',
           isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'dataSave',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
         },
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
+          ButtonCode: 'delete',
+          BtnName: '删除',
           isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "delData" },
+          Methods: 'dataDel',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
+          Params: { dataName: 'delData' },
         },
       ],
-      customDialog: "oneStyle",
+      customDialog: 'oneStyle',
       tableData: [[], [], []],
       tableColumns: [[], [], []],
       tableLoading: [false, false, false],
@@ -382,7 +382,7 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -420,15 +420,15 @@ export default {
       if (result) {
         if (data.length != 0) {
           data.forEach((x) => {
-            x["label"] = x.CustomerName;
-            x["value"] = x.CustomerID;
+            x['label'] = x.CustomerName;
+            x['value'] = x.CustomerID;
           });
         }
         this.formController0[2].select = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -440,15 +440,15 @@ export default {
       if (result) {
         if (data.length != 0) {
           data.forEach((x) => {
-            x["label"] = x.WarehouseName;
-            x["value"] = x.WarehouseID;
+            x['label'] = x.WarehouseName;
+            x['value'] = x.WarehouseID;
           });
         }
         this.formController0[4].select = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -461,17 +461,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -482,13 +482,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -522,7 +522,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -531,10 +531,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -542,25 +542,25 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
-          _this.$set(_this.btnForm[index], "isLoading", true);
+          _this.$set(_this.btnForm[index], 'isLoading', true);
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
@@ -573,7 +573,7 @@ export default {
     // 查看匹配
     lookStock(row) {
       if (!row.Qty) {
-        this.$message.error("请填写工单数量再配置配方！");
+        this.$message.error('请填写工单数量再配置配方！');
         return;
       }
       this.showBox = true;
@@ -582,8 +582,8 @@ export default {
       this.$set(this.tableData, 2, []);
       if (this.editTag == 1) {
         if (
-          !this.currentRow["BomData"] &&
-          this.currentRow["BomData"].length == 0
+          !this.currentRow['BomData'] &&
+          this.currentRow['BomData'].length == 0
         ) {
           this.getConfigData(row.OrderID);
         } else {
@@ -601,17 +601,17 @@ export default {
       });
       const { result, data, count, msg } = res.data;
       if (result) {
-        _this.$set(_this.currentRow, "BomData", data);
+        _this.$set(_this.currentRow, 'BomData', data);
         _this.dataSearch(2);
         _this.$set(
           _this.currentRow,
-          "RealyBOMData",
-          JSON.parse(JSON.stringify(data))
+          'RealyBOMData',
+          JSON.parse(JSON.stringify(data)),
         );
       } else {
         _this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -620,7 +620,7 @@ export default {
     async editRow(row) {
       this.editTag = 1;
       this.dialogShow = true;
-      this.dialogHeader = "编辑订单";
+      this.dialogHeader = '编辑订单';
       for (var name in row) {
         this.ruleForm0[name] = row[name];
       }
@@ -637,11 +637,11 @@ export default {
         this.$set(this.tableData, 1, data);
         this.$set(this.tableLoading, 1, false);
         this.templateData = JSON.parse(JSON.stringify(data));
-        this.$set(this.tablePagination[1], "pageTotal", count);
+        this.$set(this.tablePagination[1], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -653,7 +653,7 @@ export default {
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      let res = "";
+      let res = '';
       if (newData && newData.length != 0) {
         res = await SaveData(newData);
       } else {
@@ -664,7 +664,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -673,7 +673,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -699,26 +699,26 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         let obj = {
-          label: "操作",
-          width: "120",
-          prop: "Operation",
+          label: '操作',
+          width: '120',
+          prop: 'Operation',
           button: [
-            { name: "配方", methods: "lookStock", type: "primary" },
+            { name: '配方', methods: 'lookStock', type: 'primary' },
             {
-              name: "删除",
-              methods: "delRow",
-              type: "danger",
+              name: '删除',
+              methods: 'delRow',
+              type: 'danger',
               condition: (row) => {
                 row.ProductionStatus == 21 || row.ProductionStatus == 26;
               },
@@ -733,36 +733,36 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
         if (remarkTb == 2) {
           _this.selectionData[2] = [];
           if (_this.currentRow.BomData.length != 0) {
             _this.tableData[2].forEach((a) => {
               let newIndex = _this.currentRow.BomData.findIndex(
-                (b) => b.MaterialID == a.MaterialID
+                (b) => b.MaterialID == a.MaterialID,
               );
               if (newIndex != -1) {
                 for (var name in _this.currentRow.BomData[newIndex]) {
                   _this.$set(a, name, _this.currentRow.BomData[newIndex][name]);
                 }
-                _this.$set(a, "update", true);
+                _this.$set(a, 'update', true);
                 _this.$nextTick(() => {
                   _this.$refs.tableRef_3.$refs.vxeTable.setCheckboxRow(a, true);
                   _this.selectionData[2].push(a);
@@ -780,7 +780,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -791,16 +791,16 @@ export default {
       this.editTag = 0;
       this.$set(this.tableData, 1, []);
       for (let name in this.ruleForm0) {
-        this.ruleForm0[name] = "";
+        this.ruleForm0[name] = '';
       }
-      this.ruleForm0["OrderDate"] =
+      this.ruleForm0['OrderDate'] =
         new Date().getFullYear() +
-        "-" +
+        '-' +
         (new Date().getMonth() + 1) +
-        "-" +
+        '-' +
         new Date().getDate();
       this.dialogShow = true;
-      this.dialogHeader = "新增订单";
+      this.dialogHeader = '新增订单';
     },
     // 弹框确定添加
     async dialogBtnClick(val) {
@@ -810,7 +810,7 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
@@ -819,7 +819,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           _this.$refs.btnForm.$refs.formData.resetFields();
@@ -831,11 +831,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -843,10 +843,10 @@ export default {
     //////////////////////弹框事件///////////
     // 通用放大弹框
     changeWidth() {
-      if (this.customDialog === "oneStyle") {
-        this.customDialog = "twoStyle";
+      if (this.customDialog === 'oneStyle') {
+        this.customDialog = 'twoStyle';
       } else {
-        this.customDialog = "oneStyle";
+        this.customDialog = 'oneStyle';
       }
     },
     //选择商品
@@ -858,14 +858,14 @@ export default {
       if (this.ruleForm0.WarehouseID) {
         if (this.selectionData[1].length != 0) {
           this.selectionData[1].forEach((x) => {
-            this.$set(x, "WarehouseID", this.ruleForm0.WarehouseID);
-            this.$set(x, "WarehouseName", this.ruleForm0.WarehouseName);
+            this.$set(x, 'WarehouseID', this.ruleForm0.WarehouseID);
+            this.$set(x, 'WarehouseName', this.ruleForm0.WarehouseName);
           });
         } else {
-          this.$message.error("请先勾选需要填充仓库的数据！");
+          this.$message.error('请先勾选需要填充仓库的数据！');
         }
       } else {
-        this.$message.error("请先选择仓库！");
+        this.$message.error('请先选择仓库！');
       }
     },
     // 选择仓库
@@ -879,9 +879,9 @@ export default {
       this.GoodsDialog = val.GoodsDialog;
       if (data != null) {
         data.forEach((m) => {
-          m["update"] = true;
-          m["BomData"] = [];
-          m["RealyBOMData"] = [];
+          m['update'] = true;
+          m['BomData'] = [];
+          m['RealyBOMData'] = [];
           this.tableData[1].push(m);
         });
       }
@@ -889,7 +889,7 @@ export default {
     //新增商品跳转至商品信息页面
     toGoodsPage() {
       this.$router.push({
-        name: "ProductInfo",
+        name: 'ProductInfo',
       });
       this.GoodsDialog = false;
     },
@@ -902,12 +902,12 @@ export default {
       if (this.sign == 1) {
         if (row.SalesOrderDetailID != null) {
           let DelRequisitionProducts = JSON.parse(
-            localStorage.getItem("DelRequisitionProducts")
+            localStorage.getItem('DelRequisitionProducts'),
           );
           DelRequisitionProducts.push(row);
           localStorage.setItem(
-            "DelRequisitionProducts",
-            JSON.stringify(DelRequisitionProducts)
+            'DelRequisitionProducts',
+            JSON.stringify(DelRequisitionProducts),
           );
           this.newTableData.splice(index, 1);
         }
@@ -917,7 +917,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 保存草稿
     saveDraft() {
@@ -949,28 +949,28 @@ export default {
                   return true;
                 }
                 let obj1 = JSON.parse(JSON.stringify(a));
-                obj1["Qty"] = a.Qty;
-                obj1["dicID"] = 5104;
-                obj1["MaterialID"] = a.MaterialID;
-                obj1["CustomerID"] = _this.ruleForm0.CustomerID;
-                obj1["ProductionStatus"] = 26;
+                obj1['Qty'] = a.Qty;
+                obj1['dicID'] = 5104;
+                obj1['MaterialID'] = a.MaterialID;
+                obj1['CustomerID'] = _this.ruleForm0.CustomerID;
+                obj1['ProductionStatus'] = 26;
                 if (!a.DeliveryDate) {
-                  obj1["DeliveryDate"] = _this.ruleForm0.DeliveryDate;
+                  obj1['DeliveryDate'] = _this.ruleForm0.DeliveryDate;
                 }
                 if (!a.OrderDate) {
-                  obj1["OrderDate"] = _this.ruleForm0.OrderDate;
+                  obj1['OrderDate'] = _this.ruleForm0.OrderDate;
                 }
                 let childrens_2 = [];
                 let obj1_2 = JSON.parse(JSON.stringify(obj1));
-                obj1_2["dicID"] = 100;
-                obj1_2["Extend2"] = _this.ruleForm0.Extend2;
+                obj1_2['dicID'] = 100;
+                obj1_2['Extend2'] = _this.ruleForm0.Extend2;
                 let formulaChildrens = [];
                 if (a.BomData.length != 0) {
                   a.BomData.forEach((c) => {
                     let obj3 = {
                       dicID: 7926,
                       OrderID: a.OrderID,
-                      OrderFormulaID: "",
+                      OrderFormulaID: '',
                       QPA: c.QPA,
                       MaterialID: c.MaterialID,
                       DeliveryDate: c.DeliveryDate,
@@ -980,9 +980,9 @@ export default {
                     formulaChildrens.push(obj3);
                   });
                 }
-                obj1_2["childrens"] = formulaChildrens;
+                obj1_2['childrens'] = formulaChildrens;
                 childrens_2.push(obj1_2);
-                obj1["childrens"] = childrens_2;
+                obj1['childrens'] = childrens_2;
                 childrens.push(obj1);
               });
             }
@@ -996,28 +996,28 @@ export default {
                 }
                 if (!a.OrderID) {
                   let obj1 = JSON.parse(JSON.stringify(a));
-                  obj1.SalesOrderDetailID = "";
+                  obj1.SalesOrderDetailID = '';
                   obj1.dicID = 5104;
-                  obj1["MaterialID"] = a.MaterialID;
-                  obj1["Qty"] = a.Qty;
-                  obj1["ProductionStatus"] = 26;
-                  obj1["CustomerID"] = _this.ruleForm0.CustomerID;
+                  obj1['MaterialID'] = a.MaterialID;
+                  obj1['Qty'] = a.Qty;
+                  obj1['ProductionStatus'] = 26;
+                  obj1['CustomerID'] = _this.ruleForm0.CustomerID;
                   if (!a.OrderDate) {
-                    obj1["OrderDate"] = _this.ruleForm0.OrderDate;
+                    obj1['OrderDate'] = _this.ruleForm0.OrderDate;
                   }
                   let childrens_2 = [];
                   let obj1_2 = JSON.parse(JSON.stringify(obj1));
-                  obj1_2["dicID"] = 100;
-                  obj1_2["Qty"] = a.Qty;
-                  obj1_2["Extend2"] = _this.ruleForm0.Extend2;
+                  obj1_2['dicID'] = 100;
+                  obj1_2['Qty'] = a.Qty;
+                  obj1_2['Extend2'] = _this.ruleForm0.Extend2;
                   let OrderChildrens = [];
                   // 没有配置过的订单也是新增的配方
                   if (a.BomData.length != 0) {
                     a.BomData.forEach((c) => {
                       let obj3 = {
                         dicID: 7926,
-                        OrderID: "",
-                        OrderFormulaID: "",
+                        OrderID: '',
+                        OrderFormulaID: '',
                         QPA: c.QPA,
                         MaterialID: c.MaterialID,
                         DeliveryDate: c.DeliveryDate,
@@ -1027,30 +1027,30 @@ export default {
                       OrderChildrens.push(obj3);
                     });
                   }
-                  obj1_2["childrens"] = OrderChildrens;
+                  obj1_2['childrens'] = OrderChildrens;
                   childrens_2.push(obj1_2);
-                  obj1["childrens"] = childrens_2;
+                  obj1['childrens'] = childrens_2;
                   newData1.push(obj1);
                 } else {
                   let obj2 = JSON.parse(JSON.stringify(a));
                   obj2.SalesOrderDetailID = a.SalesOrderDetailID;
                   obj2.dicID = 5104;
                   obj2.Qty = a.Qty;
-                  obj2["CustomerID"] = _this.ruleForm0.CustomerID;
+                  obj2['CustomerID'] = _this.ruleForm0.CustomerID;
                   if (!a.DeliveryDate) {
-                    obj2["DeliveryDate"] = _this.ruleForm0.DeliveryDate;
+                    obj2['DeliveryDate'] = _this.ruleForm0.DeliveryDate;
                   }
                   if (!a.OrderDate) {
-                    obj2["OrderDate"] = _this.ruleForm0.OrderDate;
+                    obj2['OrderDate'] = _this.ruleForm0.OrderDate;
                   }
                   let childrens_21 = [];
                   let obj1_21 = JSON.parse(JSON.stringify(obj2));
-                  obj1_21["dicID"] = 100;
-                  obj1_21["Extend2"] = _this.ruleForm0.Extend2;
-                  obj1_21["OrderID"] = a.OrderID;
+                  obj1_21['dicID'] = 100;
+                  obj1_21['Extend2'] = _this.ruleForm0.Extend2;
+                  obj1_21['OrderID'] = a.OrderID;
                   obj1_21.Qty = a.Qty;
                   childrens_21.push(obj1_21);
-                  obj2["childrens"] = childrens_21;
+                  obj2['childrens'] = childrens_21;
                   newData3.push(obj2);
                   // 配置过的订单需要判断配方哪些是新增哪些是删除的
                   if (a.BomData.length != 0) {
@@ -1063,7 +1063,7 @@ export default {
                         let obj3 = {
                           dicID: 7926,
                           OrderID: a.OrderID,
-                          OrderFormulaID: "",
+                          OrderFormulaID: '',
                           QPA: d.QPA,
                           MaterialID: d.MaterialID,
                           DemandQty:
@@ -1086,11 +1086,11 @@ export default {
                     //删除
                     delData = a.RealyBOMData.filter(
                       (c) =>
-                        !a.BomData.some((z) => c.MaterialID == z.MaterialID)
+                        !a.BomData.some((z) => c.MaterialID == z.MaterialID),
                     );
                     if (delData.length != 0) {
                       delData.forEach((o) => {
-                        o["ElementDeleteFlag"] = 1;
+                        o['ElementDeleteFlag'] = 1;
                         newData4.push(o);
                       });
                     }
@@ -1098,26 +1098,26 @@ export default {
                 }
               });
               newData2 = _this.templateData.filter(
-                (c) => !_this.tableData[1].some((z) => c.OrderID == z.OrderID)
+                (c) => !_this.tableData[1].some((z) => c.OrderID == z.OrderID),
               ); //删除
 
               if (newData2.length != 0) {
                 newData2.forEach((o) => {
-                  o["ElementDeleteFlag"] = 1;
+                  o['ElementDeleteFlag'] = 1;
                 });
               }
 
               childrens = newData1.concat(newData2);
             } else {
-              _this.$message.error("没有需要提交的数据！");
+              _this.$message.error('没有需要提交的数据！');
               return;
             }
           }
           if (flag == 1) {
-            _this.$message.error("含有未填数量的数据，请检查一下！");
+            _this.$message.error('含有未填数量的数据，请检查一下！');
           } else {
-            form["dicID"] = _this.sysID[0].ID;
-            form["childrens"] = childrens;
+            form['dicID'] = _this.sysID[0].ID;
+            form['childrens'] = childrens;
             submitData.push(form);
             submitData = submitData.concat(newData3);
             submitData = submitData.concat(newData4);
@@ -1149,7 +1149,7 @@ export default {
         page: 1,
         form: this.ruleForm0,
         dicID: 49,
-        TemplateID: "P004",
+        TemplateID: 'P004',
         ReceiptID: this.ruleForm0.ReceiptID,
       };
       this.printLoading = true;
@@ -1158,13 +1158,13 @@ export default {
       const { js, msg, result } = res.data;
       if (result) {
         this.printLoading = false;
-        this.$refs["lodop"].ProgramCodesTMP = js;
-        this.$refs["lodop"].printPreview();
+        this.$refs['lodop'].ProgramCodesTMP = js;
+        this.$refs['lodop'].printPreview();
       } else {
         this.printLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1173,7 +1173,7 @@ export default {
     addConfig() {
       let flag = 0;
       if (this.selectionData[2].length == 0) {
-        this.$message.error("请选择要配置的数据！");
+        this.$message.error('请选择要配置的数据！');
       } else {
         this.selectionData[2].some((a) => {
           if (!a.QPA || parseFloat(a.QPA) <= 0) {
@@ -1182,10 +1182,10 @@ export default {
           }
         });
         if (flag == 1) {
-          this.$message.error("选择的数据有未填写用量的！");
+          this.$message.error('选择的数据有未填写用量的！');
         } else {
-          this.$set(this.currentRow, "BomData", this.selectionData[2]);
-          this.$message.success("暂时添加，保存才有效！");
+          this.$set(this.currentRow, 'BomData', this.selectionData[2]);
+          this.$message.success('暂时添加，保存才有效！');
           this.showBox = false;
         }
       }
@@ -1194,13 +1194,13 @@ export default {
     async GetPrintProgramCodes() {
       let res = await GetPrintProgramCodes({
         ID: this.ruleForm0.ReceiptID,
-        ProjectCode: "P001",
-        TemplateCode: "T001",
+        ProjectCode: 'P001',
+        TemplateCode: 'T001',
       });
       const { data, result } = res.data;
       if (result) {
-        this.$refs["lodop"].ProgramCodesTMP = data;
-        this.$refs["lodop"].printPreview();
+        this.$refs['lodop'].ProgramCodesTMP = data;
+        this.$refs['lodop'].printPreview();
       }
     },
   },

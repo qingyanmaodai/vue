@@ -12,7 +12,7 @@
       >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[i].datas"
+          :searchData="formSearchs[0].datas"
           :searchForm="formSearchs[i].forms"
           :remark="i"
           :isLoading="isLoading"
@@ -30,6 +30,9 @@
             ><span class="title">{{ title }}</span>
             <span class="title" style="margin-left: 20px"
               >选中总材积 {{ TotalVolume }}</span
+            >
+            <span class="title" style="margin-left: 20px"
+              >选中金额（本位币） {{ TotalAmount }}</span
             >
           </el-col>
           <el-col :span="16" class="flex_flex_end">
@@ -490,6 +493,13 @@ export default {
       return this.selectionData[this.labelStatus1].reduce((total, obj) => {
         return Number(obj.TotalVolume)
           ? total + Number(obj.TotalVolume)
+          : total;
+      }, 0);
+    },
+    TotalAmount: function () {
+      return this.selectionData[this.labelStatus1].reduce((total, obj) => {
+        return Number(obj.TotalAmount)
+          ? total + Number(obj.TotalAmount)
           : total;
       }, 0);
     },
@@ -1769,7 +1779,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     //指定人员
     async DesignatedPerson(remarkTb) {

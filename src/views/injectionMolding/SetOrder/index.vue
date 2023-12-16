@@ -115,9 +115,9 @@
 </template>
 
 <script>
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import GeneralForm from "@/components/GeneralForm";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import GeneralForm from '@/components/GeneralForm';
 import {
   GetHeader,
   GetSearchData,
@@ -125,10 +125,10 @@ import {
   UpdateProcess,
   SaveData,
   GetFuzzySearchData,
-} from "@/api/Common";
-import { OneStepReleaseByOrder } from "@/api/PageOrder";
+} from '@/api/Common';
+import { OneStepReleaseByOrder } from '@/api/PageOrder';
 export default {
-  name: "OrderInfo",
+  name: 'OrderInfo',
   components: {
     ComSearch,
     ComVxeTable,
@@ -138,95 +138,95 @@ export default {
     return {
       orderDialog: false,
       ruleformDialog: {
-        SourceOrderNo: "",
+        SourceOrderNo: '',
         dicID: 13,
-        OrderNo: "",
-        Code: "",
-        MaterialName: "",
-        MaterialID: "",
-        Spec: "",
-        Extend12: "",
-        Qty: "",
-        DeliveryDate: "",
-        SalesOrderNo: "",
-        SalesOrderID: "",
+        OrderNo: '',
+        Code: '',
+        MaterialName: '',
+        MaterialID: '',
+        Spec: '',
+        Extend12: '',
+        Qty: '',
+        DeliveryDate: '',
+        SalesOrderNo: '',
+        SalesOrderID: '',
       },
       rulesDialog: {
-        Code: [{ required: true, message: "编码为必选项", trigger: "change" }],
-        Qty: [{ required: true, message: "数量为必填项", trigger: "blur" }],
+        Code: [{ required: true, message: '编码为必选项', trigger: 'change' }],
+        Qty: [{ required: true, message: '数量为必填项', trigger: 'blur' }],
         DeliveryDate: [
-          { required: true, message: "交期为必选项", trigger: "change" },
+          { required: true, message: '交期为必选项', trigger: 'change' },
         ],
       },
       formcontrollerDialog: [
         {
-          label: "销售订单：",
-          label2: "产品名称：",
-          methods: "getSalesOrder",
+          label: '销售订单：',
+          label2: '产品名称：',
+          methods: 'getSalesOrder',
           component: {
-            type: "autocomplete",
+            type: 'autocomplete',
           },
-          prop: "SalesOrderNo",
-          prop2: "MaterialName",
+          prop: 'SalesOrderNo',
+          prop2: 'MaterialName',
         },
         {
-          label: "生产工单：",
+          label: '生产工单：',
           component: {
-            type: "input",
+            type: 'input',
           },
-          prop: "OrderNo",
+          prop: 'OrderNo',
         },
         {
-          label: "产品名称：",
+          label: '产品名称：',
           component: {
-            type: "input",
+            type: 'input',
           },
-          prop: "MaterialName",
+          prop: 'MaterialName',
           disabled: false,
         },
         {
-          label: "产品编码：",
-          label2: "产品名称：",
-          methods: "getMaterial",
+          label: '产品编码：',
+          label2: '产品名称：',
+          methods: 'getMaterial',
           component: {
-            type: "autocomplete",
+            type: 'autocomplete',
           },
-          prop: "Code",
-          prop2: "MaterialName",
+          prop: 'Code',
+          prop2: 'MaterialName',
           disabled: false,
         },
         {
-          label: "产品规格：",
+          label: '产品规格：',
           component: {
-            type: "input",
+            type: 'input',
           },
-          prop: "Spec",
+          prop: 'Spec',
           disabled: true,
         },
         {
-          label: "模具名称：",
+          label: '模具名称：',
           component: {
-            type: "input",
-            className: "",
+            type: 'input',
+            className: '',
           },
-          prop: "Extend12",
+          prop: 'Extend12',
           disabled: true,
         },
         {
-          label: "订单数量：",
+          label: '订单数量：',
           component: {
-            type: "input",
-            inputType: "number",
+            type: 'input',
+            inputType: 'number',
           },
-          prop: "Qty",
+          prop: 'Qty',
           disabled: false,
         },
         {
-          label: "订单交期：",
+          label: '订单交期：',
           component: {
-            type: "date",
+            type: 'date',
           },
-          prop: "DeliveryDate",
+          prop: 'DeliveryDate',
           disabled: false,
         },
       ],
@@ -254,15 +254,15 @@ export default {
         //   signName: 2,
         // },
         {
-          ButtonCode: "save",
-          BtnName: "保存",
-          Type: "primary",
+          ButtonCode: 'save',
+          BtnName: '保存',
+          Type: 'primary',
           Ghost: true,
-          Size: "small",
-          Methods: "dataSave",
-          Icon: "",
+          Size: 'small',
+          Methods: 'dataSave',
+          Icon: '',
           isLoading: false,
-          signName: "",
+          signName: '',
         },
       ],
       tableData: [[]],
@@ -270,21 +270,21 @@ export default {
       tableLoading: [false],
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 200, pageTotal: 0 }],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       labelStatus1: 0,
-      ProcessGroupID: "",
+      ProcessGroupID: '',
       Status1: [
-        { label: "全部", value: "" },
-        { label: "已下达", value: 21 },
-        { label: "未下达", value: 26 },
-        { label: "已完成", value: 25 },
+        { label: '全部', value: '' },
+        { label: '已下达', value: 21 },
+        { label: '未下达', value: 26 },
+        { label: '已完成', value: 25 },
       ],
       isSelect: false,
       isEdit: false,
-      dialogCurrentRow: "",
+      dialogCurrentRow: '',
       processGroupOptions: [],
       processDialog: false,
       addDisabled: false,
@@ -308,7 +308,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -319,8 +319,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -330,17 +330,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -351,13 +351,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -391,21 +391,21 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+      this.formSearchs[remarkTb].datas['ProductionStatus'] =
         this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -421,7 +421,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -429,7 +429,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -442,13 +442,13 @@ export default {
         this.dataSearch(0);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -474,15 +474,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -491,28 +491,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -522,7 +522,7 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["ProductionStatus"] = item.value;
+      this.formSearchs[0].datas['ProductionStatus'] = item.value;
       this.dataSearch(0);
       // if (index == 2) {
       //   this.isSelect = true;
@@ -539,7 +539,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -548,8 +548,8 @@ export default {
     // 确定当前工艺
     async sureProcess() {
       let obj = {};
-      obj["materialID"] = this.dialogCurrentRow.MaterialID;
-      obj["processGroupID"] = this.ProcessGroupID;
+      obj['materialID'] = this.dialogCurrentRow.MaterialID;
+      obj['processGroupID'] = this.ProcessGroupID;
       let res = await UpdateProcess(obj);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -558,7 +558,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -567,7 +567,7 @@ export default {
     add() {
       this.orderDialog = true;
       for (name in this.ruleformDialog) {
-        this.ruleformDialog[name] = "";
+        this.ruleformDialog[name] = '';
       }
     },
     // 取消单
@@ -576,7 +576,7 @@ export default {
     },
     // 添加订单
     async addOrder() {
-      this.ruleformDialog["dicID"] = 5615;
+      this.ruleformDialog['dicID'] = 5615;
       let res = await SaveData([this.ruleformDialog]);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -584,13 +584,13 @@ export default {
         this.dataSearch(0);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -601,7 +601,7 @@ export default {
         // val = 1;
         return;
       }
-      if (methods == "getMaterial") {
+      if (methods == 'getMaterial') {
         let form = {
           dicID: 12,
           Code: val,
@@ -616,11 +616,11 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
-      } else if (methods == "getSalesOrder") {
+      } else if (methods == 'getSalesOrder') {
         let form = { dicID: 5646, SalesOrderNo: val, rows: 50, page: 1 };
         let res = await GetFuzzySearchData(form);
         const { result, data, count, msg } = res.data;
@@ -629,7 +629,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -638,7 +638,7 @@ export default {
     // 搜索结果
     getRemote(val, methods) {
       console.log(val);
-      if (methods == "getMaterial") {
+      if (methods == 'getMaterial') {
         this.ruleformDialog.Code = val.Code;
         this.ruleformDialog.MaterialName = val.MaterialName;
         this.ruleformDialog.MaterialID = val.MaterialID;
@@ -648,14 +648,14 @@ export default {
           this.addDisabled = true;
           this.$set(
             this.formcontrollerDialog[5].component,
-            "className",
-            "bgRedInput"
+            'className',
+            'bgRedInput',
           );
         } else {
           this.addDisabled = false;
-          this.$set(this.formcontrollerDialog[5].component, "className", "");
+          this.$set(this.formcontrollerDialog[5].component, 'className', '');
         }
-      } else if (methods == "getSalesOrder") {
+      } else if (methods == 'getSalesOrder') {
         this.ruleformDialog.SalesOrderNo = val.SalesOrderNo;
         this.ruleformDialog.SourceOrderNo = val.SalesOrderNo;
         this.ruleformDialog.SalesOrderID = val.SalesOrderID;
@@ -665,14 +665,14 @@ export default {
         this.ruleformDialog.Spec = val.Spec;
         this.ruleformDialog.Qty = val.Qty;
         this.ruleformDialog.DeliveryDate = val.DeliveryDate;
-        this.ruleformDialog.OrderNo = "";
+        this.ruleformDialog.OrderNo = '';
         this.ruleformDialog.SalesOrderDetailID = val.SalesOrderDetailID;
         this.ruleformDialog.NoSehcduingQty = val.Qty;
       }
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
   },
 };

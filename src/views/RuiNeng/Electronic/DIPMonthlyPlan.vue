@@ -290,7 +290,7 @@ export default {
     },
     //获取当前选中行的值
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 高度控制
     setHeight() {
@@ -1384,10 +1384,6 @@ export default {
     },
     changeStatus(item, index) {
       this.labelStatus1 = index;
-    },
-    // 选择数据
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
     },
     // 保存日计划
     async dataSaveDay() {

@@ -288,10 +288,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     // 高度控制
     setHeight() {
       this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
@@ -1387,7 +1383,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 保存日计划
     async dataSaveDay() {

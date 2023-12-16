@@ -175,16 +175,16 @@
 
 <script>
 var _this;
-import printJS from "print-js";
-import html2canvas from "html2canvas";
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComFormDialog from "@/components/ComFormDialog";
-import GeneralForm from "@/components/GeneralForm";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
-import { Row } from "element-ui";
+import printJS from 'print-js';
+import html2canvas from 'html2canvas';
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComFormDialog from '@/components/ComFormDialog';
+import GeneralForm from '@/components/GeneralForm';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
+import { Row } from 'element-ui';
 export default {
-  name: "BadAduit",
+  name: 'BadAduit',
   components: {
     ComSearch,
     ComVxeTable,
@@ -201,16 +201,16 @@ export default {
       isEdit2: false,
       labelStatus1: 2,
       Status1: [
-        { label: "全部", value: "" },
-        { label: "草稿", value: 0 },
-        { label: "待审", value: [1, 2, 3] },
-        { label: "仓审", value: 5 },
-        { label: "结案", value: 5 },
+        { label: '全部', value: '' },
+        { label: '草稿', value: 0 },
+        { label: '待审', value: [1, 2, 3] },
+        { label: '仓审', value: 5 },
+        { label: '结案', value: 5 },
       ],
       sysID: [{ ID: 7810 }, { ID: 7816 }],
       currentRow: { AbnormalStatus: 4 },
-      tableHeight2: "400px",
-      customDialog: "oneStyle",
+      tableHeight2: '400px',
+      customDialog: 'oneStyle',
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
@@ -235,65 +235,65 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       //////////////新增弹框//////////////
       ruleForm0: {
-        BadDate: "",
-        AbnormalNo: "",
-        WorkShopName: "",
-        LineName: "",
+        BadDate: '',
+        AbnormalNo: '',
+        WorkShopName: '',
+        LineName: '',
         ProductNum: 0,
         TinyProcessNum: 0,
       },
       formController0: [
         {
-          label: "提报日期",
-          prop: "BadDate",
+          label: '提报日期',
+          prop: 'BadDate',
           component: {
-            type: "date",
+            type: 'date',
           },
           disabled: true,
         },
         {
-          label: "车间",
-          prop: "WorkShopName",
+          label: '车间',
+          prop: 'WorkShopName',
           component: {
-            type: "input",
+            type: 'input',
           },
           disabled: true,
         },
         {
-          label: "线别",
-          prop: "LineName",
+          label: '线别',
+          prop: 'LineName',
           component: {
-            type: "input",
+            type: 'input',
           },
           disabled: true,
         },
         {
-          label: "单据",
-          prop: "AbnormalNo",
+          label: '单据',
+          prop: 'AbnormalNo',
           component: {
-            type: "input",
+            type: 'input',
           },
           disabled: true,
         },
         {
-          label: "产品个数",
-          prop: "ProductNum",
+          label: '产品个数',
+          prop: 'ProductNum',
           component: {
-            type: "input",
+            type: 'input',
           },
           disabled: true,
         },
         {
-          label: "工序个数",
-          prop: "TinyProcessNum",
+          label: '工序个数',
+          prop: 'TinyProcessNum',
           component: {
-            type: "input",
+            type: 'input',
           },
           disabled: true,
         },
@@ -321,11 +321,11 @@ export default {
     this.AduitStatus = [];
     if (RoleMap.length != 0) {
       RoleMap.forEach((a) => {
-        if (a.RoleID == "R2111030001") {
+        if (a.RoleID == 'R2111030001') {
           this.AduitStatus.push(1);
-        } else if (a.RoleID == "R2111030002") {
+        } else if (a.RoleID == 'R2111030002') {
           this.AduitStatus.push(2);
-        } else if (a.RoleID == "R2111030003") {
+        } else if (a.RoleID == 'R2111030003') {
           this.AduitStatus.push(3);
         }
       });
@@ -351,21 +351,21 @@ export default {
       let minutes = this.zero(newDate.getMinutes());
       return (
         year +
-        "-" +
+        '-' +
         month +
-        "-" +
+        '-' +
         day +
-        " " +
+        ' ' +
         hour +
-        ":" +
+        ':' +
         seconds +
-        ":" +
+        ':' +
         minutes
       );
     },
     zero(num) {
       if (Number(num) < 10) {
-        return "0" + num;
+        return '0' + num;
       } else {
         return num;
       }
@@ -377,7 +377,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -388,8 +388,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -399,19 +399,19 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem + 'px';
       //   let rem2 = document.documentElement.clientHeight - 400 + 'px';
-      this.$set(this, "height", newHeight);
+      this.$set(this, 'height', newHeight);
       //   this.$set(this, "tableHeight2", rem2);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -422,13 +422,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -462,7 +462,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -471,10 +471,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 删除
     async dataDel(remarkTb, index, parms) {
@@ -482,25 +482,25 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请单击需要操作的数据！");
+          this.$message.error('请单击需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
-          _this.$set(_this.btnForm[index], "isLoading", true);
+          _this.$set(_this.btnForm[index], 'isLoading', true);
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
@@ -524,7 +524,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -532,7 +532,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -558,17 +558,17 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[0].datas["AbnormalStatus"] = this.AduitStatus;
+        this.formSearchs[0].datas['AbnormalStatus'] = this.AduitStatus;
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
@@ -576,35 +576,35 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         if (this.currentRow.AbnormalStatus == 1) {
           if (data.length != 0) {
             data.forEach((x) => {
-              x.Extend4 = "返工";
+              x.Extend4 = '返工';
             });
           }
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -622,7 +622,7 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
@@ -630,7 +630,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           _this.$refs.btnForm.$refs.formData.resetFields();
@@ -643,37 +643,37 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
     },
     // 通用放大弹框
     changeWidth() {
-      if (this.customDialog === "oneStyle") {
-        this.customDialog = "twoStyle";
+      if (this.customDialog === 'oneStyle') {
+        this.customDialog = 'twoStyle';
       } else {
-        this.customDialog = "oneStyle";
+        this.customDialog = 'oneStyle';
       }
     },
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[0].datas["AbnormalStatus"] = item.value;
+      this.formSearchs[0].datas['AbnormalStatus'] = item.value;
       if (index == 2) {
         // 待审需要判断登入进来的角色
-        this.formSearchs[0].datas["AbnormalStatus"] = this.AduitStatus;
+        this.formSearchs[0].datas['AbnormalStatus'] = this.AduitStatus;
       }
       this.dataSearch(0);
     },
     // 删除
     delRow(row) {
-      this.$confirm("确定删除吗？").then((_) => {
-        row["ElementDeleteFlag"] = 1;
+      this.$confirm('确定删除吗？').then((_) => {
+        row['ElementDeleteFlag'] = 1;
         let newData = [];
         newData.push(row);
         _this.generalSaveData(newData, 0);
@@ -694,7 +694,7 @@ export default {
         this.$set(this.ruleForm0, name, row[name]);
       }
       if (row.AduitPeoplesAccount) {
-        let AduitPeoplesAccount = row.AduitPeoplesAccount.split(",");
+        let AduitPeoplesAccount = row.AduitPeoplesAccount.split(',');
         if (
           AduitPeoplesAccount.findIndex((a) => a == _this.userInfo.Account) !=
           -1
@@ -704,39 +704,39 @@ export default {
       } else {
         this.sureAduit = false;
       }
-      this.formSearchs[1].datas["AbnormalNoID"] = row.AbnormalNoID;
+      this.formSearchs[1].datas['AbnormalNoID'] = row.AbnormalNoID;
       this.dialogShow = true;
-      let StringValue = "";
+      let StringValue = '';
       if (row.AbnormalStatus == 4 || row.AbnormalStatus == 5) {
         StringValue =
-          "工艺审批意见：" +
+          '工艺审批意见：' +
           row.Extend1 +
-          ";  " +
-          "\n" +
-          "巡检审批意见：" +
+          ';  ' +
+          '\n' +
+          '巡检审批意见：' +
           row.Extend2 +
-          ";  " +
-          "\n" +
-          "经理审批意见：" +
-          ";" +
+          ';  ' +
+          '\n' +
+          '经理审批意见：' +
+          ';' +
           row.Extend3 +
-          ";" +
-          "\n" +
-          "仓管审批意见：" +
+          ';' +
+          '\n' +
+          '仓管审批意见：' +
           row.Extend5 +
-          ";";
+          ';';
       } else if (row.AbnormalStatus == 3) {
         StringValue =
-          "工艺审批意见：" +
+          '工艺审批意见：' +
           row.Extend1 +
-          ";  " +
-          "巡检审批意见：" +
+          ';  ' +
+          '巡检审批意见：' +
           row.Extend2 +
-          ";  ";
+          ';  ';
       } else if (row.AbnormalStatus == 2) {
-        StringValue = "工艺审批意见：" + row.Extend1 + ";  ";
+        StringValue = '工艺审批意见：' + row.Extend1 + ';  ';
       }
-      this.$set(row, "AduitRemark", StringValue);
+      this.$set(row, 'AduitRemark', StringValue);
       this.dataSearch(1);
     },
     // 审批数据
@@ -750,19 +750,19 @@ export default {
         });
         if (flag == 1) {
           this.$message.error(
-            "存在类型为空的数据，请先选择是报废还是返工产品！"
+            '存在类型为空的数据，请先选择是报废还是返工产品！',
           );
           return;
         }
       }
 
-      this.$confirm("确定审批吗？")
+      this.$confirm('确定审批吗？')
         .then((_) => {
           let newData = [];
           if (_this.AbnormalStatus == 3) {
             let flag_2 = 0;
             _this.tableData[1].some((m, i) => {
-              if (m.Extend4 == "报废") {
+              if (m.Extend4 == '报废') {
                 flag_2 = 1; //存在报废就需要仓库审 仓库审状态是4 直接结案是5
                 return true;
               }
@@ -770,7 +770,7 @@ export default {
             if (flag_2 == 0) {
               _this.currentRow.AduitRemark = _this.currentRow.AduitRemark
                 ? _this.currentRow.AduitRemark
-                : "无";
+                : '无';
               _this.currentRow.AbnormalStatus =
                 parseInt(_this.AbnormalStatus) + 2;
             } else {
@@ -784,39 +784,39 @@ export default {
           if (_this.AbnormalStatus == 1) {
             _this.currentRow.Extend1 =
               _this.currentRow.AduitRemark +
-              ", 审批人：" +
+              ', 审批人：' +
               _this.userInfo.Name +
-              "，审批时间：" +
+              '，审批时间：' +
               _this.currentDate();
           } else if (_this.AbnormalStatus == 2) {
             _this.currentRow.Extend2 =
               _this.currentRow.AduitRemark +
-              " 审批人：" +
+              ' 审批人：' +
               _this.userInfo.Name +
-              "，审批时间：" +
+              '，审批时间：' +
               _this.currentDate();
           } else if (_this.AbnormalStatus == 3) {
             _this.currentRow.Extend3 =
               _this.currentRow.AduitRemark +
-              " 审批人：" +
+              ' 审批人：' +
               _this.userInfo.Name +
-              "，审批时间：" +
+              '，审批时间：' +
               _this.currentDate();
           } else if (_this.AbnormalStatus == 4) {
             _this.currentRow.AduitRemark =
               _this.currentRow.Extend5 +
-              " 审批人：" +
+              ' 审批人：' +
               _this.userInfo.Name +
-              "，审批时间：" +
+              '，审批时间：' +
               _this.currentDate();
           }
           newData.push(_this.currentRow);
           if (_this.AbnormalStatus == 1) {
             _this.tableData[1].forEach((x) => {
               let obj = {};
-              obj["AbnormalNoDetailsID"] = x.AbnormalNoDetailsID;
-              obj["dicID"] = 7781;
-              obj["Extend4"] = x.Extend4;
+              obj['AbnormalNoDetailsID'] = x.AbnormalNoDetailsID;
+              obj['dicID'] = 7781;
+              obj['Extend4'] = x.Extend4;
               newData.push(obj);
             });
           }
@@ -827,7 +827,7 @@ export default {
     },
     // 退回数据
     backData() {
-      this.$confirm("确定退回吗？")
+      this.$confirm('确定退回吗？')
         .then((_) => {
           let newData = [];
           _this.currentRow.AbnormalStatus = 0;
@@ -847,14 +847,14 @@ export default {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -862,12 +862,12 @@ export default {
     // 添加报废
     addType(val) {
       this.selectionData[1].forEach((x) => {
-        this.$set(x, "Extend4", val);
+        this.$set(x, 'Extend4', val);
       });
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 打印
     printData() {
@@ -877,7 +877,7 @@ export default {
       // window.print();
       // $("body").html(selfhtml);
 
-      let newContent = document.getElementById("printTest").innerHTML;
+      let newContent = document.getElementById('printTest').innerHTML;
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();

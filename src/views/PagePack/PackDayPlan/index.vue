@@ -18,7 +18,7 @@
                   OrganizeName,
                   'treeData',
                   'treeListTmp',
-                  'OrganizeName'
+                  'OrganizeName',
                 )
               "
             ></el-input>
@@ -61,7 +61,7 @@
                   ProcessName,
                   'treeData2',
                   'treeListTmp2',
-                  'ProcessName'
+                  'ProcessName',
                 )
               "
             ></el-input>
@@ -202,10 +202,10 @@
 
 <script>
 var _this;
-import { mapState } from "vuex";
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import formatDate from "@/utils/formatDate";
+import { mapState } from 'vuex';
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import formatDate from '@/utils/formatDate';
 import {
   GetHeader,
   GetHeaderTwo,
@@ -214,13 +214,13 @@ import {
   SaveData,
   GetOrgData,
   UpdateProcess,
-} from "@/api/Common";
+} from '@/api/Common';
 import {
   AddProcessPartMaterialDay,
   SearchMaterialByLine,
-} from "@/api/PagePack";
+} from '@/api/PagePack';
 export default {
-  name: "PackDayPlan",
+  name: 'PackDayPlan',
   components: {
     ComSearch,
     ComUmyTable,
@@ -229,25 +229,25 @@ export default {
     return {
       ////////////////// Search /////////////////
       adminLoading: false,
-      materialValue: "",
-      ProcessGroup: "",
+      materialValue: '',
+      ProcessGroup: '',
       addSelection: [],
       categorys: [],
       addData: [],
       materialDialog: false,
-      OrganizeName: "",
-      ProcessName: "",
+      OrganizeName: '',
+      ProcessName: '',
       treeData: [],
       treeListTmp: [],
       treeData2: [],
       treeListTmp2: [],
       treeProps: {
-        label: "OrganizeName",
-        children: "children",
+        label: 'OrganizeName',
+        children: 'children',
       },
       treeProps2: {
-        label: "ProcessName",
-        children: "children",
+        label: 'ProcessName',
+        children: 'children',
       },
       isOpen: true,
       title: this.$route.meta.title,
@@ -261,24 +261,24 @@ export default {
       btnForm: [],
       parmsBtn: [
         {
-          ButtonCode: "delete",
-          BtnName: "删除",
+          ButtonCode: 'delete',
+          BtnName: '删除',
           isLoading: false,
-          Methods: "dataDel",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
-          Params: { dataName: "selectionData" },
+          Methods: 'dataDel',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "保存",
+          ButtonCode: 'save',
+          BtnName: '保存',
           isLoading: false,
-          Methods: "dataSave",
-          Type: "success",
-          Icon: "",
-          Size: "small",
-          Params: "",
+          Methods: 'dataSave',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
+          Params: '',
         },
       ],
       tableData: [[]],
@@ -287,14 +287,14 @@ export default {
       isClear: [false],
       tablePagination: [{ pageIndex: 1, pageSize: 50, pageTotal: 0 }],
       selectionData: [[]],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       isSelect: false,
       isEdit: false,
       childrenLines: [],
-      asideType: "分厂",
+      asideType: '分厂',
       lineProcessData: [],
       toDay: [],
     };
@@ -346,7 +346,7 @@ export default {
         return [];
       }
       let newarr = [];
-      if (Object.prototype.toString.call(arr) === "[object Array]") {
+      if (Object.prototype.toString.call(arr) === '[object Array]') {
         arr.forEach((element) => {
           if (element[valueName].indexOf(value) > -1) {
             // const ab = this.rebuildData(value, element.children);
@@ -378,7 +378,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -389,8 +389,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -400,22 +400,22 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 排序
     sortChange(order, prop, remarkTb, filtertb, row, index) {
@@ -425,13 +425,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -452,7 +452,7 @@ export default {
     },
     // 编辑
     editRow(row, index, remarkTb) {
-      this.$set(row, "update", true);
+      this.$set(row, 'update', true);
     },
     // 删除
     delRow(row, index, remarkTb) {
@@ -473,7 +473,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -482,10 +482,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 特殊接口保存
     async specialSave(remarkTb, index) {
@@ -498,7 +498,7 @@ export default {
         this.dataSearch(0);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -506,7 +506,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
 
@@ -519,7 +519,7 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请勾选需要操作的数据！");
+          this.$message.error('请勾选需要操作的数据！');
           return;
         } else {
           newData = this[parms.dataName][remarkTb];
@@ -531,7 +531,7 @@ export default {
       let oldData = [];
       newData.forEach((a) => {
         if (!a.PlanQty) {
-          this.$message.error(a.MaterialName + "需双击行填写计划数量！");
+          this.$message.error(a.MaterialName + '需双击行填写计划数量！');
           return;
         }
         if (a.SalesPlanProcessMaterialDayID) {
@@ -550,7 +550,7 @@ export default {
         if (result) {
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
           this.dataSearch(0);
@@ -558,7 +558,7 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           this.adminLoading = false;
@@ -570,32 +570,32 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请勾选需要操作的数据！");
+          this.$message.error('请勾选需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
       this.$confirm(
-        "此操作将删除未报工的车间计划,如果已经报工则无法删除, 确定要删除的【" +
+        '此操作将删除未报工的车间计划,如果已经报工则无法删除, 确定要删除的【' +
           newData.length +
-          "】数据吗？"
+          '】数据吗？',
       )
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
         .catch((_) => {
-          _this.$set(_this.btnForm[index], "isLoading", false);
+          _this.$set(_this.btnForm[index], 'isLoading', false);
         });
     },
     // 通用直接保存
@@ -607,7 +607,7 @@ export default {
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
 
@@ -615,7 +615,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
 
@@ -643,24 +643,24 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
-        this.formSearchs[0].datas["PlanDay"] = this.toDay;
+        this.formSearchs[0].datas['PlanDay'] = this.toDay;
         this.getOrganizeData();
         // this.getTableData(this.formSearchs[0].datas, 0);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -691,7 +691,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -700,29 +700,29 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         console.log(data);
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -732,20 +732,20 @@ export default {
     // 单击树
     handleNodeClick(data, node) {
       if (data.OrganizeTypeID == 2) {
-        this.formSearchs[0].datas["MFGOrganizeID"] = data.OrganizeTypeID;
-        this.formSearchs[0].datas["WorkShopID"] = "";
-        this.formSearchs[0].datas["WorkShopName"] = "";
-        this.formSearchs[0].datas["LineID"] = "";
-        this.formSearchs[0].datas["LineName"] = "";
+        this.formSearchs[0].datas['MFGOrganizeID'] = data.OrganizeTypeID;
+        this.formSearchs[0].datas['WorkShopID'] = '';
+        this.formSearchs[0].datas['WorkShopName'] = '';
+        this.formSearchs[0].datas['LineID'] = '';
+        this.formSearchs[0].datas['LineName'] = '';
         this.treeData2 = [];
-        this.asideType = "分厂";
+        this.asideType = '分厂';
       }
       if (data.OrganizeTypeID == 5) {
-        this.formSearchs[0].datas["WorkShopID"] = data.OrganizeID;
-        this.formSearchs[0].datas["WorkShopName"] = data.OrganizeName;
-        this.formSearchs[0].datas["MFGOrganizeID"] = "";
-        this.formSearchs[0].datas["LineID"] = "";
-        this.formSearchs[0].datas["LineName"] = "";
+        this.formSearchs[0].datas['WorkShopID'] = data.OrganizeID;
+        this.formSearchs[0].datas['WorkShopName'] = data.OrganizeName;
+        this.formSearchs[0].datas['MFGOrganizeID'] = '';
+        this.formSearchs[0].datas['LineID'] = '';
+        this.formSearchs[0].datas['LineName'] = '';
         this.childrenLines = data.children;
         let lines = [];
         if (data.children.length != 0) {
@@ -756,15 +756,15 @@ export default {
         // 获取线下面的工序
         this.getProcessData(lines);
         this.treeData2 = [];
-        this.asideType = "车间";
+        this.asideType = '车间';
       } else if (data.OrganizeTypeID == 6) {
-        this.formSearchs[0].datas["LineID"] = data.OrganizeID;
-        this.formSearchs[0].datas["LineName"] = data.OrganizeName;
-        this.formSearchs[0].datas["MFGOrganizeID"] = "";
-        this.formSearchs[0].datas["WorkShopID"] = "";
-        this.formSearchs[0].datas["WorkShopName"] = "";
+        this.formSearchs[0].datas['LineID'] = data.OrganizeID;
+        this.formSearchs[0].datas['LineName'] = data.OrganizeName;
+        this.formSearchs[0].datas['MFGOrganizeID'] = '';
+        this.formSearchs[0].datas['WorkShopID'] = '';
+        this.formSearchs[0].datas['WorkShopName'] = '';
         this.childrenLines = [];
-        this.asideType = "线";
+        this.asideType = '线';
         // 获取线下面的工序
         this.getProcessData(data.OrganizeID);
       }
@@ -772,8 +772,8 @@ export default {
     },
     // 单击树
     handleNodeClick2(data, node) {
-      this.formSearchs[0].datas["ProcessID"] = data.ProcessID;
-      this.formSearchs[0].datas["ProcessName"] = data.ProcessName;
+      this.formSearchs[0].datas['ProcessID'] = data.ProcessID;
+      this.formSearchs[0].datas['ProcessName'] = data.ProcessName;
       this.dataSearch(0);
     },
     // 下拉选择事件
@@ -817,7 +817,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -840,13 +840,13 @@ export default {
           this.$nextTick(function () {
             _this.$refs.asideTreeRef.setCurrentKey(data[0].OrganizeID);
           });
-          this.formSearchs[0].datas["WorkShopID"] = data[0].OrganizeID;
-          this.formSearchs[0].datas["WorkShopName"] = data[0].OrganizeName;
+          this.formSearchs[0].datas['WorkShopID'] = data[0].OrganizeID;
+          this.formSearchs[0].datas['WorkShopName'] = data[0].OrganizeName;
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -861,7 +861,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -888,14 +888,14 @@ export default {
           this.$nextTick(function () {
             _this.$refs.asideTreeRef_two.setCurrentKey(data[0].ProcessID);
           });
-          this.formSearchs[0].datas["ProcessID"] = data[0].ProcessID;
-          this.formSearchs[0].datas["ProcessName"] = data[0].ProcessName;
+          this.formSearchs[0].datas['ProcessID'] = data[0].ProcessID;
+          this.formSearchs[0].datas['ProcessName'] = data[0].ProcessName;
           this.getTableData(this.formSearchs[0].datas, 0);
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -904,11 +904,11 @@ export default {
     async openDialog() {
       if (this.materialValue) {
         if (!this.formSearchs[0].datas.LineID) {
-          this.$message.error("请在左侧选择线别才可添加！");
+          this.$message.error('请在左侧选择线别才可添加！');
           return;
         }
         if (!this.formSearchs[0].datas.ProcessID) {
-          this.$message.error("请在左侧选择工序才可添加！");
+          this.$message.error('请在左侧选择工序才可添加！');
           return;
         }
         this.addData = [];
@@ -920,12 +920,12 @@ export default {
         const { result, data, count, msg } = res.data;
         if (result) {
           if (data.length == 0) {
-            this.$message.info("未查询到该产品");
+            this.$message.info('未查询到该产品');
           } else if (data.length != 1) {
             this.materialDialog = true;
             let newData = [];
             data.forEach((x) => {
-              this.addObj(x, "addData");
+              this.addObj(x, 'addData');
             });
             let MFGOrganizeID = this.userInfo.CenterID;
             let data1 = this.addData.filter((x) => {
@@ -937,45 +937,45 @@ export default {
             });
             newData = newData.concat(data2);
             this.addData = [];
-            this.$set(this, "addData", newData);
+            this.$set(this, 'addData', newData);
           } else {
-            this.addObj(res.data.data[0], "tableData");
+            this.addObj(res.data.data[0], 'tableData');
             this.tableData[0].unshift(data[0]);
           }
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
       } else {
-        this.$message.error("请填写需要添加的产品！");
+        this.$message.error('请填写需要添加的产品！');
       }
     },
     // 添加数据
     addObj(x, name) {
       let obj = x;
-      obj["PlanQty"] = null;
-      obj["SalesPlanProcessMaterialDayID"] = null;
-      obj["Reamrk2"] = "";
-      obj["IsAdd"] = true;
-      obj["dicID"] = 6709;
-      obj["LineID"] = this.formSearchs[0].datas.LineID;
-      obj["LineName"] = this.formSearchs[0].datas.LineName;
-      obj["WorkShopID"] = this.formSearchs[0].WorkShopID;
-      obj["WorkShopName"] = this.formSearchs[0].WorkShopName;
-      obj["PlanDay"] = formatDate.formatTodayDate();
+      obj['PlanQty'] = null;
+      obj['SalesPlanProcessMaterialDayID'] = null;
+      obj['Reamrk2'] = '';
+      obj['IsAdd'] = true;
+      obj['dicID'] = 6709;
+      obj['LineID'] = this.formSearchs[0].datas.LineID;
+      obj['LineName'] = this.formSearchs[0].datas.LineName;
+      obj['WorkShopID'] = this.formSearchs[0].WorkShopID;
+      obj['WorkShopName'] = this.formSearchs[0].WorkShopName;
+      obj['PlanDay'] = formatDate.formatTodayDate();
       // if (!this.formSearchs[0].datas.PlanDay[0]) {
       //   obj["PlanDay"] = formatDate.formatTodayDate();
       // } else {
       //   obj["PlanDay"] = this.formSearchs[0].datas.PlanDay[0];
       // }
-      obj["ProcessID"] = this.formSearchs[0].datas.ProcessID;
-      obj["ProcessName"] = this.formSearchs[0].datas.ProcessName;
-      obj["checked"] = false;
-      obj["APPOrPC"] = "PC";
-      obj["update"] = true;
+      obj['ProcessID'] = this.formSearchs[0].datas.ProcessID;
+      obj['ProcessName'] = this.formSearchs[0].datas.ProcessName;
+      obj['checked'] = false;
+      obj['APPOrPC'] = 'PC';
+      obj['update'] = true;
       this[name].push(obj);
     },
     // 配置工艺
@@ -984,16 +984,16 @@ export default {
         this.getSelectionData();
         if (this.addSelection != 0) {
           this.addSelection.forEach((x) => {
-            x["processGroupID"] = this.ProcessGroup.ProcessGroupID;
-            x["ProcessGroupName"] = this.ProcessGroup.ProcessGroupName;
-            x["materialID"] = x.MaterialID;
+            x['processGroupID'] = this.ProcessGroup.ProcessGroupID;
+            x['ProcessGroupName'] = this.ProcessGroup.ProcessGroupName;
+            x['materialID'] = x.MaterialID;
             this.submitCategory(x);
           });
         } else {
-          this.$message.error("请勾选要配置工艺的产品！");
+          this.$message.error('请勾选要配置工艺的产品！');
         }
       } else {
-        this.$message.error("请选择配置的工序！");
+        this.$message.error('请选择配置的工序！');
       }
     },
     // 提交配置工艺
@@ -1001,16 +1001,16 @@ export default {
       let res = await UpdateProcess(row);
       const { result, data, count, msg } = res.data;
       if (result) {
-        this.$set(row, "ProcessCount", 1);
+        this.$set(row, 'ProcessCount', 1);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1033,7 +1033,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1060,7 +1060,7 @@ export default {
             //   }
             // }
           } else {
-            this.$message.error(x.MaterialName + "暂未配置工艺");
+            this.$message.error(x.MaterialName + '暂未配置工艺');
           }
         } else {
         }

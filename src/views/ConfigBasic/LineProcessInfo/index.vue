@@ -146,19 +146,19 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetOrgData,
-} from "@/api/Common";
-import ComFormDialog from "@/components/ComFormDialog";
-import { mapState } from "vuex";
+} from '@/api/Common';
+import ComFormDialog from '@/components/ComFormDialog';
+import { mapState } from 'vuex';
 export default {
-  name: "LineProcessInfo",
+  name: 'LineProcessInfo',
   components: {
     ComSearch,
     ComVxeTable,
@@ -167,13 +167,13 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      ProcessName: "",
+      ProcessName: '',
       adminLoading: false,
       labelStatus1: 0,
       hasSelect: false,
       Status1: [
-        { label: "单个配置", value: 0 },
-        { label: "多个配置", value: 1 },
+        { label: '单个配置', value: 0 },
+        { label: '多个配置', value: 1 },
       ],
       title: this.$route.meta.title,
       dialogShow: false,
@@ -193,23 +193,23 @@ export default {
       parmsBtn: [
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
           },
           {
-            ButtonCode: "delete",
-            BtnName: "删除",
-            Type: "danger",
+            ButtonCode: 'delete',
+            BtnName: '删除',
+            Type: 'danger',
             Ghost: true,
-            Size: "small",
-            Methods: "dataDel",
-            Params: { dataName: "delData" },
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataDel',
+            Params: { dataName: 'delData' },
+            Icon: '',
           },
         ],
         [],
@@ -223,8 +223,8 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      height: "707px",
-      height2: "350px",
+      height: '707px',
+      height2: '350px',
       showPagination: true,
       tagRemark: 0,
       isEdit: false,
@@ -253,7 +253,7 @@ export default {
   methods: {
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 判断按钮权限
     judgeBtn() {
@@ -263,7 +263,7 @@ export default {
         for (var i = 0; i < 2; i++) {
           let newBtn = [];
           routeBtn.forEach((x) => {
-            if (x.ButtonCode == "edit") {
+            if (x.ButtonCode == 'edit') {
               permission = true;
             }
             let newData = this.parmsBtn[i].filter((y) => {
@@ -276,7 +276,7 @@ export default {
           this.$set(this.btnForm, i, newBtn);
         }
       }
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -286,14 +286,14 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
+      let newHeight = rem + 'px';
       if (this.$store.getters.reduceHeight == 138) {
-        newHeight2 = rem - 308 + "px";
+        newHeight2 = rem - 308 + 'px';
       } else {
-        newHeight2 = rem - 305 + "px";
+        newHeight2 = rem - 305 + 'px';
       }
-      this.$set(this, "height", newHeight);
-      this.$set(this, "height2", newHeight2);
+      this.$set(this, 'height', newHeight);
+      this.$set(this, 'height2', newHeight2);
     },
     // 编辑行
     editRow(row) {},
@@ -301,12 +301,12 @@ export default {
     delRow(row) {},
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -317,13 +317,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -346,10 +346,10 @@ export default {
     async dataExport(remarkTb) {
       this.isLoading[remarkTb] = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.isLoading[remarkTb] = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 查询
     dataSearch(remarkTb) {
@@ -366,7 +366,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -378,16 +378,16 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
-        this.$set(this.btnForm[remarkTb][index], "isLoading", false);
+        this.$set(this.btnForm[remarkTb][index], 'isLoading', false);
         this.dataSearch(remarkTb);
       } else {
-        this.$set(this.btnForm[remarkTb][index], "isLoading", false);
+        this.$set(this.btnForm[remarkTb][index], 'isLoading', false);
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -406,23 +406,23 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this[parms.dataName][remarkTb].length == 0) {
-          this.$message.error("请勾选需要操作的数据！");
+          this.$message.error('请勾选需要操作的数据！');
           return;
         } else {
           this[parms.dataName][remarkTb].forEach((x) => {
             let obj = x;
-            obj["ElementDeleteFlag"] = 1;
+            obj['ElementDeleteFlag'] = 1;
             newData.push(obj);
           });
         }
       } else {
         this.tableData[remarkTb].forEach((y) => {
           let obj2 = y;
-          obj2["ElementDeleteFlag"] = 1;
+          obj2['ElementDeleteFlag'] = 1;
           newData.push(obj2);
         });
       }
-      this.$confirm("确定要删除的【" + newData.length + "】数据吗？")
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.generalSaveData(newData, remarkTb, index);
         })
@@ -437,14 +437,14 @@ export default {
         this.dataSearch(remarkTb);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -461,8 +461,8 @@ export default {
         datas.some((m, i) => {
           m.forEach((n) => {
             // 进行验证
-            if (n.prop == "OrganizeTypeID") {
-              this.$set(n, "treeNode", true);
+            if (n.prop == 'OrganizeTypeID') {
+              this.$set(n, 'treeNode', true);
             }
             // 进行验证
             this.verifyData(n);
@@ -476,46 +476,46 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
-        this.formSearchs[0].datas["OrganizeID"] = this.userInfo.OrganizeID;
-        this.formSearchs[0].datas["OrganizeIDs"] = this.userInfo.CenterID;
+        this.formSearchs[0].datas['OrganizeID'] = this.userInfo.OrganizeID;
+        this.formSearchs[0].datas['OrganizeIDs'] = this.userInfo.CenterID;
         this.getTableData(this.formSearchs[0].datas, 0);
         this.getTableData(this.formSearchs[1].datas, 1);
       }
     },
     // 验证数据
     verifyData(n) {
-      if (n.prop == "PeoplesValue") {
-        this.$set(n, "propName", "PeoplesStr");
+      if (n.prop == 'PeoplesValue') {
+        this.$set(n, 'propName', 'PeoplesStr');
       }
-      if (n.prop == "ParentID") {
-        this.$set(n, "propName", "ParentName");
+      if (n.prop == 'ParentID') {
+        this.$set(n, 'propName', 'ParentName');
       }
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       if (remarkTb == 0) {
         let res = await GetOrgData(form);
         const { result, data, count, msg } = res.data;
@@ -525,12 +525,12 @@ export default {
             this.setChildrens(data);
           }
           this.$set(this.tableData, remarkTb, data);
-          this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+          this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
           this.$set(this.tableLoading, remarkTb, false);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           this.$set(this.tableLoading, remarkTb, false);
@@ -540,12 +540,12 @@ export default {
         const { result, data, count, msg } = res.data;
         if (result) {
           this.$set(this.tableData, remarkTb, data);
-          this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+          this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
           this.$set(this.tableLoading, remarkTb, false);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
           this.$set(this.tableLoading, remarkTb, false);
@@ -556,23 +556,23 @@ export default {
     setChildrens(data) {
       data.forEach((x) => {
         if (x.PeoplesValue) {
-          x.PeoplesValue = x.PeoplesValue.split(",");
+          x.PeoplesValue = x.PeoplesValue.split(',');
         } else {
           x.PeoplesValue = [];
         }
         if (x.PeoplesID) {
-          x.PeoplesID = x.PeoplesID.split(",");
+          x.PeoplesID = x.PeoplesID.split(',');
         } else {
           x.PeoplesID = [];
         }
-        this.$set(x, "ToList", x.PeoplesValue);
+        this.$set(x, 'ToList', x.PeoplesValue);
         if (x.ProcessIDs) {
-          x.ProcessIDs = x.ProcessIDs.split(",");
+          x.ProcessIDs = x.ProcessIDs.split(',');
         } else {
           x.ProcessIDs = [];
         }
         if (x.OrganizeProcessIDs) {
-          x.OrganizeProcessIDs = x.OrganizeProcessIDs.split(",");
+          x.OrganizeProcessIDs = x.OrganizeProcessIDs.split(',');
         } else {
           x.OrganizeProcessIDs = [];
         }
@@ -587,33 +587,33 @@ export default {
       debugger;
       if (this.labelStatus1 == 0) {
         if (this.delData[0].length == 0) {
-          this.$message.error("请单击需要关联的组织！");
+          this.$message.error('请单击需要关联的组织！');
         } else if (
           this.delData[0][0].OrganizeTypeID != 5 &&
           this.delData[0][0].OrganizeTypeID != 6
         ) {
-          this.$message.error("请单击车间或者线别！");
+          this.$message.error('请单击车间或者线别！');
         } else if (this.childrens.length == 0) {
-          this.$message.error("请添加需要关联的工序！");
+          this.$message.error('请添加需要关联的工序！');
         } else {
           let row = this.delData[0][0];
           let submitData = [];
           if (row.OrganizeTypeID == 5) {
             let rowChildrens = row.children;
             if (rowChildrens.length == 0) {
-              this.$message.error("该车间未配置拉线，无法关联工序！");
+              this.$message.error('该车间未配置拉线，无法关联工序！');
             } else {
               rowChildrens.forEach((x) => {
                 submitData = this.childrens.filter(
                   (w) =>
-                    !this.templateData.some((q) => q.ProcessID == w.ProcessID)
+                    !this.templateData.some((q) => q.ProcessID == w.ProcessID),
                 );
                 if (submitData.length != 0) {
                   submitData.forEach((y) => {
                     let obj = {};
                     obj = JSON.parse(JSON.stringify(x));
                     obj.dicID = 130;
-                    obj["ProcessID"] = y.ProcessID;
+                    obj['ProcessID'] = y.ProcessID;
                     newData.push(obj);
                   });
                 }
@@ -621,7 +621,7 @@ export default {
             }
           } else if (row.OrganizeTypeID == 6) {
             submitData = this.childrens.filter(
-              (w) => !this.templateData.some((q) => q.ProcessID == w.ProcessID)
+              (w) => !this.templateData.some((q) => q.ProcessID == w.ProcessID),
             );
             if (submitData.length != 0) {
               submitData.forEach((z) => {
@@ -629,8 +629,8 @@ export default {
                   let obj2 = {};
                   obj2 = JSON.parse(JSON.stringify(row));
                   obj2.dicID = 130;
-                  obj2["ProcessID"] = z.ProcessID;
-                  obj2["OrganizeProcessID"] = "";
+                  obj2['ProcessID'] = z.ProcessID;
+                  obj2['OrganizeProcessID'] = '';
                   newData.push(obj2);
                 }
               });
@@ -639,9 +639,9 @@ export default {
         }
       } else {
         if (this.selectionData[0].length == 0) {
-          this.$message.error("请勾选需要配置的线别！");
+          this.$message.error('请勾选需要配置的线别！');
         } else if (this.childrens.length == 0) {
-          this.$message.error("请添加需要配置的工序！");
+          this.$message.error('请添加需要配置的工序！');
         } else {
           let checkData = this.selectionData[0].filter((q) => {
             return q.OrganizeTypeID == 6;
@@ -649,7 +649,7 @@ export default {
           if (checkData.length != 0) {
             checkData.forEach((a) => {
               let Data1 = this.childrens.filter(
-                (w) => !a.ProcessIDs.some((q) => q == w.ProcessID)
+                (w) => !a.ProcessIDs.some((q) => q == w.ProcessID),
               ); //新增
               // let Data2 = a.ProcessIDs.filter(
               //   (c) => !this.childrens.some((z) => c == z.ProcessID)
@@ -658,9 +658,9 @@ export default {
               if (Data1.length != 0) {
                 Data1.forEach((t) => {
                   let newRow = JSON.parse(JSON.stringify(a));
-                  newRow["ProcessID"] = t.ProcessID;
-                  newRow["dicID"] = 130;
-                  newRow["OrganizeProcessID"] = "";
+                  newRow['ProcessID'] = t.ProcessID;
+                  newRow['dicID'] = 130;
+                  newRow['OrganizeProcessID'] = '';
                   newData.push(newRow);
                 });
               }
@@ -672,17 +672,17 @@ export default {
         this.generalSaveData(newData, 0, 0);
         this.childrens = [];
       } else {
-        this.$message.error("没有可保存的数据！");
+        this.$message.error('没有可保存的数据！');
       }
     },
     // 删除关联工序
     delConfig() {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要删除工序的线别！");
+        this.$message.error('请选择需要删除工序的线别！');
       } else if (this.childrens.length == 0) {
-        this.$message.error("请添加需要删除的工序！");
+        this.$message.error('请添加需要删除的工序！');
       } else {
-        this.$confirm("确定要删除吗？")
+        this.$confirm('确定要删除吗？')
           .then((_) => {
             let newData = [];
             let checkData = this.selectionData[0].filter((q) => {
@@ -691,7 +691,7 @@ export default {
             if (checkData.length != 0) {
               checkData.forEach((a) => {
                 let Data1 = a.ProcessIDs.filter((c) =>
-                  this.childrens.some((z) => c == z.ProcessID)
+                  this.childrens.some((z) => c == z.ProcessID),
                 ); //删除
                 if (Data1.length != 0) {
                   Data1.forEach((t) => {
@@ -699,10 +699,10 @@ export default {
                     let newIndex = a.ProcessIDs.findIndex((s) => {
                       return s == t;
                     });
-                    newRow["ProcessID"] = t.ProcessID;
-                    newRow["dicID"] = 130;
-                    newRow["ElementDeleteFlag"] = 1;
-                    newRow["OrganizeProcessID"] =
+                    newRow['ProcessID'] = t.ProcessID;
+                    newRow['dicID'] = 130;
+                    newRow['ElementDeleteFlag'] = 1;
+                    newRow['OrganizeProcessID'] =
                       a.OrganizeProcessIDs[newIndex];
                     newData.push(newRow);
                   });
@@ -719,11 +719,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -734,7 +734,7 @@ export default {
         let submitData = [];
         this.tableData[remarkTb].forEach((x) => {
           if (x.update) {
-            x["dicID"] = 1;
+            x['dicID'] = 1;
             submitData.push(x);
           }
           if (x.children && x.children.length != 0) {
@@ -744,10 +744,10 @@ export default {
         if (submitData.length != 0) {
           this.generalSaveData(submitData, 0, index);
         } else {
-          this.$message.error("没有可保存的数据");
+          this.$message.error('没有可保存的数据');
         }
       } else {
-        this.$message.error("没有可保存的数据");
+        this.$message.error('没有可保存的数据');
       }
     },
     // 递归获取子数据
@@ -755,7 +755,7 @@ export default {
       submitData.concat(row.children);
       row.children.forEach((x) => {
         if (x.update) {
-          x["dicID"] = 1;
+          x['dicID'] = 1;
           submitData.push(x);
         }
         if (x.children && x.children.length != 0) {
@@ -775,11 +775,11 @@ export default {
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, 1, data);
-        this.$set(this.tablePagination[1], "pageTotal", count);
+        this.$set(this.tablePagination[1], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -793,8 +793,8 @@ export default {
     async getRowChildrens(OrganizeID, OrganizeTypeID) {
       this.childrens = [];
       let form = {};
-      form["dicID"] = 5144;
-      form["OrganizeIDs"] = OrganizeID;
+      form['dicID'] = 5144;
+      form['OrganizeIDs'] = OrganizeID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -820,7 +820,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -850,9 +850,9 @@ export default {
         this.delData[0][0].OrganizeTypeID != 5 &&
         this.delData[0][0].OrganizeTypeID != 6
       ) {
-        this.$message.error("请单击选择车间或线别！");
+        this.$message.error('请单击选择车间或线别！');
       } else {
-        this.$confirm("确定要删除这条数据吗？")
+        this.$confirm('确定要删除这条数据吗？')
           .then((_) => {
             let row = this.delData[0][0];
             let newData = [];
@@ -865,16 +865,16 @@ export default {
                   });
                   if (newIndex != -1) {
                     a.dicID = 130;
-                    a["ElementDeleteFlag"] = 1;
-                    a["ProcessID"] = item.ProcessID;
-                    a["OrganizeProcessID"] = a.OrganizeProcessIDs[newIndex];
+                    a['ElementDeleteFlag'] = 1;
+                    a['ProcessID'] = item.ProcessID;
+                    a['OrganizeProcessID'] = a.OrganizeProcessIDs[newIndex];
                     newData.push(a);
                   }
                 });
               }
             } else if (row.OrganizeTypeID == 6) {
               item.dicID = 130;
-              item["ElementDeleteFlag"] = 1;
+              item['ElementDeleteFlag'] = 1;
               newData.push(item);
             }
             _this

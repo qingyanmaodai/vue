@@ -284,48 +284,48 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   SaveData,
   GetServerTime,
-} from "@/api/Common";
+} from '@/api/Common';
 export default {
-  name: "V2Report_2",
+  name: 'V2Report_2',
   components: {
     ComSearch,
     ComVxeTable,
   },
   data() {
     return {
-      activeTab: "first",
+      activeTab: 'first',
       dialogShow: false,
-      height3: "180px",
+      height3: '180px',
       warehouses: [],
-      footerLabel: [""],
+      footerLabel: [''],
       active: 0,
       editDialog: false,
-      includeFields: [["ProducedQty", "ConfirmQty"], [], []],
-      warehouseValue: "",
-      OrderNo: "",
+      includeFields: [['ProducedQty', 'ConfirmQty'], [], []],
+      warehouseValue: '',
+      OrderNo: '',
       OrderNos: [],
       Status1: [
-        { label: "全部订单", value: "" },
-        { label: "未开始", value: "未开始" },
-        { label: "进行中", value: "进行中" },
-        { label: "已完成", value: "已完成" },
+        { label: '全部订单', value: '' },
+        { label: '未开始', value: '未开始' },
+        { label: '进行中', value: '进行中' },
+        { label: '已完成', value: '已完成' },
       ],
       Status2: [
-        { label: "已点检", value: [1, 2] },
-        { label: "异常", value: 2 },
+        { label: '已点检', value: [1, 2] },
+        { label: '异常', value: 2 },
       ],
       labelStatus1: 0,
       labelStatus2: 0,
       ////////////////// Search /////////////////
-      includeFields: ["DemandQty", "RealOweQty", "ShortQty", "UnIssuedQty"],
+      includeFields: ['DemandQty', 'RealOweQty', 'ShortQty', 'UnIssuedQty'],
       title: this.$route.meta.title,
       drawer: false,
       formSearchs: [
@@ -362,7 +362,7 @@ export default {
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -371,14 +371,14 @@ export default {
       parseSearch: false,
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "维护超领",
+          ButtonCode: 'save',
+          BtnName: '维护超领',
           isLoading: false,
-          Methods: "defendQty",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
-          Params: "0",
+          Methods: 'defendQty',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
+          Params: '0',
         },
       ],
       sysID: [
@@ -390,11 +390,11 @@ export default {
       ],
       selectionData: [[], [], [], [], []],
       Status3: [
-        { label: "全部", value: "" },
-        { label: "复期超时", value: 1 },
-        { label: "3天内即将到期", value: 3 },
-        { label: "复期未复", value: 0 },
-        { label: "复期不满足需求", value: 2 },
+        { label: '全部', value: '' },
+        { label: '复期超时', value: 1 },
+        { label: '3天内即将到期', value: 3 },
+        { label: '复期未复', value: 0 },
+        { label: '复期不满足需求', value: 2 },
       ],
       labelStatus3: 0,
       selectionData: [[]],
@@ -415,8 +415,8 @@ export default {
   methods: {
     async getWarehosueData() {
       let form = {};
-      form["dicID"] = 80;
-      form["rows"] = 0;
+      form['dicID'] = 80;
+      form['rows'] = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -424,7 +424,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -448,33 +448,33 @@ export default {
     },
     // 行内样式
     cellStyle0({ row, column }) {
-      if (column.property == "IsCompleteInspect") {
-        if (row.IsCompleteInspect == "未开始") {
+      if (column.property == 'IsCompleteInspect') {
+        if (row.IsCompleteInspect == '未开始') {
           return {
-            backgroundColor: "#ff7b7b",
+            backgroundColor: '#ff7b7b',
           };
-        } else if (row.IsCompleteInspect == "进行中") {
+        } else if (row.IsCompleteInspect == '进行中') {
           return {
-            backgroundColor: "#fdfd8f",
+            backgroundColor: '#fdfd8f',
           };
-        } else if (row.IsCompleteInspect == "已完成") {
+        } else if (row.IsCompleteInspect == '已完成') {
           return {
-            backgroundColor: "#9fff9f",
+            backgroundColor: '#9fff9f',
           };
         }
       }
     },
     cellStyle({ row, column }) {
-      if (column.property == "RealOweQty") {
+      if (column.property == 'RealOweQty') {
         return {
-          background: "#f98686",
+          background: '#f98686',
         };
       }
 
-      if (column.property == "Extend2") {
-        if (row["Extend2"] == "是") {
+      if (column.property == 'Extend2') {
+        if (row['Extend2'] == '是') {
           return {
-            background: "#f98686",
+            background: '#f98686',
           };
         }
       }
@@ -487,17 +487,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -508,13 +508,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -548,7 +548,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           if (this.formSearchs[remarkTb].forms.length) {
             // 判断是否是页面显示的查询条件，是的字段才清空
             this.formSearchs[remarkTb].forms.forEach((element) => {
@@ -564,10 +564,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     dataSave(remarkTb) {},
@@ -592,17 +592,17 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[2].datas["InspectStatus"] = [1, 2];
+        this.formSearchs[2].datas['InspectStatus'] = [1, 2];
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
@@ -610,28 +610,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -639,11 +639,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -655,24 +655,24 @@ export default {
     },
     // 可用量查询
     usingSearch(row, prop) {
-      this.formSearchs[3].datas["MaterialID"] = row.MaterialID;
-      this.formSearchs[4].datas["MaterialID"] = row.MaterialID;
+      this.formSearchs[3].datas['MaterialID'] = row.MaterialID;
+      this.formSearchs[4].datas['MaterialID'] = row.MaterialID;
       this.dataSearch(3);
       this.dataSearch(4);
       this.dialogShow = true;
     },
     // 单击获取明细
     handleRowClick(row, remarkTb) {
-      this.formSearchs[2].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
+      this.formSearchs[2].datas['SalesOrderDetailID'] = row.SalesOrderDetailID;
       this.OrderNos = [];
       if (row.MOS) {
-        let OrderNos = row.MOS.split(",");
+        let OrderNos = row.MOS.split(',');
         OrderNos.forEach((x) => {
           this.OrderNos.push({ OrderNo: x });
         });
       }
       this.dataSearch(2);
-      this.activeTab = "second";
+      this.activeTab = 'second';
     },
     // 控制选框是否能手动勾选
     checCheckboxkMethod({ row }) {
@@ -680,49 +680,45 @@ export default {
         (row.ShortQty == 0 && row.InspectStatus == 2) ||
         row.InspectStatus == 1
       ) {
-        this.$set(row, "Disabled", true);
+        this.$set(row, 'Disabled', true);
         return false;
       } else {
         return true;
       }
     },
-    // 选择数据
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     // 选择仓库
     selectWarehouse(val) {
-      this.formSearchs[2].datas["WarehouseID"] = val;
+      this.formSearchs[2].datas['WarehouseID'] = val;
       this.dataSearch(2);
     },
     // 选择工单
     selectOrderNo(val) {
-      this.formSearchs[2].datas["OrderNo"] = val;
+      this.formSearchs[2].datas['OrderNo'] = val;
       this.dataSearch(2);
     },
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[1].datas["IsCompleteInspect"] = item.value;
+      this.formSearchs[1].datas['IsCompleteInspect'] = item.value;
       this.$set(this.tableData, 2, []);
       this.dataSearch(1);
     },
     // 改变状态
     changeStatus3(item, index) {
       this.labelStatus3 = index;
-      this.formSearchs[0].datas["OweTag"] = item.value;
+      this.formSearchs[0].datas['OweTag'] = item.value;
       this.dataSearch(0);
     },
     // 改变状态
     changeStatus2(item, index) {
-      if (!this.formSearchs[2].datas["SalesOrderDetailID"]) {
-        this.$message.error("请先在汇总单击选择单号！");
+      if (!this.formSearchs[2].datas['SalesOrderDetailID']) {
+        this.$message.error('请先在汇总单击选择单号！');
         return;
       }
       this.labelStatus2 = index;
-      this.formSearchs[2].datas.PrepareType = "";
-      this.formSearchs[2].datas.InspectStatus = "";
-      this.formSearchs[2].datas.UnIssuedQty = "";
+      this.formSearchs[2].datas.PrepareType = '';
+      this.formSearchs[2].datas.InspectStatus = '';
+      this.formSearchs[2].datas.UnIssuedQty = '';
       if (index == 0) {
         this.formSearchs[2].datas.InspectStatus = item.value;
       } else if (index == 1) {
@@ -734,9 +730,9 @@ export default {
     // 清空超领
     clearShort() {
       if (this.selectionData[2].length == 0) {
-        this.$message.error("请勾选需要清空的数据！");
+        this.$message.error('请勾选需要清空的数据！');
       } else {
-        this.$confirm("确定清空选中的吗，会直接保存哟？")
+        this.$confirm('确定清空选中的吗，会直接保存哟？')
           .then(() => {
             let newData = [];
             _this.selectionData[2].forEach((x) => {
@@ -744,13 +740,13 @@ export default {
               if (parseInt(x.UnIssuedQty) == 0) {
                 x.InspectStatus = 1;
                 if (parseInt(x.OweQty) == 0) {
-                  x.PrepareType = "齐套";
+                  x.PrepareType = '齐套';
                 } else {
-                  x.PrepareType = "欠料";
+                  x.PrepareType = '欠料';
                 }
               } else {
                 x.InspectStatus = 2;
-                x.PrepareType = "异常";
+                x.PrepareType = '异常';
               }
               newData.push(x);
             });
@@ -775,7 +771,7 @@ export default {
       if (this.tableData[2].length != 0) {
         this.tableData[2].forEach((x) => {
           if (parseInt(x.ShortQty) > 0) {
-            x.PrepareType = "超领";
+            x.PrepareType = '超领';
             x.InspectStatus = 2;
             submitData.push(x);
           }
@@ -793,14 +789,14 @@ export default {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -808,7 +804,7 @@ export default {
     // 标记与清除退补
     setClearTag(val) {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要操作的数据！");
+        this.$message.error('请选择需要操作的数据！');
       } else {
         let submitData = [];
         this.adminLoading = true;
@@ -816,12 +812,12 @@ export default {
           // 添加退补备注
           this.selectionData[0].forEach((a) => {
             if (!a.Extend2) {
-              let MaterialFormID = a.MaterialFormID.split(",");
+              let MaterialFormID = a.MaterialFormID.split(',');
               MaterialFormID.forEach((b, i) => {
                 let obj = {};
-                obj["MaterialFormID"] = b;
-                obj["Extend2"] = "是";
-                obj["dicID"] = a.dicID;
+                obj['MaterialFormID'] = b;
+                obj['Extend2'] = '是';
+                obj['dicID'] = a.dicID;
                 submitData.push(obj);
               });
             }
@@ -830,12 +826,12 @@ export default {
           // 清除退补备注
           this.selectionData[0].forEach((a) => {
             if (a.Extend2) {
-              let MaterialFormID = a.MaterialFormID.split(",");
+              let MaterialFormID = a.MaterialFormID.split(',');
               MaterialFormID.forEach((b, i) => {
                 let obj = {};
-                obj["MaterialFormID"] = b;
-                obj["Extend2"] = null;
-                obj["dicID"] = a.dicID;
+                obj['MaterialFormID'] = b;
+                obj['Extend2'] = null;
+                obj['dicID'] = a.dicID;
                 submitData.push(obj);
               });
             }
@@ -846,7 +842,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
   },
 };

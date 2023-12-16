@@ -678,10 +678,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     startObserving(remarkTb) {
       const tableElement = this.$refs[`spreadsheetRef${remarkTb}`]?.[0].$el;
       if (tableElement) {
@@ -1419,7 +1415,7 @@ export default {
     },
     //获取当前选中行的值
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     radioChange(val) {
       this.dataSearch(this.labelStatus3);

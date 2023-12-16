@@ -470,7 +470,7 @@ export default {
     },
     //获取当前选中行的值
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 统一渲染按钮事件
     btnClick(methods, parms, index, remarkTb) {

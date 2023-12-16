@@ -378,9 +378,9 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
 import {
   GetHeader,
   GetSearch,
@@ -388,15 +388,15 @@ import {
   ExportData,
   UpdateProcess,
   SaveData,
-} from "@/api/Common";
+} from '@/api/Common';
 import {
   SaveMOPlanStep4,
   SaveMOPlanStep2,
   OrderPlanMaterialForm,
-} from "@/api/PageTwoScheduling";
+} from '@/api/PageTwoScheduling';
 
 export default {
-  name: "SaleScheduling",
+  name: 'SaleScheduling',
   components: {
     ComSearch,
     ComVxeTable,
@@ -404,16 +404,16 @@ export default {
   },
   data() {
     return {
-      height1: "500px",
+      height1: '500px',
       orderDialog: false,
       SN: null,
       searchTag: 0,
-      GroupCabineValue: "",
+      GroupCabineValue: '',
       GroupCabineOptions: [],
       numDialog: false,
       numForm: {
-        numTotal: "",
-        numValue: "",
+        numTotal: '',
+        numValue: '',
       },
       newDataDialog: false,
 
@@ -466,93 +466,93 @@ export default {
       selectionData: [[], [], [], [], [], [], [], [], [], []],
       parmsBtn: [
         {
-          ButtonCode: "computedmating",
-          BtnName: "配套计算",
+          ButtonCode: 'computedmating',
+          BtnName: '配套计算',
           isLoading: false,
-          Methods: "dataComputedDate",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
+          Methods: 'dataComputedDate',
+          Type: 'warning',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionDate" },
+          Params: { dataName: 'selectionDate' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "调单",
+          ButtonCode: 'save',
+          BtnName: '调单',
           isLoading: false,
-          Methods: "changeOrder",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'changeOrder',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "调柜",
+          ButtonCode: 'save',
+          BtnName: '调柜',
           isLoading: false,
-          Methods: "groupcabine",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'groupcabine',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
 
         {
-          ButtonCode: "save",
-          BtnName: "拆单",
+          ButtonCode: 'save',
+          BtnName: '拆单',
           isLoading: false,
-          Methods: "splitRow",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
+          Methods: 'splitRow',
+          Type: 'warning',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "新增排程",
+          ButtonCode: 'save',
+          BtnName: '新增排程',
           isLoading: false,
-          Methods: "addNewData",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'addNewData',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "待出货区",
+          ButtonCode: 'save',
+          BtnName: '待出货区',
           isLoading: false,
-          Methods: "setNoOut",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
+          Methods: 'setNoOut',
+          Type: 'warning',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "已出货区",
+          ButtonCode: 'save',
+          BtnName: '已出货区',
           isLoading: false,
-          Methods: "setHasOut",
-          Type: "warning",
-          Icon: "",
-          Size: "small",
+          Methods: 'setHasOut',
+          Type: 'warning',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "取消/暂停",
+          ButtonCode: 'save',
+          BtnName: '取消/暂停',
           isLoading: false,
-          Methods: "parseData",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'parseData',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         // {
         //   ButtonCode: "save",
@@ -566,136 +566,136 @@ export default {
         //   Params: { dataName: "selectionData" },
         // },
         {
-          ButtonCode: "save",
-          BtnName: "匹配MO",
+          ButtonCode: 'save',
+          BtnName: '匹配MO',
           isLoading: false,
-          Methods: "formalMo",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'formalMo',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "保存",
+          ButtonCode: 'save',
+          BtnName: '保存',
           isLoading: false,
-          Methods: "dataSave",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
-          signName: "",
-          Params: { dataName: "tableData" },
+          Methods: 'dataSave',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
+          signName: '',
+          Params: { dataName: 'tableData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "匹配MO并下达",
+          ButtonCode: 'save',
+          BtnName: '匹配MO并下达',
           isLoading: false,
-          Methods: "APSToMOplanMatchToMo",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'APSToMOplanMatchToMo',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
           signName: 0,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "待出货区",
+          ButtonCode: 'save',
+          BtnName: '待出货区',
           isLoading: false,
-          Methods: "setNoOut",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'setNoOut',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 1,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "已出货区",
+          ButtonCode: 'save',
+          BtnName: '已出货区',
           isLoading: false,
-          Methods: "setHasOut",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'setHasOut',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 1,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "取消/暂停",
+          ButtonCode: 'save',
+          BtnName: '取消/暂停',
           isLoading: false,
-          Methods: "parseData",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'parseData',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 1,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "下到排期表",
+          ButtonCode: 'save',
+          BtnName: '下到排期表',
           isLoading: false,
-          Methods: "setScheduling",
-          Type: "success",
-          Icon: "",
-          Size: "small",
+          Methods: 'setScheduling',
+          Type: 'success',
+          Icon: '',
+          Size: 'small',
           signName: 1,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "转入已出货区",
+          ButtonCode: 'save',
+          BtnName: '转入已出货区',
           isLoading: false,
-          Methods: "setHasOut",
-          Type: "primary",
-          Icon: "",
-          Size: "small",
+          Methods: 'setHasOut',
+          Type: 'primary',
+          Icon: '',
+          Size: 'small',
           signName: 2,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "取消/暂停",
+          ButtonCode: 'save',
+          BtnName: '取消/暂停',
           isLoading: false,
-          Methods: "parseData",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'parseData',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 2,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "退回排期表",
+          ButtonCode: 'save',
+          BtnName: '退回排期表',
           isLoading: false,
-          Methods: "backScheduling",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'backScheduling',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 2,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "退回排期表",
+          ButtonCode: 'save',
+          BtnName: '退回排期表',
           isLoading: false,
-          Methods: "backScheduling",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'backScheduling',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 3,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
         {
-          ButtonCode: "save",
-          BtnName: "退回排期表",
+          ButtonCode: 'save',
+          BtnName: '退回排期表',
           isLoading: false,
-          Methods: "backScheduling",
-          Type: "danger",
-          Icon: "",
-          Size: "small",
+          Methods: 'backScheduling',
+          Type: 'danger',
+          Icon: '',
+          Size: 'small',
           signName: 4,
-          Params: { dataName: "selectionData" },
+          Params: { dataName: 'selectionData' },
         },
       ],
       tableData: [[], [], [], [], [], [], [], [], [], []],
@@ -736,19 +736,19 @@ export default {
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 500, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       labelStatus1: 0,
-      ProcessGroupID: "",
+      ProcessGroupID: '',
       Status1: [
-        { label: "总排程表", value: [21, 22, 23, 26, 24] },
-        { label: "未下达", value: 26 },
-        { label: "待出货区", value: 10 },
-        { label: "已出货区", value: 12 },
-        { label: "异常变更", value: "" },
-        { label: "计划变更", value: "" },
+        { label: '总排程表', value: [21, 22, 23, 26, 24] },
+        { label: '未下达', value: 26 },
+        { label: '待出货区', value: 10 },
+        { label: '已出货区', value: 12 },
+        { label: '异常变更', value: '' },
+        { label: '计划变更', value: '' },
       ],
       isSelect: true,
       isEdit: false,
@@ -772,81 +772,81 @@ export default {
       dialogHeader: [
         [
           {
-            label: "行号",
-            prop: "SN",
-            width: "80px",
+            label: '行号',
+            prop: 'SN',
+            width: '80px',
           },
           {
-            label: "柜号",
-            prop: "GroupCabinet",
-            width: "80px",
+            label: '柜号',
+            prop: 'GroupCabinet',
+            width: '80px',
           },
           {
-            label: "销往",
-            prop: "SaleTo",
-            width: "120px",
+            label: '销往',
+            prop: 'SaleTo',
+            width: '120px',
           },
           {
-            label: "单号",
-            prop: "SalesOrderNo",
-            width: "100px",
+            label: '单号',
+            prop: 'SalesOrderNo',
+            width: '100px',
           },
           {
-            label: "机型",
-            prop: "MaterialName",
-            width: "120px",
+            label: '机型',
+            prop: 'MaterialName',
+            width: '120px',
           },
           {
-            label: "数量",
-            prop: "Qty",
-            width: "80px",
+            label: '数量',
+            prop: 'Qty',
+            width: '80px',
           },
         ],
         [
           {
-            label: "当前行",
-            prop: "SN",
-            width: "80px",
+            label: '当前行',
+            prop: 'SN',
+            width: '80px',
           },
           {
-            label: "目标行",
-            prop: "SN2",
-            width: "80px",
+            label: '目标行',
+            prop: 'SN2',
+            width: '80px',
           },
           {
-            label: "柜号",
-            prop: "GroupCabinet",
-            width: "80px",
+            label: '柜号',
+            prop: 'GroupCabinet',
+            width: '80px',
           },
           {
-            label: "新柜号",
-            prop: "NewGroupCabinet",
-            width: "80px",
+            label: '新柜号',
+            prop: 'NewGroupCabinet',
+            width: '80px',
             component: {
-              prop: "GroupCabinets",
-              type: "select",
-              disabled: "EditDisabled",
+              prop: 'GroupCabinets',
+              type: 'select',
+              disabled: 'EditDisabled',
             },
           },
           {
-            label: "销往",
-            prop: "SaleTo",
-            width: "120px",
+            label: '销往',
+            prop: 'SaleTo',
+            width: '120px',
           },
           {
-            label: "单号",
-            prop: "SalesOrderNo",
-            width: "80px",
+            label: '单号',
+            prop: 'SalesOrderNo',
+            width: '80px',
           },
           {
-            label: "机型",
-            prop: "MaterialName",
-            width: "150px",
+            label: '机型',
+            prop: 'MaterialName',
+            width: '150px',
           },
           {
-            label: "数量",
-            prop: "Qty",
-            width: "80px",
+            label: '数量',
+            prop: 'Qty',
+            width: '80px',
           },
         ],
       ],
@@ -896,21 +896,21 @@ export default {
   methods: {
     // 计算生产材积
     computedqty(row, val, prop, index) {
-      let total = "";
+      let total = '';
       total = (
         (parseFloat(row.TotalVolume) / parseFloat(row.OweStockOutQty)) *
         val
       ).toFixed(2);
-      this.$set(row, "Extend3", total);
+      this.$set(row, 'Extend3', total);
     },
     // 计算包装材积
     computedqty2(row, val, prop, index) {
-      let total = "";
+      let total = '';
       total = (
         (parseFloat(row.TotalVolume) / parseFloat(row.OweStockOutQty)) *
         val
       ).toFixed(2);
-      this.$set(row, "Extend4", total);
+      this.$set(row, 'Extend4', total);
     },
     // 判断按钮权限
     async dataComputedDate() {
@@ -934,14 +934,14 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -953,7 +953,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -964,8 +964,8 @@ export default {
           }
         });
       }
-      this.$set(this, "btnData", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnData', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
@@ -975,17 +975,17 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -996,13 +996,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -1036,21 +1036,21 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+      this.formSearchs[remarkTb].datas['ProductionStatus'] =
         this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
@@ -1066,7 +1066,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -1074,7 +1074,7 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1099,17 +1099,17 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", this.IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', this.IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[0].datas["ProductionStatus"] = [21, 22, 23, 26, 24];
+        this.formSearchs[0].datas['ProductionStatus'] = [21, 22, 23, 26, 24];
         this.getTableData(this.formSearchs[0].datas, 0);
       }
     },
@@ -1117,31 +1117,31 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
         if (data.length != 0) {
           this.startNum = data[0].SN;
         }
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1151,12 +1151,12 @@ export default {
     // 改变状态
     changeStatus(item, index) {
       this.labelStatus1 = index;
-      this.formSearchs[index].datas["ProductionStatus"] = item.value;
+      this.formSearchs[index].datas['ProductionStatus'] = item.value;
       this.dataSearch(index);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 获取柜号
     async getGroupCabinetList() {
@@ -1167,7 +1167,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1176,9 +1176,9 @@ export default {
     groupcabine(remarkTb, data, title, ref) {
       this.searchTag = remarkTb;
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要调柜的数据！");
+        this.$message.error('请选择需要调柜的数据！');
       } else {
-        this.GroupCabineValue = "";
+        this.GroupCabineValue = '';
         this.switchDialog = true;
       }
     },
@@ -1190,18 +1190,18 @@ export default {
         if (this.dialogData[1].length == 0) {
           this.$set(this.dialogData, 1, this.selectionData[0]);
           this.dialogData[1].forEach((a) => {
-            a["update"] = true;
-            this.$set(a, "EditDisabled", false);
+            a['update'] = true;
+            this.$set(a, 'EditDisabled', false);
           });
         } else {
           this.selectionData[0].forEach((y) => {
             let newIndex = -1;
             newIndex = this.dialogData[1].findIndex(
-              (x) => x.SalesOrderDetailID == y.SalesOrderDetailID
+              (x) => x.SalesOrderDetailID == y.SalesOrderDetailID,
             );
             if (newIndex == -1) {
-              y["update"] = true;
-              this.$set(y, "EditDisabled", false);
+              y['update'] = true;
+              this.$set(y, 'EditDisabled', false);
               this.dialogData[1].push(y);
             }
           });
@@ -1213,17 +1213,17 @@ export default {
     sureGroupCabine() {
       if (this.GroupCabineValue) {
         this.selectionData[this.searchTag].forEach((x) => {
-          this.$set(x, "GroupCabinet", this.GroupCabineValue);
+          this.$set(x, 'GroupCabinet', this.GroupCabineValue);
         });
         // 保存数据
         this.generalSaveData(
           this.selectionData[this.searchTag],
-          this.searchTag
+          this.searchTag,
         );
         this.switchDialog = false;
         this.$refs.vxeTable0[0].$refs.vxeTable.clearCheckboxRow();
       } else {
-        this.$message.error("请选择柜号或者手动输入新柜号！");
+        this.$message.error('请选择柜号或者手动输入新柜号！');
       }
     },
     // 通用保存数据
@@ -1236,14 +1236,14 @@ export default {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         _this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1253,9 +1253,9 @@ export default {
       this.numForm.numValue = null;
       this.searchTag = remarkTb;
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error("请选择需要拆单的数据！");
+        this.$message.error('请选择需要拆单的数据！');
       } else if (this.selectionData[remarkTb].length > 1) {
-        this.$message.error("仅能选择一条数据进行拆单！");
+        this.$message.error('仅能选择一条数据进行拆单！');
       } else {
         this.numForm.numTotal = this.selectionData[remarkTb][0].PlanQty;
         this.numDialog = true;
@@ -1265,9 +1265,9 @@ export default {
     delsalerow(row, val, prop, index, remarkTb) {
       let newData = [];
       let obj = this.tableData[remarkTb][index];
-      obj["ElementDeleteFlag"] = 1;
+      obj['ElementDeleteFlag'] = 1;
       newData.push(obj);
-      this.$confirm("确定要删除数据吗？如果新拆单还没保存则无效")
+      this.$confirm('确定要删除数据吗？如果新拆单还没保存则无效')
         .then((_) => {
           debugger;
           _this.dataSave(remarkTb, index, null, newData);
@@ -1278,13 +1278,13 @@ export default {
     sureSplitNum() {
       let newNum =
         parseFloat(this.numForm.numTotal) - parseFloat(this.numForm.numValue);
-      this.$set(this.selectionData[this.searchTag][0], "PlanQty", newNum);
+      this.$set(this.selectionData[this.searchTag][0], 'PlanQty', newNum);
       let obj = JSON.parse(
-        JSON.stringify(this.selectionData[this.searchTag][0])
+        JSON.stringify(this.selectionData[this.searchTag][0]),
       );
-      obj["SalesPlanID"] = "";
-      obj["IsVirtualRow"] = true;
-      obj["PlanQty"] = this.numForm.numValue;
+      obj['SalesPlanID'] = '';
+      obj['IsVirtualRow'] = true;
+      obj['PlanQty'] = this.numForm.numValue;
       this.tableData[this.searchTag].unshift(obj);
       this.numDialog = false;
       this.$set(this.isClear, 0, true);
@@ -1296,23 +1296,23 @@ export default {
     // 拆单的数量不能大于计划数
     isOut(val) {
       if (val > parseFloat(this.numForm.numTotal)) {
-        this.$message.error("拆单的数量不能大于总计划数！");
+        this.$message.error('拆单的数量不能大于总计划数！');
         this.numForm.numValue = 0;
       }
     },
     // 加入待出货区
     setNoOut() {
       if (this.selectionData[this.labelStatus1].length == 0) {
-        this.$message.error("请选择加入待出货区的数据！");
+        this.$message.error('请选择加入待出货区的数据！');
       } else {
-        this.$confirm("是否将数据加入待出货?")
+        this.$confirm('是否将数据加入待出货?')
           .then(() => {
             _this.selectionData[this.labelStatus1].forEach((x) => {
               x.ProductionStatus = 10; // 待发货状态
             });
             _this.generalSaveData(
               _this.selectionData[this.labelStatus1],
-              this.labelStatus1
+              this.labelStatus1,
             );
           })
           .catch(() => {});
@@ -1321,16 +1321,16 @@ export default {
     // 加入已出货区
     setHasOut() {
       if (this.selectionData[this.labelStatus1].length == 0) {
-        this.$message.error("请选择加入已出货区的数据！");
+        this.$message.error('请选择加入已出货区的数据！');
       } else {
-        this.$confirm("是否将数据加入已出货区！")
+        this.$confirm('是否将数据加入已出货区！')
           .then(() => {
             _this.selectionData[this.labelStatus1].forEach((x) => {
               x.ProductionStatus = 12; // 已发货状态
             });
             _this.generalSaveData(
               _this.selectionData[this.labelStatus1],
-              this.labelStatus1
+              this.labelStatus1,
             );
           })
           .catch(() => {});
@@ -1339,9 +1339,9 @@ export default {
     // 取消或暂停
     parseData() {
       if (this.selectionData[this.labelStatus1].length == 0) {
-        this.$message.error("请选择取消或暂停的数据！");
+        this.$message.error('请选择取消或暂停的数据！');
       } else {
-        this.$confirm("是否取消或暂停该数据？")
+        this.$confirm('是否取消或暂停该数据？')
           .then(() => {
             _this.selectionData[this.labelStatus1].forEach((x) => {
               if (x.ProductionStatus != 24) {
@@ -1352,7 +1352,7 @@ export default {
             });
             _this.generalSaveData(
               _this.selectionData[this.labelStatus1],
-              remarkTb
+              remarkTb,
             );
           })
           .catch(() => {});
@@ -1361,14 +1361,14 @@ export default {
     // 下到排期区
     setScheduling() {
       if (this.selectionData[this.labelStatus1].length == 0) {
-        this.$message.error("请选择下排的数据！");
+        this.$message.error('请选择下排的数据！');
       } else {
-        this.$confirm("是否下排数据？")
+        this.$confirm('是否下排数据？')
           .then(async () => {
             _this.adminLoading = true;
             let res = await GetSearch(
               this.selectionData[this.labelStatus1],
-              `/APSAPI/APSTOMOplan`
+              `/APSAPI/APSTOMOplan`,
             );
             const { result, msg } = res.data;
             if (result) {
@@ -1376,14 +1376,14 @@ export default {
               this.dataSearch(this.labelStatus1);
               this.$message({
                 message: msg,
-                type: "success",
+                type: 'success',
                 dangerouslyUseHTMLString: true,
               });
             } else {
               this.adminLoading = false;
               this.$message({
                 message: msg,
-                type: "error",
+                type: 'error',
                 dangerouslyUseHTMLString: true,
                 duration: 8000,
               });
@@ -1397,16 +1397,16 @@ export default {
     // 退回排期区
     backScheduling() {
       if (this.selectionData[this.labelStatus1].length == 0) {
-        this.$message.error("请选择退回的数据！");
+        this.$message.error('请选择退回的数据！');
       } else {
-        this.$confirm("是否退回数据？")
+        this.$confirm('是否退回数据？')
           .then(() => {
             _this.selectionData[this.labelStatus1].forEach((x) => {
               x.ProductionStatus = 23; // 暂停状态
             });
             _this.generalSaveData(
               _this.selectionData[this.labelStatus1],
-              this.labelStatus1
+              this.labelStatus1,
             );
             _this.dataSearch(this.labelStatus1);
           })
@@ -1422,7 +1422,7 @@ export default {
     async sureAddNewData() {
       // 不确定是否加进来就保存在数据库，怕其他按钮操作执行查询白添加了
       if (this.selectionData[6].length == 0) {
-        this.$message.error("未选择数据！");
+        this.$message.error('未选择数据！');
         this.newDataDialog = true;
       } else {
         this.selectionData[6].forEach((m) => {
@@ -1431,7 +1431,7 @@ export default {
         _this.adminLoading = true;
         let res = await GetSearch(
           this.selectionData[6],
-          `/APSAPI/APSTOSalesPlan`
+          `/APSAPI/APSTOSalesPlan`,
         );
         const { result, msg } = res.data;
         if (result) {
@@ -1440,14 +1440,14 @@ export default {
           _this.$refs.plxTableSix.$refs.vxeTable.clearCheckboxRow();
           this.$message({
             message: msg,
-            type: "success",
+            type: 'success',
             dangerouslyUseHTMLString: true,
           });
         } else {
           this.adminLoading = false;
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
             duration: 8000,
           });
@@ -1463,7 +1463,7 @@ export default {
       // 表格数据全部返回匹配结果
       let res = await GetSearch(
         this.tableData[this.labelStatus1],
-        `/APSAPI/APSToMOplanMatch`
+        `/APSAPI/APSToMOplanMatch`,
       );
       const { result, msg } = res.data;
       if (result) {
@@ -1471,14 +1471,14 @@ export default {
         this.dataSearch(this.labelStatus1);
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
           duration: 8000,
         });
@@ -1487,12 +1487,12 @@ export default {
     // 匹配MO并下达
     APSToMOplanMatchToMo() {
       // 表格数据全部返回匹配结果
-      this.$confirm("这是对全部数据进行操作，是否自动匹配并自动下达?")
+      this.$confirm('这是对全部数据进行操作，是否自动匹配并自动下达?')
         .then(async () => {
           _this.adminLoading = true;
           let res = await GetSearch(
             _this.tableData[this.labelStatus1],
-            `/APSAPI/APSToMOplanMatchToMo`
+            `/APSAPI/APSToMOplanMatchToMo`,
           );
           const { result, msg } = res.data;
           if (result) {
@@ -1500,14 +1500,14 @@ export default {
             _this.dataSearch(this.labelStatus1);
             _this.$message({
               message: msg,
-              type: "success",
+              type: 'success',
               dangerouslyUseHTMLString: true,
             });
           } else {
             _this.adminLoading = false;
             _this.$message({
               message: msg,
-              type: "error",
+              type: 'error',
               dangerouslyUseHTMLString: true,
               duration: 8000,
             });
@@ -1525,7 +1525,7 @@ export default {
         });
         this.$set(this.dialogData, 0, []);
         if (newRow.length != 0) {
-          let NewGroupCabinet = "";
+          let NewGroupCabinet = '';
           // 获取当前柜号的下一行是否是同一柜号;
           let prop = [];
           let EditDisabled = false;
@@ -1549,13 +1549,13 @@ export default {
           if (this.dialogData[1].length != 0) {
             this.dialogData[1].forEach((x) => {
               x.SN2 = this.SN;
-              x["GroupCabinets"] = prop;
-              this.$set(x, "EditDisabled", EditDisabled);
+              x['GroupCabinets'] = prop;
+              this.$set(x, 'EditDisabled', EditDisabled);
               x.NewGroupCabinet = NewGroupCabinet;
             });
           }
         } else {
-          this.$message.error("暂未找到该目标行，请确认当前页是否有这行数据！");
+          this.$message.error('暂未找到该目标行，请确认当前页是否有这行数据！');
         }
       }
       this.$nextTick(() => {
@@ -1574,14 +1574,14 @@ export default {
     // 确定调整顺序
     sureChangeSort() {
       if (this.dialogData[0].length == 0) {
-        this.$message.error("请填写目标行再调整！");
+        this.$message.error('请填写目标行再调整！');
       } else if (this.dialogData[1].length == 0) {
-        this.$message.error("请选择需要调整的数据！");
+        this.$message.error('请选择需要调整的数据！');
       } else {
         let newData = JSON.parse(JSON.stringify(this.dialogData[1]));
         // 先删除有的，在push新的
         let newTableData = this.tableData[0].filter(
-          (x) => !newData.some((y) => y.SN == x.SN)
+          (x) => !newData.some((y) => y.SN == x.SN),
         );
         let newIndex = newTableData.findIndex((z) => z.SN == this.SN);
         // 把arr2 变成一个适合splice的数组（包含splice前2个参数的数组）
@@ -1589,8 +1589,8 @@ export default {
         Array.prototype.splice.apply(newTableData, newData);
         let startNum = this.startNum;
         newTableData.forEach((z) => {
-          this.$set(z, "SN", startNum);
-          this.$set(z, "GroupCabinet", z.NewGroupCabinet);
+          this.$set(z, 'SN', startNum);
+          this.$set(z, 'GroupCabinet', z.NewGroupCabinet);
           startNum++;
         });
         this.$set(this.tableData, 0, []);
@@ -1606,22 +1606,22 @@ export default {
     },
     // 打开工单分析
     toPage(row, prop) {
-      if (prop == "OrderJudgeSys") {
-        this.formSearchs[7].datas["SalesOrderDetailID"] =
+      if (prop == 'OrderJudgeSys') {
+        this.formSearchs[7].datas['SalesOrderDetailID'] =
           row.SalesOrderDetailID;
         this.dataSearch(7);
         this.orderDialog = true;
-      } else if (prop == "FormP") {
+      } else if (prop == 'FormP') {
         // this.formSearchs[8].datas["SalesOrderDetailID"] =
         //   row.SalesOrderDetailID;
         // this.dataSearch(8);
-        this.formSearchs[9].datas["OweQty"] = 0;
+        this.formSearchs[9].datas['OweQty'] = 0;
         // this.formSearchs[9].datas["SalesOrderDetailID"] = row.SalesOrderDetailID;
         let MOSList = [];
-        MOSList = row.MOS ? row.MOS.split(",") : [];
-        this.formSearchs[9].datas["OrderNo"] = MOSList;
+        MOSList = row.MOS ? row.MOS.split(',') : [];
+        this.formSearchs[9].datas['OrderNo'] = MOSList;
 
-        console.log("MOSList", MOSList);
+        console.log('MOSList', MOSList);
         // this.formSearchs[9].datas["OrderID"] = row.OrderID; 接口没返回此字段，会查出所有工单的数据，所有注释代码
         this.dataSearch(9);
         this.formatDialog = true;
@@ -1629,7 +1629,7 @@ export default {
     },
     // 单击出来明细
     handleRowClick2(row, remarkTb) {
-      this.formSearchs[9].datas["OrderID"] = row.OrderID;
+      this.formSearchs[9].datas['OrderID'] = row.OrderID;
       this.dataSearch(9);
     },
   },

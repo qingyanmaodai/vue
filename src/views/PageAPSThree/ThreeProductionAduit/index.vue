@@ -110,12 +110,12 @@
 </template>
 
 <script>
-import ComSearch from "@/components/ComSearch";
-import ComVxeTable from "@/components/ComVxeTable";
-import ComReportTable from "@/components/ComReportTable";
-import { GetHeader, GetSearchData, ExportData } from "@/api/Common";
+import ComSearch from '@/components/ComSearch';
+import ComVxeTable from '@/components/ComVxeTable';
+import ComReportTable from '@/components/ComReportTable';
+import { GetHeader, GetSearchData, ExportData } from '@/api/Common';
 export default {
-  name: "ThreeProductionAduit",
+  name: 'ThreeProductionAduit',
   components: {
     ComSearch,
     ComVxeTable,
@@ -126,14 +126,14 @@ export default {
       ////////////////// Search /////////////////
       dialogShow: false,
       dialogShow2: false,
-      expendCollText: "全屏",
+      expendCollText: '全屏',
       expendColl: true,
       expendColl2: true,
-      expendCollText2: "全屏",
+      expendCollText2: '全屏',
       title: this.$route.meta.title,
-      height1: "300px",
-      height2: "300px",
-      height3: "300px",
+      height1: '300px',
+      height2: '300px',
+      height3: '300px',
       drawer: false,
       formSearchs: [
         {
@@ -169,7 +169,7 @@ export default {
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
@@ -203,21 +203,21 @@ export default {
         document.documentElement.clientHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
-      let height2 = rem - 361 + "px";
-      let height3 = rem - 362 + "px";
-      this.$set(this, "height2", height2);
-      this.$set(this, "height3", height3);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
+      let height2 = rem - 361 + 'px';
+      let height3 = rem - 362 + 'px';
+      this.$set(this, 'height2', height2);
+      this.$set(this, 'height3', height3);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -228,13 +228,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -268,7 +268,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -277,10 +277,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 保存
     dataSave(remarkTb) {},
@@ -305,15 +305,15 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
         this.getTableData(this.formSearchs[0].datas, 0);
@@ -323,28 +323,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -352,11 +352,11 @@ export default {
     },
     // 刷新页面
     refrshPage() {
-      this.$store.dispatch("tagsView/delCachedView", this.$route).then(() => {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
         const { fullPath } = this.$route;
         this.$nextTick(() => {
           this.$router.replace({
-            path: "/redirect" + fullPath,
+            path: '/redirect' + fullPath,
           });
         });
       });
@@ -372,46 +372,46 @@ export default {
     systolic() {
       this.expendColl = !this.expendColl;
       if (!this.expendColl) {
-        this.expendCollText = "收缩";
+        this.expendCollText = '收缩';
         this.height1 = this.height;
       } else {
-        this.expendCollText = "全屏";
-        this.height1 = "299px";
+        this.expendCollText = '全屏';
+        this.height1 = '299px';
       }
     },
     // 展开与收缩
     systolic2() {
       this.expendColl2 = !this.expendColl2;
       if (!this.expendColl2) {
-        this.expendCollText2 = "收缩";
+        this.expendCollText2 = '收缩';
         this.height2 = this.height;
       } else {
-        this.expendCollText = "全屏";
+        this.expendCollText = '全屏';
         this.height2 = this.height3;
       }
     },
     // 单击报工
     handleRowClick(row) {
-      this.formSearchs[1].datas["LineID"] = row.LineID;
+      this.formSearchs[1].datas['LineID'] = row.LineID;
       this.dataSearch(1);
     },
     // 审核通过
     async passData() {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要退回的数据！");
+        this.$message.error('请选择需要退回的数据！');
       } else {
       }
     },
     // 退回
     async backData() {
       if (this.selectionData[0].length == 0) {
-        this.$message.error("请选择需要退回的数据！");
+        this.$message.error('请选择需要退回的数据！');
       } else {
       }
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
   },
 };

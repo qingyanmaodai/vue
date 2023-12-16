@@ -507,19 +507,19 @@
 
 <script>
 var _this;
-import ComSearch from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
+import ComSearch from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
 import {
   GetHeader,
   GetSearchData,
   ExportData,
   GetSearch,
   SaveData,
-} from "@/api/Common";
-import { OneStepReleaseByOrder } from "@/api/PageSale";
-import { Row } from "element-ui";
+} from '@/api/Common';
+import { OneStepReleaseByOrder } from '@/api/PageSale';
+import { Row } from 'element-ui';
 export default {
-  name: "ProductionAduit",
+  name: 'ProductionAduit',
   components: {
     ComSearch,
     ComUmyTable,
@@ -529,39 +529,39 @@ export default {
       TwoLevelProceData: [],
       dialogPreson: false,
       multipleSelection: [],
-      height1: "707px",
+      height1: '707px',
       LevelTwoProcessList: [], //二级工序集合
-      ProcessID: "",
+      ProcessID: '',
       ruleForm: {
-        ProcessID: "",
-        ProducedDate: "",
-        ProducedQty: "",
+        ProcessID: '',
+        ProducedDate: '',
+        ProducedQty: '',
         dicID: 6704,
         Status: 2,
-        LineID: "",
-        LineName: "",
-        ConfirmQty: "",
-        MaterialID: "",
-        MaterialName: "",
-        UserPeople: "",
-        ProcessGroupName: "",
+        LineID: '',
+        LineName: '',
+        ConfirmQty: '',
+        MaterialID: '',
+        MaterialName: '',
+        UserPeople: '',
+        ProcessGroupName: '',
         childrens: [],
-        TotalHours: "",
-        Remark3: "", //新增报工备注
-        LevelTwoProcessID: "", //二级工序id
+        TotalHours: '',
+        Remark3: '', //新增报工备注
+        LevelTwoProcessID: '', //二级工序id
       },
       rules: {
         ProducedDate: [
-          { required: true, message: "报工日期必填", trigger: "change" },
+          { required: true, message: '报工日期必填', trigger: 'change' },
         ],
         MaterialName: [
-          { required: true, message: "产品名称必填", trigger: "change" },
+          { required: true, message: '产品名称必填', trigger: 'change' },
         ],
         LineName: [
-          { required: true, message: "线别名称必填", trigger: "change" },
+          { required: true, message: '线别名称必填', trigger: 'change' },
         ],
         UserPeople: [
-          { required: true, message: "生产人员称必填", trigger: "change" },
+          { required: true, message: '生产人员称必填', trigger: 'change' },
         ],
         // ProducedQty: [
         //   { required: true, message: "报工数量必填", trigger: "blur" },
@@ -591,15 +591,15 @@ export default {
       btnForm: [],
       parmsBtn: [
         {
-          ButtonCode: "save",
-          BtnName: "批量审批",
-          Type: "success",
+          ButtonCode: 'save',
+          BtnName: '批量审批',
+          Type: 'success',
           Ghost: true,
-          Size: "small",
-          Methods: "aduitMoreData",
-          Icon: "",
-          Params: "",
-          signName: "1",
+          Size: 'small',
+          Methods: 'aduitMoreData',
+          Icon: '',
+          Params: '',
+          signName: '1',
         },
       ],
       tableData: [[], []],
@@ -611,15 +611,15 @@ export default {
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
         { pageIndex: 1, pageSize: 200, pageTotal: 0 },
       ],
-      height: "707px",
+      height: '707px',
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
       labelStatus1: 0,
       Status1: [
-        { label: "报工", value: 0 },
-        { label: "审批", value: 1 },
-        { label: "更改报工", value: 2 },
+        { label: '报工', value: 0 },
+        { label: '审批', value: 1 },
+        { label: '更改报工', value: 2 },
       ],
       isSelect: false,
       adminLoading: false,
@@ -657,14 +657,14 @@ export default {
       if (val && val.length) {
         this.$set(
           this.currentRow[this.labelStatus1],
-          "LevelTwoProcessName",
-          val.join(",")
+          'LevelTwoProcessName',
+          val.join(','),
         );
       } else {
         this.$set(
           this.currentRow[this.labelStatus1],
-          "LevelTwoProcessName",
-          ""
+          'LevelTwoProcessName',
+          '',
         );
       }
     },
@@ -674,12 +674,12 @@ export default {
       if (this.multipleSelection.length) {
         _this.$refs.multipleTable.clearSelection();
       }
-      if (this.currentRow[this.labelStatus1]["OrganizeID"]) {
+      if (this.currentRow[this.labelStatus1]['OrganizeID']) {
         this.dialogPreson = true;
 
-        if (this.currentRow[this.labelStatus1]["UserPeople"]) {
+        if (this.currentRow[this.labelStatus1]['UserPeople']) {
           let list =
-            this.currentRow[this.labelStatus1]["UserPeople"].split(",");
+            this.currentRow[this.labelStatus1]['UserPeople'].split(',');
           if (this.multiple) {
             this.$nextTick(() => {
               this.userData.forEach((item) => {
@@ -714,13 +714,13 @@ export default {
         }
         this.$set(
           this.currentRow[this.labelStatus1],
-          "Peoples",
-          list.join(",")
+          'Peoples',
+          list.join(','),
         );
         this.$set(
           this.currentRow[this.labelStatus1],
-          "UserPeople",
-          list.join(",")
+          'UserPeople',
+          list.join(','),
         );
       }
       this.dialogPreson = false;
@@ -732,9 +732,9 @@ export default {
     // 获取线别
     async getLineData() {
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 3026;
-      form["OrganizeTypeID"] = 6;
+      form['rows'] = 0;
+      form['dicID'] = 3026;
+      form['OrganizeTypeID'] = 6;
       this.adminLoading = true;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
@@ -744,7 +744,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
         this.adminLoading = false;
@@ -753,10 +753,10 @@ export default {
     async getUserData(OrganizeID) {
       this.userData = [];
       let form = {};
-      form["rows"] = 0;
-      form["dicID"] = 3007;
-      form["OrganizeID"] = OrganizeID;
-      form["OrganizeTypeID"] = 6;
+      form['rows'] = 0;
+      form['dicID'] = 3007;
+      form['OrganizeID'] = OrganizeID;
+      form['OrganizeTypeID'] = 6;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -764,7 +764,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -776,7 +776,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -787,7 +787,7 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
+      this.$set(this, 'btnForm', newBtn);
     },
     // 高度控制
     setHeight() {
@@ -799,18 +799,18 @@ export default {
         footerHeight -
         headHeight -
         this.$store.getters.reduceHeight;
-      let newHeight = rem + 20 + "px";
-      this.height1 = rem - 50 + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 20 + 'px';
+      this.height1 = rem - 50 + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 排序
@@ -821,19 +821,19 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 改变父组件表格行数据
     changeTableRowData(remarkTb, row, index) {
@@ -865,21 +865,21 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
-      this.formSearchs[remarkTb].datas["ProductionStatus"] =
+      this.formSearchs[remarkTb].datas['ProductionStatus'] =
         this.Status1[this.labelStatus1].value;
     },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 获取表头数据
     async getTableHeader() {
@@ -902,17 +902,17 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-        this.formSearchs[1].datas["ApprovalStatus"] = "过期";
+        this.formSearchs[1].datas['ApprovalStatus'] = '过期';
         this.adminLoading = false;
         // this.getTableData(this.formSearchs[0].datas, 0);
       }
@@ -921,19 +921,19 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -941,20 +941,20 @@ export default {
           data.forEach((a) => {
             let newTinyProcessData = [];
             if (a.TinyProcesss) {
-              let TinyProcessData = a.TinyProcesss.split(",");
+              let TinyProcessData = a.TinyProcesss.split(',');
               TinyProcessData.forEach((b) => {
                 newTinyProcessData.push({ label: b, value: b });
               });
-              this.$set(a, "newTinyProcessList", newTinyProcessData);
+              this.$set(a, 'newTinyProcessList', newTinyProcessData);
             }
           });
         }
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -965,11 +965,11 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       if (index == 0) {
-        this.title = "计划列表";
+        this.title = '计划列表';
       } else if (index == 1) {
-        this.title = "审核超期列表";
+        this.title = '审核超期列表';
       } else if (index == 2) {
-        this.title = "报工列表";
+        this.title = '报工列表';
       }
       // if (this.tableData[index].length == 0) {
       //   this.dataSearch(index);
@@ -982,73 +982,73 @@ export default {
       let newRow = this.lines.filter((x) => {
         return x.OrganizeID == row.LineID;
       });
-      if (newRow[0]["OrganizeID"]) {
+      if (newRow[0]['OrganizeID']) {
         this.$set(
           this.currentRow[this.labelStatus1],
-          "OrganizeID",
-          newRow[0].OrganizeID
+          'OrganizeID',
+          newRow[0].OrganizeID,
         );
         await this.getUserData(newRow[0].OrganizeID);
       }
-      if (newRow[0].OrganizeType == "集体") {
+      if (newRow[0].OrganizeType == '集体') {
         this.multiple = true;
       } else {
         this.multiple = false;
       }
       if (this.labelStatus1 == 0) {
         this.tag = 0;
-        this.$set(this.currentRow[this.labelStatus1], "UserPeople", null);
-        this.currentRow[this.labelStatus1]["ModifiedByName"] =
+        this.$set(this.currentRow[this.labelStatus1], 'UserPeople', null);
+        this.currentRow[this.labelStatus1]['ModifiedByName'] =
           this.userInfo.Name;
-        this.currentRow[this.labelStatus1]["ModifiedBy"] =
+        this.currentRow[this.labelStatus1]['ModifiedBy'] =
           this.userInfo.Account;
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
         this.$set(
           this.currentRow[this.labelStatus1],
-          "ProducedDate",
-          row.PlanDay
+          'ProducedDate',
+          row.PlanDay,
         );
-        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
-        this.$set(this.currentRow[this.labelStatus1], "Status", 2);
-        this.$set(this.currentRow[this.labelStatus1], "ProducedQty", null);
+        this.$set(this.currentRow[this.labelStatus1], 'dicID', 6704);
+        this.$set(this.currentRow[this.labelStatus1], 'Status', 2);
+        this.$set(this.currentRow[this.labelStatus1], 'ProducedQty', null);
       } else if (this.labelStatus1 == 1) {
         this.tag = 1;
-        this.currentRow[this.labelStatus1]["ModifiedByName"] =
+        this.currentRow[this.labelStatus1]['ModifiedByName'] =
           this.userInfo.Name;
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
-        this.$set(this.currentRow[this.labelStatus1], "ConfirmQty", null);
-        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
-        this.$set(this.currentRow[this.labelStatus1], "Status", 2);
+        this.$set(this.currentRow[this.labelStatus1], 'ConfirmQty', null);
+        this.$set(this.currentRow[this.labelStatus1], 'dicID', 6704);
+        this.$set(this.currentRow[this.labelStatus1], 'Status', 2);
       } else if (this.labelStatus1 == 2) {
         this.tag = 2;
         for (let name in row) {
           this.$set(this.currentRow[this.labelStatus1], name, row[name]);
         }
-        this.$set(this.currentRow[this.labelStatus1], "dicID", 6704);
+        this.$set(this.currentRow[this.labelStatus1], 'dicID', 6704);
         await this.getLevelTwoProcessData(row.ProcessID);
         await this.getTwoLevelProceData(row.ID);
-        this.currentRow[this.labelStatus1]["ModifiedByName"] =
+        this.currentRow[this.labelStatus1]['ModifiedByName'] =
           this.userInfo.Name;
-        this.currentRow[this.labelStatus1]["ModifiedBy"] =
+        this.currentRow[this.labelStatus1]['ModifiedBy'] =
           this.userInfo.Account;
         this.$set(
           this.currentRow[this.labelStatus1],
-          "UserPeople",
-          row.Peoples
+          'UserPeople',
+          row.Peoples,
         );
         this.$set(
           this.currentRow[this.labelStatus1],
-          "ProcessName",
-          row.LevelTwoProcessName ? row.LevelTwoProcessName.split(",") : []
+          'ProcessName',
+          row.LevelTwoProcessName ? row.LevelTwoProcessName.split(',') : [],
         );
         this.$set(
           this.currentRow[this.labelStatus1],
-          "LevelTwoProcessName",
-          row.LevelTwoProcessName
+          'LevelTwoProcessName',
+          row.LevelTwoProcessName,
         );
       }
     },
@@ -1059,7 +1059,7 @@ export default {
           this.currentRow[0].UserPeople.length == 0 ||
           parseFloat(this.currentRow[0].ProducedQty > 0)
         ) {
-          this.$message.error("请检查报工人员与报工数是否填写！");
+          this.$message.error('请检查报工人员与报工数是否填写！');
           return;
         }
       } else {
@@ -1067,56 +1067,56 @@ export default {
           !this.currentRow[0].UserPeople ||
           parseFloat(this.currentRow[0].ProducedQty > 0)
         ) {
-          this.$message.error("请检查报工人员与报工数是否填写！");
+          this.$message.error('请检查报工人员与报工数是否填写！');
           return;
         }
       }
 
-      this.$confirm("确定提交吗？")
+      this.$confirm('确定提交吗？')
         .then(() => {
           let childrens = [];
           if (_this.multiple) {
             _this.currentRow[0].UserPeople.forEach((y) => {
               let obj = {};
-              obj["ProducedQty"] = _this.currentRow[0]["ProducedQty"];
-              obj["ConfirmQty"] = _this.currentRow[0]["ProducedQty"];
-              obj["TotalHours"] = _this.currentRow[0]["TotalHours"];
-              obj["ConfirmTotalHours"] = _this.currentRow[0]["TotalHours"];
-              obj["dicID"] = 6710;
-              obj["Status"] = 2;
-              obj["Account"] = y;
+              obj['ProducedQty'] = _this.currentRow[0]['ProducedQty'];
+              obj['ConfirmQty'] = _this.currentRow[0]['ProducedQty'];
+              obj['TotalHours'] = _this.currentRow[0]['TotalHours'];
+              obj['ConfirmTotalHours'] = _this.currentRow[0]['TotalHours'];
+              obj['dicID'] = 6710;
+              obj['Status'] = 2;
+              obj['Account'] = y;
               if (_this.currentRow[0].newTinyProcessData) {
-                obj["Remark2"] =
-                  _this.currentRow[0].newTinyProcessData.join(",");
+                obj['Remark2'] =
+                  _this.currentRow[0].newTinyProcessData.join(',');
               }
               childrens.push(obj);
             });
           } else {
             let obj2 = {};
-            obj2["ProducedQty"] = _this.currentRow[0]["ProducedQty"];
-            obj2["ConfirmQty"] = _this.currentRow[0]["ProducedQty"];
-            obj2["TotalHours"] = _this.currentRow[0]["TotalHours"];
-            obj2["ConfirmTotalHours"] = _this.currentRow[0]["TotalHours"];
-            obj2["dicID"] = 6710;
-            obj2["Status"] = 2;
-            obj2["Account"] = _this.currentRow[0].UserPeople;
+            obj2['ProducedQty'] = _this.currentRow[0]['ProducedQty'];
+            obj2['ConfirmQty'] = _this.currentRow[0]['ProducedQty'];
+            obj2['TotalHours'] = _this.currentRow[0]['TotalHours'];
+            obj2['ConfirmTotalHours'] = _this.currentRow[0]['TotalHours'];
+            obj2['dicID'] = 6710;
+            obj2['Status'] = 2;
+            obj2['Account'] = _this.currentRow[0].UserPeople;
             if (_this.currentRow[0].newTinyProcessData) {
-              obj2["Remark2"] =
-                _this.currentRow[0].newTinyProcessData.join(",");
+              obj2['Remark2'] =
+                _this.currentRow[0].newTinyProcessData.join(',');
             }
             childrens.push(obj2);
           }
           _this.$set(
             _this.currentRow[0],
-            "ConfirmQty",
-            _this.currentRow[0]["ProducedQty"]
+            'ConfirmQty',
+            _this.currentRow[0]['ProducedQty'],
           );
           _this.$set(
             _this.currentRow[0],
-            "ConfirmTotalHours",
-            _this.currentRow[0]["TotalHours"]
+            'ConfirmTotalHours',
+            _this.currentRow[0]['TotalHours'],
           );
-          _this.$set(_this.currentRow[0], "childrens", childrens);
+          _this.$set(_this.currentRow[0], 'childrens', childrens);
           let submitData = [];
           submitData.push(_this.currentRow[0]);
           _this.dataSave(submitData, 0);
@@ -1133,7 +1133,7 @@ export default {
         });
         _this.dataSave(this.selectionData[1], 1);
       } else {
-        this.$message.error("请勾选需要批量审批的数据！");
+        this.$message.error('请勾选需要批量审批的数据！');
       }
     },
     // 审批
@@ -1142,10 +1142,10 @@ export default {
         !this.currentRow[1].ConfirmQty &&
         !this.currentRow[1].ConfirmTotalHours
       ) {
-        this.$message.error("请检查是否填写了确认值！");
+        this.$message.error('请检查是否填写了确认值！');
         return;
       }
-      this.$confirm("确定提交吗？")
+      this.$confirm('确定提交吗？')
         .then(() => {
           let submitData = [];
           _this.currentRow[1].Status = 2;
@@ -1163,26 +1163,26 @@ export default {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         if (index == 2) {
           _this.dataSearch(0);
           for (var name in this.ruleForm) {
-            this.$set(this.ruleForm, name, "");
+            this.$set(this.ruleForm, name, '');
           }
           return;
         }
-        console.log("index", index);
+        console.log('index', index);
         _this.dataSearch(index);
         for (var name in this.currentRow[index]) {
-          this.$set(this.currentRow[index], name, "");
+          this.$set(this.currentRow[index], name, '');
         }
       } else {
         this.adminLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1193,43 +1193,43 @@ export default {
     },
     // 确定新增
     sureAdd() {
-      _this.$refs["ruleForm"].validate((valid) => {
+      _this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.$confirm("确定新增吗？")
+          this.$confirm('确定新增吗？')
             .then(() => {
               if (!_this.ruleForm.ProcessGroupName) {
-                _this.$message.error("该产品没用工艺，请先配置工艺再选择！");
+                _this.$message.error('该产品没用工艺，请先配置工艺再选择！');
               } else if (!_this.ruleForm.MaterialID) {
-                _this.$message.error("该产品无效！");
+                _this.$message.error('该产品无效！');
               } else if (!_this.ruleForm.LineID) {
-                _this.$message.error("该线别无效！");
+                _this.$message.error('该线别无效！');
               } else {
                 if (!this.ruleForm.ProducedQty && !this.ruleForm.TotalHours) {
-                  this.$message.error("报工数和计时数必填一个！");
+                  this.$message.error('报工数和计时数必填一个！');
                   return;
                 }
                 let childrens = [];
-                let TotalHours = "";
+                let TotalHours = '';
                 if (this.ruleForm.TotalHours) {
                   TotalHours =
                     this.ruleForm.TotalHours / _this.ruleForm.UserPeople.length;
                 }
                 _this.ruleForm.UserPeople.forEach((y) => {
                   let obj = {};
-                  obj["ProducedQty"] = _this.ruleForm["ProducedQty"];
-                  obj["ConfirmQty"] = _this.ruleForm["ProducedQty"];
-                  obj["TotalHours"] = TotalHours;
-                  obj["ConfirmTotalHours"] = TotalHours;
-                  obj["dicID"] = 6710;
-                  obj["Status"] = 2;
-                  obj["Account"] = y;
+                  obj['ProducedQty'] = _this.ruleForm['ProducedQty'];
+                  obj['ConfirmQty'] = _this.ruleForm['ProducedQty'];
+                  obj['TotalHours'] = TotalHours;
+                  obj['ConfirmTotalHours'] = TotalHours;
+                  obj['dicID'] = 6710;
+                  obj['Status'] = 2;
+                  obj['Account'] = y;
                   childrens.push(obj);
                 });
                 _this.ruleForm.ProcessID = _this.ProcessID;
                 _this.ruleForm.dicID = 6704;
                 _this.ruleForm.Status = 2;
-                _this.ruleForm.ConfirmQty = _this.ruleForm["ProducedQty"];
-                _this.ruleForm.ConfirmTotalHours = _this.ruleForm["TotalHours"];
+                _this.ruleForm.ConfirmQty = _this.ruleForm['ProducedQty'];
+                _this.ruleForm.ConfirmTotalHours = _this.ruleForm['TotalHours'];
                 _this.ruleForm.childrens = childrens;
                 let submitData = [];
                 submitData.push(_this.ruleForm);
@@ -1245,21 +1245,21 @@ export default {
     async fetchsuggertions(val, cb) {
       if (val) {
         let form = {};
-        form["rows"] = 100;
-        form["dicID"] = 1180;
-        form["ProcessID"] =
+        form['rows'] = 100;
+        form['dicID'] = 1180;
+        form['ProcessID'] =
           this.labelStatus1 == 2
-            ? this.currentRow[this.labelStatus1]["ProcessID"]
+            ? this.currentRow[this.labelStatus1]['ProcessID']
             : this.ProcessID;
-        form["MaterialName"] = val;
-        let res = await GetSearch(form, "/APSAPI/SearchMaterialByLine");
+        form['MaterialName'] = val;
+        let res = await GetSearch(form, '/APSAPI/SearchMaterialByLine');
         const { result, data, count, msg } = res.data;
         if (result) {
           cb(data);
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -1273,9 +1273,9 @@ export default {
     },
     // 更改报工栏获取远程搜索数据
     getEditProData(item) {
-      this.currentRow[this.labelStatus1]["MaterialID"] = item.MaterialID;
-      this.currentRow[this.labelStatus1]["MaterialName"] = item.MaterialName;
-      this.currentRow[this.labelStatus1]["ProcessGroupName"] =
+      this.currentRow[this.labelStatus1]['MaterialID'] = item.MaterialID;
+      this.currentRow[this.labelStatus1]['MaterialName'] = item.MaterialName;
+      this.currentRow[this.labelStatus1]['ProcessGroupName'] =
         item.ProcessGroupName;
     },
     // 选中线别
@@ -1285,7 +1285,7 @@ export default {
           return x.OrganizeID == val;
         });
         this.ruleForm.LineID = newObj[0].OrganizeID;
-        if (newObj[0].OrganizeType == "集体") {
+        if (newObj[0].OrganizeType == '集体') {
           this.multiple_2 = true;
         } else {
           this.multiple_2 = true;
@@ -1293,15 +1293,15 @@ export default {
         this.getUserData(newObj[0].OrganizeID);
         // 获取线别的工序
         let form = {};
-        form["OrganizeID"] = newObj[0].OrganizeID;
-        form["dicID"] = 3026;
+        form['OrganizeID'] = newObj[0].OrganizeID;
+        form['dicID'] = 3026;
         let res = await GetSearchData(form);
         const { result, data, count, msg } = res.data;
         if (result) {
           let ProcessIDs = data[0].ProcessIDs;
           let ProcessID = [];
           if (ProcessIDs) {
-            ProcessID = ProcessIDs.split(",");
+            ProcessID = ProcessIDs.split(',');
           }
           this.ProcessID = ProcessID[0];
           // 获取二级工序
@@ -1309,20 +1309,20 @@ export default {
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
       } else {
-        this.ruleForm.LineID = "";
+        this.ruleForm.LineID = '';
       }
     },
     //通过线别工序获取二级工序
     async getLevelTwoProcessData(ProcessID) {
       this.LevelTwoProcessList = [];
       let form = {};
-      form["dicID"] = 7900;
-      form["ProcessID"] = ProcessID;
+      form['dicID'] = 7900;
+      form['ProcessID'] = ProcessID;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
@@ -1330,7 +1330,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1338,18 +1338,18 @@ export default {
     // 更改报工工序查询
     async getTwoLevelProceData(ID) {
       let form = {};
-      form["dicID"] = 6710;
-      form["ID"] = ID;
-      form["rows"] = 0;
+      form['dicID'] = 6710;
+      form['ID'] = ID;
+      form['rows'] = 0;
       let res = await GetSearchData(form);
       const { result, data, count, msg } = res.data;
       if (result) {
-        console.log("data", data);
+        console.log('data', data);
         this.TwoLevelProceData = data;
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -1363,7 +1363,7 @@ export default {
         let res = await SaveData(this.TwoLevelProceData);
         const { result, data, count, msg } = res.data;
         if (result) {
-          console.log("data", data);
+          console.log('data', data);
           if (data.length) {
             data.forEach((item) => {
               item.Remark2 = ProcessNames;
@@ -1371,12 +1371,12 @@ export default {
           }
           this.dataSearch(2);
           for (var name in this.currentRow[2]) {
-            this.$set(this.currentRow[2], name, "");
+            this.$set(this.currentRow[2], name, '');
           }
         } else {
           this.$message({
             message: msg,
-            type: "error",
+            type: 'error',
             dangerouslyUseHTMLString: true,
           });
         }
@@ -1390,111 +1390,111 @@ export default {
       var year1 = time1.getFullYear();
       var month1 = time1.getMonth() + 1;
       if (month1 < 10) {
-        month1 = "0" + month1;
+        month1 = '0' + month1;
       }
       var day1 = time1.getDate();
       if (day1 < 10) {
-        day1 = "0" + day1;
+        day1 = '0' + day1;
       }
-      var date1 = year1 + "-" + month1 + "-" + day1;
+      var date1 = year1 + '-' + month1 + '-' + day1;
 
       // //获取2天前的日期
       var time2 = new Date(date.getTime() - 2 * 24 * 60 * 60 * 1000);
       var year2 = time2.getFullYear();
       var month2 = time2.getMonth() + 1;
       if (month2 < 10) {
-        month2 = "0" + month2;
+        month2 = '0' + month2;
       }
       var day2 = time2.getDate();
       if (day2 < 10) {
-        day2 = "0" + day2;
+        day2 = '0' + day2;
       }
-      var date2 = year2 + "-" + month2 + "-" + day2;
+      var date2 = year2 + '-' + month2 + '-' + day2;
 
       //获取3天前的日期
       var time3 = new Date(date.getTime() - 3 * 24 * 60 * 60 * 1000);
       var year3 = time3.getFullYear();
       var month3 = time3.getMonth() + 1;
       if (month3 < 10) {
-        month3 = "0" + month3;
+        month3 = '0' + month3;
       }
       var day3 = time3.getDate();
       if (day3 < 10) {
-        day3 = "0" + day3;
+        day3 = '0' + day3;
       }
-      var date3 = year3 + "-" + month3 + "-" + day3;
+      var date3 = year3 + '-' + month3 + '-' + day3;
 
       //获取4天前的日期
       var time4 = new Date(date.getTime() - 4 * 24 * 60 * 60 * 1000);
       var year4 = time4.getFullYear();
       var month4 = time4.getMonth() + 1;
       if (month4 < 10) {
-        month4 = "0" + month4;
+        month4 = '0' + month4;
       }
       var day4 = time4.getDate();
       if (day4 < 10) {
-        day4 = "0" + day4;
+        day4 = '0' + day4;
       }
-      var date4 = year4 + "-" + month4 + "-" + day4;
+      var date4 = year4 + '-' + month4 + '-' + day4;
 
       //获取5天前的日期
       var time5 = new Date(date.getTime() - 5 * 24 * 60 * 60 * 1000);
       var year5 = time5.getFullYear();
       var month5 = time5.getMonth() + 1;
       if (month5 < 10) {
-        month5 = "0" + month5;
+        month5 = '0' + month5;
       }
       var day5 = time5.getDate();
       if (day5 < 10) {
-        day5 = "0" + day5;
+        day5 = '0' + day5;
       }
-      var date5 = year5 + "-" + month5 + "-" + day5;
+      var date5 = year5 + '-' + month5 + '-' + day5;
 
       //获取6天前的日期
       var time6 = new Date(date.getTime() - 6 * 24 * 60 * 60 * 1000);
       var year6 = time6.getFullYear();
       var month6 = time6.getMonth() + 1;
       if (month6 < 10) {
-        month6 = "0" + month6;
+        month6 = '0' + month6;
       }
       var day6 = time6.getDate();
       if (day6 < 10) {
-        day6 = "0" + day6;
+        day6 = '0' + day6;
       }
-      var date6 = year6 + "-" + month6 + "-" + day6;
+      var date6 = year6 + '-' + month6 + '-' + day6;
 
       //获取7天前的日期
       var time7 = new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000);
       var year7 = time7.getFullYear();
       var month7 = time7.getMonth() + 1;
       if (month7 < 10) {
-        month7 = "0" + month7;
+        month7 = '0' + month7;
       }
       var day7 = time7.getDate();
       if (day7 < 10) {
-        day7 = "0" + day7;
+        day7 = '0' + day7;
       }
-      var date7 = year7 + "-" + month7 + "-" + day7;
+      var date7 = year7 + '-' + month7 + '-' + day7;
 
       //获取当天的日期
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       if (month < 10) {
-        month = "0" + month;
+        month = '0' + month;
       }
       var day = date.getDate();
       if (day < 10) {
-        day = "0" + day;
+        day = '0' + day;
       }
-      var date0 = year + "-" + month + "-" + day;
-      var date5 = year5 + "-" + month5 + "-" + day5;
-      var date6 = year6 + "-" + month6 + "-" + day6;
-      var date7 = year7 + "-" + month7 + "-" + day7;
+      var date0 = year + '-' + month + '-' + day;
+      var date5 = year5 + '-' + month5 + '-' + day5;
+      var date6 = year6 + '-' + month6 + '-' + day6;
+      var date7 = year7 + '-' + month7 + '-' + day7;
       //只能修改T-7天的报工数据
       let list = [date6, date5, date4, date3, date2, date1, date0];
-      if (!list.includes(this.currentRow[this.labelStatus1]["ProducedDate"])) {
+      if (!list.includes(this.currentRow[this.labelStatus1]['ProducedDate'])) {
         this.$message.error(
-          "只能修改日期范围为" + date6 + " ~ " + date0 + "的报工数据！"
+          '只能修改日期范围为' + date6 + ' ~ ' + date0 + '的报工数据！',
         );
         return;
       }
@@ -1505,7 +1505,7 @@ export default {
           this.currentRow[this.labelStatus1].UserPeople.length == 0 ||
           parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
         ) {
-          this.$message.error("请检查报工人员与报工数是否填写！");
+          this.$message.error('请检查报工人员与报工数是否填写！');
           return;
         }
       } else {
@@ -1513,14 +1513,14 @@ export default {
           !this.currentRow[this.labelStatus1].UserPeople ||
           parseFloat(this.currentRow[this.labelStatus1].ProducedQty > 0)
         ) {
-          this.$message.error("请检查报工人员与报工数是否填写！");
+          this.$message.error('请检查报工人员与报工数是否填写！');
           return;
         }
       }
-      this.$confirm("确定保存吗？")
+      this.$confirm('确定保存吗？')
         .then(() => {
           _this.saveProceData(
-            _this.currentRow[this.labelStatus1].LevelTwoProcessName
+            _this.currentRow[this.labelStatus1].LevelTwoProcessName,
           );
           _this.dataSave([_this.currentRow[this.labelStatus1]], 2);
         })

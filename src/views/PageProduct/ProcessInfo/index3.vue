@@ -112,14 +112,14 @@
 </template>
 
 <script>
-import ComSearch from "@/components/ComSearch";
-import ComSearch1 from "@/components/ComSearch";
-import ComSearch2 from "@/components/ComSearch";
-import ComSearch3 from "@/components/ComSearch";
-import ComUmyTable from "@/components/ComUmyTable";
-import { GetHeader, GetSearchData, ExportData, SaveData } from "@/api/Common";
+import ComSearch from '@/components/ComSearch';
+import ComSearch1 from '@/components/ComSearch';
+import ComSearch2 from '@/components/ComSearch';
+import ComSearch3 from '@/components/ComSearch';
+import ComUmyTable from '@/components/ComUmyTable';
+import { GetHeader, GetSearchData, ExportData, SaveData } from '@/api/Common';
 export default {
-  name: "ProcessInfo",
+  name: 'ProcessInfo',
   components: {
     ComSearch,
     ComSearch1,
@@ -130,13 +130,13 @@ export default {
   data() {
     return {
       ////////////////// Search /////////////////
-      activeName: "first",
+      activeName: 'first',
       loseCategory: 1,
       categoryDialog: false,
       processDialog: false,
       adminLoading: false,
       title: this.$route.meta.title,
-      title2: "工序列表",
+      title2: '工序列表',
       drawer: false,
       formSearchs: [
         {
@@ -165,37 +165,37 @@ export default {
         [],
         [
           {
-            ButtonCode: "save",
-            BtnName: "建立关联",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '建立关联',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "specialSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'specialSave',
+            Icon: '',
             Params: {},
           },
         ],
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
             Params: {},
           },
         ],
         [
           {
-            ButtonCode: "save",
-            BtnName: "保存",
-            Type: "success",
+            ButtonCode: 'save',
+            BtnName: '保存',
+            Type: 'success',
             Ghost: true,
-            Size: "small",
-            Methods: "dataSave",
-            Icon: "",
+            Size: 'small',
+            Methods: 'dataSave',
+            Icon: '',
             Params: {},
           },
         ],
@@ -213,23 +213,23 @@ export default {
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
         { pageIndex: 1, pageSize: 50, pageTotal: 0 },
       ],
-      height: "400px",
+      height: '400px',
       showPagination: true,
       tagRemark: 0,
       isLoading: [false, false, false, false, false],
       isEdit: false,
       Status1: [
-        { label: "全部", value: "" },
-        { label: "未配工序", value: "" },
+        { label: '全部', value: '' },
+        { label: '未配工序', value: '' },
       ],
       Status2: [
-        { label: "配置工序", value: 1, title: "工序列表" },
-        { label: "关联产品", value: 2, title: "产品列表" },
-        { label: "工序产能", value: 3, title: "工序产能列表" },
+        { label: '配置工序', value: 1, title: '工序列表' },
+        { label: '关联产品', value: 2, title: '产品列表' },
+        { label: '工序产能', value: 3, title: '工序产能列表' },
       ],
       labelStatus1: 0,
       labelStatus2: 1,
-      currentRow: "",
+      currentRow: '',
     };
   },
   watch: {},
@@ -251,7 +251,7 @@ export default {
       let permission = false;
       if (routeBtn.length != 0) {
         routeBtn.forEach((x) => {
-          if (x.ButtonCode == "edit") {
+          if (x.ButtonCode == 'edit') {
             permission = true;
           }
           let newData = this.parmsBtn.filter((y) => {
@@ -262,25 +262,25 @@ export default {
           }
         });
       }
-      this.$set(this, "btnForm", newBtn);
-      this.$set(this, "isEdit", permission);
+      this.$set(this, 'btnForm', newBtn);
+      this.$set(this, 'isEdit', permission);
     },
     // 高度控制
     setHeight() {
       let headHeight = this.$refs.headRef.offsetHeight;
 
       let rem = (document.documentElement.clientHeight - headHeight - 100) / 2;
-      let newHeight = rem + "px";
-      this.$set(this, "height", newHeight);
+      let newHeight = rem + 'px';
+      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageIndex", val);
+      this.$set(this.tablePagination[remarkTb], 'pageIndex', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 页数
     pageSize(val, remarkTb, filtertb) {
-      this.$set(this.tablePagination[remarkTb], "pageSize", val);
+      this.$set(this.tablePagination[remarkTb], 'pageSize', val);
       this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
     },
     // 滚动
@@ -295,13 +295,13 @@ export default {
         return;
       }
       if (order) {
-        if (order === "desc") {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " DESC";
+        if (order === 'desc') {
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' DESC';
         } else {
-          this.formSearchs[remarkTb].datas["sort"] = prop + " ASC";
+          this.formSearchs[remarkTb].datas['sort'] = prop + ' ASC';
         }
       } else {
-        this.formSearchs[remarkTb].datas["sort"] = null;
+        this.formSearchs[remarkTb].datas['sort'] = null;
       }
       this.dataSearch(remarkTb);
     },
@@ -322,7 +322,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 查询
     dataSearch(remarkTb) {
@@ -339,7 +339,7 @@ export default {
     // 重置
     dataReset(remarkTb) {
       for (let name in this.formSearchs[remarkTb].datas) {
-        if (name != "dicID") {
+        if (name != 'dicID') {
           this.formSearchs[remarkTb].datas[name] = null;
         }
       }
@@ -348,10 +348,10 @@ export default {
     async dataExport(remarkTb) {
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
-      form["rows"] = 0;
+      form['rows'] = 0;
       let res = await ExportData(form);
       this.adminLoading = false;
-      this.$store.dispatch("user/exportData", res.data);
+      this.$store.dispatch('user/exportData', res.data);
     },
     // 特殊接口保存
     async specialSave(remarkTb, index) {
@@ -363,13 +363,13 @@ export default {
       if (result) {
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -379,7 +379,7 @@ export default {
       let newData = [];
       if (parms && parms.dataName) {
         if (this.selectionData[remarkTb].length == 0) {
-          this.$message.error("请选择需要操作的数据！");
+          this.$message.error('请选择需要操作的数据！');
           return;
         } else {
           newData = this.selectionData[remarkTb];
@@ -394,7 +394,7 @@ export default {
         this.btnForm[index].isLoading = false;
         this.$message({
           message: msg,
-          type: "success",
+          type: 'success',
           dangerouslyUseHTMLString: true,
         });
         this.dataSearch(remarkTb);
@@ -402,7 +402,7 @@ export default {
         this.btnForm[index].isLoading = false;
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -434,16 +434,16 @@ export default {
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
-          this.$set(this.formSearchs[z].datas, "dicID", IDs[z].ID);
+          this.$set(this.formSearchs[z].datas, 'dicID', IDs[z].ID);
           // 判断查询的长度
           x.forEach((y) => {
             if (y.prop && y.value) {
               this.$set(this.formSearchs[z].datas, [y.prop], y.value);
             } else {
-              this.$set(this.formSearchs[z].datas, [y.prop], "");
+              this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], "forms", x);
+          this.$set(this.formSearchs[z], 'forms', x);
           console.log(this.formSearchs[0].forms);
         });
         this.adminLoading = false;
@@ -452,7 +452,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -479,7 +479,7 @@ export default {
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -488,28 +488,28 @@ export default {
     verifyDta(n) {
       for (let name in n) {
         if (
-          (name == "component" && n[name]) ||
-          (name == "button" && n[name]) ||
-          (name == "active" && n[name])
+          (name == 'component' && n[name]) ||
+          (name == 'button' && n[name]) ||
+          (name == 'active' && n[name])
         ) {
-          n[name] = eval("(" + n[name] + ")");
+          n[name] = eval('(' + n[name] + ')');
         }
       }
     },
     // 获取表格数据
     async getTableData(form, remarkTb) {
       this.$set(this.tableLoading, remarkTb, true);
-      form["rows"] = this.tablePagination[remarkTb].pageSize;
-      form["page"] = this.tablePagination[remarkTb].pageIndex;
+      form['rows'] = this.tablePagination[remarkTb].pageSize;
+      form['page'] = this.tablePagination[remarkTb].pageIndex;
       let res = await GetSearchData(form);
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         this.$set(this.tableData, remarkTb, data);
-        this.$set(this.tablePagination[remarkTb], "pageTotal", count);
+        this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
       } else {
         this.$message({
           message: msg,
-          type: "error",
+          type: 'error',
           dangerouslyUseHTMLString: true,
         });
       }
@@ -519,9 +519,9 @@ export default {
     changeStatus(item, index) {
       this.labelStatus1 = index;
       if (index == 0) {
-        this.formSearchs[0].datas["ProcessCount"] = "";
+        this.formSearchs[0].datas['ProcessCount'] = '';
       } else {
-        this.formSearchs[0].datas["ProcessCount"] = 0;
+        this.formSearchs[0].datas['ProcessCount'] = 0;
       }
       this.dataSearch(0);
     },
@@ -536,7 +536,7 @@ export default {
     // 单击获取工艺
     handleRowClick(row, remarkTb) {
       this.currentRow = row;
-      this.formSearchs[1].datas["ProcessGroupID"] = row.ProcessGroupID;
+      this.formSearchs[1].datas['ProcessGroupID'] = row.ProcessGroupID;
       this.dataSearch(1);
     },
     // 新增工艺
@@ -552,9 +552,9 @@ export default {
         ? (this.loseCategory = 0)
         : (this.loseCategory = 1);
       if (this.loseCategory == 0) {
-        this.formSearchs[2].datas["ProcessCount"] = 0;
+        this.formSearchs[2].datas['ProcessCount'] = 0;
       } else {
-        this.formSearchs[2].datas["ProcessCount"] = "";
+        this.formSearchs[2].datas['ProcessCount'] = '';
       }
       this.dataSearch(2);
     },

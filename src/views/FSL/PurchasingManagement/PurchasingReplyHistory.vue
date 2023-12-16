@@ -298,10 +298,6 @@ export default {
     workbookInitialized: function (workbook) {
       this.spread = workbook;
     },
-    //获取当前选中行的值
-    selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
-    },
     // 导出
     async dataExport(remarkTb) {
       this.adminLoading = true;
@@ -813,7 +809,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
-      this.selectionData[remarkTb] = data;
+      this.$set(this.selectionData, remarkTb, data);
     },
     // 行内列样式
     cellStyle({ row, column }) {
