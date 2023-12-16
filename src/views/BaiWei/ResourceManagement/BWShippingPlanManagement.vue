@@ -5,7 +5,7 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 3, 4]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div v-for="i in [0, 1, 2]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -24,9 +24,6 @@
         <el-row>
           <el-col :span="8"
             ><span class="title">{{ title }}</span>
-            <!-- <span class="title" style="margin-left: 20px"
-              >选中总材积 {{ TotalVolume }}</span
-            > -->
           </el-col>
           <el-col :span="16" class="flex_flex_end">
             <a
@@ -81,7 +78,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 3, 4]"
+      v-for="item in [0, 1, 2]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -100,43 +97,6 @@
         @selectfun="selectFun"
       />
     </div>
-    <!-- 弹框-->
-    <el-dialog
-      :title="'拆分订单'"
-      :visible.sync="colDialogVisible4"
-      width="50%"
-    >
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="4"
-            ><span class="title">拆分编辑完请保存 </span></el-col
-          >
-          <el-col :span="20" class="flex_flex_end"
-            ><el-divider direction="vertical"></el-divider>
-            <el-button type="primary" size="mini" @click="changeEvent(1)">
-              确定拆分
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-for="item in [1]" :key="item + 'table'">
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          height="600px"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectfun="selectFun"
-          :spaceBtnShow="false"
-        />
-      </div>
-    </el-dialog>
     <!-- 弹框-->
     <el-dialog
       :title="'拆分订单'"
@@ -247,57 +207,6 @@
             >确 定</el-button
           >
         </div>
-      </span>
-    </el-dialog>
-    <!-- 弹框-->
-    <el-dialog
-      :title="'指定业务员'"
-      :visible.sync="colDialogVisible2"
-      width="70%"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-      ><div
-        style="
-          height: 60vh;
-          overflow-x: hidden;
-          display: flex;
-          flex-direction: column;
-        "
-      >
-        <div class="ant-table-title">
-          <el-row class="px-[10px]"
-            >您正在指定{{ SalesOrderNo }}订单，{{
-              Customer
-            }}客户的业务人员，勾选表示选定人员，非勾选表示未选定</el-row
-          >
-        </div>
-        <div v-for="item in [2]" :key="item + 'table'" class="flex_grow">
-          <ComVxeTable
-            :ref="`tableRef${item}`"
-            :rowKey="'RowNumber'"
-            height="100%"
-            :tableData="tableData[item]"
-            :tableHeader="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :isToolbar="false"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :hasSelect="true"
-            :isEdit="isEdit[item]"
-            :isClear="isClear[item]"
-            :keepSource="true"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-            @selectfun="selectFun"
-          />
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="Reschedule(2)">确认提交</el-button>
-        <el-button type="success" @click="dataSearch(2)">恢复默认</el-button>
-        <el-button @click="colDialogVisible2 = false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -480,13 +389,6 @@ export default {
         }, 0)
       );
     },
-    // TotalVolume: function () {
-    //   return this.selectionData[this.labelStatus1].reduce((total, obj) => {
-    //     return Number(obj.TotalVolume)
-    //       ? total + Number(obj.TotalVolume)
-    //       : total;
-    //   }, 0);
-    // },
   },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
@@ -588,8 +490,6 @@ export default {
       });
       sheet.resumePaint();
     },
-    // 更新表格高度的函数
-    updateTableHeight() {},
     //按钮权限
     judgeBtn(routeBtn) {
       console.log(routeBtn, 'routeBtn');
@@ -606,15 +506,6 @@ export default {
             }
           }
         });
-      routeBtn = routeBtn.filter((item) => {
-        if (item.ButtonCode === 'DesignatedPerson') {
-          return this.userInfo.RoleMap.some(
-            (role) =>
-              role.RoleID === 'R2309040001' || role.RoleID === 'E01Admin',
-          );
-        }
-        return true;
-      });
       this.$set(this, 'btnForm', routeBtn);
     },
     // 监听键盘
@@ -636,22 +527,6 @@ export default {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
-    },
-    // 高度控制
-    setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let newHeight = '';
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem + 'px';
-      } else {
-        newHeight = rem + 'px';
-      }
-      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
@@ -732,19 +607,6 @@ export default {
       this.adminLoading = false;
       this.$store.dispatch('user/exportData', res.data);
     },
-    // 获取选中的数据
-    getSelectionData() {
-      let sheet = this.spread.getActiveSheet();
-      let newData = sheet.getDataSource();
-      this.selectionData[0] = [];
-      if (newData.length != 0) {
-        newData.forEach((x) => {
-          if (x.isChecked) {
-            this.selectionData[0].push(x);
-          }
-        });
-      }
-    },
     // 删除
     async dataDel(remarkTb, index, parms) {
       let res = null;
@@ -753,7 +615,7 @@ export default {
         this.$message.error('请单击需要操作的数据！');
         return;
       } else {
-        if (remarkTb == 0 || remarkTb == 3 || remarkTb == 4 || remarkTb == 5) {
+        if (remarkTb == 0 || remarkTb == 1 || remarkTb == 2) {
           newData = _.cloneDeep(
             this.selectionData[remarkTb]
               .filter((x) => x['DataSource'] !== '业务') // 过滤条件，不包括 "DataSource" 为 "业务" 的对象
@@ -1586,24 +1448,6 @@ export default {
         this.spread[remarkTb].refresh(); //重新定位宽高度
       });
     },
-    bindComboBoxToCell(sheet, row, col, dataSourceName) {
-      // 获取要绑定下拉菜单的单元格对象
-      let cell = sheet.getCell(row, col);
-
-      // 创建下拉菜单单元格类型，并设置其选项数据
-      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-      comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value,
-      );
-      comboBox.editable(true);
-      // 获取下拉菜单的选项数据
-
-      comboBox.items(dataSourceName);
-      comboBox.itemHeight(24);
-
-      // 将下拉菜单单元格类型绑定到指定的单元格中
-      cell.cellType(comboBox);
-    },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
       let sheet = this.spread[0].getActiveSheet();
@@ -1756,66 +1600,6 @@ export default {
     selectFun(data, remarkTb, row) {
       this.$set(this.selectionData, remarkTb, data);
     },
-    //指定人员
-    async DesignatedPerson(remarkTb) {
-      if (this.selectionData[remarkTb].length !== 1) {
-        this.$message.error('请选择需要操作的数据且仅为一条！');
-        return;
-      }
-      this.SalesOrderNo = this.selectionData[remarkTb][0]['SalesOrderNo'];
-      this.Customer = this.selectionData[remarkTb][0]['Customer'];
-      this.colDialogVisible2 = true;
-      let form = {
-        dicID: 10127,
-        rows: 0,
-        SalesOrderDetailID:
-          this.selectionData[remarkTb][0]['SalesOrderDetailID'],
-      };
-      let res = await GetSearchData(form);
-      const { result, data, count, msg, Columns } = res.data;
-      if (result) {
-        this.$set(this, 'linkTableData2', data);
-      }
-
-      await this.dataSearch(2);
-    },
-    //添加产品机台
-    async Reschedule(remarkTb) {
-      if (remarkTb === 2) {
-        let newData = [];
-        //添加
-        let addData1 = this.selectionData[2].filter(
-          (item0) =>
-            !this.linkTableData.some((item3) => {
-              return item3['SaleMan'] === item0['Account'];
-            }),
-        );
-        addData1.forEach((item) => {
-          item['dicID'] = 10127;
-          item['SalesOrderDetailID'] =
-            this.selectionData[this.labelStatus1][0]['SalesOrderDetailID'];
-          item['SaleMan'] = item['Account'];
-        });
-        newData = newData.concat(addData1);
-
-        //删除
-        let addData2 = this.linkTableData.filter(
-          (item0) =>
-            !this.selectionData[2].some((item3) => {
-              return item3['Account'] === item0['SaleMan'];
-            }),
-        );
-
-        addData2.forEach((item) => {
-          item['dicID'] = 10127;
-          item['ElementDeleteFlag'] = 1;
-        });
-
-        newData = newData.concat(addData2);
-        await this.dataSave(2, null, null, newData);
-        this.colDialogVisible2 = false;
-      }
-    },
 
     //添加产品机台
     async confirmDialog(data, remarkTb) {
@@ -1920,24 +1704,6 @@ export default {
     },
     // 改变状态
     async changeStatus(item, index) {
-      let RoleMapList = this.$store.getters.userInfo.RoleMap;
-      if (RoleMapList.length) {
-        RoleMapList.forEach((item) => {
-          if (item.RoleID === 'R2309040001' || item.RoleID === 'E01Admin') {
-            //业务经理
-            this.RoleMapStatus = true;
-            return;
-          }
-        });
-      }
-      this.formSearchs[this.labelStatus1].datas['SaleMan'] = null;
-      if (this.RoleMapStatus !== true && index !== 5) {
-        this.$set(
-          this.formSearchs[this.labelStatus1]['datas'],
-          'SaleMan',
-          this.userInfo.Account,
-        );
-      }
       this.labelStatus1 = item['index'];
       Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
       await this.dataSearch(this.labelStatus1);
@@ -1967,15 +1733,6 @@ export default {
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      // .el-date-editor {
-      //   width: 200px;
-      // }
-      // .el-input {
-      //   width: 200px !important;
-      // }
-      // .DefaultLineNameInput {
-      //   width: 500px !important;
-      // }
     }
     .dialog-footer {
       display: flex;
