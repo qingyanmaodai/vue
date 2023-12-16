@@ -1563,14 +1563,14 @@ export default {
         GCsheets.Events.EditStarting,
         function (e, args) {},
       );
-      this.spread[remarkTb].bind(GCsheets.Events.LeaveCell, function (e, args) {
-        _this.dataSave(remarkTb, 'save');
-        // 自动计算数量
-        // _this.computedNum(args.row, args.col, args.editingText);
-        // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
-        //   sheet.setArray(args.row, i, [2021]);
-        // }
-      });
+      // this.spread[remarkTb].bind(GCsheets.Events.LeaveCell, function (e, args) {
+      //   // _this.dataSave(remarkTb, 'save');
+      //   // 自动计算数量
+      //   // _this.computedNum(args.row, args.col, args.editingText);
+      //   // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
+      //   //   sheet.setArray(args.row, i, [2021]);
+      //   // }
+      // });
       // 表格单击齐套率弹框事件
       this.spread[remarkTb].bind(GCsheets.Events.CellClick, function (e, args) {
         if (_this.tableColumns[remarkTb].length) {
