@@ -5,14 +5,10 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div
-        v-for="i in [0, 3, 4, 5]"
-        :key="i + 'head'"
-        v-show="labelStatus1 === i"
-      >
+      <div v-for="i in [0]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
+          :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
           :remark="i"
           :isLoading="isLoading"
@@ -28,23 +24,13 @@
         <el-row>
           <el-col :span="8"
             ><span class="title">{{ title }}</span>
-            <span class="title" style="margin-left: 20px"
+            <!-- <span class="title" style="margin-left: 20px"
               >选中总材积 {{ TotalVolume }}</span
-            >
-            <span class="title" style="margin-left: 20px"
-              >选中金额（本位币） {{ TotalAmount }}</span
-            >
+            > -->
           </el-col>
           <el-col :span="16" class="flex_flex_end">
-            <a
-              style="color: #ec0d1f; margin-right: 30px"
-              :href="`${apsurl}` + '/出货计划管理.pdf'"
-              target="_blank"
-              class="font_size_1"
-              >【说明文档】</a
-            >
             <!-- 下拉框 -->
-            <el-select
+            <!-- <el-select
               v-model="colorType"
               filterable
               size="small"
@@ -69,8 +55,8 @@
               type="primary"
               @click="updateColor(labelStatus1)"
               >确定</el-button
-            >
-            <div v-for="(item, y) in Status1" :key="y">
+            > -->
+            <!-- <div v-for="(item, y) in Status1" :key="y">
               <span
                 @click="changeStatus(item, y)"
                 :class="
@@ -80,20 +66,21 @@
                 "
                 >{{ item.label }}</span
               >
-              <el-divider direction="vertical"></el-divider></div
-          ></el-col>
+              <el-divider direction="vertical"></el-divider>
+              </div> -->
+          </el-col>
         </el-row>
       </div>
     </div>
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 3, 4, 5]"
+      v-for="item in [0]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
       <ComSpreadTable
-        ref="spreadsheetRef"
+        :ref="`spreadsheetRef${item}`"
         :height="'100%'"
         :tableData="tableData[item]"
         :tableColumns="tableColumns[item]"
@@ -108,44 +95,7 @@
       />
     </div>
     <!-- 弹框-->
-    <el-dialog
-      :title="'拆分订单'"
-      :visible.sync="colDialogVisible4"
-      width="50%"
-    >
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="4"
-            ><span class="title">拆分编辑完请保存 </span></el-col
-          >
-          <el-col :span="20" class="flex_flex_end"
-            ><el-divider direction="vertical"></el-divider>
-            <el-button type="primary" size="mini" @click="changeEvent(1)">
-              确定拆分
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-for="item in [1]" :key="item + 'table'">
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          height="600px"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectfun="selectFun"
-          :spaceBtnShow="false"
-        />
-      </div>
-    </el-dialog>
-    <!-- 弹框-->
-    <el-dialog
+    <!-- <el-dialog
       :title="'拆分订单'"
       class="el-dialog3"
       :visible.sync="colDialogVisible1"
@@ -186,20 +136,8 @@
       </div>
       <div class="ant-table-title pd-0-6 h-50px">
         <el-row>
-          <el-col :span="12" class="flex">
-            <!-- 订单数: {{ ONewQty }} -->
-            <!-- 线体:
-            <el-input
-              class="DefaultLineNameInput"
-              v-model="DefaultLineName"
-              size="small"
-            ></el-input
-          > -->
-          </el-col>
+          <el-col :span="12" class="flex"> </el-col>
           <el-col :span="12" class="flex_flex_end">
-            <!-- <el-button type="primary" size="mini" @click="AutoSplitOrder(1)"
-              >自动拆单</el-button
-            > -->
             <div>
               <span>新增行数：</span>
               <el-input-number
@@ -245,9 +183,7 @@
         />
       </div>
       <span slot="footer" class="dialog-footer">
-        <div class="flex">
-          <!-- <div>总数量:{{ totalQty }}</div> -->
-        </div>
+        <div class="flex"></div>
         <div>
           <el-button @click="colDialogVisible1 = false">取 消</el-button>
           <el-button type="primary" @click="confirmDialog(null, 1)"
@@ -255,58 +191,7 @@
           >
         </div>
       </span>
-    </el-dialog>
-    <!-- 弹框-->
-    <el-dialog
-      :title="'指定业务员'"
-      :visible.sync="colDialogVisible2"
-      width="70%"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-      ><div
-        style="
-          height: 60vh;
-          overflow-x: hidden;
-          display: flex;
-          flex-direction: column;
-        "
-      >
-        <div class="ant-table-title">
-          <el-row class="px-[10px]"
-            >您正在指定{{ SalesOrderNo }}订单，{{
-              Customer
-            }}客户的业务人员，勾选表示选定人员，非勾选表示未选定</el-row
-          >
-        </div>
-        <div v-for="item in [2]" :key="item + 'table'" class="flex_grow">
-          <ComVxeTable
-            :ref="`tableRef${item}`"
-            :rowKey="'RowNumber'"
-            height="100%"
-            :tableData="tableData[item]"
-            :tableHeader="tableColumns[item]"
-            :tableLoading="tableLoading[item]"
-            :isToolbar="false"
-            :remark="item"
-            :sysID="sysID[item]['ID']"
-            :hasSelect="true"
-            :isEdit="isEdit[item]"
-            :isClear="isClear[item]"
-            :keepSource="true"
-            :pagination="tablePagination[item]"
-            @pageChange="pageChange"
-            @pageSize="pageSize"
-            @sortChange="sortChange"
-            @selectfun="selectFun"
-          />
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="Reschedule(2)">确认提交</el-button>
-        <el-button type="success" @click="dataSearch(2)">恢复默认</el-button>
-        <el-button @click="colDialogVisible2 = false">取消</el-button>
-      </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -332,11 +217,9 @@ import {
   SaveData,
   GetSearch,
 } from '@/api/Common';
-import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
-import DialogTable from '@/components/Dialog/dialogTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'EKShippingPlanManagement',
+  name: 'BWShippingPlanManagement',
   components: {
     ComSearch,
     ComReportTable,
@@ -356,11 +239,10 @@ export default {
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
       drawer: false,
-      delData: [[]],
       DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
         {
-          datas: {},
+          datas: { ProcessGroupName: ['SMT'] },
           forms: [],
         },
         {
@@ -409,14 +291,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [
-        { ID: 10108 },
-        { ID: 10108 },
-        { ID: 7833 },
-        { ID: 10108 },
-        { ID: 10108 },
-        { ID: 10108 },
-      ],
+      sysID: [{ ID: 11182 }, { ID: 10108 }, { ID: 7833 }],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -432,16 +307,15 @@ export default {
       Status1: [
         {
           label: '未完成',
-          value: { IsFinish: 0, Extend7: '销售订单' },
+          value: {},
           index: 0,
         },
         {
           label: '已完成',
-          value: { IsFinish: 1, Extend7: '销售订单' },
-          index: 3,
+          value: {},
+          index: 1,
         },
-        { label: '全部', value: {}, index: 4 },
-        { label: '预测单', value: { Extend7: '预测单' }, index: 5 },
+        { label: '全部', value: {}, index: 2 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
@@ -489,24 +363,13 @@ export default {
         }, 0)
       );
     },
-    TotalVolume: function () {
-      return this.selectionData[this.labelStatus1]
-        .reduce((total, obj) => {
-          return Number(obj.TotalVolume)
-            ? total + Number(obj.TotalVolume)
-            : total;
-        }, 0)
-        .toFixed(4);
-    },
-    TotalAmount: function () {
-      return this.selectionData[this.labelStatus1]
-        .reduce((total, obj) => {
-          return Number(obj.TotalAmount)
-            ? total + Number(obj.TotalAmount)
-            : total;
-        }, 0)
-        .toFixed(2);
-    },
+    // TotalVolume: function () {
+    //   return this.selectionData[this.labelStatus1].reduce((total, obj) => {
+    //     return Number(obj.TotalVolume)
+    //       ? total + Number(obj.TotalVolume)
+    //       : total;
+    //   }, 0);
+    // },
   },
   mounted() {
     let tableContainer = document.getElementById('tableContainer'); // 通过 `<div>` 的 ID 获取元素
@@ -607,6 +470,20 @@ export default {
         });
       });
       sheet.resumePaint();
+    },
+    startObserving(remarkTb) {
+      const tableElement = this.$refs[`spreadsheetRef${remarkTb}`]?.[0].$el;
+      if (tableElement) {
+        this[`resizeObserver${remarkTb}`] = new ResizeObserver((entries) => {
+          // for (const entry of entries) {
+          this.spread[remarkTb].refresh();
+          // }
+        });
+        this[`resizeObserver${remarkTb}`].observe(tableElement);
+      }
+      // if (this.resizeObserver) {
+      //   this.resizeObserver.disconnect();
+      // }
     },
     // 更新表格高度的函数
     updateTableHeight() {},
@@ -998,15 +875,10 @@ export default {
         .catch((_) => {});
     },
     // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
+    handleRowClick(row, remarkTb) {},
     // 保存
     async dataSave(remarkTb, index, parms, newData) {
-      if (index !== 'save') {
-        this.adminLoading = true;
-      }
+      this.adminLoading = true;
       const sheet =
         this.spread[remarkTb] &&
         typeof this.spread[remarkTb].getActiveSheet === 'function'
@@ -1014,6 +886,9 @@ export default {
           : undefined;
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (sheet && sheet.isEditing()) {
+        sheet.endEdit();
+      }
       // 获取修改记录
       let changeRecords = [];
       if (newData) {
@@ -1034,25 +909,18 @@ export default {
       }
       if (changeRecords.length == 0) {
         this.$set(this, 'adminLoading', false);
-        if (index !== 'save') {
-          this.$message.error('当前数据没做修改，请先修改再保存！');
-        }
+        this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-
       let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
-        if (index !== 'save') {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          await this.dataSearch(remarkTb);
-        } else {
-          sheet.clearPendingChanges();
-        }
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
         this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
@@ -1089,6 +957,7 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
+          this.startObserving(i);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -1563,8 +1432,7 @@ export default {
         GCsheets.Events.EditStarting,
         function (e, args) {},
       );
-      this.spread[remarkTb].bind(GCsheets.Events.LeaveCell, function (e, args) {
-        _this.dataSave(remarkTb, 'save');
+      this.spread[remarkTb].bind(GCsheets.Events.EditEnded, function (e, args) {
         // 自动计算数量
         // _this.computedNum(args.row, args.col, args.editingText);
         // for (var i = args.col + 1; i < _this.tableColumns[0].length; i++) {
@@ -1809,44 +1677,6 @@ export default {
 
       await this.dataSearch(2);
     },
-    //添加产品机台
-    async Reschedule(remarkTb) {
-      if (remarkTb === 2) {
-        let newData = [];
-        //添加
-        let addData1 = this.selectionData[2].filter(
-          (item0) =>
-            !this.linkTableData.some((item3) => {
-              return item3['SaleMan'] === item0['Account'];
-            }),
-        );
-        addData1.forEach((item) => {
-          item['dicID'] = 10127;
-          item['SalesOrderDetailID'] =
-            this.selectionData[this.labelStatus1][0]['SalesOrderDetailID'];
-          item['SaleMan'] = item['Account'];
-        });
-        newData = newData.concat(addData1);
-
-        //删除
-        let addData2 = this.linkTableData.filter(
-          (item0) =>
-            !this.selectionData[2].some((item3) => {
-              return item3['Account'] === item0['SaleMan'];
-            }),
-        );
-
-        addData2.forEach((item) => {
-          item['dicID'] = 10127;
-          item['ElementDeleteFlag'] = 1;
-        });
-
-        newData = newData.concat(addData2);
-        await this.dataSave(2, null, null, newData);
-        this.colDialogVisible2 = false;
-      }
-    },
-
     //添加产品机台
     async confirmDialog(data, remarkTb) {
       if (remarkTb === 1) {
