@@ -806,6 +806,7 @@
                     v-model="scope.row[x.prop]"
                   ></el-color-picker>
                 </span>
+
                 <span v-else>{{ scope.row[x.prop] }}</span>
               </span>
               <span v-else-if="x.component.type == 'checkbox'">
@@ -826,6 +827,24 @@
                 <el-tag v-else type="danger" size="mini" effect="light"
                   >禁用
                 </el-tag>
+              </span>
+              <span v-else-if="x.component.type == 'progress'">
+                <el-progress
+                  class="w-full"
+                  :percentage="scope.row[x.prop]"
+                  :color="[
+                    { color: '#f56c6c', percentage: 20 },
+                    { color: '#e6a23c', percentage: 40 },
+                    { color: '​#ffff00', percentage: 60 },
+                    { color: '#1989fa', percentage: 80 },
+                    { color: '#5cb87a', percentage: 100 },
+                  ]"
+                  :format="
+                    (percentage) => {
+                      return `${percentage}%`;
+                    }
+                  "
+                ></el-progress>
               </span>
               <span
                 v-else
@@ -1847,4 +1866,8 @@ export default {
 .el-select {
   width: 100%;
 }
+// ::v-deep .vxe-cell .el-progress-bar {
+//   padding-right: 40px !important;
+//   margin-right: -45px;
+// }
 </style>
