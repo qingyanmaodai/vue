@@ -6,7 +6,7 @@
   >
     <div class="admin_head" ref="headRef">
       <div
-        v-for="i in [0, 1, 2, 3]"
+        v-for="i in [0, 1, 2, 3, 4, 5]"
         :key="i + 'head'"
         v-show="labelStatus1 === i"
       >
@@ -75,7 +75,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3]"
+      v-for="item in [0, 1, 2, 3, 4, 5]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -221,7 +221,7 @@ import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
 import DialogTable from '@/components/Dialog/dialogTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'PaErFuPlanManagement',
+  name: 'BWFinishedProductSchedule',
   components: {
     ComSearch,
     ComReportTable,
@@ -291,7 +291,14 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10108 }],
+      sysID: [
+        { ID: 9013 },
+        { ID: 11168 },
+        { ID: 11168 },
+        { ID: 9013 },
+        { ID: 9013 },
+        { ID: 9013 },
+      ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -304,17 +311,23 @@ export default {
       colDialogVisible1: false,
       Status1: [
         {
-          label: '成品总排期',
+          label: '待排清单',
           value: {},
           index: 0,
         },
+        { label: '生产排程', value: {}, index: 1 },
+        { label: '交期冲突', value: {}, index: 2 },
         {
-          label: '绕焊精排期',
+          label: '有变更',
           value: {},
-          index: 1,
+          index: 3,
         },
-        { label: '入轴涂覆排期', value: {}, index: 2 },
-        { label: '出货计划明细', value: {}, index: 3 },
+        {
+          label: '已完成',
+          value: {},
+          index: 4,
+        },
+        { label: '全部', value: {}, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
@@ -1360,7 +1373,37 @@ export default {
     selectFun(data, remarkTb, row) {
       this.$set(this.selectionData, remarkTb, data);
     },
-
+    async TransferPlan(remarkTb) {
+      //转入周计划
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message({
+          message: '请选择要操作的数据',
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = true;
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
+        );
+        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.adminLoading = false;
+          this.dataSearch(remarkTb);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
     //添加产品机台
     async confirmDialog(data, remarkTb) {
       if (remarkTb === 1) {
