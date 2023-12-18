@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -71,7 +75,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2]"
+      v-for="item in [0, 1, 2, 3]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -217,7 +221,7 @@ import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
 import DialogTable from '@/components/Dialog/dialogTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWShippingPlanManagement',
+  name: 'PaErFuPlanManagement',
   components: {
     ComSearch,
     ComReportTable,
@@ -287,7 +291,7 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 10108 }],
+      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10108 }],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -300,16 +304,17 @@ export default {
       colDialogVisible1: false,
       Status1: [
         {
-          label: '未完成',
-          value: { IsFinish: 0, Extend7: '销售订单' },
+          label: '成品总排期',
+          value: {},
           index: 0,
         },
         {
-          label: '已完成',
-          value: { IsFinish: 1, Extend7: '销售订单' },
+          label: '绕焊精排期',
+          value: {},
           index: 1,
         },
-        { label: '全部', value: {}, index: 2 },
+        { label: '入轴涂覆排期', value: {}, index: 2 },
+        { label: '出货计划明细', value: {}, index: 3 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
