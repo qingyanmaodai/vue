@@ -12,7 +12,7 @@
       >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
+          :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
           :remark="i"
           :isLoading="isLoading"
