@@ -546,21 +546,20 @@ export default {
           dangerouslyUseHTMLString: true,
         });
       } else {
-        this.selectionData[remarkTb].map((item) => {
-          item['StartDate'] = this.ruleForm.ProducedDate
-            ? this.$moment(this.ruleForm.ProducedDate[0]).format('YYYY-MM-DD')
-            : '';
-          item['EndDate'] = this.ruleForm.ProducedDate
-            ? this.$moment(this.ruleForm.ProducedDate[1]).format('YYYY-MM-DD')
-            : '';
-        });
         this.adminLoading = true;
-        let res = await GetSearch(
-          this.selectionData[remarkTb],
-          '/APSAPI/InsertIntoIMByOrderID',
+        let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
         );
+        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
         const { result, data, count, msg } = res.data;
         if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
           this.adminLoading = false;
           this.dataSearch(remarkTb);
         } else {

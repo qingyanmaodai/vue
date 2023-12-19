@@ -657,22 +657,6 @@ export default {
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
     },
-    // 高度控制
-    setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let newHeight = '';
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem + 'px';
-      } else {
-        newHeight = rem + 'px';
-      }
-      this.$set(this, 'height', newHeight);
-    },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
       this.$set(this.tablePagination[remarkTb], 'pageIndex', val);

@@ -244,7 +244,7 @@ export default {
       DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
         {
-          datas: {},
+          datas: { ProductionStatus: 26 },
           forms: [],
         },
         {
@@ -1383,15 +1383,19 @@ export default {
         });
       } else {
         this.adminLoading = true;
-        newData = _.cloneDeep(
+        let newData = _.cloneDeep(
           this.selectionData[remarkTb].map((obj) => {
-            obj['ElementDeleteFlag'] = 1;
             return obj;
           }),
         );
         let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
         const { result, data, count, msg } = res.data;
         if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
           this.adminLoading = false;
           this.dataSearch(remarkTb);
         } else {

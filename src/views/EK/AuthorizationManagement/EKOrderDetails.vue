@@ -227,7 +227,9 @@ export default {
       formSearchs: [
         //不同标签页面的查询条件
         {
-          datas: {}, //查询入参
+          datas: {
+            ProductionStatus: 26,
+          }, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
@@ -268,10 +270,10 @@ export default {
       ],
       sysID: [
         { ID: 10116 },
-        { ID: 10106 },
         { ID: 10077 },
         { ID: 10081 },
         { ID: 11165 },
+        { ID: 10106 },
       ],
       colorStatus: [
         { label: '字体颜色', value: 0 },
@@ -282,13 +284,13 @@ export default {
           label: '待转入',
           value: {},
         },
+        { label: '主计划', value: {} },
+        { label: '全部', value: {} },
+        { label: '异常订单', value: {} },
         {
           label: '有变更',
           value: {},
         },
-        { label: '主计划', value: {} },
-        { label: '计划调序', value: {} },
-        { label: '异常订单', value: {} },
       ],
       spread: [], //excel初始
       fileList: [],
@@ -346,9 +348,6 @@ export default {
       }
     }); // 启动 ResizeObserver 监测 `<div>` 元素的大小变化
     resizeObserver.observe(tableContainer);
-    // setTimeout(() => {
-    //   this.setHeight();
-    // }, 500);
   },
   methods: {
     updateColor(remarkTb) {
@@ -480,16 +479,6 @@ export default {
       } else {
         this[methods](remarkTb, index);
       }
-    },
-    // 高度控制
-    setHeight() {
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      let newHeight = rem + 'px';
-      this.$set(this, 'height', newHeight);
     },
     // 跳转至属性配置
     toPageSetting(id) {
@@ -1124,24 +1113,6 @@ export default {
       //   }
       // }
     },
-    bindComboBoxToCell(sheet, row, col, dataSourceName) {
-      // 获取要绑定下拉菜单的单元格对象
-      let cell = sheet.getCell(row, col);
-
-      // 创建下拉菜单单元格类型，并设置其选项数据
-      let comboBox = new GC.Spread.Sheets.CellTypes.ComboBox();
-      comboBox.editorValueType(
-        GC.Spread.Sheets.CellTypes.EditorValueType.value,
-      );
-      comboBox.editable(true);
-      // 获取下拉菜单的选项数据
-
-      comboBox.items(dataSourceName);
-      comboBox.itemHeight(24);
-
-      // 将下拉菜单单元格类型绑定到指定的单元格中
-      cell.cellType(comboBox);
-    },
     // 查询
     async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -1495,118 +1466,6 @@ export default {
         1,
       );
     },
-    // 分析
-    async Analysis([remarkTb]) {
-      // let form = {
-      // SDate: _this.machineCycle.length ? _this.machineCycle[0] : "",
-      // Edate: _this.machineCycle.length ? _this.machineCycle[1] : "",
-      // };
-      let sheet = this.spread[remarkTb].getActiveSheet();
-      let newData = sheet.getDataSource();
-      this.selectionData[this.tagRemark] = [];
-      if (newData && newData.length != 0) {
-        newData.forEach((x) => {
-          if (x.isChecked) {
-            this.selectionData[this.tagRemark].push(x);
-          }
-        });
-      }
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[this.tagRemark],
-        '/APSAPI/CalculateBOMDemand',
-      );
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    //需求检查
-    async MRPCheckData() {
-      this.adminLoading = true;
-      let res = await GetSearch('', '/APSAPI/MRPCheckData');
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
-    //需求导入
-    async MRPToOfficial() {
-      if (this.selectionData[this.tagRemark].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
-        return;
-      }
-      this.adminLoading = true;
-      let res = await GetSearch(
-        this.selectionData[this.tagRemark],
-        '/APSAPI/MRPToOfficial',
-      );
-      const { result, data, count, msg } = res.data;
-      try {
-        if (result) {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.dataSearch(this.tagRemark);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      } catch (error) {
-        if (error) {
-          this.adminLoading = false;
-        }
-      }
-    },
     //删除
     dataDel(remarkTb) {
       if (this.selectionData[remarkTb].length == 0) {
@@ -1741,6 +1600,29 @@ export default {
             .catch((_) => {});
         }
       }
+    },
+    // 计算排期
+    async CalculateSchedule(remarkTb, index) {
+      this.adminLoading = true;
+      let res = await GetSearch('', '/APSAPI/CalculateSalesStartDate');
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, 'adminLoading', false);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
+      }
+      // }
     },
     // 退回
     async backData(remarkTb, index, parms) {
