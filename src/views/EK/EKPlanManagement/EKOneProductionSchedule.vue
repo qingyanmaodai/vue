@@ -131,7 +131,7 @@ import {
 } from '@/api/Common';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'TBDayPlan',
+  name: 'EKOneProductionSchedule',
   components: {
     ComSearch,
     ComReportTable,
@@ -197,11 +197,11 @@ export default {
       tagRemark: 0,
       isLoading: false,
       sysID: [
-        { ID: 7946 },
-        { ID: 7946 },
-        { ID: 7946 },
-        { ID: 7946 },
-        { ID: 7946 },
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
       ],
       adminLoading: false,
       selectionData: [[], [], [], [], [], [], []],
@@ -214,19 +214,19 @@ export default {
       Status1: [
         {
           label: '总排期',
-          value: {},
+          value: { WorkShopID: 105 },
           index: 0,
         },
-        { label: '一车间半成品', value: {}, index: 1 },
-        { label: '一车间成品', value: {}, index: 2 },
+        { label: '已排生产计划', value: { WorkShopID: 105 }, index: 1 },
+        { label: '半成品', value: { WorkShopID: 105 }, index: 2 },
         {
-          label: '二车间半成品+成品',
-          value: {},
+          label: '成品',
+          value: { WorkShopID: 105 },
           index: 3,
         },
         {
           label: '包装',
-          value: {},
+          value: { WorkShopID: 105 },
           index: 4,
         },
       ],

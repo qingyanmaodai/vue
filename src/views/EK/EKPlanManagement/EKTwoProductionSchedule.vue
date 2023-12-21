@@ -1,11 +1,15 @@
-<!-- 激光月计划 -->
+<!-- EK生产排程 -->
 <template>
   <div
     class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3, 4]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -22,24 +26,19 @@
     <div class="admin_content pd-0-6">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="8"
-            ><span class="title">{{ title }}</span>
+          <el-col :span="8">
+            <!-- <span class="title">{{ title }}</span> -->
+            <el-radio-group v-model="radioValue0" @change="radioChange">
+              <el-radio
+                v-for="(item, index) in parmsBtn2"
+                :key="index"
+                :label="item.value"
+                :value="item.value"
+                >{{ item.label }}</el-radio
+              >
+            </el-radio-group>
           </el-col>
           <el-col :span="16" class="flex_flex_end">
-            <!-- 批量修改组件 -->
-            <div
-              v-for="i in [0]"
-              :key="'Edit' + i"
-              style="height: 100%"
-              v-show="labelStatus1 === i"
-            >
-              <ComBatchEdit
-                :OrderNos="OrderNos[i]"
-                @changeProp="changeProp"
-                :OrderNo="DVBatch"
-                :remark="i"
-              />
-            </div>
             <!-- 下拉框 -->
             <!-- <el-select
               v-model="colorType"
@@ -67,7 +66,7 @@
               @click="updateColor(labelStatus1)"
               >确定</el-button
             > -->
-            <!-- <div v-for="(item, y) in Status1" :key="y">
+            <div v-for="(item, y) in Status1" :key="y">
               <span
                 @click="changeStatus(item, y)"
                 :class="
@@ -77,8 +76,8 @@
                 "
                 >{{ item.label }}</span
               >
-              <el-divider direction="vertical"></el-divider></div
-          > -->
+              <el-divider direction="vertical"></el-divider>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -86,7 +85,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0]"
+      v-for="item in [0, 1, 2, 3, 4]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -123,8 +122,6 @@ import ComAsideTree from '@/components/ComAsideTree';
 import ComSpreadTable from '@/components/ComSpreadTable';
 import ComVxeTable from '@/components/ComVxeTable';
 import { HeaderCheckBoxCellType } from '@/static/data.js';
-import ComBatchEdit from '@/components/ComBatchEdit';
-
 import {
   GetHeader,
   GetSearchData,
@@ -132,10 +129,9 @@ import {
   SaveData,
   GetSearch,
 } from '@/api/Common';
-import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'PaErFuProportionSuppliers',
+  name: 'EKTwoProductionSchedule',
   components: {
     ComSearch,
     ComReportTable,
@@ -143,23 +139,15 @@ export default {
     DialogOptTable,
     ComVxeTable,
     ComSpreadTable,
-    ComBatchEdit,
   },
   data() {
     return {
       labelStatus1: 0,
       spread: [[], [], [], [], [], [], []],
-      dialogSearchForm: {
-        OrderID: '',
-      },
       addNum: 1,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawer: false,
       DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
-      DVBatch: null,
-      OrderNo: '',
-      OrderNos: [[]],
       formSearchs: [
         {
           datas: {},
@@ -206,13 +194,16 @@ export default {
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
       ],
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 11171 }],
+      sysID: [
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
+        { ID: 12194 },
+      ],
       adminLoading: false,
-      checkBoxCellTypeLine: '',
-      isOpen: true,
       selectionData: [[], [], [], [], [], [], []],
       NoWorkHour: [],
       LineViewSort: [],
@@ -222,31 +213,41 @@ export default {
       colDialogVisible1: false,
       Status1: [
         {
-          label: '',
-          value: {},
+          label: '总排期',
+          value: { WorkShopID: 90 },
           index: 0,
         },
-        { label: '', value: {}, index: 1 },
-        { label: '', value: {}, index: 2 },
+        { label: '已排生产计划', value: { WorkShopID: 90 }, index: 1 },
+        { label: '半成品', value: { WorkShopID: 90 }, index: 2 },
         {
-          label: '',
-          value: {},
+          label: '成品',
+          value: { WorkShopID: 90 },
           index: 3,
         },
         {
-          label: '',
-          value: {},
+          label: '包装',
+          value: { WorkShopID: 90 },
           index: 4,
         },
-        { label: '', value: {}, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
-      RoleMapStatus: false,
-      SalesOrderNo: null,
-      Customer: null,
-      linkTableData: [],
-      linkTableData2: [],
       apsurl: null,
+      formData1: {
+        SalesOrderNo: null,
+        Code: null,
+        CustomerMaterialName: null,
+        MaterialName: null,
+        DataSource: null,
+        PlanQty: null,
+        OutType: null,
+        Qty: null,
+      },
+      parmsBtn2: [
+        { label: '显示未完成', value: 1 },
+        { label: '显示已完成', value: 2 },
+        { label: '显示全部', value: '' },
+      ],
+      radioValue0: '',
     };
   },
   watch: {},
@@ -486,6 +487,67 @@ export default {
         })
         .catch((_) => {});
     },
+    // 退回
+    async backData(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
+        );
+      }
+      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
+    },
+    resetScheduling(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.adminLoading = true;
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
+        );
+      }
+      this.$confirm('确定要重排选择的【' + newData.length + '】数据吗？')
+        .then(async (_) => {
+          let res = await GetSearch(
+            newData,
+            '/APSAPI/MOPlanSaveToDayPlan?isPlan=1',
+          );
+          this.adminLoading = true;
+          this.adminLoading = true;
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.dataSearch(remarkTb);
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+            });
+          }
+        })
+        .catch((_) => {});
+    },
     // 单击行
     handleRowClick(row, remarkTb) {},
     // 保存
@@ -524,7 +586,7 @@ export default {
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      let res = await GetSearch(changeRecords, '/APSAPI/SaveData11171');
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -610,20 +672,15 @@ export default {
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         if (Columns && Columns.length != 0) {
-          Columns[0].some((n, i) => {
-            this.verifyData(n);
-            if (n.children && n.children.length != 0) {
-              n.children.forEach((x) => {
-                this.verifyData(x);
-              });
-            }
-          });
+          // Columns[0].some((n, i) => {
+          // this.verifyData(n);
+          // if (n.children && n.children.length != 0) {
+          //   n.children.forEach((x) => {
+          //     this.verifyData(x);
+          //   });
+          // }
+          // });
           this.$set(this.tableColumns, remarkTb, Columns[0]);
-          this.$set(
-            this.OrderNos,
-            remarkTb,
-            Columns[0].filter((item) => item['isEdit'] === true),
-          );
         }
         this.$set(this.tableData, remarkTb, data);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
@@ -636,30 +693,6 @@ export default {
         });
       }
       this.$set(this.tableLoading, remarkTb, false);
-    },
-    changeProp(remarkTb, OrderNo, OrderNoValue) {
-      if (!OrderNo) {
-        this.$message.error('请选择需要修改的值');
-        return;
-      }
-      if (this.tableData[remarkTb].length === 0) {
-        this.$message.error('当前表格无数据');
-        return;
-      }
-      let sheet = this.spread[remarkTb]?.getActiveSheet();
-      sheet.suspendPaint();
-      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
-        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
-          const key = column.prop;
-          if (rowItem['isChecked'] === true) {
-            let dataIndex = this.tableColumns[remarkTb].findIndex(
-              (item) => item['prop'] === OrderNo,
-            );
-            sheet.setValue(rowIndex, dataIndex, OrderNoValue);
-          }
-        });
-      });
-      sheet.resumePaint();
     },
     // 渲染数据
     setData(remarkTb) {
@@ -1223,6 +1256,10 @@ export default {
       this.labelStatus1 = item['index'];
       Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
       await this.dataSearch(this.labelStatus1);
+    },
+    radioChange(val) {
+      this.formSearchs[this.labelStatus1].datas['IsCompleteQty'] = val;
+      this.dataSearch(this.labelStatus1);
     },
   },
 };

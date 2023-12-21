@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2, 3, 4]" :key="i" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]"
+        :key="i"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -80,7 +84,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3, 4]"
+      v-for="item in [0, 1, 2, 3, 4, 5, 6, 7]"
       :key="item"
       v-show="labelStatus1 === item"
     >
@@ -251,15 +255,33 @@ export default {
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
+        {
+          datas: {}, //查询入参
+          forms: [], // 页面显示的查询条件
+          required: [], //获取必填项
+        },
       ],
-      tableData: [[], [], [], [], []], //表格渲染数据,sysID有几个就有几个数组
-      tableColumns: [[], [], [], [], []], //表格表头列
-      tableLoading: [false, false, false, false, false], //每个表加载
-      isClear: [false, false, false, false, false],
-      hasSelect: [false, false, false, false, false],
-      Region: [6, 6, 6, 6, 6],
+      tableData: [[], [], [], [], [], [], [], []], //表格渲染数据,sysID有几个就有几个数组
+      tableColumns: [[], [], [], [], [], [], [], []], //表格表头列
+      tableLoading: [false, false, false, false, false, false, false, false], //每个表加载
+      isClear: [false, false, false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false, false, false],
+      Region: [6, 6, 6, 6, 6, 6, 6, 6],
       tablePagination: [
         //表分页参数
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
@@ -268,7 +290,10 @@ export default {
       ],
       sysID: [
         { ID: 10077 },
+        { ID: 10077 },
         { ID: 10116 },
+        { ID: 10077 },
+        { ID: 10077 },
         { ID: 11165 },
         { ID: 10106 },
         { ID: 10116 },
@@ -278,11 +303,30 @@ export default {
         { label: '背景颜色', value: 1 },
       ],
       Status1: [
-        { label: '主计划', value: {} },
+        {
+          label: '一车间主计划',
+          value: { WorkShopID: '105', OrderStatus: '工单正常' },
+        },
+        {
+          label: '二车间主计划',
+          value: { WorkShopID: '90', OrderStatus: '工单正常' },
+        },
         {
           label: '待转入',
           value: {
             ProductionStatus: 26,
+          },
+        },
+        {
+          label: '已完成待出货',
+          value: {
+            OrderStatus: '已完成待出货',
+          },
+        },
+        {
+          label: '工单不足',
+          value: {
+            OrderGap: '工单不足',
           },
         },
         { label: '异常订单', value: {} },
