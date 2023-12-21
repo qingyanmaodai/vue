@@ -6,7 +6,7 @@
   >
     <div class="admin_head" ref="headRef">
       <div
-        v-for="i in [0, 3, 4, 5]"
+        v-for="i in [0, 3, 4, 5, 6]"
         :key="i + 'head'"
         v-show="labelStatus1 === i"
       >
@@ -88,7 +88,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 3, 4, 5]"
+      v-for="item in [0, 3, 4, 5, 6]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -348,7 +348,7 @@ export default {
   data() {
     return {
       labelStatus1: 0,
-      spread: [[], [], [], [], [], [], []],
+      spread: [[], [], [], [], [], [], [], []],
       dialogSearchForm: {
         OrderID: '',
       },
@@ -357,8 +357,12 @@ export default {
       title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
-      DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
+      DataSourceList: [{}, {}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -385,15 +389,16 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], [], [], []],
-      tableColumns: [[], [], [], [], [], []],
-      tableLoading: [false, false, false, false, false, false],
-      isClear: [false, false, false, false, false, false],
-      hasSelect: [false, false, false, false, false, false],
+      tableData: [[], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
@@ -416,6 +421,7 @@ export default {
         { ID: 10108 },
         { ID: 10108 },
         { ID: 10108 },
+        { ID: 10108 },
       ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
@@ -425,7 +431,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: [false, false, false, false, false, false],
+      isEdit: [false, false, false, false, false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
       colDialogVisible4: false,
@@ -441,9 +447,20 @@ export default {
           index: 3,
         },
         { label: '全部', value: {}, index: 4 },
-        { label: '预测单', value: { Extend7: '预测单' }, index: 5 },
+        {
+          label: '预测单',
+          value: {
+            Extend7: '预测单',
+          },
+          index: 5,
+        },
+        {
+          label: '试产单',
+          value: { Extend7: '试产单' },
+          index: 6,
+        },
       ],
-      Region: [5, 6, 6, 6, 6, 6],
+      Region: [5, 6, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
       Customer: null,

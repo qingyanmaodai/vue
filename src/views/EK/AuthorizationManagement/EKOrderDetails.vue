@@ -227,9 +227,7 @@ export default {
       formSearchs: [
         //不同标签页面的查询条件
         {
-          datas: {
-            ProductionStatus: 26,
-          }, //查询入参
+          datas: {}, //查询入参
           forms: [], // 页面显示的查询条件
           required: [], //获取必填项
         },
@@ -269,28 +267,30 @@ export default {
         { pageIndex: 1, pageSize: 2000, pageTotal: 0 },
       ],
       sysID: [
-        { ID: 10116 },
         { ID: 10077 },
         { ID: 10116 },
         { ID: 11165 },
         { ID: 10106 },
+        { ID: 10116 },
       ],
       colorStatus: [
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
       ],
       Status1: [
+        { label: '主计划', value: {} },
         {
           label: '待转入',
-          value: {},
+          value: {
+            ProductionStatus: 26,
+          },
         },
-        { label: '主计划', value: {} },
-        { label: '全部', value: {} },
         { label: '异常订单', value: {} },
         {
           label: '有变更',
           value: {},
         },
+        { label: '全部', value: {} },
       ],
       spread: [], //excel初始
       fileList: [],
@@ -399,26 +399,6 @@ export default {
           if (column['isEdit']) {
             cell.locked(false).foreColor('#2a06ecd9');
           }
-          // 获取颜色
-          if (
-            rowItem['Result'] !== '正常' &&
-            rowItem['Result'] &&
-            columnIndex < 5
-          ) {
-            // cell.backColor('#FF0000');
-          }
-          if (rowItem['ISPOFinish'] === '是' && key === 'ReportQty') {
-            // cell.backColor('#92d050');
-          }
-          if (rowItem['ISOutStock'] === '出库正常' && key === 'OutDate') {
-            // cell.backColor('#92d050');
-          }
-          if (rowItem['ISOutStock'] === '出库异常' && key === 'OutDate') {
-            //cell.backColor('#ff0000');
-          }
-          if (rowItem['ISCheckWarm'] === 1 && key === 'CheckDate') {
-            //cell.backColor('#ffff00');
-          }
           if (
             Object.prototype.toString.call(rowItem['FColors']) ===
             '[object Object]'
@@ -452,7 +432,6 @@ export default {
         });
       });
       sheet.resumePaint();
-      console.log(this.tableData[0]);
     },
     judgeBtn(routeBtn) {
       if (routeBtn && routeBtn.length > 0)
@@ -1472,13 +1451,6 @@ export default {
         this.$message.error('请选择需要删除的数据！');
         return;
       } else {
-        if (!this.BatchDelete && this.CreatedBy) {
-          if (this.selectionData[remarkTb].length >= 3) {
-            this.$message.error('一次最多删除两行数据');
-            return;
-          }
-        }
-
         this.$confirm('删除不可恢复，确定要删除吗？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -1629,7 +1601,7 @@ export default {
       let res = null;
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请单击需要操作的数据！');
+        this.$message.error('请选择需要操作的数据！');
         return;
       } else {
         this.selectionData[remarkTb].forEach((x) => {
@@ -1641,6 +1613,42 @@ export default {
       this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
+    },
+    // 变更
+    async ToChange(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要变更的【' + newData.length + '】数据吗？')
+        .then(async (_) => {
+          let res = await GetSearch(newData, '/APSAPI/UpdateSalesMainPlan');
+          const { datas, forms, result, msg } = res.data;
+          if (result) {
+            this.$message({
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, 'adminLoading', false);
+          } else {
+            this.$message({
+              message: msg,
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, 'adminLoading', false);
+          }
         })
         .catch((_) => {});
     },

@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0,1,2,3,4,5]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3, 4]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -22,8 +26,17 @@
     <div class="admin_content pd-0-6">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="8"
-            ><span class="title">{{ title }}</span>
+          <el-col :span="8">
+            <!-- <span class="title">{{ title }}</span> -->
+            <el-radio-group v-model="radioValue0" @change="radioChange">
+              <el-radio
+                v-for="(item, index) in parmsBtn2"
+                :key="index"
+                :label="item.value"
+                :value="item.value"
+                >{{ item.label }}</el-radio
+              >
+            </el-radio-group>
           </el-col>
           <el-col :span="16" class="flex_flex_end">
             <!-- 下拉框 -->
@@ -63,8 +76,8 @@
                 "
                 >{{ item.label }}</span
               >
-              <el-divider direction="vertical"></el-divider></div
-          >
+              <el-divider direction="vertical"></el-divider>
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -72,7 +85,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0,1,2,3,4,5]"
+      v-for="item in [0, 1, 2, 3, 4]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -183,7 +196,13 @@ export default {
       ],
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 7946 },{ ID: 7946 },{ ID: 7946 },{ ID: 7946 },{ ID: 7946 },{ ID: 7946 }],
+      sysID: [
+        { ID: 7946 },
+        { ID: 7946 },
+        { ID: 7946 },
+        { ID: 7946 },
+        { ID: 7946 },
+      ],
       adminLoading: false,
       selectionData: [[], [], [], [], [], [], []],
       NoWorkHour: [],
@@ -194,23 +213,22 @@ export default {
       colDialogVisible1: false,
       Status1: [
         {
-          label: '待排生产计划',
+          label: '总排期',
           value: {},
           index: 0,
         },
-        { label: '已排生产计划', value: {}, index: 1 },
-        { label: '成品排程', value: {}, index: 2 },
+        { label: '一车间半成品', value: {}, index: 1 },
+        { label: '一车间成品', value: {}, index: 2 },
         {
-          label: '半成品排程',
+          label: '二车间半成品+成品',
           value: {},
           index: 3,
         },
         {
-          label: '包装排程',
+          label: '包装',
           value: {},
           index: 4,
         },
-        { label: '已完工订单', value: {}, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       apsurl: null,
@@ -224,6 +242,12 @@ export default {
         OutType: null,
         Qty: null,
       },
+      parmsBtn2: [
+        { label: '显示未完成', value: 1 },
+        { label: '显示已完成', value: 2 },
+        { label: '显示全部', value: '' },
+      ],
+      radioValue0: '',
     };
   },
   watch: {},
@@ -464,7 +488,7 @@ export default {
         .catch((_) => {});
     },
     // 退回
-    async dataDel(remarkTb, index, parms) {
+    async backData(remarkTb, index, parms) {
       let newData = [];
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
@@ -649,12 +673,12 @@ export default {
       if (result) {
         if (Columns && Columns.length != 0) {
           // Columns[0].some((n, i) => {
-            // this.verifyData(n);
-            // if (n.children && n.children.length != 0) {
-            //   n.children.forEach((x) => {
-            //     this.verifyData(x);
-            //   });
-            // }
+          // this.verifyData(n);
+          // if (n.children && n.children.length != 0) {
+          //   n.children.forEach((x) => {
+          //     this.verifyData(x);
+          //   });
+          // }
           // });
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
@@ -1232,6 +1256,10 @@ export default {
       this.labelStatus1 = item['index'];
       Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
       await this.dataSearch(this.labelStatus1);
+    },
+    radioChange(val) {
+      this.formSearchs[this.labelStatus1].datas['IsCompleteQty'] = val;
+      this.dataSearch(this.labelStatus1);
     },
   },
 };
