@@ -6,7 +6,7 @@
   >
     <div class="admin_head" ref="headRef">
       <div
-        v-for="i in [0, 1, 2, 3, 4]"
+        v-for="i in [0, 1, 2, 3]"
         :key="i + 'head'"
         v-show="labelStatus1 === i"
       >
@@ -85,7 +85,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3, 4]"
+      v-for="item in [0, 1, 2, 3]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -196,13 +196,7 @@ export default {
       ],
       tagRemark: 0,
       isLoading: false,
-      sysID: [
-        { ID: 12194 },
-        { ID: 12194 },
-        { ID: 12194 },
-        { ID: 12194 },
-        { ID: 12194 },
-      ],
+      sysID: [{ ID: 12194 }, { ID: 9018 }, { ID: 12194 }, { ID: 12194 }],
       adminLoading: false,
       selectionData: [[], [], [], [], [], [], []],
       NoWorkHour: [],
@@ -218,16 +212,12 @@ export default {
           index: 0,
         },
         { label: '已排生产计划', value: { WorkShopID: 90 }, index: 1 },
-        { label: '半成品', value: { WorkShopID: 90 }, index: 2 },
-        {
-          label: '成品',
-          value: { WorkShopID: 90 },
-          index: 3,
-        },
+        { label: '半成品+成品', value: { WorkShopID: 90 }, index: 2 },
+
         {
           label: '包装',
           value: { WorkShopID: 90 },
-          index: 4,
+          index: 3,
         },
       ],
       Region: [5, 6, 6, 6, 6, 6],
@@ -1260,6 +1250,41 @@ export default {
     radioChange(val) {
       this.formSearchs[this.labelStatus1].datas['IsCompleteQty'] = val;
       this.dataSearch(this.labelStatus1);
+    },
+    async ToProductionPlan(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要转入的【' + newData.length + '】数据吗？')
+        .then(async (_) => {
+          let res = await GetSearch(newData, '/APSAPI/APSTOMOplan');
+          const { datas, forms, result, msg } = res.data;
+          if (result) {
+            this.$message({
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, 'adminLoading', false);
+          } else {
+            this.$message({
+              message: msg,
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, 'adminLoading', false);
+          }
+        })
+        .catch((_) => {});
     },
   },
 };

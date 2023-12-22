@@ -6,7 +6,7 @@
   >
     <div class="admin_head" ref="headRef">
       <div
-        v-for="i in [0, 1, 2, 3]"
+        v-for="i in [0, 1, 2, 3, 4, 5]"
         :key="i + 'head'"
         v-show="labelStatus1 === i"
       >
@@ -75,7 +75,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3]"
+      v-for="item in [0, 1, 2, 3, 4, 5]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -291,7 +291,14 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 7833 }, { ID: 10108 }],
+      sysID: [
+        { ID: 10108 },
+        { ID: 10108 },
+        { ID: 7833 },
+        { ID: 10108 },
+        { ID: 10108 },
+        { ID: 10108 },
+      ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -314,7 +321,9 @@ export default {
           index: 1,
         },
         { label: '入轴涂覆排期', value: {}, index: 2 },
-        { label: '出货计划明细', value: {}, index: 3 },
+        { label: '无刷定子', value: {}, index: 3 },
+        { label: '无刷转子', value: {}, index: 4 },
+        { label: '出货计划明细', value: {}, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,

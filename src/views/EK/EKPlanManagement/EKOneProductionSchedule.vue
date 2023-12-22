@@ -198,7 +198,7 @@ export default {
       isLoading: false,
       sysID: [
         { ID: 12194 },
-        { ID: 12194 },
+        { ID: 9018 },
         { ID: 12194 },
         { ID: 12194 },
         { ID: 12194 },
@@ -1260,6 +1260,41 @@ export default {
     radioChange(val) {
       this.formSearchs[this.labelStatus1].datas['IsCompleteQty'] = val;
       this.dataSearch(this.labelStatus1);
+    },
+    async ToProductionPlan(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要转入的【' + newData.length + '】数据吗？')
+        .then(async (_) => {
+          let res = await GetSearch(newData, '/APSAPI/APSTOMOplan');
+          const { datas, forms, result, msg } = res.data;
+          if (result) {
+            this.$message({
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+            this.dataSearch(remarkTb);
+            this.$set(this, 'adminLoading', false);
+          } else {
+            this.$message({
+              message: msg,
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+            });
+            this.$set(this, 'adminLoading', false);
+          }
+        })
+        .catch((_) => {});
     },
   },
 };
