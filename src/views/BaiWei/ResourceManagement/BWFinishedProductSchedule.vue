@@ -5,7 +5,11 @@
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div v-for="i in [0, 1, 2]" :key="i + 'head'" v-show="labelStatus1 === i">
+      <div
+        v-for="i in [0, 1, 2, 3, 4, 5]"
+        :key="i + 'head'"
+        v-show="labelStatus1 === i"
+      >
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -71,7 +75,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2]"
+      v-for="item in [0, 1, 2, 3, 4, 5]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -217,7 +221,7 @@ import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
 import DialogTable from '@/components/Dialog/dialogTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWShippingPlanManagement',
+  name: 'BWFinishedProductSchedule',
   components: {
     ComSearch,
     ComReportTable,
@@ -240,7 +244,7 @@ export default {
       DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
         {
-          datas: {},
+          datas: { ProductionStatus: 26 },
           forms: [],
         },
         {
@@ -287,7 +291,14 @@ export default {
       showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 10108 }, { ID: 10108 }, { ID: 10108 }],
+      sysID: [
+        { ID: 9013 },
+        { ID: 11168 },
+        { ID: 11168 },
+        { ID: 9013 },
+        { ID: 9013 },
+        { ID: 9013 },
+      ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
       isOpen: true,
@@ -300,16 +311,23 @@ export default {
       colDialogVisible1: false,
       Status1: [
         {
-          label: '未完成',
-          value: { IsFinish: 0, Extend7: '销售订单' },
+          label: '待排清单',
+          value: {},
           index: 0,
+        },
+        { label: '生产排程', value: {}, index: 1 },
+        { label: '交期冲突', value: {}, index: 2 },
+        {
+          label: '有变更',
+          value: {},
+          index: 3,
         },
         {
           label: '已完成',
-          value: { IsFinish: 1, Extend7: '销售订单' },
-          index: 1,
+          value: {},
+          index: 4,
         },
-        { label: '全部', value: {}, index: 2 },
+        { label: '全部', value: {}, index: 5 },
       ],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
@@ -1355,7 +1373,41 @@ export default {
     selectFun(data, remarkTb, row) {
       this.$set(this.selectionData, remarkTb, data);
     },
-
+    async TransferPlan(remarkTb) {
+      //转入周计划
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message({
+          message: '请选择要操作的数据',
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = true;
+        let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
+        );
+        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          this.adminLoading = false;
+          this.dataSearch(remarkTb);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
     //添加产品机台
     async confirmDialog(data, remarkTb) {
       if (remarkTb === 1) {
@@ -1405,6 +1457,26 @@ export default {
         this.adminLoading = false;
         this.colDialogVisible1 = false;
       }
+    },
+    // 退回
+    async backData(remarkTb, index, parms) {
+      let res = null;
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.selectionData[remarkTb].forEach((x) => {
+          let obj = x;
+          obj['ElementDeleteFlag'] = 1;
+          newData.push(obj);
+        });
+      }
+      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
     // 增行
     addRow(remarkTb) {

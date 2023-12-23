@@ -26,7 +26,7 @@
       </div>
 
       <div class="flex_grow gray flex0">
-        <div class="flex0 w-60/100 flex-col mr-[10px]">
+        <div class="flex0 w-60/100 flex-col mr-[20px]">
           <div class="itemCard">
             <div class="echartHead truncate w-full">
               <div class="echartTitle">车间当天点检概览</div>
@@ -34,11 +34,12 @@
                 <div v-for="(item, y) in Status1" :key="y">
                   <span
                     @click="changeStatus(item, y)"
-                    :class="
-                      labelStatus1 == item['index']
-                        ? 'statusActive cursor'
-                        : 'cursor'
-                    "
+                    :class="[
+                      'font_size_1 ' +
+                        (labelStatus1 == item['index']
+                          ? 'statusActive cursor'
+                          : 'cursor'),
+                    ]"
                     >{{ item.label }}</span
                   >
                   <el-divider
@@ -56,18 +57,12 @@
                 <div
                   v-for="(item, index) in ItemArray"
                   :key="index"
-                  class="flex truncate"
+                  class="flex truncate font_size_1"
                 >
-                  <div
-                    class="mr-[10px]"
-                    style="color: #6a6a6a; font-size: 16px"
-                  >
+                  <div class="mr-[10px]" style="color: #6a6a6a">
                     {{ item['key'] }}
                   </div>
-                  <div
-                    class="mr-[20px]"
-                    style="color: #000; font-size: 16px; font-weight: 600"
-                  >
+                  <div class="mr-[20px]" style="color: #000; font-weight: 600">
                     {{ item['value'] }}
                   </div>
                 </div>
@@ -1187,6 +1182,7 @@ export default {
   width: 300px;
   ::v-deep .el-progress-bar__outer {
     height: 16px !important;
+    background-color: #b2c9e5;
   }
 }
 .echartHead {

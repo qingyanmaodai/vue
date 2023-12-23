@@ -647,7 +647,7 @@ export default {
               '[object Object]'
             ) {
               Object.keys(rowItem['FColors']).forEach((key) => {
-                const columnIndex = this.tableColumns[0].findIndex(
+                const columnIndex = this.tableColumns[remarkTb].findIndex(
                   (column) => column.prop === key,
                 );
                 if (columnIndex !== -1) {
@@ -662,7 +662,7 @@ export default {
               '[object Object]'
             ) {
               Object.keys(rowItem['BColors']).forEach((key) => {
-                const columnIndex = this.tableColumns[0].findIndex(
+                const columnIndex = this.tableColumns[remarkTb].findIndex(
                   (column) => column.prop === key,
                 );
                 if (columnIndex !== -1) {

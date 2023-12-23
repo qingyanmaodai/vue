@@ -80,7 +80,7 @@
             <div class="echartBody" ref="chart1"></div>
           </div>
         </div>
-        <div class="BSecondCard">
+        <div class="BThirdCard">
           <div class="itemCard">
             <div class="echartHead">
               <div class="echartTitle">计划按部门占比</div>
@@ -975,15 +975,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-* {
-  box-sizing: border-box;
-}
-.el-container {
-}
+// * {
+//   box-sizing: border-box;
+// }
 .APS {
   padding: 10px;
   overflow: hidden;
-
   .firstNode {
     display: flex;
     justify-content: space-between;
@@ -991,8 +988,7 @@ export default {
     height: 100%;
     .headCard {
       height: 15%;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr); /* 创建两列，每列等分剩余空间 */
+      display: flex;
       gap: 10px; /* 可选的行和列之间的间距 */
       margin-bottom: 10px;
       .box {

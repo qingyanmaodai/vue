@@ -6,13 +6,13 @@
   >
     <div class="admin_head" ref="headRef">
       <div
-        v-for="i in [0, 3, 4, 5]"
+        v-for="i in [0, 3, 4, 5, 6]"
         :key="i + 'head'"
         v-show="labelStatus1 === i"
       >
         <ComSearch
           ref="searchRef"
-          :searchData="formSearchs[0].datas"
+          :searchData="formSearchs[i].datas"
           :searchForm="formSearchs[i].forms"
           :remark="i"
           :isLoading="isLoading"
@@ -88,7 +88,7 @@
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 3, 4, 5]"
+      v-for="item in [0, 3, 4, 5, 6]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -348,7 +348,7 @@ export default {
   data() {
     return {
       labelStatus1: 0,
-      spread: [[], [], [], [], [], [], []],
+      spread: [[], [], [], [], [], [], [], []],
       dialogSearchForm: {
         OrderID: '',
       },
@@ -357,8 +357,12 @@ export default {
       title: this.$route.meta.title,
       drawer: false,
       delData: [[]],
-      DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
+      DataSourceList: [{}, {}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -385,15 +389,16 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], [], [], [], [], []],
-      tableColumns: [[], [], [], [], [], []],
-      tableLoading: [false, false, false, false, false, false],
-      isClear: [false, false, false, false, false, false],
-      hasSelect: [false, false, false, false, false, false],
+      tableData: [[], [], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false, false],
       tablePagination: [
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
         { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
         { pageIndex: 1, pageSize: 0, pageTotal: 0 },
@@ -416,6 +421,7 @@ export default {
         { ID: 10108 },
         { ID: 10108 },
         { ID: 10108 },
+        { ID: 10108 },
       ],
       adminLoading: false,
       checkBoxCellTypeLine: '',
@@ -425,7 +431,7 @@ export default {
       LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: [false, false, false, false, false, false],
+      isEdit: [false, false, false, false, false, false, false],
       colDialogVisible1: false,
       colDialogVisible2: false,
       colDialogVisible4: false,
@@ -441,9 +447,20 @@ export default {
           index: 3,
         },
         { label: '全部', value: {}, index: 4 },
-        { label: '预测单', value: { Extend7: '预测单' }, index: 5 },
+        {
+          label: '预测单',
+          value: {
+            Extend7: '预测单',
+          },
+          index: 5,
+        },
+        {
+          label: '试产单',
+          value: { Extend7: '试产单' },
+          index: 6,
+        },
       ],
-      Region: [5, 6, 6, 6, 6, 6],
+      Region: [5, 6, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
       Customer: null,
@@ -656,22 +673,6 @@ export default {
     //获取子组件实例
     workbookInitialized: function (workbook, remarkTb) {
       this.spread[remarkTb] = workbook;
-    },
-    // 高度控制
-    setHeight() {
-      this.treeHeight = document.documentElement.clientHeight - 150 + 'px';
-      let headHeight = this.$refs.headRef.offsetHeight;
-      let newHeight = '';
-      let rem =
-        document.documentElement.clientHeight -
-        headHeight -
-        this.$store.getters.reduceHeight;
-      if (this.$store.getters.reduceHeight == 138) {
-        newHeight = rem + 'px';
-      } else {
-        newHeight = rem + 'px';
-      }
-      this.$set(this, 'height', newHeight);
     },
     // 第几页
     pageChange(val, remarkTb, filtertb) {
