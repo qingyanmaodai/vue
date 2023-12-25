@@ -118,7 +118,7 @@ import {
 } from '@/api/Common';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWNorthFinalDayPlan',
+  name: 'BWMachinDayPlan',
   components: {
     ComSearch,
     ComReportTable,

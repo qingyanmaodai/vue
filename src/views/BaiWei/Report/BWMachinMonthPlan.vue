@@ -118,7 +118,7 @@ import {
 } from '@/api/Common';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWNorthFinalDayPlan',
+  name: 'BWMachinMonthPlan',
   components: {
     ComSearch,
     ComReportTable,
@@ -1224,6 +1224,63 @@ export default {
       this.labelStatus1 = item['index'];
       Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
       await this.dataSearch(this.labelStatus1);
+    },
+    //转入周计划
+    async TransferPlan(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message({
+          message: '请选择要操作的数据',
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+      } else {
+        this.adminLoading = true;
+        let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
+        );
+        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          this.adminLoading = false;
+          this.dataSearch(remarkTb);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
+        }
+      }
+    },
+    // 计算排期
+    async CalculateSchedule(remarkTb, index) {
+      this.adminLoading = true;
+      let res = await GetSearch('', '/APSAPI/CalculateSalesStartDate');
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, 'adminLoading', false);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
+      }
     },
   },
 };
