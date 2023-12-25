@@ -26,7 +26,7 @@
       </div>
 
       <div class="flex_grow gray flex0">
-        <div class="flex0 w-60/100 flex-col mr-[20px]">
+        <div class="flex0 w-60/100 flex-col mr-[10px]">
           <div class="itemCard">
             <div class="echartHead truncate w-full">
               <div class="echartTitle">车间当天点检概览</div>
