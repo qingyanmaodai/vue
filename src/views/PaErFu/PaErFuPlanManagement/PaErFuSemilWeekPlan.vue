@@ -1,15 +1,11 @@
-<!-- 激光月计划 -->
+<!-- EK生产排程 -->
 <template>
   <div
     class="APSContainer flex_column content_height bgWhite"
     v-loading="adminLoading"
   >
     <div class="admin_head" ref="headRef">
-      <div
-        v-for="i in [0, 1, 2, 3, 4, 5]"
-        :key="i + 'head'"
-        v-show="labelStatus1 === i"
-      >
+      <div v-for="i in [0]" :key="i + 'head'" v-show="labelStatus1 === i">
         <ComSearch
           ref="searchRef"
           :searchData="formSearchs[i].datas"
@@ -26,8 +22,8 @@
     <div class="admin_content pd-0-6">
       <div class="ant-table-title">
         <el-row>
-          <el-col :span="8"
-            ><span class="title">{{ title }}</span>
+          <el-col :span="8">
+            <span class="title">{{ title }}</span>
           </el-col>
           <el-col :span="16" class="flex_flex_end">
             <!-- 下拉框 -->
@@ -67,29 +63,16 @@
                 "
                 >{{ item.label }}</span
               >
-              <el-divider direction="vertical"></el-divider></div
-          ></el-col>
-        </el-row>
-      </div>
-      <div class="ant-table-title" v-show="labelStatus1 === 1">
-        <el-row>
-          <el-col :span="1"> </el-col>
-          <el-col :span="23" class="flex_flex_end">
-            <div v-for="(item, y) in Status2" :key="y">
-              <span
-                @click="changeStatus2(item, y)"
-                :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
-                >{{ item.label }}</span
-              >
-              <el-divider direction="vertical"></el-divider></div
-          ></el-col>
+              <el-divider direction="vertical"></el-divider>
+            </div>
+          </el-col>
         </el-row>
       </div>
     </div>
     <div
       class="admin_content flex_grow"
       id="tableContainer"
-      v-for="item in [0, 1, 2, 3, 4, 5]"
+      v-for="item in [0]"
       :key="item + 'table'"
       v-show="labelStatus1 === item"
     >
@@ -108,104 +91,6 @@
         @selectfun="selectFun"
       />
     </div>
-    <!-- 弹框-->
-    <el-dialog
-      :title="'拆分订单'"
-      class="el-dialog3"
-      :visible.sync="colDialogVisible1"
-      :width="'66%'"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-    >
-      <div class="pd-0-6">
-        <el-row>
-          <el-col :span="6" class="flex">
-            生产订单号: {{ formData1['SalesOrderNo'] }}
-          </el-col>
-          <el-col :span="6" class="flex">
-            物料编码: {{ formData1['Code'] }}
-          </el-col>
-          <el-col :span="6" class="flex">
-            客户型号: {{ formData1['CustomerMaterialName'] }}
-          </el-col>
-          <el-col :span="6" class="flex">
-            物料名称:{{ formData1['MaterialName'] }}</el-col
-          >
-        </el-row>
-      </div>
-      <div class="ant-table-title pd-0-6 h-50px">
-        <el-row>
-          <el-col :span="6" class="flex">
-            类型:{{ formData1['DataSource'] }}</el-col
-          >
-
-          <el-col :span="6" class="flex">
-            计划出货数: {{ formData1['PlanQty'] }}
-          </el-col>
-          <el-col :span="6" class="flex">
-            出货方式: {{ formData1['OutType'] }}
-          </el-col>
-          <!-- <el-col :span="6" class="flex"> 新数量: {{ ONewQty }} </el-col> -->
-        </el-row>
-      </div>
-      <div class="ant-table-title pd-0-6 h-50px">
-        <el-row>
-          <el-col :span="12" class="flex"> </el-col>
-          <el-col :span="12" class="flex_flex_end">
-            <div>
-              <span>新增行数：</span>
-              <el-input-number
-                size="mini"
-                v-model.trim="addNum"
-                :min="1"
-                :max="100"
-                :step="1"
-                placeholder="请输入新增行数"
-                style="margin-right: 10px"
-              ></el-input-number>
-            </div>
-            <el-button type="primary" size="mini" @click="addRow(1)"
-              >新增</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteRow(1)"
-              >删除</el-button
-            >
-            <el-divider direction="vertical"></el-divider>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="admin_content flex_grow">
-        <ComVxeTable
-          ref="ComVxeTable"
-          :isToolbar="false"
-          :isEdit="true"
-          :hasSelect="true"
-          :remark="1"
-          :rowKey="'RowNumber'"
-          :height="'100%'"
-          :sysID="sysID[1]['ID']"
-          :tableData="tableData[1]"
-          :tableHeader="tableColumns[1]"
-          :tableLoading="tableLoading[1]"
-          :pagination="tablePagination[1]"
-          :isClear="isClear[1]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @sortChange="sortChange"
-          @selectfun="selectFun"
-          :footerContent="false"
-        />
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <div class="flex"></div>
-        <div>
-          <el-button @click="colDialogVisible1 = false">取 消</el-button>
-          <el-button type="primary" @click="confirmDialog(null, 1)"
-            >确 定</el-button
-          >
-        </div>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -231,11 +116,9 @@ import {
   SaveData,
   GetSearch,
 } from '@/api/Common';
-import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
-import DialogTable from '@/components/Dialog/dialogTable';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWFinishedProductSchedule',
+  name: 'PaErFuMonthPlan',
   components: {
     ComSearch,
     ComReportTable,
@@ -247,19 +130,14 @@ export default {
   data() {
     return {
       labelStatus1: 0,
-      labelStatus2: 0,
       spread: [[], [], [], [], [], [], []],
-      dialogSearchForm: {
-        OrderID: '',
-      },
       addNum: 1,
       ////////////////// Search /////////////////
       title: this.$route.meta.title,
-      drawer: false,
       DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
         {
-          datas: { ProductionStatus: 26 },
+          datas: {},
           forms: [],
         },
         {
@@ -303,114 +181,49 @@ export default {
         { label: '字体颜色', value: 0 },
         { label: '背景颜色', value: 1 },
       ],
-      showPagination: true,
       tagRemark: 0,
       isLoading: false,
-      sysID: [
-        { ID: 9013 },
-        { ID: 11168 },
-        { ID: 11168 },
-        { ID: 9013 },
-        { ID: 9013 },
-        { ID: 9013 },
-      ],
+      sysID: [{ ID: 7946 }],
       adminLoading: false,
-      checkBoxCellTypeLine: '',
-      isOpen: true,
       selectionData: [[], [], [], [], [], [], []],
-      NoWorkHour: [],
-      LineViewSort: [],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
       isEdit: [false, false, false, false, false, false],
       colDialogVisible1: false,
       Status1: [
         {
-          label: '待排清单',
+          label: '有刷',
           value: {},
           index: 0,
         },
-        { label: '生产排程', value: {}, index: 1 },
-        { label: '交期冲突', value: {}, index: 2 },
+        { label: '已排生产计划', value: {}, index: 1 },
+        { label: '半成品', value: {}, index: 2 },
         {
-          label: '有变更',
+          label: '成品',
           value: {},
           index: 3,
         },
         {
-          label: '已完成',
+          label: '包装',
           value: {},
           index: 4,
         },
-        { label: '全部', value: {}, index: 5 },
       ],
-      Status2: [],
       Region: [5, 6, 6, 6, 6, 6],
-      RoleMapStatus: false,
-      SalesOrderNo: null,
-      Customer: null,
-      linkTableData: [],
-      linkTableData2: [],
       apsurl: null,
-      formData1: {
-        SalesOrderNo: null,
-        Code: null,
-        CustomerMaterialName: null,
-        MaterialName: null,
-        DataSource: null,
-        PlanQty: null,
-        OutType: null,
-        Qty: null,
-      },
+      params: {},
     };
   },
   watch: {},
-  async created() {
+  created() {
     this.apsurl = localStorage.getItem('apsurl');
     _this = this;
     this.adminLoading = true;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
-    let res1 = await GetSearch(
-      {
-        dicID: 11168,
-        page: 1,
-        rows: 0,
-        fields: 'Account,Name',
-        groupby: 'Account,Name',
-        sort: 'Account',
-      },
-      '/APSAPI/APSData',
-    );
-    const { result: result1, data: data1, msg: msg1 } = res1.data;
-    if (result1) {
-      this.Status2 = data1
-        .map((item) => {
-          return {
-            label: item.Name,
-            value: item.Account,
-          };
-        })
-        .concat({
-          label: '全部',
-          value: '',
-        });
-      this.labelStatus2 = this.Status2.findIndex(
-        (item) => item['value'] === this.userInfo.Account,
-      );
-      if (this.labelStatus2 === -1) {
-        // 如果没有找到匹配项，将labelStatus2设置为最后一个选项的索引
-        this.labelStatus2 = this.Status2.length - 1;
-      }
-    } else {
-      this.$message({
-        message: msg1,
-        type: 'error',
-        dangerouslyUseHTMLString: true,
-      });
-    }
     this.getTableHeader();
+    this.params = new URLSearchParams(this.$route.meta.TargetFor);
   },
   activated() {
     if (this.spread) {
@@ -639,84 +452,60 @@ export default {
         })
         .catch((_) => {});
     },
-    // 拆单
-    async splitOrder(remarkTb) {
-      this.tableColumns[1] = JSON.parse(
-        JSON.stringify(this.tableColumns[remarkTb]),
-      );
-      this.tableColumns[1] = this.tableColumns[1].filter(
-        (item) =>
-          item.prop == 'PlanQty' ||
-          item.prop == 'RequestOutDate' ||
-          item.prop == 'OutType',
-      );
-      this.tableColumns[1].forEach((item) => {
-        item['width'] = 250;
-        if (
-          item.prop === 'PlanQty' ||
-          item.prop === 'RequestOutDate' ||
-          item.prop === 'OutType'
-        ) {
-          item['isEdit'] = true;
-        }
-      });
-      if (this.selectionData[remarkTb].length !== 1) {
-        this.$message.error('请选择一条数据进行操作');
+    // 退回
+    async backData(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
       } else {
-        // await this.dataSearch(1);
-        this.formData1['SalesOrderNo'] =
-          this.selectionData[remarkTb][0]['SalesOrderNo'];
-        this.formData1['Code'] = this.selectionData[remarkTb][0]['Code'];
-        this.formData1['CustomerMaterialName'] =
-          this.selectionData[remarkTb][0]['CustomerMaterialName'];
-        this.formData1['MaterialName'] =
-          this.selectionData[remarkTb][0]['MaterialName'];
-        this.formData1['DataSource'] =
-          this.selectionData[remarkTb][0]['DataSource'];
-        this.formData1['PlanQty'] = this.selectionData[remarkTb][0]['PlanQty'];
-        this.formData1['OutType'] = this.selectionData[remarkTb][0]['OutType'];
-        this.formData1['Qty'] = this.selectionData[remarkTb][0]['Qty'];
-        this.colDialogVisible1 = true;
-        this.$set(this.tableData, 1, []);
-        this.ONewQty = 0;
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
+          }),
+        );
       }
+      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
+        .then((_) => {
+          _this.dataSave(remarkTb, index, null, newData);
+        })
+        .catch((_) => {});
     },
-    resetScheduling() {
-      this.$confirm('确定要重新排全部数据吗？')
+    resetScheduling(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.adminLoading = true;
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
+        );
+      }
+      this.$confirm('确定要重排选择的【' + newData.length + '】数据吗？')
         .then(async (_) => {
+          let res = await GetSearch(
+            newData,
+            '/APSAPI/MOPlanSaveToDayPlan?isPlan=1',
+          );
           this.adminLoading = true;
-
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
-          let submitData = sheet.getDataSource();
-          submitData.forEach((m) => {
-            m['isChecked'] = true;
-          });
-          if (submitData.length >= 0) {
-            this.adminLoading = true;
-            let res = await GetSearch(
-              submitData,
-              '/APSAPI/MOPlanSaveToDayPlan?isPlan=1',
-            );
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.dataSearch(0);
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: 'success',
-                dangerouslyUseHTMLString: true,
-              });
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: 'error',
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } else {
+          this.adminLoading = true;
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.dataSearch(remarkTb);
+            this.adminLoading = false;
             this.$message({
-              message: '未有数据',
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
               type: 'error',
               dangerouslyUseHTMLString: true,
             });
@@ -819,6 +608,9 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
+          this.params.forEach((value, key) => {
+            this.formSearchs[z].datas[key] = value;
+          });
           this.$set(this.formSearchs[z], 'forms', x);
         });
         await this.changeStatus(this.Status1[0], 0);
@@ -848,14 +640,14 @@ export default {
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
         if (Columns && Columns.length != 0) {
-          Columns[0].some((n, i) => {
-            this.verifyData(n);
-            if (n.children && n.children.length != 0) {
-              n.children.forEach((x) => {
-                this.verifyData(x);
-              });
-            }
-          });
+          // Columns[0].some((n, i) => {
+          // this.verifyData(n);
+          // if (n.children && n.children.length != 0) {
+          //   n.children.forEach((x) => {
+          //     this.verifyData(x);
+          //   });
+          // }
+          // });
           this.$set(this.tableColumns, remarkTb, Columns[0]);
         }
         this.$set(this.tableData, remarkTb, data);
@@ -1427,8 +1219,14 @@ export default {
     selectFun(data, remarkTb, row) {
       this.$set(this.selectionData, remarkTb, data);
     },
+    // 改变状态
+    async changeStatus(item, index) {
+      this.labelStatus1 = item['index'];
+      Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
+      await this.dataSearch(this.labelStatus1);
+    },
+    //转入周计划
     async TransferPlan(remarkTb) {
-      //转入周计划
       if (this.selectionData[remarkTb].length == 0) {
         this.$message({
           message: '请选择要操作的数据',
@@ -1462,184 +1260,10 @@ export default {
         }
       }
     },
-    //转入日计划
-    async ToDayPlan(remarkTb) {
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message({
-          message: '请选择要操作的数据',
-          type: 'error',
-          dangerouslyUseHTMLString: true,
-        });
-      } else {
-        this.adminLoading = true;
-        let newData = _.cloneDeep(
-          this.selectionData[remarkTb].map((obj) => {
-            return obj;
-          }),
-        );
-        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMToProcessplan');
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.adminLoading = false;
-          this.dataSearch(remarkTb);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
-      }
-    },
-    //添加产品机台
-    async confirmDialog(data, remarkTb) {
-      if (remarkTb === 1) {
-        const totalNewQty = this.tableData[1].reduce(
-          (total, obj) =>
-            Number(obj.PlanQty) ? total + Number(obj.PlanQty) : total,
-          0,
-        );
-        const error = this.tableData[1].some((obj) => {
-          return !obj['PlanQty'];
-        });
-
-        if (
-          totalNewQty >=
-          Number(this.selectionData[this.labelStatus1][0]['PlanQty'])
-        ) {
-          this.$message.error('拆分数量大于或者等于原数量');
-          return;
-        }
-        if (error) {
-          this.$message.error('订单中不含有拆分数量');
-          return;
-        }
-        let newData = _.cloneDeep(
-          this.selectionData[this.labelStatus1].map((x) => {
-            x['PlanQty'] = Number(x['PlanQty']) - totalNewQty;
-            return x;
-          }),
-        ).concat(this.tableData[1]);
-        this.adminLoading = true;
-        let res = await SaveData(newData);
-        const { data, result, msg } = res.data;
-        if (result) {
-          this.$alert(msg, '提示', {
-            confirmButtonText: '确定',
-            dangerouslyUseHTMLString: true, // 使用这个选项
-            callback: (action) => {},
-          });
-          await this.dataSearch(this.labelStatus1);
-        } else {
-          this.$alert(msg, '提示', {
-            confirmButtonText: '确定',
-            dangerouslyUseHTMLString: true, // 使用这个选项
-            callback: (action) => {},
-          });
-        }
-        this.adminLoading = false;
-        this.colDialogVisible1 = false;
-      }
-    },
-    // 退回
-    async backData(remarkTb, index, parms) {
-      let res = null;
-      let newData = [];
-      if (this.selectionData[remarkTb].length == 0) {
-        this.$message.error('请选择需要操作的数据！');
-        return;
-      } else {
-        this.selectionData[remarkTb].forEach((x) => {
-          let obj = x;
-          obj['ElementDeleteFlag'] = 1;
-          newData.push(obj);
-        });
-      }
-      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
-        .then((_) => {
-          _this.dataSave(remarkTb, index, null, newData);
-        })
-        .catch((_) => {});
-    },
-    // 增行
-    addRow(remarkTb) {
-      if (remarkTb === 1) {
-        // 获取修改记录
-        if (!this.addNum) {
-          this.$message.error('请输入需要添加的行数!');
-          return;
-        }
-        const $table = this.$refs.ComVxeTable.$refs.vxeTable;
-        // 下拉数据是需要获取数据源
-        for (let x = 0; x < this.addNum; x++) {
-          let obj = _.cloneDeep(this.selectionData[this.labelStatus1][0]);
-          obj['_X_ROW_KEY'] = _.uniqueId('row__');
-          // obj['seq'] = this.tableData[remarkTb].length + 1;
-          obj['SourceID'] = this.selectionData[this.labelStatus1][0]['ID'];
-          obj['ID'] = null;
-          obj['DataSource'] = '拆单';
-          obj['isChecked'] = false;
-          obj['update'] = true;
-          obj['PlanQty'] = 0;
-          console.log(this.DataSourceList, 'in this.DataSourceList');
-          this.tableColumns[remarkTb].map((item) => {
-            if (item.prop === 'RequestOutDate') {
-              obj[item.prop] = null;
-            }
-            for (let key in this.DataSourceList[remarkTb]) {
-              if (item.DataSourceName === key) {
-                obj[key] = this.DataSourceList[remarkTb][key];
-              }
-            }
-          });
-          this.tableData[remarkTb].push(obj);
-          // $table.insertAt(obj, -1);
-        }
-        console.log(this.tableData[remarkTb], 'this.tableData[remarkTb]');
-      }
-    },
-    deleteRow(remarkTb) {
-      if (remarkTb === 1) {
-        // 遍历this.tableData[3]中的数据对象
-        for (let i = this.tableData[1].length - 1; i >= 0; i--) {
-          const dataObject = this.tableData[1][i];
-
-          // 检查isChecked属性是否为true
-          if (dataObject.isChecked === true) {
-            // 从this.tableData[3]中移除该数据对象
-            this.tableData[1].splice(i, 1);
-          }
-        }
-      }
-    },
-    changeStatus2(item, index) {
-      this.labelStatus2 = index;
-      this.formSearchs[1].datas['Account'] = item.value;
-      this.dataSearch(1);
-    },
-    // 改变状态
-    async changeStatus(item, index) {
-      this.labelStatus1 = item['index'];
-      Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
-      if (index === 1) {
-        this.changeStatus2(this.Status2[this.labelStatus2], this.labelStatus2);
-      } else {
-        await this.dataSearch(this.labelStatus1);
-      }
-    },
     // 计算排期
     async CalculateSchedule(remarkTb, index) {
       this.adminLoading = true;
-      let res = await GetSearch(
-        this.tableData[remarkTb],
-        '/APSAPI/CalculateSalesStartDate',
-      );
+      let res = await GetSearch('', '/APSAPI/CalculateSalesStartDate');
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -1670,25 +1294,5 @@ export default {
 }
 ::v-deep .el-dialog__close {
   color: #fff !important;
-}
-::v-deep .el-dialog3 {
-  .el-dialog {
-    margin-top: 10vh !important;
-    height: 80vh !important;
-    display: flex;
-    flex-direction: column;
-    .el-dialog__body {
-      padding: 2px !important;
-      flex-grow: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .dialog-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
 }
 </style>

@@ -1,5 +1,4 @@
-<!--菜单设置-->
-<!-- 四部日计划 -->
+<!-- EK生产排程 -->
 <template>
   <div
     class="APSContainer flex_column content_height bgWhite"
@@ -92,52 +91,6 @@
         @selectfun="selectFun"
       />
     </div>
-    <el-dialog
-      :title="'拆分订单'"
-      :visible.sync="colDialogVisible1"
-      width="50%"
-    >
-      <div class="ant-table-title">
-        <el-row>
-          <el-col :span="4"
-            ><span class="title">拆分编辑完请保存 </span></el-col
-          >
-          <el-col :span="20" class="flex_flex_end"
-            ><el-divider direction="vertical"></el-divider>
-            <el-button type="primary" size="mini" @click="changeEvent(1)">
-              确定拆分
-            </el-button>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-for="item in [1]" :key="item">
-        <ComSpreadTable
-          ref="spreadsheetRef"
-          height="600px"
-          :tableData="tableData[item]"
-          :tableColumns="tableColumns[item]"
-          :tableLoading="tableLoading[item]"
-          :remark="item"
-          :sysID="sysID[item]['ID']"
-          :pagination="tablePagination[item]"
-          @pageChange="pageChange"
-          @pageSize="pageSize"
-          @workbookInitialized="workbookInitialized"
-          @selectfun="selectFun"
-          :spaceBtnShow="false"
-        />
-      </div>
-    </el-dialog>
-    <!-- 弹框-->
-    <DialogTable
-      title="全局欠料"
-      :tableDialog="colDialogVisible"
-      :sysID="5165"
-      width="80%"
-      @closeDialog="colDialogVisible = false"
-      :searchForm="dialogSearchForm"
-      :isToolbar="false"
-    ></DialogTable>
   </div>
 </template>
 
@@ -162,31 +115,43 @@ import {
   ExportData,
   SaveData,
   GetSearch,
-  GetOrgData,
 } from '@/api/Common';
-import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
-import DialogTable from '@/components/Dialog/dialogTable';
+import DialogOptTable from '@/components/Dialog/dialogOptTable';
 export default {
-  name: 'BWFinalDayPlan',
+  name: 'PaErFuNeedPlan',
   components: {
     ComSearch,
     ComReportTable,
     ComAsideTree,
-    DialogTable,
+    DialogOptTable,
     ComVxeTable,
     ComSpreadTable,
   },
   data() {
     return {
-      colDialogVisible1: false,
       labelStatus1: 0,
-      spread: [[], [], [], [], []],
-      dialogSearchForm: {
-        OrderID: '',
-      },
-      colDialogVisible: false,
+      spread: [[], [], [], [], [], [], []],
+      addNum: 1,
+      ////////////////// Search /////////////////
       title: this.$route.meta.title,
+      DataSourceList: [{}, {}, {}, {}, {}, {}, {}],
       formSearchs: [
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
+        {
+          datas: {},
+          forms: [],
+        },
         {
           datas: {},
           forms: [],
@@ -197,29 +162,61 @@ export default {
         },
       ],
       btnForm: [],
-      tableData: [[], []],
-      tableColumns: [[], []],
-      tableLoading: [false],
-      isClear: [false, false],
-      hasSelect: [false, false],
-      Region: [6, 6],
+      tableData: [[], [], [], [], [], []],
+      tableColumns: [[], [], [], [], [], []],
+      tableLoading: [false, false, false, false, false, false],
+      isClear: [false, false, false, false, false, false],
+      hasSelect: [false, false, false, false, false, false],
       tablePagination: [
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
-        { pageIndex: 1, pageSize: 3000, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 20, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+        { pageIndex: 1, pageSize: 0, pageTotal: 0 },
+      ],
+      colorType: 0,
+      colorValue: null,
+      colorStatus: [
+        { label: '字体颜色', value: 0 },
+        { label: '背景颜色', value: 1 },
       ],
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 7945 }, { ID: 7945 }],
+      sysID: [{ ID: 11182 }],
       adminLoading: false,
-      selectionData: [[], []],
+      selectionData: [[], [], [], [], [], [], []],
       sheetSelectRows: [],
       sheetSelectObj: { start: 0, end: 0, count: 0 },
-      isEdit: false,
+      isEdit: [false, false, false, false, false, false],
+      colDialogVisible1: false,
+      Status1: [
+        {
+          label: '总排期',
+          value: {},
+          index: 0,
+        },
+        { label: '已排生产计划', value: {}, index: 1 },
+        { label: '半成品', value: {}, index: 2 },
+        {
+          label: '成品',
+          value: {},
+          index: 3,
+        },
+        {
+          label: '包装',
+          value: {},
+          index: 4,
+        },
+      ],
+      Region: [5, 6, 6, 6, 6, 6],
+      apsurl: null,
       params: {},
     };
   },
   watch: {},
   created() {
+    this.apsurl = localStorage.getItem('apsurl');
     _this = this;
     this.adminLoading = true;
     // 获取所有按钮
@@ -240,11 +237,114 @@ export default {
   },
   mounted() {},
   methods: {
+    updateColor(remarkTb) {
+      let sheet = this.spread[remarkTb].getActiveSheet();
+      sheet.suspendPaint();
+      const { col, colCount, row, rowCount } = sheet.getSelections()[0];
+
+      this.tableData[remarkTb].forEach((rowItem, rowIndex) => {
+        this.tableColumns[remarkTb].forEach((column, columnIndex) => {
+          const key = column.prop;
+
+          if (
+            row <= rowIndex &&
+            rowIndex < rowCount + row &&
+            col <= columnIndex &&
+            columnIndex < colCount + col
+          ) {
+            if (this.colorType === 0) {
+              if (
+                Object.prototype.toString.call(rowItem['FColors']) !==
+                '[object Object]'
+              ) {
+                rowItem['FColors'] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item['prop'] === key + 'FColor',
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem['FColors'][key] = this.colorValue;
+            } else if (this.colorType === 1) {
+              if (
+                Object.prototype.toString.call(rowItem['BColors']) !==
+                '[object Object]'
+              ) {
+                rowItem['BColors'] = {};
+              }
+              let colorIndex = this.tableColumns[remarkTb].findIndex(
+                (item) => item['prop'] === key + 'BColor',
+              );
+              sheet.setValue(rowIndex, colorIndex, this.colorValue);
+              rowItem['BColors'][key] = this.colorValue;
+            }
+          }
+
+          // 获取当前单元格
+          const cell = sheet.getCell(rowIndex, columnIndex);
+          cell.foreColor('black');
+          cell.backColor('white');
+          if (column['isEdit']) {
+            cell.locked(false).foreColor('#2a06ecd9');
+          }
+          if (
+            Object.prototype.toString.call(rowItem['FColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['FColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.foreColor(rowItem['FColors'][key]);
+              }
+            });
+          }
+          if (
+            Object.prototype.toString.call(rowItem['BColors']) ===
+            '[object Object]'
+          ) {
+            Object.keys(rowItem['BColors']).forEach((key) => {
+              const columnIndex = this.tableColumns[remarkTb].findIndex(
+                (column) => column.prop === key,
+              );
+              if (columnIndex !== -1) {
+                // 这里使用 rowIndex 和 columnIndex 获取单元格
+                const cell = sheet.getCell(rowIndex, columnIndex);
+                cell.backColor(rowItem['BColors'][key]);
+              }
+            });
+          }
+        });
+      });
+      sheet.resumePaint();
+    },
+    startObserving(remarkTb) {
+      const tableElement = this.$refs[`spreadsheetRef${remarkTb}`]?.[0].$el;
+      if (tableElement) {
+        this[`resizeObserver${remarkTb}`] = new ResizeObserver((entries) => {
+          // for (const entry of entries) {
+          this.spread[remarkTb].refresh();
+          // }
+        });
+        this[`resizeObserver${remarkTb}`].observe(tableElement);
+      }
+    },
+    //按钮权限
     judgeBtn(routeBtn) {
+      console.log(routeBtn, 'routeBtn');
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == 'save') {
-            this.$set(this, 'isEdit', true);
+            //假如signName为空，则所有表都显示保存按钮而且全部可编辑，假如不为空，则控制哪个表才可以编辑
+            if (!item['signName'] || item['signName'].length === 0) {
+              this.isEdit.fill(true);
+            } else if (item['signName'] && item['signName'].length > 0) {
+              item['signName'].map((item) => {
+                this.$set(this.isEdit, item, true);
+              });
+            }
           }
         });
       this.$set(this, 'btnForm', routeBtn);
@@ -297,13 +397,13 @@ export default {
       }
     },
     // 查询
-    dataSearch(remarkTb) {
+    async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
       this.tableData[remarkTb] = [];
       this.$set(this.tableLoading, remarkTb, true);
       this.$set(this.isClear, remarkTb, true);
       this.tablePagination[remarkTb].pageIndex = 1;
-      this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
+      await this.getTableData(this.formSearchs[remarkTb].datas, remarkTb);
       setTimeout(() => {
         this.$set(this.isClear, remarkTb, false);
       });
@@ -335,23 +435,18 @@ export default {
     // 删除
     async dataDel(remarkTb, index, parms) {
       let newData = [];
-
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
       } else {
         newData = _.cloneDeep(
-          this.selectionData[remarkTb].map((x) => {
-            x['ElementDeleteFlag'] = 1;
-            return x;
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
           }),
         );
       }
-      this.$confirm(
-        '确定要删除的【' +
-          newData.length +
-          '】数据吗，如果已经报工则无法删除？',
-      )
+      this.$confirm('确定要删除的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
@@ -360,68 +455,57 @@ export default {
     // 退回
     async backData(remarkTb, index, parms) {
       let newData = [];
-
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;
       } else {
         newData = _.cloneDeep(
-          this.selectionData[remarkTb].map((x) => {
-            x['ElementDeleteFlag'] = 1;
-            return x;
+          this.selectionData[remarkTb].map((obj) => {
+            obj['ElementDeleteFlag'] = 1;
+            return obj;
           }),
         );
       }
-      this.$confirm(
-        '确定要退回的【' +
-          newData.length +
-          '】数据吗，如果已经报工则无法退回？',
-      )
+      this.$confirm('确定要退回的【' + newData.length + '】数据吗？')
         .then((_) => {
           _this.dataSave(remarkTb, index, null, newData);
         })
         .catch((_) => {});
     },
-    resetScheduling() {
-      this.$confirm('确定要重新排全部数据吗？')
+    resetScheduling(remarkTb, index, parms) {
+      let newData = [];
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message.error('请选择需要操作的数据！');
+        return;
+      } else {
+        this.adminLoading = true;
+        newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
+        );
+      }
+      this.$confirm('确定要重排选择的【' + newData.length + '】数据吗？')
         .then(async (_) => {
+          let res = await GetSearch(
+            newData,
+            '/APSAPI/MOPlanSaveToDayPlan?isPlan=1',
+          );
           this.adminLoading = true;
-
-          let sheet = this.spread[this.labelStatus1].getActiveSheet();
-          let submitData = sheet.getDataSource();
-          submitData.forEach((m) => {
-            m['isChecked'] = true;
-            m['ProcessPlanID'] =
-              m['ProcessPlanID'] == null ? -1 : m['ProcessPlanID'];
-            m['ProcessPartID'] =
-              m['ProcessPartID'] == null ? -1 : m['ProcessPartID'];
-          });
-          if (submitData.length >= 0) {
-            this.adminLoading = true;
-            let res = await GetSearch(
-              submitData,
-              '/APSAPI/MOPlanSaveToDayPlan?isPlan=1',
-            );
-            const { result, data, count, msg } = res.data;
-            if (result) {
-              this.dataSearch(0);
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: 'success',
-                dangerouslyUseHTMLString: true,
-              });
-            } else {
-              this.adminLoading = false;
-              this.$message({
-                message: msg,
-                type: 'error',
-                dangerouslyUseHTMLString: true,
-              });
-            }
-          } else {
+          this.adminLoading = true;
+          const { result, data, count, msg } = res.data;
+          if (result) {
+            this.dataSearch(remarkTb);
+            this.adminLoading = false;
             this.$message({
-              message: '未有数据',
+              message: msg,
+              type: 'success',
+              dangerouslyUseHTMLString: true,
+            });
+          } else {
+            this.adminLoading = false;
+            this.$message({
+              message: msg,
               type: 'error',
               dangerouslyUseHTMLString: true,
             });
@@ -430,12 +514,9 @@ export default {
         .catch((_) => {});
     },
     // 单击行
-    handleRowClick(row, remarkTb) {
-      this.delData[remarkTb] = [];
-      this.delData[remarkTb].push(row);
-    },
+    handleRowClick(row, remarkTb) {},
     // 保存
-    async dataSave(remarkTb, index, parms, newData, Interface) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
       const sheet =
         this.spread[remarkTb] &&
@@ -444,7 +525,7 @@ export default {
           : undefined;
 
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      if (sheet.isEditing()) {
+      if (sheet && sheet.isEditing()) {
         sheet.endEdit();
       }
       // 获取修改记录
@@ -461,21 +542,16 @@ export default {
           DeletedRows.forEach((item) => {
             item['ElementDeleteFlag'] = 1;
           }); //获取被删除的数据
+          console.log(DirtyRows, InsertRows, DeletedRows);
           changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
-
       if (changeRecords.length == 0) {
         this.$set(this, 'adminLoading', false);
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      let res;
-      if (Interface == 1) {
-        res = await SaveData(changeRecords);
-      } else {
-        res = await SaveMOPlanStep4(changeRecords);
-      }
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
@@ -503,6 +579,16 @@ export default {
         // 获取每个表头
         datas.some((m, i) => {
           m.some((n, index) => {
+            //从列获取下拉数据源
+            // if (i === 1) {
+            if (n.DataSourceID && n.ControlType === 'combobox') {
+              this.DataSourceList[i] = {
+                [n.DataSourceName]: n.items,
+                ...this.DataSourceList[i],
+              };
+            }
+            // }
+
             if (index === 1) {
               this.tablePagination[i]['pageSize'] = n['pageSize'];
               this.hasSelect[i] = n['IsSelect'];
@@ -510,6 +596,7 @@ export default {
             }
           });
           this.$set(this.tableColumns, i, m);
+          this.startObserving(i);
         });
         // 获取查询的初始化字段 组件 按钮
         forms.some((x, z) => {
@@ -521,13 +608,13 @@ export default {
               this.$set(this.formSearchs[z].datas, [y.prop], '');
             }
           });
-          this.$set(this.formSearchs[z], 'forms', x);
           this.params.forEach((value, key) => {
             this.formSearchs[z].datas[key] = value;
           });
+          this.$set(this.formSearchs[z], 'forms', x);
         });
-
-        this.dataSearch(0);
+        await this.changeStatus(this.Status1[0], 0);
+        this.adminLoading = false;
       }
     },
     // 验证数据
@@ -548,18 +635,24 @@ export default {
       form['rows'] = this.tablePagination[remarkTb].pageSize;
       form['page'] = this.tablePagination[remarkTb].pageIndex;
       form['dicID'] = this.sysID[remarkTb]['ID'];
-      form['ControlID'] = this.userInfo.WorkFlowInstanceID;
       let res = await GetSearchData(form);
 
       const { result, data, count, msg, Columns } = res.data;
       if (result) {
-        // 获取每个表头
-        Columns.some((m, i) => {
-          this.$set(this.tableColumns, i, m);
-        });
+        if (Columns && Columns.length != 0) {
+          // Columns[0].some((n, i) => {
+          // this.verifyData(n);
+          // if (n.children && n.children.length != 0) {
+          //   n.children.forEach((x) => {
+          //     this.verifyData(x);
+          //   });
+          // }
+          // });
+          this.$set(this.tableColumns, remarkTb, Columns[0]);
+        }
         this.$set(this.tableData, remarkTb, data);
-        this.setData(remarkTb);
         this.$set(this.tablePagination[remarkTb], 'pageTotal', count);
+        this.setData(remarkTb);
       } else {
         this.$message({
           message: msg,
@@ -976,7 +1069,7 @@ export default {
     },
     // 自动计算数量
     computedNum(rowIndex, colIndex, val) {
-      let sheet = this.spread[this.labelStatus1].getActiveSheet();
+      let sheet = this.spread[0].getActiveSheet();
       let dataSource = sheet.getDataSource();
       if (val == null) {
         val = 0;
@@ -1033,7 +1126,7 @@ export default {
         //   }
         // } else {
         // }
-        sheet.setDataSource(this.tableData[this.labelStatus1]);
+        sheet.setDataSource(this.tableData[0]);
         return;
       }
       if (
@@ -1126,138 +1219,80 @@ export default {
     selectFun(data, remarkTb, row) {
       this.$set(this.selectionData, remarkTb, data);
     },
-    // 拆单
-    splitOrder(remarkTb) {
-      if (this.selectionData[remarkTb].length === 0) {
-        this.$message.error('请选择需要拆单的数据！');
-        return;
+    // 改变状态
+    async changeStatus(item, index) {
+      this.labelStatus1 = item['index'];
+      Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
+      await this.dataSearch(this.labelStatus1);
+    },
+    //转入周计划
+    async TransferPlan(remarkTb) {
+      if (this.selectionData[remarkTb].length == 0) {
+        this.$message({
+          message: '请选择要操作的数据',
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
       } else {
-        // 遍历数组中的所有元素
-        for (let i = 0; i < this.selectionData[remarkTb].length; i++) {
-          const item = this.selectionData[remarkTb][i];
-          if (!item.RowNumber) {
-            this.$message.error('所选数据含有合计行');
-            return; // 可以选择中断循环，或者继续检查其他元素
-          }
-        }
-      }
-      this.colDialogVisible1 = true;
-      let targetArray = JSON.parse(
-        JSON.stringify(this.selectionData[remarkTb]),
-      );
-
-      this.tableColumns[1] = this.tableColumns[1].filter(
-        (item) =>
-          item.prop == 'PlanQty' ||
-          item.prop == 'MachineID' ||
-          item.prop == 'LineID' ||
-          item.prop == 'MachineMouldID',
-      );
-      this.tableColumns[1].push({
-        label: '拆单数',
-        prop: 'SQty',
-      });
-      this.tableColumns[1].forEach((item) => {
-        item['width'] = 200;
-        if (item.prop === 'PlanQty') {
-          item['isEdit'] = false;
-        } else {
-          item['isEdit'] = true;
-        }
-      });
-      this.$nextTick(() => {
-        this.$set(this.tableData, 1, targetArray);
-        this.setData(1);
-      });
-    },
-    // 复制
-    async changeEvent(val) {
-      if (val === 1) {
-        const errorNum1 = this.selectionData[1].findIndex(
-          (item) => !item['SQty'],
+        this.adminLoading = true;
+        let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((obj) => {
+            return obj;
+          }),
         );
-        if (errorNum1 !== -1) {
-          this.$message.error(`第${errorNum1 + 1}行数据的拆分数量没有填写`);
-          return;
+        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
+        const { result, data, count, msg } = res.data;
+        if (result) {
+          this.$message({
+            message: msg,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+          });
+          this.adminLoading = false;
+          this.dataSearch(remarkTb);
+        } else {
+          this.adminLoading = false;
+          this.$message({
+            message: msg,
+            type: 'error',
+            dangerouslyUseHTMLString: true,
+          });
         }
-
-        const errorNum2 = this.selectionData[1].findIndex((item) => {
-          return item['SQty'] > item['PlanQty'];
-        });
-        if (errorNum2 !== -1) {
-          this.$message.error(`第${errorNum2 + 1}行数据的拆分数量超出可填范围`);
-          return;
-        }
-        this.colDialogVisible1 = false;
-        let sheet = this.spread[this.labelStatus1].getActiveSheet();
-        const changedIndices = [];
-        this.tableData[this.labelStatus1].forEach((element, index) => {
-          if (element['isChecked']) {
-            changedIndices.push(index);
-          }
-        });
-        //每增加一行，需要插入新的一行，后面一行比前面一行多1
-        const arr = changedIndices.map((num, index) => num + index);
-        //处理脏数据
-        arr.forEach((item) => {
-          this.copyRowFormat(item, sheet);
-        });
-
-        this.$nextTick(() => {
-          sheet.repaint();
-        });
-        await this.dataSave(Number(this.labelStatus1), null, null, null, 1);
       }
     },
-    //在该行数据下面增加新的一行
-    copyRowFormat(rowNumber, sheet) {
-      sheet.addRows(rowNumber + 1, 1);
-      sheet.copyTo(
-        rowNumber,
-        -1,
-        rowNumber + 1,
-        -1,
-        1,
-        -1,
-        GC.Spread.Sheets.CopyToOptions.all,
-      );
-      let newRowIndex = rowNumber + 1;
-      let oldData = sheet.getDataSource()[rowNumber]; // 获取数据源中旧行的值
-      this.tableData[this.labelStatus1][newRowIndex] = JSON.parse(
-        JSON.stringify(oldData),
-      );
-      let newData = this.tableData[this.labelStatus1][newRowIndex]; // 获取数据源中新行的值
-      let SQtyObj = this.selectionData[1].find(
-        (item) => item['RowNumber'] === oldData['RowNumber'],
-      );
-      // 去掉含prop2的值
-      this.tableColumns[this.labelStatus1].forEach((item) => {
-        if (item['prop2']) {
-          newData[item.prop] = null;
-        }
-      });
-      oldData['PlanQty'] = oldData['PlanQty'] - SQtyObj['SQty'];
-      newData['ProcessPlanID'] = null;
-      newData['PlanQty'] = SQtyObj['SQty'];
-      // newData['MachineMouldID'] = SQtyObj['MachineMouldID'];
-      newData['LineID'] = SQtyObj['LineID'];
-      // newData['MachineID'] = SQtyObj['MachineID'];
-      newData['DataSource'] = '拆单';
+    // 计算排期
+    async CalculateSchedule(remarkTb, index) {
+      this.adminLoading = true;
+      let res = await GetSearch('', '/APSAPI/CalculateSalesStartDate');
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, 'adminLoading', false);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
+      }
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.spreadContainer {
-  position: relative;
-  overflow: hidden;
-  height: 100%;
-  flex: 1;
-  border: 1px solid #ababab;
+::v-deep .el-dialog__header {
+  background-color: #409eff !important;
 }
-
-.sample-spreadsheets {
-  width: 100%;
-  height: 100%;
+::v-deep .el-dialog__title {
+  color: #fff !important;
+}
+::v-deep .el-dialog__close {
+  color: #fff !important;
 }
 </style>
