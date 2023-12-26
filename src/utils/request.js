@@ -65,9 +65,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     if (response.statusText == 'OK') {
-      if (!response.data.result) {
-        return Promise.reject(response);
-      }
       return response;
     } else {
       return Promise.reject(response.data.msg);
