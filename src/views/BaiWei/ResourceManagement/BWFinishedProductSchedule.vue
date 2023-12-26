@@ -71,6 +71,20 @@
           ></el-col>
         </el-row>
       </div>
+      <div class="ant-table-title" v-show="labelStatus1 === 1">
+        <el-row>
+          <el-col :span="1"> </el-col>
+          <el-col :span="23" class="flex_flex_end">
+            <div v-for="(item, y) in Status2" :key="y">
+              <span
+                @click="changeStatus2(item, y)"
+                :class="labelStatus2 == y ? 'statusActive cursor' : 'cursor'"
+                >{{ item.label }}</span
+              >
+              <el-divider direction="vertical"></el-divider></div
+          ></el-col>
+        </el-row>
+      </div>
     </div>
     <div
       class="admin_content flex_grow"
@@ -233,6 +247,7 @@ export default {
   data() {
     return {
       labelStatus1: 0,
+      labelStatus2: 0,
       spread: [[], [], [], [], [], [], []],
       dialogSearchForm: {
         OrderID: '',
@@ -329,6 +344,7 @@ export default {
         },
         { label: '全部', value: {}, index: 5 },
       ],
+      Status2: [],
       Region: [5, 6, 6, 6, 6, 6],
       RoleMapStatus: false,
       SalesOrderNo: null,
@@ -349,13 +365,51 @@ export default {
     };
   },
   watch: {},
-  created() {
+  async created() {
     this.apsurl = localStorage.getItem('apsurl');
     _this = this;
     this.adminLoading = true;
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
+    let res1 = await GetSearch(
+      {
+        dicID: 11168,
+        page: 1,
+        rows: 0,
+        fields: 'Account,Name',
+        groupby: 'Account,Name',
+        sort: 'Account',
+      },
+      '/APSAPI/APSData',
+    );
+    const { result: result1, data: data1, msg: msg1 } = res1.data;
+    if (result1) {
+      this.Status2 = data1
+        .map((item) => {
+          return {
+            label: item.Name,
+            value: item.Account,
+          };
+        })
+        .concat({
+          label: '全部',
+          value: '',
+        });
+      this.labelStatus2 = this.Status2.findIndex(
+        (item) => item['value'] === this.userInfo.Account,
+      );
+      if (this.labelStatus2 === -1) {
+        // 如果没有找到匹配项，将labelStatus2设置为最后一个选项的索引
+        this.labelStatus2 = this.Status2.length - 1;
+      }
+    } else {
+      this.$message({
+        message: msg1,
+        type: 'error',
+        dangerouslyUseHTMLString: true,
+      });
+    }
     this.getTableHeader();
   },
   activated() {
@@ -1564,11 +1618,45 @@ export default {
         }
       }
     },
+    changeStatus2(item, index) {
+      this.labelStatus2 = index;
+      this.formSearchs[1].datas['Account'] = item.value;
+      this.dataSearch(1);
+    },
     // 改变状态
     async changeStatus(item, index) {
       this.labelStatus1 = item['index'];
       Object.assign(this.formSearchs[this.labelStatus1].datas, item['value']);
-      await this.dataSearch(this.labelStatus1);
+      if (index === 1) {
+        this.changeStatus2(this.Status2[this.labelStatus2], this.labelStatus2);
+      } else {
+        await this.dataSearch(this.labelStatus1);
+      }
+    },
+    // 计算排期
+    async CalculateSchedule(remarkTb, index) {
+      this.adminLoading = true;
+      let res = await GetSearch(
+        this.tableData[remarkTb],
+        '/APSAPI/CalculateSalesStartDate',
+      );
+      const { datas, forms, result, msg } = res.data;
+      if (result) {
+        this.$message({
+          message: msg,
+          type: 'success',
+          dangerouslyUseHTMLString: true,
+        });
+        this.dataSearch(remarkTb);
+        this.$set(this, 'adminLoading', false);
+      } else {
+        this.$message({
+          message: msg,
+          type: 'error',
+          dangerouslyUseHTMLString: true,
+        });
+        this.$set(this, 'adminLoading', false);
+      }
     },
   },
 };
@@ -1582,5 +1670,25 @@ export default {
 }
 ::v-deep .el-dialog__close {
   color: #fff !important;
+}
+::v-deep .el-dialog3 {
+  .el-dialog {
+    margin-top: 10vh !important;
+    height: 80vh !important;
+    display: flex;
+    flex-direction: column;
+    .el-dialog__body {
+      padding: 2px !important;
+      flex-grow: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
 }
 </style>
