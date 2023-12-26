@@ -1,5 +1,5 @@
 <!--菜单设置-->
-<!-- 四部日计划 -->
+<!-- 日计划 -->
 <template>
   <div
     class="APSContainer flex_column content_height bgWhite"
