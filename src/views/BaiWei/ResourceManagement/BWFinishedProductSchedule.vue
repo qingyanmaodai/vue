@@ -1583,24 +1583,4 @@ export default {
 ::v-deep .el-dialog__close {
   color: #fff !important;
 }
-::v-deep .el-dialog3 {
-  .el-dialog {
-    margin-top: 10vh !important;
-    height: 80vh !important;
-    display: flex;
-    flex-direction: column;
-    .el-dialog__body {
-      padding: 2px !important;
-      flex-grow: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .dialog-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-}
 </style>
