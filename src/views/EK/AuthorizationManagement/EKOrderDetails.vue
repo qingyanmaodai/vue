@@ -224,7 +224,7 @@ export default {
       machineCycle: '',
       title: this.$route.meta.title, //表名
       adminLoading: false, //加载状态
-      labelStatus1: 0,
+      labelStatus1: 2,
       tagRemark: 0,
       btnForm: [], //拥有的按钮权限
       // 表头添加动态按钮
@@ -540,7 +540,7 @@ export default {
           this.$set(this.formSearchs[z], 'forms', x);
         });
         this.adminLoading = false;
-        this.changeStatus(this.Status1[0], 0);
+        this.changeStatus(this.Status1[2], this.labelStatus1);
       } else {
         this.adminLoading = false;
         this.$message({

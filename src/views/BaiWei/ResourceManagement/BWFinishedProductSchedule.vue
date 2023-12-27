@@ -1477,7 +1477,10 @@ export default {
             return obj;
           }),
         );
-        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMToProcessplan');
+        let res = await GetSearch(
+          newData,
+          '/APSAPI/MOPlanSaveToDayPlanByProcesss',
+        );
         const { result, data, count, msg } = res.data;
         if (result) {
           this.$message({
