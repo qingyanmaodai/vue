@@ -162,7 +162,7 @@ import {
 } from '@/api/Common';
 import DialogTable from '@/components/Dialog/dialogTable';
 export default {
-  name: 'PCBPlan_1',
+  name: 'BWPCBPlan',
   components: {
     ComSearch,
     ComVxeTable,
