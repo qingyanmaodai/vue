@@ -985,9 +985,11 @@ export default {
 ::v-deep .el-input-number {
   line-height: 32px !important;
   height: 100% !important;
+
   .el-input__inner {
     height: 34px !important;
   }
+
   .el-input-number__decrease,
   .el-input-number__increase {
     top: 1px;

@@ -95,6 +95,22 @@
       />
     </div>
     <!-- 弹框-->
+
+    <!-- 下达按钮 弹窗 -->
+    <el-dialog
+      title="下达"
+      class="release-oreder-dialog"
+      width="400px"
+      :visible.sync="releaseOrdersDatas.dialogCol">
+      <el-form >
+        <el-form-item label="下达天数(天)" label-width="100px">
+          <el-input placeholder="请输入下达天数" v-model.number="releaseOrdersDatas.days" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label-width="250px">
+          <el-button type="primary" @click="releaseOrdersSubmit">确认</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
     <!-- <el-dialog
       :title="'拆分订单'"
       class="el-dialog3"
@@ -334,6 +350,13 @@ export default {
         OutType: null,
         Qty: null,
       },
+
+      // 下达操作 数据 
+      releaseOrdersDatas:{
+        dialogCol:false, //控制弹框
+        data:null,        //下达 选中的数据
+        days:1            //下达 设置的天数
+      }
     };
   },
   watch: {},
@@ -484,7 +507,7 @@ export default {
     },
     //按钮权限
     judgeBtn(routeBtn) {
-      console.log(routeBtn, 'routeBtn');
+      // console.log(routeBtn, 'routeBtn');
       if (routeBtn && routeBtn.length > 0)
         routeBtn.some((item, index) => {
           if (item.ButtonCode == 'save') {
@@ -563,6 +586,57 @@ export default {
         this[methods](remarkTb, index);
       }
     },
+
+    // 下达 按钮 打开digole
+    releaseOrders(remarkTb){
+      let newData = _.cloneDeep(
+          this.selectionData[remarkTb].map((x) => {
+            x['ElementDeleteFlag'] = 1;
+            return x;
+          }),
+        );
+      if(newData.length === 0){
+        this.$message.error('请单击需要操作的数据！');  
+        return
+      }
+      this.$set(this.releaseOrdersDatas,'dialogCol',true)
+      this.$set(this.releaseOrdersDatas,'data',newData)
+      // console.log(newData)
+    },
+    // 确认 下达
+    releaseOrdersSubmit(){
+      const dataArr = []
+      for(let i of this.releaseOrdersDatas.data){
+        dataArr.push({...i,days:this.releaseOrdersDatas.days})
+      }
+      if(this.releaseOrdersDatas.days <= 0 ){
+        this.$message.error('请确认下达天数！');  
+        return
+      }
+      this.$confirm('确定要下达选择的【' + dataArr.length + '】数据【' + this.releaseOrdersDatas.days + '】天吗？')
+      .then(  res=>{
+        // 方法的 调用
+        GetSearch(dataArr, '/APSAPI/InsertIntoPCBByOrderID')
+        .then(r=>{
+          if(!r.result){
+            this.$message.error('下达失败,请重试!');  
+            return
+          }
+          this.$message.success('下达成功!');
+          this.refrshPage()
+        })
+        .catch(e=>{
+          this.$message.error('系统错误,请重试!');  
+        }).finally(()=>{
+          this.$set(this.releaseOrdersDatas,'dialogCol',false)
+        })
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+      
+      
+    },
     // 查询
     async dataSearch(remarkTb) {
       this.tagRemark = remarkTb;
@@ -592,6 +666,7 @@ export default {
     },
     // 导出
     async dataExport(remarkTb) {
+      // console.log('dataExport')
       this.adminLoading = true;
       let form = JSON.parse(JSON.stringify(this.formSearchs[remarkTb].datas));
       form['rows'] = 0;
@@ -1423,6 +1498,7 @@ export default {
     },
     // 选择数据
     selectFun(data, remarkTb, row) {
+      // console.log('select')
       this.$set(this.selectionData, remarkTb, data);
     },
     //添加产品机台

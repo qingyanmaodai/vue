@@ -62,31 +62,21 @@
             </el-col>
           </el-row>
         </div>
-        <div
-          class="flex_column"
-          :style="{ height: height }"
-          v-show="labelStatus1 == 1"
-        >
-          <div class="spreadContainer" v-loading="tableLoading[1]">
-            <gc-spread-sheets
-              class="sample-spreadsheets"
-              @workbookInitialized="initSpread"
-            >
+        <!-- <div class="flex_column" :style="{ height: height }" v-show="labelStatus1 == 1"> -->
+        <!-- <div class="spreadContainer" v-loading="tableLoading[1]">
+            <gc-spread-sheets class="sample-spreadsheets" @workbookInitialized="initSpread">
               <gc-worksheet></gc-worksheet>
             </gc-spread-sheets>
-          </div>
-          <div class="flex_row_spaceBtn pagination">
-            <div>
-              <span
-                @click="toPageSetting(sysID[1].ID)"
-                class="primaryColor cursor"
-                >SysID:{{ sysID[1].ID }}
+          </div> -->
+        <!-- <div class="flex_row_spaceBtn pagination"> -->
+        <!-- <div>
+              <span @click="toPageSetting(sysID[1].ID)" class="primaryColor cursor">SysID:{{ sysID[1].ID }}
               </span>
-            </div>
-            <div class="flex">
-              <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
-              <span>共{{ tablePagination[1].pageTotal }}条</span>
-              <!-- <el-pagination
+            </div> -->
+        <!-- <div class="flex"> -->
+        <!-- 去掉分页，因为会导致计算排期没有全选工序工时被清空问题 -->
+        <!-- <span>共{{ tablePagination[1].pageTotal }}条</span> -->
+        <!-- <el-pagination
                 background
                 @size-change="(val) => pageSize(val, 1)"
                 :current-page="tablePagination[1].pageIndex"
@@ -97,14 +87,10 @@
                 layout="total, sizes, prev, pager, next,jumper"
               >
               </el-pagination> -->
-            </div>
-          </div>
-        </div>
-        <div
-          v-for="item in [0, 2, 3, 4, 5]"
-          :key="item"
-          v-show="labelStatus1 == item"
-        >
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <div v-for="item in [0, 1]" :key="item" v-show="labelStatus1 == item">
           <ComVxeTable
             :rowKey="'RowNumber'"
             :ref="`tableRef${item}`"
@@ -175,27 +161,29 @@ export default {
       ////////////////// Search /////////////////
       footerLabel: ['', '', '', '', '', '', ''],
       sysID: [
+        // { ID: 5156 },
+        // { ID: 5615 },
         { ID: 5156 },
-        { ID: 5615 },
-        { ID: 5156 },
-        { ID: 5156 },
-        { ID: 5156 },
-        { ID: 5156 },
-        { ID: 5156 },
+        { ID: 7959 },
+        // { ID: 5156 },
+        // { ID: 5156 },
+        // { ID: 5156 },
+        // { ID: 5156 },
+        // { ID: 5156 },
       ],
       Status1: [
-        { label: 'PCB总排期', value: 0 },
-        { label: 'PCB月计划', value: 1 },
+        { label: '总排期', value: 0 },
+        // { label: 'PCB月计划', value: 1 },
         // { label: "SMT待排", value: 2 },
         // { label: "SMT已排", value: 2 },
         // { label: "补焊待排", value: 3 },
         // { label: "补焊已排", value: 3 },
-        { label: '已完成', value: 3 },
-        { label: '待转入备料', value: 4 },
-        { label: '已转入备料', value: 5 },
+        { label: '已完成', value: 1 },
+        // { label: '待转入备料', value: 4 },
+        // { label: '已转入备料', value: 5 },
       ],
       title: this.$route.meta.title,
-      labelStatus1: 1,
+      labelStatus1: 0,
       PrepareDate: '',
       adminLoading: false,
       checkdBtnCodes: [],

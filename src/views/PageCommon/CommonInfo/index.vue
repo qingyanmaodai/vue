@@ -1,4 +1,4 @@
-<!--历史导入/已关闭工单/委外业务关联-->
+<!--基础默vxe table-->
 <template>
   <div class="APSContainer flex_column content_height" v-loading="adminLoading">
     <div class="admin_head" ref="headRef">
