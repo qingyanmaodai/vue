@@ -128,16 +128,6 @@
         />
       </div>
     </el-dialog>
-    <!-- 弹框-->
-    <DialogTable
-      title="全局欠料"
-      :tableDialog="colDialogVisible"
-      :sysID="5165"
-      width="80%"
-      @closeDialog="colDialogVisible = false"
-      :searchForm="dialogSearchForm"
-      :isToolbar="false"
-    ></DialogTable>
   </div>
 </template>
 
@@ -209,7 +199,7 @@ export default {
       ],
       tagRemark: 0,
       isLoading: false,
-      sysID: [{ ID: 7945 }, { ID: 7945 }],
+      sysID: [{ ID: 7956 }, { ID: 7956 }],
       adminLoading: false,
       selectionData: [[], []],
       sheetSelectRows: [],
@@ -360,7 +350,6 @@ export default {
     // 退回
     async backData(remarkTb, index, parms) {
       let newData = [];
-
       if (this.selectionData[remarkTb].length == 0) {
         this.$message.error('请选择需要操作的数据！');
         return;

@@ -1442,24 +1442,28 @@ export default {
             return obj;
           }),
         );
-        let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.adminLoading = false;
-          this.dataSearch(remarkTb);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
+        this.$confirm('确定要转入日计划的【' + newData.length + '】条数据吗？')
+          .then(async (_) => {
+            let res = await GetSearch(newData, '/APSAPI/InsertIntoIMByOrderID');
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.$message({
+                message: msg,
+                type: 'success',
+                dangerouslyUseHTMLString: true,
+              });
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: 'error',
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          })
+          .catch((_) => {});
       }
     },
     //转入日计划
@@ -1477,27 +1481,31 @@ export default {
             return obj;
           }),
         );
-        let res = await GetSearch(
-          newData,
-          '/APSAPI/MOPlanSaveToDayPlanByProcesss',
-        );
-        const { result, data, count, msg } = res.data;
-        if (result) {
-          this.$message({
-            message: msg,
-            type: 'success',
-            dangerouslyUseHTMLString: true,
-          });
-          this.adminLoading = false;
-          this.dataSearch(remarkTb);
-        } else {
-          this.adminLoading = false;
-          this.$message({
-            message: msg,
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-          });
-        }
+        this.$confirm('确定要转入日计划的【' + newData.length + '】条数据吗？')
+          .then(async (_) => {
+            let res = await GetSearch(
+              newData,
+              '/APSAPI/MOPlanSaveToDayPlanByProcesss',
+            );
+            const { result, data, count, msg } = res.data;
+            if (result) {
+              this.$message({
+                message: msg,
+                type: 'success',
+                dangerouslyUseHTMLString: true,
+              });
+              this.adminLoading = false;
+              this.dataSearch(remarkTb);
+            } else {
+              this.adminLoading = false;
+              this.$message({
+                message: msg,
+                type: 'error',
+                dangerouslyUseHTMLString: true,
+              });
+            }
+          })
+          .catch((_) => {});
       }
     },
     //添加产品机台
@@ -1558,6 +1566,15 @@ export default {
         this.$message.error('请选择需要操作的数据！');
         return;
       } else {
+        let errorAccount = this.selectionData[remarkTb].findIndex((item) => {
+          return item['Account'] !== this.userInfo.Account;
+        });
+        if (remarkTb === 1) {
+          if (errorAccount !== -1) {
+            this.$message.error('所选数据行因计划员归属不可退回');
+            return;
+          }
+        }
         this.selectionData[remarkTb].forEach((x) => {
           let obj = x;
           obj['ElementDeleteFlag'] = 1;
