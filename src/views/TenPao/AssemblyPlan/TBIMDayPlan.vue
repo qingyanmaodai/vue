@@ -529,11 +529,16 @@ export default {
     //   this.delData[remarkTb].push(row);
     // },
     // 保存
-    async dataSave(remarkTb, index, parms, newData, Interface) {
+    async dataSave(remarkTb, index, parms, newData) {
       this.adminLoading = true;
-      const sheet = this.spread[remarkTb]?.getActiveSheet();
+      const sheet =
+        this.spread[remarkTb] &&
+        typeof this.spread[remarkTb].getActiveSheet === 'function'
+          ? this.spread[remarkTb].getActiveSheet()
+          : undefined;
+
       const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
-      if (sheet && sheet.isEditing()) {
+      if (sheet.isEditing()) {
         sheet.endEdit();
       }
       // 获取修改记录
@@ -553,17 +558,13 @@ export default {
           changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
         }
       }
+
       if (changeRecords.length == 0) {
         this.$set(this, 'adminLoading', false);
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      let res;
-      if (Interface == 1) {
-        res = await SaveData(changeRecords);
-      } else {
-        res = await SaveMOPlanStep4(changeRecords);
-      }
+      let res = await SaveData(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
