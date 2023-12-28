@@ -117,6 +117,8 @@ import {
   GetSearch,
 } from '@/api/Common';
 import DialogOptTable from '@/components/Dialog/dialogOptTable';
+import { SaveMOPlanStep4 } from '@/api/PageTwoScheduling';
+
 export default {
   name: 'BWMachinDayPlan',
   components: {
@@ -551,7 +553,7 @@ export default {
         this.$message.error('当前数据没做修改，请先修改再保存！');
         return;
       }
-      let res = await SaveData(changeRecords);
+      let res = await SaveMOPlanStep4(changeRecords);
       const { datas, forms, result, msg } = res.data;
       if (result) {
         this.$message({
