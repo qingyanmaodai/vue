@@ -272,6 +272,7 @@
                 size="small"
                 type="number"
                 @keyup.enter.native="btnClick('dataSearch')"
+                @paste.native="pasteDescription($event, x.prop)"
               ></el-input>
               <!-- 输入框 -->
               <el-input
@@ -280,6 +281,7 @@
                 size="small"
                 type="text"
                 @keyup.enter.native="btnClick('dataSearch')"
+                @paste.native="pasteDescription($event, x.prop)"
               ></el-input>
               <!-- el-popover -->
               <el-popover
