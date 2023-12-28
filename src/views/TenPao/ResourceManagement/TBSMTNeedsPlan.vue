@@ -356,7 +356,8 @@ export default {
         dialogCol:false, //控制弹框
         data:null,        //下达 选中的数据
         days:1            //下达 设置的天数
-      }
+      },
+      params: {}
     };
   },
   watch: {},
@@ -367,6 +368,8 @@ export default {
     // 获取所有按钮
     this.btnForm = this.$route.meta.btns;
     this.judgeBtn(this.btnForm);
+    // 获取路由参数
+    this.params = new URLSearchParams(this.$route.meta.TargetFor);
     this.getTableHeader();
   },
   activated() {
@@ -606,9 +609,11 @@ export default {
     // 确认 下达
     releaseOrdersSubmit(){
       const dataArr = []
+      
       for(let i of this.releaseOrdersDatas.data){
-        dataArr.push({...i,days:this.releaseOrdersDatas.days})
+        dataArr.push({...i,days:this.releaseOrdersDatas.days,ProcessGroupName:this.params.get('ProcessGroupName')})
       }
+      // console.log(dataArr)
       if(this.releaseOrdersDatas.days <= 0 ){
         this.$message.error('请确认下达天数！');  
         return
@@ -834,6 +839,9 @@ export default {
             }
           });
           this.$set(this.formSearchs[z], 'forms', x);
+          this.params.forEach((value, key) => {
+            this.formSearchs[z].datas[key] = value;
+          });
         });
         await this.changeStatus(this.Status1[0], 0);
         this.adminLoading = false;

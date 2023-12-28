@@ -509,7 +509,7 @@ export default {
   watch: {
     searchForm: {
       handler: function (val, oldVal) {
-        console.log('searchForm', this.searchForm);
+        // console.log('searchForm', this.searchForm);
         this.row = this.searchForm.length <= 6 ? 0 : 1;
         this.circle = Math.ceil(this.searchForm.length / 6); // 有几行
         this.tag = this.searchForm.length % 7;
