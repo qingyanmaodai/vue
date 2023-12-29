@@ -355,7 +355,7 @@ export default {
       releaseOrdersDatas:{
         dialogCol:false, //控制弹框
         data:null,        //下达 选中的数据
-        days:1            //下达 设置的天数
+        days:3           //下达 设置的天数
       },
       params: {}
     };
@@ -609,7 +609,6 @@ export default {
     // 确认 下达
     releaseOrdersSubmit(){
       const dataArr = []
-      
       for(let i of this.releaseOrdersDatas.data){
         dataArr.push({...i,days:this.releaseOrdersDatas.days,ProcessGroupName:this.params.get('ProcessGroupName')})
       }
@@ -623,11 +622,11 @@ export default {
         // 方法的 调用
         GetSearch(dataArr, '/APSAPI/InsertIntoPCBByOrderID')
         .then(r=>{
-          if(!r.result){
-            this.$message.error('下达失败,请重试!');  
+          if(!r.data.result){
+            this.$message.error(r.data.msg);  
             return
           }
-          this.$message.success('下达成功!');
+          this.$message.success(r.data.msg);
           this.refrshPage()
         })
         .catch(e=>{

@@ -1137,56 +1137,149 @@ export default {
       //         this.refrshPage()
       //       })
       //   })
-            GetSearch( data, '/APSAPI/APSSalesStartDate')
+      this.$confirm('确定要计算排期吗？')
+      .then(res=>{
+        GetSearch( data, '/APSAPI/APSSalesStartDate')
             .then(r=>{
-              if(!r.result){
-                this.$message.error('下达失败,请重试!');  
+              if(!r.data.result){ 
+                this.$message({
+                  message: r.data.msg,
+                  type: 'error',
+                  dangerouslyUseHTMLString: true,
+                });
                 return
               }
-              this.$message.success('下达成功!');
+              this.$message({
+                  message: r.data.msg,
+                  type: 'success',
+                  dangerouslyUseHTMLString: true,
+                });
               this.refrshPage()
             })
+      })
+      .catch(err=>{
+        // 取消
+      })
+            
     },
 
     // 保存
-    async dataSave(remarkTb, index) {
-      console.log('save')
-      this.adminLoading = true;
-      let res = await SaveData(remarkTb);
-      const { result, data, count, msg } = res.data;
+    // async dataSave(remarkTb, index) {
+    //   // console.log('save')
+    //   this.adminLoading = true;
+    //   let res = await SaveData(remarkTb);
+    //   const { result, data, count, msg } = res.data;
 
+    //   if (result) {
+    //     this.dataSearch(0);
+    //     this.$message({
+    //       message: msg,
+    //       type: 'success',
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   } else {
+    //     this.$message({
+    //       message: msg,
+    //       type: 'error',
+    //       dangerouslyUseHTMLString: true,
+    //     });
+    //   }
+    //   this.adminLoading = false;
+    // },
+    async dataSave(remarkTb, index, parms, newData) {
+      this.adminLoading = true;
+      const sheet =
+        this.spread[remarkTb] &&
+        typeof this.spread[remarkTb].getActiveSheet === 'function'
+          ? this.spread[remarkTb].getActiveSheet()
+          : undefined;
+
+      const $table = this.$refs[`tableRef${remarkTb}`]?.[0].$refs.vxeTable;
+      if (sheet && sheet.isEditing()) {
+        sheet.endEdit();
+      }
+      // 获取修改记录
+      let changeRecords = [];
+      if (newData) {
+        changeRecords = newData;
+      } else {
+        if ($table) {
+          changeRecords = $table.getUpdateRecords();
+        } else {
+          let DirtyRows = sheet.getDirtyRows().map((row) => row.item); //获取修改过的数据
+          let InsertRows = sheet.getInsertRows().map((row) => row.item); //获取插入过的数据
+          let DeletedRows = sheet.getDeletedRows().map((row) => row.item);
+          DeletedRows.forEach((item) => {
+            item['ElementDeleteFlag'] = 1;
+          }); //获取被删除的数据
+          console.log(DirtyRows, InsertRows, DeletedRows);
+          changeRecords = [...DirtyRows, ...InsertRows, ...DeletedRows];
+        }
+      }
+      console.log('changeRecords',changeRecords)
+      if (changeRecords.length == 0) {
+        this.$set(this, 'adminLoading', false);
+        this.$message.error('当前数据没做修改，请先修改再保存！');
+        return;
+      }
+      let res = await SaveData(changeRecords);
+      const { datas, forms, result, msg } = res.data;
       if (result) {
-        this.dataSearch(0);
         this.$message({
           message: msg,
           type: 'success',
           dangerouslyUseHTMLString: true,
         });
+        this.dataSearch(remarkTb);
+        this.$set(this, 'adminLoading', false);
       } else {
         this.$message({
           message: msg,
           type: 'error',
           dangerouslyUseHTMLString: true,
         });
+        this.$set(this, 'adminLoading', false);
       }
-      this.adminLoading = false;
+    },
+    // 刷新页面
+    refrshPage() {
+      this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
+        const { fullPath } = this.$route;
+        this.$nextTick(() => {
+          this.$router.replace({
+            path: '/redirect' + fullPath,
+          });
+        });
+      });
     },
     // 转入日计划
     async setPlan(remarkTb, index, params) {
       let data = this.selectionData[remarkTb]
       if(data.length === 0 ){
-        this.$message.error('请选择需要转入日计划的数据！');  
+        this.$message({
+          message:'请选择需要转入日计划的数据！',
+          type:'error',
+          dangerouslyUseHTMLString: true,
+        })
         return
       }
-      this.$confirm('确定要将选择的【' + data.length + '】数据转入日计划吗？')
+      this.$confirm('确定要将【' + data.length + '】条数据转入日计划吗？')
         .then(res=>{
           GetSearch( data, '/APSAPI/InsertProcessPlanByOrderID')
             .then(r=>{
-              if(!r.result){
-                this.$message.error('下达失败,请重试!');  
+              if(!r.data.result){
+                this.$message({
+                  message: r.data.msg,
+                  type: 'error',
+                  dangerouslyUseHTMLString: true,
+                });
                 return
               }
-              this.$message.success('下达成功!');
+              this.$message({
+                  message: r.data.msg,
+                  type: 'success',
+                  dangerouslyUseHTMLString: true,
+                });
               this.refrshPage()
             })
         })
