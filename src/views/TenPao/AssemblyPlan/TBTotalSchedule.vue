@@ -12,6 +12,7 @@
           :btnForm="btnForm"
           :signName="labelStatus1"
           @btnClick="btnClick"
+          
         />
       </div>
     </div>
